@@ -4,6 +4,7 @@ import 'package:metrics/common/presentation/navigation/constants/metrics_routes.
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
 /// conditions.
@@ -11,6 +12,9 @@ typedef MetricsPagePredicate = bool Function(MetricsPage);
 
 /// A [ChangeNotifier] that manages navigation.
 class NavigationNotifier extends ChangeNotifier {
+  /// A [NavigationState] used to interact with the current navigation state.
+  final NavigationState _navigationState;
+
   /// A [MetricsPageFactory] that provides an ability to create a [MetricsPage]
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
@@ -43,7 +47,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
   NavigationNotifier(
     this._pageFactory,
-  ) : assert(_pageFactory != null);
+    NavigationState navigationState,
+  )   : assert(_pageFactory != null),
+        assert(navigationState != null),
+        _navigationState = navigationState;
 
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
@@ -108,6 +115,15 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
+  /// Replaces the current navigation state with the given parameters.
+  void replaceState({
+    dynamic data,
+    String title = 'metrics',
+    String path,
+  }) {
+    _navigationState.replaceState(data, title, path);
+  }
+
   /// Removes all underlying pages until the [predicate] returns `true`
   /// or the stack of pages is empty and pushes the route created from the given
   /// [configuration].
@@ -124,6 +140,18 @@ class NavigationNotifier extends ChangeNotifier {
     }
 
     push(configuration);
+  }
+
+  /// Replaces the current route with the route created from the given
+  /// [configuration] and replaces the current state path with
+  /// the path of the pushed route configuration.
+  void pushStateReplacement(RouteConfiguration configuration) {
+    if (_pages.isNotEmpty) _pages.removeLast();
+
+    push(configuration);
+    replaceState(
+      path: _currentConfiguration.path,
+    );
   }
 
   /// Handles the initial route.
@@ -188,7 +216,7 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isAppInitialized) {
       _redirectRoute = configuration;
 
-      return MetricsRoutes.loading;
+      return MetricsRoutes.loading.copyWith(path: configuration.path);
     }
 
     final authorizationRequired = configuration.authorizationRequired;

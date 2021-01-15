@@ -39,6 +39,8 @@ dependencies:
     git:
       url: https://github.com/platform-platform/FlutterSwitch
       ref: master
+  flutter_web_plugins:
+    sdk: flutter
   google_sign_in: ^4.5.3
   hive: ^1.4.4+1
   js: ^0.6.2

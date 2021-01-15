@@ -34,6 +34,7 @@ import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/data/repositories/firestore_feature_config_repository.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
+import 'package:metrics/platform/web/browser_navigation_state/browser_navigation_state.dart';
 import 'package:metrics/project_groups/data/repositories/firestore_project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
@@ -41,6 +42,7 @@ import 'package:metrics/project_groups/domain/usecases/receive_project_group_upd
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart';
 
 /// Creates the [ChangeNotifier]s and injects them, using the [MultiProvider] widget.
 class InjectionContainer extends StatefulWidget {
@@ -217,7 +219,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _themeNotifier = ThemeNotifier(brightness: platformBrightness);
 
-    _navigationNotifier = NavigationNotifier(MetricsPageFactory());
+    _navigationNotifier = NavigationNotifier(
+      MetricsPageFactory(),
+      BrowserNavigationState(window.history),
+    );
 
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);

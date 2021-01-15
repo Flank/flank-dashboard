@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
@@ -14,6 +15,7 @@ import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/debug_menu_notifier_mock.dart';
 import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
+import '../../../test_utils/router_delegate_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -121,6 +123,10 @@ void main() {
           debugMenuViewModel,
         );
 
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
+
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
@@ -143,6 +149,51 @@ void main() {
 
         verify(navigationNotifier.handleAppInitialized(
           isAppInitialized: anyNamed('isAppInitialized'),
+        )).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "replaces the navigation state path once the application finishes initialization",
+      (tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+        final configuration = MetricsRoutes.dashboard;
+
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          debugMenuViewModel,
+        );
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          configuration,
+        );
+
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            featureConfigNotifier: featureConfigNotifier,
+            debugMenuNotifier: debugMenuNotifier,
+            navigationNotifier: navigationNotifier,
+          ),
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+
+        authNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
+        debugMenuNotifier.notifyListeners();
+
+        verify(navigationNotifier.replaceState(
+          data: anyNamed('data'),
+          title: anyNamed('title'),
+          path: argThat(
+            equals(configuration.path),
+            named: 'path',
+          ),
         )).called(equals(1));
       },
     );
@@ -340,6 +391,10 @@ void main() {
           debugMenuViewModel,
         );
 
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
+
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
@@ -366,6 +421,55 @@ void main() {
 
         verify(navigationNotifier.handleAppInitialized(
           isAppInitialized: anyNamed('isAppInitialized'),
+        )).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "replaces the navigation state path on opened if the application is initialized",
+      (tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+        final configuration = MetricsRoutes.dashboard;
+
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          debugMenuViewModel,
+        );
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          configuration,
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+
+        when(featureConfigNotifier.initializeConfig()).thenAnswer((_) async {
+          return featureConfigNotifier.notifyListeners();
+        });
+
+        when(debugMenuNotifier.initializeLocalConfig()).thenAnswer((_) async {
+          return debugMenuNotifier.notifyListeners();
+        });
+
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            navigationNotifier: navigationNotifier,
+            authNotifier: authNotifier,
+            featureConfigNotifier: featureConfigNotifier,
+            debugMenuNotifier: debugMenuNotifier,
+          ),
+        );
+
+        verify(navigationNotifier.replaceState(
+          data: anyNamed('data'),
+          title: anyNamed('title'),
+          path: argThat(
+            equals(configuration.path),
+            named: 'path',
+          ),
         )).called(equals(1));
       },
     );
@@ -411,8 +515,12 @@ class _LoadingPageTestbed extends StatelessWidget {
       themeNotifier: themeNotifier,
       child: Builder(
         builder: (context) {
-          return const MaterialApp(
-            home: LoadingPage(),
+          return MaterialApp(
+            home: Router(
+              routerDelegate: RouterDelegateStub(
+                body: const LoadingPage(),
+              ),
+            ),
           );
         },
       ),

@@ -4,10 +4,15 @@ import 'package:metrics/common/presentation/navigation/constants/metrics_routes.
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
+import 'package:metrics/common/presentation/pages/loading_page.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
   group("NavigationNotifier", () {
     final pageFactory = MetricsPageFactory();
+    final navigationState = NavigationStateMock();
 
     NavigationNotifier notifier;
 
@@ -18,7 +23,7 @@ void main() {
     }
 
     setUp(() {
-      notifier = NavigationNotifier(pageFactory);
+      notifier = NavigationNotifier(pageFactory, navigationState);
       prepareNotifier();
     });
 
@@ -31,7 +36,17 @@ void main() {
       "throws an AssertionError if the given page factory is null",
       () {
         expect(
-          () => NavigationNotifier(null),
+          () => NavigationNotifier(null, navigationState),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws an AssertionError if the given navigation state is null",
+      () {
+        expect(
+          () => NavigationNotifier(pageFactory, null),
           throwsAssertionError,
         );
       },
@@ -41,7 +56,7 @@ void main() {
       "creates an instance with the given parameters",
       () {
         expect(
-          () => NavigationNotifier(pageFactory),
+          () => NavigationNotifier(pageFactory, navigationState),
           returnsNormally,
         );
       },
@@ -228,7 +243,22 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".push() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.push(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -289,7 +319,21 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".pushReplacement() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushReplacement(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -312,7 +356,7 @@ void main() {
     test(
       ".pushReplacement() adds the new page if pages are empty",
       () {
-        final notifier = NavigationNotifier(pageFactory);
+        final notifier = NavigationNotifier(pageFactory, navigationState);
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         final expectedLength = notifier.pages.length + 1;
@@ -381,6 +425,137 @@ void main() {
     );
 
     test(
+      ".pushStateReplacement() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushStateReplacement(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".pushStateReplacement() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushStateReplacement(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page if pages are not empty",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
+
+        final expectedLength = notifier.pages.length;
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final actualLength = notifier.pages.length;
+
+        expect(actualLength, equals(expectedLength));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() adds the new page if pages are empty",
+      () {
+        final notifier = NavigationNotifier(pageFactory, navigationState);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final expectedLength = notifier.pages.length + 1;
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final actualLength = notifier.pages.length;
+
+        expect(actualLength, equals(expectedLength));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the given one if the user is logged in and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isProjectGroupsPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoginPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
+
+        notifier.pushStateReplacement(MetricsRoutes.login);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoginPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() updates the current configuration",
+      () {
+        const expectedConfiguration = MetricsRoutes.loading;
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
+
+        notifier.pushStateReplacement(expectedConfiguration);
+
+        expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the navigation state path with the pushed route configuration path",
+      () {
+        const expectedConfiguration = MetricsRoutes.loading;
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
+
+        notifier.pushStateReplacement(expectedConfiguration);
+
+        verify(navigationState.replaceState(
+          any,
+          any,
+          notifier.currentConfiguration.path,
+        ));
+      },
+    );
+
+    test(
       ".pushAndRemoveUntil() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -392,7 +567,24 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".pushAndRemoveUntil() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushAndRemoveUntil(
+          configuration,
+          (page) => true,
+        );
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -546,7 +738,21 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".handleInitialRoutePath() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.handleInitialRoutePath(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -611,7 +817,21 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".handleNewRoutePath() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.handleNewRoutePath(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -664,6 +884,20 @@ void main() {
         notifier.handleNewRoutePath(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".replaceState() delegates to the navigation state",
+      () {
+        const data = 'data';
+        const title = 'title';
+        const path = '/test';
+
+        notifier.replaceState(data: data, title: title, path: path);
+
+        verify(navigationState.replaceState(data, title, path))
+            .called(equals(1));
       },
     );
   });

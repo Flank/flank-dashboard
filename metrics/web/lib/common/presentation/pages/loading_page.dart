@@ -189,7 +189,14 @@ class _LoadingPageState extends State<LoadingPage>
     if (!_isInitialized) return;
 
     final notifier = Provider.of<NavigationNotifier>(context, listen: false);
-    notifier.handleAppInitialized(isAppInitialized: true);
+
+    Router.neglect(context, () {
+      notifier.handleAppInitialized(isAppInitialized: true);
+
+      notifier.replaceState(
+        path: notifier.currentConfiguration.path,
+      );
+    });
   }
 
   @override

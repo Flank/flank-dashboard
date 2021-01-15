@@ -21,6 +21,7 @@ import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
+import '../../../test_utils/router_delegate_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -160,6 +161,10 @@ void main() {
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
 
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_LoginPageTestbed(
             authNotifier: AuthNotifierStub(),
@@ -181,7 +186,7 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        verify(navigationNotifier.pushReplacement(
+        verify(navigationNotifier.pushStateReplacement(
           MetricsRoutes.dashboard,
         )).called(equals(1));
       },
@@ -192,6 +197,10 @@ void main() {
       (tester) async {
         final authNotifier = AuthNotifierMock();
         final navigationNotifier = NavigationNotifierMock();
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
 
         when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.isLoggedIn).thenReturn(true);
@@ -205,7 +214,7 @@ void main() {
           );
         });
 
-        verify(navigationNotifier.pushReplacement(
+        verify(navigationNotifier.pushStateReplacement(
           MetricsRoutes.dashboard,
         )).called(equals(1));
       },
@@ -256,7 +265,11 @@ class _LoginPageTestbed extends StatelessWidget {
         builder: (context) {
           return MetricsThemedTestbed(
             metricsThemeData: metricsThemeData,
-            body: LoginPage(key: loginKey),
+            body: Router(
+              routerDelegate: RouterDelegateStub(
+                body: LoginPage(key: loginKey),
+              ),
+            ),
           );
         },
       ),
