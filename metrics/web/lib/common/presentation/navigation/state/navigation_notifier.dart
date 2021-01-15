@@ -150,7 +150,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     push(configuration);
     replaceState(
-      path: '${MetricsRoutes.baseUrlPath}${_currentConfiguration.path}',
+      path: _currentConfiguration.path,
     );
   }
 

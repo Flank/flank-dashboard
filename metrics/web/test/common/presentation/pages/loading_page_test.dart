@@ -191,7 +191,7 @@ void main() {
           data: anyNamed('data'),
           title: anyNamed('title'),
           path: argThat(
-            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
+            equals(configuration.path),
             named: 'path',
           ),
         )).called(equals(1));
@@ -467,7 +467,7 @@ void main() {
           data: anyNamed('data'),
           title: anyNamed('title'),
           path: argThat(
-            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
+            equals(configuration.path),
             named: 'path',
           ),
         )).called(equals(1));

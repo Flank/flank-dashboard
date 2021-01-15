@@ -550,7 +550,7 @@ void main() {
         verify(navigationState.replaceState(
           any,
           any,
-          '${MetricsRoutes.baseUrlPath}${notifier.currentConfiguration.path}',
+          notifier.currentConfiguration.path,
         ));
       },
     );
