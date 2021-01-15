@@ -44,9 +44,9 @@ void main() {
           metricsConfig: metricsConfig,
         ));
         final finder = find.byType(InjectionContainer);
-        final container = tester.widget<InjectionContainer>(finder);
+        final injectionContainer = tester.widget<InjectionContainer>(finder);
 
-        expect(container.metricsConfig, same(metricsConfig));
+        expect(injectionContainer.metricsConfig, same(metricsConfig));
       },
     );
 

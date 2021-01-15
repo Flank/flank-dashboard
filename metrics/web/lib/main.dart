@@ -26,9 +26,9 @@ Future<void> main() async {
     final userAgent = window?.navigator?.userAgent;
     final eventProcessor = UserAgentEventProcessor(userAgent);
     writer = await SentryWriter.init(
-      metricsConfig?.sentryDsn,
-      metricsConfig?.sentryRelease,
-      metricsConfig?.sentryEnvironment,
+      metricsConfig.sentryDsn,
+      metricsConfig.sentryRelease,
+      metricsConfig.sentryEnvironment,
       eventProcessor: eventProcessor,
     );
   } else {

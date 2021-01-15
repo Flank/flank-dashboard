@@ -31,8 +31,6 @@ import 'arguments/model/user_credentials.dart';
 import 'test_utils/hover_widget.dart';
 import 'test_utils/pump_and_settle_widget.dart';
 
-// dart test_driver/main.dart --no-verbose --store-logs-to=build/logs --email="1@gmail.com" --password="qwe123321"
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

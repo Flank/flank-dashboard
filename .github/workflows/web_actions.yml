@@ -88,7 +88,7 @@ jobs:
         run: flutter clean && flutter build web --release --source-maps
         working-directory: metrics/web/
 
-      - name: Evalute configurations for dev release
+      - name: Prepare metrics config for dev environment
         run: |
           export SENTRY_ENVIRONMENT="development"
           : > build/web/metrics_config.js
@@ -116,7 +116,7 @@ jobs:
         run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true
         working-directory: metrics/web/
 
-      - name: Evalute configurations for dev skia release
+      - name: Prepare metrics config for dev skia environment
         env:
           SENTRY_RELEASE: ${{ SENTRY_RELEASE_AUTORENDERER }}
         run: |
