@@ -2,13 +2,13 @@ import 'package:metrics/dashboard/presentation/view_models/project_build_status_
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectBuildStatusViewModel", () {
     test("can be created with null value", () {
       expect(
-        () => ProjectBuildStatusViewModel(value: null),
+        () => const ProjectBuildStatusViewModel(value: null),
         returnsNormally,
       );
     });
@@ -16,7 +16,7 @@ void main() {
     test("creates an instance with the given value", () {
       const status = BuildStatus.failed;
 
-      final statusViewModel = ProjectBuildStatusViewModel(
+      const statusViewModel = ProjectBuildStatusViewModel(
         value: BuildStatus.failed,
       );
 
@@ -29,11 +29,11 @@ void main() {
     test(
       "equals to another ProjectBuildStatusViewModel with the same value",
       () {
-        final firstViewModel = ProjectBuildStatusViewModel(
+        const firstViewModel = ProjectBuildStatusViewModel(
           value: BuildStatus.unknown,
         );
 
-        final secondViewModel = ProjectBuildStatusViewModel(
+        const secondViewModel = ProjectBuildStatusViewModel(
           value: BuildStatus.unknown,
         );
 

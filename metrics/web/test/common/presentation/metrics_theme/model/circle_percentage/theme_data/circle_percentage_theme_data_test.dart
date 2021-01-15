@@ -4,26 +4,25 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("CirclePercentageTheme", () {
     test(
       "creates a theme with a default attention level if the given attention level is null",
       () {
-        final theme = CirclePercentageThemeData(attentionLevel: null);
+        const theme = CirclePercentageThemeData(attentionLevel: null);
 
         expect(theme.attentionLevel, isNotNull);
       },
     );
 
     test("creates a theme with the given attention level", () {
-      final attentionLevel = CirclePercentageAttentionLevel(
+      const attentionLevel = CirclePercentageAttentionLevel(
         positive: CirclePercentageStyle(strokeColor: Colors.red),
       );
 
-      final theme = CirclePercentageThemeData(attentionLevel: attentionLevel);
+      const theme = CirclePercentageThemeData(attentionLevel: attentionLevel);
 
       expect(theme.attentionLevel, equals(attentionLevel));
     });

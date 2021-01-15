@@ -3,8 +3,7 @@ import 'package:metrics/common/presentation/button/theme/style/metrics_button_st
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("LoginThemeData", () {
@@ -49,7 +48,7 @@ void main() {
       const loginOptionButtonStyle = MetricsButtonStyle(color: Colors.white);
       const passwordVisibilityIconColor = Colors.green;
 
-      final themeData = LoginThemeData(
+      const themeData = LoginThemeData(
         titleTextStyle: titleTextStyle,
         loginOptionButtonStyle: loginOptionButtonStyle,
         passwordVisibilityIconColor: passwordVisibilityIconColor,

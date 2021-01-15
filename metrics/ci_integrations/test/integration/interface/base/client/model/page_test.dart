@@ -1,19 +1,18 @@
 import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("Page", () {
     test(".hasNextPage is true if the given next page URL is not null", () {
-      final page = _PageFake(nextPageUrl: 'page/url');
+      const page = _PageFake(nextPageUrl: 'page/url');
 
       expect(page.hasNextPage, isTrue);
     });
 
     test(".hasNextPage is false if the given next page URL is null", () {
-      final page = _PageFake(nextPageUrl: null);
+      const page = _PageFake(nextPageUrl: null);
 
       expect(page.hasNextPage, isFalse);
     });

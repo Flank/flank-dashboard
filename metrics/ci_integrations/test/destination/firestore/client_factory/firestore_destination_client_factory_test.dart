@@ -6,8 +6,6 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/firestore_config_test_data.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("FirestoreDestinationClientFactory", () {
     final firestoreConfig = FirestoreConfigTestData.firestoreDestiantionConfig;

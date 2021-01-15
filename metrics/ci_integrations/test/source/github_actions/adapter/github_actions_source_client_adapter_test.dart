@@ -21,8 +21,7 @@ import 'package:test/test.dart';
 import '../../../test_utils/extensions/interaction_result_answer.dart';
 import '../test_utils/test_data/github_actions_test_data_generator.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("GithubActionsSourceClientAdapter", () {
@@ -251,8 +250,8 @@ void main() {
       () async {
         final expectedCoverage = [null, null];
 
-        final artifactsPage = WorkflowRunArtifactsPage(
-          values: const [WorkflowRunArtifact(name: 'test.json')],
+        const artifactsPage = WorkflowRunArtifactsPage(
+          values: [WorkflowRunArtifact(name: 'test.json')],
         );
 
         whenFetchWorkflowRuns(
@@ -558,8 +557,8 @@ void main() {
       ".fetchBuilds() maps fetched run jobs' startedAt date to the completedAt date if the startedAt date is null",
       () async {
         final completedAt = DateTime.now();
-        final workflowRun = WorkflowRun(number: 1);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 1);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
@@ -587,9 +586,9 @@ void main() {
     test(
       ".fetchBuilds() maps fetched run jobs' startedAt date to the DateTime.now() date if the startedAt and completedAt dates are null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
-        final workflowRunJob = WorkflowRunJob(
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
           completedAt: null,
@@ -603,7 +602,7 @@ void main() {
           page: anyNamed('page'),
           perPage: anyNamed('perPage'),
         )).thenSuccessWith(
-          WorkflowRunJobsPage(values: [workflowRunJob]),
+          const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
         final result = await adapter.fetchBuilds(jobName);
@@ -616,8 +615,8 @@ void main() {
     test(
       ".fetchBuilds() maps fetched run jobs' duration to the Duration.zero if the startedAt date is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
@@ -645,8 +644,8 @@ void main() {
     test(
       ".fetchBuilds() maps fetched run jobs' duration to the Duration.zero if the completedAt date is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: DateTime.now(),
@@ -674,9 +673,9 @@ void main() {
     test(
       ".fetchBuilds() maps fetched run jobs' url to the empty string if the url is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
-        final workflowRunJob = WorkflowRunJob(
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
           name: jobName,
           url: null,
         );
@@ -689,7 +688,7 @@ void main() {
           page: anyNamed('page'),
           perPage: anyNamed('perPage'),
         )).thenSuccessWith(
-          WorkflowRunJobsPage(values: [workflowRunJob]),
+          const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
         final result = await adapter.fetchBuilds(jobName);
@@ -812,8 +811,8 @@ void main() {
           ),
         );
 
-        final artifactsPage = WorkflowRunArtifactsPage(
-          values: const [WorkflowRunArtifact(name: 'test.json')],
+        const artifactsPage = WorkflowRunArtifactsPage(
+          values: [WorkflowRunArtifact(name: 'test.json')],
         );
 
         whenFetchWorkflowRuns(
@@ -893,7 +892,7 @@ void main() {
     test(
       ".fetchBuildsAfter() does not fetch the skipped builds",
       () {
-        final workflowRunJobsPage = WorkflowRunJobsPage(values: const [
+        const workflowRunJobsPage = WorkflowRunJobsPage(values: [
           WorkflowRunJob(conclusion: GithubActionConclusion.skipped)
         ]);
 
@@ -1213,8 +1212,8 @@ void main() {
       ".fetchBuildsAfter() maps fetched run jobs' startedAt date to the completedAt date if the startedAt date is null",
       () async {
         final completedAt = DateTime.now();
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
@@ -1244,9 +1243,9 @@ void main() {
     test(
       ".fetchBuildsAfter() maps fetched run jobs' startedAt date to the DateTime.now() date if the startedAt and completedAt dates are null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
-        final workflowRunJob = WorkflowRunJob(
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
           completedAt: null,
@@ -1260,7 +1259,7 @@ void main() {
           page: anyNamed('page'),
           perPage: anyNamed('perPage'),
         )).thenSuccessWith(
-          WorkflowRunJobsPage(values: [workflowRunJob]),
+          const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
@@ -1275,8 +1274,8 @@ void main() {
     test(
       ".fetchBuildsAfter() maps fetched run jobs' duration to the Duration.zero if the startedAt date is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: null,
@@ -1306,8 +1305,8 @@ void main() {
     test(
       ".fetchBuildsAfter() maps fetched run jobs' duration to the Duration.zero if the completedAt date is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         final workflowRunJob = WorkflowRunJob(
           name: jobName,
           startedAt: DateTime.now(),
@@ -1337,9 +1336,9 @@ void main() {
     test(
       ".fetchBuildsAfter() maps fetched run jobs' url to the empty string if the url is null",
       () async {
-        final workflowRun = WorkflowRun(number: 2);
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
-        final workflowRunJob = WorkflowRunJob(
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
           name: jobName,
           url: null,
         );
@@ -1352,7 +1351,7 @@ void main() {
           page: anyNamed('page'),
           perPage: anyNamed('perPage'),
         )).thenSuccessWith(
-          WorkflowRunJobsPage(values: [workflowRunJob]),
+          const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);

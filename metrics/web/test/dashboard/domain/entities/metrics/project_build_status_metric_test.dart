@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';

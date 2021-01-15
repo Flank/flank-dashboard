@@ -3,9 +3,6 @@ import 'package:metrics/common/presentation/button/theme/attention_level/metrics
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsButtonAttentionLevel", () {
     test(
@@ -26,7 +23,7 @@ void main() {
       const negative = MetricsButtonStyle(color: Colors.red);
       const inactive = MetricsButtonStyle(color: Colors.grey);
 
-      final attentionLevel = MetricsButtonAttentionLevel(
+      const attentionLevel = MetricsButtonAttentionLevel(
         positive: normal,
         neutral: secondary,
         negative: negative,

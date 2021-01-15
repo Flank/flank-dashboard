@@ -9,14 +9,12 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("FeatureConfigNotifier", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
 
-    final featureConfig = FeatureConfig(
+    const featureConfig = FeatureConfig(
       isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: isDebugMenuEnabled,
     );

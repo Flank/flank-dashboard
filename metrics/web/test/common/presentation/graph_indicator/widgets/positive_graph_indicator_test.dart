@@ -4,9 +4,6 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("PositiveGraphIndicator", () {
     test(
@@ -16,7 +13,7 @@ void main() {
           positive: GraphIndicatorStyle(innerColor: Colors.red),
         );
 
-        final indicator = PositiveGraphIndicator();
+        const indicator = PositiveGraphIndicator();
         final style = indicator.selectStyle(graphIndicatorAttentionLevel);
 
         expect(style, equals(graphIndicatorAttentionLevel.positive));

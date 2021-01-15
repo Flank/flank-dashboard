@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsRouteInformationParser", () {
@@ -51,7 +51,7 @@ void main() {
         );
 
         await routeInformationParser.parseRouteInformation(
-          RouteInformation(location: null),
+          const RouteInformation(location: null),
         );
 
         verify(routeConfigurationFactory.create(null)).called(equals(1));
@@ -67,7 +67,7 @@ void main() {
             .thenReturn(expectedConfiguration);
 
         final actualConfiguration = await routeInformationParser
-            .parseRouteInformation(RouteInformation(location: 'test'));
+            .parseRouteInformation(const RouteInformation(location: 'test'));
 
         expect(actualConfiguration, equals(expectedConfiguration));
       },

@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
@@ -26,7 +24,7 @@ void main() {
 class _LoadingPlaceholderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: LoadingPlaceholder(),
       ),

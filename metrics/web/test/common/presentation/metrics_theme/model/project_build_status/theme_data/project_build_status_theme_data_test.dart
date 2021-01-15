@@ -4,15 +4,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_build_st
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectBuildStatusThemeData", () {
     test(
       "creates a theme with default attention level if the given attention level is null",
       () {
-        final theme = ProjectBuildStatusThemeData(
+        const theme = ProjectBuildStatusThemeData(
           attentionLevel: null,
         );
 
@@ -27,7 +26,7 @@ void main() {
         ),
       );
 
-      final theme = ProjectBuildStatusThemeData(attentionLevel: attentionLevel);
+      const theme = ProjectBuildStatusThemeData(attentionLevel: attentionLevel);
 
       expect(theme.attentionLevel, equals(attentionLevel));
     });

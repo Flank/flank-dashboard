@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:test/test.dart';
 
@@ -13,7 +11,7 @@ void main() {
 
     test("successfully creates an instance on a valid input", () {
       expect(
-        () => ProjectCheckboxViewModel(
+        () => const ProjectCheckboxViewModel(
           id: id,
           name: name,
           isChecked: isChecked,
@@ -58,13 +56,13 @@ void main() {
     test(
       "equals to another ProjectCheckboxViewModel with the same parameters",
       () {
-        final expected = ProjectCheckboxViewModel(
+        const expected = ProjectCheckboxViewModel(
           id: id,
           name: name,
           isChecked: isChecked,
         );
 
-        final projectCheckboxViewModel = ProjectCheckboxViewModel(
+        const projectCheckboxViewModel = ProjectCheckboxViewModel(
           id: id,
           name: name,
           isChecked: isChecked,

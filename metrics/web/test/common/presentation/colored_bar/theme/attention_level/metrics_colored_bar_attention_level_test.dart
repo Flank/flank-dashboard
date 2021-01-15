@@ -3,8 +3,7 @@ import 'package:metrics/common/presentation/colored_bar/theme/attention_level/me
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsColoredBarAttentionLevel", () {
@@ -38,7 +37,7 @@ void main() {
       const positive = MetricsColoredBarStyle(color: Colors.blue);
       const neutral = MetricsColoredBarStyle(color: Colors.yellow);
       const negative = MetricsColoredBarStyle(color: Colors.red);
-      final attentionLevel = MetricsColoredBarAttentionLevel(
+      const attentionLevel = MetricsColoredBarAttentionLevel(
         positive: positive,
         neutral: neutral,
         negative: negative,

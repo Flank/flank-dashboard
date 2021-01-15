@@ -3,15 +3,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("AddProjectGroupCardAttentionLevel", () {
     test(
       "creates an instance with default positive style",
       () {
-        final attentionLevel = AddProjectGroupCardAttentionLevel();
+        const attentionLevel = AddProjectGroupCardAttentionLevel();
 
         expect(attentionLevel.positive, isNotNull);
       },
@@ -20,7 +19,7 @@ void main() {
     test(
       "creates an instance with default inactive style",
       () {
-        final attentionLevel = AddProjectGroupCardAttentionLevel();
+        const attentionLevel = AddProjectGroupCardAttentionLevel();
 
         expect(attentionLevel.inactive, isNotNull);
       },
@@ -29,7 +28,7 @@ void main() {
     test(
       "creates an instance with default styles if the given parameters are null",
       () {
-        final attentionLevel = AddProjectGroupCardAttentionLevel(
+        const attentionLevel = AddProjectGroupCardAttentionLevel(
           positive: null,
           inactive: null,
         );
@@ -42,21 +41,21 @@ void main() {
     test(
       "creates an instance with the given styles",
       () {
-        final positiveStyle = AddProjectGroupCardStyle(
+        const positiveStyle = AddProjectGroupCardStyle(
           backgroundColor: Colors.red,
           iconColor: Colors.red,
           hoverColor: Colors.red,
           labelStyle: TextStyle(color: Colors.red),
         );
 
-        final inactiveStyle = AddProjectGroupCardStyle(
+        const inactiveStyle = AddProjectGroupCardStyle(
           backgroundColor: Colors.grey,
           iconColor: Colors.grey,
           hoverColor: Colors.grey,
           labelStyle: TextStyle(color: Colors.grey),
         );
 
-        final attentionLevel = AddProjectGroupCardAttentionLevel(
+        const attentionLevel = AddProjectGroupCardAttentionLevel(
           positive: positiveStyle,
           inactive: inactiveStyle,
         );

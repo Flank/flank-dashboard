@@ -4,15 +4,14 @@ import 'package:metrics/common/presentation/button/theme/style/metrics_button_st
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsButtonThemeData", () {
     test(
       "creates a theme with default attention level if the given attention level is null",
       () {
-        final theme = MetricsButtonThemeData(
+        const theme = MetricsButtonThemeData(
           buttonAttentionLevel: null,
         );
 
@@ -27,7 +26,7 @@ void main() {
         ),
       );
 
-      final theme = MetricsButtonThemeData(
+      const theme = MetricsButtonThemeData(
         buttonAttentionLevel: attentionLevel,
       );
 

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("RendererDisplayViewModel", () {
@@ -22,7 +22,7 @@ void main() {
       () {
         const currentRenderer = 'Skia';
 
-        final viewModel = RendererDisplayViewModel(
+        const viewModel = RendererDisplayViewModel(
           currentRenderer: currentRenderer,
         );
 

@@ -4,15 +4,14 @@ import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colo
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsColoredBarThemeData", () {
     test(
       "creates a theme with default attention level if the given attention level is null",
       () {
-        final theme = MetricsColoredBarThemeData(
+        const theme = MetricsColoredBarThemeData(
           attentionLevel: null,
         );
 
@@ -25,7 +24,7 @@ void main() {
         positive: MetricsColoredBarStyle(color: Colors.red),
       );
 
-      final theme = MetricsColoredBarThemeData(
+      const theme = MetricsColoredBarThemeData(
         attentionLevel: attentionLevel,
       );
 

@@ -5,8 +5,6 @@ import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsPage", () {
     const child = Text('child');
@@ -44,7 +42,7 @@ void main() {
     test(
       "uses the default maintain state value if the given parameter is not specified",
       () {
-        final metricsPage = MetricsPage(child: child);
+        const metricsPage = MetricsPage(child: child);
 
         expect(metricsPage.maintainState, isNotNull);
       },
@@ -53,7 +51,7 @@ void main() {
     test(
       "uses the default fullscreen dialog value if the given parameter is not specified",
       () {
-        final metricsPage = MetricsPage(child: child);
+        const metricsPage = MetricsPage(child: child);
 
         expect(metricsPage.fullscreenDialog, isNotNull);
       },

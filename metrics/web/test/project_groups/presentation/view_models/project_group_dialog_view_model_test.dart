@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:collection/collection.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:test/test.dart';

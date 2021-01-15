@@ -4,8 +4,6 @@ import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("RouteConfiguration", () {
     test(
@@ -38,7 +36,7 @@ void main() {
         const path = 'test_path';
         const authorizationRequired = false;
 
-        final configuration = RouteConfiguration(
+        const configuration = RouteConfiguration(
           name: name,
           path: path,
           authorizationRequired: authorizationRequired,

@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:test/test.dart';
 
@@ -13,7 +11,7 @@ void main() {
 
     test("successfully creates an instance on a valid input", () {
       expect(
-        () => ProjectGroupCardViewModel(
+        () => const ProjectGroupCardViewModel(
           id: id,
           name: name,
           projectsCount: projectsCount,
@@ -59,13 +57,13 @@ void main() {
     test(
       "equals to another ProjectGroupCardViewModel with the same parameters",
       () {
-        final expected = ProjectGroupCardViewModel(
+        const expected = ProjectGroupCardViewModel(
           id: id,
           name: name,
           projectsCount: projectsCount,
         );
 
-        final projectGroupCardViewModel = ProjectGroupCardViewModel(
+        const projectGroupCardViewModel = ProjectGroupCardViewModel(
           id: id,
           name: name,
           projectsCount: projectsCount,

@@ -5,9 +5,6 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("BuildResultBarPaddingStrategy", () {
     final buildResultPopupViewModel = BuildResultPopupViewModel(
@@ -16,19 +13,19 @@ void main() {
     );
     final buildResults = [
       BuildResultViewModel(
-        duration: Duration(),
+        duration: const Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.successful,
         buildResultPopupViewModel: buildResultPopupViewModel,
       ),
       BuildResultViewModel(
-        duration: Duration(),
+        duration: const Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.failed,
         buildResultPopupViewModel: buildResultPopupViewModel,
       ),
       BuildResultViewModel(
-        duration: Duration(),
+        duration: const Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.unknown,
         buildResultPopupViewModel: buildResultPopupViewModel,

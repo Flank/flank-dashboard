@@ -3,8 +3,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("CirclePercentageAttentionLevel", () {
@@ -50,7 +49,7 @@ void main() {
       const neutral = CirclePercentageStyle(valueColor: Colors.red);
       const inactive = CirclePercentageStyle(valueColor: Colors.black);
 
-      final attentionLevel = CirclePercentageAttentionLevel(
+      const attentionLevel = CirclePercentageAttentionLevel(
         positive: positive,
         negative: negative,
         neutral: neutral,

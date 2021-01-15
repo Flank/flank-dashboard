@@ -3,8 +3,6 @@ import 'package:test/test.dart';
 
 import '../../test_utils/test_data/jenkins_config_test_data.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("JenkinsSourceConfigParser", () {
     const jenkinsConfigMap = {
@@ -12,7 +10,7 @@ void main() {
     };
     final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
-    final jenkinsConfigParser = JenkinsSourceConfigParser();
+    const jenkinsConfigParser = JenkinsSourceConfigParser();
 
     test(".canParse() returns false if the given map is null", () {
       final canParse = jenkinsConfigParser.canParse(null);

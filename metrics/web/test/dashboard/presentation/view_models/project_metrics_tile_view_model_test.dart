@@ -9,8 +9,6 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("ProjectMetricsTileViewModel", () {
     const projectId = 'id';
@@ -24,7 +22,7 @@ void main() {
     final buildResult = BuildResultMetricViewModel(
       buildResults: UnmodifiableListView([]),
     );
-    final buildStatus = ProjectBuildStatusViewModel(
+    const buildStatus = ProjectBuildStatusViewModel(
       value: BuildStatus.successful,
     );
 
@@ -126,18 +124,19 @@ void main() {
         final metricsTileViewModel = ProjectMetricsTileViewModel(
           projectId: id,
           projectName: name,
-          stability: StabilityViewModel(value: 0.2),
-          coverage: CoverageViewModel(value: 0.4),
+          stability: const StabilityViewModel(value: 0.2),
+          coverage: const CoverageViewModel(value: 0.4),
           performanceSparkline: PerformanceSparklineViewModel(
-            value: Duration(minutes: 30),
+            value: const Duration(minutes: 30),
             performance: UnmodifiableListView([]),
           ),
-          buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 1),
+          buildNumberMetric:
+              const BuildNumberScorecardViewModel(numberOfBuilds: 1),
           buildResultMetrics: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView([]),
             numberOfBuildsToDisplay: 1,
           ),
-          buildStatus: ProjectBuildStatusViewModel(
+          buildStatus: const ProjectBuildStatusViewModel(
             value: BuildStatus.unknown,
           ),
         );

@@ -3,8 +3,6 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("ProjectModel", () {
     const id = 'id';
@@ -25,7 +23,7 @@ void main() {
     });
 
     test("successfully creates an instance on a valid input", () {
-      expect(() => ProjectModel(id: id, name: name), returnsNormally);
+      expect(() => const ProjectModel(id: id, name: name), returnsNormally);
     });
   });
 }

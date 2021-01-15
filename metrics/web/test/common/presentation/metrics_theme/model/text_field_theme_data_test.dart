@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("TextFieldThemeData", () {
     test(
@@ -35,7 +32,7 @@ void main() {
       const focusedPrefixIconColor = Colors.green;
       const textStyle = TextStyle();
 
-      final themeData = TextFieldThemeData(
+      const themeData = TextFieldThemeData(
         focusColor: focusColor,
         hoverBorderColor: hoverBorderColor,
         prefixIconColor: prefixIconColor,

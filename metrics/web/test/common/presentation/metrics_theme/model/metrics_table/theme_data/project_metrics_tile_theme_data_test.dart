@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectMetricsTileThemeData", () {
     test(
       "creates a theme data with the default border color if the given one is null",
       () {
-        final themeData = ProjectMetricsTileThemeData(borderColor: null);
+        const themeData = ProjectMetricsTileThemeData(borderColor: null);
 
         expect(
           themeData.borderColor,
@@ -22,7 +21,7 @@ void main() {
     test(
       "creates a theme data with the default hover border color if the given one is null",
       () {
-        final themeData = ProjectMetricsTileThemeData(hoverBorderColor: null);
+        const themeData = ProjectMetricsTileThemeData(hoverBorderColor: null);
 
         expect(
           themeData.hoverBorderColor,
@@ -41,7 +40,7 @@ void main() {
         fontSize: 20.0,
       );
 
-      final themeData = ProjectMetricsTileThemeData(
+      const themeData = ProjectMetricsTileThemeData(
         backgroundColor: backgroundColor,
         hoverBackgroundColor: hoverBackgroundColor,
         borderColor: borderColor,

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("GraphIndicatorStyle", () {
     test(
@@ -20,7 +17,7 @@ void main() {
     test("creates an instance with the given values", () {
       const innerColor = Colors.red;
       const outerColor = Colors.grey;
-      final style = GraphIndicatorStyle(
+      const style = GraphIndicatorStyle(
         innerColor: innerColor,
         outerColor: outerColor,
       );

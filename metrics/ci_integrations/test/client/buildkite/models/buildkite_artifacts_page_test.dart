@@ -2,9 +2,6 @@ import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("BuildkiteArtifactsPage", () {
     const page = 1;
@@ -13,7 +10,7 @@ void main() {
     const values = [BuildkiteArtifact(id: "1"), BuildkiteArtifact(id: "2")];
 
     test("creates an instance with the given values", () {
-      final runsPage = BuildkiteArtifactsPage(
+      const runsPage = BuildkiteArtifactsPage(
         page: page,
         perPage: perPage,
         nextPageUrl: nextPageUrl,
