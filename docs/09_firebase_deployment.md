@@ -199,7 +199,7 @@ Once the Google sign-in option is enabled, you should populate the Authorized Ja
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
 4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
 
-_**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Validating Email Domains](#validating-email-domains) section to know more about allowed email domains._
+_**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Google Sign-in allowed domains configuration](#google-sign-in-allowed-domains-configuration) section to know more about allowed email domains._
 
 ### Google Sign-in allowed domains configuration
 

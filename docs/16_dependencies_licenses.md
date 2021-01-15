@@ -125,6 +125,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | flutter_svg | [pub.dev](https://pub.dev/packages/flutter_svg) | [MIT](https://github.com/dnfield/flutter_svg/blob/master/LICENSE) |
 | hive | [pub.dev](https://pub.dev/packages/hive) | [Apache 2.0](https://github.com/hivedb/hive/blob/master/hive/LICENSE) |
 | sentry | [pub.dev](https://pub.dev/packages/sentry) | [BSD](https://github.com/getsentry/sentry-dart/blob/main/LICENSE) |
+| js | [pub.dev](https://pub.dev/packages/js) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/js/LICENSE) |
 
 ### Dev dependencies
 | Name | Source | License |

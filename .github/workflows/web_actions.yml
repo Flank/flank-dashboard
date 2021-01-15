@@ -22,6 +22,7 @@ jobs:
       SENTRY_RELEASE: ${{ github.run_number }}
       SENTRY_RELEASE_AUTORENDERER: ${{ github.run_number }}_autorenderer
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID }}
       PROJECT_PATH: metrics/web/
     steps:
       - name: Checkout
@@ -84,7 +85,14 @@ jobs:
         run: brew install getsentry/tools/sentry-cli
 
       - name: Build release app
-        run: flutter clean && flutter build web --release --source-maps --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
+        run: flutter clean && flutter build web --release --source-maps
+        working-directory: metrics/web/
+
+      - name: Prepare metrics config for dev environment
+        run: |
+          export SENTRY_ENVIRONMENT="development"
+          : > build/web/metrics_config.js
+          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for HTML app version
@@ -105,7 +113,16 @@ jobs:
         working-directory: metrics/web/
 
       - name: Build release app using auto renderer
-        run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE_AUTORENDERER
+        run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true
+        working-directory: metrics/web/
+
+      - name: Prepare metrics config for dev skia environment
+        env:
+          SENTRY_RELEASE: ${{ SENTRY_RELEASE_AUTORENDERER }}
+        run: |
+          export SENTRY_ENVIRONMENT="development-skia"
+          : > build/web/metrics_config.js
+          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for auto renderer app version
