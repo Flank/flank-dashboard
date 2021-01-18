@@ -16,16 +16,24 @@ activate "CI Integrations"
 "CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
 activate CiIntegrationsRunner
 
+alt without initializing the Logger:
+    CiIntegrationsRunner -> SyncCommand: run()
+    activate SyncCommand
+
+    SyncCommand -> Logger: logInfo()
+    activate Logger
+
+    Logger --> SyncCommand: throws an Exception
+end
+
 CiIntegrationsRunner -> Logger: setup(bool verbose)
-activate Logger
 
 Logger --> CiIntegrationsRunner: void
 
 CiIntegrationsRunner -> SyncCommand: run()
-activate SyncCommand
 deactivate CiIntegrationsRunner
 
-SyncCommand -> Logger: printLog()
+SyncCommand -> Logger: logInfo()
 
 alt runs "sync --verbose":
     Logger --> Bob: display action logs

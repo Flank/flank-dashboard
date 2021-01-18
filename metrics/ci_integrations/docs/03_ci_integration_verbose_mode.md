@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations) tool. Running the `CI Integrations` tool in the `verbose mode` gives more context and provides additional details of what it's doing while working.
+Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations) tool. Running the `CI Integrations` tool in the `verbose mode` gives more context and provides additional details on what's going on during the tool running.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -36,33 +36,19 @@ Here is an example of how the `Logger` class should look:
 
 ```
 class Logger {
-  static IOSink _errorSink = stderr;
+  static void setup({ IOSink errorSink, IOSink messageSink, bool verbose }) {}
 
-  static IOSink _messageSink = stdout;
+  static void logError(Object error) {}
 
-  static bool _verbose = false;
+  static void logMessage(Object message) {}
 
-  static void setup({
-    IOSink errorSink,
-    IOSink messageSink,
-    bool verbose,
-  }) {
-    _errorSink = errorSink ?? stderr;
-    _messageSink = messageSink ?? stdout;
-    _verbose = verbose ?? false;
-  }
-
-  static void printError(Object error) => _errorSink.writeln(error);
-
-  static void printMessage(Object message) => _messageSink.writeln(message);
-
-  static void printLog(Object message) {
-    if (_verbose) _messageSink.writeln("[${DateTime.now()}] $message");
-  }
+  static void logInfo(Object message) {}
 }
 ```
 
-The `Logger.setup()` method can accept the `verbose` parameter and print logs depends on its value through the new `Logger.printLog()` method.
+The `Logger.setup()` method can accept the `verbose` parameter and print logs depends on its value through the new `Logger.logInfo()` method.
+
+_**Note**: The `Logger.setup()` method should be called before calling any other `Logger` methods._
 
 In addition, the `setup` method also accepts the `errorSink` and `messageSink` as it accepts earlier in the constructor.
 
@@ -70,14 +56,14 @@ Other methods stay as it is, but now, they are all static.
 
 ### Remove accepting the Logger instance
 
-As we converted methods of the `Logger` to the static ones, we should remove accepting the `Logger` instance from the following classes:
+As we converted methods of the `Logger` to the static ones, we should remove the `Logger` parameter from the following class constructors:
 - `CiIntegrationsRunner`
 - `CiIntegrationCommand`
 - `SyncCommand`
 
 ### Replace logging messages and errors
 
-We should replace the existing call to the `logger.printMessage()` and `logger.printError()` methods with the static analogs.
+We should replace the existing call to the `logger.printMessage()` and `logger.printError()` methods with the `Logger.logMessage()` and `Logger.logError()`.
 
 Here is an example:
 
@@ -86,7 +72,7 @@ try {
     await runner.run(arguments);
     exit(0);
   } catch (error) {
-    Logger.printError(error); // old was the logger.printError(error)
+    Logger.logError(error); // old was the logger.printError(error)
     exit(1);
   }
 }
@@ -131,17 +117,17 @@ Future run(Iterable<String> args) {
 
 ### Logging actions
 
-To log actions we should use the `Logger.printLog()` method with the message, we want to display to the output.
+To log actions we should use the `Logger.logInfo()` method with the message, we want to display to the output.
 
 Here is an example:
 
 ```
-Logger.printLog('Parsing the given config file...');
+Logger.logInfo('Parsing the given config file...');
 final rawConfig = parseConfigFileContent(file);
 
 // or
 
-Logger.printLog('Sign in to the Firestore...');
+Logger.logInfo('Sign in to the Firestore...');
 await auth.signIn(...)
 ```
 
