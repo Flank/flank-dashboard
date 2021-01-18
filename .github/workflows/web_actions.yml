@@ -109,7 +109,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy HTML version to Firebase
-        run: firebase deploy --only hosting:metrics-d9c67
+        run: firebase use default && firebase deploy --only hosting:metrics-d9c67
         working-directory: metrics/web/
 
       - name: Switch to Flutter latest master version
@@ -139,7 +139,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
-        run: firebase deploy --only hosting:metrics-skia
+        run: firebase use default && firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
       - name: Prepare metrics config for production environment
@@ -158,7 +158,7 @@ jobs:
           eval "echo \"$(sed 's/"/\\"/g' firebase.json)\"" > firebase.json
         working-directory: metrics/web/
 
-      - name: Deploy auto renderer version to Firebase
+      - name: Deploy auto renderer version to production Firebase
         env:
           FIREBASE_TOKEN: ${{ env.FIREBASE_TOKEN_PRODUCTION }}
         run: firebase use production && firebase deploy --only hosting:$PRODUCTION_HOSTING_NAME
