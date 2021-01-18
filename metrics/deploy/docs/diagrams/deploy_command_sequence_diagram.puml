@@ -1,4 +1,5 @@
-@startuml
+@startuml deploy_command_sequence_diagram
+
 scale 1900 height
 
 skinparam ParticipantPadding 20
@@ -7,113 +8,146 @@ skinparam BoxPadding 10
 actor Bob
 
 box "Deploy Tool"
-participant CLI
-participant DeployCommand
-participant FirebaseCommand
-participant FlutterCommand
-participant GCloudCommand
-participant GitCommand
+    participant CLI
+    participant DeployCommand
+    participant FirebaseCommand
+    participant FlutterCommand
+    participant GCloudCommand
+    participant GitCommand
 end box
 
 box "GCloud"
-participant gcloud
+    participant gcloud
 end box
 
 box "Firebase"
-participant firebase
+    participant firebase
 end box
 
 box "Git"
-participant git
+    participant git
 end box
 
 box "Flutter"
-participant flutter
+    participant flutter
 end box
 
 Bob -> CLI ++ : run deploy command
 CLI -> DeployCommand ++ : run()
 DeployCommand -> GCloudCommand ++ : login()
-GCloudCommand -> gcloud ++ : run auth login
-GCloudCommand --
+GCloudCommand -> gcloud ++ : gcloud auth login
 gcloud --> Bob -- : starts interactive login
+GCloudCommand --
+
 Bob -> gcloud ++ : signs in
 gcloud --> DeployCommand -- : login finished
 DeployCommand -> FirebaseCommand ++ : login()
-FirebaseCommand -> firebase ++ : run firebase login
-FirebaseCommand --
+FirebaseCommand -> firebase ++ : firebase login
 firebase --> Bob -- : starts interactive login
+FirebaseCommand --
+
 Bob -> firebase ++ : signs in
 firebase --> Bob -- : firebase token
 Bob -> DeployCommand : enters firebase token
 DeployCommand -> GCloudCommand ++ : addProject()
-GCloudCommand --> Bob -- : ask to create new project
-    alt Yes
-        Bob -> GCloudCommand ++ : y
-        GCloudCommand -> gcloud ++ : run projects create projectId
-        return project has been created
-        GCloudCommand -> gcloud ++ : run config set project projectID
-        return projectId has been set
-        return projectId
-    else No
-        Bob -> GCloudCommand ++ : n
-        GCloudCommand -> gcloud ++ : run projects list
-        gcloud --> Bob -- : shows all available projects
-        GCloudCommand --> Bob -- : asks to enter the project id
-        Bob -> DeployCommand : enters the project id
-    end
+GCloudCommand --> Bob -- : asks to create new project
+
+alt Agree to create a new project
+    Bob -> GCloudCommand ++ : Y
+    GCloudCommand -> gcloud ++ : gcloud projects create projectId
+    return project has been created
+    GCloudCommand -> gcloud ++ : gcloud config set project projectID
+    return projectId has been set
+    GCloudCommand --> DeployCommand -- : projectID
+else Do not agree to create a new project
+    Bob -> GCloudCommand ++ : N
+    GCloudCommand -> gcloud ++ : gcloud projects list
+    gcloud --> Bob -- : shows all available projects
+    GCloudCommand --> Bob -- : asks to enter the project id
+    Bob -> DeployCommand : enters the project id
+end
 
 DeployCommand -> FirebaseCommand ++ : addFirebase(projectID, firebaseToken)
-    group Add firebase capabilities to project? [Yes]
-    FirebaseCommand -> firebase ++ : run projects:addfirebase projectID firebaseToken
-    firebase --> DeployCommand -- : firebase capabilities added
-    else No
+FirebaseCommand --> Bob -- : asks to add a firebase capabilities
+
+alt Agree to add the firebase capabilities
+    Bob -> FirebaseCommand ++ : Y
+    FirebaseCommand -> firebase ++ : firebase projects:addfirebase projectID firebaseToken
+    firebase --> DeployCommand -- : firebase capabilities has been added
+    FirebaseCommand --
+else Do not agree to add the firebase capabilities
+    Bob -> FirebaseCommand ++ : N
     FirebaseCommand --> DeployCommand -- : skipped
-    end
+end
 
 DeployCommand --> Bob : asks to enter the region
 Bob -> DeployCommand : enters the region
 DeployCommand -> GCloudCommand ++ : addProjectApp(region, projectID)
- group Add project app? [Yes]
-    GCloudCommand -> gcloud ++ : run app create region projectID
-    gcloud --
-    else No
+GCloudCommand --> Bob -- : asks to add a project app
+
+alt Agree to add the project app
+    Bob -> GCloudCommand ++ : Y
+    GCloudCommand -> gcloud ++ : gcloud app create region projectID
+    gcloud --> DeployCommand -- : project app has been added
     GCloudCommand --
-    end
+else Do not agree to add the project app
+    Bob -> GCloudCommand ++ : N
+    GCloudCommand --> DeployCommand -- : skipped
+end
 
 DeployCommand -> GCloudCommand ++ : createDatabase(region, projectID)
- group Add project database? [Yes]
-    GCloudCommand -> gcloud ++ : run alpha firestore databases create region projectID quiet
-    gcloud --
-    else No
+GCloudCommand --> Bob -- : asks to add a project database
+
+alt Agree to add the project database
+    Bob -> GCloudCommand ++ : Y
+    GCloudCommand -> gcloud ++ : gcloud alpha firestore databases create region projectID quiet
+    gcloud --> DeployCommand -- : firestore has been created
     GCloudCommand --
-    end
+else Do not agree to add the project database
+    Bob -> GCloudCommand ++ : N
+    GCloudCommand --> DeployCommand -- : skipped
+end
 
 DeployCommand -> FirebaseCommand ++ : createWebApp(projectID, firebaseToken)
-    group Add web app? [Yes]
-        FirebaseCommand -> firebase ++ : run apps:create projectID firebaseToken WEB projectID
-        firebase --
-    else No
-        FirebaseCommand -> firebase ++ : run apps:list projectID firebaseToken
-        firebase --> Bob -- : shows all available apps
-    end
-FirebaseCommand --> Bob -- : requires to enter the app id
+FirebaseCommand --> Bob -- : asks to add a web app
+
+alt Agree to add the web app
+    Bob -> FirebaseCommand ++ : Y
+    FirebaseCommand -> firebase ++ : firebase apps:create projectID firebaseToken WEB projectID
+    firebase --> DeployCommand -- : firebase web app has been created
+    FirebaseCommand --
+else Do not agree to add the web app
+    Bob -> FirebaseCommand ++ : N
+    FirebaseCommand -> firebase ++ : firebase apps:list projectID firebaseToken
+    firebase --> Bob -- : shows all available apps
+end
+
+return asks to enter the app id
+
 Bob -> DeployCommand : enters the app id
 DeployCommand -> GitCommand ++ : clone(repoURL, srcPath)
-GitCommand -> git ++ : clone repoURL srcPath
+GitCommand -> git ++ : git clone repoURL srcPath
+git --> DeployCommand -- : repo has been cloned
 GitCommand --
-git --
-DeployCommand -> DeployCommand : run rm -rf configPath
+DeployCommand --> Bob : run rm -rf configPath
+
 DeployCommand -> FirebaseCommand ++ : downloadSDKConfig(appID, configPath, projectID, firebaseToken)
-FirebaseCommand -> firebase ++ : run  apps:sdkconfig -i WEB appID --interactive configPath projectID firebaseToken
+FirebaseCommand -> firebase ++ : firebase apps:sdkconfig -i WEB appID --interactive configPath projectID firebaseToken
 FirebaseCommand --
+firebase --> DeployCommand -- : web app SDK config has been downloaded
+
+DeployCommand -> firebase ++ : firebase use -add projectID
+return firebase has been added
+
 firebase --
-DeployCommand -> firebase ++ : run use projectID
-firebase --
-DeployCommand -> flutter ++ : run build web
-flutter --
-DeployCommand -> firebase ++ : run deploy --only hosting
-firebase --
-DeployCommand -> DeployCommand : cleanup resources
+DeployCommand -> flutter ++ : flutter build web
+return flutter app has been built
+
+DeployCommand -> firebase ++ : firebase deploy --only hosting
+return firebase has been deployed
+
+DeployCommand -> DeployCommand : clean up the src directory
 DeployCommand --> Bob -- : terminate
+CLI --
+
 @enduml

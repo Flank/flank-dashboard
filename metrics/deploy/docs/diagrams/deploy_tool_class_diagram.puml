@@ -1,4 +1,5 @@
 @startuml deploy_tool_class_diagram
+
 package cli {
 
     package flutter {

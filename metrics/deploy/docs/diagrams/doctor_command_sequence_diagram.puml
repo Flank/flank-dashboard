@@ -1,0 +1,57 @@
+@startuml doctor_command_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box Doctor Tool
+    participant CLI
+    participant DoctorCommand
+    participant FlutterCommand
+    participant FirebaseCommand
+    participant GCloudCommand
+    participant GitCommand
+end box
+
+box flutter
+    participant flutter
+end box
+
+box firebase
+    participant firebase
+end box
+
+box gcloud
+    participant gcloud
+end box
+
+box git
+    participant git
+end box
+
+Bob -> CLI ++ : run doctor command
+CLI -> DoctorCommand ++ : run()
+DoctorCommand -> FlutterCommand ++ : version()
+FlutterCommand -> flutter ++ : flutter --version
+flutter --> Bob -- : print Flutter version
+FlutterCommand --
+
+DoctorCommand -> FirebaseCommand ++ : version()
+FirebaseCommand -> firebase ++ : firebase --version
+firebase --> Bob -- : print Firebase version
+FirebaseCommand --
+
+DoctorCommand -> GCloudCommand ++ : version()
+GCloudCommand -> gcloud ++ : gcloud --version
+gcloud --> Bob -- : print GCloud version
+GCloudCommand --
+
+DoctorCommand -> GitCommand ++ : version()
+GitCommand -> git ++ : git --version
+git --> Bob -- : print Git version
+GitCommand --
+DoctorCommand --
+CLI --> Bob -- : terminate
+
+@enduml
