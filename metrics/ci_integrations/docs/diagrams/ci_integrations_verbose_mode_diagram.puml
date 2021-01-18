@@ -1,0 +1,40 @@
+@startuml ci_integrations_verbose_mode_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant "CI Integrations"
+participant CiIntegrationsRunner
+participant SyncCommand
+participant Logger
+
+Bob -> "CI Integrations" : runs sync
+activate "CI Integrations"
+
+"CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+activate CiIntegrationsRunner
+
+CiIntegrationsRunner -> Logger: setup(bool verbose)
+activate Logger
+
+Logger --> CiIntegrationsRunner: void
+
+CiIntegrationsRunner -> SyncCommand: run()
+activate SyncCommand
+deactivate CiIntegrationsRunner
+
+SyncCommand -> Logger: printLog()
+
+alt runs "sync --verbose":
+    Logger --> Bob: display action logs
+end
+
+Logger --> Bob: does not display action logs
+
+deactivate "CI Integrations"
+deactivate SyncCommand
+deactivate Logger
+
+@enduml
