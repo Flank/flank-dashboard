@@ -21,12 +21,12 @@ Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/plat
 The following section provides an implementation of the `verbose mode` and changes that need to do to the existing `CI Integrations` codebase.
 
 Here is a list of changes we should provide:
-1. [change the existing Logger class](#change-the-logger);
-2. [remove accepting the Logger instance](#remove-accepting-the-logger-instance);
-3. [replace logging messages and errors](#replace-logging-messages-and-errors);
-4. [add verbose option](#add-verbose-option);
-5. [setup the Logger](#setup-logger);
-6. [logging actions](#logging-actions).
+1. [Change the existing Logger class](#change-the-logger).
+2. [Remove accepting the Logger instance](#remove-accepting-the-logger-instance).
+3. [Replace logging messages and errors](#replace-logging-messages-and-errors).
+4. [Add verbose option](#add-verbose-option).
+5. [Setup the Logger](#setup-logger).
+6. [Logging actions](#logging-actions).
 
 ### Change the Logger
 
