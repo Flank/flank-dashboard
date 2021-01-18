@@ -49,7 +49,7 @@ The Metrics Web Application uses Firebase Authentication with `Email and Passwor
 
 The main part of the Firebase Authentication integration is using the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package. Consider the following statements about the authentication methods available: 
 - The `Email and Password` method directly uses the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package and signs in a user with the given email and password.
-- The `Google Sign-In` method uses [google_sign_in](https://pub.dev/packages/google_sign_in) package to perform sign in and then pass the obtained credentials (the user's email, OAuth2 access token, and OpenID Connect ID token) to the to the [Firebase `Social Authentication` (3-rd party authentication method)](https://firebase.flutter.dev/docs/auth/social). At the moment, the `Google Sign-In` method is performed with the `email` scope.
+- The `Google Sign-In` method uses [google_sign_in](https://pub.dev/packages/google_sign_in) package to perform sign in and then pass the obtained credentials (the user's email, OAuth2 access token, and OpenID Connect ID token) to the [Firebase `Social Authentication` (3-rd party authentication method)](https://firebase.flutter.dev/docs/auth/social). At the moment, the `Google Sign-In` method is performed with the `email` scope.
 
 Firebase saves the information about users such as the email, sign-in provider, creation date, last sign in, and the user's ID. This information is available in the [`Firebase Console`](https://console.firebase.google.com/) on the `Firebase Authentication` page under the `Users` tab.
 
@@ -75,9 +75,27 @@ The documents of this collection do not have any fields. Instead, the ID of the 
 
 Here is a table of security rules applied to the `allowed_email_domains` collection.
 
-| Operation       | Security Rules |
+| Operation       | [Security Rules](#security-rules-description) |
 |-----------------|----------------|
 | `read`, `write` | `Prohibited`   |
+
+### The `projects` collection
+
+The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
+
+Consider the following table that describes the fields of the `projects` document:
+
+| Field  | Description             |
+|--------|-------------------------|
+| `name` | A name of this project. |
+
+Here is a table of security rules applied to the `projects` collection.
+
+| Operation          | [Security Rules](#security-rules-description) |
+|--------------------|----------------------------------------|
+| `read`             | `isAccessAuthorized`                   |
+| `create`, `update` | `isAccessAuthorized`, `isProjectValid` |
+| `delete`           | `Prohibited`                           |
 
 ### The `build` collection
 
@@ -98,11 +116,11 @@ Consider the following table that describes the fields of a document within the 
 
 Here is a table of security rules applied to the `build` collection.
 
-| Operation          | Security Rules                  |
-|--------------------|---------------------------------|
-| `read`             | `Authorization`                 |
-| `create`, `update` | `Authorization`, `isBuildValid` |
-| `delete`           | `Prohibited`                    |
+| Operation          | [Security Rules](#security-rules-description) | 
+|--------------------|--------------------------------------|
+| `read`             | `isAccessAuthorized`                 |
+| `create`, `update` | `isAccessAuthorized`, `isBuildValid` |
+| `delete`           | `Prohibited`                         |
 
 ### The `feature_config` collection
 
@@ -117,7 +135,7 @@ Consider the following table that describes the fields of the `feature_config` d
 
 Here is a table of security rules applied to the `feature_config` collection.
 
-| Operation | Security Rules |
+| Operation | [Security Rules](#security-rules-description) |
 |-----------|----------------|
 | `read`    | `Allowed`      |
 | `write`   | `Prohibited`   |
@@ -135,29 +153,10 @@ Consider the following table that describes the fields of the `project_groups` d
 
 Here is a table of security rules applied to the `project_groups` collection.
 
-| Operation         | Security Rules                         |
-|-------------------|----------------------------------------|
-| `read`, `delete`  | `Authorization`                        | 
-| `create`, `update`| `Authorization`, `isProjectGroupValid` | 
-
-### The `projects` collection
-
-The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
-
-Consider the following table that describes the fields of the `projects` document:
-
-| Field  | Description             |
-|--------|-------------------------|
-| `name` | A name of this project. |
-
-Here is a table of security rules applied to the `projects` collection.
-
-| Operation          | Security Rules                    |
-|--------------------|-----------------------------------|
-| `read`             | `Authorization`                   |
-| `create`, `update` | `Authorization`, `isProjectValid` |
-| `delete`           | `Prohibited`                      |
-
+| Operation         | [Security Rules](#security-rules-description) |
+|-------------------|---------------------------------------------|
+| `read`, `delete`  | `isAccessAuthorized`                        | 
+| `create`, `update`| `isAccessAuthorized`, `isProjectGroupValid` | 
 
 ### The `user_profiles` collection
 
@@ -171,12 +170,23 @@ Consider the following table that describes the fields of the `user_profiles` do
 
 Here is a table of security rules applied to the `user_profiles` collection.
 
-| Operation | Security Rules                                           |
-|-----------|----------------------------------------------------------|
-| `get`     | `Authorization`, `isDocumentOwner`                       |
-| `write`   | `Authorization`, `isDocumentOwner`, `isUserProfileValid` |
-| `list`    | `Prohibited`                                             |
-| `delete`  | `Prohibited`                                             |
+| Operation | [Security Rules](#security-rules-description) |
+|-----------|---------------------------------------------------------------|
+| `get`     | `isAccessAuthorized`, `isDocumentOwner`                       |
+| `write`   | `isAccessAuthorized`, `isDocumentOwner`, `isUserProfileValid` |
+| `list`    | `Prohibited`                                                  |
+| `delete`  | `Prohibited`                                                  |
+
+### Security Rules Description
+
+| Rule                 | Description |
+|----------------------|-------------|
+| `isAccessAuthorized` | Checks whether the user is authenticated and the email domain is valid. |
+| `isProjectValid`     | Checks whether the project data from the request is valid. |
+| `isProjectGroupValid`| Checks whether the project group data from the request is valid. |
+| `isBuildValid`       | Checks whether the request contains the valid build data. |
+| `isDocumentOwner`    | Checks whether the user is the owner of the document with the given document id. |
+| `isUserProfileValid` | Checks whether the request contains the valid user profile data. |
 
 ### Security Rules Testing
 
