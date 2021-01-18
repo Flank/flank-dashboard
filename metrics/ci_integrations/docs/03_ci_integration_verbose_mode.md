@@ -131,7 +131,8 @@ Logger.logInfo('Sign in to the Firestore...');
 await auth.signIn(...)
 ```
 
-## Making Things Work
+## API
+> What will the proposed API look like?
 
 The following sequence diagram describes the process of displaying logs depends on the given `verbose` option:
 
