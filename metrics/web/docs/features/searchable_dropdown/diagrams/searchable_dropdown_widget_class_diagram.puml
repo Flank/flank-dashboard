@@ -1,0 +1,40 @@
+@startuml
+
+package flutter.widgets {
+    class Widget {}
+}
+
+package base.widgets {
+    class SearchableDropdown<T> {
+        + searchBarBuilder : SearchBarBuilder
+        + dropdownMenuBuilder : DropdownMenuBuilder
+        + itemBuilder : DropdownItemBuilder
+        + dropdownMenuController : SelectionMenuController
+        + onDropdownMenuStateChanged : ValueChanged<MenuState>
+        + items : List<T>
+        + maxVisibleItems : int
+        + onItemSelected : VoidCallback
+        + itemHeight : double
+        + searchBarPadding : EdgeInsets
+        + dropdownPadding : EdgeInsets
+        + closeDropdownOnTapOutside : bool
+    }
+}
+
+package selection_menu {
+    package widget {
+        class SelectionMenu<T> {}
+    }
+
+    package configurations {
+        class ComponentsConfiguration {}
+    }
+}
+
+SearchableDropdown --|> Widget
+SearchableDropdown --> SelectionMenu : uses
+SearchableDropdown --> ComponentsConfiguration : uses
+
+SelectionMenu --|> Widget
+
+@enduml
