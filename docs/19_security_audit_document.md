@@ -144,6 +144,12 @@ Here is a table of security rules applied to the `project_groups` collection.
 
 The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
 
+Consider the following table that describes the fields of the `projects` document:
+
+| Field  | Description             |
+|--------|-------------------------|
+| `name` | A name of this project. |
+
 Here is a table of security rules applied to the `projects` collection.
 
 | Operation          | Security Rules                    |
@@ -156,6 +162,12 @@ Here is a table of security rules applied to the `projects` collection.
 ### The `user_profiles` collection
 
 The `user_profiles` collection contains user profiles' data including the selected theme. The single document of this collection holds the data of the specific user.
+
+Consider the following table that describes the fields of the `user_profiles` document:
+
+| Field           | Description                                  |
+|-----------------|----------------------------------------------|
+| `selectedTheme` | A theme selected by the specific user.       |
 
 Here is a table of security rules applied to the `user_profiles` collection.
 
