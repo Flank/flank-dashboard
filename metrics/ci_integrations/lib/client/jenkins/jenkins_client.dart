@@ -158,7 +158,7 @@ class JenkinsClient {
       path: '$path/api/json',
       treeQuery: TreeQuery.job,
     );
-    Logger.printLog('Jenkins: fetching job from the url: $fullUrl');
+    Logger.logInfo('JenkinsClient: Fetch job from the url: $fullUrl');
 
     return _handleResponse<JenkinsJob>(
       _client.get(fullUrl, headers: headers),
@@ -208,7 +208,7 @@ class JenkinsClient {
   /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
   /// method.
   Future<InteractionResult<List<JenkinsJob>>> _fetchJobs(String url) {
-    Logger.printLog('Jenkins: fetching jobs from the url: $url');
+    Logger.logInfo('JenkinsClient: Fetch job from the url: $url');
 
     return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
@@ -262,7 +262,7 @@ class JenkinsClient {
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
   /// method.
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
-    Logger.printLog('Jenkins: fetching builds from the url: $url');
+    Logger.logInfo('JenkinsClient: Fetch builds from the url: $url');
 
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
@@ -290,7 +290,7 @@ class JenkinsClient {
       treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
 
-    Logger.printLog('Jenkins: fetching artifacts from the url: $url');
+    Logger.logInfo('JenkinsClient: Fetch artifacts from the url: $url');
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
       _client.get(url, headers: headers),
@@ -330,7 +330,7 @@ class JenkinsClient {
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
   Future<InteractionResult<Map<String, dynamic>>> _fetchArtifact(String url) {
-    Logger.printLog('Jenkins: fetching artifact from the url: $url');
+    Logger.logInfo('JenkinsClient: Fetch artifact from the url: $url');
 
     return _handleResponse<Map<String, dynamic>>(
       _client.get(url, headers: headers),

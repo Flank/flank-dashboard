@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
@@ -38,6 +39,10 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
+
+    Logger.logInfo(
+      "JenkinsSourceClientAdapter: Fetch builds after build #${lastBuild.number}",
+    );
 
     if (numberOfBuilds <= 0) return [];
 

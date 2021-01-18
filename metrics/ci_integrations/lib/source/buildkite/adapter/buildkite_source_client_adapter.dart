@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
@@ -42,6 +43,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
+    Logger.logInfo(
+        "BuildkiteSourceClientAdapter: Fetch builds after build #$latestBuildNumber");
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -98,6 +101,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       }
 
       if (hasNext) {
+        Logger.logInfo(
+            "BuildkiteSourceClientAdapter: Fetch next builds page...");
         final interaction = await buildkiteClient.fetchBuildsNext(
           buildsPage,
         );
@@ -153,6 +158,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     String pipelineSlug,
     BuildkiteBuild build,
   ) async {
+    Logger.logInfo(
+        "BuildkiteSourceClientAdapter: Searching coverage artifact for a build number #${build.number}");
     final interaction = await buildkiteClient.fetchArtifacts(
       pipelineSlug,
       build.number,
@@ -179,6 +186,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
+        Logger.logInfo(
+            "BuildkiteSourceClientAdapter: Fetch next artifacts page...");
         final interaction = await buildkiteClient.fetchArtifactsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
 
@@ -194,6 +203,11 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   /// Returns `null` if either the coverage file is not found or
   /// JSON content parsing is failed.
   Future<Percent> _mapArtifactToCoverage(BuildkiteArtifact artifact) async {
+    Logger.logInfo(
+        "BuildkiteSourceClientAdapter: Found coverage artifact with url: ${artifact.downloadUrl}");
+
+    Logger.logInfo(
+        "BuildkiteSourceClientAdapter: Downloading coverage artifact by download URL: ${artifact.downloadUrl}");
     final interaction =
         await buildkiteClient.downloadArtifact(artifact.downloadUrl);
 
@@ -204,6 +218,9 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     if (artifactBytes == null) return null;
 
     try {
+      Logger.logInfo(
+        "BuildkiteSourceClientAdapter: Parsing coverage artifact...",
+      );
       final coverageContent = utf8.decode(artifactBytes);
       final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
       final coverage = CoverageData.fromJson(coverageJson);

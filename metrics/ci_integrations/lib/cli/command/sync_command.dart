@@ -55,10 +55,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
-        Logger.printLog('Parsing the given config file...');
+        Logger.logInfo('Parsing the given config file...');
         final rawConfig = parseConfigFileContent(file);
 
-        Logger.printLog('Creating integration parties...');
+        Logger.logInfo('Creating integration parties...');
         final sourceParty = getParty(
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
@@ -68,23 +68,23 @@ class SyncCommand extends CiIntegrationCommand<void> {
           supportedParties.destinationParties,
         );
 
-        Logger.printLog('Creating source config...');
+        Logger.logInfo('Creating source config...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
         );
-        Logger.printLog('Creating destination config...');
+        Logger.logInfo('Creating destination config...');
         final destinationConfig = parseConfig(
           rawConfig.destinationConfigMap,
           destinationParty,
         );
 
-        Logger.printLog('Creating integration source client...');
+        Logger.logInfo('Creating integration source client...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
         );
-        Logger.printLog('Creating integration destination client...');
+        Logger.logInfo('Creating integration destination client...');
         destinationClient = await createClient(
           destinationConfig,
           destinationParty,
@@ -95,7 +95,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationProjectId: destinationConfig.destinationProjectId,
         );
 
-        Logger.printLog('Syncing...');
+        Logger.logInfo('Syncing...');
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
         throw SyncError(
@@ -184,7 +184,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
-      Logger.printMessage(result.message);
+      Logger.logMessage(result.message);
     } else {
       throw SyncError(message: result.message);
     }

@@ -24,21 +24,23 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
     try {
       final project =
-          await _firestore.collection('projects').document(projectId).get();
-      Logger.printLog(
-        'Firestore: getting a project with the project id #$projectId',
+      await _firestore.collection('projects').document(projectId).get();
+      Logger.logInfo(
+        'FirestoreDestinationClientAdapter: Getting a project with the project id #$projectId',
       );
       final collection = _firestore.collection('build');
 
-      Logger.printLog('Firestore: adding builds...');
+      Logger.logInfo('FirestoreDestinationClientAdapter: Adding builds...');
       for (final build in builds) {
         final documentId = '${project.id}_${build.buildNumber}';
         final map = build.copyWith(projectId: project.id).toJson();
         await collection.document(documentId).create(map);
-        Logger.printLog('Firestore: added build #$documentId');
+        Logger.logInfo(
+            'FirestoreDestinationClientAdapter: Added build #$documentId');
+//        Logger.logInfo(map);
       }
     } on GrpcError catch (e) {
-      Logger.printLog('Firestore: Error: ${e.message}');
+      Logger.logInfo('FirestoreDestinationClientAdapter: Error: ${e.message}');
       if (e.code == StatusCode.notFound) return;
       rethrow;
     }
@@ -46,8 +48,8 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
 
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
-    Logger.printLog(
-      'Firestore: fetching last builds for the project id #$projectId',
+    Logger.logInfo(
+      'FirestoreDestinationClientAdapter: Fetching last build for the project id #$projectId',
     );
     final documents = await _firestore
         .collection('build')

@@ -152,7 +152,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    Logger.printLog('Buildkite: fetching builds from the url: $url');
+    Logger.logInfo('BuildkiteClient: Fetch builds page: $url');
 
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
@@ -223,7 +223,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    Logger.printLog('Buildkite: fetching artifacts from the url: $url');
+    Logger.logInfo('BuildkiteСlient: Fetch artifacts page: $url');
 
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
@@ -234,6 +234,8 @@ class BuildkiteClient {
 
         final artifactsList = json as List<dynamic>;
         final artifacts = BuildkiteArtifact.listFromJson(artifactsList);
+        Logger.logInfo(
+            "BuildkiteClient: Process ${artifactsList.length} artifact(s)");
 
         return InteractionResult.success(
           result: BuildkiteArtifactsPage(
@@ -258,7 +260,6 @@ class BuildkiteClient {
       ..followRedirects = false;
 
     try {
-      Logger.printLog('Buildkite: downloading artifact from the url: $url');
       final redirect = await _client.send(request);
 
       if (redirect.statusCode != HttpStatus.found) {

@@ -34,12 +34,13 @@ class FirestoreDestinationClientFactory
           VolatileStore(),
         );
 
-    Logger.printLog('Sign in to the Firestore...');
+    Logger.logInfo('Sign in to the Firebase...');
     await auth.signIn(
       config.firebaseUserEmail,
       config.firebaseUserPassword,
     );
 
+    Logger.logInfo('Connecting to the Firestore...');
     final firestore = fs.Firestore(
       config.firebaseProjectId,
       firebaseAuth: auth,

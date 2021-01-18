@@ -11,8 +11,13 @@ class Logger {
   /// Determine whether to print out logs to the [_messageSink].
   static bool _verbose = false;
 
+  /// Determine whether the [setup] method of this logger is invoked.
+  static bool _isInitialized;
+
   /// Configure this logger with the given [errorSink], [messageSink]
   /// and the [verbose] values.
+  ///
+  /// Sets the [Logger] initialize status to `true`.
   ///
   /// If the given [errorSink] is `null`, the [stderr] is used.
   /// If the given [messageSink] is `null`, the [stdout] is used.
@@ -25,16 +30,38 @@ class Logger {
     _errorSink = errorSink ?? stderr;
     _messageSink = messageSink ?? stdout;
     _verbose = verbose ?? false;
+    _isInitialized = true;
   }
 
   /// Prints the given [error] to the [errorSink].
-  static void printError(Object error) => _errorSink.writeln(error);
+  ///
+  /// Throws an [Exception] if the [Logger] is not initialized.
+  static void logError(Object error) {
+    _checkInitialized();
+
+    _errorSink.writeln(error);
+  }
 
   /// Prints the given [message] to the [messageSink].
-  static void printMessage(Object message) => _messageSink.writeln(message);
+  ///
+  /// Throws an [Exception] if the [Logger] is not initialized.
+  static void logMessage(Object message) {
+    _checkInitialized();
+
+    _messageSink.writeln(message);
+  }
 
   /// Prints the given [message] to the [messageSink] if the verbose is `true`.
-  static void printLog(Object message) {
-    if (_verbose) _messageSink.writeln(message);
+  ///
+  /// Throws an [Exception] if the [Logger] is not initialized.
+  static void logInfo(Object message) {
+    _checkInitialized();
+
+    if (_verbose) _messageSink.writeln("[${DateTime.now()}] $message");
+  }
+
+  /// Throws an [Exception] if the [_isInitialized] is `false`.
+  static void _checkInitialized() {
+    if (!_isInitialized) throw Exception('The Logger is not initialized');
   }
 }
