@@ -1,7 +1,7 @@
 # Security Audit Document
 > Summary of the proposed change
 
-Describe the security aspects of the Metrics Web Application, CI Integrations tool, and Coverage Converter tool. Examine the data these applications use and store in the Metrics Database. Explore authorization processes of the applications and their usage if any.
+Describe the security aspects of the Metrics Web Application, CI Integrations tool, and Coverage Converter tool. Examine the data these applications use and store in the Metrics Database. Explore authorization processes of the applications and their usage, if any.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -17,6 +17,8 @@ This document describes the security aspects of the Metrics project applications
 
 # Goals
 > Identify success metrics and measurable goals.
+ 
+This document has the following goals:
 
 - Examine the auth mechanisms used by the Metrics applications.
 - Examine the security of data, and the data itself, stored and used by the Metrics applications.
@@ -59,9 +61,11 @@ _Note: Metrics does not duplicate the user's authentication data to the third-pa
 
 Metrics Web Application uses the `Firebase Cloud Firestore` as a database.
 
-Consider the following [document that describes the data model used in `Firebase Cloud Firestore`](https://firebase.google.com/docs/firestore/data-model).
+Consider the following [document](https://firebase.google.com/docs/firestore/data-model) that describes the data model used in `Firebase Cloud Firestore`.
 
 The application uses the `Firebase Cloud Firestore Security Rules` to protect the data stored in the `Cloud Firestore`. The `Security Rules` describe conditions that should be met to access or modify the data these rules are protecting. If the CRUD request does not satisfy the appropriate set of conditions, this request is refused as having insufficient permissions.
+
+Let's review each `Firestore Database` collection and rules for these collections:
 
 ### The `allowed_email_domains` collection
 
@@ -184,7 +188,7 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
 
-Currently, the 3 APIs are enabled for the `browser key`:
+Currently, the following APIs are enabled for the `browser key`:
 - `Identity Toolkit API`.
 - `Token Service API`.
 - `Firebase Installations API`.
@@ -213,7 +217,7 @@ CI Integrations tool uses different types of authorization in CIs and uses HTTP 
 |`Buildkite`     | `Authorization` | `Bearer <your_token>`                      | Bearer authorization |
 |`Jenkins`       | `Authorization` | `base64(<your_username>:<your_api_token>)` | Basic authorization  |
 
-The CI Integration tool does not store any access credentials and takes them directly from the CI Integrations Config. 
+The CI Integration tool does not store any access credentials and takes them directly from the CI Integrations configuration file.
 
 ## Configuration
 
