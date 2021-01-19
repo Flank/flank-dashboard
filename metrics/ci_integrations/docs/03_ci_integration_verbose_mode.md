@@ -21,7 +21,7 @@ This document meets the following goals:
 
 The following sequence diagram describes the process of displaying logs depends on the given `verbose` option:
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/ci_integration_verbose_design/metrics/ci_integrations/docs/diagrams/ci_integrations_verbose_mode_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_verbose_mode_diagram.puml)
 
 ## API
 > What will the proposed API look like?
