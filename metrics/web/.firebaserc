@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "metrics-d9c67",
-    "production": "$PRODUCTION_PROJECT_NAME"
+    "default": "metrics-d9c67"
   },
   "targets": {
     "metrics-d9c67": {
@@ -13,13 +12,6 @@
           "metrics-skia"
         ]
       }
-    },
-    "$PRODUCTION_PROJECT_NAME": {
-        "hosting": {
-            "$PRODUCTION_HOSTING_NAME": [
-                "$PRODUCTION_HOSTING_NAME"
-            ]
-        }
     }
   }
 }

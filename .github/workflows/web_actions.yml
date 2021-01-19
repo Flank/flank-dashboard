@@ -25,7 +25,7 @@ jobs:
       FIREBASE_TOKEN_PRODUCTION: ${{ secrets.FIREBASE_TOKEN_PRODUCTION }}
       GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID }}
       GOOGLE_SIGN_IN_CLIENT_ID_PRODUCTION: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID_PRODUCTION }}
-      PRODUCTION_PROJECT_NAME: ${{ secrets.PRODUCTION_PROJECT_NAME }}
+      PRODUCTION_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
       PRODUCTION_HOSTING_NAME: ${{ secrets.PRODUCTION_HOSTING_NAME }}
       PROJECT_PATH: metrics/web/
     steps:
@@ -152,16 +152,13 @@ jobs:
           eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
-      - name: Update Firebase Hosting configuration for production
-        run: |
-          eval "echo \"$(sed 's/"/\\"/g' .firebaserc)\"" > .firebaserc
-          eval "echo \"$(sed 's/"/\\"/g' firebase.json)\"" > firebase.json
-        working-directory: metrics/web/
-
       - name: Deploy auto renderer version to production Firebase
         env:
           FIREBASE_TOKEN: ${{ env.FIREBASE_TOKEN_PRODUCTION }}
-        run: firebase use production && firebase deploy --only hosting:$PRODUCTION_HOSTING_NAME
+        run: |
+          firebase use --add $PRODUCTION_PROJECT_ID production
+          firebase target:apply hosting metrics-skia $PRODUCTION_HOSTING_NAME
+          firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
   notify-actions:
