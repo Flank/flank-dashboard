@@ -28,8 +28,6 @@ end
 
 CiIntegrationsRunner -> Logger: setup(bool verbose)
 
-Logger --> CiIntegrationsRunner: void
-
 CiIntegrationsRunner -> SyncCommand: run()
 deactivate CiIntegrationsRunner
 
@@ -38,8 +36,6 @@ SyncCommand -> Logger: logInfo()
 alt runs "sync --verbose":
     Logger --> Bob: display action logs
 end
-
-Logger --> Bob: does not display action logs
 
 deactivate "CI Integrations"
 deactivate SyncCommand

@@ -14,7 +14,7 @@ Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/plat
 
 This document meets the following goals: 
 - Create a clear design of the CI Integrations Logger and verbose mode.
-- An overview of steps the new Logger implementation requires.
+- Provide an overview of steps the new Logger implementation requires.
 
 ## Design
 > Explain and diagram the technical design.
@@ -38,6 +38,18 @@ Let's review methods the `Logger` should provide:
  - `logError` - logs the given error to the error sink.
  - `logMessage` - logs the given message to the message sink.
  - `logInfo` - logs the given message to the output sink, if the `verbose mode` is enabled.
+
+So, to use the `Logger` class we should configure it like the following:
+
+```dart
+Logger.setup(...);
+```
+
+And then we can use the `Logger` to log any messages in the application. See example:
+
+```dart
+Logger.logMessage('message');
+```
 
 ### CI Integrations verbose mode
 
@@ -71,20 +83,16 @@ Future run(Iterable<String> args) {
 }
 ```
 
-When we've finished with the `Logger` initialization, we can use the `Logger` class in any place of our application. 
+As we have mentioned above, after we have finished with the `Logger` initialization, we can use the `Logger` class in any place of our application. 
 
-The following example shows the usage of the `Logger`: 
+The following examples show the usage of the `Logger`: 
 
 ```dart
-...
-Logger.setup(verbose: verbose);
-...
-
 Logger.logInfo('Parsing the given config file...');
 final rawConfig = parseConfigFileContent(file);
+```
 
-// or
-
+```dart
 Logger.logInfo('Sign in to the Firestore...');
 await auth.signIn(...)
 ```
