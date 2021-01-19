@@ -23,6 +23,10 @@ jobs:
       SENTRY_RELEASE_AUTORENDERER: ${{ github.run_number }}_autorenderer
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID }}
+      PRODUCTION_FIREBASE_TOKEN: ${{ secrets.PRODUCTION_FIREBASE_TOKEN }}
+      PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
+      PRODUCTION_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
+      PRODUCTION_HOSTING_NAME: ${{ secrets.PRODUCTION_HOSTING_NAME }}
       PROJECT_PATH: metrics/web/
     steps:
       - name: Checkout
@@ -89,10 +93,9 @@ jobs:
         working-directory: metrics/web/
 
       - name: Prepare metrics config for dev environment
-        run: |
-          export SENTRY_ENVIRONMENT="development"
-          : > build/web/metrics_config.js
-          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
+        env:
+          SENTRY_ENVIRONMENT: development
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for HTML app version
@@ -118,11 +121,9 @@ jobs:
 
       - name: Prepare metrics config for dev skia environment
         env:
-          SENTRY_RELEASE: $SENTRY_RELEASE_AUTORENDERER
-        run: |
-          export SENTRY_ENVIRONMENT="development-skia"
-          : > build/web/metrics_config.js
-          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
+          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
+          SENTRY_ENVIRONMENT: development-skia
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for auto renderer app version
@@ -136,6 +137,23 @@ jobs:
 
       - name: Deploy auto renderer version to Firebase
         run: firebase deploy --only hosting:metrics-skia
+        working-directory: metrics/web/
+
+      - name: Prepare metrics config for production skia environment
+        env:
+          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
+          GOOGLE_SIGN_IN_CLIENT_ID: ${{ env.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
+          SENTRY_ENVIRONMENT: production-skia
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
+        working-directory: metrics/web/
+
+      - name: Deploy auto renderer version to production Firebase
+        env:
+          FIREBASE_TOKEN: ${{ env.PRODUCTION_FIREBASE_TOKEN }}
+        run: |
+          firebase use --add $PRODUCTION_PROJECT_ID production
+          firebase target:apply hosting metrics-skia $PRODUCTION_HOSTING_NAME
+          firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
   notify-actions:
