@@ -44,7 +44,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
     Logger.logInfo(
-        "BuildkiteSourceClientAdapter: Fetch builds after build #$latestBuildNumber");
+        'BuildkiteSourceClientAdapter: Fetch builds after build #$latestBuildNumber...');
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -102,7 +102,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
       if (hasNext) {
         Logger.logInfo(
-            "BuildkiteSourceClientAdapter: Fetch next builds page...");
+          'BuildkiteSourceClientAdapter: Fetching next builds page...',
+        );
         final interaction = await buildkiteClient.fetchBuildsNext(
           buildsPage,
         );
@@ -159,7 +160,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     BuildkiteBuild build,
   ) async {
     Logger.logInfo(
-        "BuildkiteSourceClientAdapter: Searching coverage artifact for a build number #${build.number}");
+      'BuildkiteSourceClientAdapter: Searching coverage artifact for a build number #${build.number}...',
+    );
     final interaction = await buildkiteClient.fetchArtifacts(
       pipelineSlug,
       build.number,
@@ -187,7 +189,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
       if (hasNext) {
         Logger.logInfo(
-            "BuildkiteSourceClientAdapter: Fetch next artifacts page...");
+          'BuildkiteSourceClientAdapter: Fetching next artifacts page...',
+        );
         final interaction = await buildkiteClient.fetchArtifactsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
 
@@ -204,10 +207,9 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   /// JSON content parsing is failed.
   Future<Percent> _mapArtifactToCoverage(BuildkiteArtifact artifact) async {
     Logger.logInfo(
-        "BuildkiteSourceClientAdapter: Found coverage artifact with url: ${artifact.downloadUrl}");
+      'BuildkiteSourceClientAdapter: Downloading coverage artifact from the url: ${artifact.downloadUrl}',
+    );
 
-    Logger.logInfo(
-        "BuildkiteSourceClientAdapter: Downloading coverage artifact by download URL: ${artifact.downloadUrl}");
     final interaction =
         await buildkiteClient.downloadArtifact(artifact.downloadUrl);
 
@@ -219,7 +221,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
     try {
       Logger.logInfo(
-        "BuildkiteSourceClientAdapter: Parsing coverage artifact...",
+        'BuildkiteSourceClientAdapter: Parsing coverage artifact...',
       );
       final coverageContent = utf8.decode(artifactBytes);
       final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;

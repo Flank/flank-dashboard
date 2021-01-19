@@ -41,7 +41,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
     Logger.logInfo(
-      "JenkinsSourceClientAdapter: Fetch builds after build #${lastBuild.number}",
+      'JenkinsSourceClientAdapter: Fetching builds after build #${lastBuild.number}...',
     );
 
     if (numberOfBuilds <= 0) return [];

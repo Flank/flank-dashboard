@@ -63,32 +63,36 @@ class SyncCommand extends CiIntegrationCommand<void> {
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
         );
+        Logger.logInfo('$sourceParty was created.');
         final destinationParty = getParty(
           rawConfig.destinationConfigMap,
           supportedParties.destinationParties,
         );
+        Logger.logInfo('$destinationParty was created.');
 
-        Logger.logInfo('Creating source config...');
+        Logger.logInfo('Creating source configs...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
         );
-        Logger.logInfo('Creating destination config...');
+        Logger.logInfo('$sourceConfig was created.');
         final destinationConfig = parseConfig(
           rawConfig.destinationConfigMap,
           destinationParty,
         );
+        Logger.logInfo('$destinationConfig was created.');
 
-        Logger.logInfo('Creating integration source client...');
+        Logger.logInfo('Creating integration clients...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
         );
-        Logger.logInfo('Creating integration destination client...');
+        Logger.logInfo('$sourceClient was created.');
         destinationClient = await createClient(
           destinationConfig,
           destinationParty,
         );
+        Logger.logInfo('$destinationClient was created.');
 
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,

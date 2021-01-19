@@ -1,3 +1,4 @@
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
 import 'package:firedart/firedart.dart';
@@ -17,6 +18,10 @@ void main() {
         FirestoreDestinationClientFactory(_firebaseAuthMock);
 
     FirestoreDestinationClientAdapter adapter;
+
+    setUpAll(() {
+      Logger.setup();
+    });
 
     tearDown(() {
       adapter?.dispose();

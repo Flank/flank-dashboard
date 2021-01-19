@@ -22,11 +22,13 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
 
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
+    Map<String, dynamic> buildJson;
+
     try {
       final project =
-      await _firestore.collection('projects').document(projectId).get();
+          await _firestore.collection('projects').document(projectId).get();
       Logger.logInfo(
-        'FirestoreDestinationClientAdapter: Getting a project with the project id #$projectId',
+        'FirestoreDestinationClientAdapter: Getting a project with the project id #$projectId ...',
       );
       final collection = _firestore.collection('build');
 
@@ -34,13 +36,17 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
       for (final build in builds) {
         final documentId = '${project.id}_${build.buildNumber}';
         final map = build.copyWith(projectId: project.id).toJson();
+        buildJson = map;
+
         await collection.document(documentId).create(map);
         Logger.logInfo(
-            'FirestoreDestinationClientAdapter: Added build #$documentId');
-//        Logger.logInfo(map);
+            'FirestoreDestinationClientAdapter: Added build #$documentId.');
       }
     } on GrpcError catch (e) {
       Logger.logInfo('FirestoreDestinationClientAdapter: Error: ${e.message}');
+      if (buildJson != null) Logger.logInfo(buildJson);
+      buildJson = null;
+
       if (e.code == StatusCode.notFound) return;
       rethrow;
     }
@@ -49,7 +55,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
     Logger.logInfo(
-      'FirestoreDestinationClientAdapter: Fetching last build for the project id #$projectId',
+      'FirestoreDestinationClientAdapter: Fetching last build for the project id #$projectId...',
     );
     final documents = await _firestore
         .collection('build')

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:intl/intl.dart';
+
 /// A class providing methods for logging messages and errors for the CLI tool.
 class Logger {
   /// The [IOSink] used to log errors.
@@ -12,7 +14,7 @@ class Logger {
   static bool _verbose = false;
 
   /// Determine whether the [setup] method of this logger is invoked.
-  static bool _isInitialized;
+  static bool _isInitialized = false;
 
   /// Configure this logger with the given [errorSink], [messageSink]
   /// and the [verbose] values.
@@ -57,7 +59,13 @@ class Logger {
   static void logInfo(Object message) {
     _checkInitialized();
 
-    if (_verbose) _messageSink.writeln("[${DateTime.now()}] $message");
+    if (_verbose) {
+      final dateTimeNow = DateFormat('dd-MM-yyyy HH:mm:ss').format(
+        DateTime.now(),
+      );
+
+      _messageSink.writeln("[$dateTimeNow] $message");
+    }
   }
 
   /// Throws an [Exception] if the [_isInitialized] is `false`.

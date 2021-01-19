@@ -183,7 +183,7 @@ class GithubActionsClient {
     int perPage,
   ) {
     Logger.logInfo(
-      'GithubActionsClient: Fetch workflow runs from the url: $url',
+      'GithubActionsClient: Fetching workflow runs from the url: $url',
     );
 
     return _handleResponse<WorkflowRunsPage>(
@@ -297,7 +297,7 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
-    Logger.logInfo('GithubActionsClient: Fetch run jobs from the url: $url');
+    Logger.logInfo('GithubActionsClient: Fetching run jobs from the url: $url');
 
     return _handleResponse(
       _client.get(url, headers: headers),
@@ -383,7 +383,7 @@ class GithubActionsClient {
     int perPage,
   ) {
     Logger.logInfo(
-      'GithubActionsClient: Fetch run artifacts from the url: $url',
+      'GithubActionsClient: Fetching run artifacts from the url: $url',
     );
 
     return _handleResponse<WorkflowRunArtifactsPage>(

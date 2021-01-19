@@ -1,3 +1,4 @@
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
@@ -94,6 +95,10 @@ void main() {
         coverage: defaultCoverage,
       );
     }
+
+    setUpAll(() {
+      Logger.setup();
+    });
 
     setUp(() {
       reset(jenkinsClientMock);

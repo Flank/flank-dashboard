@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ci_integration/cli/command/sync_command.dart';
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
@@ -20,6 +21,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/matcher_util.dart';
 import '../test_util/mock/mocks.dart';
+import '../test_util/stub/io_sink_stub.dart';
 import '../test_util/test_data/config_test_data.dart';
 
 void main() {
@@ -49,6 +51,8 @@ void main() {
         fileMock,
         ciIntegrationMock,
       );
+
+      Logger.setup(messageSink: IOSinkStub(writelnCallback: (_) => {}));
 
       setUp(() {
         syncCommand.reset();

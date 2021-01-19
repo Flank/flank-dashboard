@@ -7,12 +7,7 @@ class CiIntegrationsRunner extends CommandRunner<void> {
   /// Creates an instance of command runner and registers sub-commands available.
   CiIntegrationsRunner()
       : super('ci_integrations', 'Metrics CI integrations CLI.') {
-    argParser.addFlag(
-      'verbose',
-      abbr: 'v',
-      negatable: false,
-      help: 'Noisy logging, including all shell commands executed.',
-    );
+    argParser.addFlag('verbose', abbr: 'v');
 
     addCommand(SyncCommand());
   }
