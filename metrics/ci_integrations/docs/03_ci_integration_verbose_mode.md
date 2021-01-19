@@ -63,19 +63,16 @@ We should replace the existing call to the `logger.printMessage()` and `logger.p
 Here is an example:
 
 ```dart
-try {
-    await runner.run(arguments);
-    exit(0);
-  } catch (error) {
-    Logger.logError(error); // old was the logger.printError(error)
-    exit(1);
-  }
+if (result.isSuccess) {
+  Logger.logMessage(result.message); // old was logger.printMessage(result.message)
+} else {
+  throw SyncError(message: result.message);
 }
 ```
 
 ### CI Integrations verbose mode
 
-To allow enabling and disabling verbose logging, we should provide an `--verbose` flag. To make it available for any command of the `CI Integrations` CLI, we should specify this flag on the very top level of the CLI - the `CiIntegrationsRunner` class:
+To allow enabling and disabling verbose logging, we should provide an `--verbose` flag. To make it available for any command of the `CI Integrations` CLI, we should specify this flag on the very top-level of the CLI - the `CiIntegrationsRunner` class:
 
 ```dart
 CiIntegrationsRunner(...) {
