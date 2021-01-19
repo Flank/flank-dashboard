@@ -13,7 +13,7 @@ Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/plat
 > Identify success metrics and measurable goals.
 
 This document meets the following goals: 
-- A clear design of the CI Integrations Logger and verbose mode.
+- Create a clear design of the CI Integrations Logger and verbose mode.
 - An overview of steps the new Logger implementation requires.
 
 ## Design
@@ -28,51 +28,20 @@ The following sequence diagram describes the process of displaying logs depends 
 
 This section provides verbose mode implementation details. Also, it defines the changes in the existing codebase needed to introduce the verbose mode.
 
-Here is a list of changes we should provide:
-1. [CI Integration Logger](#ci-integration-logger).
-2. [CI Integrations verbose mode](#ci-integrations-verbose-mode).
-3. [Making things work](#making-things-work).
-4. [Logging actions](#logging-actions).
-
 ### CI Integration Logger
 
 To make logging actions easily, we need to update the existing `Logger` to have only static methods. It allows us to use the `Logger` class in different parts of the `CI Integrations` tool with no need to pass the `Logger` instance through the whole application.
 
 Let's review methods the `Logger` should provide:
 
- - `setup` - responsible for initializing the Logger class.
- - `logError` - prints the given error.
- - `logMessage` - prints the given message.
- - `logInfo` - prints the given message, if the `verbose mode` is enabled.
-
-The `Logger.setup()` method can accept the `verbose` parameter and print logs depends on its value through the new `Logger.logInfo()` method.
-
-_**Note**: The `Logger.setup()` method should be called before calling any other `Logger` methods._
-
-In addition, the `setup` method also accepts the `errorSink` and `messageSink` as it accepts earlier in the constructor.
-
-Other methods stay as it is, but now, they are all static.
-
-As we converted methods of the `Logger` to the static ones, we should remove the `Logger` parameter from the following class constructors:
-- `CiIntegrationsRunner`
-- `CiIntegrationCommand`
-- `SyncCommand`
-
-We should replace the existing call to the `logger.printMessage()` and `logger.printError()` methods with the `Logger.logMessage()` and `Logger.logError()`.
-
-Here is an example:
-
-```dart
-if (result.isSuccess) {
-  Logger.logMessage(result.message); // old was logger.printMessage(result.message)
-} else {
-  ...
-}
-```
+ - `setup` - method needed to set up the `Logger`. This method sets up a logger with `messageSink`, `errorSink` and `verbose` flag. _**Please, note: This method must be called before using any other methods of this Logger**_
+ - `logError` - logs the given error to the error sink.
+ - `logMessage` - logs the given message to the message sink.
+ - `logInfo` - logs the given message to the output sink, if the `verbose mode` is enabled.
 
 ### CI Integrations verbose mode
 
-To allow enabling and disabling verbose logging, we should provide an `--verbose` flag. To make it available for any command of the `CI Integrations` CLI, we should specify this flag on the very top-level of the CLI - the `CiIntegrationsRunner` class:
+To allow enabling and disabling verbose logging, we should provide a `--verbose` flag. To make it available for any command of the `CI Integrations` CLI, we should specify this flag on the very top-level of the CLI - the `CiIntegrationsRunner` class:
 
 ```dart
 CiIntegrationsRunner(...) {
@@ -102,13 +71,15 @@ Future run(Iterable<String> args) {
 }
 ```
 
-### Logging actions
-
 When we've finished with the `Logger` initialization, we can use the `Logger` class in any place of our application. 
 
 The following example shows the usage of the `Logger`: 
 
 ```dart
+...
+Logger.setup(verbose: verbose);
+...
+
 Logger.logInfo('Parsing the given config file...');
 final rawConfig = parseConfigFileContent(file);
 
