@@ -5,7 +5,7 @@ skinparam BoxPadding 10
 
 actor Bob
 
-box Doctor Tool
+box Doctor Command
     participant CLI
     participant DoctorCommand
     participant FlutterCommand
@@ -14,41 +14,33 @@ box Doctor Tool
     participant GitCommand
 end box
 
-box flutter
-    participant flutter
-end box
+participant flutter
 
-box firebase
-    participant firebase
-end box
+participant firebase
 
-box gcloud
-    participant gcloud
-end box
+participant gcloud
 
-box git
-    participant git
-end box
+participant git
 
 Bob -> CLI ++ : run doctor command
 CLI -> DoctorCommand ++ : run()
 DoctorCommand -> FlutterCommand ++ : version()
-FlutterCommand -> flutter ++ : flutter --version
+FlutterCommand -> flutter ++ : request flutter version
 flutter --> Bob -- : print Flutter version
 FlutterCommand --
 
 DoctorCommand -> FirebaseCommand ++ : version()
-FirebaseCommand -> firebase ++ : firebase --version
+FirebaseCommand -> firebase ++ : request firebase version
 firebase --> Bob -- : print Firebase version
 FirebaseCommand --
 
 DoctorCommand -> GCloudCommand ++ : version()
-GCloudCommand -> gcloud ++ : gcloud --version
+GCloudCommand -> gcloud ++ : request gcloud version
 gcloud --> Bob -- : print GCloud version
 GCloudCommand --
 
 DoctorCommand -> GitCommand ++ : version()
-GitCommand -> git ++ : git --version
+GitCommand -> git ++ : request git version
 git --> Bob -- : print Git version
 GitCommand --
 DoctorCommand --
