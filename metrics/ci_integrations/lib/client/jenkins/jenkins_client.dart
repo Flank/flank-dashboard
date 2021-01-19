@@ -293,14 +293,12 @@ class JenkinsClient {
     Logger.logInfo('JenkinsClient: Fetching artifacts from the url: $url');
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
-        _client.get(url, headers: headers), (
-      Map<String, dynamic> json,
-    ) {
-      final artifactsList = json['artifacts'] as List<dynamic>;
-      final artifacts = JenkinsBuildArtifact.listFromJson(artifactsList);
-
-      return InteractionResult.success(result: artifacts);
-    });
+      _client.get(url, headers: headers),
+      (Map<String, dynamic> json) => InteractionResult.success(
+        result: JenkinsBuildArtifact.listFromJson(
+            json['artifacts'] as List<dynamic>),
+      ),
+    );
   }
 
   /// Retrieves the content of an artifact specified by the provided
