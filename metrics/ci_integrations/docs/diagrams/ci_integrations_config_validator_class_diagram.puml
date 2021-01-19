@@ -1,0 +1,13 @@
+@startuml ci_integrations_config_validator_class_diagram
+
+    abstract class ConfigValidator {
+
+    }
+
+    class IntegrationParty {
+
+    }
+
+    IntegrationParty --|> ConfigValidator : uses
+
+@enduml
