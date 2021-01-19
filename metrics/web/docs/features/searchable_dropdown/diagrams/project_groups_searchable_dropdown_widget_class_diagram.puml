@@ -1,0 +1,37 @@
+@startuml
+
+package common.widgets {
+    class ProjectGroupsSearchableDropdown {
+        - _dropdownMenuController : SelectionMenuController
+        - _searchBarFocusNode : FocusNode
+        - _searchBarTextController : TextEditingController
+
+        - void _openMenu()
+        - void _closeMenu()
+        - void _searchBarFocusNodeListener()
+        - void _selectAllSearchBarText()
+        - void _fillSearchBarWithSelectedItem()
+        - void _onEnterKeyPressed()
+    }
+}
+
+package base.widgets {
+    class SearchableDropdown<T> {
+        + searchBarBuilder : SearchBarBuilder
+        + dropdownMenuBuilder : DropdownMenuBuilder
+        + itemBuilder : DropdownItemBuilder
+        + dropdownMenuController : SelectionMenuController
+        + onDropdownMenuStateChanged : ValueChanged<MenuState>
+        + items : List<T>
+        + maxVisibleItems : int
+        + onItemSelected : VoidCallback
+        + itemHeight : double
+        + searchBarPadding : EdgeInsets
+        + dropdownPadding : EdgeInsets
+        + closeDropdownOnTapOutside : bool
+    }
+}
+
+ProjectGroupsSearchableDropdown --> SearchableDropdown : uses
+
+@enduml
