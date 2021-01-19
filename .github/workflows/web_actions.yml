@@ -22,9 +22,9 @@ jobs:
       SENTRY_RELEASE: ${{ github.run_number }}
       SENTRY_RELEASE_AUTORENDERER: ${{ github.run_number }}_autorenderer
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      FIREBASE_TOKEN_PRODUCTION: ${{ secrets.FIREBASE_TOKEN_PRODUCTION }}
+      PRODUCTION_FIREBASE_TOKEN: ${{ secrets.PRODUCTION_FIREBASE_TOKEN }}
       GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID }}
-      GOOGLE_SIGN_IN_CLIENT_ID_PRODUCTION: ${{ secrets.GOOGLE_SIGN_IN_CLIENT_ID_PRODUCTION }}
+      PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID: ${{ secrets.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
       PRODUCTION_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
       PRODUCTION_HOSTING_NAME: ${{ secrets.PRODUCTION_HOSTING_NAME }}
       PROJECT_PATH: metrics/web/
@@ -109,7 +109,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy HTML version to Firebase
-        run: firebase use default && firebase deploy --only hosting:metrics-d9c67
+        run: firebase deploy --only hosting:metrics-d9c67
         working-directory: metrics/web/
 
       - name: Switch to Flutter latest master version
@@ -139,13 +139,13 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
-        run: firebase use default && firebase deploy --only hosting:metrics-skia
+        run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
       - name: Prepare metrics config for production environment
         env:
           SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
-          GOOGLE_SIGN_IN_CLIENT_ID: ${{ env.GOOGLE_SIGN_IN_CLIENT_ID_PRODUCTION }}
+          GOOGLE_SIGN_IN_CLIENT_ID: ${{ env.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
         run: |
           export SENTRY_ENVIRONMENT="production-skia"
           : > build/web/metrics_config.js
@@ -154,7 +154,7 @@ jobs:
 
       - name: Deploy auto renderer version to production Firebase
         env:
-          FIREBASE_TOKEN: ${{ env.FIREBASE_TOKEN_PRODUCTION }}
+          FIREBASE_TOKEN: ${{ env.PRODUCTION_FIREBASE_TOKEN }}
         run: |
           firebase use --add $PRODUCTION_PROJECT_ID production
           firebase target:apply hosting metrics-skia $PRODUCTION_HOSTING_NAME
