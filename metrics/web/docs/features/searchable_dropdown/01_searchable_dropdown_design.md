@@ -212,4 +212,4 @@ and how it interacts with the `SearchableDropdown` widget.
 
 The widgets will be unit- and widget-tested using the core [flutter_test](https://api.flutter.dev/flutter/flutter_test/flutter_test-library.html) package.
 
-The [`selection_menu`](https://pub.dev/packages/selection_menu) package will be provided with additional tests.
+For [`selection_menu`](https://pub.dev/packages/selection_menu) package we will need to implement tests and create PR.
