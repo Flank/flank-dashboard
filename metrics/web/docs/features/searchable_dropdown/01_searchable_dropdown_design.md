@@ -27,7 +27,7 @@ Now, let's implement the `base` `SearchableDropdown` widget. Here is a [document
 
 Consider the following class diagram that describes the `SearchableDropdown` widget structure
 and how it interacts with the `selection_menu` package.  
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/searchable_dropdown_document/metrics/web/docs/features/searchable_dropdown/diagrams/searchable_dropdown_widget_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/searchable_dropdown_widget_class_diagram.puml)
 
 Consider the following table that describes each `SearchableDropdown` field:
 
@@ -205,7 +205,7 @@ void _onEnterKeyPressed() {
 
 Consider the following class diagram that describes the `ProjectGroupsSearchableDropdown` widget structure
 and how it interacts with the `SearchableDropdown` widget.  
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/searchable_dropdown_document/metrics/web/docs/features/searchable_dropdown/diagrams/project_groups_searchable_dropdown_widget_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/project_groups_searchable_dropdown_widget_class_diagram.puml)
 
 # Testing
 > How will the project be tested?
