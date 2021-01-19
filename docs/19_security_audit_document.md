@@ -67,6 +67,19 @@ The application uses the `Firebase Cloud Firestore Security Rules` to protect th
 
 Let's review each `Firestore Database` collection and rules for these collections:
 
+### Security Rules Description
+
+| Rule                 | Description |
+|----------------------|-------------|
+| <a id="isaccessauthorized"></a>`isAccessAuthorized`| The user is authenticated and the email domain is valid. |
+| <a id="isprojectvalid"></a>`isProjectValid`| The request data contains only allowed fields with valid data types. |
+| <a id="isprojectgroupvalid"></a>`isProjectGroupValid`| The request data contains only allowed fields with valid data types. |
+| <a id="isbuildvalid"></a>`isBuildValid` | A project with the project ID from the request data exists in the database, and all the rest fields have a valid data type. The given build data contains only allowed fields declared in the [build collection](#the-build-collection) section. |
+| <a id="isdocumentowner"></a>`isDocumentOwner` | The user is the owner of the given document. |
+| <a id="isuserprofilevalid"></a>`isUserProfileValid` | The request data has only the selected theme. |
+| <a id="prohibited"></a>`Prohibited`| Always prohibited. | 
+| <a id="allowed"></a>`Allowed` | Always allowed. |
+
 ### The `projects` collection
 
 The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
@@ -81,9 +94,9 @@ Here is a table of security rules applied to the `projects` collection.
 
 | Operation          | [Security Rules](#security-rules-description) |
 |--------------------|----------------------------------------|
-| `read`             | `isAccessAuthorized`                   |
-| `create`, `update` | `isAccessAuthorized`, `isProjectValid` |
-| `delete`           | `Prohibited`                           |
+| `read`             | [`isAccessAuthorized`](#isaccessauthorized)                   |
+| `create`, `update` | [`isAccessAuthorized`](#isaccessauthorized), [`isProjectValid`](#isprojectvalid) |
+| `delete`           | [`Prohibited`](#prohibited) |
 
 ### The `build` collection
 
@@ -106,9 +119,9 @@ Here is a table of security rules applied to the `build` collection.
 
 | Operation          | [Security Rules](#security-rules-description) | 
 |--------------------|--------------------------------------|
-| `read`             | `isAccessAuthorized`                 |
-| `create`, `update` | `isAccessAuthorized`, `isBuildValid` |
-| `delete`           | `Prohibited`                         |
+| `read`             | [`isAccessAuthorized`](#isaccessauthorized) |
+| `create`, `update` | [`isAccessAuthorized`](#isaccessauthorized), [`isBuildValid`](#isbuildvalid) |
+| `delete`           | [`Prohibited`](#prohibited) |
 
 ### The `project_groups` collection
 
@@ -125,8 +138,8 @@ Here is a table of security rules applied to the `project_groups` collection.
 
 | Operation         | [Security Rules](#security-rules-description) |
 |-------------------|---------------------------------------------|
-| `read`, `delete`  | `isAccessAuthorized`                        | 
-| `create`, `update`| `isAccessAuthorized`, `isProjectGroupValid` | 
+| `read`, `delete`  | [`isAccessAuthorized`](#isaccessauthorized) | 
+| `create`, `update`| [`isAccessAuthorized`](#isaccessauthorized), [`isProjectGroupValid`](#isprojectgroupvalid) | 
 
 ### The `user_profiles` collection
 
@@ -142,10 +155,10 @@ Here is a table of security rules applied to the `user_profiles` collection.
 
 | Operation | [Security Rules](#security-rules-description) |
 |-----------|---------------------------------------------------------------|
-| `get`     | `isAccessAuthorized`, `isDocumentOwner`                       |
-| `write`   | `isAccessAuthorized`, `isDocumentOwner`, `isUserProfileValid` |
-| `list`    | `Prohibited`                                                  |
-| `delete`  | `Prohibited`                                                  |
+| `get`     | [`isAccessAuthorized`](#isaccessauthorized), [`isDocumentOwner`](#isdocumentowner) |
+| `write`   | [`isAccessAuthorized`](#isaccessauthorized), [`isDocumentOwner`](#isdocumentowner), [`isUserProfileValid`](#isuserprofilevalid) |
+| `list`    | [`Prohibited`](#prohibited) |
+| `delete`  | [`Prohibited`](#prohibited) |
 
 ### The `allowed_email_domains` collection
 
@@ -157,7 +170,7 @@ Here is a table of security rules applied to the `allowed_email_domains` collect
 
 | Operation       | [Security Rules](#security-rules-description) |
 |-----------------|----------------|
-| `read`, `write` | `Prohibited`   |
+| `read`, `write` | [`Prohibited`](#prohibited) |
 
 ### The `feature_config` collection
 
@@ -174,21 +187,8 @@ Here is a table of security rules applied to the `feature_config` collection.
 
 | Operation | [Security Rules](#security-rules-description) |
 |-----------|----------------|
-| `read`    | `Allowed`      |
-| `write`   | `Prohibited`   |
-
-### Security Rules Description
-
-| Rule                 | Description |
-|----------------------|-------------|
-| `isAccessAuthorized` | The user is authenticated and the email domain is valid. |
-| `isProjectValid`     | A name of the given project is a string and the request data contains only the project name. |
-| `isProjectGroupValid`| A name of the given project group is a string having maximum 255 characters, the given project IDs is a list containing no more than 20 project IDs, and the request data contains only the project group name and the projects' IDs. |
-| `isBuildValid`       | A project ID of the given build is a string and this project exists in the database, the build number is an integer, the start time of the build is a timestamp, the build status is either successful, failed, or unknown, the build duration is an integer, the workflow name is either a string or a null, the url of the build is a string, the test coverage is either float or null. |
-| `isDocumentOwner`    | The user is the owner of the given document. |
-| `isUserProfileValid` | The request data has only the selected theme. |
-| `Prohibited`| Always prohibited. | 
-| `Allowed` | Always allowed. |
+| `read`    | [`Allowed`](#allowed) |
+| `write`   | [`Prohibited`](#prohibited) |
 
 ### Security Rules Testing
 
@@ -225,7 +225,7 @@ Application validates the user's email while signing in using the `Google` sign 
 # CI Integrations
 
 A CI Integrations tool is a command-line application that helps to import build data to the Metrics project making it available in the Metrics Web Application.
-Consider the [following document to learn more about the CI Integrations tool](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md).
+Consider the following [document](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) to learn more about the CI Integrations tool.
 
 ## Authorization
 
