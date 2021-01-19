@@ -276,10 +276,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     Logger.logInfo(
-        'GithubActionsSourceClientAdapter: Found coverage artifact with url: ${artifact.downloadUrl}');
-
-    Logger.logInfo(
-        'GithubActionsSourceClientAdapter: Downloading coverage artifact by download URL: ${artifact.downloadUrl}');
+        'GithubActionsSourceClientAdapter: Downloading coverage artifact from the url: ${artifact.downloadUrl}');
 
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
