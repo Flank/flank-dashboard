@@ -33,7 +33,7 @@ deactivate CiIntegrationsRunner
 
 SyncCommand -> Logger: logInfo()
 
-Logger -> Logger: concat log with timestamp
+Logger -> Logger: extend log with timestamp
 
 alt runs "sync --verbose":
     Logger --> Bob: display action logs
