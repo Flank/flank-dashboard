@@ -10,7 +10,7 @@ To create a reusable and customizable widget, we should implement the base `Sear
 
 ### Selection Menu Package
 
-The main widget this package provides is a highly customizable `SelectionMenu<T>` widget. The `SelectionMenu<T>` widget is separated into parts called `Components`. An each `Component` stands for a specific part of a `SelectionMenu<T>` widget, e.g. the `ListViewComponent` defines a list for items within the dropdown. The `Components` are provided with the [`ComponentsConfiguration` class](https://pub.dev/documentation/selection_menu/latest/components_configurations/ComponentsConfiguration-class.html).
+The main widget this package provides is a highly customizable `SelectionMenu<T>` widget. The `SelectionMenu<T>` widget is separated into parts called `Components`. Each `Component` stands for a specific part of a `SelectionMenu<T>` widget, e.g. the `ListViewComponent` defines a list for items within the dropdown. The `Components` are provided with the [`ComponentsConfiguration` class](https://pub.dev/documentation/selection_menu/latest/components_configurations/ComponentsConfiguration-class.html).
 
 Here is a table of main `SelectionMenu` components we should use to implement the `SearchableDropdown` widget:
 
@@ -206,3 +206,10 @@ void _onEnterKeyPressed() {
 Consider the following class diagram that describes the `ProjectGroupsSearchableDropdown` widget structure
 and how it interacts with the `SearchableDropdown` widget.  
 ![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/searchable_dropdown_document/metrics/web/docs/features/searchable_dropdown/diagrams/project_groups_searchable_dropdown_widget_class_diagram.puml)
+
+# Testing
+> How will the project be tested?
+
+The widgets will be unit- and widget-tested using the core [flutter_test](https://api.flutter.dev/flutter/flutter_test/flutter_test-library.html) package.
+
+The [`selection_menu`](https://pub.dev/packages/selection_menu) package will be provided with additional tests.
