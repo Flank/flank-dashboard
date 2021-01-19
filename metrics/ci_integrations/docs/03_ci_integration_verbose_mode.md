@@ -37,7 +37,7 @@ Let's review methods the `Logger` should provide:
  - `setup` - method needed to set up the `Logger`. This method sets up a logger with `messageSink`, `errorSink` and `verbose` flag. _**Please, note: This method must be called before using any other methods of this Logger**_
  - `logError` - logs the given error to the error sink.
  - `logMessage` - logs the given message to the message sink.
- - `logInfo` - logs the given message to the output sink, if the `verbose mode` is enabled.
+ - `logInfo` - logs the given message with a timestamp to the output sink, if the `verbose mode` is enabled.
 
 So, to use the `Logger` class we should configure it like the following:
 
