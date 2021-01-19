@@ -95,7 +95,7 @@ jobs:
       - name: Prepare metrics config for dev environment
         env:
           SENTRY_ENVIRONMENT: development
-        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for HTML app version
@@ -123,7 +123,7 @@ jobs:
         env:
           SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
           SENTRY_ENVIRONMENT: development-skia
-        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Update Source Maps for auto renderer app version
@@ -144,7 +144,7 @@ jobs:
           SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
           GOOGLE_SIGN_IN_CLIENT_ID: ${{ env.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
           SENTRY_ENVIRONMENT: production-skia
-        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
+        run: eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to production Firebase
