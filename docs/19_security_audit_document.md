@@ -67,18 +67,6 @@ The application uses the `Firebase Cloud Firestore Security Rules` to protect th
 
 Let's review each `Firestore Database` collection and rules for these collections:
 
-### The `allowed_email_domains` collection
-
-The `allowed_email_domains` collection contains the allowed email domains for the `Google Sign-In` method. The single document of this collection stands for the email domain that is allowed and may be used to authorize a user.
-
-The documents of this collection do not have any fields. Instead, the ID of the document represents a single email domain. This prevents duplicates of email domains and simplifies validating as documents aren't to be fetched.
-
-Here is a table of security rules applied to the `allowed_email_domains` collection.
-
-| Operation       | [Security Rules](#security-rules-description) |
-|-----------------|----------------|
-| `read`, `write` | `Prohibited`   |
-
 ### The `projects` collection
 
 The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
@@ -122,24 +110,6 @@ Here is a table of security rules applied to the `build` collection.
 | `create`, `update` | `isAccessAuthorized`, `isBuildValid` |
 | `delete`           | `Prohibited`                         |
 
-### The `feature_config` collection
-
-The `feature_config` collection contains the configuration values to enable or disable the application features. This collection contains a single `feature_config` document containing all configurations for the whole application.
-
-Consider the following table that describes the fields of the `feature_config` document:
-
-| Field                           | Description                                                           |
-|---------------------------------|-----------------------------------------------------------------------|
-| `isDebugMenuEnabled`            | Indicates whether the `Debug Menu` feature is enabled.                |
-| `isPasswordSignInOptionEnabled` | Indicates whether the `Email and Password` sign in option is enabled. |
-
-Here is a table of security rules applied to the `feature_config` collection.
-
-| Operation | [Security Rules](#security-rules-description) |
-|-----------|----------------|
-| `read`    | `Allowed`      |
-| `write`   | `Prohibited`   |
-
 ### The `project_groups` collection
 
 The `project_groups` collection contains project group data. The single document of this collection contains data of a specific project group.
@@ -177,16 +147,48 @@ Here is a table of security rules applied to the `user_profiles` collection.
 | `list`    | `Prohibited`                                                  |
 | `delete`  | `Prohibited`                                                  |
 
+### The `allowed_email_domains` collection
+
+The `allowed_email_domains` collection contains the allowed email domains for the `Google Sign-In` method. The single document of this collection stands for the email domain that is allowed and may be used to authorize a user.
+
+The documents of this collection do not have any fields. Instead, the ID of the document represents a single email domain. This prevents duplicates of email domains and simplifies validating as documents aren't to be fetched.
+
+Here is a table of security rules applied to the `allowed_email_domains` collection.
+
+| Operation       | [Security Rules](#security-rules-description) |
+|-----------------|----------------|
+| `read`, `write` | `Prohibited`   |
+
+### The `feature_config` collection
+
+The `feature_config` collection contains the configuration values to enable or disable the application features. This collection contains a single `feature_config` document containing all configurations for the whole application.
+
+Consider the following table that describes the fields of the `feature_config` document:
+
+| Field                           | Description                                                           |
+|---------------------------------|-----------------------------------------------------------------------|
+| `isDebugMenuEnabled`            | Indicates whether the `Debug Menu` feature is enabled.                |
+| `isPasswordSignInOptionEnabled` | Indicates whether the `Email and Password` sign in option is enabled. |
+
+Here is a table of security rules applied to the `feature_config` collection.
+
+| Operation | [Security Rules](#security-rules-description) |
+|-----------|----------------|
+| `read`    | `Allowed`      |
+| `write`   | `Prohibited`   |
+
 ### Security Rules Description
 
 | Rule                 | Description |
 |----------------------|-------------|
-| `isAccessAuthorized` | Checks whether the user is authenticated and the email domain is valid. |
-| `isProjectValid`     | Checks whether the project data from the request is valid. |
-| `isProjectGroupValid`| Checks whether the project group data from the request is valid. |
-| `isBuildValid`       | Checks whether the request contains the valid build data. |
-| `isDocumentOwner`    | Checks whether the user is the owner of the document with the given document id. |
-| `isUserProfileValid` | Checks whether the request contains the valid user profile data. |
+| `isAccessAuthorized` | The user is authenticated and the email domain is valid. |
+| `isProjectValid`     | A name of the given project is a string and the request data contains only the project name. |
+| `isProjectGroupValid`| A name of the given project group is a string having maximum 255 characters, the given project IDs is a list containing no more than 20 project IDs, and the request data contains only the project group name and the projects' IDs. |
+| `isBuildValid`       | A project ID of the given build is a string and this project exists in the database, the build number is an integer, the start time of the build is a timestamp, the build status is either successful, failed, or unknown, the build duration is an integer, the workflow name is either a string or a null, the url of the build is a string, the test coverage is either float or null. |
+| `isDocumentOwner`    | The user is the owner of the given document. |
+| `isUserProfileValid` | The request data has only the selected theme. |
+| `Prohibited`| Always prohibited. | 
+| `Allowed` | Always allowed. |
 
 ### Security Rules Testing
 
@@ -253,4 +255,4 @@ The CI Integrations tool processes and transfers build data to the Cloud Firesto
 
 The Coverage Converter allows converting coverage data from specific coverage tool output format into Metrics Coverage format.
 
-The Coverage Converter does not send anything to the third-parties or to the databases, it just converts the given data to the Metrics Coverage format. However, please note, that the result is stored as a build artifact in the CI and then used by the CI Integrations tool to report coverage.
+The Coverage Converter does not send anything to the third-parties or to the databases, it just converts the given data to the Metrics Coverage format.
