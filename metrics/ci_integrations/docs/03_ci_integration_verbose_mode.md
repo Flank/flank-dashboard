@@ -66,7 +66,7 @@ Here is an example:
 if (result.isSuccess) {
   Logger.logMessage(result.message); // old was logger.printMessage(result.message)
 } else {
-  throw SyncError(message: result.message);
+  ...
 }
 ```
 
