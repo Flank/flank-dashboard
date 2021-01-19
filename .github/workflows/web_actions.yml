@@ -93,8 +93,9 @@ jobs:
         working-directory: metrics/web/
 
       - name: Prepare metrics config for dev environment
+        env:
+          SENTRY_ENVIRONMENT: development
         run: |
-          export SENTRY_ENVIRONMENT="development"
           : > build/web/metrics_config.js
           eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
         working-directory: metrics/web/
@@ -123,8 +124,8 @@ jobs:
       - name: Prepare metrics config for dev skia environment
         env:
           SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
+          SENTRY_ENVIRONMENT: development-skia
         run: |
-          export SENTRY_ENVIRONMENT="development-skia"
           : > build/web/metrics_config.js
           eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
         working-directory: metrics/web/
@@ -142,14 +143,14 @@ jobs:
         run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
-      - name: Prepare metrics config for production environment
+      - name: Prepare metrics config for production skia environment
         env:
           SENTRY_RELEASE: ${{ env.SENTRY_RELEASE_AUTORENDERER }}
           GOOGLE_SIGN_IN_CLIENT_ID: ${{ env.PRODUCTION_GOOGLE_SIGN_IN_CLIENT_ID }}
+          SENTRY_ENVIRONMENT: production-skia
         run: |
-          export SENTRY_ENVIRONMENT="production-skia"
           : > build/web/metrics_config.js
-          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" > build/web/metrics_config.js
+          eval "echo \"$(sed 's/"/\\"/g' web/metrics_config.js)\"" >> build/web/metrics_config.js
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to production Firebase
