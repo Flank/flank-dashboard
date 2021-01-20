@@ -1,0 +1,65 @@
+@startuml ci_integrations_config_validator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant "CI Integrations"
+participant CiIntegrationsRunner
+participant SyncCommand
+participant ConfigValidatorFactory
+participant ConfigValidator
+participant Logger
+
+Bob -> "CI Integrations" : runs sync
+activate "CI Integrations"
+
+"CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+activate CiIntegrationsRunner
+
+CiIntegrationsRunner -> Logger: setup(bool verbose)
+activate Logger
+
+CiIntegrationsRunner -> SyncCommand: run()
+deactivate CiIntegrationsRunner
+activate SyncCommand
+
+SyncCommand -> SyncCommand : creates source- and destination parties
+SyncCommand -> SyncCommand : parses source- and destination configs
+
+SyncCommand -> ConfigValidatorFactory : create()
+activate ConfigValidatorFactory
+
+ConfigValidatorFactory --> SyncCommand : configValidator
+deactivate ConfigValidatorFactory
+
+SyncCommand -> ConfigValidator : call(config)
+activate ConfigValidator
+
+alt config is valid
+
+    ConfigValidator -> Logger : logInfo(info)
+    ConfigValidator --> SyncCommand : config is valid
+    SyncCommand -> SyncCommand : continues the sync command
+    SyncCommand --> Bob : sync was successful
+
+else config is not valid
+
+    ConfigValidator -> Logger : logError(error)
+    ConfigValidator --> SyncCommand : throw ""ConfigValidatorException(message)""
+    SyncCommand --> Bob : sync failed
+
+end
+
+alt runs "sync --verbose"
+    Logger --> Bob: displays logs
+end
+
+deactivate ConfigValidator
+
+deactivate "CI Integrations"
+deactivate SyncCommand
+deactivate Logger
+
+@enduml

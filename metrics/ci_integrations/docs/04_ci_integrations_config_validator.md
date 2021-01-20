@@ -3,8 +3,7 @@
 ## TL;DR
 
 Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration file before the `sync` command to provide additional context about the possible errors in the configuration file.  
-For example, if the configuration file contains non-valid email/password used to log in into CI, the used sees the corresponding error before the `sync` process starts.
-
+For example, if the configuration file contains a non-valid email/password used to log in into CI, the user sees the corresponding error before the `sync` process starts.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -23,15 +22,21 @@ This document aims the following goals:
 
 Consider the following steps needed to be able to validate the given configuration file:
 
-1. Create an abstract callable `ConfigValidator` class.
-2. Extend the `IntegrationParty` class to provide the `ConfigValidator`.
-3. For each source or destination party implement its specific `ConfigValidator`.
+1. Create abstract `ConfigValidator`, `ConfigValidatorClient`, and `ConfigValidatorFactory` classes.
+2. For each source or destination party implement its specific `ConfigValidator`, `ConfigValidatorClient`, and `ConfigValidatorFactory`.
+3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
+4. Create the source and the destination config validators and call them within the `sync` command.
 
-Here is a class diagram that demonstrates this:
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/validate_config/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
+Consider the following class diagram that demonstrates the required changes:
 
-### Making things work
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
 
-### Capturing Errors
+## Making things work
+Consider the following sequence diagram that illustrates the process of the configuration files validation:
 
+![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
 
+## Testing
+> How will the project be tested?
+
+The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
