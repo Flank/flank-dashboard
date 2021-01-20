@@ -25,7 +25,7 @@ participant git
 Bob -> CLI ++ : run doctor command
 CLI -> DoctorCommand ++ : run()
 DoctorCommand -> FlutterCommand ++ : version()
-FlutterCommand -> flutter ++ : request flutter CLI version
+FlutterCommand -> flutter ++ : request flutter version
 flutter --> Bob -- : print Flutter version
 FlutterCommand --
 
