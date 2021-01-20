@@ -25,28 +25,24 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
     Map<String, dynamic> buildJson;
 
     try {
+      _logInfo('Getting a project with the project id $projectId ...');
       final project =
           await _firestore.collection('projects').document(projectId).get();
-      Logger.logInfo(
-        'FirestoreDestinationClientAdapter: Getting a project with the project id #$projectId ...',
-      );
+
       final collection = _firestore.collection('build');
 
-      Logger.logInfo('FirestoreDestinationClientAdapter: Adding builds...');
+      _logInfo('Adding ${builds.length} builds...');
       for (final build in builds) {
         final documentId = '${project.id}_${build.buildNumber}';
         final map = build.copyWith(projectId: project.id).toJson();
         buildJson = map;
 
         await collection.document(documentId).create(map);
-        Logger.logInfo(
-          'FirestoreDestinationClientAdapter: Added build #$documentId.',
-        );
+        _logInfo('Added build id $documentId.');
       }
     } on GrpcError catch (e) {
-      Logger.logInfo('FirestoreDestinationClientAdapter: Error: ${e.message}');
       if (buildJson != null) {
-        Logger.logInfo('Failed to add build: $buildJson');
+        _logInfo('Failed to add build: $buildJson');
         buildJson = null;
       }
 
@@ -57,8 +53,8 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
 
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
-    Logger.logInfo(
-      'FirestoreDestinationClientAdapter: Fetching last build for the project id #$projectId...',
+    _logInfo(
+      'Fetching last build for the project id $projectId...',
     );
     final documents = await _firestore
         .collection('build')
@@ -66,10 +62,16 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
         .orderBy('startedAt', descending: true)
         .limit(1)
         .getDocuments();
+
     if (documents.isEmpty) return null;
 
     final document = documents.first;
     return BuildDataDeserializer.fromJson(document.map, document.id);
+  }
+
+  /// Logs out the given [message].
+  void _logInfo(String message) {
+    Logger.logInfo('FirestoreDestinationClientAdapter: $message');
   }
 
   @override

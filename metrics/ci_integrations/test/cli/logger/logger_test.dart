@@ -1,126 +1,94 @@
-import 'dart:io';
-
 import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_util/stub/io_sink_stub.dart';
+import '../test_util/mock/io_sink_mock.dart';
 
 void main() {
   group("Logger", () {
-    final errorSink = IOSinkStub();
-    final messageSink = IOSinkStub();
-    final unimplementedSink = IOSinkStub(
-      writelnCallback: (_) => throw UnimplementedError(),
-    );
+    final sinkMock = IOSinkMock();
+
     const message = 'message';
     const error = 'error';
+
+    tearDown(() {
+      reset(sinkMock);
+    });
 
     test(
       ".logError() throws an Exception if the Logger is not configured",
       () {
-        expect(() => Logger.logError(error), throwsException);
+        expect(() => Logger.logError(error), throwsStateError);
       },
     );
 
     test(
       ".logMessage() throws an Exception if the Logger is not configured",
       () {
-        expect(() => Logger.logMessage(message), throwsException);
+        expect(() => Logger.logMessage(message), throwsStateError);
       },
     );
 
     test(
       ".logInfo() throws an Exception if the Logger is not configured",
       () {
-        expect(() => Logger.logInfo(message), throwsException);
+        expect(() => Logger.logInfo(message), throwsStateError);
       },
     );
 
-    test(".setup() configure the logger with the given error sink", () {
-      final errorSink = IOSinkMock();
-      Logger.setup(errorSink: errorSink);
-
+    test(".setup() configures the logger with the given error sink", () {
+      Logger.setup(errorSink: sinkMock);
       Logger.logError(error);
 
-      verify(errorSink.writeln(any)).called(1);
+      verify(sinkMock.writeln(any)).called(1);
     });
 
-    test(".setup() configure the logger with the given message sink", () {
-      final messageSink = IOSinkMock();
-      Logger.setup(messageSink: messageSink);
-
+    test(".setup() configures the logger with the given message sink", () {
+      Logger.setup(messageSink: sinkMock);
       Logger.logMessage(message);
 
-      verify(messageSink.writeln(any)).called(1);
+      verify(sinkMock.writeln(any)).called(1);
     });
 
     test(".logError() prints the given error to the error sink", () {
-      Logger.setup(
-        errorSink: errorSink,
-        messageSink: unimplementedSink,
-      );
+      Logger.setup(errorSink: sinkMock);
+      Logger.logError(error);
 
-      expect(
-        () => Logger.logError(error),
-        prints(equalsIgnoringWhitespace(error)),
-      );
+      verify(sinkMock.writeln(error)).called(1);
     });
 
     test(
       ".logMessage() prints the given message to the message sink",
       () {
-        Logger.setup(
-          errorSink: unimplementedSink,
-          messageSink: messageSink,
-        );
+        Logger.setup(messageSink: sinkMock);
+        Logger.logMessage(message);
 
-        expect(
-          () => Logger.logMessage(message),
-          prints(equalsIgnoringWhitespace(message)),
-        );
+        verify(sinkMock.writeln(message)).called(1);
       },
     );
 
     test(
       ".logInfo() prints the given message to the message sink if the verbose is true",
       () {
-        final dateTimeNow = DateFormat('dd-MM-yyyy HH:mm:ss').format(
-          DateTime.now(),
-        );
-
+        final dateTimeNow = DateFormat.yMd().add_Hms().format(DateTime.now());
         final expected = '[$dateTimeNow] $message';
 
-        Logger.setup(
-          errorSink: unimplementedSink,
-          messageSink: messageSink,
-          verbose: true,
-        );
+        Logger.setup(messageSink: sinkMock, verbose: true);
+        Logger.logInfo(message);
 
-        expect(
-          () => Logger.logInfo(message),
-          prints(equalsIgnoringWhitespace(expected)),
-        );
+        verify(sinkMock.writeln(expected)).called(1);
       },
     );
 
     test(
       ".logInfo() does not print the given message to the message sink if the verbose is false",
       () {
-        Logger.setup(
-          errorSink: unimplementedSink,
-          messageSink: messageSink,
-          verbose: false,
-        );
+        Logger.setup(messageSink: sinkMock, verbose: false);
+        Logger.logInfo(message);
 
-        expect(
-          () => Logger.logInfo(message),
-          prints(equalsIgnoringWhitespace('')),
-        );
+        verifyNever(sinkMock.writeln(message));
       },
     );
   });
 }
-
-class IOSinkMock extends Mock implements IOSink {}

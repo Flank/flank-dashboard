@@ -5,16 +5,17 @@ import 'package:intl/intl.dart';
 /// A class providing methods for logging messages and errors for the CLI tool.
 class Logger {
   /// The [IOSink] used to log errors.
-  static IOSink _errorSink = stderr;
+  static IOSink _errorSink;
 
   /// The [IOSink] used to log messages.
-  static IOSink _messageSink = stdout;
+  static IOSink _messageSink;
 
-  /// Determine whether to print out logs to the [_messageSink].
+  /// A flag used to determine whether to enable info logs.
   static bool _verbose = false;
 
   /// Determine whether the [setup] method of this logger is invoked.
-  static bool _isInitialized = false;
+  static bool get _isInitialized =>
+      _errorSink != null && _messageSink != null && _verbose != null;
 
   /// Configure this logger with the given [errorSink], [messageSink]
   /// and the [verbose] values.
@@ -32,10 +33,9 @@ class Logger {
     _errorSink = errorSink ?? stderr;
     _messageSink = messageSink ?? stdout;
     _verbose = verbose ?? false;
-    _isInitialized = true;
   }
 
-  /// Prints the given [error] to the [errorSink].
+  /// Logs the given [error] to the error [IOSink].
   ///
   /// Throws an [Exception] if the [Logger] is not initialized.
   static void logError(Object error) {
@@ -44,7 +44,7 @@ class Logger {
     _errorSink.writeln(error);
   }
 
-  /// Prints the given [message] to the [messageSink].
+  /// Logs the given [message] to the message [IOSink].
   ///
   /// Throws an [Exception] if the [Logger] is not initialized.
   static void logMessage(Object message) {
@@ -53,23 +53,25 @@ class Logger {
     _messageSink.writeln(message);
   }
 
-  /// Prints the given [message] to the [messageSink] if the verbose is `true`.
+  /// Logs the given [message] to the message [IOSink] if the verbose is `true`.
   ///
   /// Throws an [Exception] if the [Logger] is not initialized.
   static void logInfo(Object message) {
     _checkInitialized();
 
     if (_verbose) {
-      final dateTimeNow = DateFormat('dd-MM-yyyy HH:mm:ss').format(
-        DateTime.now(),
-      );
+      final dateTimeNow = DateFormat.yMd().add_Hms().format(DateTime.now());
 
       _messageSink.writeln("[$dateTimeNow] $message");
     }
   }
 
-  /// Throws an [Exception] if the [_isInitialized] is `false`.
+  /// Throws a [StateError] if the [_isInitialized] is `false`.
   static void _checkInitialized() {
-    if (!_isInitialized) throw Exception('The Logger is not initialized');
+    if (!_isInitialized) {
+      throw StateError(
+        'The Logger is not set up. The setup method must be called before calling any other methods of the Logger.',
+      );
+    }
   }
 }

@@ -40,9 +40,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
-    Logger.logInfo(
-      'JenkinsSourceClientAdapter: Fetching builds after build #${lastBuild.number}...',
-    );
+    _logInfo('Fetching builds after build #${lastBuild.number}...');
 
     if (numberOfBuilds <= 0) return [];
 
@@ -215,6 +213,11 @@ class JenkinsSourceClientAdapter implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Logs out the given [message].
+  void _logInfo(String message) {
+    Logger.logInfo('JenkinsSourceClientAdapter: $message');
   }
 
   @override

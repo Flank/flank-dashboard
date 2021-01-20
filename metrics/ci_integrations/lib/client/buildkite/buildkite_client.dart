@@ -152,7 +152,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    Logger.logInfo('BuildkiteClient: Fetching builds page: $url');
+    _logInfo('Fetching builds: $url');
 
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
@@ -223,7 +223,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    Logger.logInfo('BuildkiteСlient: Fetching artifacts page: $url');
+    _logInfo('Fetching artifacts: $url');
 
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
@@ -252,6 +252,8 @@ class BuildkiteClient {
   /// The resulting [Uint8List] contains bytes of a desired artifact.
   Future<InteractionResult<Uint8List>> downloadArtifact(String url) async {
     if (url == null) return null;
+
+    _logInfo('Downloading artifact from the url: $url');
 
     final request = Request('GET', Uri.parse(url))
       ..headers.addAll(headers)
@@ -372,6 +374,11 @@ class BuildkiteClient {
   int _getValidPageNumber(int pageNumber) {
     if (pageNumber == null || pageNumber <= 0) return 1;
     return pageNumber;
+  }
+
+  /// Logs out the given [message].
+  void _logInfo(String message) {
+    Logger.logInfo('BuildkiteClient: $message');
   }
 
   /// Closes the client and cleans up any resources associated with it.

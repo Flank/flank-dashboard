@@ -158,7 +158,7 @@ class JenkinsClient {
       path: '$path/api/json',
       treeQuery: TreeQuery.job,
     );
-    Logger.logInfo('JenkinsClient: Fetching job from the url: $fullUrl');
+    _logInfo('Fetching job from the url: $fullUrl');
 
     return _handleResponse<JenkinsJob>(
       _client.get(fullUrl, headers: headers),
@@ -208,7 +208,7 @@ class JenkinsClient {
   /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
   /// method.
   Future<InteractionResult<List<JenkinsJob>>> _fetchJobs(String url) {
-    Logger.logInfo('JenkinsClient: Fetching jobs from the url: $url');
+    _logInfo('Fetching jobs from the url: $url');
 
     return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
@@ -262,7 +262,7 @@ class JenkinsClient {
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
   /// method.
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
-    Logger.logInfo('JenkinsClient: Fetching builds from the url: $url');
+    _logInfo('Fetching builds from the url: $url');
 
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
@@ -290,7 +290,7 @@ class JenkinsClient {
       treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
 
-    Logger.logInfo('JenkinsClient: Fetching artifacts from the url: $url');
+    _logInfo('Fetching artifacts from the url: $url');
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
       _client.get(url, headers: headers),
@@ -330,12 +330,17 @@ class JenkinsClient {
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
   Future<InteractionResult<Map<String, dynamic>>> _fetchArtifact(String url) {
-    Logger.logInfo('JenkinsClient: Fetching artifact from the url: $url');
+    _logInfo('Fetching artifact from the url: $url');
 
     return _handleResponse<Map<String, dynamic>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => InteractionResult.success(result: json),
     );
+  }
+
+  /// Logs out the given [message].
+  void _logInfo(String message) {
+    Logger.logInfo('JenkinsClient: $message');
   }
 
   /// Closes the client and cleans up any resources associated with it.

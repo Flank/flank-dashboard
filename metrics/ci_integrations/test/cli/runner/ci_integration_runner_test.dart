@@ -1,4 +1,5 @@
 import 'package:ci_integration/cli/command/sync_command.dart';
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
 import 'package:test/test.dart';
 
@@ -44,5 +45,20 @@ void main() {
         expect(options, contains('verbose'));
       },
     );
+
+    test(".run() sets up the Logger", () {
+      final runner = CiIntegrationsRunnerStub();
+
+      runner.run([]);
+
+      expect(() => Logger.logMessage(''), returnsNormally);
+    });
   });
+}
+
+/// A stub class for the [CiIntegrationsRunner] used in tests
+/// to remove printing the usage information for this runner.
+class CiIntegrationsRunnerStub extends CiIntegrationsRunner {
+  @override
+  void printUsage() {}
 }

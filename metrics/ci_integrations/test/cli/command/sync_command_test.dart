@@ -20,8 +20,8 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matcher_util.dart';
+import '../test_util/mock/io_sink_mock.dart';
 import '../test_util/mock/mocks.dart';
-import '../test_util/stub/io_sink_stub.dart';
 import '../test_util/test_data/config_test_data.dart';
 
 void main() {
@@ -52,8 +52,10 @@ void main() {
         ciIntegrationMock,
       );
 
+      final sinkMock = IOSinkMock();
+
       setUpAll(() {
-        Logger.setup(messageSink: IOSinkStub(writelnCallback: (_) => {}));
+        Logger.setup(messageSink: sinkMock);
       });
 
       setUp(() {
@@ -65,6 +67,7 @@ void main() {
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
         reset(_firebaseAuthMock);
+        reset(sinkMock);
       });
 
       PostExpectation<Future<InteractionResult>> whenRunSync() {
@@ -256,11 +259,6 @@ void main() {
       test(
         ".sync() prints a message if a sync result is a success",
         () async {
-          bool isPrinted = false;
-          Logger.setup(
-            messageSink: IOSinkStub(writelnCallback: (_) => isPrinted = true),
-          );
-
           const interactionResult = InteractionResult.success();
 
           when(ciIntegrationMock.sync(syncConfig))
@@ -272,7 +270,7 @@ void main() {
             destinationClientMock,
           );
 
-          expect(isPrinted, isTrue);
+          verify(sinkMock.writeln(any)).called(1);
         },
       );
 

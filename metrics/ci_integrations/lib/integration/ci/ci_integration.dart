@@ -43,7 +43,7 @@ class CiIntegration {
 
       List<BuildData> newBuilds;
       if (lastBuild == null) {
-        Logger.logInfo('There are no builds in Firestore...');
+        Logger.logInfo('There are no builds in the destination...');
         newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(

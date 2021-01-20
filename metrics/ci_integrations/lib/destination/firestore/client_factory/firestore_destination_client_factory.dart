@@ -34,7 +34,7 @@ class FirestoreDestinationClientFactory
           VolatileStore(),
         );
 
-    Logger.logInfo('Sign in to the Firebase...');
+    Logger.logInfo('Signing in to the Firebase...');
     await auth.signIn(
       config.firebaseUserEmail,
       config.firebaseUserPassword,

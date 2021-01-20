@@ -74,9 +74,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
-    Logger.logInfo(
-      'GithubActionsSourceClientAdapter: Fetching builds after build #$latestBuildNumber...',
-    );
+    _logInfo('Fetching builds after build #$latestBuildNumber...');
 
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
@@ -133,9 +131,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       }
 
       if (hasNext) {
-        Logger.logInfo(
-          'GithubActionsSourceClientAdapter: Fetching next workflow runs page...',
-        );
+        _logInfo('Fetching next workflow runs page...');
 
         final interaction =
             await githubActionsClient.fetchWorkflowRunsNext(runsPage);
@@ -212,9 +208,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
-        Logger.logInfo(
-          'GithubActionsSourceClientAdapter: Fetching next run jobs page...',
-        );
+        _logInfo('Fetching next run jobs page...');
 
         final interaction = await githubActionsClient.fetchRunJobsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
@@ -231,9 +225,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    Logger.logInfo(
-      'GithubActionsSourceClientAdapter: Searching coverage artifact for a workflow number #${run.number}...',
-    );
+    _logInfo('Searching coverage artifact for a workflow #${run.number}...');
 
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
@@ -260,9 +252,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
-        Logger.logInfo(
-          'GithubActionsSourceClientAdapter: Fetching next artifacts page...',
-        );
+        _logInfo('Fetching next artifacts page...');
 
         final interaction =
             await githubActionsClient.fetchRunArtifactsNext(page);
@@ -279,8 +269,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ///
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
-    Logger.logInfo(
-      'GithubActionsSourceClientAdapter: Downloading coverage artifact from the url: ${artifact.downloadUrl}',
+    _logInfo(
+      'Downloading coverage artifact from the url: ${artifact.downloadUrl}',
     );
 
     final interaction =
@@ -297,9 +287,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     if (content == null) return null;
 
-    Logger.logInfo(
-      'GithubActionsSourceClientAdapter: Parsing coverage artifact...',
-    );
+    _logInfo('Parsing coverage artifact...');
+
     final coverageContent = utf8.decode(content);
     final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
     final coverage = CoverageData.fromJson(coverageJson);
@@ -336,6 +325,11 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
     }
+  }
+
+  /// Logs out the given [message].
+  void _logInfo(String message) {
+    Logger.logInfo('GithubActionsSourceClientAdapter: $message');
   }
 
   @override

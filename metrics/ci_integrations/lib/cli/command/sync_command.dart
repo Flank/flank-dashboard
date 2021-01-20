@@ -63,36 +63,30 @@ class SyncCommand extends CiIntegrationCommand<void> {
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
         );
-        Logger.logInfo('$sourceParty was created.');
         final destinationParty = getParty(
           rawConfig.destinationConfigMap,
           supportedParties.destinationParties,
         );
-        Logger.logInfo('$destinationParty was created.');
 
         Logger.logInfo('Creating source configs...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
         );
-        Logger.logInfo('$sourceConfig was created.');
         final destinationConfig = parseConfig(
           rawConfig.destinationConfigMap,
           destinationParty,
         );
-        Logger.logInfo('$destinationConfig was created.');
 
         Logger.logInfo('Creating integration clients...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
         );
-        Logger.logInfo('$sourceClient was created.');
         destinationClient = await createClient(
           destinationConfig,
           destinationParty,
         );
-        Logger.logInfo('$destinationClient was created.');
 
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
@@ -145,6 +139,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
       throw UnimplementedError('The given source config is unknown');
     }
 
+    Logger.logInfo('$party was created.');
+
     return party;
   }
 
@@ -154,7 +150,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
     Map<String, dynamic> configMap,
     IntegrationParty<T, IntegrationClient> party,
   ) {
-    return party.configParser.parse(configMap);
+    final config = party.configParser.parse(configMap);
+    Logger.logMessage('$config was created.');
+
+    return config;
   }
 
   /// Creates an [IntegrationClient] instance with the given [config]
@@ -163,7 +162,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
     Config config,
     IntegrationParty<Config, T> party,
   ) {
-    return party.clientFactory.create(config);
+    final client = party.clientFactory.create(config);
+    Logger.logMessage('$client was created.');
+
+    return client;
   }
 
   /// Creates a [CiIntegration] instance with the given
