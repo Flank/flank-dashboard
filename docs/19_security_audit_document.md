@@ -65,7 +65,7 @@ Consider the following [document](https://firebase.google.com/docs/firestore/dat
 
 The application uses the `Firebase Cloud Firestore Security Rules` to protect the data stored in the `Cloud Firestore`. The `Security Rules` describe conditions that should be met to access or modify the data these rules are protecting. If the CRUD request does not satisfy the appropriate set of conditions, this request is refused as having insufficient permissions.
 
-Let's review each `Firestore Database` collection and rules for these collections:
+Let's follow with a description of the `Security Rule` applied to the `Firestore Database` collections:
 
 ### Security Rules Description
 
@@ -80,6 +80,8 @@ Let's review each `Firestore Database` collection and rules for these collection
 | <a id="prohibited"></a>`Prohibited`| Always prohibited. | 
 | <a id="allowed"></a>`Allowed` | Always allowed. |
 
+Let's review each `Firestore Database` collection and rules for these collections:
+
 ### The `projects` collection
 
 The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
@@ -90,7 +92,7 @@ Consider the following table that describes the fields of the `projects` documen
 |--------|-------------------------|
 | `name` | A name of this project. |
 
-Here is a table of security rules applied to the `projects` collection.
+Here is a table of security rules applied to the `projects` collection:
 
 | Operation          | [Security Rules](#security-rules-description) |
 |--------------------|----------------------------------------|
@@ -115,7 +117,7 @@ Consider the following table that describes the fields of a document within the 
 |`url`         | A URL of the source control revision used to run the build. |
 |`workflowName`| A name of the workflow executed this build.                 |
 
-Here is a table of security rules applied to the `build` collection.
+Here is a table of security rules applied to the `build` collection:
 
 | Operation          | [Security Rules](#security-rules-description) | 
 |--------------------|--------------------------------------|
@@ -134,7 +136,7 @@ Consider the following table that describes the fields of the `project_groups` d
 | `name`       | A name of this project group.                             |
 | `projectIds` | A list of project IDs that belong to this project group.  |
 
-Here is a table of security rules applied to the `project_groups` collection.
+Here is a table of security rules applied to the `project_groups` collection:
 
 | Operation         | [Security Rules](#security-rules-description) |
 |-------------------|---------------------------------------------|
@@ -151,7 +153,7 @@ Consider the following table that describes the fields of the `user_profiles` do
 |-----------------|----------------------------------------------|
 | `selectedTheme` | A theme selected by the specific user.       |
 
-Here is a table of security rules applied to the `user_profiles` collection.
+Here is a table of security rules applied to the `user_profiles` collection:
 
 | Operation | [Security Rules](#security-rules-description) |
 |-----------|---------------------------------------------------------------|
@@ -166,7 +168,7 @@ The `allowed_email_domains` collection contains the allowed email domains for th
 
 The documents of this collection do not have any fields. Instead, the ID of the document represents a single email domain. This prevents duplicates of email domains and simplifies validating as documents aren't to be fetched.
 
-Here is a table of security rules applied to the `allowed_email_domains` collection.
+Here is a table of security rules applied to the `allowed_email_domains` collection:
 
 | Operation       | [Security Rules](#security-rules-description) |
 |-----------------|----------------|
@@ -183,7 +185,7 @@ Consider the following table that describes the fields of the `feature_config` d
 | `isDebugMenuEnabled`            | Indicates whether the `Debug Menu` feature is enabled.                |
 | `isPasswordSignInOptionEnabled` | Indicates whether the `Email and Password` sign in option is enabled. |
 
-Here is a table of security rules applied to the `feature_config` collection.
+Here is a table of security rules applied to the `feature_config` collection:
 
 | Operation | [Security Rules](#security-rules-description) |
 |-----------|----------------|
