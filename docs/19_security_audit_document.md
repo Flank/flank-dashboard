@@ -72,11 +72,11 @@ Let's review each `Firestore Database` collection and rules for these collection
 | Rule                 | Description |
 |----------------------|-------------|
 | <a id="isaccessauthorized"></a>`isAccessAuthorized`| The user is authenticated and the email domain is valid. |
-| <a id="isprojectvalid"></a>`isProjectValid`| The request data contains only allowed fields with valid data types, as declared in the [projects collection](#the-projects-collection) section. |
-| <a id="isprojectgroupvalid"></a>`isProjectGroupValid`| The request data contains only allowed fields with valid data types, as declared in the [project_groups collection](#the-project_groups-collection) section. |
+| <a id="isprojectvalid"></a>`isProjectValid`| The request data contains only allowed fields, declared in the [projects collection](#the-projects-collection) section, with valid data types. |
+| <a id="isprojectgroupvalid"></a>`isProjectGroupValid`| The request data contains only allowed fields, declared in the [project_groups collection](#the-project_groups-collection) section, with valid data types. |
 | <a id="isbuildvalid"></a>`isBuildValid` | A project with the project ID from the request data exists in the database, and all the rest fields have a valid data type. The given build data contains only allowed fields declared in the [build collection](#the-build-collection) section. |
 | <a id="isdocumentowner"></a>`isDocumentOwner` | The user is the owner of the given document. |
-| <a id="isuserprofilevalid"></a>`isUserProfileValid` | The request data contains only allowed fields with valid data types, as declared in the [user_profiles collection](#the-user_profiles-collection) section. |
+| <a id="isuserprofilevalid"></a>`isUserProfileValid` | The request data contains only allowed fields, declared in the [user_profiles collection](#the-user_profiles-collection) section, with valid data types. |
 | <a id="prohibited"></a>`Prohibited`| Always prohibited. | 
 | <a id="allowed"></a>`Allowed` | Always allowed. |
 
