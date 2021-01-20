@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
@@ -18,7 +19,7 @@ void main() {
     testWidgets(
       'displays an empty text if the given description is null',
       (tester) async {
-        await tester.pumpWidget(const _ScorecardTestbed(value: null));
+        await tester.pumpWidget(const _ScorecardTestbed(description: null));
 
         expect(find.text(''), findsOneWidget);
       },
@@ -46,6 +47,22 @@ void main() {
     );
 
     testWidgets(
+      "uses the auto size text widget to display the value",
+      (WidgetTester tester) async {
+        const value = 'test';
+
+        await tester.pumpWidget(const _ScorecardTestbed(
+          value: value,
+        ));
+
+        expect(
+          find.widgetWithText(AutoSizeText, value),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
       "applies the value text style",
       (WidgetTester tester) async {
         const valueStyle = TextStyle(color: Colors.red);
@@ -54,11 +71,11 @@ void main() {
           valueStyle: valueStyle,
         ));
 
-        final valueWidget = tester.widget<Text>(
-          find.text(_ScorecardTestbed.defaultValueText),
+        final valueWidget = tester.widget<AutoSizeText>(
+          find.widgetWithText(AutoSizeText, _ScorecardTestbed.defaultValueText),
         );
 
-        expect(valueWidget.style.color, valueStyle.color);
+        expect(valueWidget.style, equals(valueStyle));
       },
     );
 
@@ -75,7 +92,7 @@ void main() {
           find.text(_ScorecardTestbed.defaultDescriptionText),
         );
 
-        expect(titleWidget.style.color, titleStyle.color);
+        expect(titleWidget.style, equals(titleStyle));
       },
     );
 
@@ -92,7 +109,7 @@ void main() {
           find.widgetWithText(Padding, _ScorecardTestbed.defaultValueText),
         );
 
-        expect(valuePaddingWidget.padding, valuePadding);
+        expect(valuePaddingWidget.padding, equals(valuePadding));
       },
     );
   });

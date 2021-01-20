@@ -19,6 +19,7 @@ environment:
   sdk: ">=2.8.0-dev.3.0.flutter-f96c48307d <3.0.0"
 
 dependencies:
+  auto_size_text: ^2.1.0
   cloud_firestore: ^0.13.3
   cloud_functions: 0.5.0
   collection: ^1.14.11
