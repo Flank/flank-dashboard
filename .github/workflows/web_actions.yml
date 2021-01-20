@@ -108,7 +108,9 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy HTML version to Firebase
-        run: firebase deploy --only hosting:metrics-d9c67
+        run: |
+          firebase target:apply hosting metrics metrics-d9c67
+          firebase deploy --only hosting:metrics
         working-directory: metrics/web/
 
       - name: Switch to Flutter latest master version
@@ -136,7 +138,10 @@ jobs:
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
-        run: firebase deploy --only hosting:metrics-skia
+        run: |
+          firebase target:clear hosting metrics
+          firebase target:apply hosting metrics metrics-skia
+          firebase deploy --only hosting:metrics
         working-directory: metrics/web/
 
       - name: Prepare metrics config for production skia environment
@@ -152,8 +157,9 @@ jobs:
           FIREBASE_TOKEN: ${{ env.PRODUCTION_FIREBASE_TOKEN }}
         run: |
           firebase use --add $PRODUCTION_PROJECT_ID production
-          firebase target:apply hosting metrics-skia $PRODUCTION_HOSTING_NAME
-          firebase deploy --only hosting:metrics-skia
+          firebase target:clear hosting metrics
+          firebase target:apply hosting metrics $PRODUCTION_HOSTING_NAME
+          firebase deploy --only hosting:metrics
         working-directory: metrics/web/
 
   notify-actions:
