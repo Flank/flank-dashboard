@@ -25,22 +25,22 @@ participant git
 Bob -> CLI ++ : run doctor command
 CLI -> DoctorCommand ++ : run()
 DoctorCommand -> FlutterCommand ++ : version()
-FlutterCommand -> flutter ++ : request flutter version
+FlutterCommand -> flutter ++ : request flutter CLI version
 flutter --> Bob -- : print Flutter version
 FlutterCommand --
 
 DoctorCommand -> FirebaseCommand ++ : version()
-FirebaseCommand -> firebase ++ : request firebase version
+FirebaseCommand -> firebase ++ : request firebase CLI version
 firebase --> Bob -- : print Firebase version
 FirebaseCommand --
 
 DoctorCommand -> GCloudCommand ++ : version()
-GCloudCommand -> gcloud ++ : request gcloud version
+GCloudCommand -> gcloud ++ : request gcloud CLI version
 gcloud --> Bob -- : print GCloud version
 GCloudCommand --
 
 DoctorCommand -> GitCommand ++ : version()
-GitCommand -> git ++ : request git version
+GitCommand -> git ++ : request git CLI version
 git --> Bob -- : print Git version
 GitCommand --
 DoctorCommand --
