@@ -75,7 +75,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
     Logger.logInfo(
-        'GithubActionsSourceClientAdapter: Fetching builds after build #$latestBuildNumber...');
+      'GithubActionsSourceClientAdapter: Fetching builds after build #$latestBuildNumber...',
+    );
 
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
@@ -212,7 +213,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
       if (hasNext) {
         Logger.logInfo(
-            'GithubActionsSourceClientAdapter: Fetching next run jobs page...');
+          'GithubActionsSourceClientAdapter: Fetching next run jobs page...',
+        );
 
         final interaction = await githubActionsClient.fetchRunJobsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
@@ -230,7 +232,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
     Logger.logInfo(
-        'GithubActionsSourceClientAdapter: Searching coverage artifact for a workflow number #${run.number}...');
+      'GithubActionsSourceClientAdapter: Searching coverage artifact for a workflow number #${run.number}...',
+    );
 
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
@@ -258,7 +261,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
       if (hasNext) {
         Logger.logInfo(
-            'GithubActionsSourceClientAdapter: Fetching next artifacts page...');
+          'GithubActionsSourceClientAdapter: Fetching next artifacts page...',
+        );
 
         final interaction =
             await githubActionsClient.fetchRunArtifactsNext(page);
@@ -276,7 +280,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     Logger.logInfo(
-        'GithubActionsSourceClientAdapter: Downloading coverage artifact from the url: ${artifact.downloadUrl}');
+      'GithubActionsSourceClientAdapter: Downloading coverage artifact from the url: ${artifact.downloadUrl}',
+    );
 
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);

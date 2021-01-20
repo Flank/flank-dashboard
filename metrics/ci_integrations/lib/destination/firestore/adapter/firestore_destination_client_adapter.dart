@@ -40,7 +40,8 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
 
         await collection.document(documentId).create(map);
         Logger.logInfo(
-            'FirestoreDestinationClientAdapter: Added build #$documentId.');
+          'FirestoreDestinationClientAdapter: Added build #$documentId.',
+        );
       }
     } on GrpcError catch (e) {
       Logger.logInfo('FirestoreDestinationClientAdapter: Error: ${e.message}');

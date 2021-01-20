@@ -52,7 +52,9 @@ void main() {
         ciIntegrationMock,
       );
 
-      Logger.setup(messageSink: IOSinkStub(writelnCallback: (_) => {}));
+      setUpAll(() {
+        Logger.setup(messageSink: IOSinkStub(writelnCallback: (_) => {}));
+      });
 
       setUp(() {
         syncCommand.reset();
@@ -248,6 +250,29 @@ void main() {
           await syncCommand.run();
 
           verify(ciIntegrationMock.sync(syncConfig)).called(1);
+        },
+      );
+
+      test(
+        ".sync() prints a message if a sync result is a success",
+        () async {
+          bool isPrinted = false;
+          Logger.setup(
+            messageSink: IOSinkStub(writelnCallback: (_) => isPrinted = true),
+          );
+
+          const interactionResult = InteractionResult.success();
+
+          when(ciIntegrationMock.sync(syncConfig))
+              .thenAnswer((_) => Future.value(interactionResult));
+
+          await syncCommand.sync(
+            syncConfig,
+            sourceClientMock,
+            destinationClientMock,
+          );
+
+          expect(isPrinted, isTrue);
         },
       );
 

@@ -44,7 +44,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
     Logger.logInfo(
-        'BuildkiteSourceClientAdapter: Fetch builds after build #$latestBuildNumber...');
+      'BuildkiteSourceClientAdapter: Fetch builds after build #$latestBuildNumber...',
+    );
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,

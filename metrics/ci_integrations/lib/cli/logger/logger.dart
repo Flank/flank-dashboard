@@ -23,7 +23,7 @@ class Logger {
   ///
   /// If the given [errorSink] is `null`, the [stderr] is used.
   /// If the given [messageSink] is `null`, the [stdout] is used.
-  /// If the given [verbose] is `null`, the `false` is used.
+  /// If the given [verbose] is `null`, `false` is used.
   static void setup({
     IOSink errorSink,
     IOSink messageSink,
