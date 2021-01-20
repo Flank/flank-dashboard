@@ -49,7 +49,7 @@ The Metrics Web Application uses Firebase Authentication with `Email and Passwor
 
 The main part of the Firebase Authentication integration is using the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package. Consider the following statements about the authentication methods available: 
 - The `Email and Password` method directly uses the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package and signs in a user with the given email and password.
-- The `Google Sign-In` method uses [google_sign_in](https://pub.dev/packages/google_sign_in) package to perform sign in and then pass the obtained credentials (the user's email, OAuth2 access token, and OpenID Connect ID token) to the [Firebase `Social Authentication` (3-rd party authentication method)](https://firebase.flutter.dev/docs/auth/social). At the moment, the `Google Sign-In` method is performed with the `email` scope.
+- The `Google Sign-In` method uses [google_sign_in](https://pub.dev/packages/google_sign_in) package to perform sign in and then pass the obtained credentials (the user's email, OAuth2 access token, and OpenID Connect ID token) to the [Firebase `Social Authentication`](https://firebase.flutter.dev/docs/auth/social) (3-rd party authentication method). At the moment, the `Google Sign-In` method is performed with the `email` scope.
 
 Firebase saves the information about users such as the email, sign-in provider, creation date, last sign in, and the user's ID. This information is available in the [`Firebase Console`](https://console.firebase.google.com/) on the `Firebase Authentication` page under the `Users` tab.
 
@@ -72,11 +72,11 @@ Let's review each `Firestore Database` collection and rules for these collection
 | Rule                 | Description |
 |----------------------|-------------|
 | <a id="isaccessauthorized"></a>`isAccessAuthorized`| The user is authenticated and the email domain is valid. |
-| <a id="isprojectvalid"></a>`isProjectValid`| The request data contains only allowed fields with valid data types. |
-| <a id="isprojectgroupvalid"></a>`isProjectGroupValid`| The request data contains only allowed fields with valid data types. |
+| <a id="isprojectvalid"></a>`isProjectValid`| The request data contains only allowed fields with valid data types, as declared in the [projects collection](#the-projects-collection) section. |
+| <a id="isprojectgroupvalid"></a>`isProjectGroupValid`| The request data contains only allowed fields with valid data types, as declared in the [project_groups collection](#the-project_groups-collection) section. |
 | <a id="isbuildvalid"></a>`isBuildValid` | A project with the project ID from the request data exists in the database, and all the rest fields have a valid data type. The given build data contains only allowed fields declared in the [build collection](#the-build-collection) section. |
 | <a id="isdocumentowner"></a>`isDocumentOwner` | The user is the owner of the given document. |
-| <a id="isuserprofilevalid"></a>`isUserProfileValid` | The request data has only the selected theme. |
+| <a id="isuserprofilevalid"></a>`isUserProfileValid` | The request data contains only allowed fields with valid data types, as declared in the [user_profiles collection](#the-user_profiles-collection) section. |
 | <a id="prohibited"></a>`Prohibited`| Always prohibited. | 
 | <a id="allowed"></a>`Allowed` | Always allowed. |
 
