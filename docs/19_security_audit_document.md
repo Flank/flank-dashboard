@@ -41,7 +41,7 @@ The implementation notes of any parts of the Metrics applications are out of the
 # Metrics Web Application
 > Describe the security aspects of the Metrics Web Application.
 
-The Metrics Web Application widely uses Firebase services (such as Firestore Database, Authentication, Cloud Functions, Analytics, and Hosting). Consider the following documentation that describes the [`Privacy and Security of Firebase services`](https://firebase.google.com/support/privacy).
+The Metrics Web Application widely uses Firebase services (such as Firestore Database, Authentication, Cloud Functions, Analytics, and Hosting). Consider the following [document](https://firebase.google.com/support/privacy) that describes the privacy and security of Firebase services.
 
 ## Authentication
 
