@@ -45,8 +45,10 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
       }
     } on GrpcError catch (e) {
       Logger.logInfo('FirestoreDestinationClientAdapter: Error: ${e.message}');
-      if (buildJson != null) Logger.logInfo(buildJson);
-      buildJson = null;
+      if (buildJson != null) {
+        Logger.logInfo('Failed to add build: $buildJson');
+        buildJson = null;
+      }
 
       if (e.code == StatusCode.notFound) return;
       rethrow;

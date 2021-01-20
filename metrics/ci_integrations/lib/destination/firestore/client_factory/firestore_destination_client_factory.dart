@@ -40,7 +40,6 @@ class FirestoreDestinationClientFactory
       config.firebaseUserPassword,
     );
 
-    Logger.logInfo('Connecting to the Firestore...');
     final firestore = fs.Firestore(
       config.firebaseProjectId,
       firebaseAuth: auth,
