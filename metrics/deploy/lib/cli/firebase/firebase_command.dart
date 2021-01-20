@@ -75,6 +75,24 @@ class FirebaseCommand {
         verbose: true);
   }
 
+  /// Chooses the firebase project.
+  Future<void> chooseProject(String projectID, String workingDir) async {
+    await cmd.run('firebase', ['use', '--add', projectID],
+        workingDirectory: workingDir, verbose: true);
+  }
+
+  /// Deploys project to the firebase hosting.
+  Future<void> deployHosting(String workingDir) async {
+    await cmd.run('firebase', ['deploy', '--only', 'hosting'],
+        workingDirectory: workingDir, verbose: true);
+  }
+
+  /// Deploys code and assets to the firebase.
+  Future<void> deploy(String workingDir) async {
+    await cmd.run('firebase', ['deploy'],
+        workingDirectory: workingDir, verbose: true);
+  }
+
   /// Prints CLI version.
   Future<void> version() async {
     await cmd.run('firebase', ['--version'], verbose: true);

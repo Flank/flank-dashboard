@@ -6,4 +6,15 @@ class FlutterCommand {
   Future<void> version() async {
     await cmd.run('flutter', ['--version'], verbose: true);
   }
+
+  /// Enables Web support for the Flutter.
+  Future<void> enableWeb() async {
+    await cmd.run('flutter', ['config', '--enable-web'], verbose: true);
+  }
+
+  /// Builds Flutter Web project.
+  Future<void> buildWeb(String workingDir) async {
+    await cmd.run('flutter', ['build', 'web'],
+        workingDirectory: workingDir, verbose: true);
+  }
 }
