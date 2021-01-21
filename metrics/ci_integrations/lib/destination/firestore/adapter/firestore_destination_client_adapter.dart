@@ -46,7 +46,10 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
         buildJson = null;
       }
 
-      if (e.code == StatusCode.notFound) return;
+      if (e.code == StatusCode.notFound) {
+        _logInfo('Project with id $projectId was not found.');
+        return;
+      }
       rethrow;
     }
   }

@@ -33,6 +33,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String pipelineSlug) async {
+    _logInfo('Fetching builds...');
     return _fetchLatestBuilds(pipelineSlug);
   }
 

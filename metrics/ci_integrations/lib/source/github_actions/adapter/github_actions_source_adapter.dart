@@ -64,6 +64,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String jobName) async {
+    _logInfo('Fetching builds...');
     return _fetchLatestBuilds(jobName);
   }
 
@@ -269,10 +270,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ///
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
-    _logInfo(
-      'Downloading coverage artifact from the url: ${artifact.downloadUrl}',
-    );
-
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
     _throwIfInteractionUnsuccessful(interaction);

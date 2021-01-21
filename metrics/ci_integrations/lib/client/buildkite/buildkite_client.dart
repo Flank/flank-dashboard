@@ -193,6 +193,7 @@ class BuildkiteClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching artifacts for build #$buildNumber...');
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {

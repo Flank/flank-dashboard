@@ -63,6 +63,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
+    _logInfo('Fetching builds...');
     return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
@@ -76,6 +77,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String projectId, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
+    _logInfo('Fetching builds for the project #$projectId...');
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
     _throwIfInteractionUnsuccessful(newBuildsFetchResult);

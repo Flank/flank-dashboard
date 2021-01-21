@@ -150,6 +150,7 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching runs for workflow #$workflowIdentifier...');
     const statusMapper = GithubActionStatusMapper();
     final _page = _getValidPageNumber(page);
 
@@ -262,6 +263,7 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
+    _logInfo('Fetching jobs for run #$runId');
     const statusMapper = GithubActionStatusMapper();
 
     final _page = _getValidPageNumber(page);
@@ -350,6 +352,7 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
+    _logInfo('Fetching artifacts for run #$runId...');
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
@@ -413,6 +416,7 @@ class GithubActionsClient {
     String url,
   ) async {
     try {
+      _logInfo('Downloading artifact from the url: $url');
       final response = await _client.get(url, headers: headers);
 
       if (response.statusCode == HttpStatus.ok) {
