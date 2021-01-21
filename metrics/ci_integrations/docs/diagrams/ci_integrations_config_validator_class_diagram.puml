@@ -44,21 +44,19 @@
 
     }
 
-    package destination.firestore.validator {
-        class FirestoreConfigValidator {}
-    }
+    package cool_integration {
+        package config as cool_integration_config {
+            package validator as cool_integration_validator {
+                class CoolIntegrationConfigValidator {}
+            }
 
-    package source {
-        package buildkite.validator {
-            class BuildkiteConfigValidator {}
+            package validator_factory as cool_integration_validator_validator_factory {
+                class CoolIntegrationConfigValidatorFactory {}
+            }
         }
 
-        package github_actions.validator {
-            class GithubActionsConfigValidator {}
-        }
-
-        package jenkins.validator {
-            class JenkinsConfigValidator {}
+        package client as cool_integration_client {
+            class CoolIntegrationConfigValidatorClient {}
         }
     }
 
@@ -79,9 +77,11 @@
     ConfigValidator --> Logger : uses
     ConfigValidator --> Config : uses
 
-    FirestoreConfigValidator ..|> ConfigValidator
-    BuildkiteConfigValidator ..|> ConfigValidator
-    GithubActionsConfigValidator ..|> ConfigValidator
-    JenkinsConfigValidator ..|> ConfigValidator
+    CoolIntegrationConfigValidator ..|> ConfigValidator
+    CoolIntegrationConfigValidator --> CoolIntegrationConfigValidatorClient : uses
+    CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidator : creates
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidatorClient : creates
+    CoolIntegrationConfigValidatorClient ..|> ConfigValidatorClient
 
 @enduml

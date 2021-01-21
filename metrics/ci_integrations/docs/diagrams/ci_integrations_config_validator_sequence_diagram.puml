@@ -31,7 +31,7 @@ activate ConfigValidatorFactory
 ConfigValidatorFactory --> SyncCommand : configValidator
 deactivate ConfigValidatorFactory
 
-SyncCommand -> ConfigValidator : call(config)
+SyncCommand -> ConfigValidator : validate(config)
 activate ConfigValidator
 
 ConfigValidator -> ConfigValidatorClient : tries to authenticate with the given credentials

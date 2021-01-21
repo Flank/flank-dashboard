@@ -21,7 +21,7 @@ This document aims the following goals:
 > Explain and diagram the technical design.
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationException` if the given config is not valid. Should be provided with a `ConfigValidatorClient` to perform network calls.  
+- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationException` if the given config is not valid. Uses a `ConfigValidatorClient` to perform network calls.  
 - A `ConfigValidatorClient` is a class that performs network calls for the `ConfigValidator`.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ConfigValidatorClient`.
 
@@ -32,11 +32,35 @@ Consider the following steps needed to be able to validate the given configurati
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create the source and the destination config validators and call them within the `sync` command.
 
-### Package Structure
-
-Consider the following class diagram that demonstrates the required changes:
+Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
 ![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
+
+#### Package Structure
+
+Consider the package structure using the source `CoolIntegration` as an example:
+
+> * integration/
+>   * interface/
+>     * base/
+>       * config/
+>         * validator/
+>           * config_validator.dart   
+>         * validator_factory/
+>           * config_validator_factory.dart  
+>       * client/
+>         * config_validator_client.dart
+>     * exception/
+>       * config_validation_exception.dart 
+>   * source/
+>     * cool_integration/
+>       * config/   
+>         * validator/
+>           * cool_integration_config_validator.dart
+>         * validator_factory/
+>           * cool_integration_config_validator_factory.dart
+>       * client/  
+>         * cool_integration_config_validator_client.dart
 
 ## Making things work
 Consider the following sequence diagram that illustrates the process of the configuration files validation:
