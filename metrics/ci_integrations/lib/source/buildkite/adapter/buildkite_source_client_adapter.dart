@@ -184,7 +184,6 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
-        _logInfo('Fetching next artifacts page...');
         final interaction = await buildkiteClient.fetchArtifactsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
 

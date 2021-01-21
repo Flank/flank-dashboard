@@ -253,8 +253,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
-        _logInfo('Fetching next artifacts page...');
-
         final interaction =
             await githubActionsClient.fetchRunArtifactsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
