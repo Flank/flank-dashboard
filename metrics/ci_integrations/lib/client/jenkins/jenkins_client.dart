@@ -134,7 +134,7 @@ class JenkinsClient {
     String name, {
     List<String> topLevelPipelines = const [],
   }) {
-    _logInfo('Fetching job by name: $name...');
+    _logInfo('Fetching $name job...');
     final jobs = (topLevelPipelines ?? []).toList()..add(name);
 
     return _fetchJob('job/${jobs?.join('/job/')}');
@@ -147,7 +147,7 @@ class JenkinsClient {
   /// [fetchJob] method, this one will parse [fullName] to detect top-level
   /// jobs and build a path to the desired job.
   Future<InteractionResult<JenkinsJob>> fetchJobByFullName(String fullName) {
-    _logInfo('Fetching job by full name: $fullName...');
+    _logInfo('Fetching $fullName job...');
 
     return _fetchJob(_jobFullNameToPath(fullName));
   }
@@ -182,7 +182,7 @@ class JenkinsClient {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
     _logInfo(
-      'Fetching jobs for the multi-branch job by full name: $multiBranchJobFullName...',
+      'Fetching $multiBranchJobFullName jobs for the multi-branch job...',
     );
     final path = _jobFullNameToPath(multiBranchJobFullName);
     final url = _buildJenkinsApiUrl(
@@ -237,7 +237,7 @@ class JenkinsClient {
     String buildingJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
-    _logInfo('Fetching builds by full name: $buildingJobFullName...');
+    _logInfo('Fetching $buildingJobFullName builds...');
     final path = _jobFullNameToPath(buildingJobFullName);
     final url = _buildJenkinsApiUrl(
       jenkinsUrl,
