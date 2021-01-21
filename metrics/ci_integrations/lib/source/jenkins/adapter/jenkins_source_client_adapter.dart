@@ -180,6 +180,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+    _logInfo('Fetching coverage artifact for a build #${build.number}...');
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
