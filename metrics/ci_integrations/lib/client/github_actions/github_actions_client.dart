@@ -150,6 +150,8 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching runs for workflow $workflowIdentifier...');
+
     const statusMapper = GithubActionStatusMapper();
     final _page = _getValidPageNumber(page);
 
@@ -163,9 +165,7 @@ class GithubActionsClient {
       basePath,
       path: 'workflows/$workflowIdentifier/runs',
       queryParameters: queryParameters,
-    );
-
-    _logInfo('Fetching runs for workflow $workflowIdentifier...');
+    ); 
 
     return _fetchWorkflowRunsPage(url, _page, perPage);
   }

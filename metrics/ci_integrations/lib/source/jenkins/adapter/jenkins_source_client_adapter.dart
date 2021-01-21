@@ -59,11 +59,12 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String projectId) async {
+    _logInfo('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
-    _logInfo('Fetching builds...');
+
     return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,

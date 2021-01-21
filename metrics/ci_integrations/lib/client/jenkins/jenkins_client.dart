@@ -181,15 +181,15 @@ class JenkinsClient {
     String multiBranchJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    _logInfo(
+      'Fetching jobs for the multi-branch job by name: $multiBranchJobFullName...',
+    );
+
     final path = _jobFullNameToPath(multiBranchJobFullName);
     final url = _buildJenkinsApiUrl(
       jenkinsUrl,
       path: '$path$jsonApiPath',
       treeQuery: 'jobs[${TreeQuery.job}]${limits.toQuery()}',
-    );
-
-    _logInfo(
-      'Fetching jobs for the multi-branch job by name: $multiBranchJobFullName...',
     );
 
     return _fetchJobs(url);
@@ -243,6 +243,8 @@ class JenkinsClient {
     String buildingJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    _logInfo('Fetching builds by job full name: $buildingJobFullName...');
+
     final path = _jobFullNameToPath(buildingJobFullName);
     final url = _buildJenkinsApiUrl(
       jenkinsUrl,
@@ -251,8 +253,6 @@ class JenkinsClient {
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
-
-    _logInfo('Fetching builds by job full name: $buildingJobFullName...');
 
     return _fetchBuilds(url);
   }
@@ -265,14 +265,14 @@ class JenkinsClient {
     String buildingJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    _logInfo('Fetching builds by job url: $buildingJobUrl');
+
     final url = _buildJenkinsApiUrl(
       buildingJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
-
-    _logInfo('Fetching builds by job url: $buildingJobUrl');
 
     return _fetchBuilds(url);
   }
@@ -339,12 +339,12 @@ class JenkinsClient {
     JenkinsBuild build,
     JenkinsBuildArtifact buildArtifact,
   ) {
+    _logInfo('Fetching artifact for build #${build.number}...');
+
     final url = _buildJenkinsApiUrl(
       build.url,
       path: 'artifact/${buildArtifact.relativePath}',
     );
-
-    _logInfo('Fetching artifact for build #${build.number}...');
 
     return _fetchArtifact(url);
   }
