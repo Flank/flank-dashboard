@@ -43,7 +43,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
-    _logInfo('Fetch builds after build #$latestBuildNumber...');
+    _logInfo('Fetching builds after build #$latestBuildNumber...');
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -156,7 +156,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     String pipelineSlug,
     BuildkiteBuild build,
   ) async {
-    _logInfo('Searching coverage artifact for a build #${build.number}...');
+    _logInfo('Fetching coverage artifact for a build #${build.number}...');
     final interaction = await buildkiteClient.fetchArtifacts(
       pipelineSlug,
       build.number,

@@ -151,7 +151,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     IntegrationParty<T, IntegrationClient> party,
   ) {
     final config = party.configParser.parse(configMap);
-    Logger.logMessage('$config was created.');
+    Logger.logInfo('$config was created.');
 
     return config;
   }
@@ -163,7 +163,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     IntegrationParty<Config, T> party,
   ) {
     final client = party.clientFactory.create(config);
-    Logger.logMessage('$client was created.');
+    Logger.logInfo('$client was created.');
 
     return client;
   }

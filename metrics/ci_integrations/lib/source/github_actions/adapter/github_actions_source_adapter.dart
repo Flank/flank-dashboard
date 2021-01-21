@@ -225,7 +225,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    _logInfo('Searching coverage artifact for a workflow #${run.number}...');
+    _logInfo('Fetching coverage artifact for a workflow #${run.number}...');
 
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
