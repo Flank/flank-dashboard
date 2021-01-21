@@ -10,7 +10,8 @@ import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/web_platform/web_platform_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/web_platform/web_platform.dart';
 import 'package:mockito/mockito.dart';
 
 // ignore_for_file: avoid_redundant_argument_values

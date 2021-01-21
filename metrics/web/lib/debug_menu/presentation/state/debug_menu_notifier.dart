@@ -11,7 +11,8 @@ import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.d
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/web_platform/web_platform_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/web_platform/web_platform.dart';
 
 /// The [ChangeNotifier] that holds and manages [LocalConfig]'s data.
 class DebugMenuNotifier extends ChangeNotifier {

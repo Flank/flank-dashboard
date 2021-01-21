@@ -118,7 +118,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Build release app using auto renderer
-        run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true
+        run: flutter clean && flutter build web --release --source-maps
         working-directory: metrics/web/
 
       - name: Prepare metrics config for dev skia environment

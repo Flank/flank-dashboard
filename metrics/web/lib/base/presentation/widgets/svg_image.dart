@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/web_platform/web_platform_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/web_platform/web_platform.dart';
 
 /// A widget that displays an SVG image.
 ///

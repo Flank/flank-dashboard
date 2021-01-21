@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/web_platform/web_platform_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/web_platform/web_platform.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
