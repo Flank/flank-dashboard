@@ -150,7 +150,6 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) async {
-    _logInfo('Fetching runs for workflow #$workflowIdentifier...');
     const statusMapper = GithubActionStatusMapper();
     final _page = _getValidPageNumber(page);
 
@@ -166,6 +165,10 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
+    _logInfo(
+      'Fetching runs for workflow #$workflowIdentifier from the page #$_page...',
+    );
+
     return _fetchWorkflowRunsPage(url, _page, perPage);
   }
 
@@ -173,6 +176,10 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
   ) {
+    _logInfo(
+      'Fetching next workflow runs after the page #${currentPage.page}...',
+    );
+
     return _processPage(currentPage, _fetchWorkflowRunsPage);
   }
 
@@ -263,7 +270,6 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
-    _logInfo('Fetching jobs for run #$runId');
     const statusMapper = GithubActionStatusMapper();
 
     final _page = _getValidPageNumber(page);
@@ -280,6 +286,8 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
+    _logInfo('Fetching jobs for run #$runId from the page #$_page...');
+
     return _fetchRunJobsPage(url, _page, perPage);
   }
 
@@ -287,6 +295,8 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchRunJobsNext(
     WorkflowRunJobsPage currentPage,
   ) {
+    _logInfo('Fetching next jobs after the page #${currentPage.page}...');
+
     return _processPage(currentPage, _fetchRunJobsPage);
   }
 
@@ -352,7 +362,6 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
-    _logInfo('Fetching artifacts for run #$runId...');
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
@@ -366,6 +375,8 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
+    _logInfo('Fetching run artifacts for run #$runId from the page #$_page...');
+
     return _fetchRunArtifactsPage(url, _page, perPage);
   }
 
@@ -373,6 +384,10 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifactsNext(
     WorkflowRunArtifactsPage currentPage,
   ) {
+    _logInfo(
+      'Fetching next run artifacts after the page #${currentPage.page}...',
+    );
+
     return _processPage(currentPage, _fetchRunArtifactsPage);
   }
 
