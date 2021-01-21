@@ -10,7 +10,7 @@ participant CiIntegrationsRunner
 participant SyncCommand
 participant ConfigValidatorFactory
 participant ConfigValidator
-participant Logger
+participant ConfigValidatorClient
 
 Bob -> "CI Integrations" : runs sync
 activate "CI Integrations"
@@ -18,15 +18,12 @@ activate "CI Integrations"
 "CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
 activate CiIntegrationsRunner
 
-CiIntegrationsRunner -> Logger: setup(bool verbose)
-activate Logger
-
 CiIntegrationsRunner -> SyncCommand: run()
 deactivate CiIntegrationsRunner
 activate SyncCommand
 
-SyncCommand -> SyncCommand : creates source- and destination parties
-SyncCommand -> SyncCommand : parses source- and destination configs
+SyncCommand -> SyncCommand : creates source and destination parties
+SyncCommand -> SyncCommand : parses source and destination configs
 
 SyncCommand -> ConfigValidatorFactory : create()
 activate ConfigValidatorFactory
@@ -37,29 +34,28 @@ deactivate ConfigValidatorFactory
 SyncCommand -> ConfigValidator : call(config)
 activate ConfigValidator
 
+ConfigValidator -> ConfigValidatorClient : tries to authenticate with the given credentials
+activate ConfigValidatorClient
+
+ConfigValidatorClient --> ConfigValidator : authentication result
+deactivate ConfigValidatorClient
+
 alt config is valid
 
-    ConfigValidator -> Logger : logInfo(info)
     ConfigValidator --> SyncCommand : config is valid
     SyncCommand -> SyncCommand : continues the sync command
     SyncCommand --> Bob : sync was successful
 
 else config is not valid
 
-    ConfigValidator -> Logger : logError(error)
-    ConfigValidator --> SyncCommand : throw ""ConfigValidatorException(message)""
+    ConfigValidator --> SyncCommand : throw ""ConfigValidationException(message)""
     SyncCommand --> Bob : sync failed
 
-end
-
-alt runs "sync --verbose"
-    Logger --> Bob: displays logs
 end
 
 deactivate ConfigValidator
 
 deactivate "CI Integrations"
 deactivate SyncCommand
-deactivate Logger
 
 @enduml

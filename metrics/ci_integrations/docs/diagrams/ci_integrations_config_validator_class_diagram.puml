@@ -10,32 +10,35 @@
                 }
             }
 
-            package validator {
-                abstract class ConfigValidator<T extends Config> {
-                    - validatorClient: ConfigValidatorClient
-                    - errorBuffer: StringBuffer
-                    + Future<void> call(T config)
+            package client {
+                abstract class ConfigValidatorClient {}
+            }
+
+            package config {
+                package model {
+                    abstract class Config {}
                 }
 
-                package client {
-                    abstract class ConfigValidatorClient {}
+                package validator {
+                    abstract class ConfigValidator<T extends Config> {
+                        - validatorClient: ConfigValidatorClient
+                        - errorBuffer: StringBuffer
+                        + Future<void> validate(T config)
+                    }
                 }
 
-                package factory {
+                package validator_factory {
                     abstract class ConfigValidatorFactory<V extends ConfigValidator> {
                         + V create()
                     }
                 }
             }
-
-            package config {
-                abstract class Config {}
-            }
         }
 
         package exception {
-            class ConfigValidatorException {
+            class ConfigValidationException {
                 + message: String
+                + String toString()
             }
         }
 
@@ -72,7 +75,7 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator --> ConfigValidatorClient : uses
-    ConfigValidator --> ConfigValidatorException : uses
+    ConfigValidator --> ConfigValidationException : throws
     ConfigValidator --> Logger : uses
     ConfigValidator --> Config : uses
 
