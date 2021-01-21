@@ -156,7 +156,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    _logInfo('Fetching builds: $url');
+    _logInfo('Fetching builds from page number $page: $url');
 
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
@@ -233,7 +233,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    _logInfo('Fetching artifacts: $url');
+    _logInfo('Fetching artifacts from page number $page: $url');
 
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
@@ -386,7 +386,7 @@ class BuildkiteClient {
     return pageNumber;
   }
 
-  /// Logs out the given [message].
+  /// Logs the given [message] as an info log.
   void _logInfo(String message) {
     Logger.logInfo('BuildkiteClient: $message');
   }

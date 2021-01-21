@@ -37,21 +37,7 @@ void main() {
       },
     );
 
-    test(".setup() configures the logger with the given error sink", () {
-      Logger.setup(errorSink: sinkMock);
-      Logger.logError(error);
-
-      verify(sinkMock.writeln(any)).called(1);
-    });
-
-    test(".setup() configures the logger with the given message sink", () {
-      Logger.setup(messageSink: sinkMock);
-      Logger.logMessage(message);
-
-      verify(sinkMock.writeln(any)).called(1);
-    });
-
-    test(".logError() prints the given error to the error sink", () {
+    test(".logError() logs the given error to the error sink", () {
       Logger.setup(errorSink: sinkMock);
       Logger.logError(error);
 
@@ -59,7 +45,7 @@ void main() {
     });
 
     test(
-      ".logMessage() prints the given message to the message sink",
+      ".logMessage() logs the given message to the message sink",
       () {
         Logger.setup(messageSink: sinkMock);
         Logger.logMessage(message);
@@ -69,7 +55,7 @@ void main() {
     );
 
     test(
-      ".logInfo() prints the given message to the message sink if the verbose is true",
+      ".logInfo() logs the given message to the message sink if the verbose is true",
       () {
         final dateTimeNow = DateFormat.yMd().add_Hms().format(DateTime.now());
         final expected = '[$dateTimeNow] $message';
@@ -82,7 +68,7 @@ void main() {
     );
 
     test(
-      ".logInfo() does not print the given message to the message sink if the verbose is false",
+      ".logInfo() does not log the given message to the message sink if the verbose is false",
       () {
         Logger.setup(messageSink: sinkMock, verbose: false);
         Logger.logInfo(message);

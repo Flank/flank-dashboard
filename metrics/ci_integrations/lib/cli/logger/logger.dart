@@ -13,7 +13,7 @@ class Logger {
   /// A flag used to determine whether to enable info logs.
   static bool _verbose = false;
 
-  /// Determine whether the [setup] method of this logger is invoked.
+  /// Determines whether this logger is set up.
   static bool get _isInitialized =>
       _errorSink != null && _messageSink != null && _verbose != null;
 
@@ -53,7 +53,8 @@ class Logger {
     _messageSink.writeln(message);
   }
 
-  /// Logs the given [message] to the message [IOSink] if the verbose is `true`.
+  /// Logs the given [message] to the message [IOSink]
+  /// if this logger is in verbose mode.
   ///
   /// Throws a [StateError] if the [Logger] is not initialized.
   static void logInfo(Object message) {

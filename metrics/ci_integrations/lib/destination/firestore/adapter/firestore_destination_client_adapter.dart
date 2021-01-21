@@ -72,7 +72,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
     return BuildDataDeserializer.fromJson(document.map, document.id);
   }
 
-  /// Logs out the given [message].
+  /// Logs the given [message] as an info log.
   void _logInfo(String message) {
     Logger.logInfo('FirestoreDestinationClientAdapter: $message');
   }
