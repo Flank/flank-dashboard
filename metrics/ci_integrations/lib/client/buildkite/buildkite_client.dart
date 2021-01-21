@@ -119,6 +119,7 @@ class BuildkiteClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching builds...');
     const stateMapper = BuildkiteBuildStateMapper();
     final _page = _getValidPageNumber(page);
 
@@ -134,8 +135,6 @@ class BuildkiteClient {
       path: 'pipelines/$pipelineSlug/builds',
       queryParameters: queryParameters,
     );
-
-    _logInfo('Fetching builds from the page #$_page...');
 
     return _fetchBuildsPage(url, _page, perPage);
   }
@@ -156,7 +155,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    _logInfo('Fetching builds from page number $page: $url');
+    _logInfo('Fetching builds from the page number $page: $url');
 
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
@@ -233,7 +232,7 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
-    _logInfo('Fetching artifacts from page number $page: $url');
+    _logInfo('Fetching artifacts from the page number $page: $url');
 
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
