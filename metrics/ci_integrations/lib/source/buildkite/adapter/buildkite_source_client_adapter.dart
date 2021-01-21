@@ -101,7 +101,6 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       }
 
       if (hasNext) {
-        _logInfo('Fetching next builds page...');
         final interaction = await buildkiteClient.fetchBuildsNext(
           buildsPage,
         );

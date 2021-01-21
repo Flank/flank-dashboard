@@ -132,8 +132,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       }
 
       if (hasNext) {
-        _logInfo('Fetching next workflow runs page...');
-
         final interaction =
             await githubActionsClient.fetchWorkflowRunsNext(runsPage);
         _throwIfInteractionUnsuccessful(interaction);
@@ -209,8 +207,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       hasNext = page.hasNextPage;
 
       if (hasNext) {
-        _logInfo('Fetching next run jobs page...');
-
         final interaction = await githubActionsClient.fetchRunJobsNext(page);
         _throwIfInteractionUnsuccessful(interaction);
 
