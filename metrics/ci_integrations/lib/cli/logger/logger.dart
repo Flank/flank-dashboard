@@ -37,7 +37,7 @@ class Logger {
 
   /// Logs the given [error] to the error [IOSink].
   ///
-  /// Throws an [Exception] if the [Logger] is not initialized.
+  /// Throws a [StateError] if the [Logger] is not initialized.
   static void logError(Object error) {
     _checkInitialized();
 
@@ -46,7 +46,7 @@ class Logger {
 
   /// Logs the given [message] to the message [IOSink].
   ///
-  /// Throws an [Exception] if the [Logger] is not initialized.
+  /// Throws a [StateError] if the [Logger] is not initialized.
   static void logMessage(Object message) {
     _checkInitialized();
 
@@ -55,7 +55,7 @@ class Logger {
 
   /// Logs the given [message] to the message [IOSink] if the verbose is `true`.
   ///
-  /// Throws an [Exception] if the [Logger] is not initialized.
+  /// Throws a [StateError] if the [Logger] is not initialized.
   static void logInfo(Object message) {
     _checkInitialized();
 
