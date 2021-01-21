@@ -77,7 +77,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String projectId, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
-    _logInfo('Fetching builds for the project #$projectId...');
+    _logInfo('Fetching builds for the project $projectId...');
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
     _throwIfInteractionUnsuccessful(newBuildsFetchResult);
@@ -166,6 +166,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String jobName,
     JenkinsBuild jenkinsBuild,
   ) async {
+    _logInfo('Mapping build to build data...');
+
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),

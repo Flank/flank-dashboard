@@ -143,7 +143,7 @@ class BuildkiteClient {
   FutureOr<InteractionResult<BuildkiteBuildsPage>> fetchBuildsNext(
     BuildkiteBuildsPage currentPage,
   ) {
-    _logInfo('Fetching next builds after the page #${currentPage.page}...');
+    _logInfo('Fetching next builds');
 
     return _processPage(currentPage, _fetchBuildsPage);
   }
@@ -196,6 +196,8 @@ class BuildkiteClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching artifacts for build #$buildNumber...');
+
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
@@ -209,10 +211,6 @@ class BuildkiteClient {
       queryParameters: queryParameters,
     );
 
-    _logInfo(
-      'Fetching artifacts for build #$buildNumber from the page #$_page...',
-    );
-
     return _fetchArtifactsPage(url, _page, perPage);
   }
 
@@ -220,7 +218,7 @@ class BuildkiteClient {
   FutureOr<InteractionResult<BuildkiteArtifactsPage>> fetchArtifactsNext(
     BuildkiteArtifactsPage currentPage,
   ) {
-    _logInfo('Fetching next artifacts after the page #${currentPage.page}...');
+    _logInfo('Fetching next artifacts...');
 
     return _processPage(currentPage, _fetchArtifactsPage);
   }

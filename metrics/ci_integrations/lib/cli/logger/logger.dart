@@ -20,8 +20,6 @@ class Logger {
   /// Configure this logger with the given [errorSink], [messageSink]
   /// and the [verbose] values.
   ///
-  /// Sets the [Logger] initialize status to `true`.
-  ///
   /// If the given [errorSink] is `null`, the [stderr] is used.
   /// If the given [messageSink] is `null`, the [stdout] is used.
   /// If the given [verbose] is `null`, `false` is used.

@@ -4,7 +4,7 @@ import 'package:ci_integration/cli/logger/logger.dart';
 
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
-  /// The name of the flag that enables noisy logging.
+  /// A name of the flag that enables noisy logging.
   static const String _verboseFlagName = 'verbose';
 
   /// Creates an instance of command runner and registers sub-commands available.

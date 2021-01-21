@@ -37,6 +37,12 @@ void main() {
       },
     );
 
+    test(".setup() sets up the Logger", () {
+      Logger.setup(messageSink: sinkMock);
+
+      expect(() => Logger.logMessage(message), returnsNormally);
+    });
+
     test(".logError() logs the given error to the error sink", () {
       Logger.setup(errorSink: sinkMock);
       Logger.logError(error);
