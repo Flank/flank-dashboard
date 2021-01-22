@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that stands for displaying the [value] text with [description].
@@ -37,7 +38,7 @@ class Scorecard extends StatelessWidget {
         Flexible(
           child: Padding(
             padding: valuePadding,
-            child: Text(
+            child: AutoSizeText(
               value ?? '',
               style: valueStyle,
             ),
