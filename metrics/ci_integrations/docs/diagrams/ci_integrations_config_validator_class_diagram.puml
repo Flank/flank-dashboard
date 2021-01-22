@@ -41,7 +41,6 @@
                 + String toString()
             }
         }
-
     }
 
     package destination.cool_integration {
@@ -54,10 +53,10 @@
                 class CoolIntegrationConfigValidatorFactory {}
             }
         }
+    }
 
-        package client as cool_integration_client {
-            class CoolIntegrationConfigValidatorClient {}
-        }
+     package client.cool_integration as client_cool_integration {
+        class CoolIntegrationConfigValidatorClient {}
     }
 
     package cli.logger {

@@ -50,8 +50,8 @@ Consider the package structure using the destination `CoolIntegration` as an exa
 >           * config_validator_factory.dart  
 >       * client/
 >         * config_validator_client.dart
->     * exception/
->       * config_validation_exception.dart 
+>   * exception/
+>     * config_validation_exception.dart 
 > * destination/
 >   * cool_integration/
 >     * config/   
