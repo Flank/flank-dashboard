@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
@@ -23,7 +24,7 @@ void main() {
 
       final finder = find.descendant(
         of: find.byTooltip(CommonStrings.home),
-        matching: find.byType(Image),
+        matching: find.byType(SvgImage),
       );
 
       expect(finder, findsOneWidget);
@@ -77,7 +78,7 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.widget<SizedBox>(find.descendant(
+        final sizedBox = tester.firstWidget<SizedBox>(find.descendant(
           of: find.byType(MetricsAppBar),
           matching: find.byType(SizedBox),
         ));
@@ -93,7 +94,7 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.widget<SizedBox>(find.descendant(
+        final sizedBox = tester.firstWidget<SizedBox>(find.descendant(
           of: find.byType(MetricsAppBar),
           matching: find.byType(SizedBox),
         ));

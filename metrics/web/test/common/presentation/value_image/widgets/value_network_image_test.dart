@@ -30,7 +30,7 @@ void main() {
           ));
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.width, equals(width));
       },
@@ -47,7 +47,7 @@ void main() {
           ));
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.height, equals(height));
       },
@@ -60,9 +60,12 @@ void main() {
           return tester.pumpWidget(const _ValueImageTestbed());
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
+        final image = FinderUtil.findSvgImage(tester);
 
-        expect(image.url, equals(_ValueImageAppearanceStrategyStub.testAsset));
+        expect(
+          image.src,
+          equals(_ValueImageAppearanceStrategyStub.testAsset),
+        );
       },
     );
   });
@@ -70,7 +73,8 @@ void main() {
 
 /// A stub implementation for the [ValueBasedImageAssetStrategy] to use
 /// in tests. This always returns the [testAsset].
-class _ValueImageAppearanceStrategyStub extends ValueBasedImageAssetStrategy<int> {
+class _ValueImageAppearanceStrategyStub
+    extends ValueBasedImageAssetStrategy<int> {
   /// An image asset to use in tests.
   static const String testAsset = "testImage";
 

@@ -104,7 +104,10 @@ void main() {
 
         when(authNotifier.authErrorMessage).thenReturn(error);
         authNotifier.notifyListeners();
-        await tester.pumpAndSettle();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         expect(find.widgetWithText(NegativeToast, error), findsOneWidget);
 

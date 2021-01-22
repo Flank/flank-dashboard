@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
@@ -401,7 +402,7 @@ void main() {
     testWidgets(
       "displays a dropdown button that contains the dropdown icon",
       (tester) async {
-        const expectedImage = NetworkImage("icons/dropdown.svg");
+        const expectedAsset = 'icons/dropdown.svg';
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -411,12 +412,12 @@ void main() {
 
         final imageFinder = find.descendant(
           of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         );
 
-        final actualImage = tester.widget<Image>(imageFinder)?.image;
+        final actualImage = tester.widget<SvgImage>(imageFinder);
 
-        expect(actualImage, equals(expectedImage));
+        expect(actualImage.src, equals(expectedAsset));
       },
     );
 

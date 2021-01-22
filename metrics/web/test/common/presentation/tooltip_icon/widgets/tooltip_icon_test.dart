@@ -64,9 +64,9 @@ void main() {
           await tester.pumpWidget(const _TooltipIconTestbed(src: src));
         });
 
-        final icon = FinderUtil.findNetworkImageWidget(tester);
+        final icon = FinderUtil.findSvgImage(tester);
 
-        expect(icon.url, equals(src));
+        expect(icon.src, equals(src));
       },
     );
 

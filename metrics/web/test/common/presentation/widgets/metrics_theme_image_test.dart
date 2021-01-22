@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
@@ -51,7 +52,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
 
       expect(image.width, equals(expectedWidth));
     });
@@ -67,7 +68,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
 
       expect(image.height, equals(expectedHeight));
     });
@@ -83,7 +84,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
 
       expect(image.fit, equals(expectedFit));
     });
@@ -103,8 +104,8 @@ void main() {
           ));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
-        final asset = image.url;
+        final image = FinderUtil.findSvgImage(tester);
+        final asset = image.src;
 
         expect(asset, equals(darkAsset));
       },
@@ -125,8 +126,8 @@ void main() {
           ));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
-        final asset = image.url;
+        final image = FinderUtil.findSvgImage(tester);
+        final asset = image.src;
 
         expect(asset, equals(lightAsset));
       },
@@ -168,14 +169,16 @@ class _MetricsThemeImageTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestInjectionContainer(
-      themeNotifier: themeNotifier,
-      child: MetricsThemeImage(
-        darkAsset: darkAsset,
-        lightAsset: lightAsset,
-        width: width,
-        height: height,
-        fit: fit,
+    return MaterialApp(
+      home: TestInjectionContainer(
+        themeNotifier: themeNotifier,
+        child: MetricsThemeImage(
+          darkAsset: darkAsset,
+          lightAsset: lightAsset,
+          width: width,
+          height: height,
+          fit: fit,
+        ),
       ),
     );
   }

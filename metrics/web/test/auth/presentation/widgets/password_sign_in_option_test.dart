@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -16,40 +17,40 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
-  const passwordVisibilityIconColor = Colors.red;
-  const metricsThemeData = MetricsThemeData(
-    loginTheme: LoginThemeData(
-      passwordVisibilityIconColor: passwordVisibilityIconColor,
-    ),
-  );
-
-  final emailInputFinder =
-      find.widgetWithText(MetricsTextFormField, AuthStrings.email);
-  final passwordInputFinder =
-      find.widgetWithText(MetricsTextFormField, AuthStrings.password);
-  final submitButtonFinder =
-      find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
-
-  const testEmail = 'test@email.com';
-  const testPassword = 'testPassword';
-  const errorMessage = 'Error Message';
-
-  AuthNotifier authNotifier;
-
-  Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
-    final passwordField = tester.widget<MetricsTextFormField>(
-      passwordInputFinder,
+  group("PasswordSignInOption", () {
+    const passwordVisibilityIconColor = Colors.red;
+    const metricsThemeData = MetricsThemeData(
+      loginTheme: LoginThemeData(
+        passwordVisibilityIconColor: passwordVisibilityIconColor,
+      ),
     );
 
-    return passwordField.suffixIcon;
-  }
+    final emailInputFinder =
+        find.widgetWithText(MetricsTextFormField, AuthStrings.email);
+    final passwordInputFinder =
+        find.widgetWithText(MetricsTextFormField, AuthStrings.password);
+    final submitButtonFinder =
+        find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
 
-  setUp(() {
-    authNotifier = AuthNotifierMock();
-    when(authNotifier.isLoading).thenReturn(false);
-  });
+    const testEmail = 'test@email.com';
+    const testPassword = 'testPassword';
+    const errorMessage = 'Error Message';
 
-  group("PasswordSignInOption", () {
+    AuthNotifier authNotifier;
+
+    Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
+      final passwordField = tester.widget<MetricsTextFormField>(
+        passwordInputFinder,
+      );
+
+      return passwordField.suffixIcon;
+    }
+
+    setUp(() {
+      authNotifier = AuthNotifierMock();
+      when(authNotifier.isLoading).thenReturn(false);
+    });
+
     testWidgets(
       "email input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
@@ -175,13 +176,12 @@ void main() {
         );
 
         final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
+        final image = tester.widget<SvgImage>(find.descendant(
           of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         ));
-        final networkImage = imageWidget.image as NetworkImage;
 
-        expect(networkImage.url, 'icons/eye_on.svg');
+        expect(image.src, equals('icons/eye_on.svg'));
       },
     );
 
@@ -197,16 +197,17 @@ void main() {
         final suffixIcon = _getPasswordFieldSuffixIcon(tester);
 
         await tester.tap(find.byWidget(suffixIcon));
-        await tester.pump();
+        await mockNetworkImagesFor(() {
+          return tester.pump();
+        });
 
         final suffixIconAfterTap = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
+        final image = tester.widget<SvgImage>(find.descendant(
           of: find.byWidget(suffixIconAfterTap),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         ));
-        final networkImage = imageWidget.image as NetworkImage;
 
-        expect(networkImage.url, 'icons/eye_off.svg');
+        expect(image.src, equals('icons/eye_off.svg'));
       },
     );
 
@@ -222,9 +223,9 @@ void main() {
         );
 
         final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final image = tester.widget<Image>(find.descendant(
+        final image = tester.widget<SvgImage>(find.descendant(
           of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         ));
 
         expect(image.color, equals(passwordVisibilityIconColor));
@@ -241,9 +242,9 @@ void main() {
         );
 
         final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
+        final imageWidget = tester.widget<SvgImage>(find.descendant(
           of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         ));
         final tappableAreaFinder = find.ancestor(
           of: find.byWidget(imageWidget),

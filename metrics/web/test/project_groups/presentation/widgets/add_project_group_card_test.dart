@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -165,7 +166,10 @@ void main() {
         );
 
         await tester.tap(find.byType(AddProjectGroupCard));
-        await tester.pumpAndSettle();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         final barrierFinder = find.byWidgetPredicate(
           (widget) => widget is ModalBarrier && widget.color == barrierColor,
@@ -271,9 +275,9 @@ void main() {
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
         );
 
-        final networkImage = FinderUtil.findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findSvgImage(tester);
 
-        expect(networkImage.url, equals('icons/add.svg'));
+        expect(networkImage.src, equals('icons/add.svg'));
       },
     );
 
@@ -290,7 +294,7 @@ void main() {
           )),
         );
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = tester.widget<SvgImage>(find.byType(SvgImage));
 
         expect(image.color, equals(inactiveIconColor));
       },
@@ -309,7 +313,7 @@ void main() {
           )),
         );
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = tester.widget<SvgImage>(find.byType(SvgImage));
 
         expect(image.color, equals(positiveIconColor));
       },

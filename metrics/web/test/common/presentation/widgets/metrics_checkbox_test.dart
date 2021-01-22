@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -31,6 +32,23 @@ void main() {
         });
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "applies the tappable area widget",
+      (tester) async {
+        const initialValue = true;
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsCheckboxTestbed(
+              value: initialValue,
+            ),
+          );
+        });
+
+        expect(find.byType(TappableArea), findsOneWidget);
       },
     );
 

@@ -46,7 +46,7 @@ class TappableArea extends StatefulWidget {
     @required this.builder,
     this.onTap,
     this.child,
-    this.hitTestBehavior,
+    this.hitTestBehavior = HitTestBehavior.opaque,
     MouseCursor mouseCursor,
   })  : assert(builder != null),
         mouseCursor = mouseCursor ?? SystemMouseCursors.click,
