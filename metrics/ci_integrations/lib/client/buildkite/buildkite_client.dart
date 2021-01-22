@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/buildkite/constants/buildkite_constants.dart';
 import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_mapper.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
@@ -118,6 +119,7 @@ class BuildkiteClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching builds...');
     const stateMapper = BuildkiteBuildStateMapper();
     final _page = _getValidPageNumber(page);
 
@@ -141,6 +143,8 @@ class BuildkiteClient {
   FutureOr<InteractionResult<BuildkiteBuildsPage>> fetchBuildsNext(
     BuildkiteBuildsPage currentPage,
   ) {
+    _logInfo('Fetching next builds');
+
     return _processPage(currentPage, _fetchBuildsPage);
   }
 
@@ -151,6 +155,8 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
+    _logInfo('Fetching builds from the page number $page: $url');
+
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
@@ -190,6 +196,8 @@ class BuildkiteClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching artifacts for build #$buildNumber...');
+
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
@@ -210,6 +218,8 @@ class BuildkiteClient {
   FutureOr<InteractionResult<BuildkiteArtifactsPage>> fetchArtifactsNext(
     BuildkiteArtifactsPage currentPage,
   ) {
+    _logInfo('Fetching next artifacts...');
+
     return _processPage(currentPage, _fetchArtifactsPage);
   }
 
@@ -220,6 +230,8 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
+    _logInfo('Fetching artifacts from the page number $page: $url');
+
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
@@ -247,6 +259,8 @@ class BuildkiteClient {
   /// The resulting [Uint8List] contains bytes of a desired artifact.
   Future<InteractionResult<Uint8List>> downloadArtifact(String url) async {
     if (url == null) return null;
+
+    _logInfo('Downloading artifact from the url: $url');
 
     final request = Request('GET', Uri.parse(url))
       ..headers.addAll(headers)
@@ -367,6 +381,11 @@ class BuildkiteClient {
   int _getValidPageNumber(int pageNumber) {
     if (pageNumber == null || pageNumber <= 0) return 1;
     return pageNumber;
+  }
+
+  /// Logs the given [message] as an info log.
+  void _logInfo(String message) {
+    Logger.logInfo('BuildkiteClient: $message');
   }
 
   /// Closes the client and cleans up any resources associated with it.

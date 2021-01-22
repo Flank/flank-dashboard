@@ -1,122 +1,86 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:intl/intl.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: avoid_redundant_argument_values
+import '../test_util/mock/io_sink_mock.dart';
 
 void main() {
   group("Logger", () {
-    final errorSink = IOSinkStub();
-    final messageSink = IOSinkStub();
+    final sinkMock = IOSinkMock();
 
-    test(
-      "creates Logger with default stderr if no error sink is given",
-      () {
-        final logger = Logger(messageSink: messageSink);
-        final errorSink = logger.errorSink;
+    const message = 'message';
+    const error = 'error';
 
-        expect(errorSink, equals(stderr));
-      },
-    );
-
-    test(
-      "creates Logger with default stdout if no message sink is given",
-      () {
-        final logger = Logger(errorSink: errorSink);
-        final messageSink = logger.messageSink;
-
-        expect(messageSink, equals(stdout));
-      },
-    );
-
-    test(".printError() prints the given error to the error sink", () {
-      final unimplementedMessageSink = IOSinkStub(
-        writelnCallback: (_) => throw UnimplementedError(),
-      );
-      final logger = Logger(
-        errorSink: errorSink,
-        messageSink: unimplementedMessageSink,
-      );
-      const expected = 'error';
-
-      expect(
-        () => logger.printError(expected),
-        prints(equalsIgnoringWhitespace(expected)),
-      );
+    tearDown(() {
+      reset(sinkMock);
     });
 
     test(
-      ".printMessage() prints the given message to the message sink",
+      ".logError() throws an Exception if the Logger is not configured",
       () {
-        final unimplementedErrorSink = IOSinkStub(
-          writelnCallback: (_) => throw UnimplementedError(),
-        );
-        final logger = Logger(
-          errorSink: unimplementedErrorSink,
-          messageSink: messageSink,
-        );
-        const expected = 'message';
+        expect(() => Logger.logError(error), throwsStateError);
+      },
+    );
 
-        expect(
-          () => logger.printMessage(expected),
-          prints(equalsIgnoringWhitespace(expected)),
-        );
+    test(
+      ".logMessage() throws an Exception if the Logger is not configured",
+      () {
+        expect(() => Logger.logMessage(message), throwsStateError);
+      },
+    );
+
+    test(
+      ".logInfo() throws an Exception if the Logger is not configured",
+      () {
+        expect(() => Logger.logInfo(message), throwsStateError);
+      },
+    );
+
+    test(".setup() sets up the Logger", () {
+      Logger.setup(messageSink: sinkMock);
+
+      expect(() => Logger.logMessage(message), returnsNormally);
+    });
+
+    test(".logError() logs the given error to the error sink", () {
+      Logger.setup(errorSink: sinkMock);
+      Logger.logError(error);
+
+      verify(sinkMock.writeln(error)).called(1);
+    });
+
+    test(
+      ".logMessage() logs the given message to the message sink",
+      () {
+        Logger.setup(messageSink: sinkMock);
+        Logger.logMessage(message);
+
+        verify(sinkMock.writeln(message)).called(1);
+      },
+    );
+
+    test(
+      ".logInfo() logs the given message to the message sink if the verbose is true",
+      () {
+        final dateTimeNow = DateFormat.yMd().add_Hms().format(DateTime.now());
+        final expected = '[$dateTimeNow] $message';
+
+        Logger.setup(messageSink: sinkMock, verbose: true);
+        Logger.logInfo(message);
+
+        verify(sinkMock.writeln(expected)).called(1);
+      },
+    );
+
+    test(
+      ".logInfo() does not log the given message to the message sink if the verbose is false",
+      () {
+        Logger.setup(messageSink: sinkMock, verbose: false);
+        Logger.logInfo(message);
+
+        verifyNever(sinkMock.writeln(message));
       },
     );
   });
-}
-
-/// A stub class for the [IOSink] providing a test implementation.
-class IOSinkStub implements IOSink {
-  /// A callback for the [writeln] method used to replace the default
-  /// implementation.
-  final void Function(Object) writelnCallback;
-
-  @override
-  Encoding encoding;
-
-  /// Creates an instance of this [IOSinkStub].
-  ///
-  /// The [writelnCallback] is optional.
-  IOSinkStub({
-    this.writelnCallback,
-  });
-
-  @override
-  void writeln([Object obj = ""]) {
-    if (writelnCallback != null) {
-      writelnCallback(obj);
-    } else {
-      print(obj);
-    }
-  }
-
-  @override
-  void add(List<int> data) {}
-
-  @override
-  void addError(Object error, [StackTrace stackTrace]) {}
-
-  @override
-  Future addStream(Stream<List<int>> stream) => Future.value(null);
-
-  @override
-  Future close() => Future.value(null);
-
-  @override
-  Future get done => Future.value(null);
-
-  @override
-  Future flush() => Future.value(null);
-
-  @override
-  void write(Object obj) {}
-
-  @override
-  void writeAll(Iterable objects, [String separator = ""]) {}
-
-  @override
-  void writeCharCode(int charCode) {}
 }

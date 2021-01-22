@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
@@ -124,6 +125,10 @@ void main() {
     final defaultBuildData = testData.generateBuildDataByNumbers(
       buildNumbers: [2, 1],
     );
+
+    setUpAll(() {
+      Logger.setup();
+    });
 
     setUp(() {
       reset(githubActionsClientMock);

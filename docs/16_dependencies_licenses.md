@@ -41,6 +41,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | equatable | [pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
 | archive | [pub.dev](https://pub.dev/packages/archive) | [Apache 2.0](https://github.com/brendan-duncan/archive/blob/master/LICENSE) |
 | firedart | [pub.dev](https://pub.dev/packages/firedart) | [Apache 2.0](https://github.com/cachapa/firedart/blob/master/LICENSE) |
+| intl | [pub.dev](https://pub.dev/packages/intl) | [BSD](https://github.com/dart-lang/intl/blob/master/LICENSE) |
 
 ### Dev dependencies
 | Name | Source | License |

@@ -10,6 +10,7 @@ dependencies:
   meta: ^1.1.8
   equatable: ^1.1.1
   archive: ^2.0.13
+  intl: ^0.16.1
   firedart:
     git:
       url: https://github.com/platform-platform/firedart.git

@@ -1,3 +1,4 @@
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
@@ -32,7 +33,6 @@ class CiIntegration {
   /// If [config] is `null` throws the [ArgumentError].
   Future<InteractionResult> sync(SyncConfig config) async {
     ArgumentError.checkNotNull(config);
-
     try {
       final sourceProjectId = config.sourceProjectId;
       final destinationProjectId = config.destinationProjectId;
@@ -43,6 +43,7 @@ class CiIntegration {
 
       List<BuildData> newBuilds;
       if (lastBuild == null) {
+        Logger.logInfo('There are no builds in the destination...');
         newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(

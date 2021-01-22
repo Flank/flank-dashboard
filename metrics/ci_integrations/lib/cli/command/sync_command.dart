@@ -32,15 +32,13 @@ class SyncCommand extends CiIntegrationCommand<void> {
   @override
   String get name => 'sync';
 
-  /// Creates an instance of this command with the given [logger].
+  /// Creates an instance of this command.
   ///
-  /// If the [supportedParties] is `null` the
+  /// If the [supportedParties] is `null`, the
   /// default [SupportedIntegrationParties] instance is created.
-  SyncCommand(
-    Logger logger, {
+  SyncCommand({
     SupportedIntegrationParties supportedParties,
-  })  : supportedParties = supportedParties ?? SupportedIntegrationParties(),
-        super(logger) {
+  }) : supportedParties = supportedParties ?? SupportedIntegrationParties() {
     argParser.addOption(
       'config-file',
       help: 'A path to the YAML configuration file.',
@@ -57,8 +55,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
+        Logger.logInfo('Parsing the given config file...');
         final rawConfig = parseConfigFileContent(file);
 
+        Logger.logInfo('Creating integration parties...');
         final sourceParty = getParty(
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
@@ -68,6 +68,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           supportedParties.destinationParties,
         );
 
+        Logger.logInfo('Creating source configs...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
@@ -77,6 +78,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationParty,
         );
 
+        Logger.logInfo('Creating integration clients...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
@@ -91,6 +93,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationProjectId: destinationConfig.destinationProjectId,
         );
 
+        Logger.logInfo('Syncing...');
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
         throw SyncError(
@@ -136,6 +139,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
       throw UnimplementedError('The given source config is unknown');
     }
 
+    Logger.logInfo('$party was created.');
+
     return party;
   }
 
@@ -145,7 +150,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
     Map<String, dynamic> configMap,
     IntegrationParty<T, IntegrationClient> party,
   ) {
-    return party.configParser.parse(configMap);
+    final config = party.configParser.parse(configMap);
+    Logger.logInfo('$config was created.');
+
+    return config;
   }
 
   /// Creates an [IntegrationClient] instance with the given [config]
@@ -154,7 +162,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
     Config config,
     IntegrationParty<Config, T> party,
   ) {
-    return party.clientFactory.create(config);
+    final client = party.clientFactory.create(config);
+    Logger.logInfo('$client was created.');
+
+    return client;
   }
 
   /// Creates a [CiIntegration] instance with the given
@@ -179,7 +190,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
-      logger.printMessage(result.message);
+      Logger.logMessage(result.message);
     } else {
       throw SyncError(message: result.message);
     }

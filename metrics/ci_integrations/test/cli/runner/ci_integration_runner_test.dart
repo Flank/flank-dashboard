@@ -5,15 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("CiIntegrationsRunner", () {
-    final Logger logger = Logger();
-    final CiIntegrationsRunner runner = CiIntegrationsRunner(logger);
-
-    test(
-      "throws an ArgumentError if the given logger is null",
-      () {
-        expect(() => CiIntegrationsRunner(null), throwsArgumentError);
-      },
-    );
+    final CiIntegrationsRunner runner = CiIntegrationsRunner();
 
     test(
       "has an executable name equals to the 'ci_integrations'",
@@ -34,9 +26,9 @@ void main() {
     );
 
     test(
-      "registers SyncCommand on create",
+      "registers a sync command on create",
       () {
-        final SyncCommand syncCommand = SyncCommand(logger);
+        final SyncCommand syncCommand = SyncCommand();
         final syncCommandName = syncCommand.name;
 
         final commands = runner.argParser.commands;
@@ -44,5 +36,29 @@ void main() {
         expect(commands, contains(syncCommandName));
       },
     );
+
+    test(
+      "registers a verbose option on create",
+      () {
+        final options = runner.argParser.options;
+
+        expect(options, contains('verbose'));
+      },
+    );
+
+    test(".run() sets up the Logger", () {
+      final runner = CiIntegrationsRunnerStub();
+
+      runner.run([]);
+
+      expect(() => Logger.logMessage(''), returnsNormally);
+    });
   });
+}
+
+/// A stub class for the [CiIntegrationsRunner] used in tests
+/// to remove printing the usage information for this runner.
+class CiIntegrationsRunnerStub extends CiIntegrationsRunner {
+  @override
+  void printUsage() {}
 }

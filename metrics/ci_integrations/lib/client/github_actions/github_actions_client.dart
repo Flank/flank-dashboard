@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -149,6 +150,8 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) async {
+    _logInfo('Fetching runs for workflow $workflowIdentifier...');
+
     const statusMapper = GithubActionStatusMapper();
     final _page = _getValidPageNumber(page);
 
@@ -162,7 +165,7 @@ class GithubActionsClient {
       basePath,
       path: 'workflows/$workflowIdentifier/runs',
       queryParameters: queryParameters,
-    );
+    ); 
 
     return _fetchWorkflowRunsPage(url, _page, perPage);
   }
@@ -171,6 +174,8 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
   ) {
+    _logInfo('Fetching next workflow runs...');
+
     return _processPage(currentPage, _fetchWorkflowRunsPage);
   }
 
@@ -181,6 +186,8 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    _logInfo('Fetching workflow runs from the page number $page: $url');
+
     return _handleResponse<WorkflowRunsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -259,6 +266,8 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
+    _logInfo('Fetching jobs for run $runId...');
+
     const statusMapper = GithubActionStatusMapper();
 
     final _page = _getValidPageNumber(page);
@@ -282,6 +291,8 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchRunJobsNext(
     WorkflowRunJobsPage currentPage,
   ) {
+    _logInfo('Fetching next jobs...');
+
     return _processPage(currentPage, _fetchRunJobsPage);
   }
 
@@ -292,6 +303,8 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    _logInfo('Fetching run jobs from the page number $page: $url');
+
     return _handleResponse(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -345,6 +358,8 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
+    _logInfo('Fetching run artifacts for run $runId...');
+
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
@@ -365,6 +380,8 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifactsNext(
     WorkflowRunArtifactsPage currentPage,
   ) {
+    _logInfo('Fetching next run artifacts...');
+
     return _processPage(currentPage, _fetchRunArtifactsPage);
   }
 
@@ -375,6 +392,8 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    _logInfo('Fetching run artifacts from the page number $page: $url');
+
     return _handleResponse<WorkflowRunArtifactsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -406,6 +425,7 @@ class GithubActionsClient {
     String url,
   ) async {
     try {
+      _logInfo('Downloading artifact from the url: $url');
       final response = await _client.get(url, headers: headers);
 
       if (response.statusCode == HttpStatus.ok) {
@@ -509,6 +529,11 @@ class GithubActionsClient {
   int _getValidPageNumber(int pageNumber) {
     if (pageNumber == null || pageNumber <= 0) return 1;
     return pageNumber;
+  }
+
+  /// Logs the given [message] as an info log.
+  void _logInfo(String message) {
+    Logger.logInfo('GithubActionsClient: $message');
   }
 
   /// Closes the client and cleans up any resources associated with it.

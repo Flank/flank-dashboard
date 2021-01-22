@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
@@ -39,6 +40,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
+    _logInfo('Fetching builds after build #${lastBuild.number}...');
+
     if (numberOfBuilds <= 0) return [];
 
     final builds = await _fetchLatestBuilds(
@@ -56,10 +59,12 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String projectId) async {
+    _logInfo('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
+
     return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
@@ -73,6 +78,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String projectId, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
+    _logInfo('Fetching builds for the project $projectId...');
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
     _throwIfInteractionUnsuccessful(newBuildsFetchResult);
@@ -161,6 +167,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String jobName,
     JenkinsBuild jenkinsBuild,
   ) async {
+    _logInfo('Mapping build to build data...');
+
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
@@ -177,6 +185,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+    _logInfo('Fetching coverage artifact for a build #${build.number}...');
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
@@ -210,6 +219,11 @@ class JenkinsSourceClientAdapter implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Logs the given [message] as an info log.
+  void _logInfo(String message) {
+    Logger.logInfo('JenkinsSourceClientAdapter: $message');
   }
 
   @override

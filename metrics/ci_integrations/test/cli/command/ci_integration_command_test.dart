@@ -1,29 +1,18 @@
 import 'package:ci_integration/cli/command/ci_integration_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
 import 'package:test/test.dart';
-
-import '../test_util/stub/logger_stub.dart';
 
 void main() {
   group("CiIntegrationCommand", () {
     const optionName = 'test-option';
 
-    final logger = LoggerStub();
-    final command = CiIntegrationCommandStub(logger);
-    final runner = CiIntegrationsRunner(logger);
+    final command = CiIntegrationCommandStub();
+    final runner = CiIntegrationsRunner();
 
     setUpAll(() {
       runner.addCommand(command);
       command.argParser.addOption(optionName);
     });
-
-    test(
-      "throws an ArgumentError if the given logger is null",
-      () {
-        expect(() => CiIntegrationCommandStub(null), throwsArgumentError);
-      },
-    );
 
     test(
       ".getArgumentValue() returns null if option was not parsed",
@@ -56,8 +45,6 @@ class CiIntegrationCommandStub extends CiIntegrationCommand {
 
   @override
   String get name => 'test';
-
-  CiIntegrationCommandStub(Logger logger) : super(logger);
 
   @override
   void run() {}

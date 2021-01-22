@@ -20,8 +20,8 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matcher_util.dart';
+import '../test_util/mock/io_sink_mock.dart';
 import '../test_util/mock/mocks.dart';
-import '../test_util/stub/logger_stub.dart';
 import '../test_util/test_data/config_test_data.dart';
 
 void main() {
@@ -43,9 +43,7 @@ void main() {
       final sourcePartiesMock = PartiesMock<SourceParty>();
       final destinationPartiesMock = PartiesMock<DestinationParty>();
 
-      final loggerStub = LoggerStub();
       final syncCommand = SyncCommandStub(
-        loggerStub,
         SupportedIntegrationParties(
           sourceParties: sourcePartiesMock,
           destinationParties: destinationPartiesMock,
@@ -54,8 +52,13 @@ void main() {
         ciIntegrationMock,
       );
 
+      final sinkMock = IOSinkMock();
+
+      setUpAll(() {
+        Logger.setup(messageSink: sinkMock);
+      });
+
       setUp(() {
-        loggerStub.clearLogs();
         syncCommand.reset();
         reset(fileMock);
         reset(ciIntegrationMock);
@@ -64,6 +67,7 @@ void main() {
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
         reset(_firebaseAuthMock);
+        reset(sinkMock);
       });
 
       PostExpectation<Future<InteractionResult>> whenRunSync() {
@@ -266,7 +270,7 @@ void main() {
             destinationClientMock,
           );
 
-          expect(loggerStub.messageLogsNumber, equals(1));
+          verify(sinkMock.writeln(any)).called(1);
         },
       );
 
@@ -291,7 +295,7 @@ void main() {
       test(
         ".dispose() disposes the given source client",
         () async {
-          final syncCommand = SyncCommand(loggerStub);
+          final syncCommand = SyncCommand();
 
           await syncCommand.dispose(
             sourceClientMock,
@@ -305,7 +309,7 @@ void main() {
       test(
         ".dispose() disposes the given destination client",
         () async {
-          final syncCommand = SyncCommand(loggerStub);
+          final syncCommand = SyncCommand();
 
           await syncCommand.dispose(
             sourceClientMock,
@@ -354,14 +358,15 @@ class SyncCommandStub extends SyncCommand {
   /// A counter used to save the number of times the [dispose] method called.
   int _disposeCallCount = 0;
 
+  /// Provides a number of times the [dispose] method called.
   int get disposeCallCount => _disposeCallCount;
 
+  /// Creates a new instance of the [SyncCommandStub].
   SyncCommandStub(
-    Logger logger,
     SupportedIntegrationParties supportedParties,
     this.fileMock,
     this.ciIntegrationMock,
-  ) : super(logger, supportedParties: supportedParties);
+  ) : super(supportedParties: supportedParties);
 
   /// Resets this stub to ensure tests run independently.
   void reset() {

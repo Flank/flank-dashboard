@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
@@ -32,6 +33,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String pipelineSlug) async {
+    _logInfo('Fetching builds...');
     return _fetchLatestBuilds(pipelineSlug);
   }
 
@@ -42,6 +44,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
+    _logInfo('Fetching builds after build #$latestBuildNumber...');
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -153,6 +156,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     String pipelineSlug,
     BuildkiteBuild build,
   ) async {
+    _logInfo('Fetching coverage artifact for a build #${build.number}...');
     final interaction = await buildkiteClient.fetchArtifacts(
       pipelineSlug,
       build.number,
@@ -204,6 +208,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     if (artifactBytes == null) return null;
 
     try {
+      _logInfo('Parsing coverage artifact...');
       final coverageContent = utf8.decode(artifactBytes);
       final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
       final coverage = CoverageData.fromJson(coverageJson);
@@ -244,6 +249,11 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
     }
+  }
+
+  /// Logs the given [message] as an info log.
+  void _logInfo(String message) {
+    Logger.logInfo('BuildkiteSourceClientAdapter: $message');
   }
 
   @override
