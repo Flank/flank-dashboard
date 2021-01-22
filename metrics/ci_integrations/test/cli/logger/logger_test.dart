@@ -16,27 +16,6 @@ void main() {
       reset(sinkMock);
     });
 
-    test(
-      ".logError() throws an Exception if the Logger is not configured",
-      () {
-        expect(() => Logger.logError(error), throwsStateError);
-      },
-    );
-
-    test(
-      ".logMessage() throws an Exception if the Logger is not configured",
-      () {
-        expect(() => Logger.logMessage(message), throwsStateError);
-      },
-    );
-
-    test(
-      ".logInfo() throws an Exception if the Logger is not configured",
-      () {
-        expect(() => Logger.logInfo(message), throwsStateError);
-      },
-    );
-
     test(".setup() sets up the Logger", () {
       Logger.setup(messageSink: sinkMock);
 
