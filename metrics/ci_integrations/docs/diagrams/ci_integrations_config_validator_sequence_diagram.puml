@@ -34,10 +34,14 @@ deactivate ConfigValidatorFactory
 SyncCommand -> ConfigValidator : validate(config)
 activate ConfigValidator
 
+
 ConfigValidator -> ConfigValidatorClient : tries to authenticate with the given credentials
 activate ConfigValidatorClient
 
 ConfigValidatorClient --> ConfigValidator : authentication result
+ConfigValidator -> ConfigValidatorClient : tries to validate other config fields
+ConfigValidatorClient --> ConfigValidator : other validation result
+
 deactivate ConfigValidatorClient
 
 alt config is valid

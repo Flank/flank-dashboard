@@ -44,7 +44,7 @@
 
     }
 
-    package cool_integration {
+    package destination.cool_integration {
         package config as cool_integration_config {
             package validator as cool_integration_validator {
                 class CoolIntegrationConfigValidator {}

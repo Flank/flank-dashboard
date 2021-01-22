@@ -38,7 +38,7 @@ Consider the following class diagram that demonstrates the required changes usin
 
 #### Package Structure
 
-Consider the package structure using the source `CoolIntegration` as an example:
+Consider the package structure using the destination `CoolIntegration` as an example:
 
 > * integration/
 >   * interface/
@@ -52,15 +52,15 @@ Consider the package structure using the source `CoolIntegration` as an example:
 >         * config_validator_client.dart
 >     * exception/
 >       * config_validation_exception.dart 
->   * source/
->     * cool_integration/
->       * config/   
->         * validator/
->           * cool_integration_config_validator.dart
->         * validator_factory/
->           * cool_integration_config_validator_factory.dart
->       * client/  
->         * cool_integration_config_validator_client.dart
+> * destination/
+>   * cool_integration/
+>     * config/   
+>       * validator/
+>         * cool_integration_config_validator.dart
+>       * validator_factory/
+>         * cool_integration_config_validator_factory.dart
+>     * client/  
+>       * cool_integration_config_validator_client.dart
 
 ## Making things work
 Consider the following sequence diagram that illustrates the process of the configuration files validation:
