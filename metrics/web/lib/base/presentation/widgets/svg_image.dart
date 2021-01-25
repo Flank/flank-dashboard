@@ -9,7 +9,7 @@ import 'package:metrics/platform/stub/renderer/renderer_stub.dart'
 /// otherwise uses the [Image.network].
 class SvgImage extends StatelessWidget {
   /// A default [Renderer] of the [SvgImage] class.
-  static const _defaultPlatform = Renderer();
+  static const _defaultRenderer = Renderer();
 
   /// A source of the image to display.
   final String src;
@@ -49,7 +49,7 @@ class SvgImage extends StatelessWidget {
     Renderer renderer,
   })  : alignment = alignment ?? Alignment.center,
         fit = fit ?? BoxFit.none,
-        renderer = renderer ?? _defaultPlatform;
+        renderer = renderer ?? _defaultRenderer;
 
   @override
   Widget build(BuildContext context) {
