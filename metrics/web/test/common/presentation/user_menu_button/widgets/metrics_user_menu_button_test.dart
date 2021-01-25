@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
-import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
@@ -108,7 +107,7 @@ void main() {
 
         await tester.pump();
 
-        final image = tester.widget<SvgImage>(find.byType(SvgImage));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(hoverColor));
       },
@@ -123,7 +122,7 @@ void main() {
           ));
         });
 
-        final image = tester.widget<SvgImage>(find.byType(SvgImage));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(color));
       },

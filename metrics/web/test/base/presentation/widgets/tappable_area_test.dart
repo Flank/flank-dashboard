@@ -111,17 +111,6 @@ void main() {
     );
 
     testWidgets(
-      "uses opaque hit test behaviour if the hit test behaviour is not provided",
-      (WidgetTester tester) async {
-        final tappableArea = TappableArea(
-          builder: _builder,
-        );
-
-        expect(tappableArea.hitTestBehavior, equals(HitTestBehavior.opaque));
-      },
-    );
-
-    testWidgets(
       "applies the given hit test behavior",
       (WidgetTester tester) async {
         const hitTestBehavior = HitTestBehavior.opaque;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
@@ -52,7 +51,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.width, equals(expectedWidth));
     });
@@ -68,7 +67,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.height, equals(expectedHeight));
     });
@@ -84,7 +83,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.fit, equals(expectedFit));
     });

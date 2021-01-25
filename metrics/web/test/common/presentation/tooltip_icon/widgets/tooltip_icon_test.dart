@@ -98,7 +98,7 @@ void main() {
           ));
         });
 
-        final icon = tester.widget<SvgImage>(find.byType(SvgImage));
+        final icon = FinderUtil.findSvgImage(tester);
 
         expect(icon.color, color);
       },
@@ -117,7 +117,7 @@ void main() {
 
         await _hoverBar(tester);
 
-        final icon = tester.widget<SvgImage>(find.byType(SvgImage));
+        final icon = FinderUtil.findSvgImage(tester);
 
         expect(icon.color, hoverColor);
       },
