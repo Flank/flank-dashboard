@@ -185,7 +185,7 @@ firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
 firebase deploy --only hosting:metrics
 ```
 
-_**Note:** If you've already configured the hosting deployment target you should run the `firebase target:clear hosting metrics` before the 5th step._
+_**Note:** If you've already had the configured hosting deployment target you should run the `firebase target:clear hosting metrics` before the 5th step._
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 

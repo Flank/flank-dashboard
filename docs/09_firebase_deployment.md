@@ -303,7 +303,7 @@ You can deploy the built application to the Firebase Hosting using the `firebase
 4. Run the `firebase target:apply hosting metrics <YOUR_HOSTING_NAME>` to specify the hosting deploy to. You can find the `<YOUR_HOSTING_NAME>` within the `Hosting` section in the Firebase console.
 5. Run the `firebase deploy --only hosting:metrics` command to deploy the application to the Firebase Hosting.
 
-_**Note:** If you've already configured the hosting deployment target you should run the `firebase target:clear hosting metrics` before the 4th step._
+_**Note:** If you've already had the configured hosting deployment target you should run the `firebase target:clear hosting metrics` before the 4th step._
 
 When the deployment process is finished, the application is accessible by the `Hosting URL` printed to the console.
 
