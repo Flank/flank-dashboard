@@ -166,17 +166,29 @@ firebase login
 ```
 firebase use --add
 ```
-4. Give an alias to your project.
-5. Run the  command from the root of the metrics project to build the release version of the application.
+4. Run the  command from the root of the metrics project to build the release version of the application.
    It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
+
 ```
 flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
-6. Run the  command to deploy an application to the Firebase Hosting.
+5. Run the command to clear the previous hosting selection.
 
 ```
-firebase deploy --only hosting
+firebase target:clear hosting metrics
+```
+
+6. Run the command to specify the hosting deploy to.
+
+```
+firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
+```
+
+7. Run the  command to deploy an application to the Firebase Hosting.
+
+```
+firebase deploy --only hosting:metrics
 ```
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
