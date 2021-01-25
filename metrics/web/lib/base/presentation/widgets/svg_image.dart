@@ -37,7 +37,7 @@ class SvgImage extends StatelessWidget {
   ///
   /// If the given [alignment] is `null` the [Alignment.center] is used.
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  /// If the given [platform] is `null`, the instance of the [Renderer]
+  /// If the given [renderer] is `null`, the instance of the [Renderer]
   /// is used.
   const SvgImage(
     this.src, {
@@ -46,10 +46,10 @@ class SvgImage extends StatelessWidget {
     this.color,
     AlignmentGeometry alignment,
     BoxFit fit,
-    Renderer platform,
+    Renderer renderer,
   })  : alignment = alignment ?? Alignment.center,
         fit = fit ?? BoxFit.none,
-        renderer = platform ?? _defaultPlatform;
+        renderer = renderer ?? _defaultPlatform;
 
   @override
   Widget build(BuildContext context) {

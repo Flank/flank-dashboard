@@ -10,9 +10,9 @@ import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
-import 'package:metrics/platform/stub/renderer/renderer_stub.dart'
-    if (dart.library.html) 'package:metrics/platform/web/renderer/web_renderer.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../test_utils/renderer_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -22,7 +22,7 @@ void main() {
     final readUseCase = _ReadLocalConfigUseCaseMock();
     final updateUseCase = _UpdateLocalConfigUseCaseMock();
     final closeUseCase = _CloseLocalConfigStorageUseCaseMock();
-    final rendererMock = _RendererMock();
+    final renderer = RendererMock();
 
     const isFpsMonitorEnabled = true;
     const localConfig = LocalConfig(
@@ -40,7 +40,7 @@ void main() {
         readUseCase,
         updateUseCase,
         closeUseCase,
-        rendererMock,
+        renderer,
       );
     });
 
@@ -49,7 +49,7 @@ void main() {
       reset(readUseCase);
       reset(updateUseCase);
       reset(closeUseCase);
-      reset(rendererMock);
+      reset(renderer);
     });
 
     test(
@@ -121,7 +121,7 @@ void main() {
             readUseCase,
             updateUseCase,
             closeUseCase,
-            rendererMock,
+            renderer,
           ),
           returnsNormally,
         );
@@ -412,20 +412,20 @@ void main() {
     );
 
     test(
-      ".rendererDisplayViewModel calls .isSkia of the given renderer",
+      ".rendererDisplayViewModel gets the current renderer using the given renderer class",
       () async {
-        when(rendererMock.isSkia).thenReturn(true);
+        when(renderer.isSkia).thenReturn(true);
 
         notifier.rendererDisplayViewModel;
 
-        verify(rendererMock.isSkia).called(1);
+        verify(renderer.isSkia).called(1);
       },
     );
 
     test(
       ".rendererDisplayViewModel returns a view model with skia value if the application uses skia renderer",
       () async {
-        when(rendererMock.isSkia).thenReturn(true);
+        when(renderer.isSkia).thenReturn(true);
         const expectedViewModel = RendererDisplayViewModel(
           currentRenderer: DebugMenuStrings.skia,
         );
@@ -439,7 +439,7 @@ void main() {
     test(
       ".rendererDisplayViewModel returns a view model with html value if the application uses html renderer",
       () async {
-        when(rendererMock.isSkia).thenReturn(false);
+        when(renderer.isSkia).thenReturn(false);
         const expectedViewModel = RendererDisplayViewModel(
           currentRenderer: DebugMenuStrings.html,
         );
@@ -472,5 +472,3 @@ class _UpdateLocalConfigUseCaseMock extends Mock
 
 class _CloseLocalConfigStorageUseCaseMock extends Mock
     implements CloseLocalConfigStorageUseCase {}
-
-class _RendererMock extends Mock implements Renderer {}

@@ -78,12 +78,18 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.firstWidget<SizedBox>(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(SizedBox),
-        ));
+        final sizedBoxPredicate = find.byWidgetPredicate(
+          (widget) =>
+              widget is SizedBox &&
+              widget.width == DimensionsConfig.contentWidth,
+        );
 
-        expect(sizedBox.width, DimensionsConfig.contentWidth);
+        final sizedBoxFinder = find.descendant(
+          of: find.byType(MetricsAppBar),
+          matching: sizedBoxPredicate,
+        );
+
+        expect(sizedBoxFinder, findsOneWidget);
       },
     );
 
@@ -94,12 +100,18 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.firstWidget<SizedBox>(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(SizedBox),
-        ));
+        final sizedBoxPredicate = find.byWidgetPredicate(
+          (widget) =>
+              widget is SizedBox &&
+              widget.height == DimensionsConfig.appBarHeight,
+        );
 
-        expect(sizedBox.height, DimensionsConfig.appBarHeight);
+        final sizedBoxFinder = find.descendant(
+          of: find.byType(MetricsAppBar),
+          matching: sizedBoxPredicate,
+        );
+
+        expect(sizedBoxFinder, findsOneWidget);
       },
     );
 
