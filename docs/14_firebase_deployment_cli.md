@@ -173,19 +173,13 @@ firebase use --add
 flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
-5. Run the command to clear the previous hosting selection.
-
-```
-firebase target:clear hosting metrics
-```
-
-6. Run the command to specify the hosting deploy to.
+5. Run the command to specify the hosting deploy to. 
 
 ```
 firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
 ```
 
-7. Run the  command to deploy an application to the Firebase Hosting.
+6. Run the  command to deploy an application to the Firebase Hosting.
 
 ```
 firebase deploy --only hosting:metrics

@@ -300,9 +300,8 @@ You can deploy the built application to the Firebase Hosting using the `firebase
 1. Open the terminal and navigate to the `metrics` project folder.
 2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account. Use the same account that you used to create your Firebase project (or the one that has access to it).
 3. Run the `firebase use --add` command and select the ID of the project created in previous steps.
-4. Run the `firebase target:clear hosting metrics` to clear the previous hosting selection.
-5. Run the `firebase target:apply hosting metrics <YOUR_HOSTING_NAME>` to specify the hosting deploy to.
-6. Run the `firebase deploy --only hosting:metrics` command to deploy the application to the Firebase Hosting.
+4. Run the `firebase target:apply hosting metrics <YOUR_HOSTING_NAME>` to specify the hosting deploy to. You can find the hosting name in the `Hosting` section in the Firebase console.
+5. Run the `firebase deploy --only hosting:metrics` command to deploy the application to the Firebase Hosting.
 
 When the deployment process is finished, the application is accessible by the `Hosting URL` printed to the console.
 
