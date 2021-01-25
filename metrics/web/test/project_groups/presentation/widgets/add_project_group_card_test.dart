@@ -165,7 +165,10 @@ void main() {
         );
 
         await tester.tap(find.byType(AddProjectGroupCard));
-        await tester.pumpAndSettle();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         final barrierFinder = find.byWidgetPredicate(
           (widget) => widget is ModalBarrier && widget.color == barrierColor,
@@ -271,9 +274,9 @@ void main() {
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
         );
 
-        final networkImage = FinderUtil.findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findSvgImage(tester);
 
-        expect(networkImage.url, equals('icons/add.svg'));
+        expect(networkImage.src, equals('icons/add.svg'));
       },
     );
 
@@ -290,7 +293,7 @@ void main() {
           )),
         );
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(inactiveIconColor));
       },
@@ -309,7 +312,7 @@ void main() {
           )),
         );
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(positiveIconColor));
       },

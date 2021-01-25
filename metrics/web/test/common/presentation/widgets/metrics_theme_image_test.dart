@@ -51,7 +51,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.width, equals(expectedWidth));
     });
@@ -67,7 +67,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.height, equals(expectedHeight));
     });
@@ -83,7 +83,7 @@ void main() {
         ));
       });
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = FinderUtil.findSvgImage(tester);
 
       expect(image.fit, equals(expectedFit));
     });
@@ -103,8 +103,8 @@ void main() {
           ));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
-        final asset = image.url;
+        final image = FinderUtil.findSvgImage(tester);
+        final asset = image.src;
 
         expect(asset, equals(darkAsset));
       },
@@ -125,8 +125,8 @@ void main() {
           ));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
-        final asset = image.url;
+        final image = FinderUtil.findSvgImage(tester);
+        final asset = image.src;
 
         expect(asset, equals(lightAsset));
       },
@@ -168,14 +168,16 @@ class _MetricsThemeImageTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestInjectionContainer(
-      themeNotifier: themeNotifier,
-      child: MetricsThemeImage(
-        darkAsset: darkAsset,
-        lightAsset: lightAsset,
-        width: width,
-        height: height,
-        fit: fit,
+    return MaterialApp(
+      home: TestInjectionContainer(
+        themeNotifier: themeNotifier,
+        child: MetricsThemeImage(
+          darkAsset: darkAsset,
+          lightAsset: lightAsset,
+          width: width,
+          height: height,
+          fit: fit,
+        ),
       ),
     );
   }

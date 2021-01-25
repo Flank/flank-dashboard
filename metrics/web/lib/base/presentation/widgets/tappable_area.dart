@@ -40,13 +40,16 @@ class TappableArea extends StatefulWidget {
   ///
   /// The [builder] must not be null.
   ///
+  /// If the [hitTestBehavior] is not provided, the [HitTestBehavior.opaque]
+  /// is used.
+  ///
   /// The [mouseCursor] value defaults to [SystemMouseCursors.click].
   const TappableArea({
     Key key,
     @required this.builder,
     this.onTap,
     this.child,
-    this.hitTestBehavior,
+    this.hitTestBehavior = HitTestBehavior.opaque,
     MouseCursor mouseCursor,
   })  : assert(builder != null),
         mouseCursor = mouseCursor ?? SystemMouseCursors.click,

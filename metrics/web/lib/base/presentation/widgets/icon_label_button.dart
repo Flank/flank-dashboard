@@ -40,7 +40,6 @@ class IconLabelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TappableArea(
       onTap: onPressed,
-      hitTestBehavior: HitTestBehavior.opaque,
       builder: (context, isHovered, _) {
         return Padding(
           padding: contentPadding,

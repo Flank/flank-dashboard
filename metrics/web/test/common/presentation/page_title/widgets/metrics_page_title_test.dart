@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
@@ -47,7 +48,7 @@ void main() {
 
       final finder = find.descendant(
         of: find.byTooltip(CommonStrings.navigateBack),
-        matching: find.byType(Image),
+        matching: find.byType(SvgImage),
       );
 
       expect(finder, findsOneWidget);
@@ -133,10 +134,10 @@ void main() {
 
         final iconFinder = find.descendant(
           of: find.byTooltip(CommonStrings.navigateBack),
-          matching: find.byType(Image),
+          matching: find.byType(SvgImage),
         );
 
-        final iconWidget = tester.widget<Image>(iconFinder);
+        final iconWidget = tester.widget<SvgImage>(iconFinder);
 
         expect(iconWidget.color, equals(testIconColor));
       },

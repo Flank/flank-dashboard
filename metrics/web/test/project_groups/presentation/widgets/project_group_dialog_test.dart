@@ -4,6 +4,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
@@ -543,13 +544,11 @@ void main() {
           if (widget is TextField && widget.decoration?.prefixIcon != null) {
             final iconFinder = find.descendant(
               of: find.byWidget(widget.decoration.prefixIcon),
-              matching: find.byType(Image),
+              matching: find.byType(SvgImage),
             );
 
-            final image = tester.widget<Image>(iconFinder);
-
-            final networkImage = image?.image as NetworkImage;
-            final imageUrl = networkImage?.url;
+            final image = tester.widget<SvgImage>(iconFinder);
+            final imageUrl = image.src;
 
             return imageUrl == 'icons/search.svg';
           }

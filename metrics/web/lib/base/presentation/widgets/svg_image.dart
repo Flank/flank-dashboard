@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/renderer/renderer_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/renderer/web_renderer.dart';
 
 /// A widget that displays an SVG image.
 ///
 /// Uses the [SvgPicture.network] if the application uses SKIA renderer,
 /// otherwise uses the [Image.network].
 class SvgImage extends StatelessWidget {
-  /// A default [WebPlatform] of the [SvgImage] class.
-  static const _defaultPlatform = WebPlatform();
+  /// A default [Renderer] of the [SvgImage] class.
+  static const _defaultRenderer = Renderer();
 
   /// A source of the image to display.
   final String src;
@@ -29,14 +30,14 @@ class SvgImage extends StatelessWidget {
   /// An [AlignmentGeometry] to align this image within its parent widget.
   final AlignmentGeometry alignment;
 
-  /// A [WebPlatform] used to detect if the current application uses SKIA.
-  final WebPlatform platform;
+  /// A [Renderer] used to detect if the current application uses SKIA.
+  final Renderer renderer;
 
   /// Creates a new instance of the [SvgImage].
   ///
   /// If the given [alignment] is `null` the [Alignment.center] is used.
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  /// If the given [platform] is `null`, the instance of the [WebPlatform]
+  /// If the given [renderer] is `null`, the instance of the [Renderer]
   /// is used.
   const SvgImage(
     this.src, {
@@ -45,14 +46,14 @@ class SvgImage extends StatelessWidget {
     this.color,
     AlignmentGeometry alignment,
     BoxFit fit,
-    WebPlatform platform,
+    Renderer renderer,
   })  : alignment = alignment ?? Alignment.center,
         fit = fit ?? BoxFit.none,
-        platform = platform ?? _defaultPlatform;
+        renderer = renderer ?? _defaultRenderer;
 
   @override
   Widget build(BuildContext context) {
-    final _isSkia = platform.isSkia;
+    final _isSkia = renderer.isSkia;
 
     return _isSkia
         ? SvgPicture.network(
