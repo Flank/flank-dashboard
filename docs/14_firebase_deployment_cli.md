@@ -18,7 +18,7 @@ Before you start, you should have the following installed:
 gcloud auth login
 ```
 
-2. List avaiable organisations.
+2. List available organisations.
 
 ```
 gcloud organizations list
@@ -155,7 +155,7 @@ flutter config --enable-web
 ### Building and deploying Flutter application
  
 1. Open the terminal and navigate to the metrics project folder.
-2. Run  command and follow the instructions to log in to the Firebase CLI with your Google account.
+2. Run the command and follow the instructions to log in to the Firebase CLI with your Google account.
  Use the same account that you used to create your Firebase project (or the one that has access to it).
 
 ```
@@ -166,20 +166,20 @@ firebase login
 ```
 firebase use --add
 ```
-4. Run the  command from the root of the metrics project to build the release version of the application.
+4. Run the command from the root of the metrics project to build the release version of the application.
    It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
 
 ```
 flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
-5. Run the command to specify the hosting deploy to. You can find the hosting name within the `Hosting` section in the Firebase console.
+5. Run the command to specify the hosting deploy to. You can find the `<YOUR_HOSTING_NAME>` within the `Hosting` section in the Firebase console.
 
 ```
 firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
 ```
 
-6. Run the  command to deploy an application to the Firebase Hosting.
+6. Run the command to deploy an application to the Firebase Hosting.
 
 ```
 firebase deploy --only hosting:metrics
@@ -200,7 +200,7 @@ The `metrics/firebase` folder contains Firestore security rules, Firestore index
 npm install
 ```
 
-3. Run the  command to deploy all components.
+3. Run the command to deploy all components.
 
 ```
 firebase deploy
@@ -209,7 +209,7 @@ firebase deploy
 
 Now you can create test projects in your Firestore database: 
 
-1. List service accounst 
+1. List service accounts 
 
 ```
 gcloud iam service-accounts list
