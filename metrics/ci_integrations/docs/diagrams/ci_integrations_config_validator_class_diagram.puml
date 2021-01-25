@@ -24,8 +24,8 @@
 
                     package validator {
                         abstract class ConfigValidator<T extends Config> {
-                            - validatorClient: ConfigValidatorClient
-                            - errorBuffer: StringBuffer
+                            - _validatorClient: ConfigValidatorClient
+                            - _errorBuffer: StringBuffer
                             + Future<void> validate(T config)
                         }
                     }
@@ -74,7 +74,9 @@
             }
 
             package adapter {
-                class CoolIntegrationDestinationConfigValidatorClientAdapter {}
+                class CoolIntegrationDestinationConfigValidatorClientAdapter {
+                    - _client: CoolIntegrationConfigValidatorClient
+                }
             }
         }
     }
@@ -97,6 +99,7 @@
 
     ConfigValidator --> ConfigValidatorClient : uses
     ConfigValidator --> ConfigValidationException : throws
+    ConfigValidatorClient --> ConfigValidationException : throws
     ConfigValidator --> Logger : uses
     ConfigValidator --> Config : uses
 
@@ -106,7 +109,8 @@
     CoolIntegrationDestinationConfigValidatorClientAdapter ..|> DestinationConfigValidatorClient
 
     CoolIntegrationDestinationConfigValidator ..|> ConfigValidator
-    CoolIntegrationDestinationConfigValidator --> CoolIntegrationConfigValidatorClient : uses
+    CoolIntegrationDestinationConfigValidator -left-> CoolIntegrationDestinationConfigValidatorClientAdapter : uses
+    CoolIntegrationDestinationConfigValidatorClientAdapter -down-> CoolIntegrationConfigValidatorClient : uses
     CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidatorClient : creates
