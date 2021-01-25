@@ -1,35 +1,55 @@
 @startuml ci_integrations_config_validator_class_diagram
 
     package integration {
-        package interface.base {
-            package party {
-                abstract class IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
-                    + clientFactory: IntegrationClientFactory<T, K>
-                    + configParser: ConfigParser<T>
-                    + configValidatorFactory: ConfigValidatorFactory<V>
-                }
-            }
-
-            package client {
-                abstract class ConfigValidatorClient {}
-            }
-
-            package config {
-                package model {
-                    abstract class Config {}
-                }
-
-                package validator {
-                    abstract class ConfigValidator<T extends Config> {
-                        - validatorClient: ConfigValidatorClient
-                        - errorBuffer: StringBuffer
-                        + Future<void> validate(T config)
+        package interface {
+            package base {
+                package party {
+                    abstract class IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
+                        + clientFactory: IntegrationClientFactory<T, K>
+                        + configParser: ConfigParser<T>
+                        + configValidatorFactory: ConfigValidatorFactory<V>
                     }
                 }
 
-                package validator_factory {
-                    abstract class ConfigValidatorFactory<V extends ConfigValidator> {
-                        + V create()
+                package client {
+                    abstract class ConfigValidatorClient {
+                        + Future<void> validateAuth(AuthorizationBase auth)
+                    }
+                }
+
+                package config {
+                    package model {
+                        abstract class Config {}
+                    }
+
+                    package validator {
+                        abstract class ConfigValidator<T extends Config> {
+                            - validatorClient: ConfigValidatorClient
+                            - errorBuffer: StringBuffer
+                            + Future<void> validate(T config)
+                        }
+                    }
+
+                    package validator_factory {
+                        abstract class ConfigValidatorFactory<V extends ConfigValidator> {
+                            + V create()
+                        }
+                    }
+                }
+            }
+
+            package source {
+                package client as source_client {
+                    abstract class SourceConfigValidatorClient {
+                        + Future<void> validateSourceProjectId(String sourceProjectId)
+                    }
+                }
+            }
+
+            package destination {
+                package client as destination_client {
+                    abstract class DestinationConfigValidatorClient {
+                        + Future<void> validateDestinationProjectId(String destinationProjectId)
                     }
                 }
             }
@@ -46,11 +66,15 @@
     package destination.cool_integration {
         package config as cool_integration_config {
             package validator as cool_integration_validator {
-                class CoolIntegrationConfigValidator {}
+                class CoolIntegrationDestinationConfigValidator {}
             }
 
             package validator_factory as cool_integration_validator_validator_factory {
                 class CoolIntegrationConfigValidatorFactory {}
+            }
+
+            package adapter {
+                class CoolIntegrationDestinationConfigValidatorClientAdapter {}
             }
         }
     }
@@ -76,11 +100,16 @@
     ConfigValidator --> Logger : uses
     ConfigValidator --> Config : uses
 
-    CoolIntegrationConfigValidator ..|> ConfigValidator
-    CoolIntegrationConfigValidator --> CoolIntegrationConfigValidatorClient : uses
+    SourceConfigValidatorClient --up|> ConfigValidatorClient
+    DestinationConfigValidatorClient --up|> ConfigValidatorClient
+
+    CoolIntegrationDestinationConfigValidatorClientAdapter ..|> DestinationConfigValidatorClient
+
+    CoolIntegrationDestinationConfigValidator ..|> ConfigValidator
+    CoolIntegrationDestinationConfigValidator --> CoolIntegrationConfigValidatorClient : uses
     CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidator : creates
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidatorClient : creates
-    CoolIntegrationConfigValidatorClient ..|> ConfigValidatorClient
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidatorClientAdapter : creates
 
 @enduml
