@@ -173,7 +173,7 @@ firebase use --add
 flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
-5. Run the command to specify the hosting deploy to. 
+5. Run the command to specify the hosting deploy to. You can find the hosting name within the `Hosting` section in the Firebase console.
 
 ```
 firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
@@ -184,6 +184,8 @@ firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
 ```
 firebase deploy --only hosting:metrics
 ```
+
+_**Note:** If you've already configured the hosting deployment target you should run the `firebase target:clear hosting metrics` before the 5th step._
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 
