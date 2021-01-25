@@ -95,11 +95,11 @@ Finally, your Firebase project configured and it's time to configure the Firebas
 
 By default, the Metrics Web Application is configured by using the `auto-generated` Firebase configuration. It means that after you deploy the Metrics application to the Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed.
 
-If you okay with the defaults, you can skip this configuration step.
+If you are okay with the defaults, you can skip this configuration step.
 
 If you want to configure a connection to the Firebase `manually`, follow the next steps:
 1. Open the [Firebase console](https://console.firebase.google.com/), choose your project
-and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
+and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`).
 2. Scroll down and find your Firebase Web Application.
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
 4. Go to the `web/index.html` file in the application directory and replace the following piece of code:
@@ -197,7 +197,7 @@ Once the Google sign-in option is enabled, you should populate the Authorized Ja
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
-4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
+4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the Google sign-in.
 
 _**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Google Sign-in allowed domains configuration](#google-sign-in-allowed-domains-configuration) section to know more about allowed email domains._
 
@@ -291,7 +291,7 @@ flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=
 
 Then, using Sentry CLI one should update source maps as described in the [Updating Source Maps](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) section of the Metrics Logger document.
 
-Once you've build the application, you can proceed to deploying to the Firebase Hosting.
+Once you've built the application, you can proceed to deploying to the Firebase Hosting.
 
 ### Deploying Flutter application
 
@@ -300,8 +300,10 @@ You can deploy the built application to the Firebase Hosting using the `firebase
 1. Open the terminal and navigate to the `metrics` project folder.
 2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account. Use the same account that you used to create your Firebase project (or the one that has access to it).
 3. Run the `firebase use --add` command and select the ID of the project created in previous steps.
-4. Give an alias to your project.
-5. Run the `firebase deploy --only hosting` command to deploy the application to the Firebase Hosting.
+4. Run the `firebase target:apply hosting metrics <YOUR_HOSTING_NAME>` to specify the hosting deploy to. You can find the `<YOUR_HOSTING_NAME>` within the `Hosting` section in the Firebase console.
+5. Run the `firebase deploy --only hosting:metrics` command to deploy the application to the Firebase Hosting.
+
+_**Note:** If you've already had the configured hosting deployment target you should run the `firebase target:clear hosting metrics` before the 4th step._
 
 When the deployment process is finished, the application is accessible by the `Hosting URL` printed to the console.
 
