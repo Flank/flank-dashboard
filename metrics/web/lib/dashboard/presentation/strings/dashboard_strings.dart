@@ -23,5 +23,5 @@ class DashboardStrings {
   static const String stabilityDescription =
       'A ratio of successful builds to all builds for the last 20 builds.';
   static const String coverageDescription =
-      "A last successful build's project code coverage of the tests.";
+      "A last successful build's code coverage percent.";
 }
