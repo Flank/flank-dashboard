@@ -11,12 +11,6 @@
                     }
                 }
 
-                package client {
-                    abstract class ConfigValidatorClient {
-                        + Future<void> validateAuth(AuthorizationBase auth)
-                    }
-                }
-
                 package config {
                     package model {
                         abstract class Config {}
@@ -24,9 +18,16 @@
 
                     package validator {
                         abstract class ConfigValidator<T extends Config> {
-                            - _validatorClient: ConfigValidatorClient
+                            - _validationDelegate: ValidationDelegate 
                             - _errorBuffer: StringBuffer
                             + Future<void> validate(T config)
+                            - void _addErrorMessage(List<String> configFields, String additionalContext)
+                        }
+                    }
+
+                    package validation_delegate as base_validation_delegate {
+                        abstract class ValidationDelegate {
+                            + Future<InteractionResult> validateAuth()
                         }
                     }
 
@@ -38,19 +39,15 @@
                 }
             }
 
-            package source {
-                package client as source_client {
-                    abstract class SourceConfigValidatorClient {
-                        + Future<void> validateSourceProjectId(String sourceProjectId)
-                    }
+            package source.config.validation_delegate {
+                abstract class SourceValidationDelegate {
+                    + Future<InteractionResult> validateSourceProjectId()
                 }
             }
 
-            package destination {
-                package client as destination_client {
-                    abstract class DestinationConfigValidatorClient {
-                        + Future<void> validateDestinationProjectId(String destinationProjectId)
-                    }
+            package destination.config.validation_delegate {
+                abstract class DestinationValidationDelegate {
+                    + Future<InteractionResult> validateDestinationProjectId()
                 }
             }
         }
@@ -73,47 +70,38 @@
                 class CoolIntegrationConfigValidatorFactory {}
             }
 
-            package adapter {
-                class CoolIntegrationDestinationConfigValidatorClientAdapter {
-                    - _client: CoolIntegrationConfigValidatorClient
+            package validation_delegate {
+                class CoolIntegrationDestinationValidationDelegate {
+                    - _client: CoolIntegrationClient
+                    + Future<void> validateExtraField()
                 }
             }
         }
     }
 
      package client.cool_integration as client_cool_integration {
-        class CoolIntegrationConfigValidatorClient {}
-    }
-
-    package cli.logger {
-        class Logger {
-            # void logError()
-            # void logMessage()
-            # void logInfo()
-        }
+        class CoolIntegrationClient {}
     }
 
     IntegrationParty --> ConfigValidatorFactory : uses
 
     ConfigValidatorFactory --> ConfigValidator : uses
 
-    ConfigValidator --> ConfigValidatorClient : uses
+    ConfigValidator --> ValidationDelegate : uses
     ConfigValidator --> ConfigValidationException : throws
-    ConfigValidatorClient --> ConfigValidationException : throws
-    ConfigValidator --> Logger : uses
     ConfigValidator --> Config : uses
 
-    SourceConfigValidatorClient --up|> ConfigValidatorClient
-    DestinationConfigValidatorClient --up|> ConfigValidatorClient
+    SourceValidationDelegate --up|> ValidationDelegate
+    DestinationValidationDelegate --up|> ValidationDelegate
 
-    CoolIntegrationDestinationConfigValidatorClientAdapter ..|> DestinationConfigValidatorClient
+    CoolIntegrationDestinationValidationDelegate ..|> DestinationValidationDelegate
 
     CoolIntegrationDestinationConfigValidator ..|> ConfigValidator
-    CoolIntegrationDestinationConfigValidator -left-> CoolIntegrationDestinationConfigValidatorClientAdapter : uses
-    CoolIntegrationDestinationConfigValidatorClientAdapter -down-> CoolIntegrationConfigValidatorClient : uses
+    CoolIntegrationDestinationConfigValidator -left-> CoolIntegrationDestinationValidationDelegate : uses
+    CoolIntegrationDestinationValidationDelegate -down-> CoolIntegrationClient : uses
     CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationConfigValidatorClient : creates
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidatorClientAdapter : creates
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
 
 @enduml

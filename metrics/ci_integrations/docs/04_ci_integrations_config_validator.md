@@ -21,14 +21,14 @@ This document aims the following goals:
 > Explain and diagram the technical design.
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationException` if the given config is not valid. Uses a `ConfigValidatorClient` to perform network calls.  
-- A `ConfigValidatorClient` is a class that performs network calls for the `ConfigValidator`.
-- A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ConfigValidatorClient`.
+- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationException` if the given config is not valid.
+- A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
+- A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
 Consider the following steps needed to be able to validate the given configuration file:
 
-1. Create abstract `ConfigValidator`, `ConfigValidatorClient`, and `ConfigValidatorFactory` classes.
-2. For each source or destination party implement its specific `ConfigValidator`, `ConfigValidatorClient`, and `ConfigValidatorFactory`.
+1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
+2. For each source or destination party implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Provide integration-specific clients with the validation-required methods.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create the source and the destination config validators and call them within the `sync` command.
 
@@ -48,8 +48,16 @@ Consider the package structure using the destination `CoolIntegration` as an exa
 >           * config_validator.dart   
 >         * validator_factory/
 >           * config_validator_factory.dart  
->       * client/
->         * config_validator_client.dart
+>         * validation_delegate/
+>           * validation_delegate.dart
+>     * source/
+>       * config/
+>         * validation_delegate/
+>           * source_validation_delegate.dart
+>     * destination/
+>       * config/
+>         * validation_delegate/
+>           * source_validation_delegate.dart
 >   * exception/
 >     * config_validation_exception.dart 
 > * destination/
@@ -59,8 +67,11 @@ Consider the package structure using the destination `CoolIntegration` as an exa
 >         * cool_integration_config_validator.dart
 >       * validator_factory/
 >         * cool_integration_config_validator_factory.dart
->     * client/  
->       * cool_integration_config_validator_client.dart
+>       * validation_delegate/
+>         * cool_integration_destination_validation_delegate.dart
+> * client/  
+>   * cool_integration/
+>     * cool_integration_client.dart
 
 ## Making things work
 Consider the following sequence diagram that illustrates the process of the configuration files validation:
