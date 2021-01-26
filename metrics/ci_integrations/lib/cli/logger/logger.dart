@@ -1,76 +1,70 @@
-import 'dart:io';
-
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
+import 'package:ci_integration/cli/logger/writer/logger_writer.dart';
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 
-/// A class providing methods for logging messages and errors for the CLI tool.
+/// A class providing methods for logging messages.
 class Logger {
-  /// The [IOSink] used to log errors.
-  static IOSink _errorSink;
+  /// A [Type] of the class this logger services.
+  final Type sourceClass;
 
-  /// The [IOSink] used to log messages.
-  static IOSink _messageSink;
+  /// A [LoggerWriter] this logger uses to write messages.
+  final LoggerWriter _writer;
 
-  /// A flag used to determine whether to enable info logs.
-  static bool _verbose = false;
+  /// A flag that determines whether to enable info logs.
+  final bool _verbose;
 
-  /// Determines whether this logger is set up.
-  static bool get _isInitialized =>
-      _errorSink != null && _messageSink != null && _verbose != null;
+  /// A [DateFormat] this logger uses to format timestamps of logs.
+  final DateFormat _dateFormat;
 
-  /// Configure this logger with the given [errorSink], [messageSink]
-  /// and the [verbose] values.
+  /// Creates a new instance of [Logger].
   ///
-  /// If the given [errorSink] is `null`, the [stderr] is used.
-  /// If the given [messageSink] is `null`, the [stdout] is used.
-  /// If the given [verbose] is `null`, `false` is used.
-  static void setup({
-    IOSink errorSink,
-    IOSink messageSink,
-    bool verbose,
-  }) {
-    _errorSink = errorSink ?? stderr;
-    _messageSink = messageSink ?? stdout;
-    _verbose = verbose ?? false;
+  /// All the required parameters must not be `null`.
+  Logger({
+    @required this.sourceClass,
+    @required LoggerWriter writer,
+    @required bool verbose,
+  })  : _writer = writer,
+        _verbose = verbose,
+        _dateFormat = DateFormat.yMd().add_Hms() {
+    ArgumentError.checkNotNull(sourceClass, 'sourceClass');
+    ArgumentError.checkNotNull(_writer, 'writer');
+    ArgumentError.checkNotNull(_verbose, 'verbose');
   }
 
-  /// Logs the given [error] to the error [IOSink].
-  ///
-  /// Throws a [StateError] if the [Logger] is not initialized.
-  static void logError(Object error) {
-    _checkInitialized();
-
-    _errorSink.writeln(error);
+  /// Returns a [Logger] instance for the class with the
+  /// given [sourceClass] type. Calls the [LoggerManager.getLogger]
+  /// method to obtain an instance of the required [Logger].
+  factory Logger.forClass(Type sourceClass) {
+    return LoggerManager.instance.getLogger(sourceClass);
   }
 
-  /// Logs the given [message] to the message [IOSink].
-  ///
-  /// Throws a [StateError] if the [Logger] is not initialized.
-  static void logMessage(Object message) {
-    _checkInitialized();
+  /// Logs the given [message] using the [LoggerWriter.write]
+  /// on the specified writer.
+  void message(Object message) {
+    final log = _processLog(message);
 
-    _messageSink.writeln(message);
+    _writer.write(log);
   }
 
-  /// Logs the given [message] to the message [IOSink]
+  /// Logs the given [message] to the logs output
   /// if this logger is in verbose mode.
-  ///
-  /// Throws a [StateError] if the [Logger] is not initialized.
-  static void logInfo(Object message) {
-    _checkInitialized();
-
+  void info(Object message) {
     if (_verbose) {
-      final dateTimeNow = DateFormat.yMd().add_Hms().format(DateTime.now());
-
-      _messageSink.writeln("[$dateTimeNow] $message");
+      this.message(message);
     }
   }
 
-  /// Throws a [StateError] if the [_isInitialized] is `false`.
-  static void _checkInitialized() {
-    if (!_isInitialized) {
-      throw StateError(
-        'The Logger is not set up. The setup method must be called before calling any other methods of the Logger.',
-      );
+  /// Processes the given [log].
+  ///
+  /// If the [_verbose] value is `true`, applies the timestamp and
+  /// [sourceClass] prefixes to the log. Otherwise, does nothing.
+  Object _processLog(Object log) {
+    if (_verbose) {
+      final dateTimeNow = _dateFormat.format(DateTime.now());
+      return '[$dateTimeNow] $sourceClass: $log';
+    } else {
+      return log;
     }
   }
 }

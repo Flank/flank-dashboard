@@ -1,6 +1,7 @@
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
@@ -24,7 +25,8 @@ class CiIntegrationsRunner extends CommandRunner<void> {
     final result = argParser.parse(args);
     final verbose = result[_verboseFlagName] as bool;
 
-    Logger.setup(verbose: verbose);
+    final loggerFactory = LoggerFactory(verbose: verbose);
+    LoggerManager.setLoggerFactory(loggerFactory);
 
     return super.run(args);
   }

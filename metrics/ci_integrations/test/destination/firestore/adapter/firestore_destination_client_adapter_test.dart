@@ -1,4 +1,3 @@
-import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/firestore/firestore.dart' as client;
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
@@ -58,10 +57,6 @@ void main() {
           .thenReturn(_collectionReferenceMock);
       return when(_collectionReferenceMock.getDocuments());
     }
-
-    setUpAll(() {
-      Logger.setup();
-    });
 
     setUp(() {
       reset(_firestoreMock);

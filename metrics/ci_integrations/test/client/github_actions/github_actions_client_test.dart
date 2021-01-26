@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -43,7 +42,6 @@ void main() {
     GithubActionsClient client;
 
     setUpAll(() async {
-      Logger.setup();
       await githubActionsMockServer.start();
       client = _createClient(githubApiUrl: githubActionsMockServer.url);
     });

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
@@ -28,7 +27,6 @@ void main() {
     BuildkiteClient client;
 
     setUpAll(() async {
-      Logger.setup();
       await buildkiteMockServer.start();
 
       client = BuildkiteClient(

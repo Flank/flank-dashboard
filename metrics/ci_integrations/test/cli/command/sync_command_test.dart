@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
@@ -20,7 +21,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matcher_util.dart';
-import '../test_util/mock/io_sink_mock.dart';
+import '../test_util/mock/logger_writer_mock.dart';
 import '../test_util/mock/mocks.dart';
 import '../test_util/test_data/config_test_data.dart';
 
@@ -52,10 +53,11 @@ void main() {
         ciIntegrationMock,
       );
 
-      final sinkMock = IOSinkMock();
+      final writerMock = LoggerWriterMock();
+      final loggerFactory = LoggerFactory(writer: writerMock);
 
       setUpAll(() {
-        Logger.setup(messageSink: sinkMock);
+        LoggerManager.setLoggerFactory(loggerFactory);
       });
 
       setUp(() {
@@ -67,7 +69,7 @@ void main() {
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
         reset(_firebaseAuthMock);
-        reset(sinkMock);
+        reset(writerMock);
       });
 
       PostExpectation<Future<InteractionResult>> whenRunSync() {
@@ -257,7 +259,7 @@ void main() {
       );
 
       test(
-        ".sync() prints a message if a sync result is a success",
+        ".sync() logs a message if a sync result is a success",
         () async {
           const interactionResult = InteractionResult.success();
 
@@ -270,7 +272,7 @@ void main() {
             destinationClientMock,
           );
 
-          verify(sinkMock.writeln(any)).called(1);
+          verify(writerMock.write(any)).called(1);
         },
       );
 

@@ -1,5 +1,5 @@
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
 import 'package:test/test.dart';
 
@@ -46,12 +46,14 @@ void main() {
       },
     );
 
-    test(".run() sets up the Logger", () {
+    test(".run() sets up the logger manager", () {
       final runner = CiIntegrationsRunnerStub();
 
       runner.run([]);
 
-      expect(() => Logger.logMessage(''), returnsNormally);
+      final logger = LoggerManager.instance.getLogger(CiIntegrationsRunnerStub);
+
+      expect(() => logger.message('test'), returnsNormally);
     });
   });
 }

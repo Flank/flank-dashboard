@@ -1,4 +1,4 @@
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
@@ -8,7 +8,7 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
 /// performed on a CI tool and stored in a builds storage.
-class CiIntegration {
+class CiIntegration with LoggerMixin {
   /// Used to interact with a source API.
   final SourceClient sourceClient;
 
@@ -43,7 +43,7 @@ class CiIntegration {
 
       List<BuildData> newBuilds;
       if (lastBuild == null) {
-        Logger.logInfo('There are no builds in the destination...');
+        logger.info('There are no builds in the destination...');
         newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(
