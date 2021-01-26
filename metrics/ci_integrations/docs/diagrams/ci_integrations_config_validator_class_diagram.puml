@@ -21,13 +21,13 @@
                             - _validationDelegate: ValidationDelegate 
                             - _errorBuffer: StringBuffer
                             + Future<void> validate(T config)
-                            - void _addErrorMessage(List<String> configFields, String additionalContext)
+                            + void addErrorMessage(String configField, String additionalContext)
                         }
                     }
 
                     package validation_delegate as base_validation_delegate {
                         abstract class ValidationDelegate {
-                            + Future<InteractionResult> validateAuth()
+                            + Future<InteractionResult> validateAuth(AuthorizationBase auth)
                         }
                     }
 
@@ -41,13 +41,13 @@
 
             package source.config.validation_delegate {
                 abstract class SourceValidationDelegate {
-                    + Future<InteractionResult> validateSourceProjectId()
+                    + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
                 }
             }
 
             package destination.config.validation_delegate {
                 abstract class DestinationValidationDelegate {
-                    + Future<InteractionResult> validateDestinationProjectId()
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
                 }
             }
         }

@@ -17,6 +17,7 @@ Bob -> "CI Integrations" : runs sync
 activate "CI Integrations"
 
 "CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+deactivate "CI Integrations"
 activate CiIntegrationsRunner
 
 CiIntegrationsRunner -> SyncCommand: run()
@@ -35,23 +36,20 @@ deactivate ConfigValidatorFactory
 SyncCommand -> ConfigValidator : validate(config)
 activate ConfigValidator
 
-
-ConfigValidator -> ValidationDelegate : tries to authenticate with the given credentials
-activate ValidationDelegate
-
-ValidationDelegate -> CoolIntegrationClient : authenticate()
-activate  CoolIntegrationClient
-CoolIntegrationClient --> ValidationDelegate : InteractionResult
-
-ValidationDelegate --> ConfigValidator : authentication result
-ConfigValidator -> ValidationDelegate : tries to validate other config fields
-ValidationDelegate -> CoolIntegrationClient : anotherMehod()
-CoolIntegrationClient --> ValidationDelegate : InteractionResult
-ValidationDelegate --> ConfigValidator : other validation result
-
-deactivate ValidationDelegate
-
 alt config is valid
+
+    ConfigValidator -> ValidationDelegate : validateAuth()
+    activate ValidationDelegate
+
+    ValidationDelegate -> CoolIntegrationClient : authenticate()
+    activate  CoolIntegrationClient
+    CoolIntegrationClient --> ValidationDelegate : InteractionResult.success
+    ValidationDelegate --> ConfigValidator : InteractionResult.success
+
+    ConfigValidator -> ValidationDelegate : validateAnotherField()
+    ValidationDelegate -> CoolIntegrationClient : anotherMethod()
+    CoolIntegrationClient --> ValidationDelegate : InteractionResult.success
+    ValidationDelegate --> ConfigValidator : InteractionResult.success
 
     ConfigValidator --> SyncCommand : config is valid
     SyncCommand -> SyncCommand : continues the sync command
@@ -59,12 +57,32 @@ alt config is valid
 
 else config is not valid
 
-    ConfigValidator -> ConfigValidator : creates exception message
+    ConfigValidator -> ValidationDelegate : validateAuth()
+
+    ValidationDelegate -> CoolIntegrationClient : authenticate()
+    CoolIntegrationClient --> ValidationDelegate : InteractionResult.success
+    ValidationDelegate --> ConfigValidator : InteractionResult.success
+
+    ConfigValidator -> ValidationDelegate : validateAnotherField()
+    ValidationDelegate -> CoolIntegrationClient : anotherMethod()
+    CoolIntegrationClient --> ValidationDelegate : InteractionResult.error
+    deactivate CoolIntegrationClient
+
+
+    ValidationDelegate --> ConfigValidator : InteractionResult.error
+    deactivate ValidationDelegate
+
+    ConfigValidator -> ConfigValidator : adds error message to error buffer
+
     ConfigValidator --> SyncCommand : throw ""ConfigValidationException(message)""
+    deactivate ConfigValidator
+
     SyncCommand --> Bob : sync failed
+    deactivate SyncCommand
 
 end
 
+deactivate ValidationDelegate
 deactivate ConfigValidator
 
 deactivate "CI Integrations"

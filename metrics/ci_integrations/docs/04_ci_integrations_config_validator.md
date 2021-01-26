@@ -28,7 +28,7 @@ Let's start with the necessary abstractions. Consider the following classes:
 Consider the following steps needed to be able to validate the given configuration file:
 
 1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
-2. For each source or destination party implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Provide integration-specific clients with the validation-required methods.
+2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create the source and the destination config validators and call them within the `sync` command.
 
@@ -57,7 +57,7 @@ Consider the package structure using the destination `CoolIntegration` as an exa
 >     * destination/
 >       * config/
 >         * validation_delegate/
->           * source_validation_delegate.dart
+>           * destination_validation_delegate.dart
 >   * exception/
 >     * config_validation_exception.dart 
 > * destination/
