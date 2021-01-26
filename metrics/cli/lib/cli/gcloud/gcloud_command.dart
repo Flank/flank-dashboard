@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:process_run/process_run.dart' as cmd;
-import 'package:process_run/shell.dart';
+import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the GCloud CLI.
 class GCloudCommand {
@@ -10,7 +9,12 @@ class GCloudCommand {
   Future<void> login() async {
     // Logins to GCloud.
     print('GCloud Login.');
-    await cmd.run('gcloud', ['auth', 'login'], verbose: true);
+    await cmd.run(
+      'gcloud',
+      ['auth', 'login'],
+      verbose: true,
+      stdin: sharedStdIn,
+    );
   }
 
   /// Adds project or uses an existing one.
@@ -28,6 +32,7 @@ class GCloudCommand {
         'gcloud',
         ['projects', 'create', projectId],
         verbose: true,
+        stdin: sharedStdIn,
       );
     } else {
       print('List existing projects');
@@ -35,6 +40,7 @@ class GCloudCommand {
         'gcloud',
         ['projects', 'list'],
         verbose: true,
+        stdin: sharedStdIn,
       );
       projectId = await prompt('Project ID');
     }
@@ -44,6 +50,7 @@ class GCloudCommand {
       'gcloud',
       ['config', 'set', 'project', projectId],
       verbose: true,
+      stdin: sharedStdIn,
     );
 
     return projectId;
@@ -57,6 +64,7 @@ class GCloudCommand {
         'gcloud',
         ['app', 'create', '--region', region, '--project', projectId],
         verbose: true,
+        stdin: sharedStdIn,
       );
     } else {
       print('Skipping adding project app.');
@@ -71,6 +79,7 @@ class GCloudCommand {
         'gcloud',
         ['services', 'enable', 'firestore.googleapis.com'],
         verbose: true,
+        stdin: sharedStdIn,
       );
       await cmd.run(
         'gcloud',
@@ -83,10 +92,9 @@ class GCloudCommand {
           region,
           '--project',
           projectId,
-          '--quiet',
         ],
         verbose: true,
-        stdin: stdin,
+        stdin: sharedStdIn,
       );
     } else {
       print('Skipping adding project database.');
@@ -95,6 +103,11 @@ class GCloudCommand {
 
   /// Prints CLI version.
   Future<void> version() async {
-    await cmd.run('gcloud', ['--version'], stdin: stdin, verbose: true);
+    await cmd.run(
+      'gcloud',
+      ['--version'],
+      verbose: true,
+      stdin: sharedStdIn,
+    );
   }
 }

@@ -81,8 +81,17 @@ class DeployCommand extends Command {
       await _firebase.chooseProject(projectId, _firebasePath, firebaseToken);
       await _npm.install(_firebasePath);
       await _firebase.deployFirestore(_firebasePath, firebaseToken);
-      await _npm.install(_firebaseFunctionsPath);
-      await _firebase.deployFunctions(_firebasePath, firebaseToken);
+
+      final proceed = await promptConfirm(
+        'A Blaze billing account is required for function deployment. '
+        'Please go to the firebase console and enable it manually or '
+        'skip this step.',
+      );
+
+      if (proceed) {
+        await _npm.install(_firebaseFunctionsPath);
+        await _firebase.deployFunctions(_firebasePath, firebaseToken);
+      }
     } catch (error) {
       print(error);
     } finally {

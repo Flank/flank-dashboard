@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:process_run/process_run.dart' as cmd;
-import 'package:process_run/shell.dart';
+import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the Firebase CLI.
 class FirebaseCommand {
@@ -11,8 +9,8 @@ class FirebaseCommand {
     await cmd.run(
       'firebase',
       ['login:ci', '--interactive'],
-      stdin: stdin,
       verbose: true,
+      stdin: sharedStdIn,
     );
 
     return prompt('Copy Firebase Token from above');
@@ -26,8 +24,8 @@ class FirebaseCommand {
       await cmd.run(
         'firebase',
         ['projects:addfirebase', projectID, '--token', firebaseToken],
-        stdin: stdin,
         verbose: true,
+        stdin: sharedStdIn,
       );
     } else {
       print('Skipping adding Firebase capabilities.');
@@ -49,17 +47,11 @@ class FirebaseCommand {
           "WEB",
           projectID
         ],
-        stdin: stdin,
         verbose: true,
+        stdin: sharedStdIn,
       );
     } else {
-      print('List of existing apps.');
-      await cmd.run(
-        'firebase',
-        ['apps:list', '--project', projectID, '--token', firebaseToken],
-        stdin: stdin,
-        verbose: true,
-      );
+      print('Skipping adding web app.');
     }
   }
 
@@ -78,9 +70,9 @@ class FirebaseCommand {
         '--token',
         firebaseToken,
       ],
-      stdin: stdin,
       workingDirectory: workingDir,
       verbose: true,
+      stdin: sharedStdIn,
     );
   }
 
@@ -95,9 +87,9 @@ class FirebaseCommand {
         '--token',
         firebaseToken,
       ],
-      stdin: stdin,
       workingDirectory: workingDir,
       verbose: true,
+      stdin: sharedStdIn,
     );
   }
 
@@ -117,9 +109,9 @@ class FirebaseCommand {
         '--token',
         firebaseToken,
       ],
-      stdin: stdin,
       workingDirectory: workingDir,
       verbose: true,
+      stdin: sharedStdIn,
     );
   }
 
@@ -134,9 +126,9 @@ class FirebaseCommand {
         '--token',
         firebaseToken,
       ],
-      stdin: stdin,
       workingDirectory: workingDir,
       verbose: true,
+      stdin: sharedStdIn,
     );
   }
 
@@ -151,39 +143,31 @@ class FirebaseCommand {
         '--token',
         firebaseToken,
       ],
-      stdin: stdin,
       workingDirectory: workingDir,
       verbose: true,
+      stdin: sharedStdIn,
     );
   }
 
   /// Deploys functions to the firebase.
   Future<void> deployFunctions(String workingDir, String firebaseToken) async {
-    final proceed = await promptConfirm(
-      'A Blaze billing account is required for function deployment. '
-      'Please go to the firebase console and enable it manually or '
-      'skip this step.',
+    await cmd.run(
+      'firebase',
+      [
+        'deploy',
+        '--only',
+        'functions',
+        '--token',
+        firebaseToken,
+      ],
+      workingDirectory: workingDir,
+      verbose: true,
+      stdin: sharedStdIn,
     );
-
-    if (proceed) {
-      await cmd.run(
-        'firebase',
-        [
-          'deploy',
-          '--only',
-          'functions',
-          '--token',
-          firebaseToken,
-        ],
-        stdin: stdin,
-        workingDirectory: workingDir,
-        verbose: true,
-      );
-    }
   }
 
   /// Prints CLI version.
   Future<void> version() async {
-    await cmd.run('firebase', ['--version'], stdin: stdin, verbose: true);
+    await cmd.run('firebase', ['--version'], verbose: true, stdin: sharedStdIn);
   }
 }

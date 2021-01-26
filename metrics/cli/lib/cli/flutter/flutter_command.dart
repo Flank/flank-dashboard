@@ -1,12 +1,11 @@
-import 'dart:io';
-
 import 'package:process_run/process_run.dart' as cmd;
+import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the Flutter CLI.
 class FlutterCommand {
   /// Prints CLI version.
   Future<void> version() async {
-    await cmd.run('flutter', ['--version'], verbose: true, stdin: stdin);
+    await cmd.run('flutter', ['--version'], verbose: true, stdin: sharedStdIn);
   }
 
   /// Enables Web support for the Flutter.
@@ -15,7 +14,7 @@ class FlutterCommand {
       'flutter',
       ['config', '--enable-web'],
       verbose: true,
-      stdin: stdin,
+      stdin: sharedStdIn,
     );
   }
 
@@ -26,7 +25,7 @@ class FlutterCommand {
       ['build', 'web'],
       workingDirectory: workingDir,
       verbose: true,
-      stdin: stdin,
+      stdin: sharedStdIn,
     );
   }
 }

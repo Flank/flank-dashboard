@@ -3,7 +3,7 @@ import 'package:deploy/deploy/deploy_command.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var runner;
+  CommandRunner runner;
 
   const _defaultUsage = '''
 Usage: metrics <command> [arguments]

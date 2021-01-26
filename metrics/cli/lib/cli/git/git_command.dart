@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:process_run/process_run.dart' as cmd;
+import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the Git CLI.
 class GitCommand {
@@ -10,12 +9,12 @@ class GitCommand {
       'git',
       ['clone', repoURL, srcPath],
       verbose: true,
-      stdin: stdin,
+      stdin: sharedStdIn,
     );
   }
 
   /// Prints CLI version.
   Future<void> version() async {
-    await cmd.run('git', ['--version'], verbose: true, stdin: stdin);
+    await cmd.run('git', ['--version'], verbose: true, stdin: sharedStdIn);
   }
 }
