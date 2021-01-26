@@ -15,7 +15,7 @@ class DeployCommand extends Command {
   static const String _tempDir = 'tempDir';
   static const String _webPath = '$_tempDir/metrics/web';
   static const String _firebasePath = '$_tempDir/metrics/firebase';
-  static const String _firebaseConfigPath = '$_webPath/web/firebase-config.js';
+  static const String _firebaseFunctionsPath = '$_firebasePath/functions';
 
   @override
   final String name = "deploy";
@@ -24,10 +24,19 @@ class DeployCommand extends Command {
   final String description =
       "Creates GCloud and Firebase project and deploy metrics app.";
 
+  /// A [FirebaseCommand] needed to get the Firebase CLI version.
   final FirebaseCommand _firebase = FirebaseCommand();
+
+  /// A [GCloudCommand] needed to get the GCloud CLI version.
   final GCloudCommand _gcloud = GCloudCommand();
+
+  /// A [GitCommand] needed to get the Git CLI version.
   final GitCommand _git = GitCommand();
+
+  /// A [FlutterCommand] needed to get the Flutter CLI version.
   final FlutterCommand _flutter = FlutterCommand();
+
+  /// A [NpmCommand] needed to get the Npm CLI version.
   final NpmCommand _npm = NpmCommand();
 
   @override
@@ -40,9 +49,9 @@ class DeployCommand extends Command {
 
     final _firebaseToken = await _firebase.login();
     await _firebase.addFirebase(_projectID, _firebaseToken);
-    final _appID = await _firebase.createWebApp(_projectID, _firebaseToken);
+    await _firebase.createWebApp(_projectID, _firebaseToken);
 
-    await _deploy(_appID, _projectID, _firebaseToken);
+    await _deploy(_projectID, _firebaseToken);
 
     await promptTerminate();
   }
@@ -57,22 +66,25 @@ class DeployCommand extends Command {
 
   /// Deploys the metrics project to the firebase.
   Future<void> _deploy(
-    String appID,
-    String projectID,
+    String projectId,
     String firebaseToken,
   ) async {
     try {
       await _git.clone(_repoURL, _tempDir);
-      await _cleanup(_firebaseConfigPath);
 
-      await _firebase.downloadSDKConfig(
-          appID, _firebaseConfigPath, projectID, firebaseToken);
-      await _firebase.chooseProject(projectID, _webPath);
+      await _firebase.chooseProject(projectId, _webPath, firebaseToken);
       await _flutter.buildWeb(_webPath);
-      await _firebase.deployHosting(_webPath);
+      await _firebase.clearTarget(_webPath, firebaseToken);
+      await _firebase.applyTarget(projectId, _webPath, firebaseToken);
+      await _firebase.deployHosting(_webPath, firebaseToken);
 
+      await _firebase.chooseProject(projectId, _firebasePath, firebaseToken);
       await _npm.install(_firebasePath);
-      await _firebase.deploy(_firebasePath);
+      await _firebase.deployFirestore(_firebasePath, firebaseToken);
+      await _npm.install(_firebaseFunctionsPath);
+      await _firebase.deployFunctions(_firebasePath, firebaseToken);
+    } catch (error) {
+      print(error);
     } finally {
       await _cleanup(_tempDir);
     }
@@ -81,6 +93,10 @@ class DeployCommand extends Command {
   /// Cleanups the directory by the given [path].
   Future<void> _cleanup(String path) async {
     final configDirectory = Directory(path);
-    await configDirectory.delete(recursive: true);
+    try {
+      await configDirectory.delete(recursive: true);
+    } catch (e) {
+      print(e);
+    }
   }
 }
