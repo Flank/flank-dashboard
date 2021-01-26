@@ -148,6 +148,18 @@ For example:
 ci_integrations sync --config-file="path/to/config_file.yaml"
 ```
 
+#### Build coverage importing
+
+By default, build coverage data is fetching along with builds. 
+
+If the given `Access Token` has no permission to read build artifacts in CI the `sync` command will fail. To skip fetching the coverage step, you should use the `sync` command with the `--skip-coverage` flag.
+
+For example:
+
+```bash
+ci_integrations sync --config-file="path/to/config_file.yaml" --skip-coverage
+```
+
 #### Automate CI Integrations
 
 Obviously, it is not very handy to manually run the CI Integrations tool every time you have a new build. You should wait for a new build to finish, then check your configuration file is up-to-date, run a sync command with this configuration file, and then wait for a sync process to complete. 
