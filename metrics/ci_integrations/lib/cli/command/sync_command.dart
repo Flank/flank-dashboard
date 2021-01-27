@@ -20,7 +20,7 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A default number of builds to fetch in the [SyncCommand] initially.
-  static const defaultInitialFetchLimit = 28;
+  static const defaultFirstSyncFetchLimit = 28;
 
   /// A name of the option that holds a path to the YAML configuration file.
   static const String _configFileOptionName = 'config-file';
@@ -56,10 +56,11 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     );
 
     argParser.addOption(
-      'initial-fetch-limit',
-      help: 'A limit of builds to fetch initially.',
-      valueHelp: '$defaultInitialFetchLimit',
-      defaultsTo: '$defaultInitialFetchLimit',
+      'first-sync-fetch-limit',
+      help:
+          'A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0.',
+      valueHelp: '$defaultFirstSyncFetchLimit',
+      defaultsTo: '$defaultFirstSyncFetchLimit',
     );
 
     argParser.addFlag(
@@ -213,8 +214,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   ) async {
     final ciIntegration = createCiIntegration(sourceClient, destinationClient);
 
-    final initialFetchLimit = getInitialFetchLimit();
-    final result = await ciIntegration.sync(syncConfig, initialFetchLimit);
+    final firstSyncFetchLimit = getFirstSyncFetchLimit();
+    final result = await ciIntegration.sync(syncConfig, firstSyncFetchLimit);
 
     if (result.isSuccess) {
       logger.message(result.message);
@@ -223,22 +224,22 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     }
   }
 
-  /// Parses the initial fetch limit specified in the [SyncCommand] arguments.
+  /// Parses the first sync fetch limit specified in the [SyncCommand] arguments.
   ///
-  /// If the initial fetch limit can't be parsed or is a negative number,
-  /// returns the [defaultInitialFetchLimit].
-  int getInitialFetchLimit() {
-    logger.info('Parsing initial fetch limit...');
+  /// If the first sync fetch limit can't be parsed or is a negative number,
+  /// returns the [defaultFirstSyncFetchLimit].
+  int getFirstSyncFetchLimit() {
+    logger.info('Parsing first sync fetch limit...');
 
-    final initialFetchLimitArgument =
-        getArgumentValue('initial-fetch-limit') as String;
+    final firstSyncFetchLimitArgument =
+        getArgumentValue('first-sync-fetch-limit') as String;
 
-    final fetchLimit = int.tryParse(initialFetchLimitArgument);
+    final fetchLimit = int.tryParse(firstSyncFetchLimitArgument);
 
     if (fetchLimit == null || fetchLimit <= 0) {
       logger.info(
-          'The provided initial fetch limit is invalid. Now using the default $defaultInitialFetchLimit one.');
-      return defaultInitialFetchLimit;
+          'The provided first sync fetch limit is invalid. Now using the default $defaultFirstSyncFetchLimit one.');
+      return defaultFirstSyncFetchLimit;
     }
 
     return fetchLimit;

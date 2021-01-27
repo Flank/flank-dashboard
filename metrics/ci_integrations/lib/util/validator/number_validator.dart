@@ -1,8 +1,8 @@
 /// An util class that provides methods for validating numbers.
 class NumberValidator {
-  /// Checks [number] to be non-`null` positive integer.
+  /// Checks the given [number] to be non-`null` positive integer.
   ///
-  /// Throws [ArgumentError] if the [number] either is `null`
+  /// Throws an [ArgumentError] if the [number] either is `null`
   /// or [num.isNegative].
   static void checkPositive(int number) {
     if (number == null) {
@@ -15,7 +15,7 @@ class NumberValidator {
   /// Checks the range edges [begin] and [end] to be non-`null` positive
   /// integers and [end] to be greater than or equal to [begin].
   ///
-  /// Throws [ArgumentError] if:
+  /// Throws an [ArgumentError] if:
   ///   * one of [begin] or [end] is null;
   ///   * one of [begin] or [end] is negative;
   ///   * [end] is less than [begin].
@@ -29,9 +29,9 @@ class NumberValidator {
     }
   }
 
-  /// Check the given number to be greater than the given [numberToCompare].
+  /// Checks the given [number] to be greater than the given [numberToCompare].
   ///
-  /// Throws [ArgumentError] if:
+  /// Throws an [ArgumentError] if:
   ///   * one of the [number] or [numberToCompare] is `null`;
   ///   * [number] is not grater than [numberToCompare].
   static void checkGreaterThan(int number, int numberToCompare) {

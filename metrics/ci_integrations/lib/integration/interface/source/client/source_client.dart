@@ -11,13 +11,13 @@ abstract class SourceClient extends IntegrationClient {
   /// Returns `null` if a project with the given [projectId] is not found.
   Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build);
 
-  /// Fetches no more than [initialFetchLimit] number of builds for a project,
+  /// Fetches no more than [firstSyncFetchLimit] number of builds for a project,
   /// identified by [projectId].
   ///
   /// Returns `null` if a project with the given [projectId] is not found.
   Future<List<BuildData>> fetchBuilds(
     String projectId,
-    int initialFetchLimit,
+    int firstSyncFetchLimit,
   );
 
   /// Fetches coverage data for the given [build].

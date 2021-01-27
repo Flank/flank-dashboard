@@ -32,14 +32,14 @@ class CiIntegration with LoggerMixin {
   /// Synchronizes builds for a project specified in the given [config].
   ///
   /// Throws an [ArgumentError] if the given [config] is `null`.
-  /// Throws an [ArgumentError] if the given [initialFetchLimit] is not greater
+  /// Throws an [ArgumentError] if the given [firstSyncFetchLimit] is not greater
   /// than `0`.
   Future<InteractionResult> sync(
     SyncConfig config,
-    int initialFetchLimit,
+    int firstSyncFetchLimit,
   ) async {
     ArgumentError.checkNotNull(config);
-    NumberValidator.checkGreaterThan(initialFetchLimit, 0);
+    NumberValidator.checkGreaterThan(firstSyncFetchLimit, 0);
 
     try {
       final sourceProjectId = config.sourceProjectId;
@@ -54,7 +54,7 @@ class CiIntegration with LoggerMixin {
         logger.info('There are no builds in the destination...');
         newBuilds = await sourceClient.fetchBuilds(
           sourceProjectId,
-          initialFetchLimit,
+          firstSyncFetchLimit,
         );
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(
