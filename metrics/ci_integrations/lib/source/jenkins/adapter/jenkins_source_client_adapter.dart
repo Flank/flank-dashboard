@@ -8,13 +8,11 @@ import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
 class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
-  /// A fetch limit for builds when we download all builds from CI (initial fetch).
-  static const initialFetchBuildsLimit = 28;
-
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
@@ -58,11 +56,16 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String projectId) async {
+  Future<List<BuildData>> fetchBuilds(
+    String projectId,
+    int initialFetchLimit,
+  ) async {
+    NumberValidator.checkGreaterThan(initialFetchLimit, 0);
+
     logger.info('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
-      limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
+      limits: JenkinsQueryLimits.endBefore(initialFetchLimit),
     );
 
     return _processJenkinsBuilds(
@@ -190,8 +193,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
-    logger
-        .info('Fetching coverage artifact for a build #${build.number}...');
+    logger.info('Fetching coverage artifact for a build #${build.number}...');
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,

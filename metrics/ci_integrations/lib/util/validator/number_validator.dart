@@ -28,4 +28,23 @@ class NumberValidator {
       throw ArgumentError('end must be greater than or equal to begin');
     }
   }
+
+  /// Check the given number to be greater than the given [numberToCompare].
+  ///
+  /// Throws [ArgumentError] if:
+  ///   * one of the [number] or [numberToCompare] is `null`;
+  ///   * [number] is not grater than [numberToCompare].
+  static void checkGreaterThan(int number, int numberToCompare) {
+    if (number == null || numberToCompare == null) {
+      throw ArgumentError(
+        'both given number and number to compare must be specified',
+      );
+    } else if (number <= numberToCompare) {
+      throw ArgumentError.value(
+        number,
+        'number',
+        'must be grater than $numberToCompare',
+      );
+    }
+  }
 }

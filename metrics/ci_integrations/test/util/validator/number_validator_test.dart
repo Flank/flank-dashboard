@@ -69,5 +69,45 @@ void main() {
     test(".checkPositiveRange() validates the given range", () {
       expect(() => NumberValidator.checkPositiveRange(1, 2), returnsNormally);
     });
+
+    test(
+      ".checkGreaterThan() throws an ArgumentError if the given number is null",
+      () {
+        expect(
+          () => NumberValidator.checkGreaterThan(null, 1),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".checkGreaterThan() throws an ArgumentError if the given number to compare is null",
+      () {
+        expect(
+          () => NumberValidator.checkGreaterThan(1, null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".checkGreaterThan() throws an ArgumentError if the given number is less than the given number to compare",
+      () {
+        expect(
+          () => NumberValidator.checkGreaterThan(1, 2),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".checkGreaterThan() throws an ArgumentError if the given number is equal to the given number to compare",
+      () {
+        expect(
+          () => NumberValidator.checkGreaterThan(1, 1),
+          throwsArgumentError,
+        );
+      },
+    );
   });
 }

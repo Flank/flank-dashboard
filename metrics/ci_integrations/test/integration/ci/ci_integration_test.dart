@@ -58,6 +58,30 @@ void main() {
     );
 
     test(
+      ".sync() throws an ArgumentError if the last build is null and the given initial fetch limit equals to 0",
+      () {
+        final ciIntegration = CiIntegration(
+          sourceClient: SourceClientStub(),
+          destinationClient: DestinationClientStub(),
+        );
+
+        expect(() => ciIntegration.sync(syncConfig, 0), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".sync() throws an ArgumentError if last build is null and the given initial fetch limit is less than 0",
+      () {
+        final ciIntegration = CiIntegration(
+          sourceClient: SourceClientStub(),
+          destinationClient: DestinationClientStub(),
+        );
+
+        expect(() => ciIntegration.sync(syncConfig, -1), throwsArgumentError);
+      },
+    );
+
+    test(
       ".sync() returns an error if a source client throws fetching all builds",
       () async {
         final sourceClient = SourceClientStub(
