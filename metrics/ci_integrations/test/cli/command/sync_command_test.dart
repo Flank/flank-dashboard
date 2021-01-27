@@ -56,6 +56,7 @@ void main() {
 
       final writerMock = LoggerWriterMock();
       final loggerFactory = LoggerFactory(writer: writerMock);
+      final initialFetchLimit = syncCommand.getInitialFetchLimit();
 
       setUpAll(() {
         LoggerManager.setLoggerFactory(loggerFactory);
@@ -82,7 +83,8 @@ void main() {
             .thenAnswer((_) => Future.value(User.fromMap({})));
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-        return when(ciIntegrationMock.sync(syncConfig));
+
+        return when(ciIntegrationMock.sync(syncConfig, initialFetchLimit));
       }
 
       test("has the 'config-file' option", () {
@@ -105,6 +107,23 @@ void main() {
           expect(options, containsPair('coverage', flagEnabledByDefault));
         },
       );
+
+      test("has the 'initial-fetch-limit' option", () {
+        final argParser = syncCommand.argParser;
+        final options = argParser.options;
+
+        expect(options, contains('initial-fetch-limit'));
+      });
+
+      test("'initial-fetch-limit' option defaults to 28", () {
+        const expectedInitialFetchLimit = SyncCommand.defaultInitialFetchLimit;
+
+        final argParser = syncCommand.argParser;
+        final fetchLimitOption = argParser.options['initial-fetch-limit'];
+
+        expect(
+            fetchLimitOption.defaultsTo, equals('$expectedInitialFetchLimit'));
+      });
 
       test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
@@ -233,7 +252,7 @@ void main() {
           when(fileMock.existsSync()).thenReturn(false);
 
           expect(syncCommand.run(), MatcherUtil.throwsSyncError);
-          verifyNever(ciIntegrationMock.sync(any));
+          verifyNever(ciIntegrationMock.sync(any, any));
         },
       );
 
@@ -261,7 +280,7 @@ void main() {
       });
 
       test(
-        ".run() runs sync on the given config",
+        ".run() runs sync on the given config and initial fetch limit",
         () async {
           whenRunSync().thenAnswer(
             (_) => Future.value(const InteractionResult.success()),
@@ -269,7 +288,9 @@ void main() {
 
           await syncCommand.run();
 
-          verify(ciIntegrationMock.sync(syncConfig)).called(1);
+          verify(
+            ciIntegrationMock.sync(syncConfig, initialFetchLimit),
+          ).called(1);
         },
       );
 
@@ -278,7 +299,7 @@ void main() {
         () async {
           const interactionResult = InteractionResult.success();
 
-          when(ciIntegrationMock.sync(syncConfig))
+          when(ciIntegrationMock.sync(syncConfig, initialFetchLimit))
               .thenAnswer((_) => Future.value(interactionResult));
 
           await syncCommand.sync(
@@ -296,7 +317,7 @@ void main() {
         () async {
           const interactionResult = InteractionResult.error();
 
-          when(ciIntegrationMock.sync(syncConfig))
+          when(ciIntegrationMock.sync(syncConfig, initialFetchLimit))
               .thenAnswer((_) => Future.value(interactionResult));
 
           final syncFuture = syncCommand.sync(

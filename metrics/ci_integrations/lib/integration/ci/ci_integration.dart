@@ -30,8 +30,11 @@ class CiIntegration with LoggerMixin {
 
   /// Synchronizes builds for a project specified in the given [config].
   ///
-  /// If [config] is `null` throws the [ArgumentError].
-  Future<InteractionResult> sync(SyncConfig config) async {
+  /// If [config] is `null` throws an [ArgumentError].
+  Future<InteractionResult> sync(
+    SyncConfig config,
+    int initialFetchLimit,
+  ) async {
     ArgumentError.checkNotNull(config);
     try {
       final sourceProjectId = config.sourceProjectId;

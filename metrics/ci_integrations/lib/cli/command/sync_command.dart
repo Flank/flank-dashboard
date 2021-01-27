@@ -19,6 +19,9 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
+  /// A default number of builds to fetch in the [SyncCommand] initially.
+  static const defaultInitialFetchLimit = 28;
+
   /// A name of the option that holds a path to the YAML configuration file.
   static const String _configFileOptionName = 'config-file';
 
@@ -51,6 +54,14 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
       help: 'A path to the YAML configuration file.',
       valueHelp: 'config.yaml',
     );
+
+    argParser.addOption(
+      'initial-fetch-limit',
+      help: 'A limit of builds to fetch initially.',
+      valueHelp: '$defaultInitialFetchLimit',
+      defaultsTo: '$defaultInitialFetchLimit',
+    );
+
     argParser.addFlag(
       _coverageFlagName,
       help: 'Whether to fetch coverage for each build during the sync.',
@@ -201,13 +212,35 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     DestinationClient destinationClient,
   ) async {
     final ciIntegration = createCiIntegration(sourceClient, destinationClient);
-    final result = await ciIntegration.sync(syncConfig);
+
+    final initialFetchLimit = getInitialFetchLimit();
+    final result = await ciIntegration.sync(syncConfig, initialFetchLimit);
 
     if (result.isSuccess) {
       logger.message(result.message);
     } else {
       throw SyncError(message: result.message);
     }
+  }
+
+  /// Parses the initial fetch limit specified in the [SyncCommand] arguments.
+  ///
+  /// If the initial fetch limit can't be parsed or is a negative number,
+  /// returns the [defaultInitialFetchLimit].
+  int getInitialFetchLimit() {
+    logger.info('Parsing initial fetch limit...');
+
+    final initialFetchLimitArgument =
+        getArgumentValue('initial-fetch-limit') as String;
+
+    final fetchLimit = int.tryParse(initialFetchLimitArgument);
+
+    if (fetchLimit == null || fetchLimit <= 0) {
+      logger.info('The provided initial fetch limit is invalid. Now using the default $defaultInitialFetchLimit one.')
+      return defaultInitialFetchLimit;
+    }
+
+    return fetchLimit;
   }
 
   /// Closes both [sourceClient] and [destinationClient] and cleans up any
