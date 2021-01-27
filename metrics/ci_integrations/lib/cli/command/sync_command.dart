@@ -236,7 +236,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     final fetchLimit = int.tryParse(initialFetchLimitArgument);
 
     if (fetchLimit == null || fetchLimit <= 0) {
-      logger.info('The provided initial fetch limit is invalid. Now using the default $defaultInitialFetchLimit one.')
+      logger.info(
+          'The provided initial fetch limit is invalid. Now using the default $defaultInitialFetchLimit one.');
       return defaultInitialFetchLimit;
     }
 
