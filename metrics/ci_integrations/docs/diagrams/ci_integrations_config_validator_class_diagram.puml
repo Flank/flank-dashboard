@@ -4,7 +4,7 @@
         package interface {
             package base {
                 package party {
-                    abstract class IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
+                    interface IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
                         + clientFactory: IntegrationClientFactory<T, K>
                         + configParser: ConfigParser<T>
                         + configValidatorFactory: ConfigValidatorFactory<V>
