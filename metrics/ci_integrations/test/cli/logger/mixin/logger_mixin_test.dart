@@ -20,4 +20,5 @@ void main() {
   });
 }
 
+/// A class stub to test the [LoggerMixin] members.
 class _ClassStub with LoggerMixin {}

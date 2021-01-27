@@ -15,7 +15,7 @@ class LoggerFactory {
   ///
   /// If the given [writer] is `null`, an instance of
   /// the [IOLoggerWriter] is used.
-  /// if the given [verbose] is `null`, the `false` value is used.
+  /// If the given [verbose] is `null`, the `false` value is used.
   LoggerFactory({
     LoggerWriter writer,
     bool verbose,

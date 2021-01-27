@@ -194,4 +194,6 @@ void main() {
   });
 }
 
+/// A class stub to use in tests as [Logger.sourceClass] and ensure
+/// this source is unique within tests.
 class _ClassStub {}

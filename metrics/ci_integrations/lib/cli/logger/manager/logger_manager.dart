@@ -4,11 +4,23 @@ import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
 /// A class that manages loggers of different classes by their type and
 /// provides loggers for instances of these classes.
 class LoggerManager {
-  /// The default [LoggerFactory] instance to use for this manager.
+  /// A default [LoggerFactory] instance to use for this manager.
   static final LoggerFactory _defaultLoggerFactory = LoggerFactory();
+
+  /// A [LoggerManager] instance to follow the Singleton pattern.
+  static final LoggerManager _instance = LoggerManager._();
 
   /// A [LoggerFactory] this manager uses to create new instances of [Logger].
   static LoggerFactory _loggerFactory = _defaultLoggerFactory;
+
+  /// Returns the current instance of the [LoggerManager].
+  static LoggerManager get instance => _instance;
+
+  /// A [Map] that holds [Logger] instances for a specific class [Type]s.
+  final Map<Type, Logger> _loggers;
+
+  /// Creates a new instance of the [LoggerManager] with an empty [_loggers] map.
+  LoggerManager._() : _loggers = {};
 
   /// Sets the current [LoggerFactory] to the given [loggerFactory].
   ///
@@ -20,19 +32,6 @@ class LoggerManager {
   static void setLoggerFactory(LoggerFactory loggerFactory) {
     _loggerFactory = loggerFactory ?? _defaultLoggerFactory;
   }
-
-  /// A [LoggerManager] instance to follow the Singleton pattern.
-  static final LoggerManager _instance = LoggerManager._();
-
-  /// Returns the current instance of the [LoggerManager].
-  static LoggerManager get instance => _instance;
-
-  /// A [Map] of loggers that contains a [Logger] instance
-  /// for a specific class [Type].
-  final Map<Type, Logger> _loggers;
-
-  /// Creates a new instance of the [LoggerManager] with an empty [_loggers] map.
-  LoggerManager._() : _loggers = {};
 
   /// Returns a [Logger] for the given [sourceClass] type.
   ///
