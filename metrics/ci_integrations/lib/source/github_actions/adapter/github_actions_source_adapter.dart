@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -20,7 +20,9 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [GithubActionsClient] to implement the [SourceClient]
 /// interface.
-class GithubActionsSourceClientAdapter implements SourceClient {
+class GithubActionsSourceClientAdapter
+    with LoggerMixin
+    implements SourceClient {
   /// A fetch limit for Github Actions API calls.
   static const int fetchLimit = 25;
 
@@ -64,7 +66,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String jobName) async {
-    _logInfo('Fetching builds...');
+    logger.info('Fetching builds...');
     return _fetchLatestBuilds(jobName);
   }
 
@@ -75,7 +77,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
-    _logInfo('Fetching builds after build #$latestBuildNumber...');
+    logger.info('Fetching builds after build #$latestBuildNumber...');
 
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
@@ -222,7 +224,9 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    _logInfo('Fetching coverage artifact for a workflow #${run.number}...');
+    logger.info(
+      'Fetching coverage artifact for a workflow #${run.number}...',
+    );
 
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
@@ -278,7 +282,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     if (content == null) return null;
 
-    _logInfo('Parsing coverage artifact...');
+    logger.info('Parsing coverage artifact...');
 
     final coverageContent = utf8.decode(content);
     final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
@@ -316,11 +320,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
     }
-  }
-
-  /// Logs the given [message] as an info log.
-  void _logInfo(String message) {
-    Logger.logInfo('GithubActionsSourceClientAdapter: $message');
   }
 
   @override

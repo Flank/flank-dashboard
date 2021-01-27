@@ -1,4 +1,4 @@
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/firestore/firestore.dart' as fs;
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
@@ -10,6 +10,8 @@ import 'package:firedart/firedart.dart';
 /// Used to create instances of the [FirestoreDestinationClientAdapter]
 /// using [FirestoreDestinationConfig].
 class FirestoreDestinationClientFactory
+    with
+        LoggerMixin
     implements
         DestinationClientFactory<FirestoreDestinationConfig,
             FirestoreDestinationClientAdapter> {
@@ -34,7 +36,7 @@ class FirestoreDestinationClientFactory
           VolatileStore(),
         );
 
-    Logger.logInfo('Signing in to the Firebase...');
+    logger.info('Signing in to the Firebase...');
     await auth.signIn(
       config.firebaseUserEmail,
       config.firebaseUserPassword,

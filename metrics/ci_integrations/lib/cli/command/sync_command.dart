@@ -6,7 +6,7 @@ import 'package:ci_integration/cli/command/ci_integration_command.dart';
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
 import 'package:ci_integration/cli/config/parser/raw_integration_config_parser.dart';
 import 'package:ci_integration/cli/error/sync_error.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -18,7 +18,7 @@ import 'package:ci_integration/integration/interface/destination/client/destinat
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 
 /// A class representing a [Command] for synchronizing builds.
-class SyncCommand extends CiIntegrationCommand<void> {
+class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// Used to parse configuration file main components.
   final _rawConfigParser = const RawIntegrationConfigParser();
 
@@ -55,10 +55,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
-        Logger.logInfo('Parsing the given config file...');
+        logger.info('Parsing the given config file...');
         final rawConfig = parseConfigFileContent(file);
 
-        Logger.logInfo('Creating integration parties...');
+        logger.info('Creating integration parties...');
         final sourceParty = getParty(
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
@@ -68,7 +68,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           supportedParties.destinationParties,
         );
 
-        Logger.logInfo('Creating source configs...');
+        logger.info('Creating source configs...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
@@ -78,7 +78,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationParty,
         );
 
-        Logger.logInfo('Creating integration clients...');
+        logger.info('Creating integration clients...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
@@ -93,7 +93,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationProjectId: destinationConfig.destinationProjectId,
         );
 
-        Logger.logInfo('Syncing...');
+        logger.info('Syncing...');
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
         throw SyncError(
@@ -139,7 +139,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
       throw UnimplementedError('The given source config is unknown');
     }
 
-    Logger.logInfo('$party was created.');
+    logger.info('$party was created.');
 
     return party;
   }
@@ -151,7 +151,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     IntegrationParty<T, IntegrationClient> party,
   ) {
     final config = party.configParser.parse(configMap);
-    Logger.logInfo('$config was created.');
+    logger.info('$config was created.');
 
     return config;
   }
@@ -163,7 +163,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     IntegrationParty<Config, T> party,
   ) {
     final client = party.clientFactory.create(config);
-    Logger.logInfo('$client was created.');
+    logger.info('$client was created.');
 
     return client;
   }
@@ -190,7 +190,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
-      Logger.logMessage(result.message);
+      logger.message(result.message);
     } else {
       throw SyncError(message: result.message);
     }
