@@ -65,7 +65,7 @@ else config is not valid
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
     deactivate CoolIntegrationValidationDelegate
 
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds error message to error buffer
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
 
     CoolIntegrationConfigValidator --> SyncCommand : throw ""ConfigValidationException(message)""
     deactivate CoolIntegrationConfigValidator

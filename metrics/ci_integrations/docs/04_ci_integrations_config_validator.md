@@ -73,7 +73,7 @@ Consider the package structure using the `CoolIntegration` as an example:
 >   * cool_integration/
 >     * config/   
 >       * validator/
->         * cool_integration_config_validator.dart
+>         * cool_integration_source_config_validator.dart
 >       * validator_factory/
 >         * cool_integration_config_validator_factory.dart
 >       * validation_delegate/
