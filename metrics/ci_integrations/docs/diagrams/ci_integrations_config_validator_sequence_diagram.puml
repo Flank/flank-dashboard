@@ -36,18 +36,20 @@ deactivate CoolIntegrationConfigValidatorFactory
 SyncCommand -> CoolIntegrationConfigValidator : validate(config)
 activate CoolIntegrationConfigValidator
 
+CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
+activate CoolIntegrationValidationDelegate
+
+CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
+activate  CoolIntegrationClient
+
+CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+
+CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+
 alt config is valid
 
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
-    activate CoolIntegrationValidationDelegate
-
-    CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
-    activate  CoolIntegrationClient
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
-    CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
 
@@ -57,17 +59,8 @@ alt config is valid
 
 else config is not valid
 
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
-
-    CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
-    CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
     deactivate CoolIntegrationClient
-
 
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
     deactivate CoolIntegrationValidationDelegate
@@ -81,11 +74,5 @@ else config is not valid
     deactivate SyncCommand
 
 end
-
-deactivate CoolIntegrationValidationDelegate
-deactivate CoolIntegrationConfigValidator
-
-deactivate "CI Integrations"
-deactivate SyncCommand
 
 @enduml

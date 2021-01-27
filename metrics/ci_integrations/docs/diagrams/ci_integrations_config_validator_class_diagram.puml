@@ -26,13 +26,13 @@
                     }
 
                     package validation_delegate as base_validation_delegate {
-                        abstract class ValidationDelegate {
+                        interface ValidationDelegate {
                             + Future<InteractionResult> validateAuth(AuthorizationBase auth)
                         }
                     }
 
                     package validator_factory {
-                        abstract class ConfigValidatorFactory<V extends ConfigValidator> {
+                        interface ConfigValidatorFactory<V extends ConfigValidator> {
                             + V create()
                         }
                     }
@@ -40,13 +40,13 @@
             }
 
             package source.config.validation_delegate {
-                abstract class SourceValidationDelegate {
+                interface SourceValidationDelegate {
                     + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
                 }
             }
 
             package destination.config.validation_delegate {
-                abstract class DestinationValidationDelegate {
+                interface DestinationValidationDelegate {
                     + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
                 }
             }
