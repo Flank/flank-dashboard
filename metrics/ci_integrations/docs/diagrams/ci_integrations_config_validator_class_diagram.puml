@@ -73,7 +73,7 @@
             package validation_delegate {
                 class CoolIntegrationDestinationValidationDelegate {
                     - _client: CoolIntegrationClient
-                    + Future<void> validateExtraField()
+                    + Future<InteractionResult> validateExtraField()
                 }
             }
         }
@@ -88,7 +88,6 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator --> ValidationDelegate : uses
-    ConfigValidator --> ConfigValidationException : throws
     ConfigValidator --> Config : uses
 
     SourceValidationDelegate --up|> ValidationDelegate
@@ -103,5 +102,6 @@
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
+    CoolIntegrationDestinationConfigValidator --> ConfigValidationException : throws
 
 @enduml

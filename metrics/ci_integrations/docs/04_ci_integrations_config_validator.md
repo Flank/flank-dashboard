@@ -38,7 +38,7 @@ Consider the following class diagram that demonstrates the required changes usin
 
 #### Package Structure
 
-Consider the package structure using the destination `CoolIntegration` as an example:
+Consider the package structure using the `CoolIntegration` as an example:
 
 > * integration/
 >   * interface/
@@ -69,6 +69,15 @@ Consider the package structure using the destination `CoolIntegration` as an exa
 >         * cool_integration_config_validator_factory.dart
 >       * validation_delegate/
 >         * cool_integration_destination_validation_delegate.dart
+> * source/
+>   * cool_integration/
+>     * config/   
+>       * validator/
+>         * cool_integration_config_validator.dart
+>       * validator_factory/
+>         * cool_integration_config_validator_factory.dart
+>       * validation_delegate/
+>         * cool_integration_source_validation_delegate.dart
 > * client/  
 >   * cool_integration/
 >     * cool_integration_client.dart
