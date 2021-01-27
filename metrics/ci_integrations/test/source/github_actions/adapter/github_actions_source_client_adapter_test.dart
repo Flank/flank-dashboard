@@ -11,7 +11,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
-import 'package:ci_integration/source/github_actions/adapter/github_actions_source_adapter.dart';
+import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';

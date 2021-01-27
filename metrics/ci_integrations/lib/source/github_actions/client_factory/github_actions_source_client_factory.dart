@@ -1,7 +1,7 @@
 import 'package:archive/archive.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
-import 'package:ci_integration/source/github_actions/adapter/github_actions_source_adapter.dart';
+import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
