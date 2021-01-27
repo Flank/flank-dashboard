@@ -300,7 +300,7 @@ package integration.ci_integration {
   class SyncConfig {
     + sourceProjectId : String
     + destinationProjectId : String
-    + skipCoverage: bool
+    + coverage: bool
   }
 
   CiIntegration ..> SyncConfig : uses

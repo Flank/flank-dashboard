@@ -148,17 +148,17 @@ For example:
 ci_integrations sync --config-file="path/to/config_file.yaml"
 ```
 
-#### Controlling Builds Coverage Syncronization
+#### Controlling Builds Coverage Synchronization
 
 By default, the CI Integrations tool fetches coverage data for each build. This coverage data comes from an appropriate coverage artifact published during the CI build. The algorithm fetches artifacts and looks for the required coverage one and then downloads it for parsing. This is a mandatory step, and if fetching or downloading an artifact fails - the synchronization process fails as well. 
 
-If your CI project is not ready to publish coverage data, or if you for some reason want to skip this step and disable coverage fetching, you may use the `--skip-coverage` flag. This flag disables any artifacts fetching and manipulating for the sync process. Consider the following example of using the `--skip-coverage` flag:
+If your CI project is not ready to publish coverage data, or if you for some reason want to skip this step and disable coverage fetching, you may use the `--no-coverage` flag. This flag disables any artifacts fetching and manipulating for the sync process. Consider the following example of using the `--no-coverage` flag:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml" --skip-coverage
+ci_integrations sync --config-file="path/to/config_file.yaml" --no-coverage
 ```
 
-_**Note**: All builds synchronized with the `--skip-coverage` flag won't contain any coverage information. This may affect the coverage metric available on the Metrics Web Application._
+_**Note**: All builds synchronized with the `--no-coverage` flag won't contain any coverage information. This may affect the coverage metric available on the Metrics Web Application._
 
 #### Automating CI Integrations
 
