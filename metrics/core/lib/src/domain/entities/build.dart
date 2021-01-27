@@ -28,7 +28,7 @@ class Build extends Equatable {
   /// A URL of the source control revision used to run the build.
   final String url;
 
-  /// A URL of the build in CI.
+  /// A URL of this build in CI.
   final String apiUrl;
 
   /// A project test coverage percent of this build.

@@ -155,7 +155,7 @@ void main() {
     test(
       ".sync() does not fetch a coverage for builds if the config's skip coverage value is true",
       () {
-        int calledTimes = 0;
+        bool isCalled = false;
 
         final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => null,
@@ -163,7 +163,7 @@ void main() {
 
         final sourceClientStub = SourceClientStub(
           fetchCoverageCallback: (_) {
-            calledTimes += 1;
+            isCalled = true;
 
             return Future.value(Percent(0.7));
           },
@@ -175,7 +175,7 @@ void main() {
         );
 
         final result = ciIntegration.sync(syncConfig).then((result) {
-          expect(calledTimes, equals(0));
+          expect(isCalled, false);
 
           return result.isSuccess;
         });

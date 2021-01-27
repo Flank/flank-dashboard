@@ -233,7 +233,7 @@ void main() {
       );
 
       test(
-        ".run() creates sync config with the skip coverage equals to 'skip-coverage' flag's value",
+        ".run() creates a sync config with the skip coverage equals to 'skip-coverage' flag's value",
         () async {
           whenRunSync().thenAnswer(
             (_) => Future.value(InteractionResult.success(result: syncConfig)),

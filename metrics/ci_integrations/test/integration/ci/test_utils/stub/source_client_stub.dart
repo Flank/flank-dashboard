@@ -23,8 +23,7 @@ class SourceClientStub implements SourceClient {
 
   /// Creates this stub class instance.
   ///
-  /// [fetchBuildsAfterCallback], [fetchBuildsCallback]
-  /// and [fetchCoverageCallback] are optional.
+  /// All parameters are optional.
   SourceClientStub({
     this.fetchBuildsAfterCallback,
     this.fetchBuildsCallback,
