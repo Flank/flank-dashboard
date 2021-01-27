@@ -1,0 +1,78 @@
+@startuml ci_integrations_config_validator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant "CI Integrations"
+participant CiIntegrationsRunner
+participant SyncCommand
+participant CoolIntegrationConfigValidatorFactory
+participant CoolIntegrationConfigValidator
+participant CoolIntegrationValidationDelegate
+participant CoolIntegrationClient
+
+Bob -> "CI Integrations" : runs sync
+activate "CI Integrations"
+
+"CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+deactivate "CI Integrations"
+activate CiIntegrationsRunner
+
+CiIntegrationsRunner -> SyncCommand: run()
+deactivate CiIntegrationsRunner
+activate SyncCommand
+
+SyncCommand -> SyncCommand : creates source and destination parties
+SyncCommand -> SyncCommand : parses source and destination configs
+
+SyncCommand -> CoolIntegrationConfigValidatorFactory : create()
+activate CoolIntegrationConfigValidatorFactory
+
+CoolIntegrationConfigValidatorFactory --> SyncCommand : configValidator
+deactivate CoolIntegrationConfigValidatorFactory
+
+SyncCommand -> CoolIntegrationConfigValidator : validate(config)
+activate CoolIntegrationConfigValidator
+
+CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
+activate CoolIntegrationValidationDelegate
+
+CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
+activate  CoolIntegrationClient
+
+CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+
+CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+
+alt config is valid
+
+    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+
+    CoolIntegrationConfigValidator --> SyncCommand : config is valid
+    SyncCommand -> SyncCommand : continues the sync command
+    SyncCommand --> Bob : sync was successful
+
+else config is not valid
+
+    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
+    deactivate CoolIntegrationClient
+
+    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
+    deactivate CoolIntegrationValidationDelegate
+
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
+
+    CoolIntegrationConfigValidator --> SyncCommand : throw ""ConfigValidationException(message)""
+    deactivate CoolIntegrationConfigValidator
+
+    SyncCommand --> Bob : sync failed
+    deactivate SyncCommand
+
+end
+
+@enduml
