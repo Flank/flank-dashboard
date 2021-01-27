@@ -32,7 +32,7 @@ All the integrations used by the CI integration module can be one of two types:
 - source (stands for the source of builds data - where they are loaded from);
 - destination (stands for the builds data storage - where they are stored).
 
-Both types are presented as a set of interfaces in `integration.interface.source` and `integration.interface.destination` respectively. Also, both of them are presented by their implementations in the `source` (for example, with `source.jenkins`, `source.bitrise`) and `destination` (for example, with `destination.firestore`) respectively.
+Both types are presented as a set of interfaces in `integration.interface.source` and `integration.interface.destination` respectively. Also, both of them are presented by their implementations in the `source` (for example, with `source.jenkins`, `source.buildkite` or `source.github_actions`) and `destination` (for example, with `destination.firestore`) respectively.
 
 The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` that parses the given configurations, creates clients and then performs `CiIntegration.sync` on them.
 
@@ -123,14 +123,17 @@ So considering the above, the package structure for the CI integration module is
 > * source/
 >     * jenkins/
 >         * `unit_structure`
->     * bitrise/
+>     * buildkite/
+>         * `unit_structure`
+>     * github_actions/
 >         * `unit_structure`
 > * destination/
 >     * firestore/
 >         * `unit_structure`
 > * client/
 >     * jenkins/
->     * bitrise/
+>     * github_actions/
+>     * buildkite/
 >     * firestore/
 
 
