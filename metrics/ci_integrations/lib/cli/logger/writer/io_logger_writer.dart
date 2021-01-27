@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:ci_integration/cli/logger/writer/logger_writer.dart';
 
-/// The implementation of the [LoggerWriter] that uses [IOSink]s as logs output.
+/// An implementation of the [LoggerWriter] that uses [IOSink]s as logs output.
 class IOLoggerWriter implements LoggerWriter {
   /// An [IOSink] this writer uses to write messages.
   final IOSink messageSink;
