@@ -15,4 +15,10 @@ abstract class SourceClient extends IntegrationClient {
   ///
   /// Returns `null` if a project with the given [projectId] is not found.
   Future<List<BuildData>> fetchBuilds(String projectId);
+
+  /// Fetches the coverage for the given [build].
+  ///
+  /// Returns `null` if the code coverage artifact for the given build
+  /// is not found.
+  Future<Percent> fetchCoverage(BuildData build);
 }

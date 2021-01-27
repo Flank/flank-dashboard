@@ -28,6 +28,9 @@ class Build extends Equatable {
   /// A URL of the source control revision used to run the build.
   final String url;
 
+  /// A URL of the build in CI.
+  final String apiUrl;
+
   /// A project test coverage percent of this build.
   final Percent coverage;
 
@@ -41,6 +44,7 @@ class Build extends Equatable {
     this.duration,
     this.workflowName,
     this.url,
+    this.apiUrl,
     this.coverage,
   });
 

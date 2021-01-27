@@ -2,16 +2,19 @@ import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 import 'test_utils/stub/destination_client_stub.dart';
 import 'test_utils/stub/source_client_stub.dart';
+import 'test_utils/test_data/builds_test_data.dart';
 
 void main() {
   group("CiIntegration", () {
     final syncConfig = SyncConfig(
       sourceProjectId: 'sourceProjectId',
       destinationProjectId: 'destinationProjectId',
+      skipCoverage: true,
     );
 
     test(
@@ -144,6 +147,76 @@ void main() {
         final ciIntegration = CiIntegrationStub();
         final result =
             ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
+
+        expect(result, completion(isTrue));
+      },
+    );
+
+    test(
+      ".sync() does not fetch a coverage for builds if the config's skip coverage value is true",
+      () {
+        int calledTimes = 0;
+
+        final destinationClient = DestinationClientStub(
+          fetchLastBuildCallback: (_) => null,
+        );
+
+        final sourceClientStub = SourceClientStub(
+          fetchCoverageCallback: (_) {
+            calledTimes += 1;
+
+            return Future.value(Percent(0.7));
+          },
+        );
+
+        final ciIntegration = CiIntegrationStub(
+          sourceClient: sourceClientStub,
+          destinationClient: destinationClient,
+        );
+
+        final result = ciIntegration.sync(syncConfig).then((result) {
+          expect(calledTimes, equals(0));
+
+          return result.isSuccess;
+        });
+
+        expect(result, completion(isTrue));
+      },
+    );
+
+    test(
+      ".sync() fetches coverage for each build if the config's skip coverage value is false",
+      () async {
+        final syncConfig = SyncConfig(
+          sourceProjectId: 'test',
+          destinationProjectId: 'test',
+          skipCoverage: false,
+        );
+
+        int calledTimes = 0;
+
+        final destinationClient = DestinationClientStub(
+          fetchLastBuildCallback: (_) => null,
+        );
+
+        final sourceClientStub = SourceClientStub(
+          fetchCoverageCallback: (_) {
+            calledTimes += 1;
+
+            return Future.value(Percent(0.7));
+          },
+        );
+
+        final ciIntegration = CiIntegrationStub(
+          sourceClient: sourceClientStub,
+          destinationClient: destinationClient,
+        );
+
+        final result = ciIntegration.sync(syncConfig).then((result) {
+          expect(calledTimes, equals(BuildsTestData.builds.length));
+
+          return result.isSuccess;
+        });
 
         expect(result, completion(isTrue));
       },

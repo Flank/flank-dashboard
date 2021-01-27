@@ -71,6 +71,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     );
   }
 
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    return Future.value(build.coverage);
+  }
+
   /// Fetches builds data for the project with given [projectId].
   ///
   /// The [limits] can be used to set a range-specifier for the request.

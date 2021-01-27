@@ -91,6 +91,11 @@ class GithubActionsSourceClientAdapter
     return _fetchLatestBuilds(jobName, latestBuildNumber);
   }
 
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    return Future.value(build.coverage);
+  }
+
   /// Fetches the latest builds by the given [jobName].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the

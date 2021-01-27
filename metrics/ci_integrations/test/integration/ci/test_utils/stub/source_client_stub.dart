@@ -17,12 +17,18 @@ class SourceClientStub implements SourceClient {
   /// implementation for testing purposes.
   final Future<List<BuildData>> Function(String) fetchBuildsCallback;
 
+  /// Callback used to replace the default [fetchCoverage] method
+  /// implementation for testing purposes.
+  final Future<Percent> Function(BuildData) fetchCoverageCallback;
+
   /// Creates this stub class instance.
   ///
-  /// Both [fetchBuildsAfterCallback] and [fetchBuildsCallback] are optional.
+  /// [fetchBuildsAfterCallback], [fetchBuildsCallback]
+  /// and [fetchCoverageCallback] are optional.
   SourceClientStub({
     this.fetchBuildsAfterCallback,
     this.fetchBuildsCallback,
+    this.fetchCoverageCallback,
   });
 
   @override
@@ -48,6 +54,15 @@ class SourceClientStub implements SourceClient {
       return fetchBuildsCallback(projectId);
     } else {
       return Future.value(BuildsTestData.builds);
+    }
+  }
+
+  @override
+  Future<Percent> fetchCoverage(BuildData build) {
+    if (fetchCoverageCallback != null) {
+      return fetchCoverageCallback(build);
+    } else {
+      return Future.value(BuildsTestData.firstBuild.coverage);
     }
   }
 

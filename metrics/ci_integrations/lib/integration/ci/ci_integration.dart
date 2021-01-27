@@ -52,23 +52,44 @@ class CiIntegration with LoggerMixin {
         );
       }
 
-      if (newBuilds != null && newBuilds.isNotEmpty) {
-        await destinationClient.addBuilds(
-          destinationProjectId,
-          newBuilds,
-        );
-        return const InteractionResult.success(
-          message: 'The data has been synced successfully!',
-        );
-      } else {
+      if (newBuilds == null || newBuilds.isEmpty) {
         return const InteractionResult.success(
           message: 'The project data is up-to-date!',
         );
       }
+
+      if (!config.skipCoverage) {
+        newBuilds = await _fetchCoverageFor(newBuilds);
+      }
+
+      await destinationClient.addBuilds(
+        destinationProjectId,
+        newBuilds,
+      );
+
+      return const InteractionResult.success(
+        message: 'The data has been synced successfully!',
+      );
     } catch (error) {
       return InteractionResult.error(
         message: 'Failed to sync the data! Details: $error',
       );
     }
+  }
+
+  /// Walks through the list of the given [builds] and fetches a coverage
+  /// for each particular build.
+  Future<List<BuildData>> _fetchCoverageFor(List<BuildData> builds) async {
+    final List<BuildData> buildsWithCoverage = [];
+
+    for (final build in builds) {
+      final coverage = await sourceClient.fetchCoverage(build);
+
+      buildsWithCoverage.add(
+        build.copyWith(coverage: coverage),
+      );
+    }
+
+    return buildsWithCoverage;
   }
 }
