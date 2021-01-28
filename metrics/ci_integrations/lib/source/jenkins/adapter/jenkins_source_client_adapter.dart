@@ -8,7 +8,6 @@ import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
@@ -60,8 +59,6 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     String projectId,
     int initialFetchLimit,
   ) async {
-    NumberValidator.checkGreaterThan(initialFetchLimit, 0);
-
     logger.info('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,

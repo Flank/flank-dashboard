@@ -105,12 +105,6 @@ Each such client has its own specific list of configuration items it requires. T
 | Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
 | Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
-### Initial fetch limit
-
-When the CI Integrations tool synchronizes the project for the first time, by default, it fetches 28 latest builds. To customize this behavior, specify the following CLI argument: `--initial-fetch-limit <YOUR_INITIAL_FETCH_LIMIT>` where the `<YOUR_INITIAL_FETCH_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds.
-
-_**Note**: The `initial-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
-
 #### Example
 
 Imagine that you want to expose your GitHub Actions builds to the `Metrics Web Application`. In this case, your `source` integration is GitHub Actions and `destination` is Firestore. Assume that you've already downloaded and configured the CI Integrations tool. The next stage is creating a configuration file for the integrations you require. Let's consider the following steps:
@@ -166,6 +160,26 @@ ci_integrations sync --config-file="path/to/config_file.yaml" --no-coverage
 
 _**Note**: All builds synchronized with the `--no-coverage` flag won't contain any coverage information. This may affect the coverage metric available on the Metrics Web Application._
 
+
+#### Initial fetch limit
+
+When the CI Integrations tool synchronizes the project for the first time, it fetches 28 latest builds by default. To customize this behavior, specify the following CLI argument: `--initial-fetch-limit <YOUR_INITIAL_FETCH_LIMIT>` where the `<YOUR_INITIAL_FETCH_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds. Consider the following example of using the `--initial-fetch-limit` flag:
+
+```bash
+ci_integrations sync --config-file="path/to/config_file.yaml" --initial-fetch-limit 20
+```
+
+_**Note**: The `--initial-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
+
+#### Sync command options and flags
+
+To simplify the sync command usage, consider the following table that describes it's available options and flags:
+
+| Name | Description | Default value |
+| --- | --- | --- |
+| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). |
+| `--initial-fetch-limit` | A number of|
+| `--no-coverage` | |
 #### Automating CI Integrations
 
 Obviously, it is not very handy to manually run the CI Integrations tool every time you have a new build. You should wait for a new build to finish, then check your configuration file is up-to-date, run a sync command with this configuration file, and then wait for a sync process to complete. 

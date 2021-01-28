@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A class representing configurations for a project within a source
-/// and destination context.
+/// A class that represents a configuration to use in sync.
 @immutable
 class SyncConfig extends Equatable {
   /// A uniquie ID of the source project to load the project metrics from.

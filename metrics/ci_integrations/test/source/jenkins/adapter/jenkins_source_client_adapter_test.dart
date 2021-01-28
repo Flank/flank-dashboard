@@ -103,26 +103,6 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is 0",
-      () {
-        expect(
-          () => adapter.fetchBuilds(jobName, 0),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is a negative number",
-      () {
-        expect(
-          () => adapter.fetchBuilds(jobName, -1),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
       ".fetchBuilds() fetches builds which are not building",
       () {
         final jenkinsBuilds = [
