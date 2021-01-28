@@ -34,7 +34,7 @@
 #### Data layer
 #### Presentation Layer
 
-### Application Version
+## Application Version
 > Explain the way of storing the application version and providing it to the Metrics Web Application.
 
 # Dependencies
