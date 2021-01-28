@@ -145,7 +145,7 @@ The main idea is to use the `sync` command the tool provides and specify a path 
 For example:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml" --initial-fetch-limit 20
+ci_integrations sync --config-file="path/to/config_file.yaml" 
 ```
 
 #### Controlling Builds Coverage Synchronization
@@ -175,11 +175,12 @@ _**Note**: The `--initial-fetch-limit` must be an integer greater than 0. If the
 
 To simplify the sync command usage, consider the following table that describes it's available options and flags:
 
-| Name | Description | Default value |
-| --- | --- | --- |
-| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). |
-| `--initial-fetch-limit` | A number of|
-| `--no-coverage` | |
+| Name | Description | Default value | Required |
+| --- | --- | --- | --- |
+| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). Must be specified. | Does not have the default value. | Yes |
+| `--initial-fetch-limit` | A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0. See [initial fetch limit](#initial-fetch-limit). | `28` | No |
+| `--[no-]coverage` | Whether to fetch coverage for each build during the sync. See [controlling coverage synchronization] (#controlling-builds-coverage-synchronization). | `true` | No | 
+
 #### Automating CI Integrations
 
 Obviously, it is not very handy to manually run the CI Integrations tool every time you have a new build. You should wait for a new build to finish, then check your configuration file is up-to-date, run a sync command with this configuration file, and then wait for a sync process to complete. 
