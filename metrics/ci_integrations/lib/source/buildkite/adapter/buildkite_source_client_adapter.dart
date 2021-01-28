@@ -61,7 +61,44 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
 
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
-    return Future.value(build.coverage);
+    ArgumentError.checkNotNull(build, 'build');
+    logger.info(
+      'Fetching coverage artifact for a build #${build.buildNumber}...',
+    );
+    final interaction = await buildkiteClient.fetchArtifacts(
+      build.workflowName,
+      build.buildNumber,
+      page: 1,
+      perPage: fetchLimit,
+    );
+    _throwIfInteractionUnsuccessful(interaction);
+
+    BuildkiteArtifactsPage page = interaction.result;
+    bool hasNext = false;
+
+    do {
+      final artifacts = page.values;
+
+      final coverageArtifact = artifacts.firstWhere(
+        (artifact) => artifact.filename == 'coverage-summary.json',
+        orElse: () => null,
+      );
+
+      if (coverageArtifact != null) {
+        return _mapArtifactToCoverage(coverageArtifact);
+      }
+
+      hasNext = page.hasNextPage;
+
+      if (hasNext) {
+        final interaction = await buildkiteClient.fetchArtifactsNext(page);
+        _throwIfInteractionUnsuccessful(interaction);
+
+        page = interaction.result;
+      }
+    } while (hasNext);
+
+    return null;
   }
 
   /// Fetches the latest builds by the given [pipelineSlug].
@@ -148,55 +185,7 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
       duration: _calculateJobDuration(build),
       workflowName: pipelineSlug,
       url: build.webUrl ?? '',
-      coverage: await _fetchCoverage(pipelineSlug, build),
     );
-  }
-
-  /// Fetches the coverage for the given [build] of a pipeline with the given
-  /// [pipelineSlug].
-  ///
-  /// Returns `null` if the code coverage artifact for the given build
-  /// is not found.
-  Future<Percent> _fetchCoverage(
-    String pipelineSlug,
-    BuildkiteBuild build,
-  ) async {
-    logger
-        .info('Fetching coverage artifact for a build #${build.number}...');
-    final interaction = await buildkiteClient.fetchArtifacts(
-      pipelineSlug,
-      build.number,
-      page: 1,
-      perPage: fetchLimit,
-    );
-    _throwIfInteractionUnsuccessful(interaction);
-
-    BuildkiteArtifactsPage page = interaction.result;
-    bool hasNext = false;
-
-    do {
-      final artifacts = page.values;
-
-      final coverageArtifact = artifacts.firstWhere(
-        (artifact) => artifact.filename == 'coverage-summary.json',
-        orElse: () => null,
-      );
-
-      if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact);
-      }
-
-      hasNext = page.hasNextPage;
-
-      if (hasNext) {
-        final interaction = await buildkiteClient.fetchArtifactsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
-
-        page = interaction.result;
-      }
-    } while (hasNext);
-
-    return null;
   }
 
   /// Maps the given [artifact] to the coverage [Percent] value.
