@@ -6,17 +6,13 @@ import 'package:cli/cli/flutter/flutter_command.dart';
 import 'package:cli/cli/gcloud/gcloud_command.dart';
 import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/cli/npm/npm_command.dart';
-import 'package:process_run/shell.dart';
+import 'package:cli/constants/config_constants.dart';
+import 'package:cli/strings/prompt_strings.dart';
+import 'package:cli/util/file_helper.dart';
+import 'package:cli/util/prompt_util.dart';
 
 /// A [Command] implementation that deploys the metrics app.
-class DeployCommand extends Command {
-  static const String _repoURL =
-      'git@github.com:platform-platform/monorepo.git';
-  static const String _tempDir = 'tempDir';
-  static const String _webPath = '$_tempDir/metrics/web';
-  static const String _firebasePath = '$_tempDir/metrics/firebase';
-  static const String _firebaseFunctionsPath = '$_firebasePath/functions';
-
+class DeployCommand extends Command<void> {
   @override
   final String name = "deploy";
 
@@ -25,19 +21,31 @@ class DeployCommand extends Command {
       "Creates GCloud and Firebase project and deploy metrics app.";
 
   /// A [FirebaseCommand] needed to get the Firebase CLI version.
-  final FirebaseCommand _firebase = FirebaseCommand();
+  final FirebaseCommand _firebase;
 
   /// A [GCloudCommand] needed to get the GCloud CLI version.
-  final GCloudCommand _gcloud = GCloudCommand();
+  final GCloudCommand _gcloud;
 
   /// A [GitCommand] needed to get the Git CLI version.
-  final GitCommand _git = GitCommand();
+  final GitCommand _git;
 
   /// A [FlutterCommand] needed to get the Flutter CLI version.
-  final FlutterCommand _flutter = FlutterCommand();
+  final FlutterCommand _flutter;
 
   /// A [NpmCommand] needed to get the Npm CLI version.
-  final NpmCommand _npm = NpmCommand();
+  final NpmCommand _npm;
+
+  final FileHelper _fileHelper;
+
+  /// Creates an instance of the [DeployCommand].
+  DeployCommand(
+    this._firebase,
+    this._gcloud,
+    this._git,
+    this._flutter,
+    this._npm, [
+    FileHelper _fileHelper,
+  ]) : _fileHelper = _fileHelper ?? FileHelper();
 
   @override
   Future<void> run() async {
@@ -53,15 +61,14 @@ class DeployCommand extends Command {
 
     await _deploy(_projectID, _firebaseToken);
 
-    await promptTerminate();
+    await PromptUtil.promptTerminate();
   }
 
   /// Selects a GCP region.
   Future<String> _selectRegion() async {
     // TODO: Listing regions won't work on new projects as compute API not enabled yet.
     //await run('gcloud',['compute','regions','list'],verbose:true);
-    print('Select default region.');
-    return prompt('region');
+    return PromptUtil.prompt(PromptStrings.selectRegion);
   }
 
   /// Deploys the metrics project to the firebase.
@@ -69,48 +76,46 @@ class DeployCommand extends Command {
     String projectId,
     String firebaseToken,
   ) async {
+    const repoURL = ConfigConstants.repoURL;
+    const tempDir = ConfigConstants.tempDir;
+    const webPath = ConfigConstants.webPath;
+    const firebasePath = ConfigConstants.firebasePath;
+    const functionsPath = ConfigConstants.firebaseFunctionsPath;
+
     try {
-      await _git.clone(_repoURL, _tempDir);
+      await _git.clone(repoURL, tempDir);
 
-      await _firebase.chooseProject(projectId, _webPath, firebaseToken);
-      await _flutter.buildWeb(_webPath);
-      await _firebase.clearTarget(_webPath, firebaseToken);
-      await _firebase.applyTarget(projectId, _webPath, firebaseToken);
-      await prompt(
-        'To make Firebase Analytics available for the current project, '
-        'please, make sure it is enabled in the Firebase console. '
-        'Enter any key to continue',
-      );
-      await _firebase.deployHosting(_webPath, firebaseToken);
+      await _firebase.chooseProject(projectId, webPath, firebaseToken);
+      await _flutter.buildWeb(webPath);
+      await _firebase.clearTarget(webPath, firebaseToken);
+      await _firebase.applyTarget(projectId, webPath, firebaseToken);
+      await PromptUtil.prompt(PromptStrings.enableAnalytics);
+      await _firebase.deployHosting(webPath, firebaseToken);
 
-      await _firebase.chooseProject(projectId, _firebasePath, firebaseToken);
-      await _npm.install(_firebasePath);
-      await _firebase.deployFirestore(_firebasePath, firebaseToken);
+      await _firebase.chooseProject(projectId, firebasePath, firebaseToken);
+      await _npm.install(firebasePath);
+      await _firebase.deployFirestore(firebasePath, firebaseToken);
 
-      final proceed = await promptConfirm(
-        'A Blaze billing account is required for function deployment. '
-        'Please go to the firebase console and enable it manually or '
-        'skip this step.',
-      );
+      final proceed =
+          await PromptUtil.promptConfirm(PromptStrings.enableBillingAccount);
 
       if (proceed) {
-        await _npm.install(_firebaseFunctionsPath);
-        await _firebase.deployFunctions(_firebasePath, firebaseToken);
+        await _npm.install(functionsPath);
+        await _firebase.deployFunctions(firebasePath, firebaseToken);
       } else {
         print('Skipping functions deploying.');
       }
     } catch (error) {
       print(error);
     } finally {
-      await _cleanup(_tempDir);
+      await _fileHelper.deleteDirectory(Directory(tempDir));
     }
   }
 
-  /// Cleanups the directory by the given [path].
-  Future<void> _cleanup(String path) async {
-    final configDirectory = Directory(path);
+  /// Deletes the given [Directory].
+  Future<void> deleteDirectory(Directory directory) async {
     try {
-      await configDirectory.delete(recursive: true);
+      await directory.delete(recursive: true);
     } catch (error) {
       print(error);
     }

@@ -1,3 +1,5 @@
+import 'package:cli/strings/prompt_strings.dart';
+import 'package:cli/util/prompt_util.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell_run.dart';
 
@@ -13,13 +15,16 @@ class FirebaseCommand {
       stdin: sharedStdIn,
     );
 
-    return prompt('Copy Firebase Token from above');
+    return PromptUtil.prompt(PromptStrings.firebaseToken);
   }
 
   /// Adds Firebase capabilities to the project
   /// based on the given [projectId] and [firebaseToken].
   Future<void> addFirebase(String projectId, String firebaseToken) async {
-    if (await promptConfirm('Add firebase capabilities to project?')) {
+    final addCapabilities =
+        await PromptUtil.promptConfirm(PromptStrings.addFirebaseCapabilities);
+
+    if (addCapabilities) {
       print('Adding Firebase capabilities.');
       await cmd.run(
         'firebase',
@@ -34,7 +39,9 @@ class FirebaseCommand {
 
   /// Creates Firebase web app with the given [projectId] and [firebaseToken].
   Future<void> createWebApp(String projectId, String firebaseToken) async {
-    if (await promptConfirm('Add web app?')) {
+    final addWebApp = await PromptUtil.promptConfirm(PromptStrings.addWebApp);
+
+    if (addWebApp) {
       print('Adding Firebase web app.');
       await cmd.run(
         'firebase',

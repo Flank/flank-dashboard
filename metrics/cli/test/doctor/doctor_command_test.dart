@@ -1,49 +1,22 @@
-import 'package:args/command_runner.dart';
-import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/util/prompt_wrapper.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
-  CommandRunner<dynamic> runner;
-  const _defaultUsage = '''
-Usage: metrics <command> [arguments]
+  test('test', () {
+    final mock = PromptMock();
 
-Global options:
--h, --help    Print this usage information.
-
-Available commands:
-  help   Display help information for metrics.
-
-Run "metrics help <command>" for more information about a command.''';
-  group("DoctorCommand", () {
-    setUpAll(() {
-      runner = CommandRunner('metrics', 'Metrics installer.');
+    when(mock.prompt('text')).thenAnswer((_)  {
+      print('yahioo');
+      return Future.value('x');
     });
-    test(
-      ".invocation has a sane default",
-      () {
-        expect(runner.invocation, equals('metrics <command> [arguments]'));
-      },
-    );
-    test('returns the usage string', () {
-      expect(runner.usage, equals('''
-Metrics installer.
 
-$_defaultUsage'''));
-    });
-    test("contains custom commands", () {
-      runner.addCommand(DoctorCommand());
-      expect(runner.usage, equals('''
-Metrics installer.
+    A.init(mock);
 
-Usage: metrics <command> [arguments]
+    final b = B();
 
-Global options:
--h, --help    Print this usage information.
-
-Available commands:
-  doctor   Check dependencies.
-
-Run "metrics help <command>" for more information about a command.'''));
-    });
+    b.run();
   });
 }
+
+class PromptMock extends Mock implements PromptWrapper {}

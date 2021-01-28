@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:cli/strings/prompt_strings.dart';
+import 'package:cli/util/prompt_util.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell_run.dart';
 
@@ -20,8 +22,10 @@ class GCloudCommand {
   /// Adds project or uses an existing one.
   Future<String> addProject() async {
     String projectId = '';
+    final createNewProject =
+        await PromptUtil.promptConfirm(PromptStrings.createNewProject);
 
-    if (await promptConfirm('Create new project ?')) {
+    if (createNewProject) {
       final random = Random();
       final codeUnits = List.generate(5, (index) => random.nextInt(26) + 97);
       final randomString = String.fromCharCodes(codeUnits);
@@ -42,7 +46,7 @@ class GCloudCommand {
         verbose: true,
         stdin: sharedStdIn,
       );
-      projectId = await prompt('Project ID');
+      projectId = await PromptUtil.prompt(PromptStrings.selectProjectId);
     }
 
     print('Setting project ID');
@@ -58,7 +62,10 @@ class GCloudCommand {
 
   /// Adds project app needed to create a Firestore database.
   Future<void> addProjectApp(String region, String projectId) async {
-    if (await promptConfirm('Add project app ?')) {
+    final addProjectApp =
+        await PromptUtil.promptConfirm(PromptStrings.addProjectApp);
+
+    if (addProjectApp) {
       print('Adding project app.');
       await cmd.run(
         'gcloud',
@@ -73,7 +80,10 @@ class GCloudCommand {
 
   /// Creates a Firestore database with the given [region] and [projectId].
   Future<void> createDatabase(String region, String projectId) async {
-    if (await promptConfirm('Add project database ?')) {
+    final addDatabase =
+        await PromptUtil.promptConfirm(PromptStrings.createProjectDatabase);
+
+    if (addDatabase) {
       print('Adding project database.');
       await cmd.run(
         'gcloud',

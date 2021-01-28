@@ -1,13 +1,15 @@
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
-import 'package:cli/doctor/doctor_command.dart';
-import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/runner/metrics_command_runner.dart';
+import 'package:cli/util/prompt_util.dart';
+import 'package:cli/util/prompt_wrapper.dart';
 
 Future main(List<String> arguments) async {
-  final runner = CommandRunner("metrics", "Metrics installer.")
-    ..addCommand(DoctorCommand())
-    ..addCommand(DeployCommand());
+  final promptWrapper = PromptWrapper();
+  PromptUtil.init(promptWrapper);
+
+  final runner = MetricsCommandRunner();
+
   try {
     await runner.run(arguments);
     exit(0);
