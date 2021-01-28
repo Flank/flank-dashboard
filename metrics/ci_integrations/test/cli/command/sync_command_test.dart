@@ -289,7 +289,7 @@ void main() {
       });
 
       test(
-        ".run() runs sync on the given config and first sync fetch limit",
+        ".run() runs sync on the given config",
         () async {
           whenRunSync().thenAnswer(
             (_) => Future.value(
