@@ -12,28 +12,28 @@ void main() {
     test(
       "creates an instance with the given message",
       () {
-        const exception = ConfigValidationError(message: message);
+        final error = ConfigValidationError(message: message);
 
-        expect(exception.message, equals(message));
+        expect(error.message, equals(message));
       },
     );
 
     test(
-      ".toString() returns the exception's message if the message is not null",
+      ".toString() returns the error's message if the message is not null",
       () {
         const expectedError = '$defaultError$message';
-        const exception = ConfigValidationError(message: message);
+        final error = ConfigValidationError(message: message);
 
-        expect(exception.toString(), equals(expectedError));
+        expect(error.toString(), equals(expectedError));
       },
     );
 
     test(
-      ".toString() returns an empty string if the exception's message is null",
+      ".toString() returns an empty string if the error's message is null",
       () {
-        const exception = ConfigValidationError(message: null);
+        final error = ConfigValidationError(message: null);
 
-        expect(exception.toString(), equals(defaultError));
+        expect(error.toString(), equals(defaultError));
       },
     );
   });

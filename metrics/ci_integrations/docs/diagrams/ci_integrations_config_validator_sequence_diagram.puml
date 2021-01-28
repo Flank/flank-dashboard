@@ -67,7 +67,7 @@ else config is not valid
 
     CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
 
-    CoolIntegrationConfigValidator --> SyncCommand : throw ""ConfigValidationException(message)""
+    CoolIntegrationConfigValidator --> SyncCommand : throw ""ConfigValidationError(message)""
     deactivate CoolIntegrationConfigValidator
 
     SyncCommand --> Bob : sync failed

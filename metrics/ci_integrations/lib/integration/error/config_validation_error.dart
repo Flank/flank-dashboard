@@ -1,11 +1,14 @@
+import 'package:meta/meta.dart';
+
 /// A class that represents a [Config] validation error.
-class ConfigValidationError implements Error {
+@immutable
+class ConfigValidationError extends Error {
   /// A [String] description of this error.
   final String message;
 
   /// Creates an instance of the [ConfigValidationError]
   /// with the given [message].
-  const ConfigValidationError({
+  ConfigValidationError({
     this.message,
   });
 
@@ -15,7 +18,4 @@ class ConfigValidationError implements Error {
 
     return "An error occurred during config validation: $errorMessage";
   }
-
-  @override
-  StackTrace get stackTrace => StackTrace.current;
 }
