@@ -26,7 +26,7 @@ import '../test_utils/test_data/github_actions_test_data_generator.dart';
 void main() {
   group("GithubActionsSourceClientAdapter", () {
     const jobName = 'job';
-    const initialFetchLimit = 28;
+    const fetchLimit = 28;
     final testData = GithubActionsTestDataGenerator(
       workflowIdentifier: 'workflow',
       jobName: jobName,
@@ -214,7 +214,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is 0",
+      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is 0",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, 0),
@@ -224,7 +224,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is a negative number",
+      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is a negative number",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, -1),
@@ -239,7 +239,7 @@ void main() {
         withJobsPage: defaultJobsPage,
       ).thenSuccessWith(defaultRunsPage);
 
-      final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+      final result = adapter.fetchBuilds(jobName, fetchLimit);
 
       expect(result, completion(equals(defaultBuildData)));
     });
@@ -259,7 +259,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
@@ -284,7 +284,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
@@ -307,7 +307,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
@@ -317,7 +317,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns no more than the given initial fetch limit number of builds",
+      ".fetchBuilds() returns no more than the given initial sync limit number of builds",
       () {
         const expectedNumberOfBuilds = 12;
         final workflowRuns = testData.generateWorkflowRunsByNumbers(
@@ -358,7 +358,7 @@ void main() {
           withJobsPage: workflowRunJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(isEmpty));
       },
@@ -375,7 +375,7 @@ void main() {
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenSuccessWith(defaultJobsPage);
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(defaultBuildData)));
       },
@@ -392,7 +392,7 @@ void main() {
         when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(defaultBuildData)));
       },
@@ -416,7 +416,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
@@ -433,7 +433,7 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -453,7 +453,7 @@ void main() {
           page: anyNamed('page'),
         )).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -470,7 +470,7 @@ void main() {
         when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -491,7 +491,7 @@ void main() {
           page: anyNamed('page'),
         )).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -508,7 +508,7 @@ void main() {
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -525,7 +525,7 @@ void main() {
         when(githubActionsClientMock.downloadRunArtifactZip(any))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -582,7 +582,7 @@ void main() {
           );
         }
 
-        final result = adapter.fetchBuilds(jobName, initialFetchLimit);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(expectedBuilds)));
       },
@@ -613,7 +613,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final startedAt = result.first.startedAt;
 
@@ -645,7 +645,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final startedAt = result.first.startedAt;
 
@@ -677,7 +677,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final duration = result.first.duration;
 
@@ -709,7 +709,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final duration = result.first.duration;
 
@@ -740,7 +740,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          initialFetchLimit,
+          fetchLimit,
         );
         final url = result.first.url;
 

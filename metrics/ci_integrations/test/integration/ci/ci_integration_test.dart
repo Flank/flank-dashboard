@@ -181,7 +181,7 @@ void main() {
           sourceProjectId: 'test',
           destinationProjectId: 'test',
           coverage: true,
-          initialFetchLimit: 10,
+          initialSyncLimit: 10,
         );
 
         int calledTimes = 0;

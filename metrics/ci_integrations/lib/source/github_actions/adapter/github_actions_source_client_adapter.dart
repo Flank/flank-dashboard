@@ -68,14 +68,14 @@ class GithubActionsSourceClientAdapter
   @override
   Future<List<BuildData>> fetchBuilds(
     String jobName,
-    int initialFetchLimit,
+    int fetchLimit,
   ) async {
-    NumberValidator.checkGreaterThan(initialFetchLimit, 0);
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
 
     logger.info('Fetching builds...');
     return _fetchLatestBuilds(
       jobName,
-      initialFetchLimit: initialFetchLimit,
+      fetchLimit: fetchLimit,
     );
   }
 
@@ -112,11 +112,11 @@ class GithubActionsSourceClientAdapter
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
   /// [Build.buildNumber] greater than the given [latestBuildNumber].
-  /// Otherwise, returns no more than [initialFetchLimit] latest builds.
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
     String jobName, {
     int latestBuildNumber,
-    int initialFetchLimit,
+    int fetchLimit,
   }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
@@ -144,7 +144,7 @@ class GithubActionsSourceClientAdapter
           final build = await _mapJobToBuildData(job, run);
           result.add(build);
 
-          if (latestBuildNumber == null && result.length == initialFetchLimit) {
+          if (latestBuildNumber == null && result.length == fetchLimit) {
             hasNext = false;
             break;
           }

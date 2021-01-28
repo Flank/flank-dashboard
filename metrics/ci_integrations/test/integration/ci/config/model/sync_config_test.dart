@@ -5,7 +5,7 @@ void main() {
   group("SyncConfig", () {
     const sourceProjectId = 'test2';
     const destinationProjectId = 'test';
-    const initialFetchLimit = 10;
+    const initialSyncLimit = 10;
     const coverage = false;
 
     test(
@@ -15,7 +15,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: null,
             destinationProjectId: destinationProjectId,
-            initialFetchLimit: initialFetchLimit,
+            initialSyncLimit: initialSyncLimit,
             coverage: coverage,
           ),
           throwsArgumentError,
@@ -30,7 +30,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: sourceProjectId,
             destinationProjectId: null,
-            initialFetchLimit: initialFetchLimit,
+            initialSyncLimit: initialSyncLimit,
             coverage: coverage,
           ),
           throwsArgumentError,
@@ -39,13 +39,13 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given initial fetch limit is null",
+      "throws an ArgumentError if the given initial sync limit is null",
       () {
         expect(
           () => SyncConfig(
             sourceProjectId: sourceProjectId,
             destinationProjectId: destinationProjectId,
-            initialFetchLimit: null,
+            initialSyncLimit: null,
             coverage: coverage,
           ),
           throwsArgumentError,
@@ -60,7 +60,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: sourceProjectId,
             destinationProjectId: destinationProjectId,
-            initialFetchLimit: initialFetchLimit,
+            initialSyncLimit: initialSyncLimit,
             coverage: null,
           ),
           throwsArgumentError,
@@ -69,13 +69,13 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given initial fetch limit is 0",
+      "throws an ArgumentError if the given initial sync limit is 0",
       () {
         expect(
           () => SyncConfig(
             sourceProjectId: sourceProjectId,
             destinationProjectId: destinationProjectId,
-            initialFetchLimit: 0,
+            initialSyncLimit: 0,
             coverage: coverage,
           ),
           throwsArgumentError,
@@ -84,13 +84,13 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given initial fetch limit is a negative number",
+      "throws an ArgumentError if the given initial sync limit is a negative number",
       () {
         expect(
           () => SyncConfig(
             sourceProjectId: sourceProjectId,
             destinationProjectId: destinationProjectId,
-            initialFetchLimit: -1,
+            initialSyncLimit: -1,
             coverage: coverage,
           ),
           throwsArgumentError,
@@ -104,13 +104,13 @@ void main() {
         final syncConfig = SyncConfig(
           sourceProjectId: sourceProjectId,
           destinationProjectId: destinationProjectId,
-          initialFetchLimit: initialFetchLimit,
+          initialSyncLimit: initialSyncLimit,
           coverage: coverage,
         );
 
         expect(syncConfig.sourceProjectId, equals(sourceProjectId));
         expect(syncConfig.destinationProjectId, equals(destinationProjectId));
-        expect(syncConfig.initialFetchLimit, equals(initialFetchLimit));
+        expect(syncConfig.initialSyncLimit, equals(initialSyncLimit));
         expect(syncConfig.coverage, equals(coverage));
       },
     );

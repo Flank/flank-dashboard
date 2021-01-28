@@ -161,15 +161,15 @@ ci_integrations sync --config-file="path/to/config_file.yaml" --no-coverage
 _**Note**: All builds synchronized with the `--no-coverage` flag won't contain any coverage information. This may affect the coverage metric available on the Metrics Web Application._
 
 
-#### Initial fetch limit
+#### Initial sync limit
 
-When the CI Integrations tool synchronizes the project for the first time, it fetches 28 latest builds by default. To customize this behavior, specify the following CLI argument: `--initial-fetch-limit <YOUR_INITIAL_FETCH_LIMIT>` where the `<YOUR_INITIAL_FETCH_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds. Consider the following example of using the `--initial-fetch-limit` flag:
+When the CI Integrations tool synchronizes the project for the first time, it synchronizes 28 latest builds by default. To customize this behavior, specify the following CLI argument: `--initial-sync-limit <YOUR_INITIAL_SYNC_LIMIT>` where the `<YOUR_INITIAL_SYNC_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds. Consider the following example of using the `--initial-sync-limit` flag:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml" --initial-fetch-limit 20
+ci_integrations sync --config-file="path/to/config_file.yaml" --initial-sync-limit 20
 ```
 
-_**Note**: The `--initial-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
+_**Note**: The `--initial-sync-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
 
 #### Sync command options and flags
 
@@ -178,7 +178,7 @@ To simplify the sync command usage, consider the following table that describes 
 | Name | Description | Default value | Required |
 | --- | --- | --- | --- |
 | `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). Must be specified. | Does not have the default value. | Yes |
-| `--initial-fetch-limit` | A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0. See [initial fetch limit](#initial-fetch-limit). | `28` | No |
+| `--initial-sync-limit` | A number of builds to synchronize from the source during project first synchronization. The value should be an integer number greater than 0. See [initial sync limit](#initial-sync-limit). | `28` | No |
 | `--[no-]coverage` | Whether to fetch coverage for each build during the sync. See [controlling coverage synchronization] (#controlling-builds-coverage-synchronization). | `true` | No | 
 
 #### Automating CI Integrations

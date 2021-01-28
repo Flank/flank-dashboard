@@ -36,14 +36,14 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   @override
   Future<List<BuildData>> fetchBuilds(
     String pipelineSlug,
-    int initialFetchLimit,
+    int fetchLimit,
   ) async {
-    NumberValidator.checkGreaterThan(initialFetchLimit, 0);
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
 
     logger.info('Fetching builds...');
     return _fetchLatestBuilds(
       pipelineSlug,
-      initialFetchLimit: initialFetchLimit,
+      fetchLimit: fetchLimit,
     );
   }
 
@@ -91,11 +91,11 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
   /// [Build.buildNumber] greater than the given [latestBuildNumber].
-  /// Otherwise, returns no more than [initialFetchLimit] latest builds.
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
     String pipelineSlug, {
     int latestBuildNumber,
-    int initialFetchLimit,
+    int fetchLimit,
   }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
@@ -122,7 +122,7 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
           final buildData = await _mapBuildToBuildData(pipelineSlug, build);
           result.add(buildData);
 
-          if (latestBuildNumber == null && result.length == initialFetchLimit) {
+          if (latestBuildNumber == null && result.length == fetchLimit) {
             hasNext = false;
             break;
           }

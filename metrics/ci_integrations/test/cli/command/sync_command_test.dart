@@ -108,24 +108,24 @@ void main() {
         },
       );
 
-      test("has the 'initial-fetch-limit' option", () {
+      test("has the 'initial-sync-limit' option", () {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains('initial-fetch-limit'));
+        expect(options, contains('initial-sync-limit'));
       });
 
       test(
-          "'initial-fetch-limit' option has the default initial fetch limit value",
+          "'initial-sync-limit' option has the default initial sync limit value",
           () {
-        const expectedInitialFetchLimit = SyncCommand.defaultInitialFetchLimit;
+        const expectedInitialSyncLimit = SyncCommand.defaultInitialSyncLimit;
 
         final argParser = syncCommand.argParser;
-        final fetchLimitOption = argParser.options['initial-fetch-limit'];
+        final syncLimitOption = argParser.options['initial-sync-limit'];
 
         expect(
-          fetchLimitOption.defaultsTo,
-          equals(expectedInitialFetchLimit),
+          syncLimitOption.defaultsTo,
+          equals(expectedInitialSyncLimit),
         );
       });
 
@@ -340,20 +340,20 @@ void main() {
       );
 
       test(
-        ".parseInitialFetchLimit() returns null if the given value can't be parsed",
+        ".parseInitialSyncLimit() returns null if the given value can't be parsed",
         () async {
-          final actualLimit = syncCommand.parseInitialFetchLimit('test');
+          final actualLimit = syncCommand.parseInitialSyncLimit('test');
 
           expect(actualLimit, isNull);
         },
       );
 
       test(
-        ".parseInitialFetchLimit() parses the initial fetch limit",
+        ".parseInitialSyncLimit() parses the initial sync limit",
         () async {
           const expectedLimit = 2;
 
-          final actualLimit = syncCommand.parseInitialFetchLimit(
+          final actualLimit = syncCommand.parseInitialSyncLimit(
             '$expectedLimit',
           );
 
@@ -457,7 +457,7 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
-    if (name == 'initial-fetch-limit') return '20';
+    if (name == 'initial-sync-limit') return '20';
 
     if (name == 'config-file') return 'config.yaml';
 

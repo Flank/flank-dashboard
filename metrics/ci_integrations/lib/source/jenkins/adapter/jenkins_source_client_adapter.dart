@@ -57,12 +57,12 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   @override
   Future<List<BuildData>> fetchBuilds(
     String projectId,
-    int initialFetchLimit,
+    int fetchLimit,
   ) async {
     logger.info('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
-      limits: JenkinsQueryLimits.endBefore(initialFetchLimit),
+      limits: JenkinsQueryLimits.endBefore(fetchLimit),
     );
 
     return _processJenkinsBuilds(
