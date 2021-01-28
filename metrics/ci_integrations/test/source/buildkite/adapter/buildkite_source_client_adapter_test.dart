@@ -759,7 +759,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() throws a StateError if fetching a artifacts page fails",
+      ".fetchCoverage() throws a StateError if fetching an artifacts page fails",
       () {
         whenFetchCoverage().thenErrorWith();
 
