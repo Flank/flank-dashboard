@@ -20,7 +20,13 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A default number of builds to fetch in the [SyncCommand] initially.
-  static const defaultFirstSyncFetchLimit = 28;
+  static const defaultFirstSyncFetchLimit = '28';
+
+  /// A name of the config file argument of this command.
+  static const configFileArgumentName = 'config-file';
+
+  /// A name of the first sync fetch limit argument of this command.
+  static const firstSyncFetchLimitArgumentName = 'first-sync-fetch-limit';
 
   /// A name of the option that holds a path to the YAML configuration file.
   static const String _configFileOptionName = 'config-file';
@@ -50,13 +56,13 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     SupportedIntegrationParties supportedParties,
   }) : supportedParties = supportedParties ?? SupportedIntegrationParties() {
     argParser.addOption(
-      _configFileOptionName,
+      configFileArgumentName,
       help: 'A path to the YAML configuration file.',
       valueHelp: 'config.yaml',
     );
 
     argParser.addOption(
-      'first-sync-fetch-limit',
+      firstSyncFetchLimitArgumentName,
       help:
           'A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0.',
       valueHelp: '$defaultFirstSyncFetchLimit',
@@ -72,7 +78,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
 
   @override
   Future<void> run() async {
-    final configFilePath = getArgumentValue(_configFileOptionName) as String;
+    final configFilePath = getArgumentValue(configFileArgumentName) as String;
     final coverage = getArgumentValue(_coverageFlagName) as bool;
     final file = getConfigFile(configFilePath);
 
@@ -113,9 +119,15 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
           destinationParty,
         );
 
+        final firstSyncFetchLimitArgument =
+            getArgumentValue(firstSyncFetchLimitArgumentName) as String;
+        final firstSyncFetchLimit = parseFirstSyncFetchLimit(
+          firstSyncFetchLimitArgument,
+        );
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
+          firstSyncFetchLimit: firstSyncFetchLimit,
           coverage: coverage,
         );
 
@@ -214,8 +226,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   ) async {
     final ciIntegration = createCiIntegration(sourceClient, destinationClient);
 
-    final firstSyncFetchLimit = getFirstSyncFetchLimit();
-    final result = await ciIntegration.sync(syncConfig, firstSyncFetchLimit);
+    final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
       logger.message(result.message);
@@ -224,22 +235,19 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     }
   }
 
-  /// Parses the first sync fetch limit specified in the [SyncCommand] arguments.
+  /// Parses the first sync fetch limit from the given [value].
   ///
-  /// If the first sync fetch limit can't be parsed or is a negative number,
-  /// returns the [defaultFirstSyncFetchLimit].
-  int getFirstSyncFetchLimit() {
+  /// Throws a [SyncError] if the fetch limit can't be parsed or is
+  /// not grater than `0`.
+  int parseFirstSyncFetchLimit(String value) {
     logger.info('Parsing first sync fetch limit...');
 
-    final firstSyncFetchLimitArgument =
-        getArgumentValue('first-sync-fetch-limit') as String;
-
-    final fetchLimit = int.tryParse(firstSyncFetchLimitArgument);
+    final fetchLimit = int.tryParse(value);
 
     if (fetchLimit == null || fetchLimit <= 0) {
-      logger.info(
-          'The provided first sync fetch limit is invalid. Now using the default $defaultFirstSyncFetchLimit one.');
-      return defaultFirstSyncFetchLimit;
+      throw SyncError(
+        message: 'The provided first sync fetch limit is invalid!',
+      );
     }
 
     return fetchLimit;

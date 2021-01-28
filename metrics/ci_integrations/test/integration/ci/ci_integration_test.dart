@@ -1,23 +1,17 @@
 import 'package:ci_integration/integration/ci/ci_integration.dart';
-import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
+import '../../cli/test_util/test_data/config_test_data.dart';
 import 'test_utils/stub/destination_client_stub.dart';
 import 'test_utils/stub/source_client_stub.dart';
 import 'test_utils/test_data/builds_test_data.dart';
 
 void main() {
   group("CiIntegration", () {
-    final syncConfig = SyncConfig(
-      sourceProjectId: 'sourceProjectId',
-      destinationProjectId: 'destinationProjectId',
-      coverage: false,
-    );
-
-    const fetchLimit = 28;
+    final syncConfig = ConfigTestData.syncConfig;
 
     test(
       "throws an ArgumentError if the given source client is null",
@@ -53,31 +47,7 @@ void main() {
           destinationClient: DestinationClientStub(),
         );
 
-        expect(() => ciIntegration.sync(null, fetchLimit), throwsArgumentError);
-      },
-    );
-
-    test(
-      ".sync() throws an ArgumentError if the the given first sync fetch limit equals to 0",
-      () {
-        final ciIntegration = CiIntegration(
-          sourceClient: SourceClientStub(),
-          destinationClient: DestinationClientStub(),
-        );
-
-        expect(() => ciIntegration.sync(syncConfig, 0), throwsArgumentError);
-      },
-    );
-
-    test(
-      ".sync() throws an ArgumentError if last build is null and the given first sync fetch limit is less than 0",
-      () {
-        final ciIntegration = CiIntegration(
-          sourceClient: SourceClientStub(),
-          destinationClient: DestinationClientStub(),
-        );
-
-        expect(() => ciIntegration.sync(syncConfig, -1), throwsArgumentError);
+        expect(() => ciIntegration.sync(null), throwsArgumentError);
       },
     );
 
@@ -94,7 +64,7 @@ void main() {
           sourceClient: sourceClient,
           destinationClient: destinationClient,
         );
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
       },
@@ -107,7 +77,7 @@ void main() {
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(sourceClient: sourceClient);
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
       },
@@ -122,7 +92,7 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
       },
@@ -137,7 +107,7 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
       },
@@ -156,7 +126,7 @@ void main() {
           sourceClient: sourceClient,
           destinationClient: destinationClient,
         );
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isSuccess, isTrue);
       },
@@ -166,7 +136,7 @@ void main() {
       ".sync() synchronizes builds",
       () async {
         final ciIntegration = CiIntegrationStub();
-        final result = await ciIntegration.sync(syncConfig, fetchLimit);
+        final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isSuccess, isTrue);
       },

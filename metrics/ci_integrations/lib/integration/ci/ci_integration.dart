@@ -3,7 +3,6 @@ import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -32,14 +31,10 @@ class CiIntegration with LoggerMixin {
   /// Synchronizes builds for a project specified in the given [config].
   ///
   /// Throws an [ArgumentError] if the given [config] is `null`.
-  /// Throws an [ArgumentError] if the given [firstSyncFetchLimit] is not greater
-  /// than `0`.
   Future<InteractionResult> sync(
     SyncConfig config,
-    int firstSyncFetchLimit,
   ) async {
     ArgumentError.checkNotNull(config);
-    NumberValidator.checkGreaterThan(firstSyncFetchLimit, 0);
 
     try {
       final sourceProjectId = config.sourceProjectId;
@@ -52,6 +47,7 @@ class CiIntegration with LoggerMixin {
       List<BuildData> newBuilds;
       if (lastBuild == null) {
         logger.info('There are no builds in the destination...');
+        final firstSyncFetchLimit = config.firstSyncFetchLimit;
         newBuilds = await sourceClient.fetchBuilds(
           sourceProjectId,
           firstSyncFetchLimit,

@@ -56,7 +56,6 @@ void main() {
 
       final writerMock = LoggerWriterMock();
       final loggerFactory = LoggerFactory(writer: writerMock);
-      final firstSyncFetchLimit = syncCommand.getFirstSyncFetchLimit();
 
       setUpAll(() {
         LoggerManager.setLoggerFactory(loggerFactory);
@@ -85,14 +84,14 @@ void main() {
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
 
-        return when(ciIntegrationMock.sync(syncConfig, firstSyncFetchLimit));
+        return when(ciIntegrationMock.sync(syncConfig));
       }
 
       test("has the 'config-file' option", () {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains('config-file'));
+        expect(options, contains(SyncCommand.configFileArgumentName));
       });
 
       test(
@@ -113,19 +112,22 @@ void main() {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains('first-sync-fetch-limit'));
+        expect(options, contains(SyncCommand.firstSyncFetchLimitArgumentName));
       });
 
-      test("'first-sync-fetch-limit' option defaults to 28", () {
-        const expectedfirstSyncFetchLimit =
+      test(
+          "'first-sync-fetch-limit' option has the default first sync fetch limit value",
+          () {
+        const expectedFirstSyncFetchLimit =
             SyncCommand.defaultFirstSyncFetchLimit;
 
         final argParser = syncCommand.argParser;
-        final fetchLimitOption = argParser.options['first-sync-fetch-limit'];
+        final fetchLimitOption =
+            argParser.options[SyncCommand.firstSyncFetchLimitArgumentName];
 
         expect(
           fetchLimitOption.defaultsTo,
-          equals('$expectedfirstSyncFetchLimit'),
+          equals(expectedFirstSyncFetchLimit),
         );
       });
 
@@ -256,7 +258,7 @@ void main() {
           when(fileMock.existsSync()).thenReturn(false);
 
           expect(syncCommand.run(), MatcherUtil.throwsSyncError);
-          verifyNever(ciIntegrationMock.sync(any, any));
+          verifyNever(ciIntegrationMock.sync(any));
         },
       );
 
@@ -298,7 +300,7 @@ void main() {
           await syncCommand.run();
 
           verify(
-            ciIntegrationMock.sync(syncConfig, firstSyncFetchLimit),
+            ciIntegrationMock.sync(syncConfig),
           ).called(1);
         },
       );
@@ -308,7 +310,7 @@ void main() {
         () async {
           const interactionResult = InteractionResult.success();
 
-          when(ciIntegrationMock.sync(syncConfig, firstSyncFetchLimit))
+          when(ciIntegrationMock.sync(syncConfig))
               .thenAnswer((_) => Future.value(interactionResult));
 
           await syncCommand.sync(
@@ -326,7 +328,7 @@ void main() {
         () async {
           const interactionResult = InteractionResult.error();
 
-          when(ciIntegrationMock.sync(syncConfig, firstSyncFetchLimit))
+          when(ciIntegrationMock.sync(syncConfig))
               .thenAnswer((_) => Future.value(interactionResult));
 
           final syncFuture = syncCommand.sync(
@@ -336,6 +338,48 @@ void main() {
           );
 
           expect(syncFuture, MatcherUtil.throwsSyncError);
+        },
+      );
+
+      test(
+        ".parseFirstSyncFetchLimit() throws a sync error if the given value can't be parsed to an integer",
+        () async {
+          expect(
+            () => syncCommand.parseFirstSyncFetchLimit('test'),
+            MatcherUtil.throwsSyncError,
+          );
+        },
+      );
+
+      test(
+        ".parseFirstSyncFetchLimit() throws a sync error if the given value is 0",
+        () async {
+          expect(
+            () => syncCommand.parseFirstSyncFetchLimit('0'),
+            MatcherUtil.throwsSyncError,
+          );
+        },
+      );
+
+      test(
+        ".parseFirstSyncFetchLimit() throws a sync error if the given value is a negative number",
+        () async {
+          expect(
+            () => syncCommand.parseFirstSyncFetchLimit('-1'),
+            MatcherUtil.throwsSyncError,
+          );
+        },
+      );
+
+      test(
+        ".parseFirstSyncFetchLimit() parses the first sync fetch limit",
+        () async {
+          const expectedLimit = 2;
+          final value = expectedLimit.toString();
+
+          final actualLimit = syncCommand.parseFirstSyncFetchLimit(value);
+
+          expect(actualLimit, equals(expectedLimit));
         },
       );
 
@@ -435,9 +479,13 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
+    if (name == SyncCommand.firstSyncFetchLimitArgumentName) return '20';
+
+    if (name == SyncCommand.configFileArgumentName) return 'config.yaml';
+
     if (name == 'coverage') return false;
 
-    return 'config.yaml';
+    return null;
   }
 
   @override
