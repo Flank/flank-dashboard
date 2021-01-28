@@ -16,7 +16,7 @@ class BuildkiteBuild extends Equatable {
   /// A state of this build.
   final BuildkiteBuildState state;
 
-  /// An API endpoint to access this build in Buildkite.
+  /// A link to access data of this build using Buildkite API.
   final String apiUrl;
 
   /// A link to access this build in Buildkite.

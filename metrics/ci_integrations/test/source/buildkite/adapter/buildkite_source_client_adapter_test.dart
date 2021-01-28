@@ -39,34 +39,6 @@ void main() {
     const coverageJson = <String, dynamic>{'pct': 0.5};
     final coverageBytes = utf8.encode(jsonEncode(coverageJson)) as Uint8List;
 
-    PostExpectation<Future<InteractionResult<BuildkiteBuildsPage>>>
-        whenFetchBuilds() {
-      return when(
-        buildkiteClientMock.fetchBuilds(
-          any,
-          state: anyNamed('state'),
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        ),
-      );
-    }
-
-    PostExpectation<Future<InteractionResult<BuildkiteArtifactsPage>>>
-        whenFetchCoverage() {
-      when(
-        buildkiteClientMock.downloadArtifact(any),
-      ).thenSuccessWith(coverageBytes);
-
-      return when(
-        buildkiteClientMock.fetchArtifacts(
-          any,
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        ),
-      );
-    }
-
     const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
       BuildkiteArtifact(filename: "coverage-summary.json"),
     ]);
@@ -84,6 +56,34 @@ void main() {
       buildNumbers: [2, 1],
     );
     final defaultBuild = testData.generateBuildData();
+
+    PostExpectation<Future<InteractionResult<BuildkiteBuildsPage>>>
+        whenFetchBuilds() {
+      return when(
+        buildkiteClientMock.fetchBuilds(
+          pipelineSlug,
+          state: BuildkiteBuildState.finished,
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
+
+    PostExpectation<Future<InteractionResult<BuildkiteArtifactsPage>>>
+        whenFetchCoverage() {
+      when(
+        buildkiteClientMock.downloadArtifact(any),
+      ).thenSuccessWith(coverageBytes);
+
+      return when(
+        buildkiteClientMock.fetchArtifacts(
+          defaultBuild.workflowName,
+          defaultBuild.buildNumber,
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
 
     setUp(() {
       reset(buildkiteClientMock);
@@ -645,7 +645,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() maps fetched builds' url to the empty string if the url is null",
+      ".fetchBuildsAfter() maps fetched builds' url to an empty string if the url is null",
       () async {
         const build = BuildkiteBuild(
           number: 2,
@@ -686,7 +686,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() throws an ArgumentError if the build is null",
+      ".fetchCoverage() throws an ArgumentError if the given build is null",
       () {
         final result = adapter.fetchCoverage(null);
 
@@ -714,6 +714,22 @@ void main() {
         final result = await adapter.fetchCoverage(defaultBuild);
 
         expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() does not download any artifacts if the coverage summary artifact does not exist",
+      () async {
+        const artifactsPage = BuildkiteArtifactsPage(
+          values: [BuildkiteArtifact(filename: 'test.json')],
+        );
+
+        whenFetchCoverage().thenSuccessWith(artifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+        verifyNever(buildkiteClientMock.downloadArtifact(any));
       },
     );
 
@@ -748,7 +764,6 @@ void main() {
       ".fetchCoverage() fetches coverage using pagination for build artifacts",
       () async {
         whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
-
         when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
@@ -759,27 +774,9 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() throws a StateError if fetching an artifacts page fails",
-      () {
-        whenFetchCoverage().thenErrorWith();
-
-        final result = adapter.fetchCoverage(defaultBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
       ".fetchCoverage() throws a StateError if fetching the coverage artifact fails",
       () {
-        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
-
-        when(buildkiteClientMock.fetchArtifacts(
-          any,
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        )).thenErrorWith();
+        whenFetchCoverage().thenErrorWith();
 
         final result = adapter.fetchCoverage(defaultBuild);
 
@@ -791,7 +788,6 @@ void main() {
       ".fetchCoverage() throws a StateError if paginating through coverage artifacts fails",
       () {
         whenFetchCoverage().thenSuccessWith(emptyArtifactsPage);
-
         when(buildkiteClientMock.fetchArtifactsNext(any)).thenErrorWith();
 
         final result = adapter.fetchCoverage(defaultBuild);
@@ -804,7 +800,6 @@ void main() {
       ".fetchCoverage() throws a StateError if downloading a coverage artifact fails",
       () {
         whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
-
         when(buildkiteClientMock.downloadArtifact(any)).thenErrorWith();
 
         final result = adapter.fetchCoverage(defaultBuild);
