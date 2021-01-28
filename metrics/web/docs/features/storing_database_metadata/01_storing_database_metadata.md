@@ -1,4 +1,4 @@
-# Storing Database Version
+# Storing Database Metadata
 > Summary of the proposed change
 
 # References
