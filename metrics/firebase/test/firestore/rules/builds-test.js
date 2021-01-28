@@ -239,6 +239,24 @@ describe("", async () => {
       );
     });
 
+    it("allows creating a build if the api url is null", async () => {
+      let build = getBuild();
+      build.apiUrl = null;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating a build if the api url is not a string", async () => {
+      let build = getBuild();
+      build.apiUrl = 2;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
     it("does not allow creating a build if the build number is not an int", async () => {
       let build = getBuild();
       build.buildNumber = "2";
@@ -266,7 +284,7 @@ describe("", async () => {
       );
     });
 
-    it("allows to create a build with null build status", async () => {
+    it("allows creating a build with null build status", async () => {
       let build = getBuild();
       build.buildStatus = null;
 
@@ -284,7 +302,7 @@ describe("", async () => {
       );
     });
 
-    it("allows to create a build when workflow name is null", async () => {
+    it("allows creating a build when workflow name is null", async () => {
       let build = getBuild();
       build.workflowName = null;
 
@@ -311,7 +329,7 @@ describe("", async () => {
       );
     });
 
-    it("allows to create a build when the coverage is null", async () => {
+    it("allows creating a build when the coverage is null", async () => {
       let build = getBuild();
       build.coverage = null;
 
@@ -323,13 +341,13 @@ describe("", async () => {
     async.forEach(users, (user, callback) => {
       describe(user.describe, () => {
         let canCreateDescription = user.can.create ?
-          "allows to create a build" : "does not allow creating a build";
+          "allows creating a build" : "does not allow creating a build";
         let canReadDescription = user.can.read ?
           "allows reading builds" : "does not allow reading builds";
         let canUpdateDescription = user.can.update ?
-          "allows to update a build" : "does not allow updating a build";
+          "allows updating a build" : "does not allow updating a build";
         let canDeleteDescription = user.can.delete ?
-          "allows to delete a build" : "does not allow deleting a build";
+          "allows deleting a build" : "does not allow deleting a build";
 
         it(canCreateDescription, async () => {
           const createPromise = user.app.collection(collection).add(getBuild());
