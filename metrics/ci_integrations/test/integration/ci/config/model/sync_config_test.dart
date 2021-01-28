@@ -10,6 +10,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: null,
             destinationProjectId: 'test',
+            coverage: false,
           ),
           throwsArgumentError,
         );
@@ -23,6 +24,21 @@ void main() {
           () => SyncConfig(
             sourceProjectId: 'test',
             destinationProjectId: null,
+            coverage: false,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given coverage is null",
+      () {
+        expect(
+          () => SyncConfig(
+            sourceProjectId: 'test',
+            destinationProjectId: 'test',
+            coverage: null,
           ),
           throwsArgumentError,
         );

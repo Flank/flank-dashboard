@@ -19,6 +19,13 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
+  /// A name of the option that holds a path to the YAML configuration file.
+  static const String _configFileOptionName = 'config-file';
+
+  /// A name of the flag that indicates whether to fetch coverage data
+  /// for builds or not.
+  static const String _coverageFlagName = 'coverage';
+
   /// Used to parse configuration file main components.
   final _rawConfigParser = const RawIntegrationConfigParser();
 
@@ -40,15 +47,21 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     SupportedIntegrationParties supportedParties,
   }) : supportedParties = supportedParties ?? SupportedIntegrationParties() {
     argParser.addOption(
-      'config-file',
+      _configFileOptionName,
       help: 'A path to the YAML configuration file.',
       valueHelp: 'config.yaml',
+    );
+    argParser.addFlag(
+      _coverageFlagName,
+      help: 'Whether to fetch coverage for each build during the sync.',
+      defaultsTo: true,
     );
   }
 
   @override
   Future<void> run() async {
-    final configFilePath = getArgumentValue('config-file') as String;
+    final configFilePath = getArgumentValue(_configFileOptionName) as String;
+    final coverage = getArgumentValue(_coverageFlagName) as bool;
     final file = getConfigFile(configFilePath);
 
     if (file.existsSync()) {
@@ -91,6 +104,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
+          coverage: coverage,
         );
 
         logger.info('Syncing...');

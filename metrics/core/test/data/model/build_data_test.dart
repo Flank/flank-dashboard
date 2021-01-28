@@ -11,6 +11,7 @@ void main() {
     const duration = Duration(seconds: 1);
     const workflowName = 'workflowName';
     const url = 'url';
+    const apiUrl = 'apiUrl';
     final coverage = Percent(1.0);
 
     final buildDataJson = {
@@ -21,6 +22,7 @@ void main() {
       'duration': duration.inMilliseconds,
       'workflowName': workflowName,
       'url': url,
+      'apiUrl': apiUrl,
       'coverage': coverage.value,
     };
 
@@ -33,8 +35,10 @@ void main() {
       duration: duration,
       workflowName: workflowName,
       url: url,
+      apiUrl: apiUrl,
       coverage: coverage,
     );
+
     test(
       ".copyWith() creates a new instance from the existing one",
       () {
@@ -46,6 +50,7 @@ void main() {
         const duration = Duration();
         const workflowName = 'newWorkflowName';
         const url = 'newUrl';
+        const apiUrl = 'newApiUrl';
         final coverage = Percent(0.0);
 
         final copiedBuildData = buildData.copyWith(
@@ -57,6 +62,7 @@ void main() {
           duration: duration,
           workflowName: workflowName,
           url: url,
+          apiUrl: apiUrl,
           coverage: coverage,
         );
 
@@ -68,6 +74,7 @@ void main() {
         expect(copiedBuildData.duration, equals(duration));
         expect(copiedBuildData.workflowName, equals(workflowName));
         expect(copiedBuildData.url, equals(url));
+        expect(copiedBuildData.apiUrl, equals(apiUrl));
         expect(copiedBuildData.coverage, equals(coverage));
       },
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
 import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
 import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
@@ -90,6 +91,20 @@ void main() {
 
         expect(options, contains('config-file'));
       });
+
+      test(
+        "has the 'coverage' flag defaults to true",
+        () {
+          final argParser = syncCommand.argParser;
+          final options = argParser.options;
+
+          final flagEnabledByDefault = predicate<Option>(
+            (option) => option.isFlag && option.defaultsTo == true,
+          );
+
+          expect(options, containsPair('coverage', flagEnabledByDefault));
+        },
+      );
 
       test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
@@ -390,6 +405,8 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
+    if (name == 'coverage') return false;
+
     return 'config.yaml';
   }
 

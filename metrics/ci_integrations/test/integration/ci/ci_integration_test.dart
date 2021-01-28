@@ -2,16 +2,19 @@ import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 import 'test_utils/stub/destination_client_stub.dart';
 import 'test_utils/stub/source_client_stub.dart';
+import 'test_utils/test_data/builds_test_data.dart';
 
 void main() {
   group("CiIntegration", () {
     final syncConfig = SyncConfig(
       sourceProjectId: 'sourceProjectId',
       destinationProjectId: 'destinationProjectId',
+      coverage: false,
     );
 
     test(
@@ -146,6 +149,74 @@ void main() {
             ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
 
         expect(result, completion(isTrue));
+      },
+    );
+
+    test(
+      ".sync() does not fetch coverage for builds if the coverage value is false in the given config",
+      () async {
+        bool isCalled = false;
+
+        final destinationClient = DestinationClientStub(
+          fetchLastBuildCallback: (_) => null,
+        );
+
+        final sourceClientStub = SourceClientStub(
+          fetchCoverageCallback: (_) {
+            isCalled = true;
+
+            return Future.value(Percent(0.7));
+          },
+        );
+
+        final ciIntegration = CiIntegrationStub(
+          sourceClient: sourceClientStub,
+          destinationClient: destinationClient,
+        );
+
+        final result = await ciIntegration
+            .sync(syncConfig)
+            .then((result) => result.isSuccess);
+
+        expect(result, isTrue);
+        expect(isCalled, isFalse);
+      },
+    );
+
+    test(
+      ".sync() fetches coverage for each build if the coverage value is true in the given config",
+      () async {
+        final syncConfig = SyncConfig(
+          sourceProjectId: 'test',
+          destinationProjectId: 'test',
+          coverage: true,
+        );
+
+        int calledTimes = 0;
+
+        final destinationClient = DestinationClientStub(
+          fetchLastBuildCallback: (_) => null,
+        );
+
+        final sourceClientStub = SourceClientStub(
+          fetchCoverageCallback: (_) {
+            calledTimes += 1;
+
+            return Future.value(Percent(0.7));
+          },
+        );
+
+        final ciIntegration = CiIntegrationStub(
+          sourceClient: sourceClientStub,
+          destinationClient: destinationClient,
+        );
+
+        final result = await ciIntegration
+            .sync(syncConfig)
+            .then((result) => result.isSuccess);
+
+        expect(result, isTrue);
+        expect(calledTimes, equals(BuildsTestData.builds.length));
       },
     );
   });

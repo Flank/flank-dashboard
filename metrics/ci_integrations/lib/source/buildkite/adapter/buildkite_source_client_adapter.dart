@@ -59,6 +59,11 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
     return _fetchLatestBuilds(pipelineSlug, latestBuildNumber);
   }
 
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    return Future.value(build.coverage);
+  }
+
   /// Fetches the latest builds by the given [pipelineSlug].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the

@@ -5,7 +5,7 @@ import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
-  /// A name of the flag that enables noisy logging.
+  /// A name of the flag that indicates whether to enable noisy logging or not.
   static const String _verboseFlagName = 'verbose';
 
   /// Creates an instance of command runner and registers sub-commands available.
@@ -14,7 +14,7 @@ class CiIntegrationsRunner extends CommandRunner<void> {
     argParser.addFlag(
       _verboseFlagName,
       abbr: 'v',
-      help: 'Enables noisy logging',
+      help: 'Whether to enable noisy logging.',
     );
 
     addCommand(SyncCommand());
