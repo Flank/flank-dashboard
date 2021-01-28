@@ -1,4 +1,4 @@
-import 'package:ci_integration/integration/exception/config_validation_exception.dart';
+import 'package:ci_integration/integration/error/config_validation_error.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
