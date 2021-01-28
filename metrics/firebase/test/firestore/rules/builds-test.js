@@ -248,7 +248,7 @@ describe("", async () => {
       );
     });
 
-    it("does not allow creating a build if the url is not a string", async () => {
+    it("does not allow creating a build if the api url is not a string", async () => {
       let build = getBuild();
       build.apiUrl = 2;
 
