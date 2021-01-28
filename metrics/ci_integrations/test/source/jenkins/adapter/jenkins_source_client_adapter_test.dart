@@ -29,7 +29,7 @@ void main() {
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
-    const firstSyncFetchLimit = 20;
+    const initialFetchLimit = 20;
 
     PostExpectation<Future<InteractionResult>> whenFetchArtifact({
       Matcher buildUrlThat,
@@ -103,7 +103,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given first sync fetch limit is 0",
+      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is 0",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, 0),
@@ -113,7 +113,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given first sync fetch limit is a negative number",
+      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is a negative number",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, -1),
@@ -137,7 +137,7 @@ void main() {
 
         final result = adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
 
         expect(result, completion(equals(expected)));
@@ -159,7 +159,7 @@ void main() {
 
         final list = await adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final coverages = list.map((buildData) => buildData.coverage).toList();
 
@@ -203,7 +203,7 @@ void main() {
 
         final result = adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
 
         expect(result, throwsStateError);
@@ -219,7 +219,7 @@ void main() {
 
         final result = adapter.fetchBuilds(
           'test-non-job',
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
 
         expect(result, throwsStateError);
@@ -227,7 +227,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() fetches no more than the given first sync fetch limit number of builds",
+      ".fetchBuilds() fetches no more than the given initial fetch limit number of builds",
       () {
         final builds = createJenkinsBuilds(
           buildNumbers: List.generate(30, (index) => index),
@@ -238,12 +238,12 @@ void main() {
 
         final result = adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
 
         expect(
           result,
-          completion(hasLength(equals(firstSyncFetchLimit))),
+          completion(hasLength(equals(initialFetchLimit))),
         );
       },
     );
@@ -289,7 +289,7 @@ void main() {
 
         final result = adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
 
         expect(result, completion(equals(expected)));
@@ -312,7 +312,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final startedAt = result.first.startedAt;
 
@@ -336,7 +336,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final duration = result.first.duration;
 
@@ -360,7 +360,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           jobName,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final url = result.first.url;
 

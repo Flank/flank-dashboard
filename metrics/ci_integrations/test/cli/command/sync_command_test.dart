@@ -108,25 +108,24 @@ void main() {
         },
       );
 
-      test("has the 'first-sync-fetch-limit' option", () {
+      test("has the 'initial-fetch-limit' option", () {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains('first-sync-fetch-limit'));
+        expect(options, contains('initial-fetch-limit'));
       });
 
       test(
-          "'first-sync-fetch-limit' option has the default first sync fetch limit value",
+          "'initial-fetch-limit' option has the default initial fetch limit value",
           () {
-        const expectedFirstSyncFetchLimit =
-            SyncCommand.defaultFirstSyncFetchLimit;
+        const expectedInitialFetchLimit = SyncCommand.defaultInitialFetchLimit;
 
         final argParser = syncCommand.argParser;
-        final fetchLimitOption = argParser.options['first-sync-fetch-limit'];
+        final fetchLimitOption = argParser.options['initial-fetch-limit'];
 
         expect(
           fetchLimitOption.defaultsTo,
-          equals(expectedFirstSyncFetchLimit),
+          equals(expectedInitialFetchLimit),
         );
       });
 
@@ -341,42 +340,22 @@ void main() {
       );
 
       test(
-        ".parseFirstSyncFetchLimit() throws a sync error if the given value can't be parsed to an integer",
+        ".parseInitialFetchLimit() returns null if the given value can't be parsed",
         () async {
-          expect(
-            () => syncCommand.parseFirstSyncFetchLimit('test'),
-            MatcherUtil.throwsSyncError,
-          );
+          final actualLimit = syncCommand.parseInitialFetchLimit('test');
+
+          expect(actualLimit, isNull);
         },
       );
 
       test(
-        ".parseFirstSyncFetchLimit() throws a sync error if the given value is 0",
-        () async {
-          expect(
-            () => syncCommand.parseFirstSyncFetchLimit('0'),
-            MatcherUtil.throwsSyncError,
-          );
-        },
-      );
-
-      test(
-        ".parseFirstSyncFetchLimit() throws a sync error if the given value is a negative number",
-        () async {
-          expect(
-            () => syncCommand.parseFirstSyncFetchLimit('-1'),
-            MatcherUtil.throwsSyncError,
-          );
-        },
-      );
-
-      test(
-        ".parseFirstSyncFetchLimit() parses the first sync fetch limit",
+        ".parseInitialFetchLimit() parses the initial fetch limit",
         () async {
           const expectedLimit = 2;
-          final value = expectedLimit.toString();
 
-          final actualLimit = syncCommand.parseFirstSyncFetchLimit(value);
+          final actualLimit = syncCommand.parseInitialFetchLimit(
+            '$expectedLimit',
+          );
 
           expect(actualLimit, equals(expectedLimit));
         },
@@ -478,7 +457,7 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
-    if (name == 'first-sync-fetch-limit') return '20';
+    if (name == 'initial-fetch-limit') return '20';
 
     if (name == 'config-file') return 'config.yaml';
 

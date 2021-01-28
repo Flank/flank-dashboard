@@ -19,14 +19,15 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
-  /// A default number of builds to fetch in the [SyncCommand] initially.
-  static const defaultFirstSyncFetchLimit = '28';
+  /// A default number of builds to fetch during the initial synchronization
+  /// of the project.
+  static const defaultInitialFetchLimit = '28';
 
   /// A name of the config file argument of this command.
   static const _configFileOptionName = 'config-file';
 
-  /// A name of the first sync fetch limit argument of this command.
-  static const _firstSyncFetchLimitOptionName = 'first-sync-fetch-limit';
+  /// A name of the initial fetch limit argument of this command.
+  static const _initialFetchLimitOptionName = 'initial-fetch-limit';
 
   /// A name of the flag that indicates whether to fetch coverage data
   /// for builds or not.
@@ -59,11 +60,11 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     );
 
     argParser.addOption(
-      _firstSyncFetchLimitOptionName,
+      _initialFetchLimitOptionName,
       help:
-          'A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0.',
-      valueHelp: defaultFirstSyncFetchLimit,
-      defaultsTo: defaultFirstSyncFetchLimit,
+          'A number of builds to fetch from the source during project initial synchronization. The value should be an integer number greater than 0.',
+      valueHelp: defaultInitialFetchLimit,
+      defaultsTo: defaultInitialFetchLimit,
     );
 
     argParser.addFlag(
@@ -116,15 +117,15 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
           destinationParty,
         );
 
-        final firstSyncFetchLimitArgument =
-            getArgumentValue(_firstSyncFetchLimitOptionName) as String;
-        final firstSyncFetchLimit = parseFirstSyncFetchLimit(
-          firstSyncFetchLimitArgument,
+        final initialFetchLimitArgument =
+            getArgumentValue(_initialFetchLimitOptionName) as String;
+        final initialFetchLimit = parseInitialFetchLimit(
+          initialFetchLimitArgument,
         );
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
-          firstSyncFetchLimit: firstSyncFetchLimit,
+          initialFetchLimit: initialFetchLimit,
           coverage: coverage,
         );
 
@@ -232,22 +233,11 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     }
   }
 
-  /// Parses the first sync fetch limit from the given [value].
-  ///
-  /// Throws a [SyncError] if the fetch limit can't be parsed or is
-  /// not grater than `0`.
-  int parseFirstSyncFetchLimit(String value) {
-    logger.info('Parsing first sync fetch limit...');
+  /// Parses the initial fetch limit from the given [value].
+  int parseInitialFetchLimit(String value) {
+    logger.info('Parsing initial fetch limit...');
 
-    final fetchLimit = int.tryParse(value);
-
-    if (fetchLimit == null || fetchLimit <= 0) {
-      throw SyncError(
-        message: 'The provided first sync fetch limit is invalid!',
-      );
-    }
-
-    return fetchLimit;
+    return int.tryParse(value);
   }
 
   /// Closes both [sourceClient] and [destinationClient] and cleans up any

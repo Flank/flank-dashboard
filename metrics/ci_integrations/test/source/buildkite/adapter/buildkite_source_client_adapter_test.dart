@@ -31,7 +31,7 @@ void main() {
       duration: DateTime(2021).difference(DateTime(2020)),
     );
 
-    const firstSyncFetchLimit = 20;
+    const initialFetchLimit = 20;
 
     final buildkiteClientMock = _BuildkiteClientMock();
     final adapter = BuildkiteSourceClientAdapter(
@@ -107,7 +107,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given first sync fetch limit is 0",
+      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is 0",
       () {
         expect(
           () => adapter.fetchBuilds(pipelineSlug, 0),
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given first sync fetch limit is a negative number",
+      ".fetchBuilds() throws an ArgumentError if the given initial fetch limit is a negative number",
       () {
         expect(
           () => adapter.fetchBuilds(pipelineSlug, -1),
@@ -129,13 +129,13 @@ void main() {
     test(".fetchBuilds() fetches builds", () {
       whenFetchBuilds().thenSuccessWith(defaultBuildsPage);
 
-      final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+      final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
       expect(result, completion(equals(defaultBuildData)));
     });
 
     test(
-      ".fetchBuilds() returns no more than the given first sync fetch limit number of builds",
+      ".fetchBuilds() returns no more than the given initial fetch limit number of builds",
       () {
         final builds = testData.generateBuildkiteBuildsByNumbers(
           buildNumbers: List.generate(30, (index) => index),
@@ -144,11 +144,11 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(buildsPage);
 
-        final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
         expect(
           result,
-          completion(hasLength(greaterThanOrEqualTo(firstSyncFetchLimit))),
+          completion(hasLength(greaterThanOrEqualTo(initialFetchLimit))),
         );
       },
     );
@@ -159,7 +159,7 @@ void main() {
 
       whenFetchBuilds().thenSuccessWith(buildsPage);
 
-      final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+      final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
       expect(result, completion(isEmpty));
     });
@@ -189,7 +189,7 @@ void main() {
         when(buildkiteClientMock.fetchBuildsNext(firstPage))
             .thenSuccessWith(secondPage);
 
-        final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
         expect(result, completion(equals(expected)));
       },
@@ -200,7 +200,7 @@ void main() {
       () {
         whenFetchBuilds().thenErrorWith();
 
-        final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -267,7 +267,7 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: builds));
 
-        final result = adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = adapter.fetchBuilds(pipelineSlug, initialFetchLimit);
 
         expect(result, completion(equals(expectedBuilds)));
       },
@@ -285,7 +285,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final duration = result.first.duration;
 
@@ -306,7 +306,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final duration = result.first.duration;
 
@@ -327,7 +327,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final duration = result.first.duration;
 
@@ -348,7 +348,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final url = result.first.url;
 
@@ -370,7 +370,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final startedAt = result.first.startedAt;
 
@@ -392,7 +392,7 @@ void main() {
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
         final startedAt = result.first.startedAt;
 

@@ -105,13 +105,11 @@ Each such client has its own specific list of configuration items it requires. T
 | Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
 | Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
-### First sync fetch limit
+### Initial fetch limit
 
-When the CI Integration tool runs sync for the first time for a specific project, it fetches all the project's latest builds. By default, the CI Integrations tool fetches 28 latest build. 
+When the CI Integrations tool synchronizes the project for the first time, by default, it fetches 28 latest builds. To customize this behavior, specify the following CLI argument: `--initial-fetch-limit <YOUR_INITIAL_FETCH_LIMIT>` where the `<YOUR_INITIAL_FETCH_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds.
 
-To customize this behaviour, consider the following CLI argument: `--first-sync-fetch-limit <YOUR_FIRST_SYNC_FETCH_LIMIT>`. Now, the CI Integrations tool will fetch no more than `<YOUR_FIRST_SYNC_FETCH_LIMIT>` builds.
-
-_**Note**: The `first-sync-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
+_**Note**: The `initial-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
 
 #### Example
 
@@ -153,7 +151,7 @@ The main idea is to use the `sync` command the tool provides and specify a path 
 For example:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml" --first-sync-fetch-limit 20
+ci_integrations sync --config-file="path/to/config_file.yaml" --initial-fetch-limit 20
 ```
 
 #### Controlling Builds Coverage Synchronization

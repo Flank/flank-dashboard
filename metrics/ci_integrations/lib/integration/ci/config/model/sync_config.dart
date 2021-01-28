@@ -14,8 +14,8 @@ class SyncConfig extends Equatable {
   final String destinationProjectId;
 
   /// A number of builds to fetch from the source during project's
-  /// first synchronization.
-  final int firstSyncFetchLimit;
+  /// initial synchronization.
+  final int initialFetchLimit;
 
   /// A flag that indicates whether to fetch coverage data for builds or not.
   final bool coverage;
@@ -24,7 +24,7 @@ class SyncConfig extends Equatable {
   List<Object> get props => [
         sourceProjectId,
         destinationProjectId,
-        firstSyncFetchLimit,
+        initialFetchLimit,
         coverage,
       ];
 
@@ -34,17 +34,22 @@ class SyncConfig extends Equatable {
   ///
   /// Throws an [ArgumentError] if any of the given parameters is `null`.
   ///
-  /// Throws an [ArgumentError] if the given [firstSyncFetchLimit] is not
+  /// Throws an [ArgumentError] if the given [initialFetchLimit] is not
   /// greater than `0`.
   SyncConfig({
     @required this.sourceProjectId,
     @required this.destinationProjectId,
     @required this.coverage,
-    @required this.firstSyncFetchLimit,
+    @required this.initialFetchLimit,
   }) {
     ArgumentError.checkNotNull(sourceProjectId, 'sourceProjectId');
     ArgumentError.checkNotNull(destinationProjectId, 'destinationProjectId');
     ArgumentError.checkNotNull(coverage, 'coverage');
-    NumberValidator.checkGreaterThan(firstSyncFetchLimit, 0);
+
+    if (initialFetchLimit == null || initialFetchLimit <= 0) {
+      throw ArgumentError(
+        'The initial fetch limit must be an integer value grater than 0',
+      );
+    }
   }
 }

@@ -48,7 +48,7 @@ class SourceClientStub implements SourceClient {
   @override
   Future<List<BuildData>> fetchBuilds(
     String projectId,
-    int firstSyncFetchLimit,
+    int initialFetchLimit,
   ) {
     if (fetchBuildsCallback != null) {
       return fetchBuildsCallback(projectId);

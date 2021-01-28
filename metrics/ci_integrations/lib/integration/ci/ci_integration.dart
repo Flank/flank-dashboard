@@ -47,10 +47,10 @@ class CiIntegration with LoggerMixin {
       List<BuildData> newBuilds;
       if (lastBuild == null) {
         logger.info('There are no builds in the destination...');
-        final firstSyncFetchLimit = config.firstSyncFetchLimit;
+        final initialFetchLimit = config.initialFetchLimit;
         newBuilds = await sourceClient.fetchBuilds(
           sourceProjectId,
-          firstSyncFetchLimit,
+          initialFetchLimit,
         );
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(
