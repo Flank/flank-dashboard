@@ -141,6 +141,7 @@ service cloud.firestore {
           && isInteger("duration")
           && isStringOrNull("workflowName")
           && isString("url")
+          && isStringOrNull("apiUrl")
           && isFloatOrNull("coverage", 0.0, 1.0);
   }
 
@@ -156,6 +157,7 @@ service cloud.firestore {
       "duration",
       "workflowName",
       "url",
+      "apiUrl",
       "coverage",
     ]);
   }
