@@ -1,4 +1,3 @@
-import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -6,11 +5,10 @@ import 'package:meta/meta.dart';
 /// and destination context.
 @immutable
 class SyncConfig extends Equatable {
-  /// Used to identify a project in a source the metrics will be loaded from.
+  /// A uniquie ID of the source project to load the project metrics from.
   final String sourceProjectId;
 
-  /// Used to identify a project in a destination storage
-  /// the loaded metrics will be saved to.
+  /// A unique ID of the destination project to save the loaded metrics.
   final String destinationProjectId;
 
   /// A number of builds to fetch from the source during project's

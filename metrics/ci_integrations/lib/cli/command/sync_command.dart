@@ -23,10 +23,10 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// of the project.
   static const defaultInitialFetchLimit = '28';
 
-  /// A name of the config file argument of this command.
+  /// A name of the option that holds a path to the YAML configuration file.
   static const _configFileOptionName = 'config-file';
 
-  /// A name of the initial fetch limit argument of this command.
+  /// A name of the option that holds the initial fetch limit.
   static const _initialFetchLimitOptionName = 'initial-fetch-limit';
 
   /// A name of the flag that indicates whether to fetch coverage data
