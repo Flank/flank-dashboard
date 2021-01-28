@@ -1,8 +1,8 @@
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the given validation delegate and error buffer",
+      "creates an instance with the given parameters",
       () {
         final configValidator = _ConfigValidatorFake(
           validationDelegate,
@@ -60,7 +60,7 @@ void main() {
     );
 
     test(
-      ".addError() adds an error message to the error buffer",
+      ".addErrorMessage() adds an error message to the error buffer",
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
@@ -69,7 +69,7 @@ void main() {
     );
 
     test(
-      ".addError() adds an error message with the information about the config field to the error buffer",
+      ".addErrorMessage() adds an error message with the information about the config field to the error buffer",
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
@@ -80,7 +80,7 @@ void main() {
     );
 
     test(
-      ".addError() does not add the additional context if the given one is null",
+      ".addErrorMessage() does not add the additional context if the given one is null",
       () {
         configValidator.addErrorMessage(configField, null);
 
@@ -94,7 +94,7 @@ void main() {
     );
 
     test(
-      ".addError() adds the additional context if the given one is not null",
+      ".addErrorMessage() adds an error message that contains the given additional context when it is not null",
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
@@ -106,7 +106,7 @@ void main() {
   });
 }
 
-/// A stub class for a [ValidationDelegate] abstract class providing
+/// A stub implementation of a [ValidationDelegate] abstract class providing
 /// a test implementation.
 class _ValidationDelegateStub implements ValidationDelegate {
   @override
@@ -116,7 +116,7 @@ class _ValidationDelegateStub implements ValidationDelegate {
 }
 
 /// A fake implementation of a [ConfigValidator] abstract class that is used
-/// for testing.
+/// to test non-abstract methods.
 class _ConfigValidatorFake extends ConfigValidator {
   /// Creates a new instance of this fake class with the given
   /// [validationDelegate] and [errorBuffer].
@@ -128,7 +128,7 @@ class _ConfigValidatorFake extends ConfigValidator {
   @override
   Future<void> validate(Config config) async {}
 
-  /// Resets this fake by clearing the [errorBuffer].
+  /// Resets this validator by clearing the [errorBuffer].
   void reset() {
     errorBuffer.clear();
   }

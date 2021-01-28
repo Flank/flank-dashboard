@@ -4,13 +4,15 @@ import 'package:test/test.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group("ConfigValidationException", () {
+  group("ConfigValidationError", () {
     const message = 'message';
+
+    const defaultError = 'An error occurred during config validation: ';
 
     test(
       "creates an instance with the given message",
       () {
-        const exception = ConfigValidationException(message: message);
+        const exception = ConfigValidationError(message: message);
 
         expect(exception.message, equals(message));
       },
@@ -19,18 +21,19 @@ void main() {
     test(
       ".toString() returns the exception's message if the message is not null",
       () {
-        const exception = ConfigValidationException(message: message);
+        const expectedError = '$defaultError$message';
+        const exception = ConfigValidationError(message: message);
 
-        expect(exception.toString(), equals(message));
+        expect(exception.toString(), equals(expectedError));
       },
     );
 
     test(
       ".toString() returns an empty string if the exception's message is null",
       () {
-        const exception = ConfigValidationException(message: null);
+        const exception = ConfigValidationError(message: null);
 
-        expect(exception.toString(), isEmpty);
+        expect(exception.toString(), equals(defaultError));
       },
     );
   });

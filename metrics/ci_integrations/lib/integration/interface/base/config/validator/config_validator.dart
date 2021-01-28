@@ -1,7 +1,7 @@
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 
-/// An abstract class that provides methods for [Config] validation.
+/// An abstract class responsible for validating the [Config].
 abstract class ConfigValidator<T extends Config> {
   /// A [ValidationDelegate] this validator uses for [Config]'s
   /// specific fields validation.
@@ -13,21 +13,24 @@ abstract class ConfigValidator<T extends Config> {
   /// Creates a new instance of the [ConfigValidator] with the
   /// given [validationDelegate] and [errorBuffer].
   ///
-  /// Throws an [ArgumentError] if any of the parameters is `null`.
+  /// Throws an [ArgumentError] if the [validationDelegate] or
+  /// [errorBuffer] is `null`.
   ConfigValidator(this.validationDelegate, this.errorBuffer) {
     ArgumentError.checkNotNull(validationDelegate);
     ArgumentError.checkNotNull(errorBuffer);
   }
 
   /// Validates the given [config].
+  ///
+  /// Throws a [ConfigValidationError] if the given [config] is not valid.
   Future<void> validate(T config);
 
-  /// Generates an error message from the given [configField]
-  /// and [additionalContext] and adds it to the [errorBuffer].
+  /// Adds an error message to the [errorBuffer] based on the given
+  /// [configField] and [additionalContext].
   void addErrorMessage(String configField, [String additionalContext]) {
     final errorMessage = _generateErrorMessage(configField, additionalContext);
 
-    errorBuffer.write(errorMessage);
+    errorBuffer.writeln(errorMessage);
   }
 
   /// Generates an error message from the given [configField]
@@ -35,11 +38,10 @@ abstract class ConfigValidator<T extends Config> {
   ///
   /// Does not add the [additionalContext] if it is `null`.
   String _generateErrorMessage(String configField, [String additionalContext]) {
-    String message =
-        'A validation error occurred while validating $T.\nThe following field(s) may be incorrect: $configField.';
+    String message = 'A $configField from the $T may be incorrect.';
 
     if (additionalContext != null) {
-      message += '\nAdditional context: $additionalContext';
+      message = '$message \nAdditional context: $additionalContext';
     }
 
     return message;
