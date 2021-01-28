@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
 import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
 import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
@@ -92,12 +93,16 @@ void main() {
       });
 
       test(
-        "has the 'coverage' flag",
+        "has the 'coverage' flag defaults to true",
         () {
           final argParser = syncCommand.argParser;
           final options = argParser.options;
 
-          expect(options, contains('coverage'));
+          final flagEnabledByDefault = predicate<Option>(
+            (option) => option.isFlag && option.defaultsTo == true,
+          );
+
+          expect(options, containsPair('coverage', flagEnabledByDefault));
         },
       );
 
@@ -229,22 +234,6 @@ void main() {
 
           expect(syncCommand.run(), MatcherUtil.throwsSyncError);
           verifyNever(ciIntegrationMock.sync(any));
-        },
-      );
-
-      test(
-        ".run() creates a sync config with the coverage equals to 'coverage' flag's value",
-        () async {
-          whenRunSync().thenAnswer(
-            (_) => Future.value(InteractionResult.success(result: syncConfig)),
-          );
-
-          await syncCommand.run();
-
-          expect(
-            verify(ciIntegrationMock.sync(captureAny)).captured.single,
-            syncConfig,
-          );
         },
       );
 

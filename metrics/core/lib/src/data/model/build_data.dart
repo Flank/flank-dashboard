@@ -18,17 +18,17 @@ class BuildData extends Build implements DataModel {
     String apiUrl,
     Percent coverage,
   }) : super(
-    id: id,
-    projectId: projectId,
-    buildNumber: buildNumber,
-    startedAt: startedAt,
-    buildStatus: buildStatus,
-    duration: duration,
-    workflowName: workflowName,
-    url: url,
-    apiUrl: apiUrl,
-    coverage: coverage,
-  );
+          id: id,
+          projectId: projectId,
+          buildNumber: buildNumber,
+          startedAt: startedAt,
+          buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          apiUrl: apiUrl,
+          coverage: coverage,
+        );
 
   /// Creates a copy of this [BuildData] but with the given fields
   /// replaced with the new values.

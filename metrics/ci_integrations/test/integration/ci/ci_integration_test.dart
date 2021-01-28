@@ -153,8 +153,8 @@ void main() {
     );
 
     test(
-      ".sync() does not fetch a coverage for builds if the config's coverage value is false",
-      () {
+      ".sync() does not fetch coverage for builds if the coverage value is false in the given config",
+      () async {
         bool isCalled = false;
 
         final destinationClient = DestinationClientStub(
@@ -174,18 +174,17 @@ void main() {
           destinationClient: destinationClient,
         );
 
-        final result = ciIntegration.sync(syncConfig).then((result) {
-          expect(isCalled, false);
+        final result = await ciIntegration
+            .sync(syncConfig)
+            .then((result) => result.isSuccess);
 
-          return result.isSuccess;
-        });
-
-        expect(result, completion(isTrue));
+        expect(result, isTrue);
+        expect(isCalled, isFalse);
       },
     );
 
     test(
-      ".sync() fetches coverage for each build if the config's coverage value is true",
+      ".sync() fetches coverage for each build if the coverage value is true in the given config",
       () async {
         final syncConfig = SyncConfig(
           sourceProjectId: 'test',
@@ -212,13 +211,12 @@ void main() {
           destinationClient: destinationClient,
         );
 
-        final result = ciIntegration.sync(syncConfig).then((result) {
-          expect(calledTimes, equals(BuildsTestData.builds.length));
+        final result = await ciIntegration
+            .sync(syncConfig)
+            .then((result) => result.isSuccess);
 
-          return result.isSuccess;
-        });
-
-        expect(result, completion(isTrue));
+        expect(result, isTrue);
+        expect(calledTimes, equals(BuildsTestData.builds.length));
       },
     );
   });

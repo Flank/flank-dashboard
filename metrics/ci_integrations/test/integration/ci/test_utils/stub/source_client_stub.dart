@@ -21,9 +21,7 @@ class SourceClientStub implements SourceClient {
   /// implementation for testing purposes.
   final Future<Percent> Function(BuildData) fetchCoverageCallback;
 
-  /// Creates this stub class instance.
-  ///
-  /// All parameters are optional.
+  /// Creates a new instance of the [SourceClientStub].
   SourceClientStub({
     this.fetchBuildsAfterCallback,
     this.fetchBuildsCallback,

@@ -12,7 +12,7 @@ class SyncConfig extends Equatable {
   /// the loaded metrics will be saved to.
   final String destinationProjectId;
 
-  /// A flag that indicates whether to fetch build coverage or not.
+  /// A flag that indicates whether to fetch coverage data for builds or not.
   final bool coverage;
 
   @override
@@ -20,8 +20,7 @@ class SyncConfig extends Equatable {
 
   /// Creates an instance of this configuration.
   ///
-  /// All parameters are required.
-  /// If one of these values is `null`, throws an [ArgumentError].
+  /// Throws an [ArgumentError], if one of the required parameters is `null`.
   SyncConfig({
     @required this.sourceProjectId,
     @required this.destinationProjectId,

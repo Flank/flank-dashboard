@@ -59,7 +59,7 @@ class CiIntegration with LoggerMixin {
       }
 
       if (config.coverage) {
-        newBuilds = await _fetchCoverageFor(newBuilds);
+        newBuilds = await _fetchCoverage(newBuilds);
       }
 
       await destinationClient.addBuilds(
@@ -77,19 +77,14 @@ class CiIntegration with LoggerMixin {
     }
   }
 
-  /// Walks through the list of the given [builds] and fetches a coverage
-  /// for each particular build.
-  Future<List<BuildData>> _fetchCoverageFor(List<BuildData> builds) async {
-    final List<BuildData> buildsWithCoverage = [];
-
-    for (final build in builds) {
+  /// Fetches coverage data for each build in the given [builds] list.
+  Future<List<BuildData>> _fetchCoverage(List<BuildData> builds) async {
+    final fetchCoverageFutures = builds.map((build) async {
       final coverage = await sourceClient.fetchCoverage(build);
 
-      buildsWithCoverage.add(
-        build.copyWith(coverage: coverage),
-      );
-    }
+      return build.copyWith(coverage: coverage);
+    });
 
-    return buildsWithCoverage;
+    return Future.wait(fetchCoverageFutures);
   }
 }

@@ -22,7 +22,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A name of the option that holds a path to the YAML configuration file.
   static const String _configFileOptionName = 'config-file';
 
-  /// A name of the flag that enables fetching coverage for each build.
+  /// A name of the flag that indicates whether to fetch coverage data
+  /// for builds or not.
   static const String _coverageFlagName = 'coverage';
 
   /// Used to parse configuration file main components.
@@ -52,7 +53,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     );
     argParser.addFlag(
       _coverageFlagName,
-      help: 'Fetching coverage for each build.',
+      help: 'Whether to fetch coverage for each build during the sync.',
       defaultsTo: true,
     );
   }
