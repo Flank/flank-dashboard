@@ -10,7 +10,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: null,
             destinationProjectId: 'test',
-            skipCoverage: false,
+            coverage: false,
           ),
           throwsArgumentError,
         );
@@ -24,7 +24,7 @@ void main() {
           () => SyncConfig(
             sourceProjectId: 'test',
             destinationProjectId: null,
-            skipCoverage: false,
+            coverage: false,
           ),
           throwsArgumentError,
         );
@@ -32,13 +32,13 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given skip coverage is null",
+      "throws an ArgumentError if the given coverage is null",
       () {
         expect(
           () => SyncConfig(
             sourceProjectId: 'test',
             destinationProjectId: 'test',
-            skipCoverage: null,
+            coverage: null,
           ),
           throwsArgumentError,
         );

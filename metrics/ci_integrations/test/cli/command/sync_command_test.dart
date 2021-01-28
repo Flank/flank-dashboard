@@ -92,12 +92,12 @@ void main() {
       });
 
       test(
-        "has the 'skip-coverage' flag",
+        "has the 'coverage' flag",
         () {
           final argParser = syncCommand.argParser;
           final options = argParser.options;
 
-          expect(options, contains('skip-coverage'));
+          expect(options, contains('coverage'));
         },
       );
 
@@ -233,7 +233,7 @@ void main() {
       );
 
       test(
-        ".run() creates a sync config with the skip coverage equals to 'skip-coverage' flag's value",
+        ".run() creates a sync config with the coverage equals to 'coverage' flag's value",
         () async {
           whenRunSync().thenAnswer(
             (_) => Future.value(InteractionResult.success(result: syncConfig)),
@@ -416,7 +416,7 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
-    if (name == 'skip-coverage') return false;
+    if (name == 'coverage') return false;
 
     return 'config.yaml';
   }

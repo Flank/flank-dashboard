@@ -58,7 +58,7 @@ class CiIntegration with LoggerMixin {
         );
       }
 
-      if (!config.skipCoverage) {
+      if (config.coverage) {
         newBuilds = await _fetchCoverageFor(newBuilds);
       }
 

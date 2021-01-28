@@ -12,15 +12,11 @@ class SyncConfig extends Equatable {
   /// the loaded metrics will be saved to.
   final String destinationProjectId;
 
-  /// A flag that indicates whether to skip fetching coverage or not.
-  final bool skipCoverage;
+  /// A flag that indicates whether to fetch build coverage or not.
+  final bool coverage;
 
   @override
-  List<Object> get props => [
-        sourceProjectId,
-        destinationProjectId,
-        skipCoverage,
-      ];
+  List<Object> get props => [sourceProjectId, destinationProjectId, coverage];
 
   /// Creates an instance of this configuration.
   ///
@@ -29,10 +25,10 @@ class SyncConfig extends Equatable {
   SyncConfig({
     @required this.sourceProjectId,
     @required this.destinationProjectId,
-    @required this.skipCoverage,
+    @required this.coverage,
   }) {
     ArgumentError.checkNotNull(sourceProjectId, 'sourceProjectId');
     ArgumentError.checkNotNull(destinationProjectId, 'destinationProjectId');
-    ArgumentError.checkNotNull(skipCoverage, 'skipCoverage');
+    ArgumentError.checkNotNull(coverage, 'coverage');
   }
 }

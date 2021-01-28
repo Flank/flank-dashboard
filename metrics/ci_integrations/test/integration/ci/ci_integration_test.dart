@@ -14,7 +14,7 @@ void main() {
     final syncConfig = SyncConfig(
       sourceProjectId: 'sourceProjectId',
       destinationProjectId: 'destinationProjectId',
-      skipCoverage: true,
+      coverage: false,
     );
 
     test(
@@ -153,7 +153,7 @@ void main() {
     );
 
     test(
-      ".sync() does not fetch a coverage for builds if the config's skip coverage value is true",
+      ".sync() does not fetch a coverage for builds if the config's coverage value is false",
       () {
         bool isCalled = false;
 
@@ -185,12 +185,12 @@ void main() {
     );
 
     test(
-      ".sync() fetches coverage for each build if the config's skip coverage value is false",
+      ".sync() fetches coverage for each build if the config's coverage value is true",
       () async {
         final syncConfig = SyncConfig(
           sourceProjectId: 'test',
           destinationProjectId: 'test',
-          skipCoverage: false,
+          coverage: true,
         );
 
         int calledTimes = 0;
