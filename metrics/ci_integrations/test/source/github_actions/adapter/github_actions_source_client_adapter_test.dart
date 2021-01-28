@@ -257,7 +257,10 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -279,7 +282,10 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -299,7 +305,10 @@ void main() {
 
         whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -405,7 +414,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -599,7 +611,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(completedAt));
@@ -628,7 +643,10 @@ void main() {
           const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -657,7 +675,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -686,7 +707,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -714,7 +738,10 @@ void main() {
           const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          firstSyncFetchLimit,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));
@@ -817,7 +844,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
 
         final coverage = result.map((build) => build.coverage).toList();
 
@@ -846,7 +876,10 @@ void main() {
         final expectedCoverage = [null, null, null];
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
         final coverage = result.map((build) => build.coverage).toList();
 
         expect(coverage, equals(expectedCoverage));
@@ -872,7 +905,10 @@ void main() {
         final expectedCoverage = [null, null, null];
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
         final coverage = result.map((build) => build.coverage).toList();
 
         expect(coverage, equals(expectedCoverage));
@@ -904,7 +940,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
 
         final coverage = result.map((build) => build.coverage).toList();
 
@@ -1256,7 +1295,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(completedAt));
@@ -1287,7 +1329,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -1318,7 +1363,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -1349,7 +1397,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -1379,7 +1430,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));

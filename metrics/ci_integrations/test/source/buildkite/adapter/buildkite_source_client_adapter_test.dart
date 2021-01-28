@@ -283,8 +283,10 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(expectedDuration));
@@ -302,8 +304,10 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -321,8 +325,10 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -340,8 +346,10 @@ void main() {
         whenFetchBuilds()
             .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));
@@ -360,8 +368,10 @@ void main() {
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(finishedAt));
@@ -380,8 +390,10 @@ void main() {
         whenFetchBuilds()
             .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
-        final result =
-            await adapter.fetchBuilds(pipelineSlug, firstSyncFetchLimit);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          firstSyncFetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);

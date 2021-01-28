@@ -230,7 +230,8 @@ void main() {
       ".fetchBuilds() fetches no more than the given first sync fetch limit number of builds",
       () {
         final builds = createJenkinsBuilds(
-            buildNumbers: List.generate(30, (index) => index));
+          buildNumbers: List.generate(30, (index) => index),
+        );
         responses.addBuilds(builds);
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);

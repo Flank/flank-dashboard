@@ -65,8 +65,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
       firstSyncFetchLimitArgumentName,
       help:
           'A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0.',
-      valueHelp: '$defaultFirstSyncFetchLimit',
-      defaultsTo: '$defaultFirstSyncFetchLimit',
+      valueHelp: defaultFirstSyncFetchLimit,
+      defaultsTo: defaultFirstSyncFetchLimit,
     );
 
     argParser.addFlag(
