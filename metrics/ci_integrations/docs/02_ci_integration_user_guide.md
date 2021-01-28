@@ -105,6 +105,14 @@ Each such client has its own specific list of configuration items it requires. T
 | Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
 | Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
+### First sync fetch limit
+
+When the CI Integration tool runs sync for the first time for a specific project, it fetches all the project's latest builds. By default, the CI Integrations tool fetches 28 latest build. 
+
+To customize this behaviour, consider the following CLI argument: `--first-sync-fetch-limit <YOUR_FIRST_SYNC_FETCH_LIMIT>`. Now, the CI Integrations tool will fetch no more than `<YOUR_FIRST_SYNC_FETCH_LIMIT>` builds.
+
+_**Note**: The `first-sync-fetch-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
+
 #### Example
 
 Imagine that you want to expose your GitHub Actions builds to the `Metrics Web Application`. In this case, your `source` integration is GitHub Actions and `destination` is Firestore. Assume that you've already downloaded and configured the CI Integrations tool. The next stage is creating a configuration file for the integrations you require. Let's consider the following steps:
@@ -145,7 +153,7 @@ The main idea is to use the `sync` command the tool provides and specify a path 
 For example:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml"
+ci_integrations sync --config-file="path/to/config_file.yaml" --first-sync-fetch-limit 20
 ```
 
 #### Controlling Builds Coverage Synchronization
