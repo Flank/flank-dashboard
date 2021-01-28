@@ -12,6 +12,7 @@ box Doctor Command
     participant FirebaseCommand
     participant GCloudCommand
     participant GitCommand
+    participant NpmCommand
 end box
 
 participant flutter
@@ -21,6 +22,8 @@ participant firebase
 participant gcloud
 
 participant git
+
+participant npm
 
 Bob -> CLI ++ : run doctor command
 CLI -> DoctorCommand ++ : run()
@@ -43,7 +46,13 @@ DoctorCommand -> GitCommand ++ : version()
 GitCommand -> git ++ : request git CLI version
 git --> Bob -- : print Git version
 GitCommand --
+
+DoctorCommand -> NpmCommand ++ : version()
+NpmCommand -> npm ++ : request npm CLI version
+npm --> Bob -- : print Npm version
+NpmCommand --
 DoctorCommand --
+
 CLI --> Bob -- : terminate
 
 @enduml

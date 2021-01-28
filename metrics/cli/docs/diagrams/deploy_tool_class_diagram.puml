@@ -1,41 +1,51 @@
 @startuml deploy_tool_class_diagram
+left to right direction
 
 package cli {
 
     package flutter {
         class FlutterCommand {
             + version(): Future<void>
+            + enableWeb(): Future<void>
+            + buildWeb(String workingDir): Future<void>
         }
     }
 
     package firebase {
         class FirebaseCommand {
             + login(): Future<String>
-            + addFirebase(String projectID, String firebaseToken): Future<void>
-            + createWebApp(String projectID, String firebaseToken): Future<String>
-            + downloadSDKConfig(String appID, String configPath, String projectID, String firebaseToken): Future<void>
+            + addFirebase(String projectId, String firebaseToken): Future<void>
+            + createWebApp(String projectId, String firebaseToken): Future<String>
+            + chooseProject(String projectId, String workingDir, String firebaseToken): Future<void>
+            + clearTarget(String workingDir, String firebaseToken): Future<void>
+            + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
+            + deployHosting(String workingDir, String firebaseToken): Future<void>
+            + deployFirestore(String workingDir, String firebaseToken): Future<void>
+            + deployFunctions(String workingDir, String firebaseToken): Future<void>
             + version(): Future<void>
         }
     }
 
     package gcloud {
         class GCloudCommand {
-            + projectID : String
-            - _chars : String
-            - _rnd : Random
             + login(): Future<void>
             + addProject(): Future<String>
-            + addProjectApp(String region, String projectID): Future<void>
-            + createDatabase(String region, String projectID): Future<void>
-            + cleanup(String srcPath): Future<void>
+            + addProjectApp(String region, String projectId): Future<void>
+            + createDatabase(String region, String projectId): Future<void>
             + version(): Future<void>
-            - _getRandomString(int length): String
         }
     }
 
     package git {
         class GitCommand {
             + clone(String repoURL, String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package npm {
+        class NpmCommand {
+            + install(String workingDir): Future<void>
             + version(): Future<void>
         }
     }
@@ -52,13 +62,17 @@ package deploy {
         - _firebase : FirebaseCommand
         - _gcloud : GCloudCommand
         - _git : GitCommand
+        - _flutter : FlutterCommand
+        - _npm : NpmCommand
         - {static} _repoURL : String
-        - {static} _srcPath : String
+        - {static} _tempDir : String
+        - {static} _webPath : String
+        - {static} _firebasePath : String
+        - {static} _firebaseFunctionsPath : String
         + run(): Future<void>
-        + cleanup(): Future<void>
-        - _login(): Future<String>
         - _selectRegion(): Future<String>
-        - _buildAndDeploy(): Future<void>
+        - _deploy(): Future<void>
+        - _cleanup(): Future<void>
     }
 }
 
@@ -70,6 +84,7 @@ package doctor {
         - _gcloud : GCloudCommand
         - _git : GitCommand
         - _flutter : FlutterCommand
+        - _npm : NpmCommand
         + run(): Future<void>
     }
 }
@@ -77,9 +92,12 @@ package doctor {
 DeployCommand --> FirebaseCommand : uses
 DeployCommand --> GCloudCommand : uses
 DeployCommand --> GitCommand : uses
+DeployCommand --> FlutterCommand : uses
+DeployCommand --> NpmCommand : uses
 FirebaseCommand <-- DoctorCommand : uses
 GCloudCommand <-- DoctorCommand : uses
 GitCommand <-- DoctorCommand : uses
 FlutterCommand <-- DoctorCommand : uses
+NpmCommand <-- DoctorCommand : uses
 
 @enduml

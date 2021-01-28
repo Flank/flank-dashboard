@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:deploy/cli/firebase/firebase_command.dart';
-import 'package:deploy/cli/flutter/flutter_command.dart';
-import 'package:deploy/cli/gcloud/gcloud_command.dart';
-import 'package:deploy/cli/git/git_command.dart';
-import 'package:deploy/cli/npm/npm_command.dart';
+import 'package:cli/cli/firebase/firebase_command.dart';
+import 'package:cli/cli/flutter/flutter_command.dart';
+import 'package:cli/cli/gcloud/gcloud_command.dart';
+import 'package:cli/cli/git/git_command.dart';
+import 'package:cli/cli/npm/npm_command.dart';
 import 'package:process_run/shell.dart';
 
 /// A [Command] implementation that deploys the metrics app.
@@ -76,6 +76,11 @@ class DeployCommand extends Command {
       await _flutter.buildWeb(_webPath);
       await _firebase.clearTarget(_webPath, firebaseToken);
       await _firebase.applyTarget(projectId, _webPath, firebaseToken);
+      await prompt(
+        'To make Firebase Analytics available for the current project, '
+        'please, make sure it is enabled in the Firebase console. '
+        'Enter any key to continue',
+      );
       await _firebase.deployHosting(_webPath, firebaseToken);
 
       await _firebase.chooseProject(projectId, _firebasePath, firebaseToken);
@@ -91,6 +96,8 @@ class DeployCommand extends Command {
       if (proceed) {
         await _npm.install(_firebaseFunctionsPath);
         await _firebase.deployFunctions(_firebasePath, firebaseToken);
+      } else {
+        print('Skipping functions deploying.');
       }
     } catch (error) {
       print(error);
@@ -104,8 +111,8 @@ class DeployCommand extends Command {
     final configDirectory = Directory(path);
     try {
       await configDirectory.delete(recursive: true);
-    } catch (e) {
-      print(e);
+    } catch (error) {
+      print(error);
     }
   }
 }

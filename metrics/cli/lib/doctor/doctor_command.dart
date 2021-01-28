@@ -1,9 +1,9 @@
 import 'package:args/command_runner.dart';
-import 'package:deploy/cli/firebase/firebase_command.dart';
-import 'package:deploy/cli/flutter/flutter_command.dart';
-import 'package:deploy/cli/gcloud/gcloud_command.dart';
-import 'package:deploy/cli/git/git_command.dart';
-import 'package:deploy/cli/npm/npm_command.dart';
+import 'package:cli/cli/firebase/firebase_command.dart';
+import 'package:cli/cli/flutter/flutter_command.dart';
+import 'package:cli/cli/gcloud/gcloud_command.dart';
+import 'package:cli/cli/git/git_command.dart';
+import 'package:cli/cli/npm/npm_command.dart';
 
 /// A [Command] implementation that verifies the dependencies.
 class DoctorCommand extends Command {

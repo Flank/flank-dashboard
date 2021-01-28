@@ -14,6 +14,7 @@ box "Deploy Command"
     participant FlutterCommand
     participant GCloudCommand
     participant GitCommand
+    participant NpmCommand
 end box
 
 participant gcloud
@@ -24,6 +25,8 @@ participant git
 
 participant flutter
 
+participant npm
+
 Bob -> CLI ++ : run deploy command
 CLI -> DeployCommand ++ : run()
 DeployCommand -> GCloudCommand ++ : login()
@@ -33,14 +36,7 @@ GCloudCommand --
 
 Bob -> gcloud ++ : signs in
 gcloud --> DeployCommand -- : login finished
-DeployCommand -> FirebaseCommand ++ : login()
-FirebaseCommand -> firebase ++ : login to the firebase
-firebase --> Bob -- : starts interactive login
-FirebaseCommand --
 
-Bob -> firebase ++ : signs in
-firebase --> Bob -- : firebase token
-Bob -> DeployCommand : enters firebase token
 DeployCommand -> GCloudCommand ++ : addProject()
 GCloudCommand --> Bob -- : asks to create new project
 
@@ -48,29 +44,18 @@ alt Agree to create a new project
     Bob -> GCloudCommand ++ : Y
     GCloudCommand -> gcloud ++ : create a new google cloud project
     return project has been created
-    GCloudCommand -> gcloud ++ : set gcloud config to point to new project
-    return project has been set
-    GCloudCommand --> DeployCommand -- : projectID
+
 else Do not agree to create a new project
-    Bob -> GCloudCommand ++ : N
+    Bob -> GCloudCommand : N
     GCloudCommand -> gcloud ++ : request a list of gcloud projects
     gcloud --> Bob -- : shows all available projects
-    GCloudCommand --> Bob -- : asks to enter the project id
-    Bob -> DeployCommand : enters the project id
+    GCloudCommand --> Bob : asks to enter the project id
+    Bob -> GCloudCommand : enters the project id
 end
 
-DeployCommand -> FirebaseCommand ++ : addFirebase(projectID, firebaseToken)
-FirebaseCommand --> Bob -- : asks to add a firebase capabilities
-
-alt Agree to add the firebase capabilities
-    Bob -> FirebaseCommand ++ : Y
-    FirebaseCommand -> firebase ++ : add firebase capabilities to the cloud project
-    firebase --> DeployCommand -- : firebase capabilities has been added
-    FirebaseCommand --
-else Do not agree to add the firebase capabilities
-    Bob -> FirebaseCommand ++ : N
-    FirebaseCommand --> DeployCommand -- : skipped
-end
+GCloudCommand -> gcloud ++ : set gcloud config to point to a new project
+return project has been set
+GCloudCommand --> DeployCommand -- : projectID
 
 DeployCommand --> Bob : asks to enter the region
 Bob -> DeployCommand : enters the region
@@ -92,12 +77,36 @@ GCloudCommand --> Bob -- : asks to add a project database
 
 alt Agree to add the project database
     Bob -> GCloudCommand ++ : Y
+    GCloudCommand -> gcloud ++ : enable firestore API
+    return firestore API has been enabled
     GCloudCommand -> gcloud ++ : create a database
     gcloud --> DeployCommand -- : database has been created
     GCloudCommand --
 else Do not agree to add the project database
     Bob -> GCloudCommand ++ : N
     GCloudCommand --> DeployCommand -- : skipped
+end
+
+DeployCommand -> FirebaseCommand ++ : login()
+FirebaseCommand -> firebase ++ : login to the firebase
+firebase --> Bob -- : starts interactive login
+FirebaseCommand --
+
+Bob -> firebase ++ : signs in
+firebase --> Bob -- : firebase token
+Bob -> DeployCommand : enters firebase token
+
+DeployCommand -> FirebaseCommand ++ : addFirebase(projectID, firebaseToken)
+FirebaseCommand --> Bob -- : asks to add a firebase capabilities
+
+alt Agree to add the firebase capabilities
+    Bob -> FirebaseCommand ++ : Y
+    FirebaseCommand -> firebase ++ : add firebase capabilities to the cloud project
+    firebase --> DeployCommand -- : firebase capabilities has been added
+    FirebaseCommand --
+else Do not agree to add the firebase capabilities
+    Bob -> FirebaseCommand ++ : N
+    FirebaseCommand --> DeployCommand -- : skipped
 end
 
 DeployCommand -> FirebaseCommand ++ : createWebApp(projectID, firebaseToken)
@@ -110,33 +119,75 @@ alt Agree to add the web app
     FirebaseCommand --
 else Do not agree to add the web app
     Bob -> FirebaseCommand ++ : N
-    FirebaseCommand -> firebase ++ : request a list of web apps
-    firebase --> Bob -- : shows all available web apps
+    FirebaseCommand -> DeployCommand -- : skipped
 end
 
-return asks to enter the app id
-
-Bob -> DeployCommand : enters the app id
-DeployCommand -> GitCommand ++ : clone(repoURL, srcPath)
+DeployCommand -> GitCommand ++ : clone(repoURL, tempDir)
 GitCommand -> git ++ : clone the source project
 git --> DeployCommand -- : project has been cloned
 GitCommand --
-DeployCommand --> Bob : clear previous config
 
-DeployCommand -> FirebaseCommand ++ : downloadSDKConfig(appID, configPath, projectID, firebaseToken)
-FirebaseCommand -> firebase ++ : download web app SDK config
+DeployCommand -> FirebaseCommand ++ : chooseProject(projectId, webPath, firebaseToken)
+FirebaseCommand -> firebase ++ : choose the firebase project
+firebase --> DeployCommand -- : project has been chosen
 FirebaseCommand --
-firebase --> DeployCommand -- : web app SDK config has been downloaded
 
-DeployCommand -> firebase ++ : choose the firebase project
-return firebase project has been chosen
+DeployCommand -> FlutterCommand ++ : buildWeb(webPath)
+FlutterCommand -> flutter ++ : build the source project
+flutter --> DeployCommand -- : flutter web app has been built
+FlutterCommand --
 
-firebase --
-DeployCommand -> flutter ++ : build the source project
-return flutter app has been built
+DeployCommand -> FirebaseCommand ++ : clearTarget(webPath, firebaseToken)
+FirebaseCommand -> firebase ++ : clear the firebase target
+firebase --> DeployCommand -- : firebase target has been cleared
+FirebaseCommand --
 
-DeployCommand -> firebase ++ : deploy the application to the hosting
-return application has been deployed
+DeployCommand -> FirebaseCommand ++ : applyTarget(projectId, webPath, firebaseToken)
+FirebaseCommand -> firebase ++ : apply the firebase target
+firebase --> DeployCommand -- : firebase target has been applied
+FirebaseCommand --
+
+DeployCommand --> Bob : firebase analytics warning
+Bob -> DeployCommand : enters any key
+
+DeployCommand -> FirebaseCommand ++ : deployHosting(webPath, firebaseToken)
+FirebaseCommand -> firebase ++ : deploy the web application to the hosting
+firebase --> DeployCommand -- : application has been deployed
+FirebaseCommand --
+
+DeployCommand -> FirebaseCommand ++ : chooseProject(projectId, firebasePath, firebaseToken)
+FirebaseCommand -> firebase ++ : choose the firebase project
+firebase --> DeployCommand -- : project has been chosen
+FirebaseCommand --
+
+DeployCommand -> NpmCommand ++ : install(firebasePath)
+NpmCommand -> npm ++ : install npm dependencies into the firebase folder
+npm --> DeployCommand -- : dependencies have been installed
+NpmCommand --
+
+DeployCommand -> FirebaseCommand ++ : deployFirestore(firebasePath, firebaseToken)
+FirebaseCommand -> firebase ++ : deploy the firestore settings to firebase
+firebase --> DeployCommand -- : firestore settings have been deployed
+FirebaseCommand --
+
+DeployCommand --> Bob : asks to enable a Blaze billing account for functions deployment
+
+alt Agree to enable the Blaze billing account
+    Bob -> DeployCommand : Y
+
+    DeployCommand -> NpmCommand ++ : install(firebaseFunctionsPath)
+    NpmCommand -> npm ++ : install npm dependencies into the functions folder
+    npm --> DeployCommand -- : dependencies have been installed
+    NpmCommand --
+
+    DeployCommand -> FirebaseCommand ++ : deployFunctions(firebasePath, firebaseToken)
+    FirebaseCommand -> firebase ++ : deploy the functions to firebase
+    firebase --> DeployCommand -- : functions have been deployed
+    FirebaseCommand --
+else Do not agree to enable the Blaze billing account
+    Bob -> DeployCommand : N
+    DeployCommand -> DeployCommand : skipped
+end
 
 DeployCommand -> DeployCommand : clean up the source directory
 DeployCommand --> CLI --: deploy finished

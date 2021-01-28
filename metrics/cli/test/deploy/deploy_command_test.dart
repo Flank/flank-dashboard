@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:deploy/deploy/deploy_command.dart';
+import 'package:cli/deploy/deploy_command.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:deploy/doctor/doctor_command.dart';
+import 'package:cli/doctor/doctor_command.dart';
 import 'package:test/test.dart';
 
 void main() {

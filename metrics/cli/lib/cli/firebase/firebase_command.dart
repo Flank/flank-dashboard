@@ -17,13 +17,13 @@ class FirebaseCommand {
   }
 
   /// Adds Firebase capabilities to the project
-  /// based on the given [projectID] and [firebaseToken].
-  Future<void> addFirebase(String projectID, String firebaseToken) async {
+  /// based on the given [projectId] and [firebaseToken].
+  Future<void> addFirebase(String projectId, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project?')) {
       print('Adding Firebase capabilities.');
       await cmd.run(
         'firebase',
-        ['projects:addfirebase', projectID, '--token', firebaseToken],
+        ['projects:addfirebase', projectId, '--token', firebaseToken],
         verbose: true,
         stdin: sharedStdIn,
       );
@@ -32,8 +32,8 @@ class FirebaseCommand {
     }
   }
 
-  /// Creates Firebase web app with the given [projectID] and [firebaseToken].
-  Future<void> createWebApp(String projectID, String firebaseToken) async {
+  /// Creates Firebase web app with the given [projectId] and [firebaseToken].
+  Future<void> createWebApp(String projectId, String firebaseToken) async {
     if (await promptConfirm('Add web app?')) {
       print('Adding Firebase web app.');
       await cmd.run(
@@ -41,11 +41,11 @@ class FirebaseCommand {
         [
           'apps:create',
           '--project',
-          projectID,
+          projectId,
           '--token',
           firebaseToken,
           "WEB",
-          projectID
+          projectId
         ],
         verbose: true,
         stdin: sharedStdIn,
@@ -57,7 +57,7 @@ class FirebaseCommand {
 
   /// Chooses the firebase project.
   Future<void> chooseProject(
-    String projectID,
+    String projectId,
     String workingDir,
     String firebaseToken,
   ) async {
@@ -66,7 +66,7 @@ class FirebaseCommand {
       [
         'use',
         '--add',
-        projectID,
+        projectId,
         '--token',
         firebaseToken,
       ],
@@ -95,7 +95,7 @@ class FirebaseCommand {
 
   /// Applies the firebase target.
   Future<void> applyTarget(
-    String projectName,
+    String projectId,
     String workingDir,
     String firebaseToken,
   ) async {
@@ -105,7 +105,7 @@ class FirebaseCommand {
         'target:apply',
         'hosting',
         'metrics',
-        projectName,
+        projectId,
         '--token',
         firebaseToken,
       ],
