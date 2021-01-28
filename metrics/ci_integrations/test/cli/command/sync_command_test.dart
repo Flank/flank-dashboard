@@ -91,7 +91,7 @@ void main() {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains(SyncCommand.configFileArgumentName));
+        expect(options, contains('config-file'));
       });
 
       test(
@@ -112,7 +112,7 @@ void main() {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 
-        expect(options, contains(SyncCommand.firstSyncFetchLimitArgumentName));
+        expect(options, contains('first-sync-fetch-limit'));
       });
 
       test(
@@ -122,8 +122,7 @@ void main() {
             SyncCommand.defaultFirstSyncFetchLimit;
 
         final argParser = syncCommand.argParser;
-        final fetchLimitOption =
-            argParser.options[SyncCommand.firstSyncFetchLimitArgumentName];
+        final fetchLimitOption = argParser.options['first-sync-fetch-limit'];
 
         expect(
           fetchLimitOption.defaultsTo,
@@ -479,9 +478,9 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
-    if (name == SyncCommand.firstSyncFetchLimitArgumentName) return '20';
+    if (name == 'first-sync-fetch-limit') return '20';
 
-    if (name == SyncCommand.configFileArgumentName) return 'config.yaml';
+    if (name == 'config-file') return 'config.yaml';
 
     if (name == 'coverage') return false;
 

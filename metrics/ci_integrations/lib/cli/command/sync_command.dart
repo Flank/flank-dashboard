@@ -23,13 +23,10 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   static const defaultFirstSyncFetchLimit = '28';
 
   /// A name of the config file argument of this command.
-  static const configFileArgumentName = 'config-file';
+  static const _configFileOptionName = 'config-file';
 
   /// A name of the first sync fetch limit argument of this command.
-  static const firstSyncFetchLimitArgumentName = 'first-sync-fetch-limit';
-
-  /// A name of the option that holds a path to the YAML configuration file.
-  static const String _configFileOptionName = 'config-file';
+  static const _firstSyncFetchLimitOptionName = 'first-sync-fetch-limit';
 
   /// A name of the flag that indicates whether to fetch coverage data
   /// for builds or not.
@@ -56,13 +53,13 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     SupportedIntegrationParties supportedParties,
   }) : supportedParties = supportedParties ?? SupportedIntegrationParties() {
     argParser.addOption(
-      configFileArgumentName,
+      _configFileOptionName,
       help: 'A path to the YAML configuration file.',
       valueHelp: 'config.yaml',
     );
 
     argParser.addOption(
-      firstSyncFetchLimitArgumentName,
+      _firstSyncFetchLimitOptionName,
       help:
           'A number of builds to fetch from the source during project first synchronization. The value should be an integer number greater than 0.',
       valueHelp: defaultFirstSyncFetchLimit,
@@ -78,7 +75,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
 
   @override
   Future<void> run() async {
-    final configFilePath = getArgumentValue(configFileArgumentName) as String;
+    final configFilePath = getArgumentValue(_configFileOptionName) as String;
     final coverage = getArgumentValue(_coverageFlagName) as bool;
     final file = getConfigFile(configFilePath);
 
@@ -120,7 +117,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
         );
 
         final firstSyncFetchLimitArgument =
-            getArgumentValue(firstSyncFetchLimitArgumentName) as String;
+            getArgumentValue(_firstSyncFetchLimitOptionName) as String;
         final firstSyncFetchLimit = parseFirstSyncFetchLimit(
           firstSyncFetchLimitArgument,
         );

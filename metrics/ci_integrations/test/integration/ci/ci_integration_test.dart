@@ -1,4 +1,5 @@
 import 'package:ci_integration/integration/ci/ci_integration.dart';
+import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -180,6 +181,7 @@ void main() {
           sourceProjectId: 'test',
           destinationProjectId: 'test',
           coverage: true,
+          firstSyncFetchLimit: 10,
         );
 
         int calledTimes = 0;
