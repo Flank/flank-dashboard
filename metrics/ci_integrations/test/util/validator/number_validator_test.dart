@@ -81,7 +81,7 @@ void main() {
     );
 
     test(
-      ".checkGreaterThan() throws an ArgumentError if the given number to compare is null",
+      ".checkGreaterThan() throws an ArgumentError if the given lower limit is null",
       () {
         expect(
           () => NumberValidator.checkGreaterThan(1, null),
@@ -91,7 +91,7 @@ void main() {
     );
 
     test(
-      ".checkGreaterThan() throws an ArgumentError if the given number is less than the given number to compare",
+      ".checkGreaterThan() throws an ArgumentError if the given number is less than the given lower limit",
       () {
         expect(
           () => NumberValidator.checkGreaterThan(1, 2),
@@ -101,7 +101,7 @@ void main() {
     );
 
     test(
-      ".checkGreaterThan() throws an ArgumentError if the given number is equal to the given number to compare",
+      ".checkGreaterThan() throws an ArgumentError if the given number is equal to the given lower limit",
       () {
         expect(
           () => NumberValidator.checkGreaterThan(1, 1),

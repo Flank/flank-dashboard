@@ -29,21 +29,21 @@ class NumberValidator {
     }
   }
 
-  /// Checks the given [number] to be greater than the given [numberToCompare].
+  /// Checks the given [number] to be greater than the given [lowerLimit].
   ///
   /// Throws an [ArgumentError] if:
-  ///   * one of the [number] or [numberToCompare] is `null`;
-  ///   * [number] is not grater than [numberToCompare].
-  static void checkGreaterThan(int number, int numberToCompare) {
-    if (number == null || numberToCompare == null) {
+  ///   * one of the [number] or [lowerLimit] is `null`;
+  ///   * [number] is not grater than [lowerLimit].
+  static void checkGreaterThan(int number, int lowerLimit) {
+    if (number == null || lowerLimit == null) {
       throw ArgumentError(
-        'both given number and number to compare must be specified',
+        'both given number and lower limit must be specified',
       );
-    } else if (number <= numberToCompare) {
+    } else if (number <= lowerLimit) {
       throw ArgumentError.value(
         number,
         'number',
-        'must be grater than $numberToCompare',
+        'must be grater than $lowerLimit',
       );
     }
   }
