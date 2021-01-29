@@ -15,7 +15,7 @@ This document follows the next goals:
 
 - Describe the place of storing the database metadata.
 - Explain the way of storing the current Metrics applications version. 
-- Describe the mechanism of blocking the Metrics applications during updating the database.
+- Describe the mechanism of blocking the Metrics applications during the database update process.
 
 # Non-Goals
 > Identify what's not in scope.
@@ -58,11 +58,13 @@ The `metadata` collection should have the following security rules:
 ## Application Version
 > Explain the way of storing the application version and providing it to the Metrics Web Application.
 
-To be able to detect whether the current application version is compatible with the database, we should have the current application version. Since this value is common for database and metrics applications we should make it easily accessible in any application like `CI Integrations`, `Metrics CLI`, or `Metrics Web`. To do so, we can store this version in the `version` file under the `metrics` package of our repository and then we can get the contents of this file and pass it as an environment variable to any of our applications during building process.
+To detect whether the current application version is compatible with the database, we should have the current application version. Since this value is common for database and metrics applications, we should make it easily accessible in any application like `CI Integrations`, `Metrics CLI`, or `Metrics Web`. 
 
-Let's consider a Unix shell script example of getting the application version from the file and passing it to the `Metrics Web Application`, for example, as an environment variable: 
+To do so, we can store the application version in the `version` file under the `metrics` package of our repository. It allows us to get the contents of this file and pass it as an environment variable to any of our applications during the building process.
 
-Assume we run this script inside the `metrics/web` package: 
+Let's consider a Unix shell script example of getting the application version from the file and passing it to the `Metrics Web Application` as an environment variable.
+
+Assume we run the following script under the `metrics/web` package: 
 
 ```bash
 VERSION=$(cat ../version)
@@ -76,7 +78,7 @@ So, we can use the following line of code to get the application version in the 
 const appVersion = String.fromEnvironment('APP_VERSION');
 ```
 
-Also, it will make it easy to o get this version during database deployment/updating to set the current database version.
+Also, the `version` file will simplify the process of getting the latest version during database deployment/updating to set the current database version.
 
 ## Making things work
 
@@ -86,15 +88,15 @@ Let's consider the process of blocking the Metrics Web Application:
 
 ### Metrics Web Application
 
-If the current version of the application is not equal to the database version we should follow the next steps: 
+If the current version of the application is not equal to the database version, we should follow the next steps: 
 
-1. Log out user from the application.
-2. Redirect the user to the `Update application` page to notify that the current application version is not compatible with the current database version, and the user should contact the administrator to resolve this conflict.
+1. Log out a user from the application.
+2. Redirect the user to the `Update application` page. This page will notify a user about the current application version is not compatible with the current database version and propose to contact the administrator to resolve this conflict.
 
-If the database update in progress we should follow next steps: 
+If the database update in progress, we should follow next steps: 
 
-1. Log out user from the application.
-2. Redirect the user to the `Updating the aplication` page to notify the user about the Metrics application update in progress.
+1. Log out a user from the application.
+2. Redirect the user to the `Updating the application` page to notify the user about the Metrics application update in progress.
 
 # Dependencies
 > What will be impacted by the project?
