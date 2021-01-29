@@ -30,7 +30,7 @@ First, let's consider a couple of terms the CI Integration tool uses and what th
 
 ### Downloading The CI Integrations Tool
 
-You can download the built CI Integration tool from the [CI Integrations releases](https://github.com/platform-platform/monorepo/releases/tag/ci_integrations-snapshot) page. Select a release depending on your operation system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+You can download the built CI Integration tool from the [CI Integrations releases](https://github.com/platform-platform/monorepo/releases/tag/ci_integrations-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
 - [`CI Integrations for Linux`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux);
 - [`CI Integrations for macOS`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos).
 
@@ -96,7 +96,7 @@ destination:
 ```
 
 Both the `source_integration_indentifier` and `destination_integration_indentifier` stands for the specific implementation of clients used to perform builds importing. 
-Each such client has its own specific list of configuration items it requires. The following table provides you with available integrations, their identifiers, and links to the configuration templates (template for a configuration file that contains this integration):
+Each such a client has its own specific list of configuration items it requires. The following table provides you with available integrations, their identifiers, and links to the configuration templates (template for a configuration file that contains this integration):
 
 | Integration | Type | Key | Template | 
 | --- | --- | --- | --- |
@@ -145,7 +145,7 @@ The main idea is to use the `sync` command the tool provides and specify a path 
 For example:
 
 ```bash
-ci_integrations sync --config-file="path/to/config_file.yaml"
+ci_integrations sync --config-file="path/to/config_file.yaml" 
 ```
 
 #### Controlling Builds Coverage Synchronization
@@ -159,6 +159,27 @@ ci_integrations sync --config-file="path/to/config_file.yaml" --no-coverage
 ```
 
 _**Note**: All builds synchronized with the `--no-coverage` flag won't contain any coverage information. This may affect the coverage metric available on the Metrics Web Application._
+
+
+#### Initial Sync Limit
+
+When the CI Integrations tool synchronizes the project for the first time, it synchronizes 28 latest builds by default. To customize this behavior, specify the following CLI argument: `--initial-sync-limit <YOUR_INITIAL_SYNC_LIMIT>` where the `<YOUR_INITIAL_SYNC_LIMIT>` is an integer number greater than 0. This will make the CI Integrations tool fetch no more than a specified number of builds. Consider the following example of using the `--initial-sync-limit` flag:
+
+```bash
+ci_integrations sync --config-file="path/to/config_file.yaml" --initial-sync-limit 20
+```
+
+_**Note**: The `--initial-sync-limit` must be an integer greater than 0. If the user provides an invalid limit, the CI Integration Tool fails with an error._
+
+#### Sync Command Options And Flags
+
+To simplify the sync command usage, consider the following table that describes its available options and flags:
+
+| Name | Description | Default value | Required |
+| --- | --- | --- | --- |
+| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). Must be specified. | `None` | Yes |
+| `--initial-sync-limit` | A number of builds to synchronize from the source during project first synchronization. The value should be an integer number greater than 0. See [initial sync limit](#initial-sync-limit). | `28` | No |
+| `--[no-]coverage` | Whether to fetch coverage for each build during the sync. See [controlling coverage synchronization](#controlling-builds-coverage-synchronization). | `true` | No | 
 
 #### Automating CI Integrations
 

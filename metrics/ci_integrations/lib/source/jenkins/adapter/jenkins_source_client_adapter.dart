@@ -12,9 +12,6 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
 class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
-  /// A fetch limit for builds when we download all builds from CI (initial fetch).
-  static const initialFetchBuildsLimit = 28;
-
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
@@ -58,11 +55,14 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String projectId) async {
+  Future<List<BuildData>> fetchBuilds(
+    String projectId,
+    int fetchLimit,
+  ) async {
     logger.info('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
-      limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
+      limits: JenkinsQueryLimits.endBefore(fetchLimit),
     );
 
     return _processJenkinsBuilds(
@@ -190,8 +190,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
-    logger
-        .info('Fetching coverage artifact for a build #${build.number}...');
+    logger.info('Fetching coverage artifact for a build #${build.number}...');
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,

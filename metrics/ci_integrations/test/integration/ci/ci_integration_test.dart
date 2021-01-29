@@ -5,17 +5,14 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
+import '../../cli/test_util/test_data/config_test_data.dart';
 import 'test_utils/stub/destination_client_stub.dart';
 import 'test_utils/stub/source_client_stub.dart';
 import 'test_utils/test_data/builds_test_data.dart';
 
 void main() {
   group("CiIntegration", () {
-    final syncConfig = SyncConfig(
-      sourceProjectId: 'sourceProjectId',
-      destinationProjectId: 'destinationProjectId',
-      coverage: false,
-    );
+    final syncConfig = ConfigTestData.syncConfig;
 
     test(
       "throws an ArgumentError if the given source client is null",
@@ -57,7 +54,7 @@ void main() {
 
     test(
       ".sync() returns an error if a source client throws fetching all builds",
-      () {
+      () async {
         final sourceClient = SourceClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
         );
@@ -68,62 +65,58 @@ void main() {
           sourceClient: sourceClient,
           destinationClient: destinationClient,
         );
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
       ".sync() returns an error if a source client throws fetching the builds after the given one",
-      () {
+      () async {
         final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(sourceClient: sourceClient);
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
       ".sync() returns an error if a destination client throws fetching the last build",
-      () {
+      () async {
         final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
       ".sync() returns an error if a destination client throws adding new builds",
-      () {
+      () async {
         final destinationClient = DestinationClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
       ".sync() ignores empty list of new builds and not call adding builds",
-      () {
+      () async {
         final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => Future.value([]),
         );
@@ -134,21 +127,19 @@ void main() {
           sourceClient: sourceClient,
           destinationClient: destinationClient,
         );
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
       ".sync() synchronizes builds",
-      () {
+      () async {
         final ciIntegration = CiIntegrationStub();
-        final result =
-            ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
+        final result = await ciIntegration.sync(syncConfig);
 
-        expect(result, completion(isTrue));
+        expect(result.isSuccess, isTrue);
       },
     );
 
@@ -190,6 +181,7 @@ void main() {
           sourceProjectId: 'test',
           destinationProjectId: 'test',
           coverage: true,
+          initialSyncLimit: 10,
         );
 
         int calledTimes = 0;

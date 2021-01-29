@@ -46,7 +46,10 @@ class SourceClientStub implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String projectId) {
+  Future<List<BuildData>> fetchBuilds(
+    String projectId,
+    int fetchLimit,
+  ) {
     if (fetchBuildsCallback != null) {
       return fetchBuildsCallback(projectId);
     } else {

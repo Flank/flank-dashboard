@@ -59,6 +59,7 @@ void main() {
 
       setUpAll(() {
         LoggerManager.setLoggerFactory(loggerFactory);
+        LoggerManager.instance.reset();
       });
 
       setUp(() {
@@ -82,6 +83,7 @@ void main() {
             .thenAnswer((_) => Future.value(User.fromMap({})));
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
+
         return when(ciIntegrationMock.sync(syncConfig));
       }
 
@@ -103,6 +105,28 @@ void main() {
           );
 
           expect(options, containsPair('coverage', flagEnabledByDefault));
+        },
+      );
+
+      test("has the 'initial-sync-limit' option", () {
+        final argParser = syncCommand.argParser;
+        final options = argParser.options;
+
+        expect(options, contains('initial-sync-limit'));
+      });
+
+      test(
+        "'initial-sync-limit' option has the default initial sync limit value",
+        () {
+          const expectedInitialSyncLimit = SyncCommand.defaultInitialSyncLimit;
+
+          final argParser = syncCommand.argParser;
+          final syncLimitOption = argParser.options['initial-sync-limit'];
+
+          expect(
+            syncLimitOption.defaultsTo,
+            equals(expectedInitialSyncLimit),
+          );
         },
       );
 
@@ -238,8 +262,11 @@ void main() {
       );
 
       test(".run() calls dispose once", () async {
-        whenRunSync()
-            .thenAnswer((_) => Future.value(const InteractionResult.success()));
+        whenRunSync().thenAnswer(
+          (_) => Future.value(
+            const InteractionResult.success(),
+          ),
+        );
 
         await syncCommand.run();
 
@@ -264,12 +291,16 @@ void main() {
         ".run() runs sync on the given config",
         () async {
           whenRunSync().thenAnswer(
-            (_) => Future.value(const InteractionResult.success()),
+            (_) => Future.value(
+              const InteractionResult.success(),
+            ),
           );
 
           await syncCommand.run();
 
-          verify(ciIntegrationMock.sync(syncConfig)).called(1);
+          verify(
+            ciIntegrationMock.sync(syncConfig),
+          ).called(1);
         },
       );
 
@@ -306,6 +337,28 @@ void main() {
           );
 
           expect(syncFuture, MatcherUtil.throwsSyncError);
+        },
+      );
+
+      test(
+        ".parseInitialSyncLimit() returns null if the given value is not an integer",
+        () async {
+          final actualLimit = syncCommand.parseInitialSyncLimit('test');
+
+          expect(actualLimit, isNull);
+        },
+      );
+
+      test(
+        ".parseInitialSyncLimit() parses the initial sync limit",
+        () async {
+          const expectedLimit = 2;
+
+          final actualLimit = syncCommand.parseInitialSyncLimit(
+            '$expectedLimit',
+          );
+
+          expect(actualLimit, equals(expectedLimit));
         },
       );
 
@@ -405,9 +458,13 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
+    if (name == 'initial-sync-limit') return '20';
+
+    if (name == 'config-file') return 'config.yaml';
+
     if (name == 'coverage') return false;
 
-    return 'config.yaml';
+    return null;
   }
 
   @override

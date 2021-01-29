@@ -11,14 +11,15 @@ import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dar
 import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [BuildkiteClient] to implement the [SourceClient]
 /// interface.
 class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
-  /// A fetch limit for Buildkite API calls.
-  static const int fetchLimit = 25;
+  /// A default number of instances to request in paginated requests.
+  static const int defaultPerPage = 25;
 
   /// A [BuildkiteClient] instance to perform API calls.
   final BuildkiteClient buildkiteClient;
@@ -33,9 +34,17 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String pipelineSlug) async {
+  Future<List<BuildData>> fetchBuilds(
+    String pipelineSlug,
+    int fetchLimit,
+  ) async {
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
+
     logger.info('Fetching builds...');
-    return _fetchLatestBuilds(pipelineSlug);
+    return _fetchLatestBuilds(
+      pipelineSlug,
+      fetchLimit: fetchLimit,
+    );
   }
 
   @override
@@ -57,7 +66,10 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
 
     if (builds.isEmpty || builds.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(pipelineSlug, latestBuildNumber);
+    return _fetchLatestBuilds(
+      pipelineSlug,
+      latestBuildNumber: latestBuildNumber,
+    );
   }
 
   @override
@@ -78,19 +90,20 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   /// Fetches the latest builds by the given [pipelineSlug].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
-  /// returns no more than the latest [fetchLimit] builds.
+  /// [Build.buildNumber] greater than the given [latestBuildNumber].
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String pipelineSlug, [
+    String pipelineSlug, {
     int latestBuildNumber,
-  ]) async {
+    int fetchLimit,
+  }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     BuildkiteBuildsPage buildsPage = await _fetchBuildsPage(
       pipelineSlug,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     do {
@@ -171,7 +184,7 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
       pipelineSlug,
       buildNumber,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     BuildkiteArtifactsPage page = _processInteraction(interaction);

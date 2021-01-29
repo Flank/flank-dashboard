@@ -15,6 +15,7 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -23,8 +24,8 @@ import 'package:metrics_core/metrics_core.dart';
 class GithubActionsSourceClientAdapter
     with LoggerMixin
     implements SourceClient {
-  /// A fetch limit for Github Actions API calls.
-  static const int fetchLimit = 25;
+  /// A default number of instances to request in paginated requests.
+  static const int defaultPerPage = 25;
 
   /// A [GithubActionsClient] instance to perform API calls.
   final GithubActionsClient githubActionsClient;
@@ -65,9 +66,17 @@ class GithubActionsSourceClientAdapter
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String jobName) async {
+  Future<List<BuildData>> fetchBuilds(
+    String jobName,
+    int fetchLimit,
+  ) async {
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
+
     logger.info('Fetching builds...');
-    return _fetchLatestBuilds(jobName);
+    return _fetchLatestBuilds(
+      jobName,
+      fetchLimit: fetchLimit,
+    );
   }
 
   @override
@@ -88,7 +97,10 @@ class GithubActionsSourceClientAdapter
 
     if (runs.isEmpty || runs.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(jobName, latestBuildNumber);
+    return _fetchLatestBuilds(
+      jobName,
+      latestBuildNumber: latestBuildNumber,
+    );
   }
 
   @override
@@ -99,18 +111,19 @@ class GithubActionsSourceClientAdapter
   /// Fetches the latest builds by the given [jobName].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
-  /// returns no more than the latest [fetchLimit] builds.
+  /// [Build.buildNumber] greater than the given [latestBuildNumber].
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String jobName, [
+    String jobName, {
     int latestBuildNumber,
-  ]) async {
+    int fetchLimit,
+  }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     WorkflowRunsPage runsPage = await _fetchRunsPage(
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     do {
@@ -191,7 +204,7 @@ class GithubActionsSourceClientAdapter
     final interaction = await githubActionsClient.fetchRunJobs(
       runId,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     _throwIfInteractionUnsuccessful(interaction);
@@ -236,7 +249,7 @@ class GithubActionsSourceClientAdapter
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
     _throwIfInteractionUnsuccessful(interaction);
 

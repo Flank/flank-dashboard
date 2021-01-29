@@ -30,9 +30,12 @@ class CiIntegration with LoggerMixin {
 
   /// Synchronizes builds for a project specified in the given [config].
   ///
-  /// If [config] is `null` throws the [ArgumentError].
-  Future<InteractionResult> sync(SyncConfig config) async {
+  /// Throws an [ArgumentError] if the given [config] is `null`.
+  Future<InteractionResult> sync(
+    SyncConfig config,
+  ) async {
     ArgumentError.checkNotNull(config);
+
     try {
       final sourceProjectId = config.sourceProjectId;
       final destinationProjectId = config.destinationProjectId;
@@ -44,7 +47,11 @@ class CiIntegration with LoggerMixin {
       List<BuildData> newBuilds;
       if (lastBuild == null) {
         logger.info('There are no builds in the destination...');
-        newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
+        final initialSyncLimit = config.initialSyncLimit;
+        newBuilds = await sourceClient.fetchBuilds(
+          sourceProjectId,
+          initialSyncLimit,
+        );
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(
           sourceProjectId,
