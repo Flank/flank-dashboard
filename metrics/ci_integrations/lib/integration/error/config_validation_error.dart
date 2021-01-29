@@ -14,8 +14,12 @@ class ConfigValidationError extends Error {
 
   @override
   String toString() {
-    final errorMessage = message ?? '';
+    String errorMessage = 'An error occurred during config validation.';
 
-    return "An error occurred during config validation: $errorMessage";
+    if (message != null) {
+      errorMessage = '$errorMessage \n$message';
+    }
+
+    return errorMessage;
   }
 }

@@ -13,10 +13,8 @@ void main() {
     const additionalContext = 'context';
 
     final validationDelegate = _ValidationDelegateStub();
-    final errorBuffer = StringBuffer();
     final configValidator = _ConfigValidatorFake(
       validationDelegate,
-      errorBuffer,
     );
 
     tearDown(() {
@@ -27,17 +25,7 @@ void main() {
       "throws an ArgumentError if the given validation delegate is null",
       () {
         expect(
-          () => _ConfigValidatorFake(null, errorBuffer),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given error buffer is null",
-      () {
-        expect(
-          () => _ConfigValidatorFake(validationDelegate, null),
+          () => _ConfigValidatorFake(null),
           throwsArgumentError,
         );
       },
@@ -48,10 +36,8 @@ void main() {
       () {
         final configValidator = _ConfigValidatorFake(
           validationDelegate,
-          errorBuffer,
         );
 
-        expect(configValidator.errorBuffer, equals(errorBuffer));
         expect(
           configValidator.validationDelegate,
           equals(validationDelegate),
@@ -64,15 +50,16 @@ void main() {
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
-        expect(errorBuffer, isNotEmpty);
+        expect(configValidator.errorBuffer, isNotEmpty);
       },
     );
 
     test(
-      ".addErrorMessage() adds an error message with the information about the config field to the error buffer",
+      ".addErrorMessage() adds an error message that contains the given config field",
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
+        final errorBuffer = configValidator.errorBuffer;
         final message = errorBuffer.toString();
 
         expect(message, contains(configField));
@@ -84,6 +71,7 @@ void main() {
       () {
         configValidator.addErrorMessage(configField, null);
 
+        final errorBuffer = configValidator.errorBuffer;
         final message = errorBuffer.toString();
         final containsAdditionalContext = message.contains(
           'Additional context',
@@ -98,6 +86,7 @@ void main() {
       () {
         configValidator.addErrorMessage(configField, additionalContext);
 
+        final errorBuffer = configValidator.errorBuffer;
         final message = errorBuffer.toString();
 
         expect(message, contains(additionalContext));
@@ -119,11 +108,10 @@ class _ValidationDelegateStub implements ValidationDelegate {
 /// to test non-abstract methods.
 class _ConfigValidatorFake extends ConfigValidator {
   /// Creates a new instance of this fake class with the given
-  /// [validationDelegate] and [errorBuffer].
+  /// [validationDelegate].
   _ConfigValidatorFake(
     ValidationDelegate validationDelegate,
-    StringBuffer errorBuffer,
-  ) : super(validationDelegate, errorBuffer);
+  ) : super(validationDelegate);
 
   @override
   Future<void> validate(Config config) async {}

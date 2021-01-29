@@ -8,16 +8,16 @@ abstract class ConfigValidator<T extends Config> {
   final ValidationDelegate validationDelegate;
 
   /// A [StringBuffer] that this validator uses to accumulate error messages.
-  final StringBuffer errorBuffer;
+  final StringBuffer errorBuffer = StringBuffer();
 
   /// Creates a new instance of the [ConfigValidator] with the
-  /// given [validationDelegate] and [errorBuffer].
+  /// given [validationDelegate].
   ///
-  /// Throws an [ArgumentError] if the [validationDelegate] or
-  /// [errorBuffer] is `null`.
-  ConfigValidator(this.validationDelegate, this.errorBuffer) {
+  /// Throws an [ArgumentError] if the [validationDelegate] is `null`.
+  ConfigValidator(
+    this.validationDelegate,
+  ) {
     ArgumentError.checkNotNull(validationDelegate);
-    ArgumentError.checkNotNull(errorBuffer);
   }
 
   /// Validates the given [config].

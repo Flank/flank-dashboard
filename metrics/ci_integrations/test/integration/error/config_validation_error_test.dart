@@ -7,7 +7,7 @@ void main() {
   group("ConfigValidationError", () {
     const message = 'message';
 
-    const defaultError = 'An error occurred during config validation: ';
+    const defaultMessage = 'An error occurred during config validation.';
 
     test(
       "creates an instance with the given message",
@@ -19,21 +19,20 @@ void main() {
     );
 
     test(
-      ".toString() returns the error's message if the message is not null",
+      ".toString() contains the error's message if the message is not null",
       () {
-        const expectedError = '$defaultError$message';
         final error = ConfigValidationError(message: message);
 
-        expect(error.toString(), equals(expectedError));
+        expect(error.toString(), contains(message));
       },
     );
 
     test(
-      ".toString() returns an empty string if the error's message is null",
+      ".toString() returns a default message if the error's message is null",
       () {
         final error = ConfigValidationError(message: null);
 
-        expect(error.toString(), equals(defaultError));
+        expect(error.toString(), equals(defaultMessage));
       },
     );
   });
