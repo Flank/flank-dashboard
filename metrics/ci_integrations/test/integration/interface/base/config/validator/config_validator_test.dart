@@ -69,15 +69,13 @@ void main() {
     test(
       ".addErrorMessage() does not add the additional context if the given one is null",
       () {
+        const additionalContext = 'Additional context';
         configValidator.addErrorMessage(configField, null);
 
         final errorBuffer = configValidator.errorBuffer;
         final message = errorBuffer.toString();
-        final containsAdditionalContext = message.contains(
-          'Additional context',
-        );
 
-        expect(containsAdditionalContext, isFalse);
+        expect(message, isNot(contains(additionalContext)));
       },
     );
 
