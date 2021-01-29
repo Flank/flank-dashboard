@@ -11,31 +11,41 @@ class DoctorCommand extends Command<void> {
   final String name = "doctor";
 
   @override
-  final String description = "Check dependencies.";
+  final String description = "Checks dependencies.";
 
-  /// A [FirebaseCommand] needed to get the Firebase CLI version.
+  /// A [FirebaseCommand] this command uses to get the Firebase CLI version.
   final FirebaseCommand _firebase;
 
-  /// A [GCloudCommand] needed to get the GCloud CLI version.
+  /// A [GCloudCommand] this command uses to get the GCloud CLI version.
   final GCloudCommand _gcloud;
 
-  /// A [GitCommand] needed to get the Git CLI version.
+  /// A [GitCommand] this command uses to get the Git CLI version.
   final GitCommand _git;
 
-  /// A [FlutterCommand] needed to get the Flutter CLI version.
+  /// A [FlutterCommand] this command uses to get the Flutter CLI version.
   final FlutterCommand _flutter;
 
-  /// A [NpmCommand] needed to get the Npm CLI version.
+  /// A [NpmCommand] this command uses to get the Npm CLI version.
   final NpmCommand _npm;
 
-  /// Creates an instance of the [DeployCommand].
-  DoctorCommand(
-    this._firebase,
-    this._gcloud,
-    this._git,
-    this._flutter,
-    this._npm,
-  );
+  /// Creates a new instance of the [DoctorCommand].
+  ///
+  /// If the given [firebase] is `null`, the [FirebaseCommand] instance is used.
+  /// If the given [gcloud] is `null`, the [GCloudCommand] instance is used.
+  /// If the given [git] is `null`, the [GitCommand] instance is used.
+  /// If the given [flutter] is `null`, the [FlutterCommand] instance is used.
+  /// If the given [npm] is `null`, the [NpmCommand] instance is used.
+  DoctorCommand({
+    FirebaseCommand firebase,
+    GCloudCommand gcloud,
+    GitCommand git,
+    FlutterCommand flutter,
+    NpmCommand npm,
+  })  : _firebase = firebase ?? const FirebaseCommand(),
+        _gcloud = gcloud ?? const GCloudCommand(),
+        _git = git ?? const GitCommand(),
+        _flutter = flutter ?? const FlutterCommand(),
+        _npm = npm ?? const NpmCommand();
 
   @override
   Future<void> run() async {

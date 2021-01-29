@@ -20,32 +20,45 @@ class DeployCommand extends Command<void> {
   final String description =
       "Creates GCloud and Firebase project and deploy metrics app.";
 
-  /// A [FirebaseCommand] needed to get the Firebase CLI version.
+  /// A [FirebaseCommand] this command uses to interact with the Firebase CLI.
   final FirebaseCommand _firebase;
 
-  /// A [GCloudCommand] needed to get the GCloud CLI version.
+  /// A [GCloudCommand] this command uses to interact with the GCloud CLI.
   final GCloudCommand _gcloud;
 
-  /// A [GitCommand] needed to get the Git CLI version.
+  /// A [GitCommand] this command uses to interact with the Git CLI.
   final GitCommand _git;
 
-  /// A [FlutterCommand] needed to get the Flutter CLI version.
+  /// A [FlutterCommand] this command uses to interact with the Flutter CLI.
   final FlutterCommand _flutter;
 
-  /// A [NpmCommand] needed to get the Npm CLI version.
+  /// A [NpmCommand] this command uses to interact with the Npm CLI.
   final NpmCommand _npm;
 
+  /// A [FileHelper] to work with the file system.
   final FileHelper _fileHelper;
 
   /// Creates an instance of the [DeployCommand].
-  DeployCommand(
-    this._firebase,
-    this._gcloud,
-    this._git,
-    this._flutter,
-    this._npm, [
-    FileHelper _fileHelper,
-  ]) : _fileHelper = _fileHelper ?? FileHelper();
+  ///
+  /// If the given [firebase] is `null`, the [FirebaseCommand] instance is used.
+  /// If the given [gcloud] is `null`, the [GCloudCommand] instance is used.
+  /// If the given [git] is `null`, the [GitCommand] instance is used.
+  /// If the given [flutter] is `null`, the [FlutterCommand] instance is used.
+  /// If the given [npm] is `null`, the [NpmCommand] instance is used.
+  /// If the given [fileHelper] is `null`, the [FileHelper] instance is used.
+  DeployCommand({
+    FirebaseCommand firebase,
+    GCloudCommand gcloud,
+    GitCommand git,
+    FlutterCommand flutter,
+    NpmCommand npm,
+    FileHelper fileHelper,
+  })  : _firebase = firebase ?? const FirebaseCommand(),
+        _gcloud = gcloud ?? const GCloudCommand(),
+        _git = git ?? const GitCommand(),
+        _flutter = flutter ?? const FlutterCommand(),
+        _npm = npm ?? const NpmCommand(),
+        _fileHelper = fileHelper ?? const FileHelper();
 
   @override
   Future<void> run() async {
@@ -109,15 +122,6 @@ class DeployCommand extends Command<void> {
       print(error);
     } finally {
       await _fileHelper.deleteDirectory(Directory(tempDir));
-    }
-  }
-
-  /// Deletes the given [Directory].
-  Future<void> deleteDirectory(Directory directory) async {
-    try {
-      await directory.delete(recursive: true);
-    } catch (error) {
-      print(error);
     }
   }
 }

@@ -7,6 +7,9 @@ import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the GCloud CLI.
 class GCloudCommand {
+  /// Creates a new instance of the [GCloudCommand].
+  const GCloudCommand();
+
   /// Logins to GCloud and Firebase and gets the Firebase CI token.
   Future<void> login() async {
     // Logins to GCloud.

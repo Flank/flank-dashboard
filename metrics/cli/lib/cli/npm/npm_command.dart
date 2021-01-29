@@ -3,6 +3,9 @@ import 'package:process_run/shell_run.dart';
 
 /// A wrapper class for the Npm CLI.
 class NpmCommand {
+  /// Creates a new instance of the [NpmCommand].
+  const NpmCommand();
+
   /// Installs npm dependencies in the project by the given [workingDir].
   Future<void> install(String workingDir) async {
     await cmd.run(
