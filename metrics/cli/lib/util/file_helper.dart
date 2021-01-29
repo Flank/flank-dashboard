@@ -6,7 +6,7 @@ class FileHelper {
   const FileHelper();
 
   /// Deletes files by the given [path].
-  Future<void> deleteDirectory(Directory directory) async {;
+  Future<void> deleteDirectory(Directory directory) async {
     try {
       await directory.delete(recursive: true);
     } catch (error) {
