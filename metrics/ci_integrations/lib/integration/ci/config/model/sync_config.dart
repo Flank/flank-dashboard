@@ -7,7 +7,8 @@ class SyncConfig extends Equatable {
   /// A unique identifier of the source project to load the project builds from.
   final String sourceProjectId;
 
-  /// A unique ID of the destination project to save the loaded metrics.
+  /// A unique identifier of the destination project to save the project
+  /// builds to.
   final String destinationProjectId;
 
   /// A number of builds to fetch from the source during project's
