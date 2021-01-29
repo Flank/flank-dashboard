@@ -175,8 +175,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   FutureOr<T> createClient<T extends IntegrationClient>(
     Config config,
     IntegrationParty<Config, T> party,
-  ) {
-    final client = party.clientFactory.create(config);
+  ) async {
+    final client = await party.clientFactory.create(config);
     logger.info('$client was created.');
 
     return client;

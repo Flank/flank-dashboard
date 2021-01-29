@@ -16,6 +16,9 @@ class BuildkiteBuild extends Equatable {
   /// A state of this build.
   final BuildkiteBuildState state;
 
+  /// A link to access data of this build using Buildkite API.
+  final String apiUrl;
+
   /// A link to access this build in Buildkite.
   final String webUrl;
 
@@ -35,6 +38,7 @@ class BuildkiteBuild extends Equatable {
     this.number,
     this.blocked,
     this.state,
+    this.apiUrl,
     this.webUrl,
     this.startedAt,
     this.finishedAt,
@@ -62,6 +66,7 @@ class BuildkiteBuild extends Equatable {
       id: json['id'] as String,
       number: json['number'] as int,
       blocked: json['blocked'] as bool,
+      apiUrl: json['url'] as String,
       webUrl: json['web_url'] as String,
       state: state,
       startedAt: startedAt,
@@ -87,6 +92,7 @@ class BuildkiteBuild extends Equatable {
       'id': id,
       'number': number,
       'blocked': blocked,
+      'url': apiUrl,
       'web_url': webUrl,
       'state': stateMapper.unmap(state),
       'started_at': startedAt?.toIso8601String(),

@@ -216,7 +216,7 @@ jobs:
         working-directory: metrics/ci_integrations/
 
       - name: Run tests
-        run: bash test.sh
+        run: pub run test_coverage --print-test-output --no-badge
         working-directory: metrics/ci_integrations/
 
   check-links-actions:

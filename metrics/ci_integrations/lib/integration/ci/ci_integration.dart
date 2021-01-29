@@ -79,6 +79,7 @@ class CiIntegration with LoggerMixin {
 
   /// Fetches coverage data for each build in the given [builds] list.
   Future<List<BuildData>> _fetchCoverage(List<BuildData> builds) async {
+    logger.info('Fetching coverage data for builds...');
     final fetchCoverageFutures = builds.map((build) async {
       final coverage = await sourceClient.fetchCoverage(build);
 
