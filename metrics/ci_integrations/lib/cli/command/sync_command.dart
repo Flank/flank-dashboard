@@ -26,7 +26,7 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A name of the option that holds a path to the YAML configuration file.
   static const _configFileOptionName = 'config-file';
 
-  /// A name of the option that holds the initial sync limit.
+  /// A name of the initial sync limit option.
   static const _initialSyncLimitOptionName = 'initial-sync-limit';
 
   /// A name of the flag that indicates whether to fetch coverage data

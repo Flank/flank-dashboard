@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A class that represents a configuration to use in sync.
+/// A class that represents a configuration of the synchronization process.
 @immutable
 class SyncConfig extends Equatable {
-  /// A uniquie ID of the source project to load the project metrics from.
+  /// A unique identifier of the source project to load the project builds from.
   final String sourceProjectId;
 
   /// A unique ID of the destination project to save the loaded metrics.
@@ -27,12 +27,10 @@ class SyncConfig extends Equatable {
 
   /// Creates an instance of the [SyncConfig] with the given parameters.
   ///
-  /// All parameters are required.
-  ///
   /// Throws an [ArgumentError] if any of the given parameters is `null`.
   ///
-  /// Throws an [ArgumentError] if the given [initialSyncLimit] is not
-  /// greater than `0`.
+  /// Throws an [ArgumentError] if the given [initialSyncLimit] is
+  /// less than or equal to `0`.
   SyncConfig({
     @required this.sourceProjectId,
     @required this.destinationProjectId,

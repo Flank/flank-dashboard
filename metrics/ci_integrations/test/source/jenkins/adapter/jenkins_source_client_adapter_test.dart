@@ -207,7 +207,14 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() fetches no more than the given initial sync limit number of builds",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit value is less than 0",
+      () {
+        expect(() => adapter.fetchBuilds(jobName, -1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() fetches no more than the given fetch limit number of builds",
       () {
         final builds = createJenkinsBuilds(
           buildNumbers: List.generate(30, (index) => index),
@@ -223,7 +230,7 @@ void main() {
 
         expect(
           result,
-          completion(hasLength(equals(fetchLimit))),
+          completion(hasLength(lessThanOrEqualTo(fetchLimit))),
         );
       },
     );

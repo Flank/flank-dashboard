@@ -116,18 +116,19 @@ void main() {
       });
 
       test(
-          "'initial-sync-limit' option has the default initial sync limit value",
-          () {
-        const expectedInitialSyncLimit = SyncCommand.defaultInitialSyncLimit;
+        "'initial-sync-limit' option has the default initial sync limit value",
+        () {
+          const expectedInitialSyncLimit = SyncCommand.defaultInitialSyncLimit;
 
-        final argParser = syncCommand.argParser;
-        final syncLimitOption = argParser.options['initial-sync-limit'];
+          final argParser = syncCommand.argParser;
+          final syncLimitOption = argParser.options['initial-sync-limit'];
 
-        expect(
-          syncLimitOption.defaultsTo,
-          equals(expectedInitialSyncLimit),
-        );
-      });
+          expect(
+            syncLimitOption.defaultsTo,
+            equals(expectedInitialSyncLimit),
+          );
+        },
+      );
 
       test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
@@ -340,7 +341,7 @@ void main() {
       );
 
       test(
-        ".parseInitialSyncLimit() returns null if the given value can't be parsed",
+        ".parseInitialSyncLimit() returns null if the given value is not an integer",
         () async {
           final actualLimit = syncCommand.parseInitialSyncLimit('test');
 

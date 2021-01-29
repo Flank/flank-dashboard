@@ -214,7 +214,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is 0",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is 0",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, 0),
@@ -224,7 +224,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is a negative number",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is a negative number",
       () {
         expect(
           () => adapter.fetchBuilds(jobName, -1),
@@ -317,9 +317,9 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns no more than the given initial sync limit number of builds",
+      ".fetchBuilds() returns no more than the given fetch limit number of builds",
       () {
-        const expectedNumberOfBuilds = 12;
+        const fetchLimit = 12;
         final workflowRuns = testData.generateWorkflowRunsByNumbers(
           runNumbers: List.generate(30, (index) => index),
         );
@@ -331,12 +331,12 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(workflowRunsPage);
 
-        final result = adapter.fetchBuilds(jobName, expectedNumberOfBuilds);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(
           result,
           completion(
-            hasLength(expectedNumberOfBuilds),
+            hasLength(lessThanOrEqualTo(fetchLimit)),
           ),
         );
       },

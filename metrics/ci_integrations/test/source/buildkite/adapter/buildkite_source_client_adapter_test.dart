@@ -107,7 +107,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is 0",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is 0",
       () {
         expect(
           () => adapter.fetchBuilds(pipelineSlug, 0),
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() throws an ArgumentError if the given initial sync limit is a negative number",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is a negative number",
       () {
         expect(
           () => adapter.fetchBuilds(pipelineSlug, -1),
@@ -135,7 +135,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() returns no more than the given initial sync limit number of builds",
+      ".fetchBuilds() returns no more than the given fetch limit number of builds",
       () {
         final builds = testData.generateBuildkiteBuildsByNumbers(
           buildNumbers: List.generate(30, (index) => index),
@@ -148,7 +148,7 @@ void main() {
 
         expect(
           result,
-          completion(hasLength(greaterThanOrEqualTo(fetchLimit))),
+          completion(hasLength(lessThanOrEqualTo(fetchLimit))),
         );
       },
     );

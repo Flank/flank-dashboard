@@ -179,7 +179,7 @@ To simplify the sync command usage, consider the following table that describes 
 | --- | --- | --- | --- |
 | `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). Must be specified. | Does not have the default value. | Yes |
 | `--initial-sync-limit` | A number of builds to synchronize from the source during project first synchronization. The value should be an integer number greater than 0. See [initial sync limit](#initial-sync-limit). | `28` | No |
-| `--[no-]coverage` | Whether to fetch coverage for each build during the sync. See [controlling coverage synchronization] (#controlling-builds-coverage-synchronization). | `true` | No | 
+| `--[no-]coverage` | Whether to fetch coverage for each build during the sync. See [controlling coverage synchronization](#controlling-builds-coverage-synchronization). | `true` | No | 
 
 #### Automating CI Integrations
 
