@@ -33,12 +33,12 @@ To detect the database structure updates in the Metrics applications, we should 
 Let's review the way of storing the database metadata: 
 
 ## Database Metadata
-> Explain the way of storing and loading the database metadata in the Firestore database.
+> Explain the way of storing the database metadata in the database.
 
 ### Firestore 
-> Explain the way of storing the database metadata in the Firestore database - database structure and rules.
+> Explain the database structure and rules needed to store the metadata in the Firestore.
 
-To store the database version and make it easily accessible, we need to add to the `metadata` collection with the `metadata` document. This document will contain the `databaseVersion` field of `String` and `isUpdating` `boolean` field. 
+To store the database metadata and make it easily accessible, we need to add to the `metadata` collection with the `metadata` document. This document will contain the `databaseVersion` field of `String` and `isUpdating` `boolean` field. 
 
 So, the database structure should look like the following: 
 
@@ -53,16 +53,19 @@ So, the database structure should look like the following:
 The `metadata` collection should have the following security rules: 
 
 - No one can write (update, delete, create) documents in this collection.
-- Anybody can read the documents from this collection. 
+- Anybody can read documents from this collection. 
 
 ## Application Version
-> Explain the way of storing the application version and providing it to the Metrics Web Application.
+> Explain the way of storing the application version and providing it to the Metrics applications.
 
 To detect whether the current application version is compatible with the database, we should have the current application version. Since this value is common for database and Metrics applications, we should make it easily accessible in any application like `CI Integrations`, `Metrics CLI`, or `Metrics Web`. 
 
-To do so, we can store the application version in the `version` file under the `metrics` package of our repository. It allows us to get the contents of this file and pass it as an environment variable to any of our applications during the building process.
+To do so, we can store the application version in the `version` file under the [metrics](https://github.com/platform-platform/monorepo/tree/master/metrics) package of our repository. It allows us to get the contents of this file and pass it as an environment variable to any of our applications during the building process.
 
-Let's consider a Unix shell script example of getting the application version from the file and passing it to the `Metrics Web Application` as an environment variable.
+### Metrics Web Application
+> Explain the way of passing the application version to the Metrics Web Application.
+
+Let's consider an example of a Unix shell script for getting the application version from the file and passing it to the `Metrics Web Application` as an environment variable.
 
 Assume we run the following script under the `metrics/web` package: 
 
@@ -81,14 +84,16 @@ const appVersion = String.fromEnvironment('APP_VERSION');
 Also, the `version` file will simplify the process of getting the latest version during database deployment/updating to set the current database version.
 
 ## Making things work
+> Explain the process of updating the Metrics applications.
 
 Once we have a database version in the Firestore database and an application version, we should block the Metrics applications from updating the database records when the database is updating or its version is not compatible with the current application version.
 
 Let's consider the process of blocking the Metrics Web Application: 
 
 ### Metrics Web Application
+> Explain the process of updating the Metrics Web Application. 
 
-If the current version of the application is not equal to the database version, we should follow the next steps: 
+If the current version of the application is not compatible with the database version, we should follow the next steps: 
 
 1. Log out a user from the application.
 2. Redirect the user to the `Update application` page. This page will notify a user about the current application version is not compatible with the current database version and propose to contact the administrator to resolve this conflict.
