@@ -1,6 +1,6 @@
-import 'package:ci_integration/client/buildkite/models/buildkite_access_token.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 
-/// Represents permissions for a [BuildkiteAccessToken].
+/// Represents permissions for a [BuildkiteToken].
 enum BuildkiteTokenPermission {
   /// A permission to list and retrieve details of agents.
   readAgents,

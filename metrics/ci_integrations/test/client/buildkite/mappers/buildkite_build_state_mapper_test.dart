@@ -155,6 +155,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.passed to the passed build state value",
       () {
@@ -165,6 +166,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.failed to the failed build state value",
       () {
@@ -175,6 +177,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.blocked to the blocked build state value",
       () {
@@ -185,6 +188,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.canceled to the canceled build state value",
       () {
@@ -195,6 +199,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.canceling to the canceling build state value",
       () {
@@ -205,6 +210,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.skipped to the skipped build state value",
       () {
@@ -215,6 +221,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.notRun to the notRun build state value",
       () {
@@ -225,6 +232,7 @@ void main() {
         expect(state, equals(expectedState));
       },
     );
+
     test(
       ".unmap() unmaps the BuildkiteBuildState.finished to the finished build state value",
       () {
