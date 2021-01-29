@@ -18,8 +18,8 @@
 
                     package validator {
                         abstract class ConfigValidator<T extends Config> {
-                            - _validationDelegate: ValidationDelegate 
-                            - _errorBuffer: StringBuffer
+                            + validationDelegate: ValidationDelegate
+                            + errorBuffer: StringBuffer
                             + Future<void> validate(T config)
                             + void addErrorMessage(String configField, String additionalContext)
                         }
@@ -52,8 +52,8 @@
             }
         }
 
-        package exception {
-            class ConfigValidationException {
+        package error {
+            class ConfigValidationError {
                 + message: String
                 + String toString()
             }
@@ -102,6 +102,6 @@
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
-    CoolIntegrationDestinationConfigValidator --> ConfigValidationException : throws
+    CoolIntegrationDestinationConfigValidator --> ConfigValidationError : throws
 
 @enduml

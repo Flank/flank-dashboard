@@ -21,7 +21,7 @@ This document aims the following goals:
 > Explain and diagram the technical design.
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationException` if the given config is not valid.
+- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationError` if the given config is not valid.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
@@ -58,8 +58,8 @@ Consider the package structure using the `CoolIntegration` as an example:
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
->   * exception/
->     * config_validation_exception.dart 
+>   * error/
+>     * config_validation_error.dart 
 > * destination/
 >   * cool_integration/
 >     * config/   
