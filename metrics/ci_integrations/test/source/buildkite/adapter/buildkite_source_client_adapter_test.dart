@@ -220,7 +220,7 @@ void main() {
 
         when(buildkiteClientMock.fetchBuildsNext(firstPage)).thenErrorWith();
 
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(pipelineSlug, fetchLimit,);
 
         expect(result, throwsStateError);
       },
