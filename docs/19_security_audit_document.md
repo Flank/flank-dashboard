@@ -218,6 +218,7 @@ Currently, the following APIs are enabled for the `browser key`:
 - `Identity Toolkit API`.
 - `Token Service API`.
 - `Firebase Installations API`.
+- `Firebase Management API`.
 
 ### Email domains validation
 
