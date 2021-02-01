@@ -10,7 +10,7 @@ class GCloudCommand {
   /// Creates a new instance of the [GCloudCommand].
   const GCloudCommand();
 
-  /// Logins to GCloud and Firebase and gets the Firebase CI token.
+  /// Logins into Gcloud.
   Future<void> login() async {
     // Logins to GCloud.
     print('GCloud Login.');

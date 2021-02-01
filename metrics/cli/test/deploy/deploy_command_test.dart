@@ -78,13 +78,13 @@ void main() {
       expect(description, isNotEmpty);
     });
 
-    test(".run() executes gcloud login", () async {
+    test(".run() logs in Gcloud", () async {
       await command.run();
 
       verify(gcloudMock.login()).calledOnce();
     });
 
-    test(".run() executes firebase login", () async {
+    test(".run() logs in Firebase", () async {
       await command.run();
 
       verify(firebaseMock.login()).calledOnce();
@@ -157,7 +157,7 @@ void main() {
     );
 
     test(
-      ".run() chooses a firebase project in the web folder after adding a project, firebase login and cloning a repo",
+      ".run() inits a firebase project in the web folder after adding a project, firebase login and cloning a repo",
       () async {
         await command.run();
 
@@ -165,18 +165,18 @@ void main() {
           gcloudMock.addProject(),
           firebaseMock.login(),
           gitMock.clone(repoURL, tempDir),
-          firebaseMock.chooseProject(projectId, webPath, firebaseToken),
+          firebaseMock.initFirebaseProject(projectId, webPath, firebaseToken),
         ]);
       },
     );
 
     test(
-      ".run() builds web app after choosing a project",
+      ".run() builds web app after initializing a firebase project in the web folder",
       () async {
         await command.run();
 
         verifyInOrder([
-          firebaseMock.chooseProject(projectId, webPath, firebaseToken),
+          firebaseMock.initFirebaseProject(projectId, webPath, firebaseToken),
           flutterMock.buildWeb(webPath),
         ]);
       },
@@ -208,7 +208,7 @@ void main() {
     );
 
     test(
-      ".run() chooses a firebase project in the firebase folder after adding a project, firebase login and cloning a repo",
+      ".run() inits a firebase project in the firebase folder after adding a project, firebase login and cloning a repo",
       () async {
         await command.run();
 
@@ -216,18 +216,18 @@ void main() {
           gcloudMock.addProject(),
           firebaseMock.login(),
           gitMock.clone(repoURL, tempDir),
-          firebaseMock.chooseProject(projectId, firebasePath, firebaseToken),
+          firebaseMock.initFirebaseProject(projectId, firebasePath, firebaseToken),
         ]);
       },
     );
 
     test(
-      ".run() installs npm and deploys a firestore configuration after initializing a firebase project",
+      ".run() installs npm and deploys a firestore configuration after initializing a firebase project in the firebase folder",
       () async {
         await command.run();
 
         verifyInOrder([
-          firebaseMock.chooseProject(projectId, firebasePath, firebaseToken),
+          firebaseMock.initFirebaseProject(projectId, firebasePath, firebaseToken),
           npmMock.install(firebasePath),
           firebaseMock.deployFirestore(firebasePath, firebaseToken),
         ]);

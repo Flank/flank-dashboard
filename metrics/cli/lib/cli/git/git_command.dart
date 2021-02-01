@@ -6,7 +6,8 @@ class GitCommand {
   /// Creates a new instance of the [GitCommand].
   const GitCommand();
 
-  /// Clones the git repository from the given [repoURL] to the given [srcPath].
+  /// Clones the git repository from the given [repoURL] into
+  /// the given [srcPath].
   Future<void> clone(String repoURL, String srcPath) async {
     await cmd.run(
       'git',

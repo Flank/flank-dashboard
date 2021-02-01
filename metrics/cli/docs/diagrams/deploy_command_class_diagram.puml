@@ -1,0 +1,113 @@
+@startuml deploy_command_class_diagram
+
+package strings {
+    class PromptStrings{}
+}
+
+package deploy {
+    class DeployCommand {
+        + name : String
+        + description : String
+        - _firebase : FirebaseCommand
+        - _gcloud : GCloudCommand
+        - _git : GitCommand
+        - _flutter : FlutterCommand
+        - _npm : NpmCommand
+        - _fileHelper : FileHelper
+        + run(): Future<void>
+        - _selectRegion(): Future<String>
+        - _deploy(): Future<void>
+    }
+}
+
+package cli {
+    package gcloud {
+        class GCloudCommand {
+            + login(): Future<void>
+            + addProject(): Future<String>
+            + addProjectApp(String region, String projectId): Future<void>
+            + createDatabase(String region, String projectId): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package firebase {
+        class FirebaseCommand {
+            + login(): Future<String>
+            + addFirebase(String projectId, String firebaseToken): Future<void>
+            + createWebApp(String projectId, String firebaseToken): Future<void>
+            + initFirebaseProject(String projectId, String workingDir, String firebaseToken): Future<void>
+            + clearTarget(String workingDir, String firebaseToken): Future<void>
+            + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
+            + deployHosting(String workingDir, String firebaseToken): Future<void>
+            + deployFirestore(String workingDir, String firebaseToken): Future<void>
+            + deployFunctions(String workingDir, String firebaseToken): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package npm {
+        class NpmCommand {
+            + install(String workingDir): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package git {
+        class GitCommand {
+            + clone(String repoURL, String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package flutter {
+        class FlutterCommand {
+            + version(): Future<void>
+            + enableWeb(): Future<void>
+            + buildWeb(String workingDir): Future<void>
+        }
+    }
+}
+
+package utils {
+    class FileHelper {
+        + deleteDirectory(Directory directory) : Future<void>
+    }
+    class PromptWrapper {
+        + prompt(String text, {Stream<List<int>> stdin}) : Future<String>
+        + promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+        + promptTerminate() : Future<void>
+    }
+    class PromptUtil {
+        - {static} _promptWrapper : PromptWrapper
+        + {static} init(PromptWrapper promptWrapper) : void
+        + {static} prompt(String text, {Stream<List<int>> stdin}) : Future<String>
+        + {static} promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+        + {static} promptTerminate() : Future<void>
+    }
+}
+
+package constants {
+    class ConfigConstants{}
+}
+
+DeployCommand -left-> PromptStrings : uses
+DeployCommand --> ConfigConstants : uses
+DeployCommand --> PromptUtil : uses
+DeployCommand --> FileHelper : uses
+
+DeployCommand --> GCloudCommand: uses
+DeployCommand --> FirebaseCommand : uses
+DeployCommand --> GitCommand : uses
+DeployCommand --> FlutterCommand : uses
+DeployCommand --> NpmCommand : uses
+
+FirebaseCommand -> PromptUtil : uses
+GCloudCommand --> PromptUtil : uses
+
+GCloudCommand --> PromptStrings : uses
+FirebaseCommand --> PromptStrings : uses
+
+PromptUtil --> PromptWrapper : uses
+
+@enduml

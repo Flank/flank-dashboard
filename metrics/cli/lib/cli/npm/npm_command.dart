@@ -6,7 +6,7 @@ class NpmCommand {
   /// Creates a new instance of the [NpmCommand].
   const NpmCommand();
 
-  /// Installs npm dependencies in the project by the given [workingDir].
+  /// Installs npm dependencies into the given [workingDir].
   Future<void> install(String workingDir) async {
     await cmd.run(
       'npm',

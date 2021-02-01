@@ -98,14 +98,14 @@ class DeployCommand extends Command<void> {
     try {
       await _git.clone(repoURL, tempDir);
 
-      await _firebase.chooseProject(projectId, webPath, firebaseToken);
+      await _firebase.initFirebaseProject(projectId, webPath, firebaseToken);
       await _flutter.buildWeb(webPath);
       await _firebase.clearTarget(webPath, firebaseToken);
       await _firebase.applyTarget(projectId, webPath, firebaseToken);
       await PromptUtil.prompt(PromptStrings.enableAnalytics);
       await _firebase.deployHosting(webPath, firebaseToken);
 
-      await _firebase.chooseProject(projectId, firebasePath, firebaseToken);
+      await _firebase.initFirebaseProject(projectId, firebasePath, firebaseToken);
       await _npm.install(firebasePath);
       await _firebase.deployFirestore(firebasePath, firebaseToken);
 

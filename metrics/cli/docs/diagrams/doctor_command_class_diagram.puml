@@ -1,0 +1,71 @@
+@startuml doctor_command_class_diagram
+
+package doctor {
+    class DoctorCommand {
+        + name : String
+        + description : String
+        - _firebase : FirebaseCommand
+        - _gcloud : GCloudCommand
+        - _git : GitCommand
+        - _flutter : FlutterCommand
+        - _npm : NpmCommand
+        + run(): Future<void>
+    }
+}
+
+package cli {
+    package flutter {
+        class FlutterCommand {
+            + version(): Future<void>
+            + enableWeb(): Future<void>
+            + buildWeb(String workingDir): Future<void>
+        }
+    }
+
+    package firebase {
+        class FirebaseCommand {
+            + login(): Future<String>
+            + addFirebase(String projectId, String firebaseToken): Future<void>
+            + createWebApp(String projectId, String firebaseToken): Future<void>
+            + initFirebaseProject(String projectId, String workingDir, String firebaseToken): Future<void>
+            + clearTarget(String workingDir, String firebaseToken): Future<void>
+            + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
+            + deployHosting(String workingDir, String firebaseToken): Future<void>
+            + deployFirestore(String workingDir, String firebaseToken): Future<void>
+            + deployFunctions(String workingDir, String firebaseToken): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package npm {
+        class NpmCommand {
+            + install(String workingDir): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package gcloud {
+        class GCloudCommand {
+            + login(): Future<void>
+            + addProject(): Future<String>
+            + addProjectApp(String region, String projectId): Future<void>
+            + createDatabase(String region, String projectId): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package git {
+        class GitCommand {
+            + clone(String repoURL, String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
+DoctorCommand --> GCloudCommand: uses
+DoctorCommand --> FirebaseCommand : uses
+DoctorCommand --> GitCommand : uses
+DoctorCommand --> FlutterCommand : uses
+DoctorCommand --> NpmCommand : uses
+
+@enduml

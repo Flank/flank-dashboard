@@ -127,7 +127,7 @@ GitCommand -> git ++ : clone the source project
 git --> DeployCommand -- : project has been cloned
 GitCommand --
 
-DeployCommand -> FirebaseCommand ++ : chooseProject(projectId, webPath, firebaseToken)
+DeployCommand -> FirebaseCommand ++ : initFirebaseProject(projectId, webPath, firebaseToken)
 FirebaseCommand -> firebase ++ : choose the firebase project
 firebase --> DeployCommand -- : project has been chosen
 FirebaseCommand --
@@ -155,7 +155,7 @@ FirebaseCommand -> firebase ++ : deploy the web application to the hosting
 firebase --> DeployCommand -- : application has been deployed
 FirebaseCommand --
 
-DeployCommand -> FirebaseCommand ++ : chooseProject(projectId, firebasePath, firebaseToken)
+DeployCommand -> FirebaseCommand ++ : initFirebaseProject(projectId, firebasePath, firebaseToken)
 FirebaseCommand -> firebase ++ : choose the firebase project
 firebase --> DeployCommand -- : project has been chosen
 FirebaseCommand --

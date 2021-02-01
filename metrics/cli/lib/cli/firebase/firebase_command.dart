@@ -8,7 +8,7 @@ class FirebaseCommand {
   /// Creates a new instance of the [FirebaseCommand].
   const FirebaseCommand();
 
-  /// Logins to GCloud and Firebase and gets the Firebase CI token.
+  /// Logins into the Firebase.
   Future<String> login() async {
     print('Firebase login.');
     await cmd.run(
@@ -40,7 +40,7 @@ class FirebaseCommand {
     }
   }
 
-  /// Creates Firebase web app with the given [projectId] and [firebaseToken].
+  /// Creates Firebase web app for the given [projectId] and [firebaseToken].
   Future<void> createWebApp(String projectId, String firebaseToken) async {
     final addWebApp = await PromptUtil.promptConfirm(PromptStrings.addWebApp);
 
@@ -65,8 +65,9 @@ class FirebaseCommand {
     }
   }
 
-  /// Chooses the firebase project.
-  Future<void> chooseProject(
+  /// Initializes the firebase project into the given [workingDir] for
+  /// the given [projectId] and [firebaseToken].
+  Future<void> initFirebaseProject(
     String projectId,
     String workingDir,
     String firebaseToken,
@@ -86,7 +87,8 @@ class FirebaseCommand {
     );
   }
 
-  /// Clears the firebase target.
+  /// Clears the firebase target in the given [workingDir] for
+  /// the given [firebaseToken].
   Future<void> clearTarget(String workingDir, String firebaseToken) async {
     await cmd.run(
       'firebase',
@@ -103,7 +105,8 @@ class FirebaseCommand {
     );
   }
 
-  /// Applies the firebase target.
+  /// Applies the firebase target into the given [workingDir] for
+  /// the given [projectId] and [firebaseToken].
   Future<void> applyTarget(
     String projectId,
     String workingDir,
@@ -125,7 +128,8 @@ class FirebaseCommand {
     );
   }
 
-  /// Deploys a project to the firebase hosting.
+  /// Deploys a project from the given [workingDir] to the firebase hosting
+  /// using the given [firebaseToken].
   Future<void> deployHosting(String workingDir, String firebaseToken) async {
     await cmd.run(
       'firebase',
@@ -142,7 +146,8 @@ class FirebaseCommand {
     );
   }
 
-  /// Deploys a firestore settings to the firebase.
+  /// Deploys a firestore settings from the given [workingDir] to the firebase
+  /// using the given [firebaseToken].
   Future<void> deployFirestore(String workingDir, String firebaseToken) async {
     await cmd.run(
       'firebase',
@@ -159,7 +164,8 @@ class FirebaseCommand {
     );
   }
 
-  /// Deploys functions to the firebase.
+  /// Deploys functions from the given [workingDir] to the firebase
+  /// using the given [firebaseToken].
   Future<void> deployFunctions(String workingDir, String firebaseToken) async {
     await cmd.run(
       'firebase',
