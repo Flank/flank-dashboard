@@ -1,12 +1,12 @@
 # Storing Database Metadata
 > Summary of the proposed change
 
-Store the database metadata to simplify the Metrics Application update process.
+Store the Metrics database metadata to simplify the Metrics Application update process.
 
 # Motivation
 > What problem is this project solving?
 
-Simplifies the process of updating the Metrics Application with the database structure. 
+Simplifies the process of updating the Metrics applications and the database structure. 
 
 # Goals
 > Identify success metrics and measurable goals.
@@ -40,7 +40,7 @@ Let's review the way of storing the database metadata:
 
 To store the database metadata and make it easily accessible, we need to add to the `metadata` collection with the `metadata` document. This document will contain the `databaseVersion` field of `String` and `isUpdating` `boolean` field. 
 
-So, the database structure should look like the following: 
+So, the database structure will look like the following: 
 
 > - projects
 > - ...
@@ -106,10 +106,10 @@ If the database update is in progress, we should follow the next steps:
 # Dependencies
 > What will be impacted by the project?
 
-This project will impact the process of building the Metrics Web Application.
+This project will impact the process of building and updating the Metrics Web Application.
 
 # Results
 
 > What was the outcome of the project?
 
-This document described the place of storing the database metadata and application version. Also, it explained the mechanism of blocking the Metrics Web Application when the current database version is not compatible with the application version.
+This document described the place of storing the database metadata and application version. Also, it explained the mechanism of blocking the Metrics applications when the current database version is not compatible with the application version.
