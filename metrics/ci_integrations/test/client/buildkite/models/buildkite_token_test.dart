@@ -1,34 +1,34 @@
-import 'package:ci_integration/client/buildkite/mappers/buildkite_token_permission_mapper.dart';
+import 'package:ci_integration/client/buildkite/mappers/buildkite_token_scope_mapper.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
-import 'package:ci_integration/client/buildkite/models/buildkite_token_permission.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const permissionStrings = [
-    BuildkiteTokenPermissionMapper.readAgents,
-    BuildkiteTokenPermissionMapper.writeAgents,
+  const scopeStrings = [
+    BuildkiteTokenScopeMapper.readAgents,
+    BuildkiteTokenScopeMapper.writeAgents,
   ];
 
-  const permissions = [
-    BuildkiteTokenPermission.readAgents,
-    BuildkiteTokenPermission.writeAgents,
+  const scopes = [
+    BuildkiteTokenScope.readAgents,
+    BuildkiteTokenScope.writeAgents,
   ];
 
   const tokenJson = {
-    'scopes': permissionStrings,
+    'scopes': scopeStrings,
   };
 
   const expectedToken = BuildkiteToken(
-    permissions: permissions,
+    scopes: scopes,
   );
 
   group("BuildkiteToken", () {
     test(
-      "creates an instance with the given permissions",
+      "creates an instance with the given scopes",
       () {
-        const token = BuildkiteToken(permissions: permissions);
+        const token = BuildkiteToken(scopes: scopes);
 
-        expect(token.permissions, equals(permissions));
+        expect(token.scopes, equals(scopes));
       },
     );
 
@@ -74,7 +74,7 @@ void main() {
       ".listFromJson() map a list of buildkite tokens",
       () {
         const anotherJson = {'scopes': []};
-        const anotherToken = BuildkiteToken(permissions: []);
+        const anotherToken = BuildkiteToken(scopes: []);
         const jsonList = [tokenJson, anotherJson];
         const expectedList = [expectedToken, anotherToken];
 

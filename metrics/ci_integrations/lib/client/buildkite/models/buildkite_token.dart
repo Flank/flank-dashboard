@@ -1,18 +1,18 @@
-import 'package:ci_integration/client/buildkite/mappers/buildkite_token_permission_mapper.dart';
-import 'package:ci_integration/client/buildkite/models/buildkite_token_permission.dart';
+import 'package:ci_integration/client/buildkite/mappers/buildkite_token_scope_mapper.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class that represents a Buildkite access token needed for authorization.
 class BuildkiteToken extends Equatable {
-  /// A [List] of [BuildkiteTokenPermission]s of this token.
-  final List<BuildkiteTokenPermission> permissions;
+  /// A [List] of [BuildkiteTokenScope]s of this token.
+  final List<BuildkiteTokenScope> scopes;
 
   @override
-  List<Object> get props => [permissions];
+  List<Object> get props => [scopes];
 
-  /// Creates an instance of the [BuildkiteToken] with the given [permissions].
+  /// Creates an instance of the [BuildkiteToken] with the given [scopes].
   const BuildkiteToken({
-    this.permissions,
+    this.scopes,
   });
 
   /// Creates a new instance of the [BuildkiteToken] from the decoded JSON
@@ -22,16 +22,16 @@ class BuildkiteToken extends Equatable {
   factory BuildkiteToken.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    const permissionMapper = BuildkiteTokenPermissionMapper();
+    const permissionMapper = BuildkiteTokenScopeMapper();
     final permissionsList =
         (json['scopes'] as List<dynamic>)?.map((element) => '$element');
 
     final permissions = permissionsList?.map(permissionMapper.map)?.toList();
 
-    return BuildkiteToken(permissions: permissions);
+    return BuildkiteToken(scopes: permissions);
   }
 
-  /// Creates a list of [BuildkiteToken] from the given [list] of decoded JSON
+  /// Creates a list of [BuildkiteToken]s from the given [list] of decoded JSON
   /// objects.
   ///
   /// Returns `null` if the given [list] is `null`.
@@ -43,12 +43,12 @@ class BuildkiteToken extends Equatable {
 
   /// Converts this token instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    const persmissionMapper = BuildkiteTokenPermissionMapper();
+    const scopeMapper = BuildkiteTokenScopeMapper();
 
-    final permissionsList = permissions.map(persmissionMapper.unmap).toList();
+    final scopesList = scopes.map(scopeMapper.unmap).toList();
 
     return <String, dynamic>{
-      'scopes': permissionsList,
+      'scopes': scopesList,
     };
   }
 
