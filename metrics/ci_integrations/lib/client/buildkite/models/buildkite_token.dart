@@ -22,13 +22,13 @@ class BuildkiteToken extends Equatable {
   factory BuildkiteToken.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    const permissionMapper = BuildkiteTokenScopeMapper();
-    final permissionsList =
-        (json['scopes'] as List<dynamic>)?.map((element) => '$element');
+    const scopeMapper = BuildkiteTokenScopeMapper();
+    final scopesValue = json['scopes'] as List<dynamic>;
+    final scopesList = scopesValue?.map((element) => '$element');
 
-    final permissions = permissionsList?.map(permissionMapper.map)?.toList();
+    final scopes = scopesList?.map(scopeMapper.map)?.toList();
 
-    return BuildkiteToken(scopes: permissions);
+    return BuildkiteToken(scopes: scopes);
   }
 
   /// Creates a list of [BuildkiteToken]s from the given [list] of decoded JSON
@@ -45,7 +45,7 @@ class BuildkiteToken extends Equatable {
   Map<String, dynamic> toJson() {
     const scopeMapper = BuildkiteTokenScopeMapper();
 
-    final scopesList = scopes.map(scopeMapper.unmap).toList();
+    final scopesList = scopes?.map(scopeMapper.unmap)?.toList();
 
     return <String, dynamic>{
       'scopes': scopesList,

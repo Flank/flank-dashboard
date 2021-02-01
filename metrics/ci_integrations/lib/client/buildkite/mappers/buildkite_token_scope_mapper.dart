@@ -3,7 +3,7 @@ import 'package:ci_integration/integration/interface/base/client/mapper/mapper.d
 
 /// A class that provides methods for mapping Buildkite token scopes.
 class BuildkiteTokenScopeMapper implements Mapper<String, BuildkiteTokenScope> {
-  /// A token scope that allows to list and retrieve details of agents.
+  /// A token scope that allows to list and retrieve agent details.
   static const String readAgents = 'read_agents';
 
   /// A token scope that allows to create, update and delete agents.
@@ -18,7 +18,7 @@ class BuildkiteTokenScopeMapper implements Mapper<String, BuildkiteTokenScope> {
   /// A token scope that allows to delete build artifacts.
   static const String writeArtifacts = 'write_artifacts';
 
-  /// A token scope that allows to list and retrieve details of builds.
+  /// A token scope that allows to list and retrieve build details.
   static const String readBuilds = 'read_builds';
 
   /// A token scope that allows to create new builds.
@@ -33,16 +33,16 @@ class BuildkiteTokenScopeMapper implements Mapper<String, BuildkiteTokenScope> {
   /// A token scope that allows to delete build logs.
   static const String writeBuildLogs = 'write_build_logs';
 
-  /// A token scope that allows to list and retrieve details of organizations.
+  /// A token scope that allows to list and retrieve organization details.
   static const String readOrganizations = 'read_organizations';
 
-  /// A token scope that allows to list and retrieve details of pipelines.
+  /// A token scope that allows to list and retrieve pipeline details.
   static const String readPipelines = 'read_pipelines';
 
   /// A token scope that allows to create, update and delete pipelines.
   static const String writePipelines = 'write_pipelines';
 
-  /// A token scope that allows to retrieve basic details of the user.
+  /// A token scope that allows to retrieve basic user details.
   static const String readUser = 'read_user';
 
   /// Creates a new instance of the [BuildkiteTokenScopeMapper].

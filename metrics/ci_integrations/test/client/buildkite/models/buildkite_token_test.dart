@@ -44,9 +44,9 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final token = BuildkiteToken.fromJson(tokenJson);
+        final actualToken = BuildkiteToken.fromJson(tokenJson);
 
-        expect(token, equals(token));
+        expect(actualToken, equals(token));
       },
     );
 

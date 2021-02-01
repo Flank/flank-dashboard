@@ -46,9 +46,9 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final pipeline = BuildkitePipeline.fromJson(pipelineJson);
+        final actualPipeline = BuildkitePipeline.fromJson(pipelineJson);
 
-        expect(pipeline, equals(pipeline));
+        expect(actualPipeline, equals(pipeline));
       },
     );
 

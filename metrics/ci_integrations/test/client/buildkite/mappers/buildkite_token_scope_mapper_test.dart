@@ -371,7 +371,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps returns null if the given scope is null",
+      ".unmap() returns null if the given scope is null",
       () {
         final scope = mapper.unmap(null);
 
