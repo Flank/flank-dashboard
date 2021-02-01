@@ -20,7 +20,7 @@ class BuildkitePipeline extends Equatable {
   factory BuildkitePipeline.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    final slug = (json['slug'] as dynamic)?.toString();
+    final slug = json['slug'] as String;
 
     return BuildkitePipeline(slug: slug);
   }
@@ -32,7 +32,8 @@ class BuildkitePipeline extends Equatable {
   static List<BuildkitePipeline> listFromJson(List<dynamic> list) {
     return list
         ?.map(
-            (json) => BuildkitePipeline.fromJson(json as Map<String, dynamic>))
+          (json) => BuildkitePipeline.fromJson(json as Map<String, dynamic>),
+        )
         ?.toList();
   }
 

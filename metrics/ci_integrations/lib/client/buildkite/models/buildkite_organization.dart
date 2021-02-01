@@ -20,7 +20,7 @@ class BuildkiteOrganization extends Equatable {
   factory BuildkiteOrganization.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    final name = (json['name'] as dynamic)?.toString();
+    final name = json['name'] as String;
 
     return BuildkiteOrganization(name: name);
   }
@@ -31,8 +31,10 @@ class BuildkiteOrganization extends Equatable {
   /// Returns `null` if the given [list] is `null`.
   static List<BuildkiteOrganization> listFromJson(List<dynamic> list) {
     return list
-        ?.map((json) =>
-            BuildkiteOrganization.fromJson(json as Map<String, dynamic>))
+        ?.map(
+          (json) =>
+              BuildkiteOrganization.fromJson(json as Map<String, dynamic>),
+        )
         ?.toList();
   }
 
