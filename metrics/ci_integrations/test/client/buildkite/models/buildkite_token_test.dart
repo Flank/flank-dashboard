@@ -4,27 +4,27 @@ import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dar
 import 'package:test/test.dart';
 
 void main() {
-  const scopeStrings = [
-    BuildkiteTokenScopeMapper.readAgents,
-    BuildkiteTokenScopeMapper.writeAgents,
-  ];
-
-  const scopes = [
-    BuildkiteTokenScope.readAgents,
-    BuildkiteTokenScope.writeAgents,
-  ];
-
-  const tokenJson = {
-    'scopes': scopeStrings,
-  };
-
-  const expectedToken = BuildkiteToken(
-    scopes: scopes,
-  );
-
   group("BuildkiteToken", () {
+    const scopeStrings = [
+      BuildkiteTokenScopeMapper.readAgents,
+      BuildkiteTokenScopeMapper.writeAgents,
+    ];
+
+    const scopes = [
+      BuildkiteTokenScope.readAgents,
+      BuildkiteTokenScope.writeAgents,
+    ];
+
+    const tokenJson = {
+      'scopes': scopeStrings,
+    };
+
+    const expectedToken = BuildkiteToken(
+      scopes: scopes,
+    );
+
     test(
-      "creates an instance with the given scopes",
+      "creates an instance with the given parameters",
       () {
         const token = BuildkiteToken(scopes: scopes);
 
@@ -60,18 +60,16 @@ void main() {
     );
 
     test(
-      ".listFromJson() maps an empty list to an empty one",
+      ".listFromJson() returns an empty list if the given one is empty",
       () {
-        final list = BuildkiteToken.listFromJson(
-          [],
-        );
+        final list = BuildkiteToken.listFromJson([]);
 
         expect(list, isEmpty);
       },
     );
 
     test(
-      ".listFromJson() map a list of buildkite tokens",
+      ".listFromJson() creates a list of Buildkite tokens from the given list of JSON encodable objects",
       () {
         const anotherJson = {'scopes': []};
         const anotherToken = BuildkiteToken(scopes: []);

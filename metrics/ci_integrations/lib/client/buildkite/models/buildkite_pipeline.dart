@@ -2,14 +2,22 @@ import 'package:equatable/equatable.dart';
 
 /// A class that represents a Buildkite pipeline.
 class BuildkitePipeline extends Equatable {
+  /// A unique identifier of this pipeline.
+  final String id;
+
+  /// A name of this pipeline;
+  final String name;
+
   /// A slug of this pipeline.
   final String slug;
 
   @override
-  List<Object> get props => [slug];
+  List<Object> get props => [id, name, slug];
 
-  /// Creates an instance of the [BuildkitePipeline] with the given [slug].
+  /// Creates an instance of the [BuildkitePipeline] with the given parameters.
   const BuildkitePipeline({
+    this.id,
+    this.name,
     this.slug,
   });
 
@@ -20,26 +28,28 @@ class BuildkitePipeline extends Equatable {
   factory BuildkitePipeline.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
+    final id = json['id'] as String;
+    final name = json['name'] as String;
     final slug = json['slug'] as String;
 
-    return BuildkitePipeline(slug: slug);
+    return BuildkitePipeline(id: id, name: name, slug: slug);
   }
 
-  /// Creates a list of [BuildkitePipeline] from the given [list] of
+  /// Creates a list of [BuildkitePipeline]s from the given [list] of
   /// decoded JSON objects.
   ///
   /// Returns `null` if the given [list] is `null`.
   static List<BuildkitePipeline> listFromJson(List<dynamic> list) {
-    return list
-        ?.map(
-          (json) => BuildkitePipeline.fromJson(json as Map<String, dynamic>),
-        )
-        ?.toList();
+    return list?.map((json) {
+      return BuildkitePipeline.fromJson(json as Map<String, dynamic>);
+    })?.toList();
   }
 
-  /// Converts this pipeline slug into the JSON encodable [String].
+  /// Converts this pipeline instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'id': id,
+      'name': name,
       'slug': slug,
     };
   }

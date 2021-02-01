@@ -2,18 +2,34 @@ import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const slug = 'test';
-
-  const pipelineJson = {'slug': slug};
-
-  const expectedPipeline = BuildkitePipeline(slug: slug);
-
   group("BuildkitePipeline", () {
-    test(
-      "create an instance with the given slug",
-      () {
-        const pipeline = BuildkitePipeline(slug: slug);
+    const id = 'id';
+    const name = 'test';
+    const slug = 'slug';
 
+    const pipelineJson = {
+      'id': id,
+      'name': name,
+      'slug': slug,
+    };
+
+    const pipeline = BuildkitePipeline(
+      id: id,
+      name: name,
+      slug: slug,
+    );
+
+    test(
+      "creates an instance with the given parameters",
+      () {
+        const pipeline = BuildkitePipeline(
+          id: id,
+          name: name,
+          slug: slug,
+        );
+
+        expect(pipeline.id, equals(id));
+        expect(pipeline.name, equals(name));
         expect(pipeline.slug, equals(slug));
       },
     );
@@ -32,7 +48,7 @@ void main() {
       () {
         final pipeline = BuildkitePipeline.fromJson(pipelineJson);
 
-        expect(pipeline, equals(expectedPipeline));
+        expect(pipeline, equals(pipeline));
       },
     );
 
@@ -46,23 +62,21 @@ void main() {
     );
 
     test(
-      ".listFromJson() maps an empty list to an empty one",
+      ".listFromJson() returns an empty list if the given one is empty",
       () {
-        final list = BuildkitePipeline.listFromJson(
-          [],
-        );
+        final list = BuildkitePipeline.listFromJson([]);
 
         expect(list, isEmpty);
       },
     );
 
     test(
-      ".listFromJson() maps a list of buildkite slugs",
+      ".listFromJson() creates a list of Buildkite pipelines from the given list of JSON encodable objects",
       () {
         const anotherJson = {'slug': ''};
         const anotherPipeline = BuildkitePipeline(slug: '');
         const jsonList = [pipelineJson, anotherJson];
-        const expectedList = [expectedPipeline, anotherPipeline];
+        const expectedList = [pipeline, anotherPipeline];
 
         final pipelineList = BuildkitePipeline.listFromJson(jsonList);
 
@@ -71,9 +85,9 @@ void main() {
     );
 
     test(
-      ".toJson converts an instance to the json encodable map",
+      ".toJson() converts an instance to the json encodable map",
       () {
-        final json = expectedPipeline.toJson();
+        final json = pipeline.toJson();
 
         expect(json, equals(pipelineJson));
       },

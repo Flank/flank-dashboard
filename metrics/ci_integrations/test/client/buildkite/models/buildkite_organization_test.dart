@@ -2,19 +2,35 @@ import 'package:ci_integration/client/buildkite/models/buildkite_organization.da
 import 'package:test/test.dart';
 
 void main() {
-  const name = 'test';
-
-  const organizationJson = {'name': name};
-
-  const expectedOrganization = BuildkiteOrganization(name: name);
-
   group("BuildkiteOrganization", () {
-    test(
-      "create an instance with the given name",
-      () {
-        const organization = BuildkiteOrganization(name: name);
+    const id = 'id';
+    const name = 'test';
+    const slug = 'slug';
 
+    const organizationJson = {
+      'id': id,
+      'name': name,
+      'slug': slug,
+    };
+
+    const organization = BuildkiteOrganization(
+      id: id,
+      name: name,
+      slug: slug,
+    );
+
+    test(
+      "creates an instance with the given parameters",
+      () {
+        const organization = BuildkiteOrganization(
+          id: id,
+          name: name,
+          slug: slug,
+        );
+
+        expect(organization.id, equals(id));
         expect(organization.name, equals(name));
+        expect(organization.slug, equals(slug));
       },
     );
 
@@ -32,7 +48,7 @@ void main() {
       () {
         final organization = BuildkiteOrganization.fromJson(organizationJson);
 
-        expect(organization, equals(expectedOrganization));
+        expect(organization, equals(organization));
       },
     );
 
@@ -46,23 +62,21 @@ void main() {
     );
 
     test(
-      ".listFromJson() maps an empty list to an empty one",
+      ".listFromJson() returns an empty list if the given one is empty",
       () {
-        final list = BuildkiteOrganization.listFromJson(
-          [],
-        );
+        final list = BuildkiteOrganization.listFromJson([]);
 
         expect(list, isEmpty);
       },
     );
 
     test(
-      ".listFromJson() maps a list of buildkite names",
+      ".listFromJson() creates a list of Buildkite organizations from the given list of JSON encodable objects",
       () {
         const anotherJson = {'name': ''};
         const anotherOrganization = BuildkiteOrganization(name: '');
         const jsonList = [organizationJson, anotherJson];
-        const expectedList = [expectedOrganization, anotherOrganization];
+        const expectedList = [organization, anotherOrganization];
 
         final organizationList = BuildkiteOrganization.listFromJson(jsonList);
 
@@ -71,9 +85,9 @@ void main() {
     );
 
     test(
-      ".toJson converts an instance to the json encodable map",
+      ".toJson() converts an instance to the json encodable map",
       () {
-        final json = expectedOrganization.toJson();
+        final json = organization.toJson();
 
         expect(json, equals(organizationJson));
       },

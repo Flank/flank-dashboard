@@ -189,7 +189,7 @@ void main() {
     );
 
     test(
-      ".map() maps the not specified scope to null",
+      ".map() maps the not existing scope to null",
       () {
         final scope = mapper.map('test');
 
@@ -198,7 +198,7 @@ void main() {
     );
 
     test(
-      ".map() maps the null scope to null",
+      ".map() returns null if the given scope is null",
       () {
         final scope = mapper.map(null);
 
