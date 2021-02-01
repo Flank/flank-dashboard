@@ -46,8 +46,9 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final actualOrganization =
-            BuildkiteOrganization.fromJson(organizationJson);
+        final actualOrganization = BuildkiteOrganization.fromJson(
+          organizationJson,
+        );
 
         expect(actualOrganization, equals(organization));
       },
