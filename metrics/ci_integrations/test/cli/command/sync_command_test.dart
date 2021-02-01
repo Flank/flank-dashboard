@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
@@ -20,8 +22,8 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matcher_util.dart';
+import '../test_util/mock/logger_writer_mock.dart';
 import '../test_util/mock/mocks.dart';
-import '../test_util/stub/logger_stub.dart';
 import '../test_util/test_data/config_test_data.dart';
 
 void main() {
@@ -43,9 +45,7 @@ void main() {
       final sourcePartiesMock = PartiesMock<SourceParty>();
       final destinationPartiesMock = PartiesMock<DestinationParty>();
 
-      final loggerStub = LoggerStub();
       final syncCommand = SyncCommandStub(
-        loggerStub,
         SupportedIntegrationParties(
           sourceParties: sourcePartiesMock,
           destinationParties: destinationPartiesMock,
@@ -54,8 +54,15 @@ void main() {
         ciIntegrationMock,
       );
 
+      final writerMock = LoggerWriterMock();
+      final loggerFactory = LoggerFactory(writer: writerMock);
+
+      setUpAll(() {
+        LoggerManager.setLoggerFactory(loggerFactory);
+        LoggerManager.instance.reset();
+      });
+
       setUp(() {
-        loggerStub.clearLogs();
         syncCommand.reset();
         reset(fileMock);
         reset(ciIntegrationMock);
@@ -64,6 +71,7 @@ void main() {
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
         reset(_firebaseAuthMock);
+        reset(writerMock);
       });
 
       PostExpectation<Future<InteractionResult>> whenRunSync() {
@@ -75,6 +83,7 @@ void main() {
             .thenAnswer((_) => Future.value(User.fromMap({})));
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
+
         return when(ciIntegrationMock.sync(syncConfig));
       }
 
@@ -84,6 +93,42 @@ void main() {
 
         expect(options, contains('config-file'));
       });
+
+      test(
+        "has the 'coverage' flag defaults to true",
+        () {
+          final argParser = syncCommand.argParser;
+          final options = argParser.options;
+
+          final flagEnabledByDefault = predicate<Option>(
+            (option) => option.isFlag && option.defaultsTo == true,
+          );
+
+          expect(options, containsPair('coverage', flagEnabledByDefault));
+        },
+      );
+
+      test("has the 'initial-sync-limit' option", () {
+        final argParser = syncCommand.argParser;
+        final options = argParser.options;
+
+        expect(options, contains('initial-sync-limit'));
+      });
+
+      test(
+        "'initial-sync-limit' option has the default initial sync limit value",
+        () {
+          const expectedInitialSyncLimit = SyncCommand.defaultInitialSyncLimit;
+
+          final argParser = syncCommand.argParser;
+          final syncLimitOption = argParser.options['initial-sync-limit'];
+
+          expect(
+            syncLimitOption.defaultsTo,
+            equals(expectedInitialSyncLimit),
+          );
+        },
+      );
 
       test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
@@ -217,8 +262,11 @@ void main() {
       );
 
       test(".run() calls dispose once", () async {
-        whenRunSync()
-            .thenAnswer((_) => Future.value(const InteractionResult.success()));
+        whenRunSync().thenAnswer(
+          (_) => Future.value(
+            const InteractionResult.success(),
+          ),
+        );
 
         await syncCommand.run();
 
@@ -243,17 +291,21 @@ void main() {
         ".run() runs sync on the given config",
         () async {
           whenRunSync().thenAnswer(
-            (_) => Future.value(const InteractionResult.success()),
+            (_) => Future.value(
+              const InteractionResult.success(),
+            ),
           );
 
           await syncCommand.run();
 
-          verify(ciIntegrationMock.sync(syncConfig)).called(1);
+          verify(
+            ciIntegrationMock.sync(syncConfig),
+          ).called(1);
         },
       );
 
       test(
-        ".sync() prints a message if a sync result is a success",
+        ".sync() logs a message if a sync result is a success",
         () async {
           const interactionResult = InteractionResult.success();
 
@@ -266,7 +318,7 @@ void main() {
             destinationClientMock,
           );
 
-          expect(loggerStub.messageLogsNumber, equals(1));
+          verify(writerMock.write(any)).called(1);
         },
       );
 
@@ -289,9 +341,31 @@ void main() {
       );
 
       test(
+        ".parseInitialSyncLimit() returns null if the given value is not an integer",
+        () async {
+          final actualLimit = syncCommand.parseInitialSyncLimit('test');
+
+          expect(actualLimit, isNull);
+        },
+      );
+
+      test(
+        ".parseInitialSyncLimit() parses the initial sync limit",
+        () async {
+          const expectedLimit = 2;
+
+          final actualLimit = syncCommand.parseInitialSyncLimit(
+            '$expectedLimit',
+          );
+
+          expect(actualLimit, equals(expectedLimit));
+        },
+      );
+
+      test(
         ".dispose() disposes the given source client",
         () async {
-          final syncCommand = SyncCommand(loggerStub);
+          final syncCommand = SyncCommand();
 
           await syncCommand.dispose(
             sourceClientMock,
@@ -305,7 +379,7 @@ void main() {
       test(
         ".dispose() disposes the given destination client",
         () async {
-          final syncCommand = SyncCommand(loggerStub);
+          final syncCommand = SyncCommand();
 
           await syncCommand.dispose(
             sourceClientMock,
@@ -354,14 +428,15 @@ class SyncCommandStub extends SyncCommand {
   /// A counter used to save the number of times the [dispose] method called.
   int _disposeCallCount = 0;
 
+  /// Provides a number of times the [dispose] method called.
   int get disposeCallCount => _disposeCallCount;
 
+  /// Creates a new instance of the [SyncCommandStub].
   SyncCommandStub(
-    Logger logger,
     SupportedIntegrationParties supportedParties,
     this.fileMock,
     this.ciIntegrationMock,
-  ) : super(logger, supportedParties: supportedParties);
+  ) : super(supportedParties: supportedParties);
 
   /// Resets this stub to ensure tests run independently.
   void reset() {
@@ -383,7 +458,13 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
-    return 'config.yaml';
+    if (name == 'initial-sync-limit') return '20';
+
+    if (name == 'config-file') return 'config.yaml';
+
+    if (name == 'coverage') return false;
+
+    return null;
   }
 
   @override

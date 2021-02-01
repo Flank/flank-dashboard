@@ -9,6 +9,7 @@ void main() {
     const number = 1;
     const blocked = false;
     const state = BuildkiteBuildStateMapper.passed;
+    const apiUrl = 'api-url';
     const webUrl = 'url';
     final startedAt = DateTime(2020).toUtc();
     final finishedAt = DateTime(2020, 2).toUtc();
@@ -16,7 +17,8 @@ void main() {
     final buildJson = <String, dynamic>{
       'id': id,
       'number': number,
-      'blocked' : blocked,
+      'blocked': blocked,
+      'url': apiUrl,
       'web_url': webUrl,
       'state': state,
       'started_at': startedAt?.toIso8601String(),
@@ -28,6 +30,7 @@ void main() {
       number: number,
       blocked: blocked,
       state: BuildkiteBuildState.passed,
+      apiUrl: apiUrl,
       webUrl: webUrl,
       startedAt: startedAt,
       finishedAt: finishedAt,
@@ -41,6 +44,7 @@ void main() {
         number: number,
         blocked: blocked,
         state: state,
+        apiUrl: apiUrl,
         webUrl: webUrl,
         startedAt: startedAt,
         finishedAt: finishedAt,
@@ -50,6 +54,7 @@ void main() {
       expect(build.number, equals(number));
       expect(build.blocked, equals(blocked));
       expect(build.state, equals(state));
+      expect(build.apiUrl, equals(apiUrl));
       expect(build.webUrl, equals(webUrl));
       expect(build.startedAt, equals(startedAt));
       expect(build.finishedAt, equals(finishedAt));
@@ -83,8 +88,9 @@ void main() {
       final anotherJson = <String, dynamic>{
         'id': "2",
         'number': 2,
-        'blocked' : blocked,
+        'blocked': blocked,
         'web_url': 'url',
+        'url': 'api-url',
         'state': BuildkiteBuildStateMapper.failed,
         'started_at': DateTime(2020, 3).toIso8601String(),
         'finished_at': DateTime(2020, 4).toIso8601String(),

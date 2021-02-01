@@ -23,6 +23,7 @@ const builds = {
     workflowName: "workflow",
     duration: 234,
     url: "url1",
+    apiUrl: "apiUrl1",
     coverage: 0.0,
   },
   "build/2": {
@@ -33,6 +34,7 @@ const builds = {
     workflowName: "workflow",
     duration: 345,
     url: "url2",
+    apiUrl: "apiUrl2",
     coverage: 1.0,
   },
 };

@@ -11,7 +11,8 @@ import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.d
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
-import 'package:metrics/util/web_platform.dart';
+import 'package:metrics/platform/stub/renderer/renderer_stub.dart'
+    if (dart.library.html) 'package:metrics/platform/web/renderer/web_renderer.dart';
 
 /// The [ChangeNotifier] that holds and manages [LocalConfig]'s data.
 class DebugMenuNotifier extends ChangeNotifier {
@@ -27,8 +28,8 @@ class DebugMenuNotifier extends ChangeNotifier {
   /// A [UseCase] that provides an ability to close the [LocalConfig] storage.
   final CloseLocalConfigStorageUseCase _closeLocalConfigStorageUseCase;
 
-  /// A [WebPlatform] that provides an ability to detect the current renderer.
-  final WebPlatform _webPlatform;
+  /// A [Renderer] that provides an ability to detect the current renderer.
+  final Renderer _renderer;
 
   /// Indicates whether the [LocalConfig] is loading.
   bool _isLoading = false;
@@ -63,7 +64,7 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// A view model that provides the current renderer's name.
   RendererDisplayViewModel get rendererDisplayViewModel {
-    final isSkia = _webPlatform.isSkia;
+    final isSkia = _renderer.isSkia;
 
     final currentRenderer =
         isSkia ? DebugMenuStrings.skia : DebugMenuStrings.html;
@@ -80,12 +81,12 @@ class DebugMenuNotifier extends ChangeNotifier {
     this._readLocalConfigUseCase,
     this._updateLocalConfigUseCase,
     this._closeLocalConfigStorageUseCase, [
-    WebPlatform webPlatform,
+    Renderer renderer,
   ])  : assert(_openLocalConfigStorageUseCase != null),
         assert(_readLocalConfigUseCase != null),
         assert(_updateLocalConfigUseCase != null),
         assert(_closeLocalConfigStorageUseCase != null),
-        _webPlatform = webPlatform ?? const WebPlatform();
+        _renderer = renderer ?? const Renderer();
 
   /// Initializes the [LocalConfig].
   ///

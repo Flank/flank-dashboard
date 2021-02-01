@@ -11,7 +11,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
-import 'package:ci_integration/source/github_actions/adapter/github_actions_source_adapter.dart';
+import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -26,7 +26,7 @@ import '../test_utils/test_data/github_actions_test_data_generator.dart';
 void main() {
   group("GithubActionsSourceClientAdapter", () {
     const jobName = 'job';
-
+    const fetchLimit = 28;
     final testData = GithubActionsTestDataGenerator(
       workflowIdentifier: 'workflow',
       jobName: jobName,
@@ -213,13 +213,33 @@ void main() {
       },
     );
 
+    test(
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is 0",
+      () {
+        expect(
+          () => adapter.fetchBuilds(jobName, 0),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is a negative number",
+      () {
+        expect(
+          () => adapter.fetchBuilds(jobName, -1),
+          throwsArgumentError,
+        );
+      },
+    );
+
     test(".fetchBuilds() fetches builds", () {
       whenFetchWorkflowRuns(
         withArtifactsPage: defaultArtifactsPage,
         withJobsPage: defaultJobsPage,
       ).thenSuccessWith(defaultRunsPage);
 
-      final result = adapter.fetchBuilds(jobName);
+      final result = adapter.fetchBuilds(jobName, fetchLimit);
 
       expect(result, completion(equals(defaultBuildData)));
     });
@@ -237,7 +257,10 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -259,7 +282,10 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -279,7 +305,10 @@ void main() {
 
         whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -288,8 +317,9 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns no more than the GithubActionsSourceClientAdapter.fetchLimit builds",
+      ".fetchBuilds() returns no more than the given fetch limit number of builds",
       () {
+        const fetchLimit = 12;
         final workflowRuns = testData.generateWorkflowRunsByNumbers(
           runNumbers: List.generate(30, (index) => index),
         );
@@ -301,11 +331,13 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(workflowRunsPage);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(
           result,
-          completion(hasLength(GithubActionsSourceClientAdapter.fetchLimit)),
+          completion(
+            hasLength(lessThanOrEqualTo(fetchLimit)),
+          ),
         );
       },
     );
@@ -326,7 +358,7 @@ void main() {
           withJobsPage: workflowRunJobsPage,
         ).thenSuccessWith(defaultRunsPage);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(isEmpty));
       },
@@ -343,7 +375,7 @@ void main() {
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenSuccessWith(defaultJobsPage);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(defaultBuildData)));
       },
@@ -360,7 +392,7 @@ void main() {
         when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(defaultBuildData)));
       },
@@ -382,7 +414,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final actualCoverage =
             result.map((buildData) => buildData.coverage).toList();
 
@@ -398,7 +433,7 @@ void main() {
           withJobsPage: defaultJobsPage,
         ).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -418,7 +453,7 @@ void main() {
           page: anyNamed('page'),
         )).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -435,7 +470,7 @@ void main() {
         when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -456,7 +491,7 @@ void main() {
           page: anyNamed('page'),
         )).thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -473,7 +508,7 @@ void main() {
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -490,7 +525,7 @@ void main() {
         when(githubActionsClientMock.downloadRunArtifactZip(any))
             .thenErrorWith();
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -547,7 +582,7 @@ void main() {
           );
         }
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(expectedBuilds)));
       },
@@ -576,7 +611,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(completedAt));
@@ -605,7 +643,10 @@ void main() {
           const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -634,7 +675,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -663,7 +707,10 @@ void main() {
           WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -691,7 +738,10 @@ void main() {
           const WorkflowRunJobsPage(values: [workflowRunJob]),
         );
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));
@@ -794,7 +844,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
 
         final coverage = result.map((build) => build.coverage).toList();
 
@@ -823,7 +876,10 @@ void main() {
         final expectedCoverage = [null, null, null];
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
         final coverage = result.map((build) => build.coverage).toList();
 
         expect(coverage, equals(expectedCoverage));
@@ -849,7 +905,10 @@ void main() {
         final expectedCoverage = [null, null, null];
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
         final coverage = result.map((build) => build.coverage).toList();
 
         expect(coverage, equals(expectedCoverage));
@@ -881,7 +940,10 @@ void main() {
           testData.coverage,
         ];
 
-        final result = await adapter.fetchBuildsAfter(jobName, lastBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          lastBuild,
+        );
 
         final coverage = result.map((build) => build.coverage).toList();
 
@@ -1233,7 +1295,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(completedAt));
@@ -1264,7 +1329,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -1295,7 +1363,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -1326,7 +1397,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -1356,7 +1430,10 @@ void main() {
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));

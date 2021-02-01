@@ -1,9 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
@@ -85,8 +86,9 @@ void main() {
           metricsThemeData: theme,
         ));
 
-        final buildNumberMetricText =
-            tester.widget<Text>(find.text('$numberOfBuilds'));
+        final buildNumberMetricText = tester.widget<AutoSizeText>(
+          find.widgetWithText(AutoSizeText, '$numberOfBuilds'),
+        );
 
         expect(buildNumberMetricText.style, equals(textStyle));
       },

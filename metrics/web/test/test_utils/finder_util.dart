@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 
 /// A utility class needed to find widgets in the widget tree under tests.
 class FinderUtil {
@@ -20,6 +21,11 @@ class FinderUtil {
     );
 
     return containerWidget.decoration as BoxDecoration;
+  }
+
+  /// Finds the [SvgImage] in the widget tree under tests using the given [tester].
+  static SvgImage findSvgImage(WidgetTester tester) {
+    return tester.widget<SvgImage>(find.byType(SvgImage));
   }
 
   /// Finds the [SvgPicture] in the widget tree under tests using the given [tester].

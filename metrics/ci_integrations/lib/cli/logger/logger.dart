@@ -1,27 +1,70 @@
-import 'dart:io';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
+import 'package:ci_integration/cli/logger/writer/logger_writer.dart';
+import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 
-/// A class providing methods for logging messages and errors for the CLI tool.
+/// A class providing methods for logging messages.
 class Logger {
-  /// The [IOSink] used to log errors.
-  final IOSink errorSink;
+  /// A [Type] of the class this logger services.
+  final Type sourceClass;
 
-  /// The [IOSink] used to log messages.
-  final IOSink messageSink;
+  /// A [LoggerWriter] this logger uses to write messages.
+  final LoggerWriter _writer;
 
-  /// Creates this logger instance.
+  /// A flag that determines whether to enable info logs.
+  final bool _verbose;
+
+  /// A [DateFormat] this logger uses to format timestamps of logs.
+  final DateFormat _dateFormat;
+
+  /// Creates a new instance of [Logger].
   ///
-  /// Both [errorSink] and [messageSink] are optional.
-  /// If the [errorSink] is not given, the default [stderr] is used.
-  /// If the [messageSink] is not given, the default [stdout] is used.
+  /// All the required parameters must not be `null`.
   Logger({
-    IOSink errorSink,
-    IOSink messageSink,
-  })  : errorSink = errorSink ?? stderr,
-        messageSink = messageSink ?? stdout;
+    @required this.sourceClass,
+    @required LoggerWriter writer,
+    @required bool verbose,
+  })  : _writer = writer,
+        _verbose = verbose,
+        _dateFormat = DateFormat.yMd().add_Hms() {
+    ArgumentError.checkNotNull(sourceClass, 'sourceClass');
+    ArgumentError.checkNotNull(_writer, 'writer');
+    ArgumentError.checkNotNull(_verbose, 'verbose');
+  }
 
-  /// Prints the given [error] to the [errorSink].
-  void printError(Object error) => errorSink.writeln(error);
+  /// Returns a [Logger] instance for the class with the
+  /// given [sourceClass] type. Calls the [LoggerManager.getLogger]
+  /// method to obtain an instance of the required [Logger].
+  factory Logger.forClass(Type sourceClass) {
+    return LoggerManager.instance.getLogger(sourceClass);
+  }
 
-  /// Prints the given [message] to the [messageSink].
-  void printMessage(Object message) => messageSink.writeln(message);
+  /// Logs the given [message] using the [LoggerWriter.write]
+  /// on the specified writer.
+  void message(Object message) {
+    final log = _processLog(message);
+
+    _writer.write(log);
+  }
+
+  /// Logs the given [message] to the logs output
+  /// if this logger is in verbose mode.
+  void info(Object message) {
+    if (_verbose) {
+      this.message(message);
+    }
+  }
+
+  /// Processes the given [log].
+  ///
+  /// If the [_verbose] value is `true`, applies the timestamp and
+  /// [sourceClass] prefixes to the log. Otherwise, does nothing.
+  Object _processLog(Object log) {
+    if (_verbose) {
+      final dateTimeNow = _dateFormat.format(DateTime.now());
+      return '[$dateTimeNow] $sourceClass: $log';
+    } else {
+      return log;
+    }
+  }
 }

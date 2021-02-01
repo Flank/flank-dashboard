@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
@@ -23,7 +24,7 @@ void main() {
 
       final finder = find.descendant(
         of: find.byTooltip(CommonStrings.home),
-        matching: find.byType(Image),
+        matching: find.byType(SvgImage),
       );
 
       expect(finder, findsOneWidget);
@@ -77,12 +78,18 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.widget<SizedBox>(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(SizedBox),
-        ));
+        final sizedBoxPredicate = find.byWidgetPredicate(
+          (widget) =>
+              widget is SizedBox &&
+              widget.width == DimensionsConfig.contentWidth,
+        );
 
-        expect(sizedBox.width, DimensionsConfig.contentWidth);
+        final sizedBoxFinder = find.descendant(
+          of: find.byType(MetricsAppBar),
+          matching: sizedBoxPredicate,
+        );
+
+        expect(sizedBoxFinder, findsOneWidget);
       },
     );
 
@@ -93,12 +100,18 @@ void main() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
         });
 
-        final sizedBox = tester.widget<SizedBox>(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(SizedBox),
-        ));
+        final sizedBoxPredicate = find.byWidgetPredicate(
+          (widget) =>
+              widget is SizedBox &&
+              widget.height == DimensionsConfig.appBarHeight,
+        );
 
-        expect(sizedBox.height, DimensionsConfig.appBarHeight);
+        final sizedBoxFinder = find.descendant(
+          of: find.byType(MetricsAppBar),
+          matching: sizedBoxPredicate,
+        );
+
+        expect(sizedBoxFinder, findsOneWidget);
       },
     );
 

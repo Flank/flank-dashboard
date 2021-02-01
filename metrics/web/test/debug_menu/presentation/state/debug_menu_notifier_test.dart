@@ -10,8 +10,9 @@ import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
-import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../test_utils/renderer_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -21,7 +22,7 @@ void main() {
     final readUseCase = _ReadLocalConfigUseCaseMock();
     final updateUseCase = _UpdateLocalConfigUseCaseMock();
     final closeUseCase = _CloseLocalConfigStorageUseCaseMock();
-    final webPlatform = _WebPlatformMock();
+    final renderer = RendererMock();
 
     const isFpsMonitorEnabled = true;
     const localConfig = LocalConfig(
@@ -39,7 +40,7 @@ void main() {
         readUseCase,
         updateUseCase,
         closeUseCase,
-        webPlatform,
+        renderer,
       );
     });
 
@@ -48,7 +49,7 @@ void main() {
       reset(readUseCase);
       reset(updateUseCase);
       reset(closeUseCase);
-      reset(webPlatform);
+      reset(renderer);
     });
 
     test(
@@ -120,7 +121,7 @@ void main() {
             readUseCase,
             updateUseCase,
             closeUseCase,
-            webPlatform,
+            renderer,
           ),
           returnsNormally,
         );
@@ -128,7 +129,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the given parameters if the given web platform is null",
+      "creates an instance with the given parameters if the given renderer is null",
       () {
         expect(
           () => DebugMenuNotifier(
@@ -411,20 +412,20 @@ void main() {
     );
 
     test(
-      ".rendererDisplayViewModel calls .isSkia of the given web platform",
+      ".rendererDisplayViewModel gets the current renderer using the given renderer class",
       () async {
-        when(webPlatform.isSkia).thenReturn(true);
+        when(renderer.isSkia).thenReturn(true);
 
         notifier.rendererDisplayViewModel;
 
-        verify(webPlatform.isSkia).called(1);
+        verify(renderer.isSkia).called(1);
       },
     );
 
     test(
       ".rendererDisplayViewModel returns a view model with skia value if the application uses skia renderer",
       () async {
-        when(webPlatform.isSkia).thenReturn(true);
+        when(renderer.isSkia).thenReturn(true);
         const expectedViewModel = RendererDisplayViewModel(
           currentRenderer: DebugMenuStrings.skia,
         );
@@ -438,7 +439,7 @@ void main() {
     test(
       ".rendererDisplayViewModel returns a view model with html value if the application uses html renderer",
       () async {
-        when(webPlatform.isSkia).thenReturn(false);
+        when(renderer.isSkia).thenReturn(false);
         const expectedViewModel = RendererDisplayViewModel(
           currentRenderer: DebugMenuStrings.html,
         );
@@ -471,5 +472,3 @@ class _UpdateLocalConfigUseCaseMock extends Mock
 
 class _CloseLocalConfigStorageUseCaseMock extends Mock
     implements CloseLocalConfigStorageUseCase {}
-
-class _WebPlatformMock extends Mock implements WebPlatform {}

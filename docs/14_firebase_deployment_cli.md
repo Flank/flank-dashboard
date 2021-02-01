@@ -18,7 +18,7 @@ Before you start, you should have the following installed:
 gcloud auth login
 ```
 
-2. List avaiable organisations.
+2. List available organisations.
 
 ```
 gcloud organizations list
@@ -155,29 +155,37 @@ flutter config --enable-web
 ### Building and deploying Flutter application
  
 1. Open the terminal and navigate to the metrics project folder.
-2. Run  command and follow the instructions to log in to the Firebase CLI with your Google account.
- Use the same account that you used to create your Firebase project (or the one that has access to it).
+2. Run the following command and follow the instructions to log in to the Firebase CLI with your Google account.
+ Use the same account that you used to create your Firebase project (or the one that has access to it):
 
 ```
 firebase login
 ```
-3. After you have logged in, run the  command below and select the project id of the project, created in previous steps.
+3. After you have logged in, run the following command below and select the project id of the project, created in previous steps:
 
 ```
 firebase use --add
 ```
-4. Give an alias to your project.
-5. Run the  command from the root of the metrics project to build the release version of the application.
-   It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
+4. Run the following command from the root of the metrics project to build the release version of the application.
+   It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer:
+
 ```
 flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
-6. Run the  command to deploy an application to the Firebase Hosting.
+5. Run the following command to specify the hosting deploy to. You can find the `<YOUR_HOSTING_NAME>` within the `Hosting` section in the Firebase console:
 
 ```
-firebase deploy --only hosting
+firebase target:apply hosting metrics <YOUR_HOSTING_NAME>
 ```
+
+6. Run the following command to deploy an application to the Firebase Hosting:
+
+```
+firebase deploy --only hosting:metrics
+```
+
+_**Note:** If you've already had the configured hosting deployment target you should run the `firebase target:clear hosting metrics` before the 5th step._
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 
@@ -192,7 +200,7 @@ The `metrics/firebase` folder contains Firestore security rules, Firestore index
 npm install
 ```
 
-3. Run the  command to deploy all components.
+3. Run the command to deploy all components.
 
 ```
 firebase deploy
@@ -201,7 +209,7 @@ firebase deploy
 
 Now you can create test projects in your Firestore database: 
 
-1. List service accounst 
+1. List service accounts 
 
 ```
 gcloud iam service-accounts list

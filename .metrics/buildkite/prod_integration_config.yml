@@ -1,0 +1,12 @@
+source:
+  buildkite:
+    access_token: $PROD_BUILDKITE_TOKEN
+    pipeline_slug: $PROD_PIPELINE_SLUG
+    organization_slug: $PROD_ORGANIZATION_SLUG
+destination:
+  firestore:
+    firebase_project_id: $PROD_FIREBASE_PROJECT_ID
+    firebase_user_email: $PROD_WEB_APP_USER_EMAIL
+    firebase_user_pass: $PROD_WEB_APP_USER_PASSWORD
+    firebase_public_api_key: $PROD_CI_INTEGRATIONS_FIREBASE_API_KEY
+    metrics_project_id: $PROD_METRICS_PROJECT_ID

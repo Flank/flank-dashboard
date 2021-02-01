@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -14,14 +15,17 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [GithubActionsClient] to implement the [SourceClient]
 /// interface.
-class GithubActionsSourceClientAdapter implements SourceClient {
-  /// A fetch limit for Github Actions API calls.
-  static const int fetchLimit = 25;
+class GithubActionsSourceClientAdapter
+    with LoggerMixin
+    implements SourceClient {
+  /// A default number of instances to request in paginated requests.
+  static const int defaultPerPage = 25;
 
   /// A [GithubActionsClient] instance to perform API calls.
   final GithubActionsClient githubActionsClient;
@@ -62,8 +66,17 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String jobName) async {
-    return _fetchLatestBuilds(jobName);
+  Future<List<BuildData>> fetchBuilds(
+    String jobName,
+    int fetchLimit,
+  ) async {
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
+
+    logger.info('Fetching builds...');
+    return _fetchLatestBuilds(
+      jobName,
+      fetchLimit: fetchLimit,
+    );
   }
 
   @override
@@ -73,6 +86,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
+    logger.info('Fetching builds after build #$latestBuildNumber...');
 
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
@@ -83,24 +97,33 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     if (runs.isEmpty || runs.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(jobName, latestBuildNumber);
+    return _fetchLatestBuilds(
+      jobName,
+      latestBuildNumber: latestBuildNumber,
+    );
+  }
+
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    return Future.value(build.coverage);
   }
 
   /// Fetches the latest builds by the given [jobName].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
-  /// returns no more than the latest [fetchLimit] builds.
+  /// [Build.buildNumber] greater than the given [latestBuildNumber].
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String jobName, [
+    String jobName, {
     int latestBuildNumber,
-  ]) async {
+    int fetchLimit,
+  }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     WorkflowRunsPage runsPage = await _fetchRunsPage(
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     do {
@@ -181,7 +204,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     final interaction = await githubActionsClient.fetchRunJobs(
       runId,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     _throwIfInteractionUnsuccessful(interaction);
@@ -219,10 +242,14 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
+    logger.info(
+      'Fetching coverage artifact for a workflow #${run.number}...',
+    );
+
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
     _throwIfInteractionUnsuccessful(interaction);
 
@@ -272,6 +299,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     );
 
     if (content == null) return null;
+
+    logger.info('Parsing coverage artifact...');
 
     final coverageContent = utf8.decode(content);
     final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;

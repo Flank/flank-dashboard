@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
@@ -10,10 +11,7 @@ import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
-class JenkinsSourceClientAdapter implements SourceClient {
-  /// A fetch limit for builds when we download all builds from CI (initial fetch).
-  static const initialFetchBuildsLimit = 28;
-
+class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
@@ -39,6 +37,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
+    logger.info('Fetching builds after build #${lastBuild.number}...');
+
     if (numberOfBuilds <= 0) return [];
 
     final builds = await _fetchLatestBuilds(
@@ -55,15 +55,25 @@ class JenkinsSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String projectId) async {
+  Future<List<BuildData>> fetchBuilds(
+    String projectId,
+    int fetchLimit,
+  ) async {
+    logger.info('Fetching builds...');
     final buildingJob = await _fetchBuilds(
       projectId,
-      limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
+      limits: JenkinsQueryLimits.endBefore(fetchLimit),
     );
+
     return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
     );
+  }
+
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    return Future.value(build.coverage);
   }
 
   /// Fetches builds data for the project with given [projectId].
@@ -73,6 +83,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String projectId, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
+    logger.info('Fetching builds for the project $projectId...');
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
     _throwIfInteractionUnsuccessful(newBuildsFetchResult);
@@ -161,6 +172,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
     String jobName,
     JenkinsBuild jenkinsBuild,
   ) async {
+    logger.info('Mapping build to build data...');
+
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
@@ -177,6 +190,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+    logger.info('Fetching coverage artifact for a build #${build.number}...');
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,

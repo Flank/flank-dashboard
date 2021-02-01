@@ -349,13 +349,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
-            valueTextStyle: TextStyle(
+            valueTextStyle: MetricsTextStyle(
               fontSize: 24.0,
+              lineHeightInPixels: 24.0,
               color: _metricsLightGrey,
               fontWeight: FontWeight.bold,
             ),
-            descriptionTextStyle: TextStyle(
+            descriptionTextStyle: MetricsTextStyle(
               fontSize: 14.0,
+              lineHeightInPixels: 14.0,
               color: _metricsLightGrey,
               fontWeight: FontWeight.bold,
             ),

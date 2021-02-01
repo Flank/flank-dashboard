@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
@@ -19,7 +20,7 @@ typedef BodyParserCallback<T> = InteractionResult<T> Function(
 );
 
 /// A client for interactions with the Jenkins API.
-class JenkinsClient {
+class JenkinsClient with LoggerMixin {
   /// A Jenkins JSON API path.
   static const String jsonApiPath = '/api/json';
 
@@ -133,7 +134,9 @@ class JenkinsClient {
     String name, {
     List<String> topLevelPipelines = const [],
   }) {
+    logger.info('Fetching job by name: $name...');
     final jobs = (topLevelPipelines ?? []).toList()..add(name);
+
     return _fetchJob('job/${jobs?.join('/job/')}');
   }
 
@@ -144,6 +147,8 @@ class JenkinsClient {
   /// [fetchJob] method, this one will parse [fullName] to detect top-level
   /// jobs and build a path to the desired job.
   Future<InteractionResult<JenkinsJob>> fetchJobByFullName(String fullName) {
+    logger.info('Fetching job by full name: $fullName...');
+
     return _fetchJob(_jobFullNameToPath(fullName));
   }
 
@@ -157,6 +162,7 @@ class JenkinsClient {
       path: '$path/api/json',
       treeQuery: TreeQuery.job,
     );
+    logger.info('Fetching job from the url: $fullUrl');
 
     return _handleResponse<JenkinsJob>(
       _client.get(fullUrl, headers: headers),
@@ -175,16 +181,21 @@ class JenkinsClient {
     String multiBranchJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    logger.info(
+      'Fetching jobs for the multi-branch job by name: $multiBranchJobFullName...',
+    );
+
     final path = _jobFullNameToPath(multiBranchJobFullName);
     final url = _buildJenkinsApiUrl(
       jenkinsUrl,
       path: '$path$jsonApiPath',
       treeQuery: 'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
+
     return _fetchJobs(url);
   }
 
-  /// Retrieves jobs for the multi-branch job by its full name.
+  /// Retrieves jobs for the multi-branch job by its url.
   ///
   /// Results with a list of [JenkinsJob]s.
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
@@ -193,11 +204,16 @@ class JenkinsClient {
     String multiBranchJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    logger.info(
+      'Fetching jobs for the multi-branch job by url: $multiBranchJobUrl...',
+    );
+
     final url = _buildJenkinsApiUrl(
       multiBranchJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
+
     return _fetchJobs(url);
   }
 
@@ -206,6 +222,8 @@ class JenkinsClient {
   /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
   /// method.
   Future<InteractionResult<List<JenkinsJob>>> _fetchJobs(String url) {
+    logger.info('Fetching jobs from the url: $url');
+
     return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
@@ -225,6 +243,8 @@ class JenkinsClient {
     String buildingJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    logger.info('Fetching builds by job full name: $buildingJobFullName...');
+
     final path = _jobFullNameToPath(buildingJobFullName);
     final url = _buildJenkinsApiUrl(
       jenkinsUrl,
@@ -233,6 +253,7 @@ class JenkinsClient {
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
+
     return _fetchBuilds(url);
   }
 
@@ -244,12 +265,15 @@ class JenkinsClient {
     String buildingJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    logger.info('Fetching builds by job url: $buildingJobUrl');
+
     final url = _buildJenkinsApiUrl(
       buildingJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
+
     return _fetchBuilds(url);
   }
 
@@ -258,6 +282,8 @@ class JenkinsClient {
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
   /// method.
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
+    logger.info('Fetching builds from the url: $url');
+
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
@@ -284,6 +310,8 @@ class JenkinsClient {
       treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
 
+    logger.info('Fetching artifacts from the url: $url');
+
     return _handleResponse<List<JenkinsBuildArtifact>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => InteractionResult.success(
@@ -299,6 +327,8 @@ class JenkinsClient {
     String buildUrl,
     String relativePath,
   ) {
+    logger.info('Fetching artifacts by relative path: $relativePath');
+
     final url = _buildJenkinsApiUrl(buildUrl, path: 'artifact/$relativePath');
 
     return _fetchArtifact(url);
@@ -309,6 +339,8 @@ class JenkinsClient {
     JenkinsBuild build,
     JenkinsBuildArtifact buildArtifact,
   ) {
+    logger.info('Fetching artifact for build #${build.number}...');
+
     final url = _buildJenkinsApiUrl(
       build.url,
       path: 'artifact/${buildArtifact.relativePath}',
@@ -322,6 +354,8 @@ class JenkinsClient {
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
   Future<InteractionResult<Map<String, dynamic>>> _fetchArtifact(String url) {
+    logger.info('Fetching artifact from the url: $url');
+
     return _handleResponse<Map<String, dynamic>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => InteractionResult.success(result: json),

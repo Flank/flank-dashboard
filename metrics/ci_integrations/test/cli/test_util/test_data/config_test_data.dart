@@ -45,5 +45,7 @@ class ConfigTestData {
   static final SyncConfig syncConfig = SyncConfig(
     destinationProjectId: FirestoreConfigTestData.metricsProjectId,
     sourceProjectId: JenkinsConfigTestData.jobName,
+    initialSyncLimit: 20,
+    coverage: false,
   );
 }

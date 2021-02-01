@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
@@ -7,7 +8,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("Scorecard", () {
     testWidgets(
-      'displays an empty text if the given value is null',
+      "displays an empty text if the given value is null",
       (tester) async {
         await tester.pumpWidget(const _ScorecardTestbed(value: null));
 
@@ -16,9 +17,9 @@ void main() {
     );
 
     testWidgets(
-      'displays an empty text if the given description is null',
+      "displays an empty text if the given description is null",
       (tester) async {
-        await tester.pumpWidget(const _ScorecardTestbed(value: null));
+        await tester.pumpWidget(const _ScorecardTestbed(description: null));
 
         expect(find.text(''), findsOneWidget);
       },
@@ -46,6 +47,43 @@ void main() {
     );
 
     testWidgets(
+      "uses the auto size text widget to display the value",
+      (WidgetTester tester) async {
+        const value = 'test';
+
+        await tester.pumpWidget(const _ScorecardTestbed(
+          value: value,
+        ));
+
+        expect(
+          find.widgetWithText(AutoSizeText, value),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "reduces the value font size to fit the constraints",
+      (WidgetTester tester) async {
+        const value = 'very long name 12345678910';
+        const initialFontSize = 100.0;
+        const valueStyle = TextStyle(fontSize: initialFontSize);
+
+        await tester.pumpWidget(const _ScorecardTestbed(
+          value: value,
+          valueStyle: valueStyle,
+          constraints: BoxConstraints(maxWidth: 50),
+        ));
+
+        final valueFinder = find.text(value);
+        final valueWidget = tester.widget<Text>(valueFinder);
+        final actualFontSize = valueWidget.style.fontSize;
+
+        expect(actualFontSize, lessThan(initialFontSize));
+      },
+    );
+
+    testWidgets(
       "applies the value text style",
       (WidgetTester tester) async {
         const valueStyle = TextStyle(color: Colors.red);
@@ -54,11 +92,11 @@ void main() {
           valueStyle: valueStyle,
         ));
 
-        final valueWidget = tester.widget<Text>(
-          find.text(_ScorecardTestbed.defaultValueText),
+        final valueWidget = tester.widget<AutoSizeText>(
+          find.widgetWithText(AutoSizeText, _ScorecardTestbed.defaultValueText),
         );
 
-        expect(valueWidget.style.color, valueStyle.color);
+        expect(valueWidget.style, equals(valueStyle));
       },
     );
 
@@ -75,7 +113,7 @@ void main() {
           find.text(_ScorecardTestbed.defaultDescriptionText),
         );
 
-        expect(titleWidget.style.color, titleStyle.color);
+        expect(titleWidget.style, equals(titleStyle));
       },
     );
 
@@ -92,7 +130,7 @@ void main() {
           find.widgetWithText(Padding, _ScorecardTestbed.defaultValueText),
         );
 
-        expect(valuePaddingWidget.padding, valuePadding);
+        expect(valuePaddingWidget.padding, equals(valuePadding));
       },
     );
   });
@@ -106,19 +144,23 @@ class _ScorecardTestbed extends StatelessWidget {
   /// A default value text used in tests.
   static const defaultValueText = 'value';
 
-  /// The text that describes the [value].
+  /// A text that describes the [value].
   final String description;
 
-  /// The text to display.
+  /// A text to display.
   final String value;
 
-  /// The [TextStyle] of the [description] text.
+  /// A [TextStyle] of the [description] text.
   final TextStyle descriptionStyle;
 
-  /// The [TextStyle] of the [value] text.
+  /// A [BoxConstraints] to use under tests to imitate this widget's
+  /// layout constraints.
+  final BoxConstraints constraints;
+
+  /// A [TextStyle] of the [value] text.
   final TextStyle valueStyle;
 
-  /// The padding of the [value] text.
+  /// A padding of the [value] text.
   final EdgeInsets valuePadding;
 
   /// Creates a new instance of this testbed.
@@ -133,18 +175,22 @@ class _ScorecardTestbed extends StatelessWidget {
     this.value = defaultValueText,
     this.descriptionStyle,
     this.valueStyle,
+    this.constraints,
     this.valuePadding = const EdgeInsets.all(32.0),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      body: Scorecard(
-        description: description,
-        value: value,
-        descriptionStyle: descriptionStyle,
-        valueStyle: valueStyle,
-        valuePadding: valuePadding,
+      body: Container(
+        constraints: constraints,
+        child: Scorecard(
+          description: description,
+          value: value,
+          descriptionStyle: descriptionStyle,
+          valueStyle: valueStyle,
+          valuePadding: valuePadding,
+        ),
       ),
     );
   }

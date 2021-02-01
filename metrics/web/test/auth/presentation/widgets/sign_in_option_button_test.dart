@@ -60,8 +60,8 @@ void main() {
           ));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
-        final source = image.url;
+        final image = FinderUtil.findSvgImage(tester);
+        final source = image.src;
 
         expect(source, equals(asset));
       },

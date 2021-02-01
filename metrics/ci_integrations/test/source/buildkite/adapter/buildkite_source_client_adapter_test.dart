@@ -31,6 +31,8 @@ void main() {
       duration: DateTime(2021).difference(DateTime(2020)),
     );
 
+    const fetchLimit = 20;
+
     final buildkiteClientMock = _BuildkiteClientMock();
     final adapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClientMock,
@@ -38,29 +40,6 @@ void main() {
 
     const coverageJson = <String, dynamic>{'pct': 0.5};
     final coverageBytes = utf8.encode(jsonEncode(coverageJson)) as Uint8List;
-
-    PostExpectation<Future<InteractionResult<BuildkiteBuildsPage>>>
-        whenFetchBuilds({BuildkiteArtifactsPage withArtifactsPage}) {
-      when(
-        buildkiteClientMock.downloadArtifact(any),
-      ).thenSuccessWith(coverageBytes);
-
-      when(buildkiteClientMock.fetchArtifacts(
-        any,
-        any,
-        perPage: anyNamed('perPage'),
-        page: anyNamed('page'),
-      )).thenSuccessWith(withArtifactsPage);
-
-      return when(
-        buildkiteClientMock.fetchBuilds(
-          any,
-          state: anyNamed('state'),
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        ),
-      );
-    }
 
     const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
       BuildkiteArtifact(filename: "coverage-summary.json"),
@@ -78,6 +57,35 @@ void main() {
     final defaultBuildData = testData.generateBuildDataByNumbers(
       buildNumbers: [2, 1],
     );
+    final defaultBuild = testData.generateBuildData();
+
+    PostExpectation<Future<InteractionResult<BuildkiteBuildsPage>>>
+        whenFetchBuilds() {
+      return when(
+        buildkiteClientMock.fetchBuilds(
+          pipelineSlug,
+          state: BuildkiteBuildState.finished,
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
+
+    PostExpectation<Future<InteractionResult<BuildkiteArtifactsPage>>>
+        whenFetchCoverage() {
+      when(
+        buildkiteClientMock.downloadArtifact(any),
+      ).thenSuccessWith(coverageBytes);
+
+      return when(
+        buildkiteClientMock.fetchArtifacts(
+          defaultBuild.workflowName,
+          defaultBuild.buildNumber,
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
 
     setUp(() {
       reset(buildkiteClientMock);
@@ -98,111 +106,49 @@ void main() {
       expect(adapter.buildkiteClient, equals(buildkiteClientMock));
     });
 
-    test(".fetchBuilds() fetches builds", () {
-      whenFetchBuilds(
-        withArtifactsPage: defaultArtifactsPage,
-      ).thenSuccessWith(defaultBuildsPage);
+    test(
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is 0",
+      () {
+        expect(
+          () => adapter.fetchBuilds(pipelineSlug, 0),
+          throwsArgumentError,
+        );
+      },
+    );
 
-      final result = adapter.fetchBuilds(pipelineSlug);
+    test(
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit is a negative number",
+      () {
+        expect(
+          () => adapter.fetchBuilds(pipelineSlug, -1),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(".fetchBuilds() fetches builds", () {
+      whenFetchBuilds().thenSuccessWith(defaultBuildsPage);
+
+      final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
       expect(result, completion(equals(defaultBuildData)));
     });
 
-    test(".fetchBuilds() fetches coverage for each build", () async {
-      final expectedCoverage = [
-        testData.coverage,
-        testData.coverage,
-      ];
-
-      whenFetchBuilds(
-        withArtifactsPage: defaultArtifactsPage,
-      ).thenSuccessWith(defaultBuildsPage);
-
-      final result = await adapter.fetchBuilds(pipelineSlug);
-      final actualCoverage =
-          result.map((buildData) => buildData.coverage).toList();
-
-      expect(actualCoverage, equals(expectedCoverage));
-    });
-
     test(
-      ".fetchBuilds() maps the coverage value to null if the coverage summary artifact does not exist",
-      () async {
-        const expectedCoverage = [null, null];
-        const artifactsPage = BuildkiteArtifactsPage(
-          values: [BuildkiteArtifact(filename: 'test.json')],
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: artifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        final result = await adapter.fetchBuilds(pipelineSlug);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps the coverage value to null if an artifact bytes is null",
-      () async {
-        const expectedCoverage = [null, null];
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(null);
-
-        final result = await adapter.fetchBuilds(pipelineSlug);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps the coverage value to null if the JSON content parsing is failed",
-      () async {
-        const incorrectJson = "{pct : 100}";
-        const expectedCoverage = [null, null];
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(
-          utf8.encode(incorrectJson) as Uint8List,
-        );
-
-        final result = await adapter.fetchBuilds(pipelineSlug);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuilds() returns no more than the BuildkiteSourceClientAdapter.fetchLimit builds",
+      ".fetchBuilds() returns no more than the given fetch limit number of builds",
       () {
         final builds = testData.generateBuildkiteBuildsByNumbers(
           buildNumbers: List.generate(30, (index) => index),
         );
         final buildsPage = BuildkiteBuildsPage(values: builds);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
+        whenFetchBuilds().thenSuccessWith(buildsPage);
 
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
         expect(
           result,
-          completion(hasLength(BuildkiteSourceClientAdapter.fetchLimit)),
+          completion(hasLength(lessThanOrEqualTo(fetchLimit))),
         );
       },
     );
@@ -211,50 +157,12 @@ void main() {
       final build = testData.generateBuildkiteBuild(blocked: true);
       final buildsPage = BuildkiteBuildsPage(values: [build]);
 
-      whenFetchBuilds(
-        withArtifactsPage: defaultArtifactsPage,
-      ).thenSuccessWith(buildsPage);
+      whenFetchBuilds().thenSuccessWith(buildsPage);
 
-      final result = adapter.fetchBuilds(pipelineSlug);
+      final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
       expect(result, completion(isEmpty));
     });
-
-    test(
-      ".fetchBuilds() fetches builds using pagination for build artifacts",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = adapter.fetchBuilds(pipelineSlug);
-
-        expect(result, completion(equals(defaultBuildData)));
-      },
-    );
-
-    test(
-      ".fetchBuilds() fetches coverage for each build using pagination for build artifacts",
-      () async {
-        final expectedCoverage = [testData.coverage, testData.coverage];
-
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = await adapter.fetchBuilds(pipelineSlug);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
 
     test(
       ".fetchBuilds() fetches builds using pagination for builds",
@@ -276,14 +184,12 @@ void main() {
           buildNumbers: [1, 2],
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchBuilds().thenSuccessWith(firstPage);
 
         when(buildkiteClientMock.fetchBuildsNext(firstPage))
             .thenSuccessWith(secondPage);
 
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
         expect(result, completion(equals(expected)));
       },
@@ -292,11 +198,9 @@ void main() {
     test(
       ".fetchBuilds() throws a StateError if fetching a builds page fails",
       () {
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenErrorWith();
+        whenFetchBuilds().thenErrorWith();
 
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
         expect(result, throwsStateError);
       },
@@ -312,64 +216,14 @@ void main() {
           ),
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchBuilds().thenSuccessWith(firstPage);
 
         when(buildkiteClientMock.fetchBuildsNext(firstPage)).thenErrorWith();
 
-        final result = adapter.fetchBuilds(pipelineSlug);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if fetching the coverage artifact fails",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifacts(
-          any,
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        )).thenErrorWith();
-
-        final result = adapter.fetchBuilds(pipelineSlug);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if paginating through coverage artifacts fails",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenErrorWith();
-
-        final result = adapter.fetchBuilds(pipelineSlug);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if downloading a coverage artifact fails",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenErrorWith();
-
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
 
         expect(result, throwsStateError);
       },
@@ -414,10 +268,9 @@ void main() {
           states: states,
         );
 
-        whenFetchBuilds(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(BuildkiteBuildsPage(values: builds));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: builds));
 
-        final result = adapter.fetchBuilds(pipelineSlug);
+        final result = adapter.fetchBuilds(pipelineSlug, fetchLimit);
 
         expect(result, completion(equals(expectedBuilds)));
       },
@@ -431,11 +284,12 @@ void main() {
         final finish = build.finishedAt;
         final expectedDuration = finish.difference(start);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(expectedDuration));
@@ -451,11 +305,12 @@ void main() {
           finishedAt: DateTime.now(),
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -471,11 +326,12 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -490,11 +346,13 @@ void main() {
           webUrl: null,
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds()
+            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));
@@ -511,11 +369,12 @@ void main() {
           finishedAt: finishedAt,
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(finishedAt));
@@ -531,11 +390,13 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds()
+            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
-        final result = await adapter.fetchBuilds(pipelineSlug);
+        final result = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -564,9 +425,7 @@ void main() {
           buildNumbers: [4, 3, 2],
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
+        whenFetchBuilds().thenSuccessWith(buildsPage);
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
@@ -587,9 +446,7 @@ void main() {
           buildNumbers: [7, 6, 5],
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
+        whenFetchBuilds().thenSuccessWith(buildsPage);
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
@@ -607,147 +464,11 @@ void main() {
           ),
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
+        whenFetchBuilds().thenSuccessWith(buildsPage);
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
         expect(result, completion(isEmpty));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() fetches coverage for each build",
-      () async {
-        final expected = [
-          testData.coverage,
-          testData.coverage,
-          testData.coverage,
-        ];
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expected));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps the coverage value to null if the coverage summary artifact does not exist",
-      () async {
-        const expectedCoverage = [null, null, null];
-        const artifactsPage = BuildkiteArtifactsPage(
-          values: [BuildkiteArtifact(filename: "test.json")],
-        );
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: artifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps the coverage value to null if an artifact bytes is null",
-      () async {
-        const expectedCoverage = [null, null];
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [3, 2, 1],
-          ),
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(null);
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps the coverage value to null if the JSON content parsing is failed",
-      () async {
-        const expectedCoverage = [null, null];
-        const incorrectJson = "{pct : 100}";
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [3, 2, 1],
-          ),
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(
-          utf8.encode(incorrectJson) as Uint8List,
-        );
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() fetches coverage for each build using pagination for build artifacts",
-      () async {
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [4, 3, 2, 1],
-          ),
-        );
-        final expectedCoverage = [
-          testData.coverage,
-          testData.coverage,
-          testData.coverage,
-        ];
-
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expectedCoverage));
       },
     );
 
@@ -758,9 +479,7 @@ void main() {
         final buildsPage = BuildkiteBuildsPage(values: [build]);
         final lastBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(buildsPage);
+        whenFetchBuilds().thenSuccessWith(buildsPage);
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
@@ -789,9 +508,7 @@ void main() {
           ),
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchBuilds().thenSuccessWith(firstPage);
 
         when(buildkiteClientMock.fetchBuildsNext(firstPage))
             .thenSuccessWith(secondPage);
@@ -803,37 +520,9 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() fetches builds using the pagination for buildkite artifacts",
-      () {
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final buildsPage = BuildkiteBuildsPage(
-          values: testData.generateBuildkiteBuildsByNumbers(
-            buildNumbers: [4, 3, 2, 1],
-          ),
-        );
-        final expected = testData.generateBuildDataByNumbers(
-          buildNumbers: [4, 3, 2],
-        );
-
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(buildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-
-        expect(result, completion(equals(expected)));
-      },
-    );
-
-    test(
       ".fetchBuildsAfter() throws a StateError if fetching a builds page fails",
       () {
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
+        whenFetchBuilds().thenSuccessWith(defaultBuildsPage);
 
         when(buildkiteClientMock.fetchBuilds(
           any,
@@ -861,66 +550,9 @@ void main() {
           ),
         );
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchBuilds().thenSuccessWith(firstPage);
 
         when(buildkiteClientMock.fetchBuildsNext(firstPage)).thenErrorWith();
-
-        final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() throws a StateError if fetching the coverage artifact fails",
-      () {
-        whenFetchBuilds().thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifacts(
-          any,
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        )).thenErrorWith();
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() throws a StateError if paginating through builds artifacts fails",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
-            .thenErrorWith();
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() throws a StateError if downloading an artifact fails",
-      () {
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultBuildsPage);
-
-        when(buildkiteClientMock.downloadArtifact(any)).thenErrorWith();
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
@@ -968,8 +600,7 @@ void main() {
         );
         final lastBuild = testData.generateBuildData(buildNumber: 0);
 
-        whenFetchBuilds(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(BuildkiteBuildsPage(values: builds));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: builds));
 
         final result = adapter.fetchBuildsAfter(pipelineSlug, lastBuild);
 
@@ -986,9 +617,7 @@ void main() {
         final finish = build.finishedAt;
         final expectedDuration = finish.difference(start);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final duration = result.first.duration;
@@ -1008,9 +637,7 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final duration = result.first.duration;
@@ -1030,9 +657,7 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final duration = result.first.duration;
@@ -1052,9 +677,8 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds()
+            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final startedAt = result.first.startedAt;
@@ -1064,29 +688,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() maps fetched builds' difference between the startedAt and finishedAt dates to the Duration.zero if the finishedAt date is null",
-      () async {
-        final build = BuildkiteBuild(
-          number: 2,
-          blocked: false,
-          startedAt: DateTime.now(),
-          finishedAt: null,
-        );
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
-
-        final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
-        final duration = result.first.duration;
-
-        expect(duration, equals(Duration.zero));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps fetched builds' url to the empty string if the url is null",
+      ".fetchBuildsAfter() maps fetched builds' url to an empty string if the url is null",
       () async {
         const build = BuildkiteBuild(
           number: 2,
@@ -1095,9 +697,8 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds()
+            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final url = result.first.url;
@@ -1118,14 +719,135 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds(
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(finishedAt));
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws an ArgumentError if the given build is null",
+      () {
+        final result = adapter.fetchCoverage(null);
+
+        expect(result, throwsArgumentError);
+      },
+    );
+
+    test(".fetchCoverage() fetches coverage for the given build", () async {
+      whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
+
+      final result = await adapter.fetchCoverage(defaultBuild);
+
+      expect(result, isNotNull);
+    });
+
+    test(
+      ".fetchCoverage() returns null if the coverage summary artifact does not exist",
+      () async {
+        const artifactsPage = BuildkiteArtifactsPage(
+          values: [BuildkiteArtifact(filename: 'test.json')],
+        );
+
+        whenFetchCoverage().thenSuccessWith(artifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() does not download any artifacts if the coverage summary artifact does not exist",
+      () async {
+        const artifactsPage = BuildkiteArtifactsPage(
+          values: [BuildkiteArtifact(filename: 'test.json')],
+        );
+
+        whenFetchCoverage().thenSuccessWith(artifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+        verifyNever(buildkiteClientMock.downloadArtifact(any));
+      },
+    );
+
+    test(
+      ".fetchCoverage() returns null if an artifact bytes is null",
+      () async {
+        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
+        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(null);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() returns null if the JSON content parsing is failed",
+      () async {
+        const incorrectJson = "{pct : 100}";
+        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
+        when(buildkiteClientMock.downloadArtifact(any)).thenSuccessWith(
+          utf8.encode(incorrectJson) as Uint8List,
+        );
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() fetches coverage using pagination for build artifacts",
+      () async {
+        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
+        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
+            .thenSuccessWith(defaultArtifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if fetching the coverage artifact fails",
+      () {
+        whenFetchCoverage().thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if paginating through coverage artifacts fails",
+      () {
+        whenFetchCoverage().thenSuccessWith(emptyArtifactsPage);
+        when(buildkiteClientMock.fetchArtifactsNext(any)).thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if downloading a coverage artifact fails",
+      () {
+        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
+        when(buildkiteClientMock.downloadArtifact(any)).thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
       },
     );
 

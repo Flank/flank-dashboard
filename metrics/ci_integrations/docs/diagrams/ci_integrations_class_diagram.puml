@@ -3,7 +3,8 @@ left to right direction
 
 package client {
   class JenkinsClient
-  class BitriseClient
+  class GithubActionsClient
+  class BuildkiteClient
   class Firestore
 }
 
@@ -29,6 +30,7 @@ package integration.interface.source {
   interface SourceClient {
     + {abstract} fetchBuilds(String) : List<BuildData>
     + {abstract} fetchBuildsAfter(String, BuildData) : List<BuildData>
+    + {abstract} fetchCoverage(BuildData) : Percent
     + {abstract} dispose() : void
   }
 
@@ -90,6 +92,7 @@ together {
       + jenkinsClient: JenkinsClient
       + fetchBuilds(String) : List<BuildData>
       + fetchBuildsAfter(String, BuildData) : List<BuildData>
+      + fetchCoverage(BuildData) : Percent
       + dispose() : void
     }
 
@@ -104,38 +107,74 @@ together {
     JenkinsSourceParty ..> JenkinsSourceClientFactory : uses
   }
 
-  package source.bitrise {
-    class BitriseSourceConfig {
+  package source.github_actions {
+    class GithubActionsSourceParty {
+      + clientFactory : GithubActionsSourceClientFactory
+      + configParser : GithubActionsSourceConfigParser
+    }
+
+    class GithubActionsSourceConfig {
       + getSourceProjectId() : String
     }
 
-    class BitriseSourceConfigParser {
-      + parse(Map<String, dynamic>) : BitriseSourceConfig
+    class GithubActionsSourceConfigParser {
+      + parse(Map<String, dynamic>) : GithubActionsSourceConfig
       + canParse(Map<String, dynamic>) : bool
     }
 
-    class BitriseSourceClientAdapter {
-      + bitriseClient : BitriseClient
+    class GithubActionsSourceClientAdapter {
+      + githubActionsClient: GithubActionsClient
       + fetchBuilds(String) : List<BuildData>
       + fetchBuildsAfter(String, BuildData) : List<BuildData>
+      + fetchCoverage(BuildData) : Percent
       + dispose() : void
     }
 
-    class BitriseSourceClientFactory {
-      + create(BitriseSourceConfig) : BitriseSourceClientAdapter
+    class GithubActionsSourceClientFactory {
+      + create(GithubActionsSourceConfig) : GithubActionsSourceClientAdapter
     }
 
-    class BitriseSourceParty {
-      + clientFactory : BitriseSourceClientFactory
-      + configParser : BitriseSourceConfigParser
-    }
-
-    BitriseSourceConfigParser ..> BitriseSourceConfig : creates
-    BitriseSourceClientAdapter ..> BitriseClient : uses
-    BitriseSourceClientFactory ..> BitriseSourceClientAdapter : creates
-    BitriseSourceParty ..> BitriseSourceConfigParser : uses
-    BitriseSourceParty ..> BitriseSourceClientFactory : uses
+    GithubActionsSourceConfigParser ..> GithubActionsSourceConfig : creates
+    GithubActionsSourceClientAdapter ..> GithubActionsClient : uses
+    GithubActionsSourceClientFactory ..> GithubActionsSourceClientAdapter : creates
+    GithubActionsSourceParty ..> GithubActionsSourceConfigParser : uses
+    GithubActionsSourceParty ..> GithubActionsSourceClientFactory : uses
   }
+
+  package source.buildkite {
+    class BuildkiteSourceConfig {
+      + getSourceProjectId() : String
+    }
+
+    class BuildkiteSourceConfigParser {
+      + parse(Map<String, dynamic>) : BuildkiteSourceConfig
+      + canParse(Map<String, dynamic>) : bool
+    }
+
+    class BuildkiteSourceClientAdapter {
+      + buildkiteClient : BuildkiteClient
+      + fetchBuilds(String) : List<BuildData>
+      + fetchBuildsAfter(String, BuildData) : List<BuildData>
+      + fetchCoverage(BuildData) : Percent
+      + dispose() : void
+    }
+
+    class BuildkiteSourceClientFactory {
+      + create(BuildkiteSourceConfig) : BuildkiteSourceClientAdapter
+    }
+
+    class BuildkiteSourceParty {
+      + clientFactory : BuildkiteSourceClientFactory
+      + configParser : BuildkiteSourceConfigParser
+    }
+
+    BuildkiteSourceConfigParser ..> BuildkiteSourceConfig : creates
+    BuildkiteSourceClientAdapter ..> BuildkiteClient : uses
+    BuildkiteSourceClientFactory ..> BuildkiteSourceClientAdapter : creates
+    BuildkiteSourceParty ..> BuildkiteSourceConfigParser : uses
+    BuildkiteSourceParty ..> BuildkiteSourceClientFactory : uses
+  }
+
   package destination.firestore {
     class FirestoreDestinationParty {
       + clientFactory : FirestoreDestinationClientFactory
@@ -261,6 +300,7 @@ package integration.ci_integration {
   class SyncConfig {
     + sourceProjectId : String
     + destinationProjectId : String
+    + coverage: bool
   }
 
   CiIntegration ..> SyncConfig : uses
@@ -269,7 +309,8 @@ package integration.ci_integration {
 integration.interface.base <|---- integration.interface.source
 integration.interface.base <|---- integration.interface.destination
 integration.interface.source <|.. source.jenkins
-integration.interface.source <|.. source.bitrise
+integration.interface.source <|.. source.github_actions
+integration.interface.source <|.. source.buildkite
 integration.interface.destination <|.. destination.firestore
 integration.ci_integration ..> integration.interface.source : uses
 integration.ci_integration ..> integration.interface.destination : uses

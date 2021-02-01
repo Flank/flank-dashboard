@@ -1,20 +1,33 @@
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
+import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
-  /// The [Logger] this runner and its commands should use for messages
-  /// and errors.
-  final Logger logger;
+  /// A name of the flag that indicates whether to enable noisy logging or not.
+  static const String _verboseFlagName = 'verbose';
 
   /// Creates an instance of command runner and registers sub-commands available.
-  ///
-  /// Throws an [ArgumentError] if the given [logger] is `null`.
-  CiIntegrationsRunner(this.logger)
+  CiIntegrationsRunner()
       : super('ci_integrations', 'Metrics CI integrations CLI.') {
-    ArgumentError.checkNotNull(logger, 'logger');
+    argParser.addFlag(
+      _verboseFlagName,
+      abbr: 'v',
+      help: 'Whether to enable noisy logging.',
+    );
 
-    addCommand(SyncCommand(logger));
+    addCommand(SyncCommand());
+  }
+
+  @override
+  Future<void> run(Iterable<String> args) {
+    final result = argParser.parse(args);
+    final verbose = result[_verboseFlagName] as bool;
+
+    final loggerFactory = LoggerFactory(verbose: verbose);
+    LoggerManager.setLoggerFactory(loggerFactory);
+
+    return super.run(args);
   }
 }

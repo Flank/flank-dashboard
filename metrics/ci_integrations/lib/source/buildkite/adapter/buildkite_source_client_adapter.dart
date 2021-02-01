@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
@@ -9,14 +11,15 @@ import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dar
 import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:ci_integration/util/validator/number_validator.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [BuildkiteClient] to implement the [SourceClient]
 /// interface.
-class BuildkiteSourceClientAdapter implements SourceClient {
-  /// A fetch limit for Buildkite API calls.
-  static const int fetchLimit = 25;
+class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
+  /// A default number of instances to request in paginated requests.
+  static const int defaultPerPage = 25;
 
   /// A [BuildkiteClient] instance to perform API calls.
   final BuildkiteClient buildkiteClient;
@@ -31,8 +34,17 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String pipelineSlug) async {
-    return _fetchLatestBuilds(pipelineSlug);
+  Future<List<BuildData>> fetchBuilds(
+    String pipelineSlug,
+    int fetchLimit,
+  ) async {
+    NumberValidator.checkGreaterThan(fetchLimit, 0);
+
+    logger.info('Fetching builds...');
+    return _fetchLatestBuilds(
+      pipelineSlug,
+      fetchLimit: fetchLimit,
+    );
   }
 
   @override
@@ -42,6 +54,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
+    logger.info('Fetching builds after build #$latestBuildNumber...');
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -53,25 +66,44 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
     if (builds.isEmpty || builds.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(pipelineSlug, latestBuildNumber);
+    return _fetchLatestBuilds(
+      pipelineSlug,
+      latestBuildNumber: latestBuildNumber,
+    );
+  }
+
+  @override
+  Future<Percent> fetchCoverage(BuildData build) async {
+    ArgumentError.checkNotNull(build, 'build');
+
+    final coverageArtifact = await _fetchCoverageArtifact(
+      build.workflowName,
+      build.buildNumber,
+    );
+
+    if (coverageArtifact == null) return null;
+
+    final bytes = await _downloadArtifact(coverageArtifact);
+    return _mapArtifactToCoverage(bytes);
   }
 
   /// Fetches the latest builds by the given [pipelineSlug].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
-  /// returns no more than the latest [fetchLimit] builds.
+  /// [Build.buildNumber] greater than the given [latestBuildNumber].
+  /// Otherwise, returns no more than [fetchLimit] latest builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String pipelineSlug, [
+    String pipelineSlug, {
     int latestBuildNumber,
-  ]) async {
+    int fetchLimit,
+  }) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     BuildkiteBuildsPage buildsPage = await _fetchBuildsPage(
       pipelineSlug,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
 
     do {
@@ -98,11 +130,8 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       }
 
       if (hasNext) {
-        final interaction = await buildkiteClient.fetchBuildsNext(
-          buildsPage,
-        );
-        _throwIfInteractionUnsuccessful(interaction);
-        buildsPage = interaction.result;
+        final interaction = await buildkiteClient.fetchBuildsNext(buildsPage);
+        buildsPage = _processInteraction(interaction);
       }
     } while (hasNext);
 
@@ -123,9 +152,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       perPage: perPage,
     );
 
-    _throwIfInteractionUnsuccessful(interaction);
-
-    return interaction.result;
+    return _processInteraction(interaction);
   }
 
   /// Maps the given [build] to the [BuildData] instance.
@@ -140,70 +167,66 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       duration: _calculateJobDuration(build),
       workflowName: pipelineSlug,
       url: build.webUrl ?? '',
-      coverage: await _fetchCoverage(pipelineSlug, build),
+      apiUrl: build.apiUrl,
     );
   }
 
-  /// Fetches the coverage for the given [build] of a pipeline with the given
-  /// [pipelineSlug].
+  /// Fetches an artifact with coverage data for the build with the given
+  /// [buildNumber] of a pipeline with the given [pipelineSlug].
   ///
-  /// Returns `null` if the code coverage artifact for the given build
-  /// is not found.
-  Future<Percent> _fetchCoverage(
+  /// Returns `null` if a coverage artifact is not found.
+  Future<BuildkiteArtifact> _fetchCoverageArtifact(
     String pipelineSlug,
-    BuildkiteBuild build,
+    int buildNumber,
   ) async {
+    logger.info('Fetching coverage artifact for a build #$buildNumber...');
     final interaction = await buildkiteClient.fetchArtifacts(
       pipelineSlug,
-      build.number,
+      buildNumber,
       page: 1,
-      perPage: fetchLimit,
+      perPage: defaultPerPage,
     );
-    _throwIfInteractionUnsuccessful(interaction);
 
-    BuildkiteArtifactsPage page = interaction.result;
+    BuildkiteArtifactsPage page = _processInteraction(interaction);
+    BuildkiteArtifact artifact;
     bool hasNext = false;
 
     do {
       final artifacts = page.values;
-
-      final coverageArtifact = artifacts.firstWhere(
+      artifact = artifacts.firstWhere(
         (artifact) => artifact.filename == 'coverage-summary.json',
         orElse: () => null,
       );
 
-      if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact);
-      }
-
-      hasNext = page.hasNextPage;
+      hasNext = page.hasNextPage && artifact == null;
 
       if (hasNext) {
         final interaction = await buildkiteClient.fetchArtifactsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
-
-        page = interaction.result;
+        page = _processInteraction(interaction);
       }
     } while (hasNext);
 
-    return null;
+    return artifact;
   }
 
-  /// Maps the given [artifact] to the coverage [Percent] value.
+  /// Downloads the given [artifact] using the [BuildkiteArtifact.downloadUrl].
+  Future<Uint8List> _downloadArtifact(BuildkiteArtifact artifact) async {
+    final interaction = await buildkiteClient.downloadArtifact(
+      artifact.downloadUrl,
+    );
+
+    return _processInteraction(interaction);
+  }
+
+  /// Maps the given [artifactBytes] into the coverage [Percent] value.
   ///
-  /// Returns `null` if either the coverage file is not found or
+  /// Returns `null` if either the given [artifactBytes] is `null` or
   /// JSON content parsing is failed.
-  Future<Percent> _mapArtifactToCoverage(BuildkiteArtifact artifact) async {
-    final interaction =
-        await buildkiteClient.downloadArtifact(artifact.downloadUrl);
-
-    _throwIfInteractionUnsuccessful(interaction);
-
-    final artifactBytes = interaction.result;
-
+  Percent _mapArtifactToCoverage(Uint8List artifactBytes) {
     if (artifactBytes == null) return null;
 
     try {
+      logger.info('Parsing coverage artifact...');
       final coverageContent = utf8.decode(artifactBytes);
       final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
       final coverage = CoverageData.fromJson(coverageJson);
@@ -238,12 +261,17 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     }
   }
 
-  /// Throws a [StateError] with the message of [interactionResult] if this
-  /// result is [InteractionResult.isError].
-  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
-    if (interactionResult.isError) {
-      throw StateError(interactionResult.message);
+  /// Processes the given [interaction].
+  ///
+  /// Throws the [StateError], if the given interaction
+  /// is [InteractionResult.isError]. Otherwise, returns
+  /// its [InteractionResult.result].
+  T _processInteraction<T>(InteractionResult<T> interaction) {
+    if (interaction.isError) {
+      throw StateError(interaction.message);
     }
+
+    return interaction.result;
   }
 
   @override

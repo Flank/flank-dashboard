@@ -29,6 +29,8 @@ void main() {
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
+    const fetchLimit = 20;
+
     PostExpectation<Future<InteractionResult>> whenFetchArtifact({
       Matcher buildUrlThat,
       Matcher relativePathThat,
@@ -113,7 +115,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
 
         expect(result, completion(equals(expected)));
       },
@@ -132,7 +137,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final list = await adapter.fetchBuilds(jobName);
+        final list = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final coverages = list.map((buildData) => buildData.coverage).toList();
 
         expect(coverages, equals(expected));
@@ -173,7 +181,10 @@ void main() {
           limits: anyNamed('limits'),
         )).thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
 
         expect(result, throwsStateError);
       },
@@ -186,28 +197,40 @@ void main() {
           (_) => responses.error<JenkinsBuildingJob>(),
         );
 
-        final result = adapter.fetchBuilds('test-non-job');
+        final result = adapter.fetchBuilds(
+          'test-non-job',
+          fetchLimit,
+        );
 
         expect(result, throwsStateError);
       },
     );
 
     test(
-      ".fetchBuilds() fetches no more than the last 28 builds of a project on an initial fetch",
+      ".fetchBuilds() throws an ArgumentError if the given fetch limit value is less than 0",
       () {
-        const expectedBuildsLength =
-            JenkinsSourceClientAdapter.initialFetchBuildsLimit;
+        expect(() => adapter.fetchBuilds(jobName, -1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() fetches no more than the given fetch limit number of builds",
+      () {
         final builds = createJenkinsBuilds(
-            buildNumbers: List.generate(30, (index) => index));
+          buildNumbers: List.generate(30, (index) => index),
+        );
         responses.addBuilds(builds);
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
 
         expect(
           result,
-          completion(hasLength(equals(expectedBuildsLength))),
+          completion(hasLength(lessThanOrEqualTo(fetchLimit))),
         );
       },
     );
@@ -251,7 +274,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(jobName);
+        final result = adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
 
         expect(result, completion(equals(expected)));
       },
@@ -271,7 +297,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
@@ -292,7 +321,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
@@ -313,7 +345,10 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = await adapter.fetchBuilds(jobName);
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
         final url = result.first.url;
 
         expect(url, equals(''));

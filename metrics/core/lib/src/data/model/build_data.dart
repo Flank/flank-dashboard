@@ -15,6 +15,7 @@ class BuildData extends Build implements DataModel {
     Duration duration,
     String workflowName,
     String url,
+    String apiUrl,
     Percent coverage,
   }) : super(
           id: id,
@@ -25,6 +26,7 @@ class BuildData extends Build implements DataModel {
           duration: duration,
           workflowName: workflowName,
           url: url,
+          apiUrl: apiUrl,
           coverage: coverage,
         );
 
@@ -39,6 +41,7 @@ class BuildData extends Build implements DataModel {
     Duration duration,
     String workflowName,
     String url,
+    String apiUrl,
     Percent coverage,
   }) {
     return BuildData(
@@ -50,6 +53,7 @@ class BuildData extends Build implements DataModel {
       duration: duration ?? this.duration,
       workflowName: workflowName ?? this.workflowName,
       url: url ?? this.url,
+      apiUrl: apiUrl ?? this.apiUrl,
       coverage: coverage ?? this.coverage,
     );
   }
@@ -64,6 +68,7 @@ class BuildData extends Build implements DataModel {
       'duration': duration?.inMilliseconds,
       'workflowName': workflowName,
       'url': url,
+      'apiUrl': apiUrl,
       'coverage': coverage?.value,
     };
   }

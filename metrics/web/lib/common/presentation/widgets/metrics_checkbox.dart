@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// A widget that displays a metrics styled checkbox.
 class MetricsCheckbox extends StatelessWidget {
@@ -30,8 +31,9 @@ class MetricsCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
 
-    return GestureDetector(
+    return TappableArea(
       onTap: () => onChanged?.call(!value),
+      builder: (_, __, child) => child,
       child: AnimatedCrossFade(
         crossFadeState: state,
         duration: const Duration(milliseconds: 100),

@@ -347,7 +347,9 @@ void main() {
           find.widgetWithText(IconLabelButton, CommonStrings.edit),
         );
 
-        await tester.pumpAndSettle();
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         final barrierFinder = find.byWidgetPredicate(
           (widget) =>
@@ -492,11 +494,13 @@ void main() {
           ),
         );
 
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          projectGroupsNotifier: projectGroupsNotifier,
-          projectGroupCardViewModel: projectGroupCardViewModel,
-          theme: testTheme,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupCardTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+            projectGroupCardViewModel: projectGroupCardViewModel,
+            theme: testTheme,
+          ));
+        });
 
         await mockNetworkImagesFor(() async {
           await _enterProjectGroupCard(tester);
@@ -506,7 +510,9 @@ void main() {
           find.widgetWithText(IconLabelButton, CommonStrings.delete),
         );
 
-        await tester.pumpAndSettle();
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         final barrierFinder = find.byWidgetPredicate(
           (widget) =>

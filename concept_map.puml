@@ -46,7 +46,7 @@ Jenkins -down-> CI : data
 GA -down-> CI : data
 Buildkite -down-> CI : data
 
-CI -down-> Firestore : stores and \l manipulates metrics
+CI -down-> Firestore : sync data
 CI -down-> Authentication : authenticates
 CI -[hidden]down-> Hosting
 

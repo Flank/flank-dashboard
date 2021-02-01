@@ -80,9 +80,9 @@ void main() {
           await tester.pumpWidget(_MetricsUserMenuButtonTestbed());
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
+        final image = FinderUtil.findSvgImage(tester);
 
-        expect(image.url, equals("icons/avatar.svg"));
+        expect(image.src, equals("icons/avatar.svg"));
       },
     );
 
@@ -107,7 +107,7 @@ void main() {
 
         await tester.pump();
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(hoverColor));
       },
@@ -122,7 +122,7 @@ void main() {
           ));
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findSvgImage(tester);
 
         expect(image.color, equals(color));
       },

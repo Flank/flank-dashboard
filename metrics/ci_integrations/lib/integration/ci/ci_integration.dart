@@ -1,3 +1,4 @@
+import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
@@ -7,7 +8,7 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
 /// performed on a CI tool and stored in a builds storage.
-class CiIntegration {
+class CiIntegration with LoggerMixin {
   /// Used to interact with a source API.
   final SourceClient sourceClient;
 
@@ -29,8 +30,10 @@ class CiIntegration {
 
   /// Synchronizes builds for a project specified in the given [config].
   ///
-  /// If [config] is `null` throws the [ArgumentError].
-  Future<InteractionResult> sync(SyncConfig config) async {
+  /// Throws an [ArgumentError] if the given [config] is `null`.
+  Future<InteractionResult> sync(
+    SyncConfig config,
+  ) async {
     ArgumentError.checkNotNull(config);
 
     try {
@@ -43,7 +46,12 @@ class CiIntegration {
 
       List<BuildData> newBuilds;
       if (lastBuild == null) {
-        newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
+        logger.info('There are no builds in the destination...');
+        final initialSyncLimit = config.initialSyncLimit;
+        newBuilds = await sourceClient.fetchBuilds(
+          sourceProjectId,
+          initialSyncLimit,
+        );
       } else {
         newBuilds = await sourceClient.fetchBuildsAfter(
           sourceProjectId,
@@ -51,23 +59,40 @@ class CiIntegration {
         );
       }
 
-      if (newBuilds != null && newBuilds.isNotEmpty) {
-        await destinationClient.addBuilds(
-          destinationProjectId,
-          newBuilds,
-        );
-        return const InteractionResult.success(
-          message: 'The data has been synced successfully!',
-        );
-      } else {
+      if (newBuilds == null || newBuilds.isEmpty) {
         return const InteractionResult.success(
           message: 'The project data is up-to-date!',
         );
       }
+
+      if (config.coverage) {
+        newBuilds = await _fetchCoverage(newBuilds);
+      }
+
+      await destinationClient.addBuilds(
+        destinationProjectId,
+        newBuilds,
+      );
+
+      return const InteractionResult.success(
+        message: 'The data has been synced successfully!',
+      );
     } catch (error) {
       return InteractionResult.error(
         message: 'Failed to sync the data! Details: $error',
       );
     }
+  }
+
+  /// Fetches coverage data for each build in the given [builds] list.
+  Future<List<BuildData>> _fetchCoverage(List<BuildData> builds) async {
+    logger.info('Fetching coverage data for builds...');
+    final fetchCoverageFutures = builds.map((build) async {
+      final coverage = await sourceClient.fetchCoverage(build);
+
+      return build.copyWith(coverage: coverage);
+    });
+
+    return Future.wait(fetchCoverageFutures);
   }
 }

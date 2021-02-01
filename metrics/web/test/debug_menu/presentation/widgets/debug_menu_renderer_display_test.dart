@@ -85,7 +85,7 @@ class _DebugMenuRendererDisplayTestbed extends StatelessWidget {
   /// A [MetricsThemeData] to use under tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates a new instance of this testbed with the given [platform].
+  /// Creates a new instance of this testbed with the given [renderer].
   ///
   /// A [metricsThemeData] defaults to the [MetricsThemeData] instance.
   const _DebugMenuRendererDisplayTestbed({
