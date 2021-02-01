@@ -19,7 +19,7 @@ void main() {
       'scopes': scopeStrings,
     };
 
-    const expectedToken = BuildkiteToken(
+    const token = BuildkiteToken(
       scopes: scopes,
     );
 
@@ -46,7 +46,7 @@ void main() {
       () {
         final token = BuildkiteToken.fromJson(tokenJson);
 
-        expect(token, equals(expectedToken));
+        expect(token, equals(token));
       },
     );
 
@@ -74,7 +74,7 @@ void main() {
         const anotherJson = {'scopes': []};
         const anotherToken = BuildkiteToken(scopes: []);
         const jsonList = [tokenJson, anotherJson];
-        const expectedList = [expectedToken, anotherToken];
+        const expectedList = [token, anotherToken];
 
         final tokenList = BuildkiteToken.listFromJson(jsonList);
 
@@ -85,7 +85,7 @@ void main() {
     test(
       ".toJson converts an instance to the json encodable map",
       () {
-        final json = expectedToken.toJson();
+        final json = token.toJson();
 
         expect(json, equals(tokenJson));
       },

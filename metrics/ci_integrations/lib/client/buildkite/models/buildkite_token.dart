@@ -36,9 +36,9 @@ class BuildkiteToken extends Equatable {
   ///
   /// Returns `null` if the given [list] is `null`.
   static List<BuildkiteToken> listFromJson(List<dynamic> list) {
-    return list
-        ?.map((json) => BuildkiteToken.fromJson(json as Map<String, dynamic>))
-        ?.toList();
+    return list?.map((json) {
+      return BuildkiteToken.fromJson(json as Map<String, dynamic>);
+    })?.toList();
   }
 
   /// Converts this token instance into the JSON encodable [Map].
