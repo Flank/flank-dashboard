@@ -806,13 +806,18 @@ void main() {
     test(
       ".fetchCoverage() fetches coverage using pagination for build artifacts",
       () async {
-        whenFetchCoverage().thenSuccessWith(defaultArtifactsPage);
-        when(buildkiteClientMock.fetchArtifactsNext(emptyArtifactsPage))
+        const artifactsPage = BuildkiteArtifactsPage(
+          values: [BuildkiteArtifact()],
+          nextPageUrl: 'url',
+        );
+        whenFetchCoverage().thenSuccessWith(artifactsPage);
+        when(buildkiteClientMock.fetchArtifactsNext(any))
             .thenSuccessWith(defaultArtifactsPage);
 
         final result = await adapter.fetchCoverage(defaultBuild);
 
         expect(result, isNotNull);
+        verify(buildkiteClientMock.fetchArtifactsNext(any)).called(1);
       },
     );
 

@@ -13,6 +13,9 @@ class WorkflowRun extends Equatable {
   /// A link to access this workflow run in Github web UI.
   final String url;
 
+  /// A link to access data of this workflow run using Github Actions API.
+  final String apiUrl;
+
   /// A status of this workflow run.
   final GithubActionStatus status;
 
@@ -27,6 +30,7 @@ class WorkflowRun extends Equatable {
     this.id,
     this.number,
     this.url,
+    this.apiUrl,
     this.status,
     this.createdAt,
   });
@@ -48,6 +52,7 @@ class WorkflowRun extends Equatable {
       id: json['id'] as int,
       number: json['run_number'] as int,
       url: json['html_url'] as String,
+      apiUrl: json['url'] as String,
       status: status,
       createdAt: createdAt,
     );
@@ -70,6 +75,7 @@ class WorkflowRun extends Equatable {
     return <String, dynamic>{
       'id': id,
       'run_number': number,
+      'url': apiUrl,
       'html_url': url,
       'status': statusMapper.unmap(status),
       'created_at': createdAt?.toIso8601String(),

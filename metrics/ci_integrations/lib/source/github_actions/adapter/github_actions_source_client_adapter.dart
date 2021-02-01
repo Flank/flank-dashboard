@@ -105,7 +105,21 @@ class GithubActionsSourceClientAdapter
 
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
-    return Future.value(build.coverage);
+    ArgumentError.checkNotNull(build, 'build');
+
+    logger.info('Fetching workflow run for build #${build.buildNumber}...');
+    final workflowRun = await _fetchWorkflowRunByUrl(build.apiUrl);
+
+    if (workflowRun == null) return null;
+
+    logger.info(
+      'Fetching coverage artifact for a workflow #${workflowRun.number}...',
+    );
+    final coverageArtifact = await _fetchCoverageArtifact(workflowRun);
+
+    if (coverageArtifact == null) return null;
+
+    return _mapArtifactToCoverage(coverageArtifact);
   }
 
   /// Fetches the latest builds by the given [jobName].
@@ -154,8 +168,7 @@ class GithubActionsSourceClientAdapter
       if (hasNext) {
         final interaction =
             await githubActionsClient.fetchWorkflowRunsNext(runsPage);
-        _throwIfInteractionUnsuccessful(interaction);
-        runsPage = interaction.result;
+        runsPage = _processInteraction(interaction);
       }
     } while (hasNext);
 
@@ -175,9 +188,7 @@ class GithubActionsSourceClientAdapter
       perPage: perPage,
     );
 
-    _throwIfInteractionUnsuccessful(interaction);
-
-    return interaction.result;
+    return _processInteraction(interaction);
   }
 
   /// Maps the given [job] and [run] to the [BuildData] instance.
@@ -192,7 +203,7 @@ class GithubActionsSourceClientAdapter
       duration: _calculateJobDuration(job),
       workflowName: job.name,
       url: job.url ?? '',
-      coverage: await _fetchCoverage(run),
+      apiUrl: run.apiUrl,
     );
   }
 
@@ -207,9 +218,7 @@ class GithubActionsSourceClientAdapter
       perPage: defaultPerPage,
     );
 
-    _throwIfInteractionUnsuccessful(interaction);
-
-    WorkflowRunJobsPage page = interaction.result;
+    WorkflowRunJobsPage page = _processInteraction(interaction);
     bool hasNext = false;
 
     do {
@@ -228,58 +237,57 @@ class GithubActionsSourceClientAdapter
 
       if (hasNext) {
         final interaction = await githubActionsClient.fetchRunJobsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
 
-        page = interaction.result;
+        page = _processInteraction(interaction);
       }
     } while (hasNext);
 
     return null;
   }
 
-  /// Fetches the coverage for the given [run].
+  /// Fetches a workflow run by the given [url].
+  ///
+  /// Returns `null` if the workflow run with the given [url] is not found.
+  Future<WorkflowRun> _fetchWorkflowRunByUrl(String url) async {
+    final interaction = await githubActionsClient.fetchWorkflowRunByUrl(url);
+
+    return _processInteraction(interaction);
+  }
+
+  /// Fetches an artifact with coverage data for the given workflow [run].
   ///
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
-  Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    logger.info(
-      'Fetching coverage artifact for a workflow #${run.number}...',
-    );
-
+  Future<WorkflowRunArtifact> _fetchCoverageArtifact(WorkflowRun run) async {
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       page: 1,
       perPage: defaultPerPage,
     );
-    _throwIfInteractionUnsuccessful(interaction);
 
-    WorkflowRunArtifactsPage page = interaction.result;
+    WorkflowRunArtifactsPage page = _processInteraction(interaction);
+    WorkflowRunArtifact artifact;
     bool hasNext = false;
 
     do {
       final artifacts = page.values;
 
-      final coverageArtifact = artifacts.firstWhere(
+      artifact = artifacts.firstWhere(
         (artifact) => artifact.name == coverageArtifactName,
         orElse: () => null,
       );
 
-      if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact);
-      }
-
-      hasNext = page.hasNextPage;
+      hasNext = page.hasNextPage && artifact == null;
 
       if (hasNext) {
         final interaction =
             await githubActionsClient.fetchRunArtifactsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
 
-        page = interaction.result;
+        page = _processInteraction(interaction);
       }
     } while (hasNext);
 
-    return null;
+    return artifact;
   }
 
   /// Maps the given [artifact] to the coverage [Percent] value.
@@ -288,9 +296,8 @@ class GithubActionsSourceClientAdapter
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
-    _throwIfInteractionUnsuccessful(interaction);
 
-    final artifactBytes = interaction.result;
+    final artifactBytes = _processInteraction(interaction);
     final artifactArchive = archiveHelper.decodeArchive(artifactBytes);
 
     final content = archiveHelper.getFileContent(
@@ -332,12 +339,17 @@ class GithubActionsSourceClientAdapter
     }
   }
 
-  /// Throws a [StateError] with the message of [interactionResult] if this
-  /// result is [InteractionResult.isError].
-  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
-    if (interactionResult.isError) {
-      throw StateError(interactionResult.message);
+  /// Processes the given [interaction].
+  ///
+  /// Throws the [StateError], if the given interaction
+  /// is [InteractionResult.isError]. Otherwise, returns
+  /// its [InteractionResult.result].
+  T _processInteraction<T>(InteractionResult<T> interaction) {
+    if (interaction.isError) {
+      throw StateError(interaction.message);
     }
+
+    return interaction.result;
   }
 
   @override
