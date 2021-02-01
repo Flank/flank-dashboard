@@ -1027,14 +1027,17 @@ void main() {
       },
     );
 
-    test(".fetchCoverage() fetches coverage for the given build", () async {
-      whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
-          .thenSuccessWith(defaultArtifactsPage);
+    test(
+      ".fetchCoverage() fetches coverage for the given build",
+      () async {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(defaultArtifactsPage);
 
-      final result = await adapter.fetchCoverage(defaultBuild);
+        final result = await adapter.fetchCoverage(defaultBuild);
 
-      expect(result, isNotNull);
-    });
+        expect(result, isNotNull);
+      },
+    );
 
     test(
       ".fetchCoverage() returns null if fetching a workflow run for the given build returns null",

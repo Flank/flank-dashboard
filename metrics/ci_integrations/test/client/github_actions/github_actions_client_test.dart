@@ -318,7 +318,7 @@ void main() {
     );
 
     test(
-      ".fetchWorkflowRunByUrl() fails if workflow run with the given url is not found",
+      ".fetchWorkflowRunByUrl() fails if a workflow run with the given url is not found",
       () {
         final url =
             '${githubActionsMockServer.url}${githubActionsMockServer.basePath}/runs/2';
