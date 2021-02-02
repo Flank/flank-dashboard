@@ -1,7 +1,16 @@
 #!/usr/bin/env groovy
 
-pipelineJob('ci_integrations') {
-    displayName('CI Integrations')
+pipelineJob('monorepo') {
+    displayName('Monorepo')
+
+    properties {
+        pipelineTriggers {
+            triggers {
+                githubPush()
+            }
+        }
+    }
+
     definition {
         cpsScm {
             scm {
@@ -12,7 +21,7 @@ pipelineJob('ci_integrations') {
                     branches('*/master')
                 }
             }
-            scriptPath('.jenkins/pipelines/ci_integrations.groovy')
+            scriptPath('.jenkins/pipelines/monorepo.groovy')
         }
     }
 }
