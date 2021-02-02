@@ -95,9 +95,9 @@ The project will be unit-tested using the Dart's core [test](https://pub.dev/pac
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
 
-- Implement the config validation functionality as an flag of the `sync` command (`sync --[no]-validate`).
+- Implement the config validation functionality as a flag of the `sync` command (`sync --[no]-validate`).
     - Pros:
         - Can be enabled by default to decrease the number of errors related to the invalid config files.
     - Cons:
-        - No ability to simply validate config without performing synchronization. 
-        - Validation may require additional permissions that are not needed for the synchronization.
+        - No ability to validate just a config file without performing synchronization. 
+        - Validation may require additional permissions that are not essential for the synchronization.
