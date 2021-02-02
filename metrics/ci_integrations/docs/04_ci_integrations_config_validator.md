@@ -89,7 +89,7 @@ Consider the package structure using the `CoolIntegration` as an example:
 >     * cool_integration_client.dart
 
 ## Making things work
-Consider the following sequence diagram that illustrates the process of the configuration files validation:
+Consider the following sequence diagram that illustrates the process of the configuration file validation:
 
 ![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_validate_command/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
 
