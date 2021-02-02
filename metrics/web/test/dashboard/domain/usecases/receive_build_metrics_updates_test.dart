@@ -23,9 +23,6 @@ void main() {
     final receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(repository);
     const extraBuildsToGenerate = 5;
-    const numberOfBuildsToGenerate =
-        ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics +
-            extraBuildsToGenerate;
 
     List<Build> builds;
     Build lastBuild;
@@ -119,6 +116,9 @@ void main() {
     test(
       "loads the build result metric for last number of builds to load for chart metrics",
       () async {
+        const numberOfBuildsToGenerate =
+            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics +
+                extraBuildsToGenerate;
         final builds = List.generate(
           numberOfBuildsToGenerate,
           (index) => Build(
@@ -161,8 +161,11 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of builds to load for chart metrics",
+      "loads the stability metric for number of builds to load for stability metrics",
       () async {
+        const numberOfBuildsToGenerate =
+            ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetrics +
+                extraBuildsToGenerate;
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
           numberOfBuildsToGenerate,
@@ -181,7 +184,7 @@ void main() {
 
         final lastBuilds = builds.sublist(
           builds.length -
-              ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,
+              ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetrics,
         );
         final successfulBuilds = lastBuilds.where(
           (build) => build.buildStatus == BuildStatus.successful,

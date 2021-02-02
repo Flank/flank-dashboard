@@ -21,6 +21,9 @@ class ReceiveProjectMetricsUpdates
   /// A number of builds to load for chart metrics.
   static const int buildsToLoadForChartMetrics = 20;
 
+  /// A number of builds to load for [DashboardProjectMetrics.stability] metrics.
+  static const int buildsToLoadForStabilityMetrics = 30;
+
   /// A [Duration] of a loading period for builds.
   static const Duration buildsLoadingPeriod = Duration(days: 6);
 
@@ -97,6 +100,10 @@ class ReceiveProjectMetricsUpdates
       builds,
       buildsToLoadForChartMetrics,
     );
+    final lastBuildsForStability = _getLastBuilds(
+      builds,
+      buildsToLoadForStabilityMetrics,
+    );
     final lastBuildsInPeriod = _getBuildsInPeriod(
       builds,
       buildsLoadingPeriod,
@@ -108,7 +115,7 @@ class ReceiveProjectMetricsUpdates
     final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
     final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
     final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
-    final stability = _getStability(lastBuilds);
+    final stability = _getStability(lastBuildsForStability);
     final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
