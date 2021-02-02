@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_body.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:selection_menu/components_configurations.dart';
 
@@ -26,33 +25,29 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
     return DropdownBody(
       state: data.menuState,
       builder: (context, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: Container(
-            width: 212.0,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0.0, 8.0),
-                  blurRadius: 16.0,
-                  color: theme.shadowColor,
-                ),
-              ],
-            ),
-            child: Card(
-              key: UniqueKey(),
-              margin: EdgeInsets.zero,
-              color: theme.backgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+        return Container(
+          width: 212.0,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0.0, 8.0),
+                blurRadius: 16.0,
+                color: theme.shadowColor,
               ),
-              elevation: 0.0,
-              child: data.child,
+            ],
+          ),
+          child: Card(
+            key: UniqueKey(),
+            margin: EdgeInsets.zero,
+            color: theme.backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
             ),
+            elevation: 0.0,
+            child: data.child,
           ),
         );
       },
-      animationDuration: DurationConstants.animation,
       maxHeight: data.constraints.maxHeight,
       maxWidth: 212.0,
       onOpenStateChanged: _onOpenStateChanges,
