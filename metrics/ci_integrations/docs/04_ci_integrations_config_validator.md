@@ -20,6 +20,8 @@ This document aims the following goals:
 ## Design
 > Explain and diagram the technical design.
 
+### Main interfaces and classes
+
 Let's start with the necessary abstractions. Consider the following classes:
 - A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationError` if the given config is not valid.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
@@ -30,7 +32,8 @@ Consider the following steps needed to be able to validate the given configurati
 1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
 2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
-4. Create the source and the destination config validators and call them within the `validate` command.
+4. Create the `ValidateCommand` class.
+5. Create the source and the destination config validators and call them within the `validate` command.
 
 Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
@@ -40,6 +43,9 @@ Consider the following class diagram that demonstrates the required changes usin
 
 Consider the package structure using the `CoolIntegration` as an example:
 
+> * cli/
+>   * command/
+>     * validate_command.dart
 > * integration/
 >   * interface/
 >     * base/

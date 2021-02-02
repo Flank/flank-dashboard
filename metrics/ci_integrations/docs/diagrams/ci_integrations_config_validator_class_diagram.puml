@@ -79,8 +79,19 @@
         }
     }
 
-     package client.cool_integration as client_cool_integration {
+    package client.cool_integration as client_cool_integration {
         class CoolIntegrationClient {}
+    }
+
+    package cli.command {
+        class ValidateCommand {
+            + name : String
+            + description : String
+            + supportedParties : SupportedIntegrationParties 
+            - _integrationConfigParser : RawIntegrationConfigParser
+
+            + void run()
+        }
     }
 
     IntegrationParty --> ConfigValidatorFactory : uses
@@ -103,5 +114,8 @@
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
     CoolIntegrationDestinationConfigValidator --> ConfigValidationError : throws
+
+    ValidateCommand -right-> IntegrationParty : uses
+    ValidateCommand -right-> ConfigValidatorFactory : uses
 
 @enduml
