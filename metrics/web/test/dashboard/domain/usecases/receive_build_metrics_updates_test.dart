@@ -70,7 +70,7 @@ void main() {
       ).called(equals(1));
     });
 
-    test("subscribes to number of builds to load for chart metrics", () {
+    test("subscribes to number of builds to load for stability metric", () {
       final repository = _MetricsRepositoryMock();
 
       when(repository.latestProjectBuildsStream(any, any))
@@ -88,7 +88,7 @@ void main() {
       verify(
         repository.latestProjectBuildsStream(
           any,
-          ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,
+          ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetric,
         ),
       ).called(equals(1));
     });
@@ -161,10 +161,10 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of builds to load for stability metrics",
+      "loads the stability metric for number of builds to load for the stability metric",
       () async {
         const numberOfBuildsToGenerate =
-            ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetrics +
+            ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetric +
                 extraBuildsToGenerate;
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
@@ -184,7 +184,7 @@ void main() {
 
         final lastBuilds = builds.sublist(
           builds.length -
-              ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetrics,
+              ReceiveProjectMetricsUpdates.buildsToLoadForStabilityMetric,
         );
         final successfulBuilds = lastBuilds.where(
           (build) => build.buildStatus == BuildStatus.successful,

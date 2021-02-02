@@ -22,7 +22,7 @@ class ReceiveProjectMetricsUpdates
   static const int buildsToLoadForChartMetrics = 20;
 
   /// A number of builds to load for [DashboardProjectMetrics.stability] metric.
-  static const int buildsToLoadForStabilityMetrics = 30;
+  static const int buildsToLoadForStabilityMetric = 30;
 
   /// A [Duration] of a loading period for builds.
   static const Duration buildsLoadingPeriod = Duration(days: 6);
@@ -40,7 +40,7 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      buildsToLoadForStabilityMetrics,
+      buildsToLoadForStabilityMetric,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
@@ -102,7 +102,7 @@ class ReceiveProjectMetricsUpdates
     );
     final lastBuildsForStability = _getLastBuilds(
       builds,
-      buildsToLoadForStabilityMetrics,
+      buildsToLoadForStabilityMetric,
     );
     final lastBuildsInPeriod = _getBuildsInPeriod(
       builds,
