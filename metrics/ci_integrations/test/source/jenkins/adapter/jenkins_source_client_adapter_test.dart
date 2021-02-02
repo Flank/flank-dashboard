@@ -297,6 +297,56 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps fetched url to an API url if the url is not null",
+      () async {
+        const jenkinsBuild = JenkinsBuild(
+          url: defaultBuildUrl,
+          building: false,
+          artifacts: [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
+
+        final actualAPIUrl = result.first.apiUrl;
+
+        final expectedAPIUrl =
+            '${jenkinsBuild.url}${JenkinsClient.jsonApiPath}';
+
+        expect(actualAPIUrl, equals(expectedAPIUrl));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched url to null if the url is null",
+      () async {
+        const jenkinsBuild = JenkinsBuild(
+          url: null,
+          building: false,
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
+
+        final actualAPIUrl = result.first.apiUrl;
+
+        expect(actualAPIUrl, isNull);
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() fetches builds which are not building",
       () {
         const build = BuildData(buildNumber: 1);
@@ -560,6 +610,57 @@ void main() {
         final url = result.first.url;
 
         expect(url, equals(''));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched url to an API url if the url is not null",
+      () async {
+        const build = BuildData(buildNumber: 1);
+
+        const jenkinsBuild = JenkinsBuild(
+          number: 2,
+          url: defaultBuildUrl,
+          building: false,
+          artifacts: [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+
+        final actualAPIUrl = result.first.apiUrl;
+
+        final expectedAPIUrl =
+            '${jenkinsBuild.url}${JenkinsClient.jsonApiPath}';
+
+        expect(actualAPIUrl, equals(expectedAPIUrl));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched url to null if the url is null",
+      () async {
+        const build = BuildData(buildNumber: 1);
+
+        const jenkinsBuild = JenkinsBuild(
+          number: 2,
+          url: null,
+          building: false,
+          artifacts: [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+
+        final actualAPIUrl = result.first.apiUrl;
+
+        expect(actualAPIUrl, isNull);
       },
     );
 

@@ -200,7 +200,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
-      apiUrl: jenkinsBuild.url,
+      apiUrl: _buildJenkinsAPIUrl(jenkinsBuild.url),
     );
   }
 
@@ -239,6 +239,13 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Builds an API url for the [JenkinsBuild] from the given [url].
+  String _buildJenkinsAPIUrl(String url) {
+    if (url == null) return null;
+
+    return '$url${JenkinsClient.jsonApiPath}';
   }
 
   /// Processes the given [interaction].

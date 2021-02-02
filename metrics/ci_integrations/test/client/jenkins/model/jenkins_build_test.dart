@@ -22,7 +22,7 @@ void main() {
       'timestamp': timestamp.millisecondsSinceEpoch,
       'result': result,
       'url': url,
-      'apiUrl': apiUrl,
+      'api-url': apiUrl,
       'artifacts': JenkinsArtifactsTestData.artifactsJson,
     };
 
@@ -104,8 +104,11 @@ void main() {
 
     test(".toJson() converts an instance to the json map", () {
       final json = jenkinsBuild.toJson();
+      final expectedJson = Map.from(buildJson);
 
-      expect(json, equals(buildJson));
+      expectedJson.remove('api-url');
+
+      expect(json, equals(expectedJson));
     });
   });
 }

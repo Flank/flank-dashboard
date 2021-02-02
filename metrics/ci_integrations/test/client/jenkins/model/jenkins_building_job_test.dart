@@ -44,6 +44,7 @@ void main() {
       );
 
       const firstBuildJson = {
+        'id': null,
         'number': firstBuildNumber,
         'duration': null,
         'timestamp': null,
@@ -55,6 +56,7 @@ void main() {
       jenkinsBuildJson = firstBuildJson;
 
       const lastBuildJson = {
+        'id': null,
         'number': secondBuildNumber,
         'duration': null,
         'timestamp': null,
