@@ -2,8 +2,8 @@
 
 ## TL;DR
 
-Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields by running the `validate` command that provides additional context about the possible errors in the configuration file.   
-For example, if the configuration file contains a non-valid email/password used to log in into CI, the user sees the corresponding error before he or she will run the `sync` command.
+Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields by running the `validate` command that provides information about the possible errors in the configuration file.     
+For example, if the configuration file contains a non-valid email/password used to log in into CI, the user will get the corresponding error message once run the `validate` command.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -32,8 +32,9 @@ Consider the following steps needed to be able to validate the given configurati
 1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
 2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
-4. Create the `ValidateCommand` class.
-5. Create the source and the destination config validators and call them within the `validate` command.
+4. Create a `ValidateCommand` class.
+5. Registrate the `ValidateCommand` in the `CiIntegrationsRunner`. 
+6. Create the source and the destination config validators and call them within the `validate` command.
 
 Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
@@ -103,7 +104,7 @@ The project will be unit-tested using the Dart's core [test](https://pub.dev/pac
 
 - Implement the config validation functionality as a flag of the `sync` command (`sync --[no]-validate`).
     - Pros:
-        - Can be enabled by default to decrease the number of errors related to invalid config files.
+        - Can be enabled by default to detect invalid configuration fields before synchronization.
     - Cons:
-        - No ability to validate just a config file without performing synchronization. 
+        - No ability to validate a config file without performing synchronization. 
         - Validation process may need extra permissions that are not essential for the synchronization.

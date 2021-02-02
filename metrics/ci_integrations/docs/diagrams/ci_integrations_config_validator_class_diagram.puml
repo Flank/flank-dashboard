@@ -119,6 +119,7 @@
     CoolIntegrationDestinationConfigValidator --> ConfigValidationError : throws
 
     ValidateCommand -left-> IntegrationParty : uses
-    ValidateCommand -left-> ConfigValidatorFactory : uses
+    ValidateCommand -left-> ConfigValidator : uses
+    ValidateCommand --> Config : uses
 
 @enduml

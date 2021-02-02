@@ -13,7 +13,7 @@ participant CoolIntegrationConfigValidator
 participant CoolIntegrationValidationDelegate
 participant CoolIntegrationClient
 
-Bob -> "CI Integrations" : runs ""validate""
+Bob -> "CI Integrations" : runs validate
 activate "CI Integrations"
 
 "CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
@@ -54,7 +54,7 @@ alt config is valid
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
 
     CoolIntegrationConfigValidator --> ValidateCommand : config is valid
-    ValidateCommand --> Bob : config is valid
+    ValidateCommand --> Bob : prints the validation successful message
 
 else config is not valid
 
@@ -66,10 +66,10 @@ else config is not valid
 
     CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
 
-    CoolIntegrationConfigValidator --> ValidateCommand : throw ""ConfigValidationError(message)""
+    CoolIntegrationConfigValidator --> ValidateCommand : throw ConfigValidationError(message)
     deactivate CoolIntegrationConfigValidator
 
-    ValidateCommand --> Bob : config is not valid
+    ValidateCommand --> Bob : prints the validation error message
     deactivate ValidateCommand
 
 end
