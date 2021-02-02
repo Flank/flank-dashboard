@@ -2,8 +2,8 @@
 
 ## TL;DR
 
-Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields before the `sync` command to provide additional context about the possible errors in the configuration file.   
-For example, if the configuration file contains a non-valid email/password used to log in into CI, the user sees the corresponding error before the `sync` process starts.
+Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields by running `validate` command to provide additional context about the possible errors in the configuration file.   
+For example, if the configuration file contains a non-valid email/password used to log in into CI, the user sees the corresponding error before he or she will run the `sync` command.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -30,7 +30,7 @@ Consider the following steps needed to be able to validate the given configurati
 1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
 2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
-4. Create the source and the destination config validators and call them within the `sync` command.
+4. Create the source and the destination config validators and call them within the `validate` command.
 
 Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
@@ -85,9 +85,19 @@ Consider the package structure using the `CoolIntegration` as an example:
 ## Making things work
 Consider the following sequence diagram that illustrates the process of the configuration files validation:
 
-![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
+![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_validate_command/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
 
 ## Testing
 > How will the project be tested?
 
 The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a validation client that performs direct HTTP calls. 
+
+# Alternatives Considered
+> Summarize alternative designs (pros & cons)
+
+- Implement the config validation functionality as an flag of the `sync` command (`sync --[no]-validate`).
+    - Pros:
+        - Can be enabled by default to decrease the number of errors related to the invalid config files.
+    - Cons:
+        - No ability to simply validate config without performing synchronization. 
+        - Validation may require additional permissions that are not needed for the synchronization.
