@@ -106,16 +106,16 @@
 
     CoolIntegrationDestinationValidationDelegate ..|> DestinationValidationDelegate
 
-    CoolIntegrationDestinationConfigValidator --|> ConfigValidator
+    CoolIntegrationDestinationConfigValidator -left-|> ConfigValidator
     CoolIntegrationDestinationConfigValidator -left-> CoolIntegrationDestinationValidationDelegate : uses
-    CoolIntegrationDestinationValidationDelegate -down-> CoolIntegrationClient : uses
+    CoolIntegrationDestinationValidationDelegate -left-> CoolIntegrationClient : uses
     CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
+    CoolIntegrationConfigValidatorFactory -left-> CoolIntegrationClient : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
     CoolIntegrationDestinationConfigValidator --> ConfigValidationError : throws
 
-    ValidateCommand -right-> IntegrationParty : uses
-    ValidateCommand -right-> ConfigValidatorFactory : uses
+    ValidateCommand -left-> IntegrationParty : uses
+    ValidateCommand -left-> ConfigValidatorFactory : uses
 
 @enduml
