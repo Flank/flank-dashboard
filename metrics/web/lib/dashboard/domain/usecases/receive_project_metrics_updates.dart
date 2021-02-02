@@ -21,7 +21,7 @@ class ReceiveProjectMetricsUpdates
   /// A number of builds to load for chart metrics.
   static const int buildsToLoadForChartMetrics = 20;
 
-  /// A number of builds to load for [DashboardProjectMetrics.stability] metrics.
+  /// A number of builds to load for [DashboardProjectMetrics.stability] metric.
   static const int buildsToLoadForStabilityMetrics = 30;
 
   /// A [Duration] of a loading period for builds.
