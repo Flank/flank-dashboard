@@ -87,6 +87,8 @@
     }
 
     package cli.command {
+        abstract class CiIntegrationCommand {}
+
         class ValidateCommand {
             + name : String
             + description : String
@@ -121,5 +123,6 @@
     ValidateCommand -left-> IntegrationParty : uses
     ValidateCommand -left-> ConfigValidator : uses
     ValidateCommand --> Config : uses
+    ValidateCommand --|> CiIntegrationCommand
 
 @enduml
