@@ -5,6 +5,11 @@ steps:
       - cd metrics/coverage_converter
       - pub get
       - dartanalyzer . --fatal-infos --fatal-warnings
+    plugins:
+      - docker-compose:
+          config: ".buildkite/compose-files/dart-docker-compose.yml"
+          run: dart
+          workdir: /monorepo
 
   - label: "Run tests"
     key: "tests"
@@ -13,27 +18,24 @@ steps:
       - cd metrics/coverage_converter
       - pub get
       - pub run test_coverage --print-test-output --no-badge
-    artifact_paths: "metrics/coverage_converter/coverage/lcov.info"
-
-  - label: "Export coverage report"
-    key: "coverage"
-    depends_on: "tests"
-    commands:
-      - curl -o coverage_converter -k https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux -L
-      - chmod a+x coverage_converter
-      - buildkite-agent artifact download metrics/coverage_converter/coverage/lcov.info .
-      - ./coverage_converter lcov -i metrics/coverage_converter/coverage/lcov.info -o coverage-summary.json
-    artifact_paths: "coverage-summary.json"
+      - coverage_converter lcov -i coverage/lcov.info -o coverage-summary.json
+    plugins:
+      - docker-compose:
+          config: ".buildkite/compose-files/dart-docker-compose.yml"
+          run: dart
+          workdir: /monorepo
+    artifact_paths:
+      - "metrics/coverage_converter/coverage-summary.json"
 
   - label: "Finalize build"
     key: "finalize"
     depends_on:
-      - step: "coverage"
+      - step: "tests"
     commands:
       - echo "The build is completed."
 
   - label: "Trigger sync for a Coverage Converter project"
-    trigger: sync-pipeline
+    trigger: test-sync-pipeline
     depends_on: "finalize"
     allow_dependency_failure: true
     async: true

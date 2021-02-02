@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+  flutter:
+    image: "testmnrp/flutter-chromedriver:3"
+    volumes:
+      - ../../.:/monorepo

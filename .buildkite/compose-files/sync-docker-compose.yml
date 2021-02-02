@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+  sync:
+    image: "testmnrp/sync-builddata:1"
+    volumes:
+      - ../../.:/monorepo
