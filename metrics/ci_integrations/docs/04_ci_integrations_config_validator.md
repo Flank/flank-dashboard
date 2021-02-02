@@ -37,7 +37,7 @@ Consider the following steps needed to be able to validate the given configurati
 
 Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_validate_command/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
 
 #### Package Structure
 
