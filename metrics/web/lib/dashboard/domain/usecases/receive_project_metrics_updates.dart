@@ -96,7 +96,7 @@ class ReceiveProjectMetricsUpdates
       );
     }
 
-    final lastBuilds = _getLastBuilds(
+    final lastBuildsForBuildResults = _getLastBuilds(
       builds,
       buildsToLoadForChartMetrics,
     );
@@ -113,7 +113,8 @@ class ReceiveProjectMetricsUpdates
       status: builds.last.buildStatus,
     );
     final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
-    final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
+    final buildResultMetrics =
+        _getBuildResultMetrics(lastBuildsForBuildResults);
     final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
     final stability = _getStability(lastBuildsForStability);
     final coverage = _getCoverage(builds);
