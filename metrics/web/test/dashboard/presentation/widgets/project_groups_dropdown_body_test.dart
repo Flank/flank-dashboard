@@ -172,9 +172,9 @@ class _ProjectGroupsDropdownBodyTestbed extends StatelessWidget {
 ///
 /// Provides test implementation of the [AnimationComponentData] methods.
 class _AnimationComponentDataStub implements AnimationComponentData {
-  /// A deafault duration of animation when menu is opening or closing.
+  /// A default duration of animation when menu is opening or closing.
   static const Duration _animationDuration = Duration(milliseconds: 100);
-  
+
   /// A default callback that informs about the [MenuStateChanged].
   static void _defaultMenuStateChangedCallback() {}
 
@@ -196,6 +196,7 @@ class _AnimationComponentDataStub implements AnimationComponentData {
   @override
   final MenuStateChanged closed;
 
+  /// Creates a new instance of this stub.
   _AnimationComponentDataStub({
     this.menuState = MenuState.OpeningStart,
     this.child = const Text('child'),
