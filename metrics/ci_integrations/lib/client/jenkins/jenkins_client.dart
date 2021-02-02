@@ -277,6 +277,22 @@ class JenkinsClient with LoggerMixin {
     return _fetchBuilds(url);
   }
 
+  /// Retrieves a [JenkinsBuild] by the provided [buildUrl].
+  Future<InteractionResult<JenkinsBuild>> fetchBuildByUrl(
+    String buildUrl,
+  ) {
+    final url = _buildJenkinsApiUrl(buildUrl);
+
+    logger.info('Fetching build from the url: $url');
+
+    return _handleResponse<JenkinsBuild>(
+      _client.get(url, headers: headers),
+      (Map<String, dynamic> json) => InteractionResult.success(
+        result: JenkinsBuild.fromJson(json),
+      ),
+    );
+  }
+
   /// Retrieves a building job by the given URL.
   ///
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this

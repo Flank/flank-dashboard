@@ -45,11 +45,18 @@ void main() {
       String jobName = jobName,
       JenkinsQueryLimits limits,
     }) {
-      whenFetchArtifact().thenAnswer(responses.artifact);
+      // whenFetchArtifact().thenAnswer(responses.artifact);
       return when(jenkinsClientMock.fetchBuilds(
         jobName,
         limits: limits ?? anyNamed('limits'),
       ));
+    }
+
+    PostExpectation<Future<InteractionResult>> whenFetchCoverage() {
+      whenFetchArtifact().thenAnswer(responses.artifact);
+      when(jenkinsClientMock.fetchBuildByUrl(any)).thenAnswer(responses.build);
+
+      return when(jenkinsClientMock.fetchArtifact(any, any));
     }
 
     /// Creates a [JenkinsBuild] instance with the given [buildNumber]
@@ -125,70 +132,79 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() fetches a coverage for each build",
-      () async {
-        final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 1),
-          createJenkinsBuild(buildNumber: 2, artifacts: [])
-        ];
-        final expected = [defaultCoverage, null];
-
-        responses.addBuilds(jenkinsBuilds);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final list = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final coverages = list.map((buildData) => buildData.coverage).toList();
-
-        expect(coverages, equals(expected));
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if fetching an artifact content fails for any of the given builds",
+      ".fetchCoverage() throws an ArgumentError if the given build is null",
       () {
-        const fileName = 'coverage-summary.json';
-        const relativePath = 'test/$fileName';
-        final jenkinsBuild = createJenkinsBuild(buildNumber: 1);
-        final nonExistingCoverageJenkinsBuild = createJenkinsBuild(
-          buildNumber: 2,
-          artifacts: const [
-            JenkinsBuildArtifact(
-              fileName: fileName,
-              relativePath: relativePath,
-            ),
-          ],
-        );
-        final jenkinsBuilds = [jenkinsBuild, nonExistingCoverageJenkinsBuild];
+        final result = adapter.fetchCoverage(null);
 
-        responses.addBuilds(jenkinsBuilds);
-
-        whenFetchArtifact(
-          buildUrlThat: equals(jenkinsBuild.url),
-          relativePathThat: anything,
-        ).thenAnswer(responses.artifact);
-
-        whenFetchArtifact(
-          buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
-          relativePathThat: equals(relativePath),
-        ).thenAnswer((_) => responses.error<Map<String, dynamic>>());
-
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuilds);
-
-        final result = adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-
-        expect(result, throwsStateError);
+        expect(result, throwsArgumentError);
       },
     );
+
+    // test(
+    //   ".fetchBuilds() fetches a coverage for each build",
+    //   () async {
+    //     final jenkinsBuilds = [
+    //       createJenkinsBuild(buildNumber: 1),
+    //       createJenkinsBuild(buildNumber: 2, artifacts: [])
+    //     ];
+    //     final expected = [defaultCoverage, null];
+
+    //     responses.addBuilds(jenkinsBuilds);
+
+    //     whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+    //     final list = await adapter.fetchBuilds(
+    //       jobName,
+    //       fetchLimit,
+    //     );
+    //     final coverages = list.map((buildData) => buildData.coverage).toList();
+
+    //     expect(coverages, equals(expected));
+    //   },
+    // );
+
+    // test(
+    //   ".fetchBuilds() throws a StateError if fetching an artifact content fails for any of the given builds",
+    //   () {
+    //     const fileName = 'coverage-summary.json';
+    //     const relativePath = 'test/$fileName';
+    //     final jenkinsBuild = createJenkinsBuild(buildNumber: 1);
+    //     final nonExistingCoverageJenkinsBuild = createJenkinsBuild(
+    //       buildNumber: 2,
+    //       artifacts: const [
+    //         JenkinsBuildArtifact(
+    //           fileName: fileName,
+    //           relativePath: relativePath,
+    //         ),
+    //       ],
+    //     );
+    //     final jenkinsBuilds = [jenkinsBuild, nonExistingCoverageJenkinsBuild];
+
+    //     responses.addBuilds(jenkinsBuilds);
+
+    //     whenFetchArtifact(
+    //       buildUrlThat: equals(jenkinsBuild.url),
+    //       relativePathThat: anything,
+    //     ).thenAnswer(responses.artifact);
+
+    //     whenFetchArtifact(
+    //       buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
+    //       relativePathThat: equals(relativePath),
+    //     ).thenAnswer((_) => responses.error<Map<String, dynamic>>());
+
+    //     when(jenkinsClientMock.fetchBuilds(
+    //       jobName,
+    //       limits: anyNamed('limits'),
+    //     )).thenAnswer(responses.fetchBuilds);
+
+    //     final result = adapter.fetchBuilds(
+    //       jobName,
+    //       fetchLimit,
+    //     );
+
+    //     expect(result, throwsStateError);
+    //   },
+    // );
 
     test(
       ".fetchBuilds() throws a StateError if a project with the given id is not found",
@@ -376,67 +392,67 @@ void main() {
       },
     );
 
-    test(
-      ".fetchBuildsAfter() fetches a coverage for each build",
-      () async {
-        const build = BuildData(buildNumber: 1);
-        final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 2),
-          createJenkinsBuild(buildNumber: 3, artifacts: [])
-        ];
-        final expected = [defaultCoverage, null];
+    // test(
+    //   ".fetchBuildsAfter() fetches a coverage for each build",
+    //   () async {
+    //     const build = BuildData(buildNumber: 1);
+    //     final jenkinsBuilds = [
+    //       createJenkinsBuild(buildNumber: 2),
+    //       createJenkinsBuild(buildNumber: 3, artifacts: [])
+    //     ];
+    //     final expected = [defaultCoverage, null];
 
-        responses.addBuilds(jenkinsBuilds);
+    //     responses.addBuilds(jenkinsBuilds);
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+    //     whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final list = await adapter.fetchBuildsAfter(jobName, build);
-        final coverages = list.map((buildData) => buildData.coverage).toList();
+    //     final list = await adapter.fetchBuildsAfter(jobName, build);
+    //     final coverages = list.map((buildData) => buildData.coverage).toList();
 
-        expect(coverages, equals(expected));
-      },
-    );
+    //     expect(coverages, equals(expected));
+    //   },
+    // );
 
-    test(
-      ".fetchBuildsAfter() throws a StateError if fetching an artifact content fails for any of the given builds",
-      () {
-        const build = BuildData(buildNumber: 1);
-        const fileName = 'coverage-summary.json';
-        const relativePath = 'test/$fileName';
-        final jenkinsBuild = createJenkinsBuild(buildNumber: 2);
-        final nonExistingCoverageJenkinsBuild = createJenkinsBuild(
-          buildNumber: 3,
-          artifacts: const [
-            JenkinsBuildArtifact(
-              fileName: fileName,
-              relativePath: relativePath,
-            ),
-          ],
-        );
-        final jenkinsBuilds = [jenkinsBuild, nonExistingCoverageJenkinsBuild];
+    // test(
+    //   ".fetchBuildsAfter() throws a StateError if fetching an artifact content fails for any of the given builds",
+    //   () {
+    //     const build = BuildData(buildNumber: 1);
+    //     const fileName = 'coverage-summary.json';
+    //     const relativePath = 'test/$fileName';
+    //     final jenkinsBuild = createJenkinsBuild(buildNumber: 2);
+    //     final nonExistingCoverageJenkinsBuild = createJenkinsBuild(
+    //       buildNumber: 3,
+    //       artifacts: const [
+    //         JenkinsBuildArtifact(
+    //           fileName: fileName,
+    //           relativePath: relativePath,
+    //         ),
+    //       ],
+    //     );
+    //     final jenkinsBuilds = [jenkinsBuild, nonExistingCoverageJenkinsBuild];
 
-        responses.addBuilds(jenkinsBuilds);
+    //     responses.addBuilds(jenkinsBuilds);
 
-        whenFetchArtifact(
-          buildUrlThat: equals(jenkinsBuild.url),
-          relativePathThat: anything,
-        ).thenAnswer(responses.artifact);
+    //     whenFetchArtifact(
+    //       buildUrlThat: equals(jenkinsBuild.url),
+    //       relativePathThat: anything,
+    //     ).thenAnswer(responses.artifact);
 
-        whenFetchArtifact(
-          buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
-          relativePathThat: equals(relativePath),
-        ).thenAnswer((_) => responses.error<Map<String, dynamic>>());
+    //     whenFetchArtifact(
+    //       buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
+    //       relativePathThat: equals(relativePath),
+    //     ).thenAnswer((_) => responses.error<Map<String, dynamic>>());
 
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuilds);
+    //     when(jenkinsClientMock.fetchBuilds(
+    //       jobName,
+    //       limits: anyNamed('limits'),
+    //     )).thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+    //     final result = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, throwsStateError);
-      },
-    );
+    //     expect(result, throwsStateError);
+    //   },
+    // );
 
     test(
       ".fetchBuildsAfter() maps fetched builds statuses according to specification",
@@ -683,6 +699,7 @@ void main() {
         expect(url, equals(''));
       },
     );
+
     test(".dispose() closes the Jenkins client", () {
       adapter.dispose();
 
@@ -764,6 +781,12 @@ class _JenkinsClientResponse {
       'pct': 0.6,
     };
     return _wrapFuture(InteractionResult.success(result: result));
+  }
+
+  /// Builds the response for the [JenkinsClient.fetchBuildByUrl] method.
+  Future<InteractionResult<JenkinsBuild>> build([_]) {
+    const build = JenkinsBuild(id: '1');
+    return _wrapFuture(const InteractionResult.success(result: build));
   }
 
   /// Builds the error response creating an [InteractionResult.error] instance.

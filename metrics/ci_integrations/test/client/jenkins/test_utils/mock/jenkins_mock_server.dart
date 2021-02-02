@@ -31,6 +31,18 @@ class JenkinsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
+            '/job/test/1${JenkinsClient.jsonApiPath}',
+          ),
+          dispatcher: _buildResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/job/test/2${JenkinsClient.jsonApiPath}',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
             '/job/test/job/master${JenkinsClient.jsonApiPath}',
           ),
           dispatcher: _buildingJobResponse,
@@ -191,6 +203,13 @@ class JenkinsMockServer extends ApiMockServer {
     }
 
     await MockServerUtils.writeResponse(request, response);
+  }
+
+  /// Responses with a jenkins build for the given [request].
+  Future<void> _buildResponse(HttpRequest request) async {
+    const jenkinsBuild = JenkinsBuild(id: '1');
+
+    await MockServerUtils.writeResponse(request, jenkinsBuild.toJson());
   }
 
   /// Responses with a [JenkinsBuildingJob] for the given [request].

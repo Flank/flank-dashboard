@@ -7,27 +7,33 @@ import '../test_utils/test_data/jenkins_artifacts_test_data.dart';
 void main() {
   group("JenkinsBuild", () {
     const resultMapper = JenkinsBuildResultMapper();
+    const id = '1';
     const number = 1;
     const duration = 10000;
     const result = 'FAILURE';
     const url = 'url';
+    const apiUrl = 'api-url';
     final timestamp = DateTime(2020);
 
     final buildJson = {
+      'id': id,
       'number': number,
       'duration': duration,
       'timestamp': timestamp.millisecondsSinceEpoch,
       'result': result,
       'url': url,
+      'apiUrl': apiUrl,
       'artifacts': JenkinsArtifactsTestData.artifactsJson,
     };
 
     final jenkinsBuild = JenkinsBuild(
+      id: id,
       number: number,
       duration: const Duration(milliseconds: duration),
       timestamp: timestamp,
       result: resultMapper.map(result),
       url: url,
+      apiUrl: apiUrl,
       artifacts: JenkinsArtifactsTestData.artifacts,
     );
 
@@ -64,6 +70,7 @@ void main() {
     test(
       ".listFromJson() maps a list of jobs json maps",
       () {
+        const _id = '2';
         const _number = number + 1;
         const _duration = duration + 10000;
         final _timestamp = timestamp.add(const Duration(days: 1));
@@ -71,6 +78,7 @@ void main() {
         const _url = 'anotherUrl';
 
         final anotherBuildJson = {
+          'id': _id,
           'number': _number,
           'duration': _duration,
           'timestamp': _timestamp.millisecondsSinceEpoch,
@@ -80,6 +88,7 @@ void main() {
         };
 
         final anotherBuild = JenkinsBuild(
+          id: _id,
           number: _number,
           duration: const Duration(milliseconds: _duration),
           timestamp: _timestamp,

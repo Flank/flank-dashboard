@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
@@ -73,7 +74,24 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
 
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
-    return Future.value(build.coverage);
+    ArgumentError.checkNotNull(build, 'build');
+
+    logger.info('Fetching build by url: ${build.apiUrl}...');
+    final jenkinsBuild = await _fetchBuildByUrl(build.apiUrl);
+
+    if (jenkinsBuild == null) return null;
+
+    logger.info(
+      'Fetching coverage artifact for a build #${build.buildNumber}...',
+    );
+    final coverageArtifact = _getCoverageArtifact(jenkinsBuild);
+
+    if (coverageArtifact == null) return null;
+
+    return _downloadArtifactByRelativePath(
+      jenkinsBuild.url,
+      coverageArtifact.relativePath,
+    );
   }
 
   /// Fetches builds data for the project with given [projectId].
@@ -84,10 +102,10 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
     logger.info('Fetching builds for the project $projectId...');
-    final newBuildsFetchResult =
+    final interaction =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
-    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
-    return newBuildsFetchResult.result;
+
+    return _processInteraction(interaction);
   }
 
   /// Fetches latest builds for the project with the given [projectId] which
@@ -129,12 +147,13 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return builds;
   }
 
-  /// Throws a [StateError] with the message of [interactionResult] if this
-  /// result is [InteractionResult.isError].
-  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
-    if (interactionResult.isError) {
-      throw StateError(interactionResult.message);
-    }
+  /// Fetches a build by the given [url].
+  ///
+  /// Returns `null` if the build with the given [url] is not found.
+  Future<JenkinsBuild> _fetchBuildByUrl(String url) async {
+    final interaction = await jenkinsClient.fetchBuildByUrl(url);
+
+    return _processInteraction(interaction);
   }
 
   /// Processes the given [builds] to the list of [BuildData]s.
@@ -181,35 +200,31 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
-      coverage: await _fetchCoverage(jenkinsBuild),
+      apiUrl: jenkinsBuild.url,
     );
   }
 
-  /// Fetches the code coverage for the given [build].
-  ///
-  /// Returns `null` if the code coverage artifact for the given build
-  /// is not found.
-  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
-    logger.info('Fetching coverage artifact for a build #${build.number}...');
-    final coverageArtifact = build.artifacts.firstWhere(
+  /// Gets a coverage artifact from the given [build].
+  JenkinsBuildArtifact _getCoverageArtifact(JenkinsBuild build) {
+    if (build.artifacts == null) return null;
+
+    return build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
     );
+  }
 
-    CoverageData coverage;
+  /// Downloads an artifact from the given [buildUrl] using the [relativePath].
+  Future<Percent> _downloadArtifactByRelativePath(
+    String buildUrl,
+    String relativePath,
+  ) async {
+    final interaction =
+        await jenkinsClient.fetchArtifactByRelativePath(buildUrl, relativePath);
 
-    if (coverageArtifact != null) {
-      final artifactContentFetchResult =
-          await jenkinsClient.fetchArtifactByRelativePath(
-        build.url,
-        coverageArtifact.relativePath,
-      );
+    final artifactContent = _processInteraction(interaction);
 
-      _throwIfInteractionUnsuccessful(artifactContentFetchResult);
-
-      final artifactContent = artifactContentFetchResult.result;
-      coverage = CoverageData.fromJson(artifactContent);
-    }
+    final coverage = CoverageData.fromJson(artifactContent);
 
     return coverage?.percent;
   }
@@ -224,6 +239,19 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Processes the given [interaction].
+  ///
+  /// Throws the [StateError], if the given interaction
+  /// is [InteractionResult.isError]. Otherwise, returns
+  /// its [InteractionResult.result].
+  T _processInteraction<T>(InteractionResult<T> interaction) {
+    if (interaction.isError) {
+      throw StateError(interaction.message);
+    }
+
+    return interaction.result;
   }
 
   @override
