@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields by running `validate` command that provides additional context about the possible errors in the configuration file.   
+Introducing a `CI Integrations Config Validator` provides an ability to validate the CI Integrations configuration fields by running the `validate` command that provides additional context about the possible errors in the configuration file.   
 For example, if the configuration file contains a non-valid email/password used to log in into CI, the user sees the corresponding error before he or she will run the `sync` command.
 
 ## References
