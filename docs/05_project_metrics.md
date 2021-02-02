@@ -92,12 +92,12 @@ Builds metric with no builds (Light theme).
 ## Stability Metric
 #### Description
 A Stability metric is a ratio of successful builds to all builds for the last 20 builds. So, stability is equal to `S/T`, where: 
-* `S` is the number of successful builds of the last 20 builds.
-* `T` is the number of all builds for the last 20 builds.
+* `S` is the number of successful builds of the last 30 builds.
+* `T` is the number of all builds for the last 30 builds.
 #### Source
-A stability metric is calculated out of the last 20 builds.
+A stability metric is calculated out of the last 30 builds.
 #### Date ranges
-A stability metric includes the stability calculated from the last 20 builds.
+A stability metric includes the stability calculated from the last 30 builds.
 #### Appearance
 Depending on its value, stability appears differently:
 * A positive stability has the value >= 80% and the app applies green colors to it.

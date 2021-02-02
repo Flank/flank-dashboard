@@ -21,7 +21,7 @@ it’s 20M - meaning 20 minutes
 
 ### Stability
 - Displays "Stability" metric
-- Data displayed for the last 14 builds
+- Data displayed for the last 30 builds
 
 ### Coverage
 - Displays "Coverage" metric
