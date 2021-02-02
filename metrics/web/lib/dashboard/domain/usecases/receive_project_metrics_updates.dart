@@ -40,7 +40,7 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      buildsToLoadForChartMetrics,
+      buildsToLoadForStabilityMetrics,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
