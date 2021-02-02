@@ -225,7 +225,7 @@ First, let's restrict the browser key:
 3. Go to the `Credentials` section, find the `Browser Key` in the `API Keys` section and open it.
 4. Under the `Application restrictions`, click `HTTP referrers(web sites)` and then `Add an item` to add URLs that can use this API key.
 5. To specify the APIs available for this key, scroll down to the `API Restrictions` section, and click the `Restrict key` button.
-6. In the opened dropdown, enable the following APIs: `Google Identity Toolkit API`, `Token Service API` and `Firebase Installations API`.
+6. In the opened dropdown, enable the following APIs: `Google Identity Toolkit API`, `Token Service API`, `Firebase Installations API`, and `Firebase Management API`.
 7. Click the `Save` button.
 
 To be able to synchronize the build data using the CI Integrations tool, we need to set up a new API key. The following steps are required to do so: 
