@@ -31,7 +31,7 @@ The following sections provide an implementation of the Metrics CLI tool.
 
 Here is a list of functionality points we should provide to the Metrics CLI tool:
 - checking all the third-party CLIs necessary for the correct operation;
-- automatic creating and configuring of projects in gcloud, firebase and deploying it;
+- automatic creating and configuring of projects in gcloud, firebase and deploying it.
 
 Let's take a look at the classes the Metrics CLI tool requires.
 
@@ -41,11 +41,11 @@ CLI wrapper classes are wrappers over the third-party CLIs functions. These clas
 
 The Metrics CLI tool has the following wrappers that used for the firebase deployment:
 
-- `FirebaseCliWrapper` used to work with firebase CLI
-- `FlutterCliWrapper` used to work with flutter CLI
-- `GCloudCliWrapper` used to work with gcloud CLI
-- `GitCliWrapper` used to work with git CLI
-- `NpmCliWrapper` used to work with npm CLI
+- `FirebaseCliWrapper` used to work with firebase CLI;
+- `FlutterCliWrapper` used to work with flutter CLI;
+- `GCloudCliWrapper` used to work with gcloud CLI;
+- `GitCliWrapper` used to work with git CLI;
+- `NpmCliWrapper` used to work with npm CLI.
 
 ### MetricsCommandRunner
 
@@ -88,11 +88,11 @@ The following sequence diagram demonstrates how the `DeployCommand` works:
 
 Before you start, you should download the latest version of the Metrics CLI tool and have the following installed:
 
-1. [flutter](https://flutter.dev/docs/get-started/install) v1.25.0-8.2.pre.
-2. [npm](https://www.npmjs.com/get-npm).
-3. [git](https://cli.github.com/)
-4. [firebase](https://firebase.google.com/docs/cli)
-5. [gcloud](https://cloud.google.com/sdk/gcloud)
+1. [flutter](https://flutter.dev/docs/get-started/install) v1.25.0-8.2.pre;
+2. [npm](https://www.npmjs.com/get-npm);
+3. [git](https://cli.github.com/);
+4. [firebase](https://firebase.google.com/docs/cli);
+5. [gcloud](https://cloud.google.com/sdk/gcloud).
 
 ### Doctor
 
