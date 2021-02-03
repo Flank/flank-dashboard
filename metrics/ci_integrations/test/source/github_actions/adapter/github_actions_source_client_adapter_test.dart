@@ -51,60 +51,6 @@ void main() {
     final coverageJson = <String, dynamic>{'pct': 0.6};
     final coverageBytes = utf8.encode(jsonEncode(coverageJson)) as Uint8List;
 
-    PostExpectation<Uint8List> whenDecodeCoverage({
-      Uint8List withArtifactBytes,
-    }) {
-      when(
-        archiveHelperMock.decodeArchive(withArtifactBytes),
-      ).thenReturn(archiveMock);
-
-      return when(
-        archiveHelperMock.getFileContent(archiveMock, 'coverage-summary.json'),
-      );
-    }
-
-    PostExpectation<Future<InteractionResult<WorkflowRunsPage>>>
-        whenFetchWorkflowRuns({
-      WorkflowRunJobsPage withJobsPage,
-      WorkflowRunArtifactsPage withArtifactsPage,
-      Uint8List withArtifactBytes,
-    }) {
-      when(
-        githubActionsClientMock.downloadRunArtifactZip(any),
-      ).thenSuccessWith(withArtifactBytes);
-
-      whenDecodeCoverage(
-        withArtifactBytes: withArtifactBytes,
-      ).thenReturn(coverageBytes);
-
-      when(githubActionsClientMock.fetchRunJobs(
-        any,
-        status: anyNamed('status'),
-        perPage: anyNamed('perPage'),
-        page: anyNamed('page'),
-      )).thenSuccessWith(withJobsPage);
-
-      when(githubActionsClientMock.fetchRunArtifacts(
-        any,
-        perPage: anyNamed('perPage'),
-        page: anyNamed('page'),
-      )).thenSuccessWith(withArtifactsPage);
-
-      return when(
-        githubActionsClientMock.fetchWorkflowRuns(
-          any,
-          status: anyNamed('status'),
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        ),
-      );
-    }
-
-    final emptyArtifactsPage = WorkflowRunArtifactsPage(
-      page: 1,
-      nextPageUrl: testData.url,
-      values: const [],
-    );
     final emptyWorkflowRunJobsPage = WorkflowRunJobsPage(
       page: 1,
       nextPageUrl: testData.url,
@@ -124,6 +70,62 @@ void main() {
     final defaultBuildData = testData.generateBuildDataByNumbers(
       buildNumbers: [2, 1],
     );
+    final defaultBuild = testData.generateBuildData();
+    const defaultWorkflowRun = WorkflowRun();
+
+    final artifactsPage = WorkflowRunArtifactsPage(
+      values: const [WorkflowRunArtifact()],
+      nextPageUrl: testData.url,
+    );
+
+    PostExpectation<Uint8List> whenDecodeCoverage({
+      Uint8List withArtifactBytes,
+    }) {
+      when(githubActionsClientMock.downloadRunArtifactZip(any))
+          .thenSuccessWith(withArtifactBytes);
+
+      when(archiveHelperMock.decodeArchive(withArtifactBytes))
+          .thenReturn(archiveMock);
+
+      return when(
+        archiveHelperMock.getFileContent(archiveMock, 'coverage-summary.json'),
+      );
+    }
+
+    PostExpectation<Future<InteractionResult<WorkflowRunArtifactsPage>>>
+        whenFetchCoverage({
+      WorkflowRun withWorkflowRun,
+    }) {
+      when(githubActionsClientMock.fetchWorkflowRunByUrl(any))
+          .thenSuccessWith(withWorkflowRun);
+
+      return when(githubActionsClientMock.fetchRunArtifacts(
+        any,
+        perPage: anyNamed('perPage'),
+        page: anyNamed('page'),
+      ));
+    }
+
+    PostExpectation<Future<InteractionResult<WorkflowRunsPage>>>
+        whenFetchWorkflowRuns({
+      WorkflowRunJobsPage withJobsPage,
+    }) {
+      when(githubActionsClientMock.fetchRunJobs(
+        any,
+        status: anyNamed('status'),
+        perPage: anyNamed('perPage'),
+        page: anyNamed('page'),
+      )).thenSuccessWith(withJobsPage);
+
+      return when(
+        githubActionsClientMock.fetchWorkflowRuns(
+          any,
+          status: anyNamed('status'),
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
 
     setUp(() {
       reset(githubActionsClientMock);
@@ -234,87 +236,13 @@ void main() {
     );
 
     test(".fetchBuilds() fetches builds", () {
-      whenFetchWorkflowRuns(
-        withArtifactsPage: defaultArtifactsPage,
-        withJobsPage: defaultJobsPage,
-      ).thenSuccessWith(defaultRunsPage);
+      whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+          .thenSuccessWith(defaultRunsPage);
 
       final result = adapter.fetchBuilds(jobName, fetchLimit);
 
       expect(result, completion(equals(defaultBuildData)));
     });
-
-    test(
-      ".fetchBuilds() fetches coverage for each build",
-      () async {
-        final expectedCoverage = [
-          testData.coverage,
-          testData.coverage,
-        ];
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps the coverage value to null if an artifact with the specified name does not exist",
-      () async {
-        final expectedCoverage = [null, null];
-
-        const artifactsPage = WorkflowRunArtifactsPage(
-          values: [WorkflowRunArtifact(name: 'test.json')],
-        );
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: artifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps the coverage value to null if an artifact archive does not contain the coverage summary json",
-      () async {
-        final expectedCoverage = [null, null];
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
 
     test(
       ".fetchBuilds() returns no more than the given fetch limit number of builds",
@@ -326,10 +254,8 @@ void main() {
 
         final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(workflowRunsPage);
 
         final result = adapter.fetchBuilds(jobName, fetchLimit);
 
@@ -353,10 +279,8 @@ void main() {
           values: [workflowRunJob],
         );
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: workflowRunJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         final result = adapter.fetchBuilds(jobName, fetchLimit);
 
@@ -367,10 +291,8 @@ void main() {
     test(
       ".fetchBuilds() fetches builds using pagination for workflow run jobs",
       () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: emptyWorkflowRunJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenSuccessWith(defaultJobsPage);
@@ -382,93 +304,9 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() fetches builds using pagination for run artifacts",
-      () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: emptyArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = adapter.fetchBuilds(jobName, fetchLimit);
-
-        expect(result, completion(equals(defaultBuildData)));
-      },
-    );
-
-    test(
-      ".fetchBuilds() fetches coverage for each build using pagination for run artifacts",
-      () async {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: emptyArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final expectedCoverage = [
-          testData.coverage,
-          testData.coverage,
-        ];
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final actualCoverage =
-            result.map((buildData) => buildData.coverage).toList();
-
-        expect(actualCoverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
       ".fetchBuilds() throws a StateError if fetching a workflow runs page fails",
       () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenErrorWith();
-
-        final result = adapter.fetchBuilds(jobName, fetchLimit);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if fetching the coverage artifact fails",
-      () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifacts(
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        )).thenErrorWith();
-
-        final result = adapter.fetchBuilds(jobName, fetchLimit);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if paginating through coverage artifacts fails",
-      () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: emptyArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenErrorWith();
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenErrorWith();
 
         final result = adapter.fetchBuilds(jobName, fetchLimit);
 
@@ -479,10 +317,8 @@ void main() {
     test(
       ".fetchBuilds() throws a StateError if fetching the workflow run jobs fails",
       () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchRunJobs(
           any,
@@ -500,29 +336,10 @@ void main() {
     test(
       ".fetchBuilds() throws a StateError if paginating through run jobs fails",
       () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: emptyWorkflowRunJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
-            .thenErrorWith();
-
-        final result = adapter.fetchBuilds(jobName, fetchLimit);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuilds() throws a StateError if downloading a coverage artifact archive fails",
-      () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.downloadRunArtifactZip(any))
             .thenErrorWith();
 
         final result = adapter.fetchBuilds(jobName, fetchLimit);
@@ -566,8 +383,7 @@ void main() {
         final workflowRunJobs = testData.generateWorkflowRunJobsByConclusions(
             conclusions: conclusions);
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
 
         for (int i = 0; i < workflowRuns.length; ++i) {
           final run = workflowRuns[i];
@@ -600,8 +416,7 @@ void main() {
           completedAt: completedAt,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -632,8 +447,7 @@ void main() {
           completedAt: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -664,8 +478,7 @@ void main() {
           completedAt: DateTime.now(),
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -696,8 +509,7 @@ void main() {
           completedAt: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -727,8 +539,7 @@ void main() {
           url: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -763,10 +574,8 @@ void main() {
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(runsPage);
 
         final result = adapter.fetchBuildsAfter(jobName, lastBuild);
 
@@ -790,7 +599,6 @@ void main() {
         final lastBuild = testData.generateBuildData(buildNumber: 4);
 
         whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
           withJobsPage: defaultJobsPage,
         ).thenSuccessWith(runsPage);
 
@@ -811,143 +619,12 @@ void main() {
 
         final lastBuild = testData.generateBuildData(buildNumber: 4);
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(runsPage);
 
         final result = adapter.fetchBuildsAfter(jobName, lastBuild);
 
         expect(result, completion(isEmpty));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() fetches coverage for each build",
-      () async {
-        final runsPage = WorkflowRunsPage(
-          values: testData.generateWorkflowRunsByNumbers(
-            runNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        final expected = [
-          testData.coverage,
-          testData.coverage,
-          testData.coverage,
-        ];
-
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          lastBuild,
-        );
-
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expected));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps the coverage value to null if an artifact with the specified name does not exist",
-      () async {
-        final runsPage = WorkflowRunsPage(
-          values: testData.generateWorkflowRunsByNumbers(
-            runNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        const artifactsPage = WorkflowRunArtifactsPage(
-          values: [WorkflowRunArtifact(name: 'test.json')],
-        );
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: artifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
-
-        final expectedCoverage = [null, null, null];
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          lastBuild,
-        );
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps the coverage value to null if an artifact archive does not contain the coverage summary json",
-      () async {
-        final runsPage = WorkflowRunsPage(
-          values: testData.generateWorkflowRunsByNumbers(
-            runNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
-
-        whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
-
-        final expectedCoverage = [null, null, null];
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          lastBuild,
-        );
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expectedCoverage));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() fetches coverage for each build using pagination for run artifacts",
-      () async {
-        final runsPage = WorkflowRunsPage(
-          values: testData.generateWorkflowRunsByNumbers(
-            runNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: emptyArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        final expectedCoverage = [
-          testData.coverage,
-          testData.coverage,
-          testData.coverage,
-        ];
-
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          lastBuild,
-        );
-
-        final coverage = result.map((build) => build.coverage).toList();
-
-        expect(coverage, equals(expectedCoverage));
       },
     );
 
@@ -960,10 +637,8 @@ void main() {
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: workflowRunJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         final result = adapter.fetchBuildsAfter(jobName, lastBuild);
 
@@ -993,44 +668,13 @@ void main() {
           buildNumbers: [4, 3, 2],
         );
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(firstPage);
 
         when(githubActionsClientMock.fetchWorkflowRunsNext(firstPage))
             .thenSuccessWith(secondPage);
 
         final result = adapter.fetchBuildsAfter(jobName, firstBuild);
-
-        expect(result, completion(equals(expected)));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() fetches builds using the pagination for run artifacts",
-      () {
-        final runsPage = WorkflowRunsPage(
-          values: testData.generateWorkflowRunsByNumbers(
-            runNumbers: [4, 3, 2, 1],
-          ),
-        );
-
-        final expected = testData.generateBuildDataByNumbers(
-          buildNumbers: [4, 3, 2],
-        );
-
-        final lastBuild = testData.generateBuildData(buildNumber: 1);
-
-        whenFetchWorkflowRuns(
-          withArtifactsPage: emptyArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(runsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
-
-        final result = adapter.fetchBuildsAfter(jobName, lastBuild);
 
         expect(result, completion(equals(expected)));
       },
@@ -1051,10 +695,8 @@ void main() {
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: emptyWorkflowRunJobsPage,
-        ).thenSuccessWith(runsPage);
+        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+            .thenSuccessWith(runsPage);
 
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
             .thenSuccessWith(defaultJobsPage);
@@ -1068,10 +710,8 @@ void main() {
     test(
       ".fetchBuildsAfter() throws a StateError if fetching a workflow runs page fails",
       () {
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchWorkflowRuns(
           any,
@@ -1098,10 +738,8 @@ void main() {
           ),
         );
 
-        whenFetchWorkflowRuns(
-          withArtifactsPage: defaultArtifactsPage,
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(firstPage);
+        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
+            .thenSuccessWith(firstPage);
 
         when(githubActionsClientMock.fetchWorkflowRunsNext(firstPage))
             .thenErrorWith();
@@ -1115,49 +753,9 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() throws a StateError if fetching the coverage artifact fails",
-      () {
-        whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifacts(
-          any,
-          perPage: anyNamed('perPage'),
-          page: anyNamed('page'),
-        )).thenErrorWith();
-
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = adapter.fetchBuildsAfter(jobName, firstBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() throws a StateError if paginating through run artifacts fails",
-      () {
-        whenFetchWorkflowRuns(
-          withJobsPage: defaultJobsPage,
-          withArtifactsPage: emptyArtifactsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.fetchRunArtifactsNext(emptyArtifactsPage))
-            .thenErrorWith();
-
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = adapter.fetchBuildsAfter(jobName, firstBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
       ".fetchBuildsAfter() throws a StateError if fetching the run job fails",
       () {
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchRunJobs(
           any,
@@ -1176,31 +774,10 @@ void main() {
     test(
       ".fetchBuildsAfter() throws a StateError if paginating through run jobs fails",
       () {
-        whenFetchWorkflowRuns(
-          withJobsPage: emptyWorkflowRunJobsPage,
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultRunsPage);
+        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+            .thenSuccessWith(defaultRunsPage);
 
         when(githubActionsClientMock.fetchRunJobsNext(emptyWorkflowRunJobsPage))
-            .thenErrorWith();
-
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = adapter.fetchBuildsAfter(jobName, firstBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() throws a StateError if downloading an artifact archive fails",
-      () {
-        whenFetchWorkflowRuns(
-          withJobsPage: defaultJobsPage,
-          withArtifactsPage: defaultArtifactsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        when(githubActionsClientMock.downloadRunArtifactZip(any))
             .thenErrorWith();
 
         final firstBuild = testData.generateBuildData(buildNumber: 1);
@@ -1246,8 +823,7 @@ void main() {
         final workflowRunJobs = testData.generateWorkflowRunJobsByConclusions(
             conclusions: conclusions);
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
 
         for (int i = 0; i < workflowRuns.length; ++i) {
           final run = workflowRuns[i];
@@ -1282,8 +858,7 @@ void main() {
           completedAt: completedAt,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -1316,8 +891,7 @@ void main() {
           completedAt: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -1350,8 +924,7 @@ void main() {
           completedAt: DateTime.now(),
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -1384,8 +957,7 @@ void main() {
           completedAt: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -1417,8 +989,7 @@ void main() {
           url: null,
         );
 
-        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
-            .thenSuccessWith(workflowRunsPage);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
         when(githubActionsClientMock.fetchRunJobs(
           any,
           status: anyNamed('status'),
@@ -1437,6 +1008,162 @@ void main() {
         final url = result.first.url;
 
         expect(url, equals(''));
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws an ArgumentError if the given build is null",
+      () {
+        final result = adapter.fetchCoverage(null);
+
+        expect(result, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() fetches coverage for the given build",
+      () async {
+        final expectedCoverage = defaultBuild.coverage;
+
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(defaultArtifactsPage);
+        whenDecodeCoverage(withArtifactBytes: coverageBytes)
+            .thenReturn(coverageBytes);
+
+        final actualCoverage = await adapter.fetchCoverage(defaultBuild);
+
+        expect(actualCoverage, equals(expectedCoverage));
+      },
+    );
+
+    test(
+      ".fetchCoverage() returns null if fetching a workflow run for the given build returns null",
+      () async {
+        whenFetchCoverage(withWorkflowRun: null)
+            .thenSuccessWith(defaultArtifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() returns null if the coverage summary artifact is not found",
+      () async {
+        const artifactsPage = WorkflowRunArtifactsPage(
+          values: [WorkflowRunArtifact(name: 'test.json')],
+        );
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() does not download any artifacts if the coverage summary artifact is not found",
+      () async {
+        const artifactsPage = WorkflowRunArtifactsPage(
+          values: [WorkflowRunArtifact(name: 'test.json')],
+        );
+
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+        verifyNever(githubActionsClientMock.downloadRunArtifactZip(any));
+      },
+    );
+
+    test(
+      ".fetchCoverage() returns null if an artifact archive does not contain the coverage summary json",
+      () async {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(defaultArtifactsPage);
+        whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
+
+        final result = await adapter.fetchCoverage(defaultBuild);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
+      ".fetchCoverage() fetches coverage using pagination for run artifacts",
+      () async {
+        final expectedCoverage = defaultBuild.coverage;
+
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+        whenDecodeCoverage(withArtifactBytes: coverageBytes)
+            .thenReturn(coverageBytes);
+        when(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
+            .thenSuccessWith(defaultArtifactsPage);
+
+        final actualCoverage = await adapter.fetchCoverage(defaultBuild);
+
+        expect(actualCoverage, equals(expectedCoverage));
+        verify(
+          githubActionsClientMock.fetchRunArtifactsNext(artifactsPage),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if fetching a workflow run fails for the given build",
+      () {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+        when(githubActionsClientMock.fetchWorkflowRunByUrl(any))
+            .thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if fetching the coverage artifact fails",
+      () {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun).thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if paginating through coverage artifacts fails",
+      () {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+        when(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
+            .thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if downloading an artifact archive fails",
+      () {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(defaultArtifactsPage);
+        when(githubActionsClientMock.downloadRunArtifactZip(any))
+            .thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
       },
     );
 

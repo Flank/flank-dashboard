@@ -8,6 +8,7 @@ void main() {
   group("WorkflowRun", () {
     const id = 1;
     const number = 1;
+    const apiUrl = 'api-url';
     const url = 'url';
     const status = 'queued';
     final createdAt = DateTime(2020).toUtc();
@@ -15,6 +16,7 @@ void main() {
     final runJson = <String, dynamic>{
       'id': id,
       'run_number': number,
+      'url': apiUrl,
       'html_url': url,
       'status': status,
       'created_at': createdAt.toIso8601String(),
@@ -23,6 +25,7 @@ void main() {
     final run = WorkflowRun(
       id: id,
       number: number,
+      apiUrl: apiUrl,
       url: url,
       status: GithubActionStatus.queued,
       createdAt: createdAt,
@@ -34,6 +37,7 @@ void main() {
       final run = WorkflowRun(
         id: id,
         number: number,
+        apiUrl: apiUrl,
         url: url,
         status: status,
         createdAt: createdAt,
@@ -41,6 +45,7 @@ void main() {
 
       expect(run.id, equals(id));
       expect(run.number, equals(number));
+      expect(run.apiUrl, equals(apiUrl));
       expect(run.url, equals(url));
       expect(run.status, equals(status));
       expect(run.createdAt, equals(createdAt));
@@ -88,6 +93,7 @@ void main() {
         final anotherJson = <String, dynamic>{
           'id': 2,
           'run_number': 2,
+          'apiUrl': 'api-url2',
           'url': 'url2',
           'status': 'completed',
           'created_at': DateTime(2019).toUtc().toIso8601String(),

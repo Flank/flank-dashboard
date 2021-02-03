@@ -165,7 +165,7 @@ class GithubActionsClient with LoggerMixin {
       basePath,
       path: 'workflows/$workflowIdentifier/runs',
       queryParameters: queryParameters,
-    ); 
+    );
 
     return _fetchWorkflowRunsPage(url, _page, perPage);
   }
@@ -207,6 +207,20 @@ class GithubActionsClient with LoggerMixin {
             values: runs,
           ),
         );
+      },
+    );
+  }
+
+  /// Fetches a [WorkflowRun] by the given [url].
+  Future<InteractionResult<WorkflowRun>> fetchWorkflowRunByUrl(String url) {
+    logger.info('Fetching workflow run by url: $url');
+
+    return _handleResponse<WorkflowRun>(
+      _client.get(url, headers: headers),
+      (Map<String, dynamic> json, Map<String, String> headers) {
+        if (json == null) return const InteractionResult.success();
+
+        return InteractionResult.success(result: WorkflowRun.fromJson(json));
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
@@ -105,7 +106,19 @@ class GithubActionsSourceClientAdapter
 
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
-    return Future.value(build.coverage);
+    ArgumentError.checkNotNull(build, 'build');
+
+    logger.info('Fetching workflow run for build #${build.buildNumber}...');
+    final interaction =
+        await githubActionsClient.fetchWorkflowRunByUrl(build.apiUrl);
+    final workflowRun = _processInteraction(interaction);
+
+    if (workflowRun == null) return null;
+
+    final coverageArtifact = await _fetchCoverageArtifact(workflowRun);
+    final artifactBytes = await _downloadArtifact(coverageArtifact);
+
+    return _mapArtifactToCoverage(artifactBytes);
   }
 
   /// Fetches the latest builds by the given [jobName].
@@ -154,8 +167,7 @@ class GithubActionsSourceClientAdapter
       if (hasNext) {
         final interaction =
             await githubActionsClient.fetchWorkflowRunsNext(runsPage);
-        _throwIfInteractionUnsuccessful(interaction);
-        runsPage = interaction.result;
+        runsPage = _processInteraction(interaction);
       }
     } while (hasNext);
 
@@ -175,9 +187,7 @@ class GithubActionsSourceClientAdapter
       perPage: perPage,
     );
 
-    _throwIfInteractionUnsuccessful(interaction);
-
-    return interaction.result;
+    return _processInteraction(interaction);
   }
 
   /// Maps the given [job] and [run] to the [BuildData] instance.
@@ -192,7 +202,7 @@ class GithubActionsSourceClientAdapter
       duration: _calculateJobDuration(job),
       workflowName: job.name,
       url: job.url ?? '',
-      coverage: await _fetchCoverage(run),
+      apiUrl: run.apiUrl,
     );
   }
 
@@ -207,9 +217,7 @@ class GithubActionsSourceClientAdapter
       perPage: defaultPerPage,
     );
 
-    _throwIfInteractionUnsuccessful(interaction);
-
-    WorkflowRunJobsPage page = interaction.result;
+    WorkflowRunJobsPage page = _processInteraction(interaction);
     bool hasNext = false;
 
     do {
@@ -228,69 +236,62 @@ class GithubActionsSourceClientAdapter
 
       if (hasNext) {
         final interaction = await githubActionsClient.fetchRunJobsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
 
-        page = interaction.result;
+        page = _processInteraction(interaction);
       }
     } while (hasNext);
 
     return null;
   }
 
-  /// Fetches the coverage for the given [run].
+  /// Fetches an artifact with coverage data for the given workflow [run].
   ///
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
-  Future<Percent> _fetchCoverage(WorkflowRun run) async {
+  Future<WorkflowRunArtifact> _fetchCoverageArtifact(WorkflowRun run) async {
     logger.info(
       'Fetching coverage artifact for a workflow #${run.number}...',
     );
-
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       page: 1,
       perPage: defaultPerPage,
     );
-    _throwIfInteractionUnsuccessful(interaction);
 
-    WorkflowRunArtifactsPage page = interaction.result;
+    WorkflowRunArtifactsPage page = _processInteraction(interaction);
+    WorkflowRunArtifact artifact;
     bool hasNext = false;
 
     do {
       final artifacts = page.values;
 
-      final coverageArtifact = artifacts.firstWhere(
+      artifact = artifacts.firstWhere(
         (artifact) => artifact.name == coverageArtifactName,
         orElse: () => null,
       );
 
-      if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact);
-      }
-
-      hasNext = page.hasNextPage;
+      hasNext = page.hasNextPage && artifact == null;
 
       if (hasNext) {
         final interaction =
             await githubActionsClient.fetchRunArtifactsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
 
-        page = interaction.result;
+        page = _processInteraction(interaction);
       }
     } while (hasNext);
 
-    return null;
+    return artifact;
   }
 
-  /// Maps the given [artifact] to the coverage [Percent] value.
+  /// Downloads the given [artifact] using the [WorkflowRunArtifact.downloadUrl].
   ///
-  /// Returns `null` if the coverage file is not found.
-  Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
+  /// If the given artifact is `null`, returns `null`.
+  Future<Uint8List> _downloadArtifact(WorkflowRunArtifact artifact) async {
+    if (artifact == null) return null;
+
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
-    _throwIfInteractionUnsuccessful(interaction);
-
-    final artifactBytes = interaction.result;
+    final artifactBytes = _processInteraction(interaction);
     final artifactArchive = archiveHelper.decodeArchive(artifactBytes);
 
     final content = archiveHelper.getFileContent(
@@ -298,15 +299,26 @@ class GithubActionsSourceClientAdapter
       'coverage-summary.json',
     );
 
-    if (content == null) return null;
+    return content;
+  }
 
-    logger.info('Parsing coverage artifact...');
+  /// Maps the given [artifactBytes] into the coverage [Percent] value.
+  ///
+  /// Returns `null` if either the given [artifactBytes] is `null` or
+  /// JSON content parsing is failed.
+  Future<Percent> _mapArtifactToCoverage(Uint8List artifactBytes) async {
+    if (artifactBytes == null) return null;
 
-    final coverageContent = utf8.decode(content);
-    final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
-    final coverage = CoverageData.fromJson(coverageJson);
+    try {
+      logger.info('Parsing coverage artifact...');
+      final coverageContent = utf8.decode(artifactBytes);
+      final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
+      final coverage = CoverageData.fromJson(coverageJson);
 
-    return coverage?.percent;
+      return coverage?.percent;
+    } on FormatException catch (_) {
+      return null;
+    }
   }
 
   /// Calculates a [Duration] of the given [job].
@@ -332,12 +344,17 @@ class GithubActionsSourceClientAdapter
     }
   }
 
-  /// Throws a [StateError] with the message of [interactionResult] if this
-  /// result is [InteractionResult.isError].
-  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
-    if (interactionResult.isError) {
-      throw StateError(interactionResult.message);
+  /// Processes the given [interaction].
+  ///
+  /// Throws the [StateError], if the given interaction
+  /// is [InteractionResult.isError]. Otherwise, returns
+  /// its [InteractionResult.result].
+  T _processInteraction<T>(InteractionResult<T> interaction) {
+    if (interaction.isError) {
+      throw StateError(interaction.message);
     }
+
+    return interaction.result;
   }
 
   @override

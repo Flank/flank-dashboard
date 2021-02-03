@@ -35,6 +35,18 @@ class GithubActionsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
+            '$basePath/runs/1',
+          ),
+          dispatcher: _workflowRunResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/runs/2',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
             '$basePath/runs/1/jobs',
           ),
           dispatcher: _workflowRunJobsResponse,
@@ -74,6 +86,13 @@ class GithubActionsMockServer extends ApiMockServer {
           dispatcher: MockServerUtils.downloadResponse,
         ),
       ];
+
+  /// Responses with a workflow run for the given [request].
+  Future<void> _workflowRunResponse(HttpRequest request) async {
+    const workflowRun = WorkflowRun(id: 1);
+
+    await MockServerUtils.writeResponse(request, workflowRun.toJson());
+  }
 
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
