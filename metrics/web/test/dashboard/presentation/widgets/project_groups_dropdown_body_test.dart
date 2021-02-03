@@ -200,7 +200,8 @@ class _AnimationComponentDataStub implements AnimationComponentData {
   ///
   /// The [menuState] defaults to the [MenuState.OpeningStart].
   /// The [child] defaults to the [Text] with the 'child' label.
-  /// The [constraints] defaults to the [MenuAnimationDurations]
+  /// The [constraints] defaults to the [BoxConstraints].
+  /// The [menuAnimationDurations] defaults to the [MenuAnimationDurations]
   /// with [_animationDuration] parameter for arguments.
   ///
   /// If the given [opened] callback is `null`,
