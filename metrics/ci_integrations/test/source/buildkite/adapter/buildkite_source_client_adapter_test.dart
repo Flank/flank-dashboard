@@ -811,13 +811,13 @@ void main() {
           nextPageUrl: 'url',
         );
         whenFetchCoverage().thenSuccessWith(artifactsPage);
-        when(buildkiteClientMock.fetchArtifactsNext(any))
+        when(buildkiteClientMock.fetchArtifactsNext(artifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
         final result = await adapter.fetchCoverage(defaultBuild);
 
         expect(result, isNotNull);
-        verify(buildkiteClientMock.fetchArtifactsNext(any)).called(1);
+        verify(buildkiteClientMock.fetchArtifactsNext(artifactsPage)).called(1);
       },
     );
 

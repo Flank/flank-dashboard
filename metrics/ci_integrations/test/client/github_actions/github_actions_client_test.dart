@@ -319,29 +319,27 @@ void main() {
 
     test(
       ".fetchWorkflowRunByUrl() fails if a workflow run with the given url is not found",
-      () {
+      () async {
         final url =
             '${githubActionsMockServer.url}${githubActionsMockServer.basePath}/runs/2';
 
-        final result =
-            client.fetchWorkflowRunByUrl(url).then((result) => result.isError);
+        final result = await client.fetchWorkflowRunByUrl(url);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
-      ".fetchWorkflowRunByUrl() responds with a workflow run for the build matching the given url",
-      () {
+      ".fetchWorkflowRunByUrl() responds with a workflow run matching the given url",
+      () async {
         final url =
             '${githubActionsMockServer.url}${githubActionsMockServer.basePath}/runs/$runId';
+        final expected = WorkflowRun(id: runId, apiUrl: url);
 
-        final result =
-            client.fetchWorkflowRunByUrl(url).then((result) => result.result);
+        final interaction = await client.fetchWorkflowRunByUrl(url);
+        final result = interaction.result;
 
-        const expected = WorkflowRun(id: runId);
-
-        expect(result, completion(equals(expected)));
+        expect(result, equals(expected));
       },
     );
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
@@ -108,18 +109,20 @@ class GithubActionsSourceClientAdapter
     ArgumentError.checkNotNull(build, 'build');
 
     logger.info('Fetching workflow run for build #${build.buildNumber}...');
-    final workflowRun = await _fetchWorkflowRunByUrl(build.apiUrl);
+    final interaction =
+        await githubActionsClient.fetchWorkflowRunByUrl(build.apiUrl);
+
+    final workflowRun = _processInteraction(interaction);
 
     if (workflowRun == null) return null;
 
-    logger.info(
-      'Fetching coverage artifact for a workflow #${workflowRun.number}...',
-    );
     final coverageArtifact = await _fetchCoverageArtifact(workflowRun);
 
     if (coverageArtifact == null) return null;
 
-    return _mapArtifactToCoverage(coverageArtifact);
+    final artifactBytes = await _downloadArtifact(coverageArtifact);
+
+    return _mapArtifactToCoverage(artifactBytes);
   }
 
   /// Fetches the latest builds by the given [jobName].
@@ -245,20 +248,14 @@ class GithubActionsSourceClientAdapter
     return null;
   }
 
-  /// Fetches a workflow run by the given [url].
-  ///
-  /// Returns `null` if the workflow run with the given [url] is not found.
-  Future<WorkflowRun> _fetchWorkflowRunByUrl(String url) async {
-    final interaction = await githubActionsClient.fetchWorkflowRunByUrl(url);
-
-    return _processInteraction(interaction);
-  }
-
   /// Fetches an artifact with coverage data for the given workflow [run].
   ///
   /// Returns `null` if the coverage artifact with the [coverageArtifactName]
   /// is not found.
   Future<WorkflowRunArtifact> _fetchCoverageArtifact(WorkflowRun run) async {
+    logger.info(
+      'Fetching coverage artifact for a workflow #${run.number}...',
+    );
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       page: 1,
@@ -290,10 +287,8 @@ class GithubActionsSourceClientAdapter
     return artifact;
   }
 
-  /// Maps the given [artifact] to the coverage [Percent] value.
-  ///
-  /// Returns `null` if the coverage file is not found.
-  Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
+  /// Downloads the given [artifact] using the [WorkflowRunArtifact.downloadUrl].
+  Future<Uint8List> _downloadArtifact(WorkflowRunArtifact artifact) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
 
@@ -305,15 +300,26 @@ class GithubActionsSourceClientAdapter
       'coverage-summary.json',
     );
 
-    if (content == null) return null;
+    return content;
+  }
 
-    logger.info('Parsing coverage artifact...');
+  /// Maps the given [artifactBytes] into the coverage [Percent] value.
+  ///
+  /// Returns `null` if either the given [artifactBytes] is `null` or
+  /// JSON content parsing is failed.
+  Future<Percent> _mapArtifactToCoverage(Uint8List artifactBytes) async {
+    if (artifactBytes == null) return null;
 
-    final coverageContent = utf8.decode(content);
-    final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
-    final coverage = CoverageData.fromJson(coverageJson);
+    try {
+      logger.info('Parsing coverage artifact...');
+      final coverageContent = utf8.decode(artifactBytes);
+      final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
+      final coverage = CoverageData.fromJson(coverageJson);
 
-    return coverage?.percent;
+      return coverage?.percent;
+    } on FormatException catch (_) {
+      return null;
+    }
   }
 
   /// Calculates a [Duration] of the given [job].

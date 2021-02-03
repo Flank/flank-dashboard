@@ -81,9 +81,11 @@ void main() {
     PostExpectation<Uint8List> whenDecodeCoverage({
       Uint8List withArtifactBytes,
     }) {
-      when(
-        archiveHelperMock.decodeArchive(withArtifactBytes),
-      ).thenReturn(archiveMock);
+      when(githubActionsClientMock.downloadRunArtifactZip(any))
+          .thenSuccessWith(withArtifactBytes);
+
+      when(archiveHelperMock.decodeArchive(withArtifactBytes))
+          .thenReturn(archiveMock);
 
       return when(
         archiveHelperMock.getFileContent(archiveMock, 'coverage-summary.json'),
@@ -92,17 +94,8 @@ void main() {
 
     PostExpectation<Future<InteractionResult<WorkflowRunArtifactsPage>>>
         whenFetchCoverage({
-      Uint8List withArtifactBytes,
       WorkflowRun withWorkflowRun,
     }) {
-      when(
-        githubActionsClientMock.downloadRunArtifactZip(any),
-      ).thenSuccessWith(withArtifactBytes);
-
-      whenDecodeCoverage(
-        withArtifactBytes: withArtifactBytes,
-      ).thenReturn(coverageBytes);
-
       when(githubActionsClientMock.fetchWorkflowRunByUrl(any))
           .thenSuccessWith(withWorkflowRun);
 
@@ -252,7 +245,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() returns no more than the GithubActionsSourceClientAdapter.fetchLimit builds",
+      ".fetchBuilds() returns no more than the given fetch limit number of builds",
       () {
         const fetchLimit = 12;
         final workflowRuns = testData.generateWorkflowRunsByNumbers(
@@ -1030,12 +1023,16 @@ void main() {
     test(
       ".fetchCoverage() fetches coverage for the given build",
       () async {
+        final expectedCoverage = defaultBuild.coverage;
+
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(defaultArtifactsPage);
+        whenDecodeCoverage(withArtifactBytes: coverageBytes)
+            .thenReturn(coverageBytes);
 
-        final result = await adapter.fetchCoverage(defaultBuild);
+        final actualCoverage = await adapter.fetchCoverage(defaultBuild);
 
-        expect(result, isNotNull);
+        expect(actualCoverage, equals(expectedCoverage));
       },
     );
 
@@ -1052,7 +1049,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() returns null if the coverage summary artifact does not exist",
+      ".fetchCoverage() returns null if the coverage summary artifact is not found",
       () async {
         const artifactsPage = WorkflowRunArtifactsPage(
           values: [WorkflowRunArtifact(name: 'test.json')],
@@ -1068,7 +1065,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() does not download any artifacts if the coverage summary artifact does not exist",
+      ".fetchCoverage() does not download any artifacts if the coverage summary artifact is not found",
       () async {
         const artifactsPage = WorkflowRunArtifactsPage(
           values: [WorkflowRunArtifact(name: 'test.json')],
@@ -1101,16 +1098,37 @@ void main() {
     test(
       ".fetchCoverage() fetches coverage using pagination for run artifacts",
       () async {
+        final expectedCoverage = defaultBuild.coverage;
+
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(artifactsPage);
+
+        whenDecodeCoverage(withArtifactBytes: coverageBytes)
+            .thenReturn(coverageBytes);
 
         when(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
-        final result = await adapter.fetchCoverage(defaultBuild);
+        final actualCoverage = await adapter.fetchCoverage(defaultBuild);
 
-        verify(githubActionsClientMock.fetchRunArtifactsNext(any)).called(1);
-        expect(result, isNotNull);
+        expect(actualCoverage, equals(expectedCoverage));
+        verify(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
+            .called(1);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if fetching a workflow run fails for the given build",
+      () {
+        whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
+            .thenSuccessWith(artifactsPage);
+
+        when(githubActionsClientMock.fetchWorkflowRunByUrl(any))
+            .thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
       },
     );
 
