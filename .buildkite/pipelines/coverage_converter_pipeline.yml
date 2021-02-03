@@ -35,7 +35,7 @@ steps:
       - echo "The build is completed."
 
   - label: "Trigger sync for a Coverage Converter project"
-    trigger: test-sync-pipeline
+    trigger: sync-pipeline
     depends_on: "finalize"
     allow_dependency_failure: true
     async: true
