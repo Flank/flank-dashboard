@@ -324,7 +324,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() maps fetched url to null if the url is null",
+      ".fetchBuilds() maps an API url to null if the fetched url is null",
       () async {
         const jenkinsBuild = JenkinsBuild(
           url: null,
@@ -641,7 +641,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() maps fetched url to null if the url is null",
+      ".fetchBuildsAfter() maps an API url to null if the fetched url is null",
       () async {
         const build = BuildData(buildNumber: 1);
 
@@ -690,7 +690,8 @@ void main() {
     test(
       ".fetchCoverage() returns null if fetching a jenkins build returns null",
       () async {
-        whenFetchCoverage().thenSuccessWith(defaultArtifactContent);
+        whenFetchCoverage(withJenkinsBuild: null)
+            .thenSuccessWith(defaultArtifactContent);
 
         final result = await adapter.fetchCoverage(defaultBuild);
 

@@ -197,6 +197,8 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   /// Gets a coverage artifact from the given [build].
+  ///
+  /// Returns `null` if [build] artifacts is `null`.
   JenkinsBuildArtifact _getCoverageArtifact(JenkinsBuild build) {
     if (build.artifacts == null) return null;
 
@@ -234,6 +236,8 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   /// Builds an API url for the [JenkinsBuild] from the given [url].
+  ///
+  /// Returns `null` if the given [url] is `null`.
   String _buildJenkinsAPIUrl(String url) {
     if (url == null) return null;
 
