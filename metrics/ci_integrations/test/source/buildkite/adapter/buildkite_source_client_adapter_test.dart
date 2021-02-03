@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
@@ -15,6 +14,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/extensions/interaction_result_answer.dart';
+import '../test_utils/buildkite_client_mock.dart';
 import '../test_utils/test_data/buildkite_test_data_generator.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -33,7 +33,7 @@ void main() {
 
     const fetchLimit = 20;
 
-    final buildkiteClientMock = _BuildkiteClientMock();
+    final buildkiteClientMock = BuildkiteCLientMock();
     final adapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClientMock,
     );
@@ -863,5 +863,3 @@ void main() {
     });
   });
 }
-
-class _BuildkiteClientMock extends Mock implements BuildkiteClient {}
