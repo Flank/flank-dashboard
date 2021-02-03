@@ -116,7 +116,7 @@ void main() {
     });
 
     test(
-      "loads the build result metric for last number of builds to load for chart metrics",
+      "loads the build result metric for number of builds to load for chart metrics",
       () async {
         final builds = List.generate(
           numberOfBuildsToGenerate,
@@ -159,7 +159,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of builds to load for the stability metric",
+      "loads the stability metric for number of builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(

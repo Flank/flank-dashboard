@@ -13,7 +13,7 @@ class DimensionsConfig {
   static const double graphIndicatorOuterDiameter = 8.0;
 
   /// An inner diameter of the graph indicator.
-  static const double graphIndicatorInnerDiameter = 3.0;
+  static const double graphIndicatorInnerDiameter = 4.0;
 
   /// A width of the graph bar.
   static const double graphBarWidth = 8.0;
