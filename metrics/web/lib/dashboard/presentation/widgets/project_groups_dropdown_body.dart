@@ -24,7 +24,7 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
 
     return DropdownBody(
       state: data.menuState,
-      builder: (context, animation) {
+      builder: (context, _) {
         return Container(
           width: 212.0,
           decoration: BoxDecoration(
