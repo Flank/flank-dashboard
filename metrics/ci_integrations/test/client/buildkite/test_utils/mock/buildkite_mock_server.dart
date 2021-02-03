@@ -6,6 +6,10 @@ import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_ma
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_organization.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 
 import '../../../test_utils/mock_server_utils.dart';
 
@@ -40,6 +44,36 @@ class BuildkiteMockServer extends ApiMockServer {
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/pipeline_slug/builds/not_found/artifacts',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/access-token',
+          ),
+          dispatcher: _accessTokenResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            basePath,
+          ),
+          dispatcher: _organizationResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/organizations/not_found',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/pipeline_slug',
+          ),
+          dispatcher: _pipelineResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/not_found',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
@@ -107,6 +141,43 @@ class BuildkiteMockServer extends ApiMockServer {
     final _response = artifacts.map((artifact) => artifact.toJson()).toList();
 
     await MockServerUtils.writeResponse(request, _response);
+  }
+
+  /// Responses with a [BuildkiteToken].
+  Future<void> _accessTokenResponse(HttpRequest request) async {
+    const token = BuildkiteToken(
+      scopes: [BuildkiteTokenScope.readBuilds],
+    );
+
+    final tokenJson = token.toJson();
+
+    await MockServerUtils.writeResponse(request, tokenJson);
+  }
+
+  /// Responses with a [BuildkiteOrganization].
+  Future<void> _organizationResponse(HttpRequest request) async {
+    const organization = BuildkiteOrganization(
+      id: 'id',
+      name: 'name',
+      slug: 'slug',
+    );
+
+    final organizationJson = organization.toJson();
+
+    await MockServerUtils.writeResponse(request, organizationJson);
+  }
+
+  /// Responses with a [BuildkitePipeline].
+  Future<void> _pipelineResponse(HttpRequest request) async {
+    const pipeline = BuildkitePipeline(
+      id: 'id',
+      name: 'name',
+      slug: 'slug',
+    );
+
+    final pipelineJson = pipeline.toJson();
+
+    await MockServerUtils.writeResponse(request, pipelineJson);
   }
 
   /// Redirects to the artifact download URL.
