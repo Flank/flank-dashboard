@@ -320,7 +320,9 @@ class BuildkiteClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: requestHeaders),
       (json, _) {
-        final token = BuildkiteToken.fromJson(json as Map<String, dynamic>);
+        final tokenJson = json as Map<String, dynamic>;
+
+        final token = BuildkiteToken.fromJson(tokenJson);
 
         return InteractionResult.success(result: token);
       },
@@ -339,9 +341,9 @@ class BuildkiteClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: headers),
       (json, _) {
-        final organization = BuildkiteOrganization.fromJson(
-          json as Map<String, dynamic>,
-        );
+        final organizationJson = json as Map<String, dynamic>;
+
+        final organization = BuildkiteOrganization.fromJson(organizationJson);
 
         return InteractionResult.success(result: organization);
       },
@@ -360,9 +362,9 @@ class BuildkiteClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: headers),
       (json, _) {
-        final pipeline = BuildkitePipeline.fromJson(
-          json as Map<String, dynamic>,
-        );
+        final pipelineJson = json as Map<String, dynamic>;
+
+        final pipeline = BuildkitePipeline.fromJson(pipelineJson);
 
         return InteractionResult.success(result: pipeline);
       },
