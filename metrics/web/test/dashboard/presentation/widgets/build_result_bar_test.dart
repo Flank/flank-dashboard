@@ -17,7 +17,10 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.d
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -39,6 +42,7 @@ void main() {
       date: DateTime.now(),
       duration: const Duration(seconds: 20),
       buildStatus: BuildStatus.successful,
+      url: 'url',
     );
     final placeholderFinder = find.byType(PlaceholderBar);
     final mouseRegionFinder = find.ancestor(
@@ -53,6 +57,13 @@ void main() {
         return tester.pumpAndSettle();
       });
     }
+
+    final urlLauncherMock = _UrlLauncherMock();
+    UrlLauncherPlatform.instance = urlLauncherMock;
+
+    tearDown(() {
+      reset(urlLauncherMock);
+    });
 
     testWidgets(
       "displays the PlaceholderBar if the given build result is null",
@@ -229,6 +240,60 @@ void main() {
     );
 
     testWidgets(
+      "opens the build result url on tap if the url can be launched",
+      (tester) async {
+        await tester.pumpWidget(
+          _BuildResultBarTestbed(
+            buildResult: successfulBuildResult,
+          ),
+        );
+        final url = successfulBuildResult.url;
+
+        when(urlLauncherMock.canLaunch(url)).thenAnswer(
+          (_) => Future.value(true),
+        );
+        await tester.tap(find.byType(BuildResultBar));
+
+        verify(urlLauncherMock.launch(
+          url,
+          useSafariVC: anyNamed('useSafariVC'),
+          useWebView: anyNamed('useWebView'),
+          enableJavaScript: anyNamed('enableJavaScript'),
+          enableDomStorage: anyNamed('enableDomStorage'),
+          universalLinksOnly: anyNamed('universalLinksOnly'),
+          headers: anyNamed('headers'),
+        )).called(1);
+      },
+    );
+
+    testWidgets(
+      "does not open the build result url on tap if the url can't be launched",
+      (tester) async {
+        await tester.pumpWidget(
+          _BuildResultBarTestbed(
+            buildResult: successfulBuildResult,
+          ),
+        );
+        final url = successfulBuildResult.url;
+
+        when(urlLauncherMock.canLaunch(url)).thenAnswer(
+          (_) => Future.value(false),
+        );
+        await tester.tap(find.byType(BuildResultBar));
+
+        verifyNever(urlLauncherMock.launch(
+          url,
+          useSafariVC: anyNamed('useSafariVC'),
+          useWebView: anyNamed('useWebView'),
+          enableJavaScript: anyNamed('enableJavaScript'),
+          enableDomStorage: anyNamed('enableDomStorage'),
+          universalLinksOnly: anyNamed('universalLinksOnly'),
+          headers: anyNamed('headers'),
+        ));
+      },
+    );
+
+    testWidgets(
       "displays the MetricsColoredBar with the BuildResultBarAppearanceStrategy",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
@@ -285,3 +350,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
     );
   }
 }
+
+class _UrlLauncherMock extends Mock
+    with MockPlatformInterfaceMixin
+    implements UrlLauncherPlatform {}
