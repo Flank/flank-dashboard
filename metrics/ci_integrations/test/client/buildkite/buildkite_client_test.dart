@@ -547,7 +547,7 @@ void main() {
     );
 
     test(
-      ".fetchToken() returns an error if the given authorization is not valid",
+      ".fetchToken() returns an error result if the given authorization is not valid",
       () async {
         final invalidAuthorization = BearerAuthorization('invalidToken');
 
@@ -570,7 +570,7 @@ void main() {
     );
 
     test(
-      ".fetchOrganization() returns an error if there is no organization with the given slug",
+      ".fetchOrganization() returns an error result if there is no organization with the given slug",
       () async {
         final interactionResult = await client.fetchOrganization(notFound);
 
@@ -591,7 +591,7 @@ void main() {
     );
 
     test(
-      ".fetchPipeline() returns an error if there is no pipeline with the given slug",
+      ".fetchPipeline() returns an error result if there is no pipeline with the given slug",
       () async {
         final interactionResult = await client.fetchPipeline(notFound);
 
