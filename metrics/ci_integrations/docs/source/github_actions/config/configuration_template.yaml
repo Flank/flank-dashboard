@@ -46,6 +46,46 @@ source:
     # - https://github.com/<repository-owner>/<repository-name>
     repository_owner: ...
 
+    # A name of the job within the Github Actions workflow.
+    #
+    # The tool uses this name to fetch a job associated with the concrete project builds.
+    # Thus, a single build is a single job result within a workflow run. Here, job is
+    # specified using the `job_name` field and workflow is specified using the `workflow_identifier`.
+    #
+    # You can obtain the job name by looking for it in a file that defines your workflow.
+    # In this file, the `jobs` section contains a list of jobs that run within this workflow.
+    # Each job in that list contains a `name` field standing for a name of this job.
+    # Use the name of the desired job as the value for the `job_name` configuration field.
+    # To know more about the workflow file contents and syntax, consider the following links:
+    # - https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+    # - https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idname
+    job_name: ...
+
+    # A name of an artifact that contains a `coverage-summary.json` with coverage data for the build.
+    #
+    # The tool uses this name to identify an artifact it should fetch and download to parse coverage data.
+    # If artifact with the specified name is not found, the coverage is considered as `null`,
+    # meaning that no coverage data is available.
+    #
+    # You can obtain the coverage artifact name by looking for it in a file that defines your workflow.
+    # Open the workflow file and look for a step that uploads an artifact related to coverage.
+    # This step should define an artifact name you are looking for.
+    # For example, if you are using `actions/upload-artifact@v2` (https://github.com/actions/upload-artifact):
+    # ```
+    #   - name: Upload coverage artifact
+    #     uses: actions/upload-artifact@v2
+    #     with:
+    #       name: <COVERAGE_ARTIFACT_NAME>
+    #       path: path/to/coverage-summary.json
+    # ```
+    # Please note, that the coverage artifact *must* contain the `coverage-summary.json` file.
+    #
+    # Consider the following links for more information:
+    # - https://github.com/actions/upload-artifact
+    # - https://docs.github.com/en/rest/reference/actions#artifacts
+    # - https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md
+    coverage_artifact_name: ...
+
     # A GitHub API Access Token that is used to authenticate HTTP requests.
     # 
     # You can create an access token on the Developer Settings page on GitHub. 
