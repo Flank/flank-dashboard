@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_body.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
 import 'package:selection_menu/components_configurations.dart';
 
@@ -33,31 +32,6 @@ void main() {
         );
 
         expect(find.byWidget(animationComponentData.child), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "animates the given child with fade transition",
-      (tester) async {
-        final animationComponentData = _AnimationComponentDataStub();
-
-        await tester.pumpWidget(
-          _ProjectGroupsDropdownBodyTestbed(
-            data: animationComponentData,
-          ),
-        );
-
-        final dropdownBodyFinder = find.byType(DropdownBody);
-
-        final fadeTransitionFinder = find.ancestor(
-          of: find.byWidget(animationComponentData.child),
-          matching: find.descendant(
-            of: dropdownBodyFinder,
-            matching: find.byType(FadeTransition),
-          ),
-        );
-
-        expect(fadeTransitionFinder, findsOneWidget);
       },
     );
 
@@ -109,26 +83,6 @@ void main() {
         expect(
           dropdownBodyWidget.maxHeight,
           equals(maxHeight),
-        );
-      },
-    );
-
-    testWidgets(
-      "applies the animation duration constant to the dropdown body",
-      (tester) async {
-        await tester.pumpWidget(
-          _ProjectGroupsDropdownBodyTestbed(
-            data: _AnimationComponentDataStub(),
-          ),
-        );
-
-        final dropdownBodyWidget = tester.widget<DropdownBody>(
-          find.byType(DropdownBody),
-        );
-
-        expect(
-          dropdownBodyWidget.animationDuration,
-          equals(DurationConstants.animation),
         );
       },
     );
@@ -218,7 +172,11 @@ class _ProjectGroupsDropdownBodyTestbed extends StatelessWidget {
 ///
 /// Provides test implementation of the [AnimationComponentData] methods.
 class _AnimationComponentDataStub implements AnimationComponentData {
+  /// A default animation duration to use within this stub.
   static const Duration _animationDuration = Duration(milliseconds: 100);
+
+  /// A default [MenuStateChanged] to use in tests.
+  static void _defaultMenuStateChangedCallback() {}
 
   @override
   final MenuState menuState;
@@ -238,6 +196,18 @@ class _AnimationComponentDataStub implements AnimationComponentData {
   @override
   final MenuStateChanged closed;
 
+  /// Creates a new instance of the [_AnimationComponentDataStub].
+  ///
+  /// The [menuState] defaults to the [MenuState.OpeningStart].
+  /// The [child] defaults to the [Text] with the 'child' label.
+  /// The [constraints] defaults to the [BoxConstraints].
+  /// The [menuAnimationDurations] defaults to the [MenuAnimationDurations]
+  /// with [_animationDuration] parameter for arguments.
+  ///
+  /// If the given [opened] callback is `null`,
+  /// the [_defaultMenuStateChangedCallback] is used.
+  /// If the given [closed] callback is `null`,
+  /// the [_defaultMenuStateChangedCallback] is used.
   _AnimationComponentDataStub({
     this.menuState = MenuState.OpeningStart,
     this.child = const Text('child'),
@@ -248,9 +218,10 @@ class _AnimationComponentDataStub implements AnimationComponentData {
       forward: _animationDuration,
       reverse: _animationDuration,
     ),
-    this.opened,
-    this.closed,
-  });
+    MenuStateChanged opened,
+    MenuStateChanged closed,
+  })  : opened = opened ?? _defaultMenuStateChangedCallback,
+        closed = closed ?? _defaultMenuStateChangedCallback;
 
   @override
   TickerProvider get tickerProvider => null;
