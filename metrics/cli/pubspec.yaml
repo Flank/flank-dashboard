@@ -1,4 +1,4 @@
-name: deploy
+name: cli
 description: A sample command-line application.
 # version: 1.0.0
 # homepage: https://www.example.com

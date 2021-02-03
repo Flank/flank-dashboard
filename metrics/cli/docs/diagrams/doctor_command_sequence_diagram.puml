@@ -1,0 +1,26 @@
+@startuml metrics_command_runner_class_diagram
+
+package args {
+    class CommandRunner{}
+    class Command {}
+}
+
+package runner {
+    class MetricsCommandRunner {}
+}
+
+package deploy {
+    class DeployCommand {}
+}
+
+package doctor {
+    class DoctorCommand {}
+}
+
+MetricsCommandRunner --> DoctorCommand : uses
+MetricsCommandRunner --> DeployCommand : uses
+DeployCommand --|> Command
+DoctorCommand --|> Command
+MetricsCommandRunner --|> CommandRunner
+
+@enduml
