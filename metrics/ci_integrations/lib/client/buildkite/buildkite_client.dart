@@ -11,6 +11,9 @@ import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_organization.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -296,6 +299,75 @@ class BuildkiteClient with LoggerMixin {
         message: 'Failed to perform an operation. Error details: $error',
       );
     }
+  }
+
+  /// Fetches a [BuildkiteToken] by the given [auth].
+  Future<InteractionResult<BuildkiteToken>> fetchTokenInfo(
+    AuthorizationBase auth,
+  ) {
+    ArgumentError.checkNotNull(auth, 'auth');
+
+    final url = UrlUtils.buildUrl(
+      buildkiteApiUrl,
+      path: 'access-token',
+    );
+
+    final headers = <String, String>{
+      HttpHeaders.contentTypeHeader: ContentType.json.value,
+      HttpHeaders.acceptHeader: ContentType.json.value,
+      ...auth.toMap(),
+    };
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final token = BuildkiteToken.fromJson(json as Map<String, dynamic>);
+
+        return InteractionResult.success(result: token);
+      },
+    );
+  }
+
+  /// Fetches a [BuildkiteOrganization] by the given [organizationSlug].
+  Future<InteractionResult<BuildkiteOrganization>> fetchOrganizationInfo(
+    String organizationSlug,
+  ) {
+    final url = UrlUtils.buildUrl(
+      buildkiteApiUrl,
+      path: 'organizations/$organizationSlug',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final organization = BuildkiteOrganization.fromJson(
+          json as Map<String, dynamic>,
+        );
+
+        return InteractionResult.success(result: organization);
+      },
+    );
+  }
+
+  /// Fetches a [BuildkitePipeline] by the given [organizationName].
+  Future<InteractionResult<BuildkitePipeline>> fetchPipelineInfo(
+    String pipelineSlug,
+  ) {
+    final url = UrlUtils.buildUrl(
+      basePath,
+      path: 'pipelines/$pipelineSlug',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final pipeline = BuildkitePipeline.fromJson(
+          json as Map<String, dynamic>,
+        );
+
+        return InteractionResult.success(result: pipeline);
+      },
+    );
   }
 
   /// Processes the given [currentPage] and delegates fetching to the given
