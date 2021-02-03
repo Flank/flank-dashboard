@@ -4,7 +4,7 @@ Display projects and associated metrics for each project.
 For metrics definitions see [metrics definitions](05_project_metrics.md).
 
 ### Build Chart (Bar chart)
-- 14 last builds with colors indicating build success/failure
+- 30 last builds with colors indicating build success/failure
 - Any aborted build counted as failed
 - Bar height is the time it took the build to finish (without queue time)
 

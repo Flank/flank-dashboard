@@ -21,13 +21,13 @@ class BuildResultBarPaddingStrategy {
     final index = buildResults.indexOf(buildResult);
 
     if (index == buildResults.length - 1) {
-      return const EdgeInsets.only(left: 2.0);
+      return const EdgeInsets.only(left: 1.0);
     }
 
     if (index == 0) {
-      return const EdgeInsets.only(right: 2.0);
+      return const EdgeInsets.only(right: 1.0);
     }
 
-    return const EdgeInsets.symmetric(horizontal: 2.0);
+    return const EdgeInsets.symmetric(horizontal: 1.0);
   }
 }

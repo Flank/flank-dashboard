@@ -29,14 +29,14 @@ A build results metric includes the build results and duration of the latest bui
 #### Source
 The information about build results comes from the CI system that performs these builds.
 #### Date ranges
-The build results metric includes the results of the last 20 builds.
+The build results metric includes the results of the last 30 builds.
 #### Appearance
 The build results metric appears as a bar graph. Each bar stands for one build result. 
 The height of each bar stands for the build duration. The height of each bar is relative. That means that two bars in different projects with the same height may have a different duration.
 * If the build result is successful the app uses a green bar.
 * If the build result is failed the app uses a red bar.
 * If the build result is unknown the app uses a grey bar.
-* If there are not enough builds to fill in all the 20 bars the app will fill the rest with the grey dashes at the bottom of a graph.
+* If there are not enough builds to fill in all the 30 bars the app fills the rest with the grey dashes at the bottom of a graph.
 
 ![Build Results (Dark theme)](./images/build_results_bar.png?raw=true)    
 Build Results (Dark theme).    
