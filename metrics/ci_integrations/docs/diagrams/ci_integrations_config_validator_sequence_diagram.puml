@@ -7,33 +7,33 @@ actor Bob
 
 participant "CI Integrations"
 participant CiIntegrationsRunner
-participant SyncCommand
+participant ValidateCommand
 participant CoolIntegrationConfigValidatorFactory
 participant CoolIntegrationConfigValidator
 participant CoolIntegrationValidationDelegate
 participant CoolIntegrationClient
 
-Bob -> "CI Integrations" : runs sync
+Bob -> "CI Integrations" : runs validate
 activate "CI Integrations"
 
 "CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
 deactivate "CI Integrations"
 activate CiIntegrationsRunner
 
-CiIntegrationsRunner -> SyncCommand: run()
+CiIntegrationsRunner -> ValidateCommand: run()
 deactivate CiIntegrationsRunner
-activate SyncCommand
+activate ValidateCommand
 
-SyncCommand -> SyncCommand : creates source and destination parties
-SyncCommand -> SyncCommand : parses source and destination configs
+ValidateCommand -> ValidateCommand : creates source and destination parties
+ValidateCommand -> ValidateCommand : parses source and destination configs
 
-SyncCommand -> CoolIntegrationConfigValidatorFactory : create()
+ValidateCommand -> CoolIntegrationConfigValidatorFactory : create()
 activate CoolIntegrationConfigValidatorFactory
 
-CoolIntegrationConfigValidatorFactory --> SyncCommand : configValidator
+CoolIntegrationConfigValidatorFactory --> ValidateCommand : configValidator
 deactivate CoolIntegrationConfigValidatorFactory
 
-SyncCommand -> CoolIntegrationConfigValidator : validate(config)
+ValidateCommand -> CoolIntegrationConfigValidator : validate(config)
 activate CoolIntegrationConfigValidator
 
 CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
@@ -53,9 +53,8 @@ alt config is valid
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
 
-    CoolIntegrationConfigValidator --> SyncCommand : config is valid
-    SyncCommand -> SyncCommand : continues the sync command
-    SyncCommand --> Bob : sync was successful
+    CoolIntegrationConfigValidator --> ValidateCommand : config is valid
+    ValidateCommand --> Bob : prints the validation successful message
 
 else config is not valid
 
@@ -67,11 +66,11 @@ else config is not valid
 
     CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
 
-    CoolIntegrationConfigValidator --> SyncCommand : throw ""ConfigValidationError(message)""
+    CoolIntegrationConfigValidator --> ValidateCommand : throw ConfigValidationError(message)
     deactivate CoolIntegrationConfigValidator
 
-    SyncCommand --> Bob : sync failed
-    deactivate SyncCommand
+    ValidateCommand --> Bob : prints the validation error message
+    deactivate ValidateCommand
 
 end
 
