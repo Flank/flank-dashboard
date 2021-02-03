@@ -30,7 +30,7 @@ void main() {
     final defaultArtifactContent = <String, dynamic>{
       'pct': 0.6,
     };
-    const defaultBuild = BuildData();
+    final defaultBuild = BuildData(coverage: defaultCoverage);
     const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
 
     final jenkinsClientMock = _JenkinsClientMock();
@@ -676,17 +676,19 @@ void main() {
     test(
       ".fetchCoverage() fetches a coverage for the given build",
       () async {
+        final expectedCoverage = defaultBuild.coverage;
+
         whenFetchCoverage(withJenkinsBuild: defaultJenkinsBuild)
             .thenSuccessWith(defaultArtifactContent);
 
-        final result = await adapter.fetchCoverage(defaultBuild);
+        final actualCoverage = await adapter.fetchCoverage(defaultBuild);
 
-        expect(result, isNotNull);
+        expect(actualCoverage, equals(expectedCoverage));
       },
     );
 
     test(
-      ".fetchCoverage() returns null if fetching jenkins build returns null",
+      ".fetchCoverage() returns null if fetching a jenkins build returns null",
       () async {
         whenFetchCoverage().thenSuccessWith(defaultArtifactContent);
 
@@ -697,7 +699,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() returns null if the coverage summary artifact does not exist",
+      ".fetchCoverage() returns null if the coverage summary artifact is not found",
       () async {
         final jenkinsBuild = createJenkinsBuild(
           buildNumber: defaultId,
@@ -714,7 +716,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() does not fetch any artifacts if the coverage summary artifact does not exist",
+      ".fetchCoverage() does not fetch any artifacts if the coverage summary artifact is not found",
       () async {
         final jenkinsBuild = createJenkinsBuild(
           buildNumber: defaultId,
@@ -747,6 +749,20 @@ void main() {
       () {
         whenFetchCoverage(withJenkinsBuild: defaultJenkinsBuild)
             .thenErrorWith();
+
+        final result = adapter.fetchCoverage(defaultBuild);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchCoverage() throws a StateError if fetching a jenkins build fails",
+      () {
+        whenFetchCoverage(withJenkinsBuild: defaultJenkinsBuild)
+            .thenSuccessWith(defaultArtifactContent);
+
+        when(jenkinsClientMock.fetchBuildByUrl(any)).thenErrorWith();
 
         final result = adapter.fetchCoverage(defaultBuild);
 

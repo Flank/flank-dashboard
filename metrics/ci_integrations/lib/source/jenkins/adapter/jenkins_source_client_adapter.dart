@@ -77,7 +77,8 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     ArgumentError.checkNotNull(build, 'build');
 
     logger.info('Fetching build by url: ${build.apiUrl}...');
-    final jenkinsBuild = await _fetchBuildByUrl(build.apiUrl);
+    final interaction = await jenkinsClient.fetchBuildByUrl(build.apiUrl);
+    final jenkinsBuild = _processInteraction(interaction);
 
     if (jenkinsBuild == null) return null;
 
@@ -145,15 +146,6 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     }
 
     return builds;
-  }
-
-  /// Fetches a build by the given [url].
-  ///
-  /// Returns `null` if the build with the given [url] is not found.
-  Future<JenkinsBuild> _fetchBuildByUrl(String url) async {
-    final interaction = await jenkinsClient.fetchBuildByUrl(url);
-
-    return _processInteraction(interaction);
   }
 
   /// Processes the given [builds] to the list of [BuildData]s.

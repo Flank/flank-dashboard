@@ -305,6 +305,34 @@ void main() {
       },
     );
 
+    test(
+      ".fetchBuildByUrl() fails if a build with the given url is not found",
+      () {
+        final url = '${jenkinsMockServer.url}/job/test/2';
+
+        final result =
+            jenkinsClient.fetchBuildByUrl(url).then((result) => result.isError);
+
+        expect(result, completion(isTrue));
+      },
+    );
+
+    test(
+      ".fetchBuildByUrl() responds with a build matching the given url",
+      () {
+        const jenkinsBuildId = '1';
+
+        final url = '${jenkinsMockServer.url}/job/test/$jenkinsBuildId';
+
+        final result =
+            jenkinsClient.fetchBuildByUrl(url).then((result) => result.result);
+
+        const expected = JenkinsBuild(id: jenkinsBuildId);
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
     test(".fetchBuildsByUrl() fails if a building job is not found", () {
       final result = jenkinsClient
           .fetchBuildsByUrl('${jenkinsMockServer.url}/job/test/job/dev')
@@ -475,33 +503,5 @@ void main() {
 
       expect(result, completion(equals(expected)));
     });
-
-    test(
-      ".fetchBuildByUrl() fails if a build with the given url is not found",
-      () {
-        final url = '${jenkinsMockServer.url}/job/test/2';
-
-        final result =
-            jenkinsClient.fetchBuildByUrl(url).then((result) => result.isError);
-
-        expect(result, completion(isTrue));
-      },
-    );
-
-    test(
-      ".fetchBuildByUrl() responds with a build matching the given url",
-      () {
-        const jenkinsBuildId = '1';
-
-        final url = '${jenkinsMockServer.url}/job/test/$jenkinsBuildId';
-
-        final result =
-            jenkinsClient.fetchBuildByUrl(url).then((result) => result.result);
-
-        const expected = JenkinsBuild(id: jenkinsBuildId);
-
-        expect(result, completion(equals(expected)));
-      },
-    );
   });
 }
