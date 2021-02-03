@@ -302,7 +302,7 @@ class BuildkiteClient with LoggerMixin {
   }
 
   /// Fetches a [BuildkiteToken] by the given [auth].
-  Future<InteractionResult<BuildkiteToken>> fetchTokenInfo(
+  Future<InteractionResult<BuildkiteToken>> fetchToken(
     AuthorizationBase auth,
   ) {
     ArgumentError.checkNotNull(auth, 'auth');
@@ -312,14 +312,13 @@ class BuildkiteClient with LoggerMixin {
       path: 'access-token',
     );
 
-    final headers = <String, String>{
-      HttpHeaders.contentTypeHeader: ContentType.json.value,
-      HttpHeaders.acceptHeader: ContentType.json.value,
+    final requestHeaders = <String, String>{
+      ...headers,
       ...auth.toMap(),
     };
 
     return _handleResponse(
-      _client.get(url, headers: headers),
+      _client.get(url, headers: requestHeaders),
       (json, _) {
         final token = BuildkiteToken.fromJson(json as Map<String, dynamic>);
 
@@ -329,7 +328,7 @@ class BuildkiteClient with LoggerMixin {
   }
 
   /// Fetches a [BuildkiteOrganization] by the given [organizationSlug].
-  Future<InteractionResult<BuildkiteOrganization>> fetchOrganizationInfo(
+  Future<InteractionResult<BuildkiteOrganization>> fetchOrganization(
     String organizationSlug,
   ) {
     final url = UrlUtils.buildUrl(
@@ -350,7 +349,7 @@ class BuildkiteClient with LoggerMixin {
   }
 
   /// Fetches a [BuildkitePipeline] by the given [organizationName].
-  Future<InteractionResult<BuildkitePipeline>> fetchPipelineInfo(
+  Future<InteractionResult<BuildkitePipeline>> fetchPipeline(
     String pipelineSlug,
   ) {
     final url = UrlUtils.buildUrl(

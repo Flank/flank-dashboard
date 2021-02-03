@@ -527,19 +527,19 @@ void main() {
     );
 
     test(
-      ".fetchTokenInfo() throws an ArgumentError if the given auth is null",
+      ".fetchToken() throws an ArgumentError if the given auth is null",
       () async {
         expect(
-          () => client.fetchTokenInfo(null),
+          () => client.fetchToken(null),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchTokenInfo() returns a buildkite token if the given authorization is valid",
+      ".fetchToken() returns a buildkite token if the given authorization is valid",
       () async {
-        final interactionResult = await client.fetchTokenInfo(authorization);
+        final interactionResult = await client.fetchToken(authorization);
         final token = interactionResult.result;
 
         expect(token, isNotNull);
@@ -547,20 +547,20 @@ void main() {
     );
 
     test(
-      ".fetchTokenInfo() returns an error if the given authorization is not valid",
+      ".fetchToken() returns an error if the given authorization is not valid",
       () async {
         final invalidAuthorization = BearerAuthorization('invalidToken');
 
-        final result = await client.fetchTokenInfo(invalidAuthorization);
+        final result = await client.fetchToken(invalidAuthorization);
 
         expect(result.isError, isTrue);
       },
     );
 
     test(
-      ".fetchOrganizationInfo() returns a buildkite organization",
+      ".fetchOrganization() returns a buildkite organization",
       () async {
-        final interactionResult = await client.fetchOrganizationInfo(
+        final interactionResult = await client.fetchOrganization(
           organizationSlug,
         );
         final organization = interactionResult.result;
@@ -570,18 +570,18 @@ void main() {
     );
 
     test(
-      ".fetchOrganizationInfo() returns an error if there is no organization with the given slug",
+      ".fetchOrganization() returns an error if there is no organization with the given slug",
       () async {
-        final interactionResult = await client.fetchOrganizationInfo(notFound);
+        final interactionResult = await client.fetchOrganization(notFound);
 
         expect(interactionResult.isError, isTrue);
       },
     );
 
     test(
-      ".fetchPipelineInfo() returns a buildkite pipeline",
+      ".fetchPipeline() returns a buildkite pipeline",
       () async {
-        final interactionResult = await client.fetchPipelineInfo(
+        final interactionResult = await client.fetchPipeline(
           pipelineSlug,
         );
         final organization = interactionResult.result;
@@ -591,9 +591,9 @@ void main() {
     );
 
     test(
-      ".fetchPipelineInfo() returns an error if there is no pipeline with the given slug",
+      ".fetchPipeline() returns an error if there is no pipeline with the given slug",
       () async {
-        final interactionResult = await client.fetchPipelineInfo(notFound);
+        final interactionResult = await client.fetchPipeline(notFound);
 
         expect(interactionResult.isError, isTrue);
       },
