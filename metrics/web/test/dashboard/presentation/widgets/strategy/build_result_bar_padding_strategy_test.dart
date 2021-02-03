@@ -39,7 +39,7 @@ void main() {
     test(
       ".getBarPadding() returns an edge insets only with right value if the given build result is the first in the list",
       () {
-        const expectedInsets = EdgeInsets.only(right: 2.0);
+        const expectedInsets = EdgeInsets.only(right: 1.0);
         final buildResult = buildResults.first;
 
         final edgeInsets = strategy.getBarPadding(buildResult);
@@ -51,7 +51,7 @@ void main() {
     test(
       ".getBarPadding() returns an edge insets with right and left value if the given build result is not the first and last in the list",
       () {
-        const expectedInsets = EdgeInsets.symmetric(horizontal: 2.0);
+        const expectedInsets = EdgeInsets.symmetric(horizontal: 1.0);
         final buildResult = buildResults[1];
 
         final edgeInsets = strategy.getBarPadding(buildResult);
@@ -63,7 +63,7 @@ void main() {
     test(
       ".getBarPadding() returns an edge insets only with left only if the given build result if the first in list",
       () {
-        const expectedInsets = EdgeInsets.only(left: 2.0);
+        const expectedInsets = EdgeInsets.only(left: 1.0);
         final buildResult = buildResults.last;
 
         final edgeInsets = strategy.getBarPadding(buildResult);
@@ -75,7 +75,7 @@ void main() {
     test(
       ".getBarPadding() returns an edge insets only with left value if there is only one build result",
       () {
-        const expectedInsets = EdgeInsets.only(left: 2.0);
+        const expectedInsets = EdgeInsets.only(left: 1.0);
         final buildResult = BuildResultViewModel(
           date: DateTime.now(),
           duration: Duration.zero,

@@ -19,10 +19,7 @@ import 'package:rxdart/rxdart.dart';
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
   /// A number of builds to load for chart metrics.
-  static const int buildsToLoadForChartMetrics = 20;
-
-  /// A number of builds to load for [DashboardProjectMetrics.stability] metric.
-  static const int buildsToLoadForStabilityMetric = 30;
+  static const int buildsToLoadForChartMetrics = 30;
 
   /// A [Duration] of a loading period for builds.
   static const Duration buildsLoadingPeriod = Duration(days: 6);
@@ -40,7 +37,7 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      buildsToLoadForStabilityMetric,
+      buildsToLoadForChartMetrics,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
@@ -96,13 +93,9 @@ class ReceiveProjectMetricsUpdates
       );
     }
 
-    final lastBuildsForBuildResults = _getLastBuilds(
+    final lastBuilds = _getLastBuilds(
       builds,
       buildsToLoadForChartMetrics,
-    );
-    final lastBuildsForStability = _getLastBuilds(
-      builds,
-      buildsToLoadForStabilityMetric,
     );
     final lastBuildsInPeriod = _getBuildsInPeriod(
       builds,
@@ -113,10 +106,9 @@ class ReceiveProjectMetricsUpdates
       status: builds.last.buildStatus,
     );
     final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
-    final buildResultMetrics =
-        _getBuildResultMetrics(lastBuildsForBuildResults);
+    final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
     final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
-    final stability = _getStability(lastBuildsForStability);
+    final stability = _getStability(lastBuilds);
     final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
