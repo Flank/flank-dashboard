@@ -165,8 +165,6 @@ class BuildkiteClient with LoggerMixin {
       (json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
 
-        if (json == null) return const InteractionResult.success();
-
         final buildsList = json as List<dynamic>;
         final builds = BuildkiteBuild.listFromJson(buildsList);
 
@@ -239,8 +237,6 @@ class BuildkiteClient with LoggerMixin {
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
-
-        if (json == null) return const InteractionResult.success();
 
         final artifactsList = json as List<dynamic>;
         final artifacts = BuildkiteArtifact.listFromJson(artifactsList);
