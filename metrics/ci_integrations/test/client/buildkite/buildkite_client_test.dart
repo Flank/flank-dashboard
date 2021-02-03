@@ -16,8 +16,10 @@ void main() {
   group("BuildkiteClient", () {
     const testPageNumber = 1;
     const buildNumber = 1;
-    const organizationSlug = "organization_slug";
+    const organizationSlug = 'organization_slug';
     const pipelineSlug = 'pipeline_slug';
+    const notFound = 'not_found';
+
     final authorization = ApiKeyAuthorization(
       HttpHeaders.authorizationHeader,
       'token',
@@ -159,7 +161,7 @@ void main() {
     test(
       ".fetchBuilds() fails with an error if there is no pipeline with such slug",
       () async {
-        final result = await client.fetchBuilds('not_found');
+        final result = await client.fetchBuilds(notFound);
 
         expect(result.isError, isTrue);
       },
@@ -525,6 +527,79 @@ void main() {
     );
 
     test(
+      ".fetchToken() throws an ArgumentError if the given auth is null",
+      () async {
+        expect(
+          () => client.fetchToken(null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchToken() returns a buildkite token if the given authorization is valid",
+      () async {
+        final interactionResult = await client.fetchToken(authorization);
+        final token = interactionResult.result;
+
+        expect(token, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchToken() returns an error result if the given authorization is not valid",
+      () async {
+        final invalidAuthorization = BearerAuthorization('invalidToken');
+
+        final result = await client.fetchToken(invalidAuthorization);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchOrganization() returns a buildkite organization",
+      () async {
+        final interactionResult = await client.fetchOrganization(
+          organizationSlug,
+        );
+        final organization = interactionResult.result;
+
+        expect(organization, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOrganization() returns an error result if there is no organization with the given slug",
+      () async {
+        final interactionResult = await client.fetchOrganization(notFound);
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchPipeline() returns a buildkite pipeline",
+      () async {
+        final interactionResult = await client.fetchPipeline(
+          pipelineSlug,
+        );
+        final organization = interactionResult.result;
+
+        expect(organization, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchPipeline() returns an error result if there is no pipeline with the given slug",
+      () async {
+        final interactionResult = await client.fetchPipeline(notFound);
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
       ".downloadArtifact() returns null if the given url is null",
       () async {
         final interactionResult = await client.downloadArtifact(null);
@@ -537,7 +612,7 @@ void main() {
       ".downloadArtifact() fails with an error if the artifact associated with the given download url is not found",
       () async {
         final downloadUrl =
-            '${client.basePath}pipelines/$pipelineSlug/builds/$buildNumber/artifacts/not_found/download';
+            '${client.basePath}pipelines/$pipelineSlug/builds/$buildNumber/artifacts/$notFound/download';
 
         final interactionResult = await client.downloadArtifact(downloadUrl);
 
