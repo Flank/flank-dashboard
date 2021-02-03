@@ -111,15 +111,11 @@ class GithubActionsSourceClientAdapter
     logger.info('Fetching workflow run for build #${build.buildNumber}...');
     final interaction =
         await githubActionsClient.fetchWorkflowRunByUrl(build.apiUrl);
-
     final workflowRun = _processInteraction(interaction);
 
     if (workflowRun == null) return null;
 
     final coverageArtifact = await _fetchCoverageArtifact(workflowRun);
-
-    if (coverageArtifact == null) return null;
-
     final artifactBytes = await _downloadArtifact(coverageArtifact);
 
     return _mapArtifactToCoverage(artifactBytes);
@@ -288,10 +284,13 @@ class GithubActionsSourceClientAdapter
   }
 
   /// Downloads the given [artifact] using the [WorkflowRunArtifact.downloadUrl].
+  ///
+  /// If the given artifact is `null`, returns `null`.
   Future<Uint8List> _downloadArtifact(WorkflowRunArtifact artifact) async {
+    if (artifact == null) return null;
+
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
-
     final artifactBytes = _processInteraction(interaction);
     final artifactArchive = archiveHelper.decodeArchive(artifactBytes);
 

@@ -1054,7 +1054,6 @@ void main() {
         const artifactsPage = WorkflowRunArtifactsPage(
           values: [WorkflowRunArtifact(name: 'test.json')],
         );
-
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(artifactsPage);
 
@@ -1086,7 +1085,6 @@ void main() {
       () async {
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(defaultArtifactsPage);
-
         whenDecodeCoverage(withArtifactBytes: coverageBytes).thenReturn(null);
 
         final result = await adapter.fetchCoverage(defaultBuild);
@@ -1102,18 +1100,17 @@ void main() {
 
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(artifactsPage);
-
         whenDecodeCoverage(withArtifactBytes: coverageBytes)
             .thenReturn(coverageBytes);
-
         when(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
             .thenSuccessWith(defaultArtifactsPage);
 
         final actualCoverage = await adapter.fetchCoverage(defaultBuild);
 
         expect(actualCoverage, equals(expectedCoverage));
-        verify(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
-            .called(1);
+        verify(
+          githubActionsClientMock.fetchRunArtifactsNext(artifactsPage),
+        ).called(1);
       },
     );
 
@@ -1122,7 +1119,6 @@ void main() {
       () {
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(artifactsPage);
-
         when(githubActionsClientMock.fetchWorkflowRunByUrl(any))
             .thenErrorWith();
 
@@ -1148,7 +1144,6 @@ void main() {
       () {
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(artifactsPage);
-
         when(githubActionsClientMock.fetchRunArtifactsNext(artifactsPage))
             .thenErrorWith();
 
@@ -1163,7 +1158,6 @@ void main() {
       () {
         whenFetchCoverage(withWorkflowRun: defaultWorkflowRun)
             .thenSuccessWith(defaultArtifactsPage);
-
         when(githubActionsClientMock.downloadRunArtifactZip(any))
             .thenErrorWith();
 
