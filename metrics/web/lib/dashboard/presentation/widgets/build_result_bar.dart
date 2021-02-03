@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
-import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
-import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
+import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -97,6 +97,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
               onEnter: (_) => openPopup(),
               onExit: (_) => closePopup(),
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: _onBarTap,
                 child: Padding(
                   padding: _barPadding,
