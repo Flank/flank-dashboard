@@ -10,7 +10,6 @@ import 'package:ci_integration/client/buildkite/models/buildkite_organization.da
 import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/util/authorization/authorization.dart';
 
 import '../../../test_utils/mock_server_utils.dart';
 
@@ -18,9 +17,6 @@ import '../../../test_utils/mock_server_utils.dart';
 class BuildkiteMockServer extends ApiMockServer {
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
-
-  /// An [AuthorizationBase] required to authorize in requests.
-  final AuthorizationBase auth;
 
   /// Returns a base path of the Buildkite API.
   String get basePath => '/organizations/organization_slug';
@@ -100,21 +96,9 @@ class BuildkiteMockServer extends ApiMockServer {
       ];
 
   @override
-  List<AuthCredentials> get authCredentials {
-    final authorizationHeaders = auth?.toMap();
-
-    final token = authorizationHeaders?.values?.first;
-
-    return [
-      AuthCredentials(token: token),
-    ];
-  }
-
-  /// Creates an instance of the [BuildkiteMockServer]
-  /// with the given [auth].
-  BuildkiteMockServer({
-    this.auth,
-  });
+  List<AuthCredentials> get authCredentials => const [
+        AuthCredentials(token: 'token'),
+      ];
 
   /// Responses with a list of [BuildkiteBuild]s having the build state
   /// and the finished at specified in the [request] parameters.

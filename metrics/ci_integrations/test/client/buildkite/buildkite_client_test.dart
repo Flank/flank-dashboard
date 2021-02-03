@@ -20,10 +20,12 @@ void main() {
     const pipelineSlug = 'pipeline_slug';
     const notFound = 'not_found';
 
-    const validAuthToken = 'validToken';
-    final authorization = BearerAuthorization(validAuthToken);
+    final authorization = ApiKeyAuthorization(
+      HttpHeaders.authorizationHeader,
+      'token',
+    );
 
-    final buildkiteMockServer = BuildkiteMockServer(auth: authorization);
+    final buildkiteMockServer = BuildkiteMockServer();
     BuildkiteClient client;
 
     setUpAll(() async {
