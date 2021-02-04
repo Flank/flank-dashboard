@@ -36,7 +36,7 @@ void main() {
 
     final auth = BearerAuthorization('token');
 
-    final client = BuildkiteCLientMock();
+    final client = BuildkiteClientMock();
     final delegate = BuildkiteSourceValidationDelegate(client);
 
     tearDown(() {
@@ -64,7 +64,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the interaction with the client is an error",
+      ".validateAuth() returns an error if the interaction with the client is not successful",
       () async {
         when(
           client.fetchToken(auth),
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction with the buildkite token if the given authorization is valid",
+      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the given authorization is valid",
       () async {
         when(
           client.fetchToken(auth),
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error if the interaction with the client is an error",
+      ".validateSourceProjectId() returns an error if the interaction with the client is not successful",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -147,7 +147,7 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns a successful interaction with the buildkite pipeline if the given pipeline slug is valid",
+      ".validateSourceProjectId() returns a successful interaction containing the fetched Buildkite pipeline if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -163,13 +163,13 @@ void main() {
     );
 
     test(
-      ".validateOrganization() returns an error if the interaction with the client is an error",
+      ".validateOrganizationSlug() returns an error if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateOrganization(
+        final interactionResult = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
 
@@ -178,13 +178,13 @@ void main() {
     );
 
     test(
-      ".validateOrganization() returns an error if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns an error if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateOrganization(
+        final interactionResult = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
 
@@ -193,13 +193,13 @@ void main() {
     );
 
     test(
-      ".validateOrganization() returns a successful interaction with the buildkite organization if the given organization slug is valid",
+      ".validateOrganizationSlug() returns a successful interaction containing the fetched Buildkite organization if the given organization slug is valid",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenSuccessWith(buildkiteOrganization);
 
-        final interactionResult = await delegate.validateOrganization(
+        final interactionResult = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
         final organization = interactionResult.result;

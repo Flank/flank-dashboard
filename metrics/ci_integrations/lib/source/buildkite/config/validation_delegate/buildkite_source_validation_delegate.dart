@@ -8,18 +8,19 @@ import 'package:ci_integration/source/buildkite/strings/buildkite_validation_str
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
-/// A validation delegate for the Buildkite source integration.
+/// A [SourceValidationDelegate] for the Buildkite source integration.
 class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
-  /// A [List] containing all required [BuildkiteTokenScope]s
-  /// to use in validation.
+  /// A [List] containing all required [BuildkiteTokenScope]s.
   static const List<BuildkiteTokenScope> _requiredTokenScopes = [
     BuildkiteTokenScope.readBuilds,
   ];
 
-  /// A [BuildkiteClient] of this validation delegate.
+  /// A [BuildkiteClient] used to perform calls to the Buildkite API.
   final BuildkiteClient _client;
 
   /// Creates an instance of the [BuildkiteSourceValidationDelegate]
+  ///
+  /// Throws an [ArgumentError] if the given [_client] is `null`.
   BuildkiteSourceValidationDelegate(this._client) {
     ArgumentError.checkNotNull(_client);
   }
@@ -32,7 +33,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
 
     if (tokenInteraction.isError || tokenInteraction.result == null) {
       return const InteractionResult.error(
-        message: BuildkiteValidationStrings.tokenInvalid,
+        message: BuildkiteStrings.tokenInvalid,
       );
     }
 
@@ -45,7 +46,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
 
     if (!containsRequiredScopes) {
       return const InteractionResult.error(
-        message: BuildkiteValidationStrings.tokenDoesNotHaveReadBuildsScope,
+        message: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
       );
     }
 
@@ -60,7 +61,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
 
     if (pipelineInteraction.isError || pipelineInteraction.result == null) {
       return const InteractionResult.error(
-        message: BuildkiteValidationStrings.pipelineNotFound,
+        message: BuildkiteStrings.pipelineNotFound,
       );
     }
 
@@ -68,7 +69,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
   }
 
   /// Validates the given [organizationSlug].
-  Future<InteractionResult<BuildkiteOrganization>> validateOrganization(
+  Future<InteractionResult<BuildkiteOrganization>> validateOrganizationSlug(
     String organizationSlug,
   ) async {
     final organizationInteraction = await _client.fetchOrganization(
@@ -78,7 +79,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
     if (organizationInteraction.isError ||
         organizationInteraction.result == null) {
       return const InteractionResult.error(
-        message: BuildkiteValidationStrings.organizationNotFound,
+        message: BuildkiteStrings.organizationNotFound,
       );
     }
 

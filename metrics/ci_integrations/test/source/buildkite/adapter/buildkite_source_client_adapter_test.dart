@@ -33,7 +33,7 @@ void main() {
 
     const fetchLimit = 20;
 
-    final buildkiteClientMock = BuildkiteCLientMock();
+    final buildkiteClientMock = BuildkiteClientMock();
     final adapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClientMock,
     );
