@@ -4,7 +4,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/interface/source/config/validation_delegate/source_validation_delegate.dart';
-import 'package:ci_integration/source/buildkite/strings/buildkite_validation_strings.dart';
+import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
