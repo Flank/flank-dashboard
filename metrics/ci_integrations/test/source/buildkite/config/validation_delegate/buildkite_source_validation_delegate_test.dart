@@ -19,8 +19,7 @@ void main() {
 
     const buildkiteToken = BuildkiteToken(
       scopes: [
-        BuildkiteTokenScope.readAgents,
-        BuildkiteTokenScope.readArtifacts
+        BuildkiteTokenScope.readBuilds,
       ],
     );
     const buildkiteOrganization = BuildkiteOrganization(
@@ -65,16 +64,46 @@ void main() {
     );
 
     test(
-      ".validateAuth() delegates to .fetchToken() of the given client",
-      () {
-        delegate.validateAuth(auth);
+      ".validateAuth() returns an error if the interaction with the client is an error",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenErrorWith();
 
-        verify(client.fetchToken(auth)).called(1);
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isError, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns a buildkite token",
+      ".validateAuth() returns an error if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns an error if the fetched token does not have the read builds token scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(const BuildkiteToken(scopes: []));
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns a successful interaction with the buildkite token if the given authorization is valid",
       () async {
         when(
           client.fetchToken(auth),
@@ -88,31 +117,37 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if fetching token fails",
+      ".validateSourceProjectId() returns an error if the interaction with the client is an error",
       () async {
         when(
-          client.fetchToken(auth),
+          client.fetchPipeline(pipelineSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final interactionResult = await delegate.validateSourceProjectId(
+          pipelineSlug,
+        );
 
         expect(interactionResult.isError, isTrue);
       },
     );
 
     test(
-      ".validateSourceProjectId() delegates to .fetchPipeline() of the given client",
-      () {
-        const sourceProjectId = 'id';
+      ".validateSourceProjectId() returns an error if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchPipeline(pipelineSlug),
+        ).thenSuccessWith(null);
 
-        delegate.validateSourceProjectId(sourceProjectId);
+        final interactionResult = await delegate.validateSourceProjectId(
+          pipelineSlug,
+        );
 
-        verify(client.fetchPipeline(sourceProjectId)).called(1);
+        expect(interactionResult.isError, isTrue);
       },
     );
 
     test(
-      ".validateSourceProjectId() returns a buildkite pipeline",
+      ".validateSourceProjectId() returns a successful interaction with the buildkite pipeline if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -128,14 +163,14 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error if fetching buildkite pipeline fails",
+      ".validateOrganization() returns an error if the interaction with the client is an error",
       () async {
         when(
-          client.fetchPipeline(pipelineSlug),
+          client.fetchOrganization(organizationSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateSourceProjectId(
-          pipelineSlug,
+        final interactionResult = await delegate.validateOrganization(
+          organizationSlug,
         );
 
         expect(interactionResult.isError, isTrue);
@@ -143,18 +178,22 @@ void main() {
     );
 
     test(
-      ".validateOrganization() delegates to .fetchOrganization() of the given client",
-      () {
-        const organizationSlug = 'slug';
+      ".validateOrganization() returns an error if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenSuccessWith(null);
 
-        delegate.validateOrganization(organizationSlug);
+        final interactionResult = await delegate.validateOrganization(
+          organizationSlug,
+        );
 
-        verify(client.fetchOrganization(organizationSlug)).called(1);
+        expect(interactionResult.isError, isTrue);
       },
     );
 
     test(
-      ".validateOrganization() returns a buildkite organization",
+      ".validateOrganization() returns a successful interaction with the buildkite organization if the given organization slug is valid",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -166,21 +205,6 @@ void main() {
         final organization = interactionResult.result;
 
         expect(organization, equals(buildkiteOrganization));
-      },
-    );
-
-    test(
-      ".validateOrganization() returns an error if fetching buildkite organization fails",
-      () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenErrorWith();
-
-        final interactionResult = await delegate.validateOrganization(
-          organizationSlug,
-        );
-
-        expect(interactionResult.isError, isTrue);
       },
     );
   });
