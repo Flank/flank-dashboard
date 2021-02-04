@@ -15,7 +15,7 @@ Introducing the auto-deployment to Firebase  for the Metrics app allows users to
 
 This document has the following goals:
 
-- a clear design of the Metrics CLI tool;
+- develop a clear design of the Metrics CLI tool;
 - describe the overall process of the Doctor command;
 - describe the overall process of the Deploy command.
 
@@ -29,17 +29,18 @@ Deployment to other cloud providers than Google Cloud.
 
 The following sections provide an implementation of the Metrics CLI tool.
 
-Here is a list of functionality points we should provide to the Metrics CLI tool:
-- checking all the third-party CLIs necessary for the correct operation;
-- automatic creating and configuring of projects in gcloud, firebase and deploying it.
+To simplify the deployment process, the Metrics CLI should have the following commands:
+
+- [Doctor command](#DoctorCommand) - a command used to check all third-party CLIs required for the deployment process available;
+- [Deploy command](#DeployCommand)- a command used to automatic GCloud and Firebase projects creating and deploying the Metrics applications.
 
 Let's take a look at the classes the Metrics CLI tool requires.
 
 ### CLI Wrappers
 
-CLI wrapper classes are wrappers over the third-party CLIs functions. These classes encapsulate the CLI commands invocation.
-
-The Metrics CLI tool has the following wrappers that used for the firebase deployment:
+Since the Metrics CLI uses the third-party CLIs to deploy the Metrics applications, we should implement classes used to interact with these CLIs. 
+These classes should encapsulate the CLI commands invocation in its methods. 
+To deploy the Metrics Web Application, we should have the following classes:
 
 - `FirebaseCliWrapper` used to work with firebase CLI;
 - `FlutterCliWrapper` used to work with flutter CLI;
@@ -47,17 +48,9 @@ The Metrics CLI tool has the following wrappers that used for the firebase deplo
 - `GitCliWrapper` used to work with git CLI;
 - `NpmCliWrapper` used to work with npm CLI.
 
-### MetricsCommandRunner
-
-The `MetricsCommandRunner` is a class that extends a `CommandRunner` and used for registering and running [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands.
-
-The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
-
-![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
-
 ### DoctorCommand
 
-The `DoctorCommand` is a class that extends a `Command` and is used to check the current versions of the CLIs required for the [deploy command](#deploycommand).
+To simplify the Metrics CLI setup, we should implement the `Doctor` command to provide an ability to simply check whether all required tools installed and get their versions.
 
 The following class diagram demonstrates the structure of the `DoctorCommand`:
 
@@ -96,32 +89,40 @@ Before you start, you should download the latest version of the Metrics CLI tool
 
 ### Doctor
 
-The `doctor` is the supporting command of the Metrics CLI tool, which checks the environment for all required dependencies (firebase, npm, etc.) and print the information to the user. See flutter doctor for inspiration.
+The `doctor` command provides an ability allows checking the environment for all required dependencies like firebase, npm, etc.
+The output of this command includes the versions of all required third-party CLIs. 
+If the `doctor` command output contains any errors - the user should fix them before running the `deploy` command.
 
 To run the `doctor` command use the following code in your console:
 
 ```bash
-path/metrics doctor
+./metrics doctor
 ```
 
 ### Deploy
 
-The `deploy` is the main command of the Metrics CLI tool, which creates gcloud and firebase projects, enables firestore and necessary services and deploys web projects to the hosting.
+The `deploy` command creates GCloud and Firebase projects, enables Firestore and other Firebase services necessary for correct Metrics Web Application working, and deploys the Metrics Web Application to the Firebase hosting.
 
-In some cases, the deploy command requires user interaction(such as login to firebase or gcloud CLI).
+This command may require user interaction during the deployment process. For example, it may ask to log in to the Firebase or GCloud CLI.
 
-To run the `deploy` command use the following code in your console:
+To start the `deploy` process, run the following command in the directory containing the Metrics CLI tool:
 
 ```bash
-path/metrics deploy
+./metrics deploy
 ```
+
+### MetricsCommandRunner
+
+The `MetricsCommandRunner` is a class that extends a `CommandRunner` and used for registering and running [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands.
+
+The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
+
+![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
 
 ## Testing
 
-All parts of the application should be unit-tested using Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages.
-
-_**Note**: We can't test [CLI wrappers](#cli-wrappers) as they use a top-level function [Process.start](https://api.dart.dev/stable/2.10.5/dart-io/Process/start.html) to work._
-
+All parts of the Metrics CLI application will be unit-tested using Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages.
+_**Note**: Since the  [CLI wrapper](#cli-wrappers) classes use the top-level [Process.start](https://api.dart.dev/stable/2.10.5/dart-io/Process/start.html) function, they could not be covered with tests and should be tested manually._
 ## Alternatives Considered
 
 > Summarize alternative designs (pros & cons)
