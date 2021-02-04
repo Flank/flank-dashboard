@@ -42,36 +42,46 @@ activate CoolIntegrationValidationDelegate
 CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
 activate  CoolIntegrationClient
 
-CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-
-CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
-CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
-
-alt config is valid
+alt auth is valid
 
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+    CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.success)
 
-    CoolIntegrationConfigValidator --> ValidateCommand : config is valid
-    ValidateCommand --> Bob : prints the validation successful message
 
-else config is not valid
+else auth is not valid
 
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
-    deactivate CoolIntegrationClient
-
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
-    deactivate CoolIntegrationValidationDelegate
-
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
-
-    CoolIntegrationConfigValidator --> ValidateCommand : throw ConfigValidationError(message)
-    deactivate CoolIntegrationConfigValidator
-
-    ValidateCommand --> Bob : prints the validation error message
-    deactivate ValidateCommand
+    CoolIntegrationConfigValidator  -> CoolIntegrationConfigValidator : validationResult.add(ConfigValidationResult.failure)
 
 end
+
+
+alt another field can be validated
+
+    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
+    CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+
+    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+    deactivate CoolIntegrationClient
+
+    CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
+    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+    deactivate CoolIntegrationValidationDelegate
+
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.success)
+
+else another field cannot be validated
+
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.unknown)
+
+end
+
+deactivate CoolIntegrationConfigValidator
+
+ConfigValidator --> ValidateCommand : validationResult
+ValidateCommand --> Bob : provides detailed conclusion on config
 
 @enduml
