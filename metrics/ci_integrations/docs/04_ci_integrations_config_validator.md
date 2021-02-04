@@ -23,13 +23,14 @@ This document aims the following goals:
 ### Main interfaces and classes
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationError` if the given config is not valid.
+- A `ConfigValidationResult` is a class that holds the validation conclusions on each config's field. A `ConfigFieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `ConfigFieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
+- A `ConfigValidator` is a class that provides the validation functionality. It's main `validate` method returns a `ConfigValidationResult` as an output.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
 Consider the following steps needed to be able to validate the given configuration file:
 
-1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
+1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ConfigValidationResult`, and `ConfigFieldValidationResult`.
 2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create a `ValidateCommand` class.
@@ -38,7 +39,7 @@ Consider the following steps needed to be able to validate the given configurati
 
 Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
 
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
 
 #### Package Structure
 
@@ -51,6 +52,9 @@ Consider the package structure using the `CoolIntegration` as an example:
 >   * interface/
 >     * base/
 >       * config/
+>         * model/
+>           * config_validation_result.dart
+>           * config_field_validation_result.dart
 >         * validator/
 >           * config_validator.dart   
 >         * validator_factory/
@@ -65,8 +69,6 @@ Consider the package structure using the `CoolIntegration` as an example:
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
->   * error/
->     * config_validation_error.dart 
 > * destination/
 >   * cool_integration/
 >     * config/   
@@ -92,7 +94,7 @@ Consider the package structure using the `CoolIntegration` as an example:
 ## Making things work
 Consider the following sequence diagram that illustrates the process of the configuration file validation:
 
-![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
+![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
 
 ## Testing
 > How will the project be tested?

@@ -14,27 +14,44 @@
                 package config {
                     package model {
                         interface Config {}
+
+                        class ConfigValidationResult {
+                            - _results : List<ConfigFieldValidationResult>
+
+                            + void addResult(ConfigFieldValidationResult result)
+                            + String toString()
+                        }
+
+                        class ConfigFieldValidationResult {
+                            + conclusion : String
+                            + field : String
+                            + additionalContext : String
+                            
+                            + ConfigValidationResult.success(String field, String additionalContext)
+                            + ConfigValidationResult.unknown(String field, String additionalContext)
+                            + ConfigValidationResult.failure(String field, String additionalContext)
+
+                            - ConfigValidationResult._(String conclusion, String field, String additionalContext)
+                        }
                     }
 
                     package validator {
                         abstract class ConfigValidator<T extends Config> {
                             + validationDelegate : ValidationDelegate
-                            + errorBuffer : StringBuffer
 
-                            + validate(T config) : Future<void>
-                            + addErrorMessage(String configField, String additionalContext) : void
+                            + Future<ConfigValidationResult> validate(T config)
                         }
                     }
 
                     package validation_delegate as base_validation_delegate {
                         interface ValidationDelegate {
-                            + validateAuth(AuthorizationBase auth) : Future<InteractionResult>
+                            + Future<InteractionResult> validateAuth(AuthorizationBase auth)
                         }
                     }
 
                     package validator_factory {
                         interface ConfigValidatorFactory<V extends ConfigValidator> {
-                            + create() : V
+                            + V create()
                         }
                     }
                 }
@@ -42,22 +59,14 @@
 
             package source.config.validation_delegate {
                 interface SourceValidationDelegate {
-                    + validateSourceProjectId(String sourceProjectId) : Future<InteractionResult>
+                    + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
                 }
             }
 
             package destination.config.validation_delegate {
                 interface DestinationValidationDelegate {
-                    + validateDestinationProjectId(String destinationProjectId) : Future<InteractionResult>
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId) 
                 }
-            }
-        }
-
-        package error {
-            class ConfigValidationError {
-                + message : String
-
-                + toString() : String
             }
         }
     }
@@ -76,7 +85,7 @@
                 class CoolIntegrationDestinationValidationDelegate {
                     - _client: CoolIntegrationClient
 
-                    + validateExtraField() : Future<InteractionResult>
+                    + Future<InteractionResult> validateExtraField()
                 }
             }
         }
@@ -95,7 +104,7 @@
             + supportedParties : SupportedIntegrationParties 
             - _integrationConfigParser : RawIntegrationConfigParser
 
-            + run() : void
+            + void run() 
         }
     }
 
@@ -104,21 +113,23 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator --> ValidationDelegate : uses
+    ConfigValidator --> ConfigValidationResult : uses
     ConfigValidator --> Config : uses
 
-    SourceValidationDelegate --up|> ValidationDelegate
-    DestinationValidationDelegate --up|> ValidationDelegate
+    ConfigValidationResult --> ConfigFieldValidationResult : uses
+
+    SourceValidationDelegate -up-|> ValidationDelegate
+    DestinationValidationDelegate -left-|> ValidationDelegate
 
     CoolIntegrationDestinationValidationDelegate ..|> DestinationValidationDelegate
 
-    CoolIntegrationDestinationConfigValidator -left-|> ConfigValidator
-    CoolIntegrationDestinationConfigValidator -left-> CoolIntegrationDestinationValidationDelegate : uses
-    CoolIntegrationDestinationValidationDelegate -left-> CoolIntegrationClient : uses
+    CoolIntegrationDestinationConfigValidator -down-|> ConfigValidator
+    CoolIntegrationDestinationConfigValidator --> CoolIntegrationDestinationValidationDelegate : uses
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationClient : uses
     CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
-    CoolIntegrationConfigValidatorFactory -left-> CoolIntegrationClient : creates
+    CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
     CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
-    CoolIntegrationDestinationConfigValidator --> ConfigValidationError : throws
 
     ValidateCommand -left-> IntegrationParty : uses
     ValidateCommand -left-> ConfigValidatorFactory : uses
