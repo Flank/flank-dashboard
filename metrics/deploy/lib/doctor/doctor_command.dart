@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:args/command_runner.dart';
 import 'package:deploy/cli/firebase/firebase_command.dart';
 import 'package:deploy/cli/flutter/flutter_command.dart';

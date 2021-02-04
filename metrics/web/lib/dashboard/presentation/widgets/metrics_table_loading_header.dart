@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header_loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:universal_html/js.dart';
 
 /// A class that provides information about the renderer that

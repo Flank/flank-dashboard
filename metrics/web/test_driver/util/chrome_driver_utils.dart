@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:http/http.dart' as http;
 
 import '../cli/web_driver/chrome_driver.dart';

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:test/test.dart';

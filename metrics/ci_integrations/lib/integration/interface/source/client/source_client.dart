@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
 import 'package:metrics_core/metrics_core.dart';

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/auth/data/converter/firebase_auth_error_code_converter.dart';
 import 'package:metrics/auth/data/model/firebase_auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';

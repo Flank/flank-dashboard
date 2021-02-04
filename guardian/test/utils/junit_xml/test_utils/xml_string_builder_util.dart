@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A class that provides methods for building test XML strings.
 class XmlStringBuilderUtil {
   /// Builds XML string with element with given [name] that contains only [text].

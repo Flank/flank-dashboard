@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A utility class that provides methods for validating strings.
 class StringValidator {
   /// Checks the given [value] to be not `null` or empty string.

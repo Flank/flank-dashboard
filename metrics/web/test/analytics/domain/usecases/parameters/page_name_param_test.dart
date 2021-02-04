@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/analytics/domain/entities/page_name.dart';
 import 'package:metrics/analytics/domain/usecases/parameters/page_name_param.dart';
 import 'package:test/test.dart';

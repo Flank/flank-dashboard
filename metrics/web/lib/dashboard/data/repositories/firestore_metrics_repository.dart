@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrics/dashboard/data/deserializer/build_data_deserializer.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';

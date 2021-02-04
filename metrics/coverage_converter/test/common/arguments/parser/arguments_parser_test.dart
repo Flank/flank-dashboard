@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:args/args.dart';
 import 'package:args/src/arg_results.dart';
 import 'package:coverage_converter/common/arguments/model/coverage_converter_arguments.dart';

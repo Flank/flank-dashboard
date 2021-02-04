@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import '../../../common/logger/logger.dart';
 import '../../../util/file_utils.dart';
 import '../process/process_wrapper.dart';

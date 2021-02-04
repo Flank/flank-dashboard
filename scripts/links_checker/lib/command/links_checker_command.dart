@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:args/command_runner.dart';
 import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:links_checker/checker/links_checker.dart';

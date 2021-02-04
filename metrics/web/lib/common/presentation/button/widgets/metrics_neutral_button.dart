@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_button.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_projects_validation_exception.dart';
 import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_projects_validation_error_message.dart';

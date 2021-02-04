@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/repositories/local_config_repository.dart';

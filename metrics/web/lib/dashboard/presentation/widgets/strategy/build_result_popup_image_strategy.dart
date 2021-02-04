@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 

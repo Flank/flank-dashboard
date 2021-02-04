@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/tooltip_title.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
