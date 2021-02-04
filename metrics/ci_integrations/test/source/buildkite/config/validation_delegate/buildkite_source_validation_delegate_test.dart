@@ -147,7 +147,7 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns a successful interaction containing the fetched Buildkite pipeline if the given pipeline slug is valid",
+      ".validateSourceProjectId() returns a successful interaction if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -156,9 +156,8 @@ void main() {
         final interactionResult = await delegate.validateSourceProjectId(
           pipelineSlug,
         );
-        final pipeline = interactionResult.result;
 
-        expect(pipeline, equals(buildkitePipeline));
+        expect(interactionResult.isSuccess, isTrue);
       },
     );
 
@@ -193,7 +192,7 @@ void main() {
     );
 
     test(
-      ".validateOrganizationSlug() returns a successful interaction containing the fetched Buildkite organization if the given organization slug is valid",
+      ".validateOrganizationSlug() returns a successful interaction if the given organization slug is valid",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -202,9 +201,8 @@ void main() {
         final interactionResult = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final organization = interactionResult.result;
 
-        expect(organization, equals(buildkiteOrganization));
+        expect(interactionResult.isSuccess, isTrue);
       },
     );
   });

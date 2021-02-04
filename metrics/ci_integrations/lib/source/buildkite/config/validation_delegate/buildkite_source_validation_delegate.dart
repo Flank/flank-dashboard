@@ -65,7 +65,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
       );
     }
 
-    return pipelineInteraction;
+    return const InteractionResult.success();
   }
 
   /// Validates the given [organizationSlug].
@@ -83,6 +83,6 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
       );
     }
 
-    return organizationInteraction;
+    return const InteractionResult.success();
   }
 }
