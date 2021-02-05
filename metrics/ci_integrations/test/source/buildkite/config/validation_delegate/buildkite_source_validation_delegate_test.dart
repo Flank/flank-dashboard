@@ -213,7 +213,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched Buildkite token has the read builds and read artifacts scopes",
+      ".validateAuth() returns an interaction containing the fetched Buildkite token if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
         const buildkiteToken = BuildkiteToken(
           scopes: readBuildsAndArtifactsScopes,
