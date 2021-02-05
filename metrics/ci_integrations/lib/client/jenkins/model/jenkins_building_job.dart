@@ -1,7 +1,7 @@
+import 'package:ci_integration/client/jenkins/deserializer/jenkins_build_deserializer.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
-
-import 'jenkins_job.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 
 /// A class representing a Jenkins building job.
 class JenkinsBuildingJob extends JenkinsJob {
@@ -41,13 +41,15 @@ class JenkinsBuildingJob extends JenkinsJob {
       name: json['name'] as String,
       fullName: json['fullName'] as String,
       url: json['url'] as String,
-      firstBuild: JenkinsBuild.fromJson(
+      firstBuild: JenkinsBuildDeserializer.fromJson(
         json['firstBuild'] as Map<String, dynamic>,
       ),
-      lastBuild: JenkinsBuild.fromJson(
+      lastBuild: JenkinsBuildDeserializer.fromJson(
         json['lastBuild'] as Map<String, dynamic>,
       ),
-      builds: JenkinsBuild.listFromJson(json['builds'] as List<dynamic>),
+      builds: JenkinsBuildDeserializer.listFromJson(
+        json['builds'] as List<dynamic>,
+      ),
     );
   }
 

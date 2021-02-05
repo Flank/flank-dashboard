@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
-import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
@@ -82,19 +81,8 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
 
     if (jenkinsBuild == null) return null;
 
-    logger.info(
-      'Fetching a coverage artifact for the build #${build.buildNumber}...',
-    );
-    final coverageArtifact = _getCoverageArtifact(jenkinsBuild);
-
-    if (coverageArtifact == null) return null;
-
-    final fetchArtifactInteraction = await jenkinsClient.fetchArtifact(
-      jenkinsBuild,
-      coverageArtifact,
-    );
-    final artifactContent = _processInteraction(fetchArtifactInteraction);
-    final coverage = CoverageData.fromJson(artifactContent);
+    final artifact = await _fetchCoverageArtifact(jenkinsBuild);
+    final coverage = CoverageData.fromJson(artifact);
 
     return coverage?.percent;
   }
@@ -200,16 +188,27 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     );
   }
 
-  /// Gets a coverage artifact from the given [build].
+  /// Fetches a coverage artifact from the given [build].
   ///
-  /// Returns `null` if [build] artifacts is `null`.
-  JenkinsBuildArtifact _getCoverageArtifact(JenkinsBuild build) {
-    if (build.artifacts == null) return null;
+  /// Returns `null` if either the given [build] or its artifacts is `null`,
+  /// or the `coverage-summary.json` artifact is not found.
+  Future<Map<String, dynamic>> _fetchCoverageArtifact(
+    JenkinsBuild build,
+  ) async {
+    logger.info(
+      'Fetching a coverage artifact for the build #${build.number}...',
+    );
+    if (build?.artifacts == null) return null;
 
-    return build.artifacts.firstWhere(
+    final artifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
     );
+
+    if (artifact == null) return null;
+
+    final interaction = await jenkinsClient.fetchArtifact(build, artifact);
+    return _processInteraction(interaction);
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].

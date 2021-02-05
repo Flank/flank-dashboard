@@ -70,6 +70,39 @@ void main() {
     );
 
     test(
+      ".removeTrailingSlash() throws an ArgumentError if the given path is null",
+      () {
+        expect(
+          () => UrlUtils.removeTrailingSlash(null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".removeTrailingSlash() returns unchanged string if the given path does not end with slash",
+      () {
+        const path = 'path';
+
+        final result = UrlUtils.removeTrailingSlash(path);
+
+        expect(result, equals(path));
+      },
+    );
+
+    test(
+      ".removeTrailingSlash() returns a string without trailing slash",
+      () {
+        const expectedPath = 'path';
+        const path = 'path/';
+
+        final result = UrlUtils.removeTrailingSlash(path);
+
+        expect(result, equals(expectedPath));
+      },
+    );
+
+    test(
       ".replacePathSeparators() throws an ArgumentError if the path is null",
       () {
         expect(

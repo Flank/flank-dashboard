@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ci_integration/client/jenkins/constants/jenkins_constants.dart';
+import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
@@ -11,6 +13,7 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
 import 'test_utils/mock/jenkins_mock_server.dart';
+import 'test_utils/test_data/jenkins_build_test_data.dart';
 
 void main() {
   group("JenkinsClient", () {
@@ -41,7 +44,8 @@ void main() {
 
       firstBuild = JenkinsBuild(
         number: 1,
-        url: jenkinsMockServer.url,
+        url: '${jenkinsMockServer.url}/1',
+        apiUrl: JenkinsBuildTestData.getApiUrl(jenkinsMockServer.url, 1),
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.failure,
@@ -50,7 +54,8 @@ void main() {
 
       lastBuild = JenkinsBuild(
         number: 2,
-        url: jenkinsMockServer.url,
+        url: '${jenkinsMockServer.url}/2',
+        apiUrl: JenkinsBuildTestData.getApiUrl(jenkinsMockServer.url, 2),
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.success,
@@ -311,21 +316,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() adds API url to jenkins builds",
-      () async {
-        final result = await jenkinsClient.fetchBuilds('test/master');
-
-        final buildingJob = result.result;
-
-        final hasAPIUrl =
-            buildingJob.builds.every((build) => build.apiUrl != null);
-
-        expect(hasAPIUrl, isTrue);
-      },
-    );
-
-    test(
-      ".fetchBuildByUrl() fails if a build with the given url is not found",
+      ".fetchBuildByUrl() fails if a build by the given url is not found",
       () async {
         final url = '${jenkinsMockServer.url}/job/test/2';
 
@@ -336,17 +327,21 @@ void main() {
     );
 
     test(
-      ".fetchBuildByUrl() responds with a build matching the given url",
+      ".fetchBuildByUrl() fetching a build matching the given url",
       () async {
         const jenkinsBuildNumber = 1;
 
         final url = '${jenkinsMockServer.url}/job/test/$jenkinsBuildNumber';
-        final apiUrl = '$url${JenkinsClient.jsonApiPath}';
+        final query = 'tree=${Uri.encodeQueryComponent(TreeQuery.build)}';
+        final apiUrl = '$url${JenkinsConstants.jsonApiPath}?$query';
 
         final result = await jenkinsClient.fetchBuildByUrl(apiUrl);
 
-        final expected =
-            JenkinsBuild(number: jenkinsBuildNumber, url: url, apiUrl: apiUrl);
+        final expected = JenkinsBuild(
+          number: jenkinsBuildNumber,
+          url: url,
+          apiUrl: apiUrl,
+        );
 
         expect(result.result, equals(expected));
       },
@@ -398,23 +393,6 @@ void main() {
         );
 
         expect(result, completion(equals(expected)));
-      },
-    );
-
-    test(
-      ".fetchBuildsByUrl() adds API url to jenkins builds",
-      () async {
-        final result = await jenkinsClient.fetchBuildsByUrl(
-          '${jenkinsMockServer.url}/job/test/job/master',
-          limits: JenkinsQueryLimits.endAt(1),
-        );
-
-        final buildingJob = result.result;
-
-        final hasAPIUrl =
-            buildingJob.builds.every((build) => build.apiUrl != null);
-
-        expect(hasAPIUrl, isTrue);
       },
     );
 
@@ -488,7 +466,7 @@ void main() {
     test(
       ".fetchArtifactByRelativePath() responds with an artifact content",
       () {
-        final url = '${jenkinsMockServer.url}/job/test/job/master/1';
+        final url = '${jenkinsMockServer.url}/job/test/job/master/1/';
         final result = jenkinsClient
             .fetchArtifactByRelativePath(url, 'coverage/coverage.json')
             .then((result) => result.result);
@@ -522,7 +500,7 @@ void main() {
 
     test(".fetchArtifact() responds with an artifact content", () {
       final build = JenkinsBuild(
-        url: '${jenkinsMockServer.url}/job/test/job/master/1',
+        url: '${jenkinsMockServer.url}/job/test/job/master/1/',
       );
       const artifact = JenkinsBuildArtifact(
         fileName: 'coverage.json',

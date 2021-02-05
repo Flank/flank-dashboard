@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
+import 'package:ci_integration/client/jenkins/builder/jenkins_url_builder.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
+import 'package:ci_integration/client/jenkins/deserializer/jenkins_build_deserializer.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
@@ -21,8 +23,8 @@ typedef BodyParserCallback<T> = InteractionResult<T> Function(
 
 /// A client for interactions with the Jenkins API.
 class JenkinsClient with LoggerMixin {
-  /// A Jenkins JSON API path.
-  static const String jsonApiPath = '/api/json';
+  /// A [JenkinsUrlBuilder] this client uses to build API URLs.
+  static const JenkinsUrlBuilder _jenkinsUrlBuilder = JenkinsUrlBuilder();
 
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
@@ -61,27 +63,6 @@ class JenkinsClient with LoggerMixin {
       HttpHeaders.acceptHeader: ContentType.json.value,
       if (authorization != null) ...authorization.toMap(),
     };
-  }
-
-  /// Builds URL to the Jenkins API using the parts provided. Delegates
-  /// building URL to the [UrlUtils.buildUrl] method.
-  ///
-  /// The [url] can be either a link to the Jenkins instance or link to an
-  /// object from Jenkins (such as [JenkinsBuild.url], [JenkinsJob.url] and
-  /// so on). The [path] defaults to Jenkins JSON API path. The [treeQuery]
-  /// stands for the `tree` query parameter used to specify objects' properties
-  /// API should return and defaults to an empty string.
-  String _buildJenkinsApiUrl(
-    String url, {
-    String path = jsonApiPath,
-    String treeQuery = '',
-  }) {
-    return UrlUtils.buildUrl(
-      url,
-      path: path,
-      queryParameters:
-          treeQuery == null || treeQuery.isEmpty ? null : {'tree': treeQuery},
-    );
   }
 
   /// Converts a [JenkinsJob]'s full name to the path to this job.
@@ -157,9 +138,9 @@ class JenkinsClient with LoggerMixin {
   /// Both [fetchJob] and [fetchJobByFullName] delegate fetching job to this
   /// method.
   Future<InteractionResult<JenkinsJob>> _fetchJob(String path) {
-    final fullUrl = _buildJenkinsApiUrl(
+    final fullUrl = _jenkinsUrlBuilder.build(
       jenkinsUrl,
-      path: '$path/api/json',
+      path: path,
       treeQuery: TreeQuery.job,
     );
     logger.info('Fetching job from the url: $fullUrl');
@@ -186,9 +167,9 @@ class JenkinsClient with LoggerMixin {
     );
 
     final path = _jobFullNameToPath(multiBranchJobFullName);
-    final url = _buildJenkinsApiUrl(
+    final url = _jenkinsUrlBuilder.build(
       jenkinsUrl,
-      path: '$path$jsonApiPath',
+      path: path,
       treeQuery: 'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
 
@@ -208,7 +189,7 @@ class JenkinsClient with LoggerMixin {
       'Fetching jobs for the multi-branch job by url: $multiBranchJobUrl...',
     );
 
-    final url = _buildJenkinsApiUrl(
+    final url = _jenkinsUrlBuilder.build(
       multiBranchJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'jobs[${TreeQuery.job}]${limits.toQuery()}',
@@ -246,9 +227,9 @@ class JenkinsClient with LoggerMixin {
     logger.info('Fetching builds by job full name: $buildingJobFullName...');
 
     final path = _jobFullNameToPath(buildingJobFullName);
-    final url = _buildJenkinsApiUrl(
+    final url = _jenkinsUrlBuilder.build(
       jenkinsUrl,
-      path: '$path$jsonApiPath',
+      path: path,
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
@@ -267,7 +248,7 @@ class JenkinsClient with LoggerMixin {
   }) {
     logger.info('Fetching builds by job url: $buildingJobUrl');
 
-    final url = _buildJenkinsApiUrl(
+    final url = _jenkinsUrlBuilder.build(
       buildingJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'
@@ -284,10 +265,8 @@ class JenkinsClient with LoggerMixin {
     return _handleResponse<JenkinsBuild>(
       _client.get(buildUrl, headers: headers),
       (Map<String, dynamic> json) {
-        json['api_url'] = buildUrl;
-
         return InteractionResult.success(
-          result: JenkinsBuild.fromJson(json),
+          result: JenkinsBuildDeserializer.fromJson(json),
         );
       },
     );
@@ -303,16 +282,8 @@ class JenkinsClient with LoggerMixin {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
-        final builds = (json['builds'] as List<dynamic>)?.reversed?.toList();
-
-        builds.map((build) {
-          build['api_url'] = _buildJenkinsApiUrl(
-            build['url'] as String,
-            treeQuery: TreeQuery.build,
-          );
-        }).toList();
-
-        json['builds'] = builds;
+        final builds = json['builds'] as List<dynamic>;
+        json['builds'] = builds?.reversed?.toList();
 
         return InteractionResult.success(
           result: JenkinsBuildingJob.fromJson(json),
@@ -331,7 +302,7 @@ class JenkinsClient with LoggerMixin {
     String buildUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
-    final url = _buildJenkinsApiUrl(
+    final url = _jenkinsUrlBuilder.build(
       buildUrl,
       treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
@@ -342,7 +313,8 @@ class JenkinsClient with LoggerMixin {
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => InteractionResult.success(
         result: JenkinsBuildArtifact.listFromJson(
-            json['artifacts'] as List<dynamic>),
+          json['artifacts'] as List<dynamic>,
+        ),
       ),
     );
   }
@@ -355,7 +327,7 @@ class JenkinsClient with LoggerMixin {
   ) {
     logger.info('Fetching artifacts by relative path: $relativePath');
 
-    final url = _buildJenkinsApiUrl(buildUrl, path: 'artifact/$relativePath');
+    final url = '${buildUrl}artifact/$relativePath';
 
     return _fetchArtifact(url);
   }
@@ -367,10 +339,7 @@ class JenkinsClient with LoggerMixin {
   ) {
     logger.info('Fetching artifact for build #${build.number}...');
 
-    final url = _buildJenkinsApiUrl(
-      build.url,
-      path: 'artifact/${buildArtifact.relativePath}',
-    );
+    final url = '${build.url}artifact/${buildArtifact.relativePath}';
 
     return _fetchArtifact(url);
   }

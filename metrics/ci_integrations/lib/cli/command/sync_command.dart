@@ -61,8 +61,9 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
 
     argParser.addOption(
       _initialSyncLimitOptionName,
-      help:
-          'A number of builds to fetch from the source during project initial synchronization. The value should be an integer number greater than 0.',
+      help: 'A number of builds to fetch from the source during '
+          'project initial synchronization. The value should be an integer '
+          'number greater than 0.',
       valueHelp: defaultInitialSyncLimit,
       defaultsTo: defaultInitialSyncLimit,
     );

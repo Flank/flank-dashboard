@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
+import 'package:ci_integration/client/jenkins/constants/jenkins_constants.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
-import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
@@ -19,49 +19,49 @@ class JenkinsMockServer extends ApiMockServer {
   List<RequestHandler> get handlers => [
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test${JenkinsClient.jsonApiPath}',
+            '/job/test${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: _multiBranchJobResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/name/${JenkinsClient.jsonApiPath}',
+            '/job/name/${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/1${JenkinsClient.jsonApiPath}',
+            '/job/test/1${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: _buildResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/2${JenkinsClient.jsonApiPath}',
+            '/job/test/2${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/job/master${JenkinsClient.jsonApiPath}',
+            '/job/test/job/master${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: _buildingJobResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/job/dev${JenkinsClient.jsonApiPath}',
+            '/job/test/job/dev${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/job/master/1${JenkinsClient.jsonApiPath}',
+            '/job/test/job/master/1${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: _artifactsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
+            '/job/test/job/master/10${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
@@ -129,7 +129,7 @@ class JenkinsMockServer extends ApiMockServer {
     if (hasBuilds) {
       final firstBuild = JenkinsBuild(
         number: 1,
-        url: url,
+        url: '$url/1',
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.failure,
@@ -137,7 +137,7 @@ class JenkinsMockServer extends ApiMockServer {
       );
       final lastBuild = JenkinsBuild(
         number: 2,
-        url: url,
+        url: '$url/2',
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.success,

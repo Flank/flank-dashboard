@@ -18,7 +18,7 @@ import '../../../test_utils/extensions/interaction_result_answer.dart';
 void main() {
   group("JenkinsSourceClientAdapter", () {
     const jobName = 'test-job';
-    const defaultId = 1;
+    const defaultBuildNumber = 1;
     final defaultCoverage = Percent(0.6);
     const defaultDuration = Duration(seconds: 10);
     const defaultBuildUrl = 'buildUrl';
@@ -600,7 +600,7 @@ void main() {
       ".fetchCoverage() returns null if the coverage summary artifact is not found",
       () async {
         final jenkinsBuild = createJenkinsBuild(
-          buildNumber: defaultId,
+          buildNumber: defaultBuildNumber,
           artifacts: [],
         );
 
@@ -617,7 +617,7 @@ void main() {
       ".fetchCoverage() does not fetch any artifacts content if the coverage summary artifact is not found",
       () async {
         final jenkinsBuild = createJenkinsBuild(
-          buildNumber: defaultId,
+          buildNumber: defaultBuildNumber,
           artifacts: [],
         );
 
