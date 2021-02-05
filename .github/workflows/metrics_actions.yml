@@ -257,4 +257,4 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.ref }}
       - name: Check the license in files
-        uses: kt3k/license_checker@v1.0.3
+        uses: kt3k/license_checker@v1.0.4
