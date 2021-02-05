@@ -6,7 +6,7 @@ class BuildkiteStrings {
   static const String tokenDoesNotHaveReadBuildsScope =
       "The access token does not have the required 'read_builds' scope.";
   static const String tokenDoesNotHaveReadArtifactsScope =
-      "This token does not have the 'read_artifacts' scope, so the 'sync' command should be run with the 'no-coverage' flag or the 'read_artifacts' scope should be provided";
+      "This token does not have the 'read_artifacts' scope, so the 'sync' command should be run with the 'no-coverage' flag or the 'read_artifacts' scope should be provided.";
   static const String pipelineNotFound =
       'The pipeline with such slug does not exist.';
   static const String organizationNotFound =
