@@ -3,6 +3,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
+import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -77,6 +78,20 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns an error with the token invalid message if the interaction with the client is not successful",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenErrorWith();
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.tokenInvalid));
+      },
+    );
+
+    test(
       ".validateAuth() returns an error if the result of an interaction with the client is null",
       () async {
         when(
@@ -99,6 +114,56 @@ void main() {
         final interactionResult = await delegate.validateAuth(auth);
 
         expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns an error with the token does not have read builds scope message if the fetched token does not have the read builds token scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(const BuildkiteToken(scopes: []));
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final message = interactionResult.message;
+
+        expect(
+          message,
+          equals(BuildkiteStrings.tokenDoesNotHaveReadBuildsScope),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched token has the read builds scope but does not have the read artifacts scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(buildkiteToken);
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final token = interactionResult.result;
+
+        expect(token, equals(buildkiteToken));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a successful interaction with the token does not have read artifacts scope message if the fetched token does not have the read artifacts token scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(
+          const BuildkiteToken(scopes: [BuildkiteTokenScope.readBuilds]),
+        );
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final message = interactionResult.message;
+
+        expect(
+          message,
+          equals(BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope),
+        );
       },
     );
 
@@ -132,6 +197,22 @@ void main() {
     );
 
     test(
+      ".validateSourceProjectId() returns an error with the pipeline not found message if the interaction with the client is not successful",
+      () async {
+        when(
+          client.fetchPipeline(pipelineSlug),
+        ).thenErrorWith();
+
+        final interactionResult = await delegate.validateSourceProjectId(
+          pipelineSlug,
+        );
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.pipelineNotFound));
+      },
+    );
+
+    test(
       ".validateSourceProjectId() returns an error if the result of an interaction with the client is null",
       () async {
         when(
@@ -143,6 +224,22 @@ void main() {
         );
 
         expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateSourceProjectId() returns an error with the pipeline not found message if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchPipeline(pipelineSlug),
+        ).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateSourceProjectId(
+          pipelineSlug,
+        );
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.pipelineNotFound));
       },
     );
 
@@ -177,6 +274,22 @@ void main() {
     );
 
     test(
+      ".validateOrganizationSlug() returns an error with the organization not found message if the interaction with the client is not successful",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenErrorWith();
+
+        final interactionResult = await delegate.validateOrganizationSlug(
+          organizationSlug,
+        );
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.organizationNotFound));
+      },
+    );
+
+    test(
       ".validateOrganizationSlug() returns an error if the result of an interaction with the client is null",
       () async {
         when(
@@ -188,6 +301,22 @@ void main() {
         );
 
         expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateOrganizationSlug() returns an error with the organization not found message if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateOrganizationSlug(
+          organizationSlug,
+        );
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.organizationNotFound));
       },
     );
 

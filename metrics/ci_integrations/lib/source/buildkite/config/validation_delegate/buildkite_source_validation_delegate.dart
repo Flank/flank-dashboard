@@ -1,6 +1,4 @@
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
-import 'package:ci_integration/client/buildkite/models/buildkite_organization.dart';
-import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/interface/source/config/validation_delegate/source_validation_delegate.dart';
@@ -18,9 +16,9 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
   /// A [BuildkiteClient] used to perform calls to the Buildkite API.
   final BuildkiteClient _client;
 
-  /// Creates an instance of the [BuildkiteSourceValidationDelegate]
+  /// Creates an instance of the [BuildkiteSourceValidationDelegate].
   ///
-  /// Throws an [ArgumentError] if the given [_client] is `null`.
+  /// Throws an [ArgumentError] if the given [BuildkiteClient] is `null`.
   BuildkiteSourceValidationDelegate(this._client) {
     ArgumentError.checkNotNull(_client);
   }
@@ -43,10 +41,19 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
     final containsRequiredScopes = _requiredTokenScopes.every(
       (element) => tokenScopes.contains(element),
     );
-
     if (!containsRequiredScopes) {
       return const InteractionResult.error(
         message: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
+      );
+    }
+
+    final containsScopesToReadArtifacts = tokenScopes.contains(
+      BuildkiteTokenScope.readArtifacts,
+    );
+    if (!containsScopesToReadArtifacts) {
+      return InteractionResult.success(
+        result: token,
+        message: BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope,
       );
     }
 
@@ -54,7 +61,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
   }
 
   @override
-  Future<InteractionResult<BuildkitePipeline>> validateSourceProjectId(
+  Future<InteractionResult<void>> validateSourceProjectId(
     String pipelineSlug,
   ) async {
     final pipelineInteraction = await _client.fetchPipeline(pipelineSlug);
@@ -69,7 +76,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
   }
 
   /// Validates the given [organizationSlug].
-  Future<InteractionResult<BuildkiteOrganization>> validateOrganizationSlug(
+  Future<InteractionResult<void>> validateOrganizationSlug(
     String organizationSlug,
   ) async {
     final organizationInteraction = await _client.fetchOrganization(
