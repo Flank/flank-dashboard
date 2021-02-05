@@ -6,9 +6,6 @@ import 'package:equatable/equatable.dart';
 
 /// A class representing a single Jenkins build.
 class JenkinsBuild extends Equatable {
-  /// A unique identifier of this build.
-  final String id;
-
   /// A build number used to identify the build within a [JenkinsBuildingJob].
   ///
   /// This is unique only within a job's list of builds.
@@ -37,11 +34,10 @@ class JenkinsBuild extends Equatable {
 
   @override
   List<Object> get props =>
-      [id, number, duration, timestamp, result, url, artifacts];
+      [number, duration, timestamp, result, url, artifacts];
 
   /// Creates a new instance of the [JenkinsBuild].
   const JenkinsBuild({
-    this.id,
     this.number,
     this.duration,
     this.timestamp,
@@ -68,12 +64,11 @@ class JenkinsBuild extends Equatable {
     final result = resultMapper.map(json['result'] as String);
 
     return JenkinsBuild(
-      id: json['id'] as String,
       number: json['number'] as int,
       duration: duration,
       timestamp: timestamp,
       result: result,
-      apiUrl: json['url'] as String,
+      apiUrl: json['api_url'] as String,
       url: json['url'] as String,
       building: json['building'] as bool,
       artifacts: JenkinsBuildArtifact.listFromJson(
@@ -95,12 +90,12 @@ class JenkinsBuild extends Equatable {
   Map<String, dynamic> toJson() {
     const resultMapper = JenkinsBuildResultMapper();
     return {
-      'id': id,
       'number': number,
       'duration': duration?.inMilliseconds,
       'timestamp': timestamp?.millisecondsSinceEpoch,
       'result': resultMapper.unmap(result),
       'url': url,
+      'api_url': apiUrl,
       'artifacts': artifacts?.map((a) => a.toJson())?.toList()
     };
   }

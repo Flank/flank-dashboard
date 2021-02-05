@@ -277,19 +277,19 @@ class JenkinsClient with LoggerMixin {
     return _fetchBuilds(url);
   }
 
-  /// Retrieves a [JenkinsBuild] by the provided [buildUrl].
-  Future<InteractionResult<JenkinsBuild>> fetchBuildByUrl(
-    String buildUrl,
-  ) {
-    final url = _buildJenkinsApiUrl(buildUrl);
-
-    logger.info('Fetching build from the url: $url');
+  /// Fetches a [JenkinsBuild] by the given [buildUrl].
+  Future<InteractionResult<JenkinsBuild>> fetchBuildByUrl(String buildUrl) {
+    logger.info('Fetching a build by the URL: $buildUrl');
 
     return _handleResponse<JenkinsBuild>(
-      _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => InteractionResult.success(
-        result: JenkinsBuild.fromJson(json),
-      ),
+      _client.get(buildUrl, headers: headers),
+      (Map<String, dynamic> json) {
+        json['api_url'] = buildUrl;
+
+        return InteractionResult.success(
+          result: JenkinsBuild.fromJson(json),
+        );
+      },
     );
   }
 
@@ -303,7 +303,17 @@ class JenkinsClient with LoggerMixin {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
-        json['builds'] = (json['builds'] as List<dynamic>)?.reversed?.toList();
+        final builds = (json['builds'] as List<dynamic>)?.reversed?.toList();
+
+        builds.map((build) {
+          build['api_url'] = _buildJenkinsApiUrl(
+            build['url'] as String,
+            treeQuery: TreeQuery.build,
+          );
+        }).toList();
+
+        json['builds'] = builds;
+
         return InteractionResult.success(
           result: JenkinsBuildingJob.fromJson(json),
         );

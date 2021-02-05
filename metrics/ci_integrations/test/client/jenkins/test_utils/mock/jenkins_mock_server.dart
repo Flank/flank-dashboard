@@ -129,6 +129,7 @@ class JenkinsMockServer extends ApiMockServer {
     if (hasBuilds) {
       final firstBuild = JenkinsBuild(
         number: 1,
+        url: url,
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.failure,
@@ -136,6 +137,7 @@ class JenkinsMockServer extends ApiMockServer {
       );
       final lastBuild = JenkinsBuild(
         number: 2,
+        url: url,
         duration: const Duration(),
         timestamp: DateTime(2000),
         result: JenkinsBuildResult.success,
@@ -207,7 +209,9 @@ class JenkinsMockServer extends ApiMockServer {
 
   /// Responses with a jenkins build for the given [request].
   Future<void> _buildResponse(HttpRequest request) async {
-    const jenkinsBuild = JenkinsBuild(id: '1');
+    const buildNumber = 1;
+    final buildUrl = '$url/job/test/$buildNumber';
+    final jenkinsBuild = JenkinsBuild(number: buildNumber, url: buildUrl);
 
     await MockServerUtils.writeResponse(request, jenkinsBuild.toJson());
   }

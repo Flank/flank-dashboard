@@ -56,7 +56,7 @@ void main() {
       when(jenkinsClientMock.fetchBuildByUrl(any))
           .thenSuccessWith(withJenkinsBuild);
 
-      return when(jenkinsClientMock.fetchArtifactByRelativePath(any, any));
+      return when(jenkinsClientMock.fetchArtifact(withJenkinsBuild, any));
     }
 
     /// Creates a [JenkinsBuild] instance with the given [buildNumber]
@@ -293,56 +293,6 @@ void main() {
         final url = result.first.url;
 
         expect(url, equals(''));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps fetched url to an API url if the url is not null",
-      () async {
-        const jenkinsBuild = JenkinsBuild(
-          url: defaultBuildUrl,
-          building: false,
-          artifacts: [defaultArtifact],
-        );
-
-        responses.addBuilds([jenkinsBuild]);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-
-        final actualAPIUrl = result.first.apiUrl;
-
-        final expectedAPIUrl =
-            '${jenkinsBuild.url}${JenkinsClient.jsonApiPath}';
-
-        expect(actualAPIUrl, equals(expectedAPIUrl));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps an API url to null if the fetched url is null",
-      () async {
-        const jenkinsBuild = JenkinsBuild(
-          url: null,
-          building: false,
-        );
-
-        responses.addBuilds([jenkinsBuild]);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-
-        final actualAPIUrl = result.first.apiUrl;
-
-        expect(actualAPIUrl, isNull);
       },
     );
 
@@ -594,7 +544,6 @@ void main() {
       ".fetchBuildsAfter() maps fetched url to the empty string if the url is null",
       () async {
         const build = BuildData(buildNumber: 1);
-
         const jenkinsBuild = JenkinsBuild(
           number: 2,
           url: null,
@@ -603,64 +552,12 @@ void main() {
         );
 
         responses.addBuilds([jenkinsBuild]);
-
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = await adapter.fetchBuildsAfter(jobName, build);
         final url = result.first.url;
 
         expect(url, equals(''));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps fetched url to an API url if the url is not null",
-      () async {
-        const build = BuildData(buildNumber: 1);
-
-        const jenkinsBuild = JenkinsBuild(
-          number: 2,
-          url: defaultBuildUrl,
-          building: false,
-          artifacts: [defaultArtifact],
-        );
-
-        responses.addBuilds([jenkinsBuild]);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuildsAfter(jobName, build);
-
-        final actualAPIUrl = result.first.apiUrl;
-
-        final expectedAPIUrl =
-            '${jenkinsBuild.url}${JenkinsClient.jsonApiPath}';
-
-        expect(actualAPIUrl, equals(expectedAPIUrl));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps an API url to null if the fetched url is null",
-      () async {
-        const build = BuildData(buildNumber: 1);
-
-        const jenkinsBuild = JenkinsBuild(
-          number: 2,
-          url: null,
-          building: false,
-          artifacts: [defaultArtifact],
-        );
-
-        responses.addBuilds([jenkinsBuild]);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuildsAfter(jobName, build);
-
-        final actualAPIUrl = result.first.apiUrl;
-
-        expect(actualAPIUrl, isNull);
       },
     );
 
@@ -717,7 +614,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() does not fetch any artifacts if the coverage summary artifact is not found",
+      ".fetchCoverage() does not fetch any artifacts content if the coverage summary artifact is not found",
       () async {
         final jenkinsBuild = createJenkinsBuild(
           buildNumber: defaultId,
@@ -734,7 +631,7 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() returns null if an artifact bytes are null",
+      ".fetchCoverage() returns null if an artifact content is null",
       () async {
         whenFetchCoverage(withJenkinsBuild: defaultJenkinsBuild)
             .thenSuccessWith(null);
@@ -762,7 +659,6 @@ void main() {
       () {
         whenFetchCoverage(withJenkinsBuild: defaultJenkinsBuild)
             .thenSuccessWith(defaultArtifactContent);
-
         when(jenkinsClientMock.fetchBuildByUrl(any)).thenErrorWith();
 
         final result = adapter.fetchCoverage(defaultBuild);

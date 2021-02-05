@@ -76,23 +76,27 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   Future<Percent> fetchCoverage(BuildData build) async {
     ArgumentError.checkNotNull(build, 'build');
 
-    logger.info('Fetching build by url: ${build.apiUrl}...');
+    logger.info('Fetching a build by the URL: ${build.apiUrl}...');
     final interaction = await jenkinsClient.fetchBuildByUrl(build.apiUrl);
     final jenkinsBuild = _processInteraction(interaction);
 
     if (jenkinsBuild == null) return null;
 
     logger.info(
-      'Fetching coverage artifact for a build #${build.buildNumber}...',
+      'Fetching a coverage artifact for the build #${build.buildNumber}...',
     );
     final coverageArtifact = _getCoverageArtifact(jenkinsBuild);
 
     if (coverageArtifact == null) return null;
 
-    return _downloadArtifactByRelativePath(
-      jenkinsBuild.url,
-      coverageArtifact.relativePath,
+    final fetchArtifactInteraction = await jenkinsClient.fetchArtifact(
+      jenkinsBuild,
+      coverageArtifact,
     );
+    final artifactContent = _processInteraction(fetchArtifactInteraction);
+    final coverage = CoverageData.fromJson(artifactContent);
+
+    return coverage?.percent;
   }
 
   /// Fetches builds data for the project with given [projectId].
@@ -192,7 +196,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
-      apiUrl: _buildJenkinsAPIUrl(jenkinsBuild.url),
+      apiUrl: jenkinsBuild.apiUrl,
     );
   }
 
@@ -208,21 +212,6 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     );
   }
 
-  /// Downloads an artifact from the given [buildUrl] using the [relativePath].
-  Future<Percent> _downloadArtifactByRelativePath(
-    String buildUrl,
-    String relativePath,
-  ) async {
-    final interaction =
-        await jenkinsClient.fetchArtifactByRelativePath(buildUrl, relativePath);
-
-    final artifactContent = _processInteraction(interaction);
-
-    final coverage = CoverageData.fromJson(artifactContent);
-
-    return coverage?.percent;
-  }
-
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
   BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
     switch (result) {
@@ -233,15 +222,6 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
-  }
-
-  /// Builds an API url for the [JenkinsBuild] from the given [url].
-  ///
-  /// Returns `null` if the given [url] is `null`.
-  String _buildJenkinsAPIUrl(String url) {
-    if (url == null) return null;
-
-    return '$url${JenkinsClient.jsonApiPath}';
   }
 
   /// Processes the given [interaction].

@@ -16,26 +16,8 @@ void main() {
   group("JenkinsClient", () {
     final jenkinsMockServer = JenkinsMockServer();
 
-    final firstBuild = JenkinsBuild(
-      number: 1,
-      duration: const Duration(),
-      timestamp: DateTime(2000),
-      result: JenkinsBuildResult.failure,
-      artifacts: const [],
-    );
-
-    final lastBuild = JenkinsBuild(
-      number: 2,
-      duration: const Duration(),
-      timestamp: DateTime(2000),
-      result: JenkinsBuildResult.success,
-      artifacts: const [
-        JenkinsBuildArtifact(
-          fileName: 'coverage.json',
-          relativePath: 'coverage/coverage.json',
-        ),
-      ],
-    );
+    JenkinsBuild firstBuild;
+    JenkinsBuild lastBuild;
 
     final authorization = ApiKeyAuthorization(
       HttpHeaders.authorizationHeader,
@@ -55,6 +37,29 @@ void main() {
       jenkinsClient = JenkinsClient(
         jenkinsUrl: jenkinsMockServer.url,
         authorization: authorization,
+      );
+
+      firstBuild = JenkinsBuild(
+        number: 1,
+        url: jenkinsMockServer.url,
+        duration: const Duration(),
+        timestamp: DateTime(2000),
+        result: JenkinsBuildResult.failure,
+        artifacts: const [],
+      );
+
+      lastBuild = JenkinsBuild(
+        number: 2,
+        url: jenkinsMockServer.url,
+        duration: const Duration(),
+        timestamp: DateTime(2000),
+        result: JenkinsBuildResult.success,
+        artifacts: const [
+          JenkinsBuildArtifact(
+            fileName: 'coverage.json',
+            relativePath: 'coverage/coverage.json',
+          ),
+        ],
       );
     });
 
@@ -306,30 +311,44 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() adds API url to jenkins builds",
+      () async {
+        final result = await jenkinsClient.fetchBuilds('test/master');
+
+        final buildingJob = result.result;
+
+        final hasAPIUrl =
+            buildingJob.builds.every((build) => build.apiUrl != null);
+
+        expect(hasAPIUrl, isTrue);
+      },
+    );
+
+    test(
       ".fetchBuildByUrl() fails if a build with the given url is not found",
-      () {
+      () async {
         final url = '${jenkinsMockServer.url}/job/test/2';
 
-        final result =
-            jenkinsClient.fetchBuildByUrl(url).then((result) => result.isError);
+        final result = await jenkinsClient.fetchBuildByUrl(url);
 
-        expect(result, completion(isTrue));
+        expect(result.isError, isTrue);
       },
     );
 
     test(
       ".fetchBuildByUrl() responds with a build matching the given url",
-      () {
-        const jenkinsBuildId = '1';
+      () async {
+        const jenkinsBuildNumber = 1;
 
-        final url = '${jenkinsMockServer.url}/job/test/$jenkinsBuildId';
+        final url = '${jenkinsMockServer.url}/job/test/$jenkinsBuildNumber';
+        final apiUrl = '$url${JenkinsClient.jsonApiPath}';
 
-        final result =
-            jenkinsClient.fetchBuildByUrl(url).then((result) => result.result);
+        final result = await jenkinsClient.fetchBuildByUrl(apiUrl);
 
-        const expected = JenkinsBuild(id: jenkinsBuildId);
+        final expected =
+            JenkinsBuild(number: jenkinsBuildNumber, url: url, apiUrl: apiUrl);
 
-        expect(result, completion(equals(expected)));
+        expect(result.result, equals(expected));
       },
     );
 
@@ -379,6 +398,23 @@ void main() {
         );
 
         expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsByUrl() adds API url to jenkins builds",
+      () async {
+        final result = await jenkinsClient.fetchBuildsByUrl(
+          '${jenkinsMockServer.url}/job/test/job/master',
+          limits: JenkinsQueryLimits.endAt(1),
+        );
+
+        final buildingJob = result.result;
+
+        final hasAPIUrl =
+            buildingJob.builds.every((build) => build.apiUrl != null);
+
+        expect(hasAPIUrl, isTrue);
       },
     );
 

@@ -44,24 +44,24 @@ void main() {
       );
 
       const firstBuildJson = {
-        'id': null,
         'number': firstBuildNumber,
         'duration': null,
         'timestamp': null,
         'result': null,
         'url': firstBuildUrl,
+        'api_url': null,
         'artifacts': [JenkinsArtifactsTestData.fileArtifactJson],
       };
 
       jenkinsBuildJson = firstBuildJson;
 
       const lastBuildJson = {
-        'id': null,
         'number': secondBuildNumber,
         'duration': null,
         'timestamp': null,
         'result': null,
         'url': secondBuildUrl,
+        'api_url': null,
         'artifacts': [JenkinsArtifactsTestData.coverageArtifactJson],
       };
 
