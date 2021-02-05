@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
+import 'package:metrics/debug_menu/presentation/strings/debug_menu_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
-import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 
 /// Stub implementation of the [DebugMenuNotifier].
 ///

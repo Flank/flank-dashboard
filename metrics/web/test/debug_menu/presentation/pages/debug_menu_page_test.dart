@@ -8,9 +8,9 @@ import 'package:metrics/common/presentation/page_title/widgets/metrics_page_titl
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
+import 'package:metrics/debug_menu/presentation/strings/debug_menu_strings.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
-import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:mockito/mockito.dart';
