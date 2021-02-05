@@ -23,6 +23,11 @@ void main() {
         BuildkiteTokenScope.readBuilds,
       ],
     );
+    const readBuildsAndArtifactsScopes = [
+      BuildkiteTokenScope.readBuilds,
+      BuildkiteTokenScope.readArtifacts
+    ];
+
     const buildkiteOrganization = BuildkiteOrganization(
       id: 'id',
       name: 'name',
@@ -78,7 +83,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error with the token invalid message if the interaction with the client is not successful",
+      ".validateAuth() returns an interaction with the token invalid message if the interaction with the client is not successful",
       () async {
         when(
           client.fetchToken(auth),
@@ -105,6 +110,20 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns an interaction with the token invalid message if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final message = interactionResult.message;
+
+        expect(message, equals(BuildkiteStrings.tokenInvalid));
+      },
+    );
+
+    test(
       ".validateAuth() returns an error if the fetched token does not have the read builds token scope",
       () async {
         when(
@@ -118,7 +137,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error with the token does not have read builds scope message if the fetched token does not have the read builds token scope",
+      ".validateAuth() returns an interaction with the token does not have read builds scope message if the fetched token does not have the read builds token scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -135,7 +154,20 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched token does not have the read artifacts scope",
+      ".validateAuth() returns a successful interaction if the fetched token is valid, but does not have the read artifacts scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(buildkiteToken);
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns an interaction containing the fetched Buildkite token if the fetched token is valid, but does not have the read artifacts scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -149,7 +181,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction with the token does not have read artifacts scope message if the fetched token does not have the read artifacts token scope",
+      ".validateAuth() returns an interaction with the token does not have read artifacts scope message if the fetched is valid, but token does not have the read artifacts token scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -166,8 +198,26 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the given authorization is valid",
+      ".validateAuth() returns a successful interaction if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(
+          const BuildkiteToken(scopes: readBuildsAndArtifactsScopes),
+        );
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched Buildkite token has the read builds and read artifacts scopes",
+      () async {
+        const buildkiteToken = BuildkiteToken(
+          scopes: readBuildsAndArtifactsScopes,
+        );
         when(
           client.fetchToken(auth),
         ).thenSuccessWith(buildkiteToken);
@@ -195,7 +245,7 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error with the pipeline not found message if the interaction with the client is not successful",
+      ".validateSourceProjectId() returns an interaction with the pipeline not found message if the interaction with the client is not successful",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -226,7 +276,7 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error with the pipeline not found message if the result of an interaction with the client is null",
+      ".validateSourceProjectId() returns an interaction with the pipeline not found message if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -272,7 +322,7 @@ void main() {
     );
 
     test(
-      ".validateOrganizationSlug() returns an error with the organization not found message if the interaction with the client is not successful",
+      ".validateOrganizationSlug() returns an interaction with the organization not found message if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -303,7 +353,7 @@ void main() {
     );
 
     test(
-      ".validateOrganizationSlug() returns an error with the organization not found message if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns an interaction with the organization not found message if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
