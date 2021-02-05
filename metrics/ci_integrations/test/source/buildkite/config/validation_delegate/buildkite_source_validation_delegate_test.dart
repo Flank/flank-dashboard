@@ -135,7 +135,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched token has the read builds scope but does not have the read artifacts scope",
+      ".validateAuth() returns a successful interaction containing the fetched Buildkite token if the fetched token does not have the read artifacts scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -153,9 +153,7 @@ void main() {
       () async {
         when(
           client.fetchToken(auth),
-        ).thenSuccessWith(
-          const BuildkiteToken(scopes: [BuildkiteTokenScope.readBuilds]),
-        );
+        ).thenSuccessWith(buildkiteToken);
 
         final interactionResult = await delegate.validateAuth(auth);
         final message = interactionResult.message;
