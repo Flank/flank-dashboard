@@ -4,9 +4,9 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
+import 'package:metrics/debug_menu/presentation/strings/debug_menu_strings.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
-import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:provider/provider.dart';
 
