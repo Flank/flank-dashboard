@@ -3,6 +3,8 @@ import 'package:ci_integration/client/jenkins/constants/jenkins_constants.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("JenkinsUrlBuilder", () {
     const builder = JenkinsUrlBuilder();
