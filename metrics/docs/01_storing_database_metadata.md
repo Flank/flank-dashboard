@@ -1,7 +1,7 @@
 # Storing Database Metadata
 > Summary of the proposed change
 
-Store the Metrics database metadata to simplify the Metrics Application update process.
+Store the Metrics database metadata to simplify the Metrics applications update process.
 
 # Motivation
 > What problem is this project solving?
@@ -14,7 +14,7 @@ Simplifies the process of updating the Metrics applications and the database str
 This document follows the next goals: 
 
 - Describe the place of storing the database metadata.
-- Explain the way of storing the current Metrics applications version. 
+- Explain the way of storing the current Metrics applications supported database version. 
 - Describe the mechanism of blocking the Metrics applications during the database update process.
 
 # Non-Goals
@@ -102,12 +102,12 @@ const supportedDatabaseVersion = String.fromEnvironment('SUPPORTED_DATABASE_VERS
 ```
 
 ## Making Things Work
-> Explain the process of updating the Metrics applications.
+> Explain the usage of the supported database version in the Metrics applications.
 
 Once we have a database version in the Firestore database and a supported database version in the Metrics applications, we should block the Metrics applications from updating the database records when the database is updating or its version is not supported by the application.
 
 ### Metrics Web Application
-> Explain the process of updating the Metrics Web Application. 
+> Explain the usage of the supported database version in the Metrics Web Application.
 
 Since this document examines the supported database version feature on a very top level, let's review the simplest application blocking process that includes logging out a user from the application. It allows us to block database interactions in the application without any significant changes in its logic. But since we have an `isUpdating` flag in the database, it allows us to change the behavior later and avoid logging out users during the application updates.
 
@@ -122,6 +122,7 @@ If the database update is in progress, we should follow the next steps:
 2. Redirect the user to the `Updating the application` page to notify the user about the Metrics application update in progress.
 
 ### CI Integrations Tool 
+> Explain the usage of the supported database version in the CI Integrations tool.
 
 If the `CI Integrations` tool is not compatible with the current database version or the database is updating, we should fail the synchronization process and show the error message explaining what is going on. The error message should explain the reason for stopping the synchronization clearly, including information on how to resolve the problem. For example, if we've interrupted the synchronization due to the application does not support the current database version, we can show the following error message:
 
@@ -131,6 +132,7 @@ https://github.com/platform-platform/monorepo/releases/download/ci_integrations-
 ```
 
 ### Metrics CLI Tool 
+> Explain the usage of the supported database version in the Metrics CLI tool.
 
 The Metrics CLI tool should use the `DB_VERSION` file during deployment to set the current database version and pass the supported application version to the Metrics applications.
 
