@@ -14,11 +14,12 @@
                 package model {
                     interface Config {}
 
-                    abstract ConfigValidationResultBuilder<T extends ConfigValidationResult> {
+                    abstract class ConfigValidationResultBuilder<T extends ConfigValidationResult> {
                         - _authValidationResult : ConfigFieldValidationResult
 
                         + T build()
-                        + void setAuthResult(ConfigFieldValidationResult authResult)
+                        + void setAuthResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
+                        + ConfigFieldValidationResult buildResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
                     }
 
                     abstract class ConfigValidationResult<T extends Config> {
@@ -88,7 +89,7 @@
                 abstract class SourceConfigValidationResultBuilder {
                     - _sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
+                    + void setSourceProjectIdResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
                 }
             }
         }
@@ -108,7 +109,7 @@
                 abstract class DestinationConfigValidationResultBuilder {
                     - _destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
+                    + void setDestinationProjectIdResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
                 }
             }
         }
@@ -124,6 +125,7 @@
     ConfigValidator --> Config : uses
 
     ConfigValidationResultBuilder -down-> ConfigValidationResult : builds
+    ConfigValidationResultBuilder -down-> ConfigFieldValidationResult : uses
 
     ConfigValidationResult -down-> ConfigFieldValidationResult : uses
 
