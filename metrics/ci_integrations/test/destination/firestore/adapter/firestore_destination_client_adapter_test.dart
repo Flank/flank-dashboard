@@ -115,7 +115,7 @@ void main() {
 
     test(
       ".addBuilds() does not add builds if fetching the project throws",
-      () async {
+      () {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
         final result = adapter.addBuilds(testProjectId, []);
@@ -127,7 +127,7 @@ void main() {
 
     test(
       ".addBuilds() does not add builds if a project with the given id does not exist",
-      () async {
+      () {
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
         when(_documentMock.exists).thenReturn(false);
 
