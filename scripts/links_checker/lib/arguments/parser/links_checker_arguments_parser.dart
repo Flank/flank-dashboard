@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:args/args.dart';
 import 'package:links_checker/arguments/models/links_checker_arguments.dart';
 

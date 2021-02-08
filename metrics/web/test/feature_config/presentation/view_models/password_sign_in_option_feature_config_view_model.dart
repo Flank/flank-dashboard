@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/feature_config/presentation/view_models/password_sign_in_option_feature_config_view_model.dart';
 

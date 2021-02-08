@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 
 /// A class that stores [MetricsButtonStyle]s for different visual feedback

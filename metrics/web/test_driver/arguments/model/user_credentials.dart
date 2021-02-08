@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// Represents the user credentials for the Metrics application.
 class UserCredentials {
   /// A user email environment variable name.

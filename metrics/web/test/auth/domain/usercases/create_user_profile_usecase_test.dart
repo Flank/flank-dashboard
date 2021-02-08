@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_profile_param.dart';

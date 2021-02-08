@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/foundation.dart';
 import 'package:metrics/feature_config/domain/entities/feature_config.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';

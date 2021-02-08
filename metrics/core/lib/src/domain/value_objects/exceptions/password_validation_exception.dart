@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics_core/src/domain/value_objects/exceptions/validation_exception.dart';
 import 'package:metrics_core/src/domain/value_objects/exceptions/password_validation_error_code.dart';
 

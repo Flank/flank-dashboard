@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// An util class that provides methods for validating numbers.
 class NumberValidator {
   /// Checks the given [number] to be non-`null` positive integer.

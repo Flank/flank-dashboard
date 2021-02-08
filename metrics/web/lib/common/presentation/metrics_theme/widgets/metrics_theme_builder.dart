@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';

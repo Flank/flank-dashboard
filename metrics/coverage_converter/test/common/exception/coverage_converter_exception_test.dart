@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:coverage_converter/common/exception/coverage_converter_exception.dart';
 import 'package:coverage_converter/common/exception/error_code/coverage_converter_error_code.dart';
 import 'package:coverage_converter/common/strings/common_strings.dart';

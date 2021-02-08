@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
 import 'package:ci_integration/source/buildkite/party/buildkite_source_party.dart';
 import 'package:ci_integration/source/github_actions/party/github_actions_source_party.dart';

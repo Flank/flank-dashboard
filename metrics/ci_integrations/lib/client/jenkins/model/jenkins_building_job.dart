@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/client/jenkins/deserializer/jenkins_build_deserializer.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';

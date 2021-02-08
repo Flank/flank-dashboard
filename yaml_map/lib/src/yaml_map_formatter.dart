@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:yaml_map/src/formatter/date_time_type_formatter.dart';
 import 'package:yaml_map/src/formatter/list_type_formatter.dart';
 import 'package:yaml_map/src/formatter/map_type_formatter.dart';

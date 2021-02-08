@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 
 /// A base class for project group repositories.

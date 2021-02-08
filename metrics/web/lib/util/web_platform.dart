@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:universal_io/io.dart';
 
 /// A class that represents the information about the environment in which the

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import '../../../arguments/model/user_credentials.dart';
 import '../../../common/config/browser_name.dart';
 import '../../../common/model/device.dart';

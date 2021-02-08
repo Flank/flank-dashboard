@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 part of junit_xml;
 
 /// An XML node parser abstract class that defines parse methods for

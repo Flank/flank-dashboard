@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 

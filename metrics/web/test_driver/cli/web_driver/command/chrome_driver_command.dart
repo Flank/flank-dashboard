@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import '../../common/command/command_builder.dart';
 import '../model/chrome_driver_log_level.dart';
 

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:collection/collection.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:test/test.dart';

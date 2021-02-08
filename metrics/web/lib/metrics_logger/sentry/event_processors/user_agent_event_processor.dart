@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:metrics/metrics_logger/sentry/event_processors/sentry_event_processor.dart';

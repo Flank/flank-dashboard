@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:yaml_map/src/yaml_map_formatter.dart';
 
 /// A formatter abstract class that defines format method for specified type [T]

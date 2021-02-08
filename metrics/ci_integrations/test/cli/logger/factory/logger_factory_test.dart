@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
 import 'package:ci_integration/cli/logger/writer/io_logger_writer.dart';
 import 'package:mockito/mockito.dart';

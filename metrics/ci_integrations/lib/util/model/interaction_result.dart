@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A class containing a result of an interaction.
 class InteractionResult<T> {
   /// Used to indicate that this interaction is failed.

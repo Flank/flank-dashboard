@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 
 /// A [LoggerWriter] implementation that [print]s errors with their contexts.

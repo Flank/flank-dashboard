@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A class containing a result of validation.
 class ValidationResult {
   /// Used to indicate that validation is failed.
