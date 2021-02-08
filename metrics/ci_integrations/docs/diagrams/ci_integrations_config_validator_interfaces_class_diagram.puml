@@ -36,12 +36,12 @@
                             + field : String
                             + additionalContext : String
 
-                            + isValid : bool
-                            + isInvalid : bool
+                            + isSuccess : bool
+                            + isFailure : bool
                             + isUnknown : bool
 
-                            + ConfigValidationResult.valid(String field, String additionalContext)
-                            + ConfigValidationResult.invalid(String field, String additionalContext)
+                            + ConfigValidationResult.success(String field, String additionalContext)
+                            + ConfigValidationResult.failure(String field, String additionalContext)
                             + ConfigValidationResult.unknown(String field, String additionalContext)
                             + String toString()
 
