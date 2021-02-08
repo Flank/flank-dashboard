@@ -15,30 +15,30 @@
                     interface Config {}
 
                     package builder {
-                        abstract class ConfigValidationResultBuilder<T extends ConfigValidationResult> {
-                            + authValidationResult : ConfigFieldValidationResult
+                        abstract class ValidationResultBuilder<T extends ValidationResult> {
+                            + authValidationResult : FieldValidationResult
                             + interruptReason : String
 
                             + T build()
-                            + void setAuthResult(ConfigFieldValidationResult authResult)
+                            + void setAuthResult(FieldValidationResult authResult)
                             + void setInterruptReason(String reason)
                         }
                     }
 
-                    interface ConfigValidationResult<T extends Config> {
-                        + authValidationResult : ConfigFieldValidationResult
+                    interface ValidationResult<T extends Config> {
+                        + authValidationResult : FieldValidationResult
 
                         + String toString()
                     }
 
-                    enum ConfigFieldValidationConclusion {
+                    enum FieldValidationConclusion {
                         + valid
                         + invalid
                         + unknown
                     }
 
-                    class ConfigFieldValidationResult {
-                        + conclusion : ConfigFieldValidationConclusion
+                    class FieldValidationResult {
+                        + conclusion : FieldValidationConclusion
                         + field : String
                         + additionalContext : String
 
@@ -46,20 +46,20 @@
                         + isFailure : bool
                         + isUnknown : bool
 
-                        + ConfigFieldValidationResult.success(String field, String additionalContext)
-                        + ConfigFieldValidationResult.failure(String field, String additionalContext)
-                        + ConfigFieldValidationResult.unknown(String field, String additionalContext)
+                        + FieldValidationResult.success(String field, String additionalContext)
+                        + FieldValidationResult.failure(String field, String additionalContext)
+                        + FieldValidationResult.unknown(String field, String additionalContext)
                         + String toString()
 
-                        - ConfigValidationResult._(ConfigFieldValidationConclusion conclusion, String field, String additionalContext)
+                        - ValidationResult._(FieldValidationConclusion conclusion, String field, String additionalContext)
                     }
                 }
 
                 package validator {
-                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, K extends ConfigValidationResultBuilder> {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, K extends ValidationResultBuilder> {
                         + validationDelegate : V
                         + validationResultBuilder : K
-                        + Future<ConfigValidationResult> validate(T config)
+                        + Future<ValidationResult> validate(T config)
                     }
                 }
 
@@ -85,15 +85,15 @@
             }
 
             package model as source_model {
-                interface SourceConfigValidationResult {
-                    + sourceProjectIdValidationResult : ConfigFieldValidationResult
+                interface SourceValidationResult {
+                    + sourceProjectIdValidationResult : FieldValidationResult
                 }
 
                 package builder as source_builder {
-                    abstract class SourceConfigValidationResultBuilder {
-                        + sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
+                    abstract class SourceValidationResultBuilder {
+                        + sourceProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
+                        + void setSourceProjectIdResult(FieldValidationResult sourceProjectIdResult)
                     }
                 }
             }
@@ -107,15 +107,15 @@
             }
 
             package model as destination_model {
-                interface DestinationConfigValidationResult {
-                    + destinationProjectIdValidationResult : ConfigFieldValidationResult
+                interface DestinationValidationResult {
+                    + destinationProjectIdValidationResult : FieldValidationResult
                 }
 
                 package builder as destination_builder {
-                    abstract class DestinationConfigValidationResultBuilder {
-                        + destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
+                    abstract class DestinationValidationResultBuilder {
+                        + destinationProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
+                        + void setDestinationProjectIdResult(FieldValidationResult destinationProjectIdResult)
                     }
                 }
             }
@@ -127,34 +127,34 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator -left-> ValidationDelegate : uses
-    ConfigValidator --> ConfigValidationResult : uses
-    ConfigValidator --> ConfigValidationResultBuilder : uses
+    ConfigValidator --> ValidationResult : uses
+    ConfigValidator --> ValidationResultBuilder : uses
     ConfigValidator --> Config : uses
 
-    ConfigValidationResultBuilder --> ConfigValidationResult : builds
-    ConfigValidationResultBuilder --> ConfigFieldValidationResult : uses
+    ValidationResultBuilder --> ValidationResult : builds
+    ValidationResultBuilder --> FieldValidationResult : uses
 
-    ConfigValidationResult --> ConfigFieldValidationResult : uses
+    ValidationResult --> FieldValidationResult : uses
 
-    ConfigFieldValidationResult --> ConfigFieldValidationConclusion : uses
+    FieldValidationResult --> FieldValidationConclusion : uses
 
     SourceValidationDelegate -left-|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
 
-    SourceConfigValidationResult -left-|> ConfigValidationResult
-    DestinationConfigValidationResult -right-|> ConfigValidationResult
+    SourceValidationResult -left-|> ValidationResult
+    DestinationValidationResult -right-|> ValidationResult
 
-    SourceConfigValidationResultBuilder -left-|> ConfigValidationResultBuilder
-    DestinationConfigValidationResultBuilder -right-|> ConfigValidationResultBuilder
+    SourceValidationResultBuilder -left-|> ValidationResultBuilder
+    DestinationValidationResultBuilder -right-|> ValidationResultBuilder
 
-    SourceConfigValidationResultBuilder -down-> SourceConfigValidationResult : builds
-    DestinationConfigValidationResultBuilder -down-> DestinationConfigValidationResult : builds
+    SourceValidationResultBuilder -down-> SourceValidationResult : builds
+    DestinationValidationResultBuilder -down-> DestinationValidationResult : builds
 
-    Config -[hidden]down-> ConfigValidationResultBuilder
+    Config -[hidden]down-> ValidationResultBuilder
 
-    DestinationValidationDelegate -[hidden]down-> DestinationConfigValidationResultBuilder
-    SourceValidationDelegate -[hidden]down-> SourceConfigValidationResultBuilder
+    DestinationValidationDelegate -[hidden]down-> DestinationValidationResultBuilder
+    SourceValidationDelegate -[hidden]down-> SourceValidationResultBuilder
 
-    SourceConfigValidationResultBuilder -[hidden]down-> SourceConfigValidationResult
-    DestinationConfigValidationResultBuilder -[hidden]down-> DestinationConfigValidationResult
+    SourceValidationResultBuilder -[hidden]down-> SourceValidationResult
+    DestinationValidationResultBuilder -[hidden]down-> DestinationValidationResult
 @enduml

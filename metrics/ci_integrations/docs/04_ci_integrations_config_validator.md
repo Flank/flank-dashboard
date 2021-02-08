@@ -23,10 +23,10 @@ This document aims the following goals:
 ### Main interfaces and classes
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidationResult` is a class that holds the validation conclusions on each config's field. A `ConfigFieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `ConfigFieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
-- A `ConfigValidator` is a class that provides the validation functionality. It's main `validate` method returns a `ConfigValidationResult` as an output.
+- A `ValidationResult` is a class that holds the validation conclusions on each config's field. A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
+- A `ConfigValidator` is a class that provides the validation functionality. It's main `validate` method returns a `ValidationResult` as an output.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
-- A `ConfigValidationResultBuilder` is a class that simplifies the creation of the validation output and has the main `build` method that returns a `ConfigValidationResult`. See [output generation](#output-generation).
+- A `ValidationResultBuilder` is a class that simplifies the creation of the validation output and has the main `build` method that returns a `ValidationResult`. See [output generation](#output-generation).
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
 Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
@@ -40,9 +40,9 @@ Consider the following package structure for the abstract and base classes of th
 >     * base/
 >       * config/
 >         * model/
->           * config_validation_result.dart
->           * config_field_validation_result.dart
->           * config_field_validation_conclusion.dart
+>           * validation_result.dart
+>           * field_validation_result.dart
+>           * field_validation_conclusion.dart
 >         * validator/
 >           * config_validator.dart
 >         * validator_factory/
@@ -54,24 +54,24 @@ Consider the following package structure for the abstract and base classes of th
 >         * validation_delegate/
 >           * source_validation_delegate.dart
 >         * model/
->           * source_config_validation_result.dart
->           * source_config_validation_result_builder.dart
+>           * source_validation_result.dart
+>           * source_validation_result_builder.dart
 >     * destination/
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
 >         * model/
->           * destination_config_validation_result.dart
->           * destination_config_validation_result_builder.dart
+>           * destination_validation_result.dart
+>           * destination_validation_result_builder.dart
 
 
 #### Output Generation
 
-It is very necessary to provide a clear and understandable output and at the same time keep the code clean and testable. To do that, let's use the `ConfigValidationResultBuilder` class. This class represents a `Builder` pattern and its main goal is to assemble the `ConfigValidationResult` step by step. Consider the following code that demonstrates the `ConfigValidationResultBuilder` usage within the `validate` method of the `ConfigValidator`:
+It is very necessary to provide a clear and understandable output and at the same time keep the code clean and testable. To do that, let's use the `ValidationResultBuilder` class. This class represents a `Builder` pattern and its main goal is to assemble the `ValidationResult` step by step. Consider the following code that demonstrates the `ValidationResultBuilder` usage within the `validate` method of the `ConfigValidator`:
 
 ```dart
 
-final resultBuilder = ConfigValidationResultBuilder();
+final resultBuilder = ValidationResultBuilder();
 
 // validating auth
 final accessToken = config.accessToken;
@@ -81,7 +81,7 @@ final authInteraction = validationDelegate.validateAuth(auth);
 // auth is not valid
 if (authInteraction.isError) {
   final authAdditionalContext = authInteraction.message;
-  final authResult = ConfigFieldValidationResult.failure('accessToken', authAdditionalContext)
+  final authResult = FieldValidationResult.failure('accessToken', authAdditionalContext)
   resultBuilder.setAuthResult(authResult);
   
   // terminating validation as the auth needed for validation is invalid
@@ -94,7 +94,7 @@ if (authInteraction.isError) {
 }
 
 // auth is valid, validation is continued
-final authResult = ConfigFieldValidationResult.success('accessToken');
+final authResult = FieldValidationResult.success('accessToken');
 resultBuilder.setAuthResult(authResult);
 
 // other fields validation
@@ -109,8 +109,8 @@ return result;
 
 Consider the following steps needed to be able to validate the given configuration file:
 
-1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ConfigValidationResult`, `SourceConfigValidationResult`, `DestinationConfigValidationResult`, `ConfigValidationResultBuilder`, `SourceConfigValidationResultBuilder`, `DestinationConfigValidationResultBuilder` and `ConfigFieldValidationResult`.
-2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ConfigValidationResult`, `ConfigValidationResultBuilder` `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
+1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ValidationResult`, `SourceValidationResult`, `DestinationValidationResult`, `ValidationResultBuilder`, `SourceValidationResultBuilder`, `DestinationValidationResultBuilder` and `FieldValidationResult`.
+2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ValidationResult`, `ValidationResultBuilder` `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create a `ValidateCommand` class.
 5. Register the `ValidateCommand` in the `CiIntegrationsRunner`.
@@ -132,14 +132,14 @@ Consider the following package structure for the `CoolIntegration` config valida
 >   * cool_integration/
 >     * config/
 >       * validator/
->         * cool_integration_destination_config_validator.dart
+>         * cool_integration_destination_validator.dart
 >       * validator_factory/
->         * cool_integration_config_validator_factory.dart
+>         * cool_integration_validator_factory.dart
 >       * validation_delegate/
 >         * cool_integration_destination_validation_delegate.dart
 >       * model/
->         * cool_integration_destination_config_validation_result.dart
->         * cool_integration_destination_config_validation_result_builder.dart
+>         * cool_integration_destination_validation_result.dart
+>         * cool_integration_destination_validation_result_builder.dart
 > * client/
 >   * cool_integration/
 >     * cool_integration_client.dart

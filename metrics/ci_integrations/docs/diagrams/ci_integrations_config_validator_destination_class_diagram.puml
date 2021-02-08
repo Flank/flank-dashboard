@@ -4,7 +4,7 @@
         package destination.config as interface_config {
 
             package validation_delegate as interface_delegate {
-                interface DestinationConfigValidationDelegate {}
+                interface DestinationValidationDelegate {}
             }
 
             package validator_factory as interface_factory {
@@ -12,9 +12,9 @@
             }
 
             package model as interface_model {
-                abstract class DestinationConfigValidationResult {}
+                abstract class DestinationValidationResult {}
                 
-                abstract class DestinationConfigValidationResultBuilder {}
+                abstract class DestinationValidationResultBuilder {}
             }
 
         }
@@ -22,15 +22,15 @@
 
     package destination.cool_integration.config as cool_integration_config {
         package validator as cool_integration_validator {
-            class CoolIntegrationDestinationConfigValidator {}
+            class CoolIntegrationDestinationValidator {}
         }
 
         package validator_factory as cool_integration_validator_validator_factory {
-            class CoolIntegrationConfigValidatorFactory {}
+            class CoolIntegrationValidatorFactory {}
         }
 
         package validation_delegate {
-            class CoolIntegrationDestinationConfigValidationDelegate {
+            class CoolIntegrationDestinationValidationDelegate {
                 - _client: CoolIntegrationClient
 
                 + Future<InteractionResult> validateExtraField()
@@ -38,9 +38,9 @@
         }
 
         package model as cool_integration_model {
-            class CoolIntegrationDestinationConfigValidationResultBuilder {}
+            class CoolIntegrationDestinationValidationResultBuilder {}
 
-            class CoolIntegrationDestinationConfigValidationResult {}
+            class CoolIntegrationDestinationValidationResult {}
         }
     }
 
@@ -61,26 +61,26 @@
         }
     }
 
-    CoolIntegrationDestinationConfigValidator --> CoolIntegrationDestinationConfigValidationDelegate : uses
-    CoolIntegrationDestinationConfigValidationDelegate --> CoolIntegrationClient : uses
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidator : creates
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationClient : creates
-    CoolIntegrationConfigValidatorFactory --> CoolIntegrationDestinationConfigValidationDelegate : creates
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationDelegate : uses
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationClient : uses
+    CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidator : creates
+    CoolIntegrationValidatorFactory --> CoolIntegrationClient : creates
+    CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
 
     ValidateCommand -down-|> CiIntegrationCommand
-    ValidateCommand -left-> CoolIntegrationDestinationConfigValidator : uses
-    ValidateCommand -left-> CoolIntegrationConfigValidatorFactory : uses
+    ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
+    ValidateCommand -left-> CoolIntegrationValidatorFactory : uses
 
-    CoolIntegrationDestinationConfigValidationDelegate .left.|> DestinationConfigValidationDelegate
-    CoolIntegrationDestinationConfigValidationResult -down-|> DestinationConfigValidationResult
-    CoolIntegrationDestinationConfigValidationResultBuilder -down-|> DestinationConfigValidationResultBuilder
+    CoolIntegrationDestinationValidationDelegate .left.|> DestinationValidationDelegate
+    CoolIntegrationDestinationValidationResult -down-|> DestinationValidationResult
+    CoolIntegrationDestinationValidationResultBuilder -down-|> DestinationValidationResultBuilder
     
-    CoolIntegrationDestinationConfigValidator --> CoolIntegrationDestinationConfigValidationResultBuilder : uses
-    CoolIntegrationDestinationConfigValidator --> CoolIntegrationDestinationConfigValidationResult : uses
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResultBuilder : uses
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResult : uses
 
-    CoolIntegrationDestinationConfigValidationResultBuilder -right-> CoolIntegrationDestinationConfigValidationResult : builds
+    CoolIntegrationDestinationValidationResultBuilder -right-> CoolIntegrationDestinationValidationResult : builds
 
-    CoolIntegrationConfigValidatorFactory ..|> ConfigValidatorFactory
+    CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
 
-    CoolIntegrationConfigValidatorFactory -[hidden]left-> CoolIntegrationClient
+    CoolIntegrationValidatorFactory -[hidden]left-> CoolIntegrationClient
 @enduml
