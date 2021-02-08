@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A class that represents the links checker [Exception].
 class LinksCheckerException implements Exception {
   /// A list of errors that provides an information

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/firestore/firestore.dart' as fs;
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';

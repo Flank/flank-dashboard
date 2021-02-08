@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';

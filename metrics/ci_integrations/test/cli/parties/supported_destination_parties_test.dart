@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
 import 'package:test/test.dart';

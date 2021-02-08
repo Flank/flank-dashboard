@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:coverage_converter/common/arguments/parser/coverage_converter_arguments_parser.dart';
 import 'package:coverage_converter/lcov/command/lcov_coverage_converter_command.dart';
 import 'package:coverage_converter/lcov/converter/lcov_coverage_converter.dart';

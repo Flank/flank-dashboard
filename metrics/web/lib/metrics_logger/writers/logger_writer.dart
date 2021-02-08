@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'dart:async';
 
 /// An abstract class for logger writers that provide methods to write errors

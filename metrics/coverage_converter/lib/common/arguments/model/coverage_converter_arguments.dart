@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// A class that represents the coverage converter arguments.
 class CoverageConverterArguments {
   /// An input file path containing the specific coverage report.

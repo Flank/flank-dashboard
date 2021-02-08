@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/source/jenkins/client_factory/jenkins_source_client_factory.dart';
 import 'package:ci_integration/source/jenkins/config/parser/jenkins_source_config_parser.dart';
 import 'package:ci_integration/source/jenkins/party/jenkins_source_party.dart';

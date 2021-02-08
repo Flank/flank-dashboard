@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/source/github_actions/client_factory/github_actions_source_client_factory.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';

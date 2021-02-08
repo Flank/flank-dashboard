@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:universal_html/html.dart';
 
 /// A class that sets the favicon of the application depending on the OS theme.

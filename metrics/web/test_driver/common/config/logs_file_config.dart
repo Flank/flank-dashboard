@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// Holds the log file names.
 class LogsFileConfig {
   /// Name of the file to store the flutter driver test logs.

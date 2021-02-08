@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';

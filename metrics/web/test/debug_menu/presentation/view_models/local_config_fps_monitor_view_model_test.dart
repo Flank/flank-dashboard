@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 

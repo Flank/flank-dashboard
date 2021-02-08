@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// The enum that represents the persistent store error codes.
 enum PersistentStoreErrorCode {
   /// Indicates that an error occurred while opening connection

@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';

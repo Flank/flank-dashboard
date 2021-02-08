@@ -245,3 +245,16 @@ jobs:
 
       - name: Check links are pointing to master
         run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed}}'
+
+  check-license-actions:
+    name: Check License Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Check the license in files
+        uses: kt3k/license_checker@v1.0.4

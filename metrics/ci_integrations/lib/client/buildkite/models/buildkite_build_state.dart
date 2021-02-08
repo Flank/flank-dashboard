@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 /// Represents a state for a Buildkite build.
 enum BuildkiteBuildState {
   /// Represents a state for a build that is in progress.

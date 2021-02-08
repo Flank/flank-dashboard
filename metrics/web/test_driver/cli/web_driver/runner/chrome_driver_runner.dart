@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0 
+// that can be found in the LICENSE file.
+
 import '../../common/runner/web_driver_process_runner.dart';
 import '../command/chrome_driver_command.dart';
 import '../process/chrome_driver_process.dart';
