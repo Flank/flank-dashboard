@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -34,6 +34,10 @@ class FirestoreDestinationClientAdapter
       final project =
           await _firestore.collection('projects').document(projectId).get();
 
+      if (!project.exists) {
+        throw GrpcError.notFound('Project with id $projectId was not found');
+      }
+
       final collection = _firestore.collection('build');
 
       logger.info('Adding ${builds.length} builds...');
@@ -45,16 +49,12 @@ class FirestoreDestinationClientAdapter
         await collection.document(documentId).create(map);
         logger.info('Added build id $documentId.');
       }
-    } on GrpcError catch (e) {
+    } on GrpcError catch (_) {
       if (buildJson != null) {
         logger.info('Failed to add build: $buildJson');
         buildJson = null;
       }
 
-      if (e.code == StatusCode.notFound) {
-        logger.info('Project with id $projectId was not found.');
-        return;
-      }
       rethrow;
     }
   }

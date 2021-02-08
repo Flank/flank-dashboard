@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/firestore.dart' as client;
@@ -79,20 +79,21 @@ void main() {
     );
 
     test(
-      ".addBuilds() returns normally if firestore throws GrpcError.notFound",
+      ".addBuilds() throws an exception if the firestore throws exception different from GrpcError.notFound",
       () {
-        whenFetchProject().thenThrow(GrpcError.notFound());
+        whenFetchProject().thenThrow(Exception());
 
         final result = adapter.addBuilds(testProjectId, []);
 
-        expect(result, completes);
+        expect(result, throwsException);
       },
     );
 
     test(
-      ".addBuilds() throws an exception if the firestore throws exception different from GrpcError.notFound",
+      ".addBuilds() throws an exception if a project with the given id does not exist",
       () {
-        whenFetchProject().thenThrow(Exception());
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(false);
 
         final result = adapter.addBuilds(testProjectId, []);
 
@@ -117,8 +118,22 @@ void main() {
       () async {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
-        await adapter.addBuilds(testProjectId, []);
+        final result = adapter.addBuilds(testProjectId, []);
 
+        expect(result, throwsException);
+        verifyNever(_firestoreMock.collection('build'));
+      },
+    );
+
+    test(
+      ".addBuilds() does not add builds if a project with the given id does not exist",
+      () async {
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(false);
+
+        final result = adapter.addBuilds(testProjectId, []);
+
+        expect(result, throwsException);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
@@ -131,6 +146,7 @@ void main() {
           BuildData(buildNumber: 2),
         ];
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(true);
         when(_documentMock.id).thenReturn(testProjectId);
         when(_firestoreMock.collection('build'))
             .thenReturn(_collectionReferenceMock);
@@ -162,6 +178,7 @@ void main() {
             .toList();
 
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(true);
         when(_documentMock.id).thenReturn(testProjectId);
         when(_firestoreMock.collection('build'))
             .thenReturn(_collectionReferenceMock);
@@ -194,6 +211,7 @@ void main() {
           .toList();
 
       whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+      when(_documentMock.exists).thenReturn(true);
       when(_documentMock.id).thenReturn(testProjectId);
       when(_firestoreMock.collection('build'))
           .thenReturn(_collectionReferenceMock);
