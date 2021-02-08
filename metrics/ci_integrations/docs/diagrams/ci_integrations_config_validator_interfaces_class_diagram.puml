@@ -1,109 +1,114 @@
 @startuml ci_integrations_config_validator_class_diagram
 
-    package integration {
-        package interface {
-            package base {
-                package party {
-                    interface IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
-                        + clientFactory : IntegrationClientFactory<T, K>
-                        + configParser : ConfigParser<T>
-                        + configValidatorFactory : ConfigValidatorFactory<V>
-                    }
-                }
-
-                package config {
-                    package model {
-                        interface Config {}
-
-                        interface ConfigValidationResultBuilder<T extends ConfigValidationResult> {
-                            + T build()
-                        }
-
-                        interface ConfigValidationResult<T extends Config> {
-                            + authValidationResult : ConfigFieldValidationResult
-
-                            + String toString()
-                        }
-
-                        enum ConfigFieldValidationConclusion {
-                            + valid
-                            + invalid
-                            + unknown
-                        }
-
-                        class ConfigFieldValidationResult {
-                            + conclusion : ConfigFieldValidationConclusion
-                            + field : String
-                            + additionalContext : String
-
-                            + isSuccess : bool
-                            + isFailure : bool
-                            + isUnknown : bool
-
-                            + ConfigValidationResult.success(String field, String additionalContext)
-                            + ConfigValidationResult.failure(String field, String additionalContext)
-                            + ConfigValidationResult.unknown(String field, String additionalContext)
-                            + String toString()
-
-                            - ConfigValidationResult._(ConfigFieldValidationConclusion conclusion, String field, String additionalContext)
-                        }
-                    }
-
-                    package validator {
-                        abstract class ConfigValidator<T extends Config, V extends ValidationDelegate> {
-                            + validationDelegate : V
-
-                            + Future<ConfigValidationResult> validate(T config)
-                        }
-                    }
-
-                    package validation_delegate as base_validation_delegate {
-                        interface ValidationDelegate {
-                            + Future<InteractionResult> validateAuth(AuthorizationBase auth)
-                        }
-                    }
-
-                    package validator_factory {
-                        interface ConfigValidatorFactory<V extends ConfigValidator> {
-                            + V create()
-                        }
-                    }
-                }
-            }
-            
-            package source.config {
-                package validation_delegate as source_validation_delegate {
-                    interface SourceValidationDelegate {
-                        + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
-                    }
-                }
-
-                package model as source_model {
-                    interface SourceConfigValidationResult {
-                        + sourceProjectIdValidationResult : ConfigFieldValidationResult
-                    }
-
-                    interface SourceConfigValidationResultBuilder {
-                        + sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
-                    }
+    package integration.interface {
+        package base {
+            package party {
+                interface IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
+                    + clientFactory : IntegrationClientFactory<T, K>
+                    + configParser : ConfigParser<T>
+                    + configValidatorFactory : ConfigValidatorFactory<V>
                 }
             }
 
-            package destination.config {
-                package validation_delegate as destination_validation_delegate {
-                    interface DestinationValidationDelegate {
-                        + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+            package config {
+                package model {
+                    interface Config {}
+
+                    abstract ConfigValidationResultBuilder<T extends ConfigValidationResult> {
+                        - _authValidationResult : ConfigFieldValidationResult
+
+                        + T build()
+                        + void setAuthResult(ConfigFieldValidationResult authResult)
+                    }
+
+                    interface ConfigValidationResult<T extends Config> {
+                        + authValidationResult : ConfigFieldValidationResult
+
+                        + String toString()
+                    }
+
+                    enum ConfigFieldValidationConclusion {
+                        + valid
+                        + invalid
+                        + unknown
+                    }
+
+                    class ConfigFieldValidationResult {
+                        + conclusion : ConfigFieldValidationConclusion
+                        + field : String
+                        + additionalContext : String
+
+                        + isSuccess : bool
+                        + isFailure : bool
+                        + isUnknown : bool
+
+                        + ConfigValidationResult.success(String field, String additionalContext)
+                        + ConfigValidationResult.failure(String field, String additionalContext)
+                        + ConfigValidationResult.unknown(String field, String additionalContext)
+                        + String toString()
+
+                        - ConfigValidationResult._(ConfigFieldValidationConclusion conclusion, String field, String additionalContext)
                     }
                 }
 
-                package model as destination_model {
-                    interface DestinationConfigValidationResult {
-                        + destinationProjectIdValidationResult : ConfigFieldValidationResult
-                    }
+                package validator {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate> {
+                        + validationDelegate : V
 
-                    interface DestinationConfigValidationResultBuilder {
-                        + destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
+                        + Future<ConfigValidationResult> validate(T config)
                     }
+                }
+
+                package validation_delegate as base_validation_delegate {
+                    interface ValidationDelegate {
+                        + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                    }
+                }
+
+                package validator_factory {
+                    interface ConfigValidatorFactory<V extends ConfigValidator> {
+                        + V create()
+                    }
+                }
+            }
+        }
+        
+        package source.config {
+            package validation_delegate as source_validation_delegate {
+                interface SourceValidationDelegate {
+                    + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
+                }
+            }
+
+            package model as source_model {
+                interface SourceConfigValidationResult {
+                    + sourceProjectIdValidationResult : ConfigFieldValidationResult
+                }
+
+                abstract class SourceConfigValidationResultBuilder {
+                    - _sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
+
+                    + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
+                }
+            }
+        }
+
+        package destination.config {
+            package validation_delegate as destination_validation_delegate {
+                interface DestinationValidationDelegate {
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+                }
+            }
+
+            package model as destination_model {
+                interface DestinationConfigValidationResult {
+                    + destinationProjectIdValidationResult : ConfigFieldValidationResult
+                }
+
+                abstract class DestinationConfigValidationResultBuilder {
+                    - _destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
+
+                    + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
                 }
             }
         }
