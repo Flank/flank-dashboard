@@ -91,6 +91,17 @@ jobs:
         run: dart2native bin/main.dart -o ./coverage_converter_linux
         working-directory: metrics/coverage_converter/
 
+      - name: Generate SHA256 Hash
+        run: shasum metrics/coverage_converter/coverage_converter_linux > metrics/coverage_converter/coverage_converter_linux.sha256
+
+      - name: Upload SHA256 Hash
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_converter_linux_sha256
+          path: metrics/coverage_converter/coverage_converter_linux.sha256
+          if-no-files-found: error
+
       - name: Upload Artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v2
@@ -99,41 +110,11 @@ jobs:
           path: metrics/coverage_converter/coverage_converter_linux
           if-no-files-found: error
 
-  linux-generate-sha256-actions:
-    name: Coverage Converter Linux Generate SHA256 Actions
-    needs: [ linux-actions ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          ref: ${{ github.ref }}
-      
-      - name: Download Linux Build
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage_converter_linux
-          path: metrics/coverage_converter/
-
-      - name: Create Coverage Converter Linux Archive
-        run: tar -czvf metrics/coverage_converter/coverage_converter_linux.tgz metrics/coverage_converter/coverage_converter_linux
-      
-      - name: Generate Coverage Converter Linux SHA256 Hash
-        run: shasum metrics/coverage_converter/coverage_converter_linux.tgz > metrics/coverage_converter/coverage_converter_linux.tgz.sha256
-
-      - name: Upload Coverage Converter Linux SHA256 Hash
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage_converter_linux_sha256
-          path: metrics/coverage_converter/coverage_converter_linux.tgz.sha256
-          if-no-files-found: error
-  
   release-actions:
     name: Coverage Converter Release Actions
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [ macos-actions, linux-actions, linux-generate-sha256-actions ]
+    needs: [ macos-actions, linux-actions ]
 
     steps:
       - name: Checkout
@@ -176,12 +157,12 @@ jobs:
           git push --delete origin coverage-converter-snapshot
 
       - name: Create release
-        run: gh release create coverage-converter-snapshot metrics/coverage_converter/coverage_converter_macos metrics/coverage_converter/coverage_converter_linux metrics/coverage_converter/coverage_converter_linux.tgz.sha256 --prerelease --title 'Coverage converter snapshot'
+        run: gh release create coverage-converter-snapshot metrics/coverage_converter/coverage_converter_macos metrics/coverage_converter/coverage_converter_linux metrics/coverage_converter/coverage_converter_linux.sha256 --prerelease --title 'Coverage converter snapshot'
 
   notify-actions:
     name: Notify about building finished
     runs-on: macos-latest
-    needs: [ macos-actions, linux-actions, linux-generate-sha256-actions, release-actions ]
+    needs: [ macos-actions, linux-actions, release-actions ]
     if: "always()"
     steps:
       - name: Notify about building the Coverage Converter
@@ -192,7 +173,7 @@ jobs:
           event-type: building_project
           client-payload: '{"building_coverage_converter": "true"}'
       - name: Send notification to Slack
-        if: needs.macos-actions.result == 'failure' || needs.linux-actions.result == 'failure' || needs.linux-generate-sha256-actions.result == 'failure' || needs.release-actions.result == 'failure' || needs.macos-actions.result == 'cancelled' || needs.linux-actions.result == 'cancelled' || needs.linux-generate-sha256-actions.result == 'cancelled' || needs.release-actions.result == 'cancelled'
+        if: needs.macos-actions.result == 'failure' || needs.linux-actions.result == 'failure' || needs.release-actions.result == 'failure' || needs.macos-actions.result == 'cancelled' || needs.linux-actions.result == 'cancelled' || needs.release-actions.result == 'cancelled'
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
