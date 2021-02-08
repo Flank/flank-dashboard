@@ -50,8 +50,8 @@
                     }
 
                     package validator {
-                        abstract class ConfigValidator<T extends Config> {
-                            + validationDelegate : ValidationDelegate
+                        abstract class ConfigValidator<T extends Config, V extends ValidationDelegate> {
+                            + validationDelegate : V
 
                             + Future<ConfigValidationResult> validate(T config)
                         }
@@ -133,4 +133,8 @@
     SourceConfigValidationResultBuilder -up-|> ConfigValidationResultBuilder
     DestinationConfigValidationResultBuilder -down-|> ConfigValidationResultBuilder
 
+    ValidationDelegate -[hidden]down-> ConfigValidationResultBuilder
+
+    DestinationValidationDelegate -[hidden]down-> DestinationConfigValidationResultBuilder
+    SourceValidationDelegate -[hidden]down-> SourceConfigValidationResultBuilder
 @enduml
