@@ -48,7 +48,7 @@ alt auth is valid
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
     CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAuthResult(ConfigValidationConclusion.success)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAuthResult(ConfigValidationResult.success('auth'))
     activate CoolIntegrationConfigValidationResultBuilder
 
 
@@ -57,7 +57,7 @@ else auth is not valid
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
     CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAuthResult(ConfigValidationConclusion.failure, additionalContext)
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : terminating validation (invalid auth)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setInterruptReason('The auth is not valid. Can't continue the validation.')
     CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : build()
     CoolIntegrationConfigValidationResultBuilder --> CoolIntegrationConfigValidator : configValidationResult
 
@@ -76,7 +76,7 @@ CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : perform
 CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
 deactivate CoolIntegrationValidationDelegate
 
-CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAnotherFieldResult(ConfigValidationConclusion.success)
+CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAnotherFieldResult(ConfigFieldValidationResult.success('anotherField'))
 CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : finalizing validation
 CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : build()
 CoolIntegrationConfigValidationResultBuilder --> CoolIntegrationConfigValidator : configValidationResult

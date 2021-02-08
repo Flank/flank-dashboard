@@ -19,7 +19,7 @@
 
                         + T build()
                         + void setAuthResult(ConfigFieldValidationResult authResult)
-                        + void setInteruptReason(String reason)
+                        + void setInterruptReason(String reason)
                     }
 
                     abstract class ConfigValidationResult<T extends Config> {

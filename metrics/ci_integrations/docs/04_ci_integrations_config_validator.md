@@ -85,9 +85,9 @@ if (authInteraction.isError) {
   resultBuilder.setAuthResult(authResult);
   
   // terminating validation as the auth needed for validation is invalid
-  final interuptReason = 'Cannot continue the validation, as the provided access token is invalid.';
+  final interruptReason = 'Cannot continue the validation, as the provided access token is invalid.';
   
-  resultBuilder.setInteruptReason(interuptReason);
+  resultBuilder.setInterruptReason(interuptReason);
 
   final validationResult = resultBuilder.build();
   return validationResult;
