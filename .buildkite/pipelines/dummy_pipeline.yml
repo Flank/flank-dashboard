@@ -1,0 +1,28 @@
+steps:
+  - label: "Dummy step"
+    key: "dummy"
+    commands:
+      - DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl 
+      - curl -L https://raw.githubusercontent.com/jdzsz/randomsleep/main/randomsleep.sh -o randomsleep.sh
+      - bash randomsleep.sh 
+    plugins:
+      - docker-compose:
+          config: ".buildkite/compose-files/docker-compose.yml"
+          run: ubuntu
+
+  - label: "Finalize build"
+    key: "finalize"
+    depends_on:
+      - step: "dummy"
+    commands:
+      - echo "The build is completed."
+
+  - label: "Trigger sync for a dummy project"
+    trigger: sync-pipeline
+    depends_on: "finalize"
+    allow_dependency_failure: true
+    async: true
+    build:
+      env:
+        PIPELINE_SLUG: "${BUILDKITE_PIPELINE_SLUG}"
+        METRICS_PROJECT_ID: "buildkite_dummy"
