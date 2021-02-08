@@ -1,0 +1,112 @@
+# Metrics Web Supported Database Version
+> Summary of the proposed change
+
+Have the supported database version in the Metrics Web Application to block the application during the database updates or when the Metrics Web application does not supports the current database version.
+
+# References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Storing database metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md)
+
+# Motivation
+> What problem is this project solving?
+
+Notify the users about the application update is in progress, or the application version is not compatible with the database version.
+
+# Goals
+
+> Identify success metrics and measurable goals.
+
+This document has the following goals: 
+
+- Describe the process of getting the supported database version.
+- Describe the way of loading the current database metadata.
+- Explain the process of blocking the application during database updates or when it does not supports the current database version.
+
+# Non-Goals
+
+> Identify what's not in scope.
+
+This document does not describes the way of storing the database and supported database versions. See [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md) document to get more info about these details.
+
+# Design
+
+> Explain and diagram the technical design
+>
+> Identify risks and edge cases
+
+To be able to detect whether the application is compatible with the current database, we should get the following values: 
+
+- Supported database version of this application
+- Database metadata
+
+Let's review the way of getting each of them separately: 
+
+## Supported Database Version
+
+Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` environment variable, we can get this value in the application from the environment with the following code: 
+
+`String.fromEnvironment('APPLICATION_VERSION')`
+
+The way of fetching this value is common for all Metrics applications, so we should place the class responsible for getting this value to the `core` library to be able to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
+
+## Database Version
+
+Also, to detect whether the current application is compatible with the database, we should load the database metadata from the Firestore database. To do so, we should implement the following application layers: 
+
+### Domain Layer
+
+To load the database version we should create a `DatabaseMetadata` entity in the domain layer. Also, we should have an `DatabaseMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveDatabaseMetadataUpdates` use case. 
+
+Let's review domain layer classes and their relationships on the class diagram below: 
+
+![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_domain_class_diagram.puml)
+
+### Data Layer
+
+To load the data from the Firestore database, we should implement a `DatabaseMetadataRepository` and create a `DatabaseMetadataData` data model class used to map the JSON-encodable objects to the `DatabaseMetadata` entity and back.
+
+Let's consider the class diagram of the data layer: 
+
+![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_data_class_diagram.puml)
+
+### Presentation Layer
+
+Once we have a `domain` and a `data` layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` to show them if the database currently cannot handle any requests.
+
+Let's examine the following class diagram that displays the main classes of the presentation layer: 
+
+![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_presentation_class_diagram.puml)
+
+# Making things work
+> Describe the way of blocking the application from accessing the database. 
+
+Once we have a `domain`, `data`, and `presentation` layers ready, we can make these things work with other components of the Metrics Web Application. 
+
+To block the application when its version is not compatible with the database version, we should connect the `MetadataNotifier` with the `NavigationNotifier` to navigate to the specific pages when the application is not available, and the `AuthNotifier` to log out a user once the application becomes unavailable. 
+
+To do so, we should add a listener to the `MetadataNotifier` in the `InjectionContainer` widget so that should log out a user from the app and notify the `NavigationNotifier` about the application become unavailable.
+
+Let's consider the following sequence diagram explaining this process: 
+
+![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_sequence_diagram.puml)
+
+# Dependencies
+
+> What is the project blocked on?
+
+> What will be impacted by the project?
+
+This project will impact the process of initializing the Metrics Web Application.
+
+# Testing
+
+> How will the project be tested?
+
+This project will be tested using unit, widget, and integration tests.
+
+# Results
+
+> What was the outcome of the project?
+
+This document described the process of getting the database and supported database versions. Also, it explains the way of blocking the Metrics Web Application to avoid changing database during its updates.

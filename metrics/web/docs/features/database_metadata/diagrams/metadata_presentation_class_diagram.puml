@@ -1,0 +1,58 @@
+@startuml metadata_presentation_class_diagram
+
+package core.src.util {
+    class ApplicationMetadata {
+        version() : String
+    }
+}
+
+package database_metadata {
+    package domain {
+        package entities {
+            class DatabaseMetadata {
+                version : String
+                isUpdating : bool
+            }
+        }
+
+
+        package usecases {
+            class ReceiveDatabaseMetadataUpdates {
+                call() : Stream<DatabaseMetadata>
+            }
+        }
+    }
+
+    package presentation {
+        package state {
+            class MetadataNotifier {
+                - receiveDatabaseMetadataUpdates : ReceiveDatabaseMetadataUpdates
+                - applicationMetadata : ApplicationMetadata
+                + isAppAvailable : bool 
+            }
+        }
+
+        package pages {
+            class ApplicationUpdatingPage {
+                + build() : Widget
+            }
+            class ApplicationIsOutdatedPage {
+                + build() : Widget
+            }
+        }
+
+        package strings {
+            class MetadataStrings {}
+        }
+    }
+}
+
+MetadataNotifier --> ApplicationMetadata : uses
+MetadataNotifier --> ReceiveDatabaseMetadataUpdates : uses
+MetadataNotifier --> DatabaseMetadata : uses
+
+ApplicationUpdatingPage --> MetadataStrings : uses
+ApplicationIsOutdatedPage --> MetadataStrings : uses
+
+
+@enduml
