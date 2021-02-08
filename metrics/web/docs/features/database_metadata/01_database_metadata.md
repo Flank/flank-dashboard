@@ -91,6 +91,12 @@ Let's consider the following sequence diagram explaining this process:
 
 ![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_sequence_diagram.puml)
 
+Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the `MetadataNotifier` changes on the `LoadingScreen` to be able to detect whether the application is fully initialized. 
+
+The another thing we should do is refresh the application page once the database finishing updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
+
+![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/database_finished_updating_sequence_diagram.puml)
+
 # Dependencies
 
 > What is the project blocked on?

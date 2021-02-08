@@ -6,7 +6,7 @@ package core.src.util {
     }
 }
 
-package database_metadata {
+package metadata {
     package domain {
         package entities {
             class DatabaseMetadata {
@@ -28,7 +28,9 @@ package database_metadata {
             class MetadataNotifier {
                 - receiveDatabaseMetadataUpdates : ReceiveDatabaseMetadataUpdates
                 - applicationMetadata : ApplicationMetadata
-                + isAppAvailable : bool 
+                + isDbSupported : bool 
+                + isDbUpdating : bool
+                + isIntialized : bool 
             }
         }
 

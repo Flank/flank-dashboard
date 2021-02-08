@@ -6,7 +6,7 @@ package base.domain.usecases {
     }
 }
 
-package database_metadata.domain {
+package metadata.domain {
     package entities {
         class DatabaseMetadata {
             + version : String
