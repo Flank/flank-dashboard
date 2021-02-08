@@ -19,7 +19,7 @@
 
                         + T build()
                         + void setAuthResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
-                        + ConfigFieldValidationResult buildResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
+                        + ConfigFieldValidationResult buildFieldResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
                     }
 
                     abstract class ConfigValidationResult<T extends Config> {
