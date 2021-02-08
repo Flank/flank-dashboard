@@ -140,6 +140,9 @@
     SourceConfigValidationResultBuilder -left-|> ConfigValidationResultBuilder
     DestinationConfigValidationResultBuilder -right-|> ConfigValidationResultBuilder
 
+    SourceConfigValidationResultBuilder -down-> SourceConfigValidationResult : builds
+    DestinationConfigValidationResultBuilder -down-> DestinationConfigValidationResult : builds
+
     Config -[hidden]down-> ConfigValidationResultBuilder
     DestinationValidationDelegate -[hidden]down-> DestinationConfigValidationResultBuilder
     SourceValidationDelegate -[hidden]down-> SourceConfigValidationResultBuilder
