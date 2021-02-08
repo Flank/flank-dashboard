@@ -18,8 +18,8 @@
                         - _authValidationResult : ConfigFieldValidationResult
 
                         + T build()
-                        + void setAuthResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
-                        + ConfigFieldValidationResult buildFieldResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
+                        + void setAuthResult(ConfigFieldValidationResult authResult)
+                        + void setInteruptReason(String reason)
                     }
 
                     abstract class ConfigValidationResult<T extends Config> {
@@ -89,7 +89,7 @@
                 abstract class SourceConfigValidationResultBuilder {
                     - _sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setSourceProjectIdResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
+                    + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
                 }
             }
         }
@@ -109,7 +109,7 @@
                 abstract class DestinationConfigValidationResultBuilder {
                     - _destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setDestinationProjectIdResult(ConfigFieldValidationConclusion conclusion, String additionalContext)
+                    + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
                 }
             }
         }
@@ -119,29 +119,30 @@
 
     ConfigValidatorFactory --> ConfigValidator : uses
 
-    ConfigValidator --> ValidationDelegate : uses
+    ConfigValidator -right-> ValidationDelegate : uses
     ConfigValidator --> ConfigValidationResult : uses
     ConfigValidator --> ConfigValidationResultBuilder : uses
     ConfigValidator --> Config : uses
 
-    ConfigValidationResultBuilder -down-> ConfigValidationResult : builds
-    ConfigValidationResultBuilder -down-> ConfigFieldValidationResult : uses
+    ConfigValidationResultBuilder --> ConfigValidationResult : builds
+    ConfigValidationResultBuilder --> ConfigFieldValidationResult : uses
 
-    ConfigValidationResult -down-> ConfigFieldValidationResult : uses
+    ConfigValidationResult --> ConfigFieldValidationResult : uses
 
-    ConfigFieldValidationResult -down-> ConfigFieldValidationConclusion : uses
+    ConfigFieldValidationResult --> ConfigFieldValidationConclusion : uses
 
-    SourceValidationDelegate -up-|> ValidationDelegate
-    DestinationValidationDelegate -down-|> ValidationDelegate
+    SourceValidationDelegate -left-|> ValidationDelegate
+    DestinationValidationDelegate -right-|> ValidationDelegate
 
-    SourceConfigValidationResult -up-|> ConfigValidationResult
-    DestinationConfigValidationResult -down-|> ConfigValidationResult
+    SourceConfigValidationResult -left-|> ConfigValidationResult
+    DestinationConfigValidationResult -right-|> ConfigValidationResult
 
-    SourceConfigValidationResultBuilder -up-|> ConfigValidationResultBuilder
-    DestinationConfigValidationResultBuilder -down-|> ConfigValidationResultBuilder
+    SourceConfigValidationResultBuilder -left-|> ConfigValidationResultBuilder
+    DestinationConfigValidationResultBuilder -right-|> ConfigValidationResultBuilder
 
-    ValidationDelegate -[hidden]down-> ConfigValidationResultBuilder
-
+    Config -[hidden]down-> ConfigValidationResultBuilder
     DestinationValidationDelegate -[hidden]down-> DestinationConfigValidationResultBuilder
     SourceValidationDelegate -[hidden]down-> SourceConfigValidationResultBuilder
+    SourceConfigValidationResultBuilder -[hidden]down-> SourceConfigValidationResult
+    DestinationConfigValidationResultBuilder -[hidden]down-> DestinationConfigValidationResult
 @enduml
