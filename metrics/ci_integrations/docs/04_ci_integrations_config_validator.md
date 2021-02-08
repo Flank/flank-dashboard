@@ -29,7 +29,7 @@ Let's start with the necessary abstractions. Consider the following classes:
 - A `ConfigValidationResultBuilder` is a class that simplifies the creation of the validation output and has the main `build` method that returns a `ConfigValidationResult`. See [output generation](#output-generation).
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
-Consider the following class diagram that demonstrates main abstract and base classes needed to implement the config validation feature:
+Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
 
 ![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_interfaces_class_diagram.puml)
 
@@ -154,4 +154,4 @@ The project will be unit-tested using the Dart's core [test](https://pub.dev/pac
         - Can be enabled by default to detect invalid configuration fields before synchronization.
     - Cons:
         - No ability to validate a config file without performing synchronization.
-        - Validation process may need extra permissions that are not essential for the synchronization.
+        - The validation process may need extra permissions that are not essential for synchronization.
