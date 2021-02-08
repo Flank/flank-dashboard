@@ -92,7 +92,7 @@ if (authInteraction.isError) {
 }
 
 // auth is valid, validation is continued
-resultBuilder.setAuthResult(ConfigFieldValidationResult.success);
+resultBuilder.setAuthResult(ConfigFieldValidationConclusion.success);
 
 // other fields validation
 ...
