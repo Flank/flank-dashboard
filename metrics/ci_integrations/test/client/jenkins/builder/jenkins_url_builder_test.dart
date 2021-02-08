@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
+
 import 'package:ci_integration/client/jenkins/builder/jenkins_url_builder.dart';
 import 'package:ci_integration/client/jenkins/constants/jenkins_constants.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
