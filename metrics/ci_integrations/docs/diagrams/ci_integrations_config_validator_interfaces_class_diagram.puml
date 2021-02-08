@@ -43,9 +43,9 @@
                         + isFailure : bool
                         + isUnknown : bool
 
-                        + ConfigValidationResult.success(String field, String additionalContext)
-                        + ConfigValidationResult.failure(String field, String additionalContext)
-                        + ConfigValidationResult.unknown(String field, String additionalContext)
+                        + ConfigFieldValidationResult.success(String field, String additionalContext)
+                        + ConfigFieldValidationResult.failure(String field, String additionalContext)
+                        + ConfigFieldValidationResult.unknown(String field, String additionalContext)
                         + String toString()
 
                         - ConfigValidationResult._(ConfigFieldValidationConclusion conclusion, String field, String additionalContext)

@@ -81,11 +81,11 @@ final authInteraction = delegate.validateAuth(auth);
 // auth is not valid
 if (authInteraction.isError) {
   final authAdditionalContext = authInteraction.message;
-  resultBuilder.setAuthResult(ConfigFieldValidationResult.failure, authAdditionalContext);
+  resultBuilder.setAuthResult(ConfigFieldValidationConclusion.failure, authAdditionalContext);
   
   // terminating validation as the auth needed for validation is invalid
   final additionalContext = 'Did not validate as the provided access token is invalid.';
-  final anotherFieldResult = resultBuilder.setAnotherFieldResult(ConfigFieldValidationResult.failure, additionalContext);
+  final anotherFieldResult = resultBuilder.setAnotherFieldResult(ConfigFieldValidationConclusion.failure, additionalContext);
 
   final validationResult = resultBuilder.build();
   return validationResult;
