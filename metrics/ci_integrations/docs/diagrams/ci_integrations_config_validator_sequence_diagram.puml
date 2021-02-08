@@ -10,6 +10,7 @@ participant CiIntegrationsRunner
 participant ValidateCommand
 participant CoolIntegrationConfigValidatorFactory
 participant CoolIntegrationConfigValidator
+participant CoolIntegrationConfigValidationResultBuilder
 participant CoolIntegrationValidationDelegate
 participant CoolIntegrationClient
 
@@ -47,41 +48,47 @@ alt auth is valid
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
     CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.success)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAuthResult(ConfigValidationConclusion.success)
+    activate CoolIntegrationConfigValidationResultBuilder
 
 
 else auth is not valid
 
     CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
     CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
-    CoolIntegrationConfigValidator  -> CoolIntegrationConfigValidator : validationResult.add(ConfigValidationResult.failure)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAuthResult(ConfigValidationConclusion.failure, additionalContext)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : terminating validation (invalid auth)
+    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : build()
+    CoolIntegrationConfigValidationResultBuilder --> CoolIntegrationConfigValidator : configValidationResult
+
+    CoolIntegrationConfigValidator --> ValidateCommand : configValidationResult (config is invalid)
 
 end
 
 
-alt another field can be validated
+CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
 
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
-    CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+deactivate CoolIntegrationClient
 
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-    deactivate CoolIntegrationClient
+CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
+CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+deactivate CoolIntegrationValidationDelegate
 
-    CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-    deactivate CoolIntegrationValidationDelegate
+CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : setAnotherFieldResult(ConfigValidationConclusion.success)
+CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : finalizing validation
+CoolIntegrationConfigValidator -> CoolIntegrationConfigValidationResultBuilder : build()
+CoolIntegrationConfigValidationResultBuilder --> CoolIntegrationConfigValidator : configValidationResult
 
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.success)
+deactivate CoolIntegrationConfigValidationResultBuilder
 
-else another field cannot be validated
-
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : validationResult.add(ConfigFieldValidationResult.unknown)
-
-end
+CoolIntegrationConfigValidator --> ValidateCommand : configValidationResult (config is valid)
 
 deactivate CoolIntegrationConfigValidator
 
-ConfigValidator --> ValidateCommand : validationResult
 ValidateCommand --> Bob : provides detailed conclusion on config
+
+deactivate ValidateCommand
 
 @enduml
