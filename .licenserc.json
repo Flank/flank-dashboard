@@ -6,6 +6,7 @@
   "ignore": [
     "design/",
     "docs/",
+    "metrics/docs/",
     "metrics/ci_integrations/docs/",
     "metrics/coverage_converter/docs/",
     "metrics/deploy/docs/",
