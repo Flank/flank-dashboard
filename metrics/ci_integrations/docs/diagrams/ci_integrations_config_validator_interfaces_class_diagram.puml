@@ -14,13 +14,15 @@
                 package model {
                     interface Config {}
 
-                    abstract class ConfigValidationResultBuilder<T extends ConfigValidationResult> {
-                        + authValidationResult : ConfigFieldValidationResult
-                        + interruptReason : String
+                    package builder {
+                        abstract class ConfigValidationResultBuilder<T extends ConfigValidationResult> {
+                            + authValidationResult : ConfigFieldValidationResult
+                            + interruptReason : String
 
-                        + T build()
-                        + void setAuthResult(ConfigFieldValidationResult authResult)
-                        + void setInterruptReason(String reason)
+                            + T build()
+                            + void setAuthResult(ConfigFieldValidationResult authResult)
+                            + void setInterruptReason(String reason)
+                        }
                     }
 
                     interface ConfigValidationResult<T extends Config> {
@@ -54,9 +56,9 @@
                 }
 
                 package validator {
-                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate> {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, K extends ConfigValidationResultBuilder> {
                         + validationDelegate : V
-
+                        + validationResultBuilder : K
                         + Future<ConfigValidationResult> validate(T config)
                     }
                 }
@@ -87,10 +89,12 @@
                     + sourceProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
-                abstract class SourceConfigValidationResultBuilder {
-                    + sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
+                package builder as source_builder {
+                    abstract class SourceConfigValidationResultBuilder {
+                        + sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
+                        + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
+                    }
                 }
             }
         }
@@ -107,10 +111,12 @@
                     + destinationProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
-                abstract class DestinationConfigValidationResultBuilder {
-                    + destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
+                package builder as destination_builder {
+                    abstract class DestinationConfigValidationResultBuilder {
+                        + destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
 
-                    + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
+                        + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
+                    }
                 }
             }
         }
@@ -145,8 +151,10 @@
     DestinationConfigValidationResultBuilder -down-> DestinationConfigValidationResult : builds
 
     Config -[hidden]down-> ConfigValidationResultBuilder
+
     DestinationValidationDelegate -[hidden]down-> DestinationConfigValidationResultBuilder
     SourceValidationDelegate -[hidden]down-> SourceConfigValidationResultBuilder
+
     SourceConfigValidationResultBuilder -[hidden]down-> SourceConfigValidationResult
     DestinationConfigValidationResultBuilder -[hidden]down-> DestinationConfigValidationResult
 @enduml
