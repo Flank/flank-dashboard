@@ -76,23 +76,26 @@ final resultBuilder = ConfigValidationResultBuilder();
 // validating auth
 final accessToken = config.accessToken;
 final auth = AuthorizationBase(accessToken);
-final authInteraction = delegate.validateAuth(auth);
+final authInteraction = validationDelegate.validateAuth(auth);
 
 // auth is not valid
 if (authInteraction.isError) {
   final authAdditionalContext = authInteraction.message;
-  resultBuilder.setAuthResult(ConfigFieldValidationConclusion.failure, authAdditionalContext);
+  final authResult = ConfigFieldValidationResult.failure('accessToken', authAdditionalContext)
+  resultBuilder.setAuthResult(authResult);
   
   // terminating validation as the auth needed for validation is invalid
-  final additionalContext = 'Did not validate as the provided access token is invalid.';
-  final anotherFieldResult = resultBuilder.setAnotherFieldResult(ConfigFieldValidationConclusion.failure, additionalContext);
+  final interuptReason = 'Cannot continue the validation, as the provided access token is invalid.';
+  
+  resultBuilder.setInteruptReason(interuptReason);
 
   final validationResult = resultBuilder.build();
   return validationResult;
 }
 
 // auth is valid, validation is continued
-resultBuilder.setAuthResult(ConfigFieldValidationConclusion.success);
+final authResult = ConfigFieldValidationResult.success('accessToken');
+resultBuilder.setAuthResult(authResult);
 
 // other fields validation
 ...
