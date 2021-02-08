@@ -15,14 +15,15 @@
                     interface Config {}
 
                     abstract class ConfigValidationResultBuilder<T extends ConfigValidationResult> {
-                        - _authValidationResult : ConfigFieldValidationResult
+                        + authValidationResult : ConfigFieldValidationResult
+                        + interruptReason : String
 
                         + T build()
                         + void setAuthResult(ConfigFieldValidationResult authResult)
                         + void setInterruptReason(String reason)
                     }
 
-                    abstract class ConfigValidationResult<T extends Config> {
+                    interface ConfigValidationResult<T extends Config> {
                         + authValidationResult : ConfigFieldValidationResult
 
                         + String toString()
@@ -82,12 +83,12 @@
             }
 
             package model as source_model {
-                abstract class SourceConfigValidationResult {
+                interface SourceConfigValidationResult {
                     + sourceProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
                 abstract class SourceConfigValidationResultBuilder {
-                    - _sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
+                    + sourceProjectIdFieldValidationResult : ConfigFieldValidationResult
 
                     + void setSourceProjectIdResult(ConfigFieldValidationResult sourceProjectIdResult)
                 }
@@ -102,12 +103,12 @@
             }
 
             package model as destination_model {
-                abstract class DestinationConfigValidationResult {
+                interface DestinationConfigValidationResult {
                     + destinationProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
                 abstract class DestinationConfigValidationResultBuilder {
-                    - _destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
+                    + destinationProjectIdFieldValidationResult : ConfigFieldValidationResult
 
                     + void setDestinationProjectIdResult(ConfigFieldValidationResult destinationProjectIdResult)
                 }
@@ -119,7 +120,7 @@
 
     ConfigValidatorFactory --> ConfigValidator : uses
 
-    ConfigValidator -right-> ValidationDelegate : uses
+    ConfigValidator -left-> ValidationDelegate : uses
     ConfigValidator --> ConfigValidationResult : uses
     ConfigValidator --> ConfigValidationResultBuilder : uses
     ConfigValidator --> Config : uses
