@@ -21,7 +21,7 @@
                         + void setAuthResult(ConfigFieldValidationResult authResult)
                     }
 
-                    interface ConfigValidationResult<T extends Config> {
+                    abstract class ConfigValidationResult<T extends Config> {
                         + authValidationResult : ConfigFieldValidationResult
 
                         + String toString()
@@ -81,7 +81,7 @@
             }
 
             package model as source_model {
-                interface SourceConfigValidationResult {
+                abstract class SourceConfigValidationResult {
                     + sourceProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
@@ -101,7 +101,7 @@
             }
 
             package model as destination_model {
-                interface DestinationConfigValidationResult {
+                abstract class DestinationConfigValidationResult {
                     + destinationProjectIdValidationResult : ConfigFieldValidationResult
                 }
 
