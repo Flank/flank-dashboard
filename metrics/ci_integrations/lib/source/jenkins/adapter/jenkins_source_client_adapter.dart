@@ -76,7 +76,18 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
 
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
-    return Future.value(build.coverage);
+    ArgumentError.checkNotNull(build, 'build');
+
+    logger.info('Fetching a build by the URL: ${build.apiUrl}...');
+    final interaction = await jenkinsClient.fetchBuildByUrl(build.apiUrl);
+    final jenkinsBuild = _processInteraction(interaction);
+
+    if (jenkinsBuild == null) return null;
+
+    final artifact = await _fetchCoverageArtifact(jenkinsBuild);
+    final coverage = CoverageData.fromJson(artifact);
+
+    return coverage?.percent;
   }
 
   /// Fetches builds data for the project with given [projectId].
@@ -87,10 +98,10 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) async {
     logger.info('Fetching builds for the project $projectId...');
-    final newBuildsFetchResult =
+    final interaction =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
-    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
-    return newBuildsFetchResult.result;
+
+    return _processInteraction(interaction);
   }
 
   /// Fetches latest builds for the project with the given [projectId] which
@@ -130,14 +141,6 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     }
 
     return builds;
-  }
-
-  /// Throws a [StateError] with the message of [interactionResult] if this
-  /// result is [InteractionResult.isError].
-  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
-    if (interactionResult.isError) {
-      throw StateError(interactionResult.message);
-    }
   }
 
   /// Processes the given [builds] to the list of [BuildData]s.
@@ -184,37 +187,31 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
-      coverage: await _fetchCoverage(jenkinsBuild),
+      apiUrl: jenkinsBuild.apiUrl,
     );
   }
 
-  /// Fetches the code coverage for the given [build].
+  /// Fetches a coverage artifact from the given [build].
   ///
-  /// Returns `null` if the code coverage artifact for the given build
-  /// is not found.
-  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
-    logger.info('Fetching coverage artifact for a build #${build.number}...');
-    final coverageArtifact = build.artifacts.firstWhere(
+  /// Returns `null` if either the given [build] or its artifacts is `null`,
+  /// or the `coverage-summary.json` artifact is not found.
+  Future<Map<String, dynamic>> _fetchCoverageArtifact(
+    JenkinsBuild build,
+  ) async {
+    logger.info(
+      'Fetching a coverage artifact for the build #${build.number}...',
+    );
+    if (build?.artifacts == null) return null;
+
+    final artifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
     );
 
-    CoverageData coverage;
+    if (artifact == null) return null;
 
-    if (coverageArtifact != null) {
-      final artifactContentFetchResult =
-          await jenkinsClient.fetchArtifactByRelativePath(
-        build.url,
-        coverageArtifact.relativePath,
-      );
-
-      _throwIfInteractionUnsuccessful(artifactContentFetchResult);
-
-      final artifactContent = artifactContentFetchResult.result;
-      coverage = CoverageData.fromJson(artifactContent);
-    }
-
-    return coverage?.percent;
+    final interaction = await jenkinsClient.fetchArtifact(build, artifact);
+    return _processInteraction(interaction);
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
@@ -227,6 +224,19 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Processes the given [interaction].
+  ///
+  /// Throws the [StateError], if the given interaction
+  /// is [InteractionResult.isError]. Otherwise, returns
+  /// its [InteractionResult.result].
+  T _processInteraction<T>(InteractionResult<T> interaction) {
+    if (interaction.isError) {
+      throw StateError(interaction.message);
+    }
+
+    return interaction.result;
   }
 
   @override

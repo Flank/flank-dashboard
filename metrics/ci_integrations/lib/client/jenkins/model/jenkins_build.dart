@@ -23,6 +23,9 @@ class JenkinsBuild extends Equatable {
   /// A result of this build.
   final JenkinsBuildResult result;
 
+  /// A link to access data of this build using Jenkins API.
+  final String apiUrl;
+
   /// A link to access this build in Jenkins.
   final String url;
 
@@ -34,7 +37,7 @@ class JenkinsBuild extends Equatable {
 
   @override
   List<Object> get props =>
-      [number, duration, timestamp, result, url, artifacts];
+      [number, duration, timestamp, result, apiUrl, url, artifacts];
 
   /// Creates a new instance of the [JenkinsBuild].
   const JenkinsBuild({
@@ -42,47 +45,11 @@ class JenkinsBuild extends Equatable {
     this.duration,
     this.timestamp,
     this.result,
+    this.apiUrl,
     this.url,
     this.building,
     this.artifacts,
   });
-
-  /// Creates an instance of Jenkins build from the decoded JSON object.
-  ///
-  /// Returns `null` if [json] is `null`.
-  factory JenkinsBuild.fromJson(Map<String, dynamic> json) {
-    if (json == null) return null;
-
-    final timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int);
-    final duration = json['duration'] == null
-        ? null
-        : Duration(milliseconds: json['duration'] as int);
-    const resultMapper = JenkinsBuildResultMapper();
-    final result = resultMapper.map(json['result'] as String);
-
-    return JenkinsBuild(
-      number: json['number'] as int,
-      duration: duration,
-      timestamp: timestamp,
-      result: result,
-      url: json['url'] as String,
-      building: json['building'] as bool,
-      artifacts: JenkinsBuildArtifact.listFromJson(
-        json['artifacts'] as List<dynamic>,
-      ),
-    );
-  }
-
-  /// Creates a list of Jenkins builds from the [list] of decoded JSON objects.
-  ///
-  /// Returns `null` if the given list is `null`.
-  static List<JenkinsBuild> listFromJson(List<dynamic> list) {
-    return list
-        ?.map((json) => JenkinsBuild.fromJson(json as Map<String, dynamic>))
-        ?.toList();
-  }
 
   /// Converts object into the JSON encodable [Map].
   Map<String, dynamic> toJson() {

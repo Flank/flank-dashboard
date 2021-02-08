@@ -3,6 +3,7 @@
 
 import 'package:ci_integration/client/jenkins/mapper/jenkins_build_result_mapper.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_artifacts_test_data.dart';
@@ -34,67 +35,30 @@ void main() {
       artifacts: JenkinsArtifactsTestData.artifacts,
     );
 
-    test(".fromJson() returns null if a given json is null", () {
-      final job = JenkinsBuild.fromJson(null);
+    test("creates a new instance with the given parameters", () {
+      const duration = Duration(milliseconds: 10000);
+      const result = JenkinsBuildResult.aborted;
+      const artifacts = JenkinsArtifactsTestData.artifacts;
+      const apiUrl = 'api-url';
 
-      expect(job, isNull);
+      final jenkinsBuild = JenkinsBuild(
+        number: number,
+        duration: duration,
+        timestamp: timestamp,
+        result: result,
+        url: url,
+        apiUrl: apiUrl,
+        artifacts: artifacts,
+      );
+
+      expect(jenkinsBuild.number, equals(number));
+      expect(jenkinsBuild.duration, equals(duration));
+      expect(jenkinsBuild.timestamp, equals(timestamp));
+      expect(jenkinsBuild.result, equals(result));
+      expect(jenkinsBuild.url, equals(url));
+      expect(jenkinsBuild.apiUrl, equals(apiUrl));
+      expect(jenkinsBuild.artifacts, equals(artifacts));
     });
-
-    test(".fromJson() creates an instance from a json map", () {
-      final job = JenkinsBuild.fromJson(buildJson);
-
-      expect(job, equals(jenkinsBuild));
-    });
-
-    test(
-      ".listFromJson() maps a null list as null one",
-      () {
-        final jobs = JenkinsBuild.listFromJson(null);
-
-        expect(jobs, isNull);
-      },
-    );
-
-    test(
-      ".listFromJson() maps an empty list as empty one",
-      () {
-        final jobs = JenkinsBuild.listFromJson([]);
-
-        expect(jobs, isEmpty);
-      },
-    );
-
-    test(
-      ".listFromJson() maps a list of jobs json maps",
-      () {
-        const _number = number + 1;
-        const _duration = duration + 10000;
-        final _timestamp = timestamp.add(const Duration(days: 1));
-        const _result = 'SUCCESS';
-        const _url = 'anotherUrl';
-
-        final anotherBuildJson = {
-          'number': _number,
-          'duration': _duration,
-          'timestamp': _timestamp.millisecondsSinceEpoch,
-          'result': _result,
-          'url': _url,
-          'artifacts': null,
-        };
-
-        final anotherBuild = JenkinsBuild(
-          number: _number,
-          duration: const Duration(milliseconds: _duration),
-          timestamp: _timestamp,
-          result: resultMapper.map(_result),
-          url: _url,
-        );
-
-        final jobs = JenkinsBuild.listFromJson([buildJson, anotherBuildJson]);
-
-        expect(jobs, equals([jenkinsBuild, anotherBuild]));
-      },
-    );
 
     test(".toJson() converts an instance to the json map", () {
       final json = jenkinsBuild.toJson();

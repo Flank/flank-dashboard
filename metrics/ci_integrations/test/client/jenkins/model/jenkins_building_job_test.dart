@@ -6,6 +6,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_artifacts_test_data.dart';
+import '../test_utils/test_data/jenkins_build_test_data.dart';
 
 void main() {
   group("JenkinsBuildingJob", () {
@@ -16,28 +17,30 @@ void main() {
 
     setUpAll(() {
       const firstBuildNumber = 1;
-      const firstBuildUrl = 'firstBuildUrl';
+      const firstBuildUrl = 'http://test.com/1';
       const secondBuildNumber = 2;
-      const secondBuildUrl = 'secondBuildUrl';
+      const secondBuildUrl = 'http://test.com/2';
       const buildingJobName = 'name';
       const buildingJobFullName = 'fullName';
       const buildingJobUrl = 'url';
 
-      const firstBuild = JenkinsBuild(
+      final firstBuild = JenkinsBuild(
         number: firstBuildNumber,
         url: firstBuildUrl,
-        artifacts: [JenkinsArtifactsTestData.fileArtifact],
+        apiUrl: JenkinsBuildTestData.getApiUrl('http://test.com', 1),
+        artifacts: const [JenkinsArtifactsTestData.fileArtifact],
       );
 
-      const lastBuild = JenkinsBuild(
+      final lastBuild = JenkinsBuild(
         number: secondBuildNumber,
         url: secondBuildUrl,
-        artifacts: [JenkinsArtifactsTestData.coverageArtifact],
+        apiUrl: JenkinsBuildTestData.getApiUrl('http://test.com', 2),
+        artifacts: const [JenkinsArtifactsTestData.coverageArtifact],
       );
 
       jenkinsBuild = firstBuild;
 
-      buildingJob = const JenkinsBuildingJob(
+      buildingJob = JenkinsBuildingJob(
         name: buildingJobName,
         fullName: buildingJobFullName,
         url: buildingJobUrl,

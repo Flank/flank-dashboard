@@ -36,6 +36,22 @@ class UrlUtils {
     return uri.toString();
   }
 
+  /// Removes the slash (`/`) from the end of the given [path].
+  ///
+  /// If the given [path] does not end with the slash symbol, returns unchanged
+  /// value.
+  ///
+  /// Throws [ArgumentError] is the given [path] is `null`.
+  static String removeTrailingSlash(String path) {
+    ArgumentError.checkNotNull(path, 'path');
+
+    if (path.endsWith('/')) {
+      return path.substring(0, path.length - 1);
+    }
+
+    return path;
+  }
+
   /// Transforms [path] replacing separators with additional path segments
   /// specified by [replacement].
   ///
