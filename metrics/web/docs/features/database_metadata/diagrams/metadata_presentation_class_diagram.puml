@@ -2,7 +2,13 @@
 
 package core.src.util {
     class ApplicationMetadata {
-        version() : String
+        + version() : String
+    }
+}
+
+package common.presentation.widgets {
+    class ApplicationUnavailableScaffold {
+        + build(BuildContext context) : Widget
     }
 }
 
@@ -10,15 +16,15 @@ package metadata {
     package domain {
         package entities {
             class DatabaseMetadata {
-                version : String
-                isUpdating : bool
+                + version : String
+                + isUpdating : bool
             }
         }
 
 
         package usecases {
             class ReceiveDatabaseMetadataUpdates {
-                call() : Stream<DatabaseMetadata>
+                + call() : Stream<DatabaseMetadata>
             }
         }
     }
@@ -44,7 +50,10 @@ package metadata {
         }
 
         package strings {
-            class MetadataStrings {}
+            class MetadataStrings {
+                + {static} applicationIsOutdated : String
+                + {static} databaseUpdating : String
+            }
         }
     }
 }

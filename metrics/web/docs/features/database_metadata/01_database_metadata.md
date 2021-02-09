@@ -72,7 +72,7 @@ Let's consider the class diagram of the data layer:
 
 ### Presentation Layer
 
-Once we have a `domain` and a `data` layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` to show them if the database currently cannot handle any requests.
+Once we have a `domain` and a `data` layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` to show them if the database currently cannot handle any requests. Since `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` pages are pretty similar for now, we should create a common widget that will contain the common part (literally everything except of displayed text) for these pages.
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
