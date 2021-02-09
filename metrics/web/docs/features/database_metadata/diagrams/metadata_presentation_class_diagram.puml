@@ -65,5 +65,7 @@ MetadataNotifier --> DatabaseMetadata : uses
 ApplicationUpdatingPage --> MetadataStrings : uses
 ApplicationIsOutdatedPage --> MetadataStrings : uses
 
+ApplicationUpdatingPage -up-> ApplicationUnavailableScaffold : uses
+ApplicationIsOutdatedPage -up-> ApplicationUnavailableScaffold : uses
 
 @enduml
