@@ -140,8 +140,9 @@ Consider the following package structure for the `CoolIntegration` config valida
 >       * validation_delegate/
 >         * cool_integration_destination_validation_delegate.dart
 >       * model/
+>         * builder/
+>           * cool_integration_destination_validation_result_builder.dart
 >         * cool_integration_destination_validation_result.dart
->         * cool_integration_destination_validation_result_builder.dart
 > * client/
 >   * cool_integration/
 >     * cool_integration_client.dart
