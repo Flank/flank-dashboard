@@ -23,10 +23,11 @@ This document aims the following goals:
 ### Main interfaces and classes
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ValidationResult` is a class that holds the validation conclusions on each config's field. A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
-- A `ConfigValidator` is a class that provides the validation functionality. It's main `validate` method returns a `ValidationResult` as an output.
+- A `ValidationResult` is a class that holds the validation conclusions on each config's field.
+- A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
+- A `ConfigValidator` is a class responsible for validating the configuration. The `validate` method of this class returns a `ValidationResult` as an output.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
-- A `ValidationResultBuilder` is a class that simplifies the creation of the validation output and has the main `build` method that returns a `ValidationResult`. See [output generation](#output-generation).
+- A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult` and has the main `build` method that returns a `ValidationResult`. See [output generation](#output-generation) for more details.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
 Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
@@ -40,6 +41,8 @@ Consider the following package structure for the abstract and base classes of th
 >     * base/
 >       * config/
 >         * model/
+>           * builder/
+>             * validation_result_builder.dart
 >           * validation_result.dart
 >           * field_validation_result.dart
 >           * field_validation_conclusion.dart
@@ -54,20 +57,22 @@ Consider the following package structure for the abstract and base classes of th
 >         * validation_delegate/
 >           * source_validation_delegate.dart
 >         * model/
+>           * builder/
+>             * source_validation_result_builder.dart
 >           * source_validation_result.dart
->           * source_validation_result_builder.dart
 >     * destination/
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
 >         * model/
+>           * builder/
+>             * destination_validation_result_builder.dart
 >           * destination_validation_result.dart
->           * destination_validation_result_builder.dart
 
 
 #### Output Generation
 
-It is very necessary to provide a clear and understandable output and at the same time keep the code clean and testable. To do that, let's use the `ValidationResultBuilder` class. This class represents a `Builder` pattern and its main goal is to assemble the `ValidationResult` step by step. Consider the following code that demonstrates the `ValidationResultBuilder` usage within the `validate` method of the `ConfigValidator`:
+It is very necessary to provide a clear and understandable output and at the same time keep the code clean and testable. To do that, let's use the `ValidationResultBuilder` class. This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step. Consider the following code that demonstrates the `ValidationResultBuilder` usage within the `validate` method of the `ConfigValidator`:
 
 ```dart
 
@@ -86,11 +91,9 @@ if (authInteraction.isError) {
   
   // terminating validation as the auth needed for validation is invalid
   final interruptReason = 'Cannot continue the validation, as the provided access token is invalid.';
-  
   resultBuilder.setInterruptReason(interuptReason);
 
-  final validationResult = resultBuilder.build();
-  return validationResult;
+  return resultBuilder.build();
 }
 
 // auth is valid, validation is continued
@@ -100,8 +103,7 @@ resultBuilder.setAuthResult(authResult);
 // other fields validation
 ...
 
-final result = resultBuilder.build();
-return result;
+return resultBuilder.build();
 
 ```
 
@@ -109,7 +111,7 @@ return result;
 
 Consider the following steps needed to be able to validate the given configuration file:
 
-1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ValidationResult`, `SourceValidationResult`, `DestinationValidationResult`, `ValidationResultBuilder`, `SourceValidationResultBuilder`, `DestinationValidationResultBuilder` and `FieldValidationResult`.
+1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ValidationResult`, `SourceValidationResult`, `DestinationValidationResult`, `ValidationResultBuilder`, `SourceValidationResultBuilder`, `DestinationValidationResultBuilder`, and `FieldValidationResult`.
 2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ValidationResult`, `ValidationResultBuilder` `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create a `ValidateCommand` class.
@@ -147,7 +149,7 @@ Consider the following package structure for the `CoolIntegration` config valida
 ## Testing
 > How will the project be tested?
 
-The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a validation client that performs direct HTTP calls.
+The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used to test new methods of the clients that perform direct HTTP calls.
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)

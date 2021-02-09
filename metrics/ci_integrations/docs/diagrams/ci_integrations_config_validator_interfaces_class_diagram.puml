@@ -20,12 +20,12 @@
                             + interruptReason : String
 
                             + T build()
-                            + void setAuthResult(FieldValidationResult authResult)
+                            + void setAuthValidationResult(FieldValidationResult authResult)
                             + void setInterruptReason(String reason)
                         }
                     }
 
-                    interface ValidationResult<T extends Config> {
+                    interface ValidationResult {
                         + authValidationResult : FieldValidationResult
 
                         + String toString()
@@ -42,24 +42,21 @@
                         + field : String
                         + additionalContext : String
 
-                        + isSuccess : bool
-                        + isFailure : bool
-                        + isUnknown : bool
-
-                        + FieldValidationResult.success(String field, String additionalContext)
-                        + FieldValidationResult.failure(String field, String additionalContext)
-                        + FieldValidationResult.unknown(String field, String additionalContext)
+                        + FieldValidationResult success(String field, String additionalContext)
+                        + FieldValidationResult failure(String field, String additionalContext)
+                        + FieldValidationResult unknown(String field, String additionalContext)
                         + String toString()
 
-                        - ValidationResult._(FieldValidationConclusion conclusion, String field, String additionalContext)
+                        - FieldValidationResult _(FieldValidationConclusion conclusion, String field, String additionalContext)
                     }
                 }
 
                 package validator {
-                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, K extends ValidationResultBuilder> {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
                         + validationDelegate : V
-                        + validationResultBuilder : K
-                        + Future<ValidationResult> validate(T config)
+                        + validationResultBuilder : ConfigValidationResultBuilder<R>
+
+                        + Future<R> validate(T config)
                     }
                 }
 
@@ -90,10 +87,10 @@
                 }
 
                 package builder as source_builder {
-                    abstract class SourceValidationResultBuilder {
+                    abstract class SourceValidationResultBuilder<T extends SourceValidationResult> {
                         + sourceProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setSourceProjectIdResult(FieldValidationResult sourceProjectIdResult)
+                        + void setSourceProjectIdValidationResult(FieldValidationResult sourceProjectIdResult)
                     }
                 }
             }
@@ -112,10 +109,10 @@
                 }
 
                 package builder as destination_builder {
-                    abstract class DestinationValidationResultBuilder {
+                    abstract class DestinationValidationResultBuilder<T extends DestinationValidationResult> {
                         + destinationProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setDestinationProjectIdResult(FieldValidationResult destinationProjectIdResult)
+                        + void setDestinationProjectIdValidationResult(FieldValidationResult destinationProjectIdResult)
                     }
                 }
             }
