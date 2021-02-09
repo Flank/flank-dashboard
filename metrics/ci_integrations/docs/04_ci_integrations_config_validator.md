@@ -32,7 +32,7 @@ Let's start with the necessary abstractions. Consider the following classes:
 
 Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_interfaces_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_interfaces_class_diagram.puml)
 
 Consider the following package structure for the abstract and base classes of the config validation feature: 
 
@@ -122,11 +122,11 @@ Assume a `CoolIntegration` as a destination party for which we want to provide t
 
 - Class diagram:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_destination_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_destination_class_diagram.puml)
 
 - Sequence diagram:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
 
 Consider the following package structure for the `CoolIntegration` config validation feature:
 
