@@ -2,7 +2,7 @@ steps:
   - label: "Dummy step"
     key: "dummy"
     commands:
-      - bash scripts/random_sleep.sh
+      - bash scripts/random_sleep/random_sleep.sh
     plugins:
       - docker-compose:
           config: ".buildkite/compose-files/docker-compose.yml"
