@@ -85,6 +85,18 @@ jobs:
         run: dart2native -o ${{ matrix.output_name }} bin/main.dart
         working-directory: metrics/ci_integrations/
 
+      - name: Generate Linux SHA256 Hash
+        if: matrix.os == 'ubuntu-latest'
+        run: shasum -a 256 metrics/ci_integrations/ci_integrations_linux > metrics/ci_integrations/ci_integrations_linux.sha256
+
+      - name: Upload Linux SHA256 Hash
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ci_integrations_linux_sha256
+          path: metrics/ci_integrations/ci_integrations_linux.sha256
+          if-no-files-found: error
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -125,13 +137,19 @@ jobs:
           name: ci_integrations_linux
           path: metrics/ci_integrations/
 
+      - name: Download Linux SHA256 Hash
+        uses: actions/download-artifact@v2
+        with:
+          name: ci_integrations_linux_sha256
+          path: metrics/ci_integrations/
+
       - name: Delete release
         run: |
           gh release delete ci_integrations-snapshot -y
           git push --delete origin ci_integrations-snapshot
 
       - name: Create release
-        run: gh release create ci_integrations-snapshot metrics/ci_integrations/ci_integrations_macos metrics/ci_integrations/ci_integrations_linux --prerelease --title 'CI Integrations snapshot'
+        run: gh release create ci_integrations-snapshot metrics/ci_integrations/ci_integrations_macos metrics/ci_integrations/ci_integrations_linux metrics/ci_integrations/ci_integrations_linux.sha256 --prerelease --title 'CI Integrations snapshot'
 
   notify-actions:
     name: Notify about building finished
