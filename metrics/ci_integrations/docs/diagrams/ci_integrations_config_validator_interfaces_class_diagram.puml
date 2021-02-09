@@ -22,7 +22,6 @@
                             + T build()
                             + void setAuthValidationResult(FieldValidationResult authValidationResult)
                             + void setInterruptReason(String reason)
-                            + void reset()
                         }
                     }
 

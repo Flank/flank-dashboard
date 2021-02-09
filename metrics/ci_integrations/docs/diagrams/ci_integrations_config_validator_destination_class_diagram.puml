@@ -1,6 +1,11 @@
 @startuml ci_integrations_config_validator_class_diagram
 
     package integration.interface {
+
+        package base.config {
+            abstract class ConfigValidator {}
+        }
+
         package destination.config as interface_config {
 
             package validation_delegate as interface_delegate {
@@ -25,7 +30,9 @@
     package destination.cool_integration {
 
         package party {
-            class CoolIntegrationDestinationParty {}
+            class CoolIntegrationDestinationParty {
+                + validatorFactory : CoolIntegrationValidatorFactory
+            }
         }
 
         package config as cool_integration_config {
@@ -47,10 +54,16 @@
 
             package model as cool_integration_model {
                 package builder as cool_integration_builder {
-                    class CoolIntegrationDestinationValidationResultBuilder {}
+                    class CoolIntegrationDestinationValidationResultBuilder {
+                        + coolFieldValidationResult : FieldValidationResult
+
+                        + setCoolFieldValidationResult(FieldValidationResult coolFieldValidationResult)
+                    }
                 }
 
-                class CoolIntegrationDestinationValidationResult {}
+                class CoolIntegrationDestinationValidationResult {
+                    + coolFieldValidationResult : FieldValidationResult
+                }
             }
         }
     }
@@ -91,10 +104,15 @@
     
     CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResultBuilder : uses
     CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResult : uses
+    CoolIntegrationDestinationValidator -down-|> ConfigValidator
 
     CoolIntegrationDestinationValidationResultBuilder -right-> CoolIntegrationDestinationValidationResult : builds
 
     CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
 
     CoolIntegrationValidatorFactory -[hidden]left-> CoolIntegrationClient
+    DestinationValidationDelegate -[hidden]right-> DestinationValidationResult
+
+    DestinationValidationResult -[hidden]left-> CoolIntegrationDestinationValidationResultBuilder
+
 @enduml

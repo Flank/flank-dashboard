@@ -62,6 +62,7 @@ else auth is not valid
     CoolIntegrationValidationResultBuilder --> CoolIntegrationConfigValidator : validationResult
 
     CoolIntegrationConfigValidator --> ValidateCommand : validationResult
+    ValidateCommand --> Bob : provides detailed conclusion on config validation
 
 end
 
@@ -86,7 +87,7 @@ CoolIntegrationConfigValidator --> ValidateCommand : validationResult
 
 deactivate CoolIntegrationConfigValidator
 
-ValidateCommand --> Bob : provides detailed conclusion on config
+ValidateCommand --> Bob : provides detailed conclusion on config validation
 
 deactivate ValidateCommand
 
