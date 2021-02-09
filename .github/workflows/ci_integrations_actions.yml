@@ -86,9 +86,11 @@ jobs:
         working-directory: metrics/ci_integrations/
 
       - name: Generate Linux SHA256 Hash
+        if: matrix.os == 'ubuntu-latest'
         run: shasum metrics/ci_integrations/ci_integrations_linux > metrics/ci_integrations/ci_integrations_linux.sha256
 
       - name: Upload Linux SHA256 Hash
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
         with:
           name: ci_integrations_linux_sha256
