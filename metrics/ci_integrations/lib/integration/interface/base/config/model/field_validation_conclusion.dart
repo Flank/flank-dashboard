@@ -3,8 +3,8 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 
-/// Represents a conclusion of the [Config] field validation.
-enum ConfigFieldValidationConclusion {
+/// Represents a validation conclusion for a specific [Config] field.
+enum FieldValidationConclusion {
   /// Represents a conclusion that the field is valid.
   valid,
 

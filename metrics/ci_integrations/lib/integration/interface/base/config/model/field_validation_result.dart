@@ -2,12 +2,13 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
-import 'package:ci_integration/integration/interface/base/config/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/integration/interface/base/config/model/field_validation_conclusion.dart';
+import 'package:ci_integration/integration/interface/base/config/model/mappers/field_validation_conclusion_mapper.dart';
 
 /// A class that represents a validation result for a single [Config]'s field.
-class ConfigFieldValidationResult {
-  /// A [ConfigFieldValidationConclusion] of this validation result.
-  final ConfigFieldValidationConclusion conclusion;
+class FieldValidationResult {
+  /// A [FieldValidationConclusion] of this validation result.
+  final FieldValidationConclusion conclusion;
 
   /// A name of the validated field.
   final String field;
@@ -16,19 +17,19 @@ class ConfigFieldValidationResult {
   final String additionalContext;
 
   /// Indicates whether this validation result is successful.
-  bool get isSuccess => conclusion == ConfigFieldValidationConclusion.valid;
+  bool get isSuccess => conclusion == FieldValidationConclusion.valid;
 
   /// Indicates whether this validation result is failure.
-  bool get isFailure => conclusion == ConfigFieldValidationConclusion.invalid;
+  bool get isFailure => conclusion == FieldValidationConclusion.invalid;
 
   /// Indicates whether this validation result is unknown.
-  bool get isUnknown => conclusion == ConfigFieldValidationConclusion.unknown;
+  bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
 
-  /// Creates an instance of the [ConfigFieldValidationConclusion]
+  /// Creates an instance of the [FieldValidationConclusion]
   /// with the given parameters.
   ///
   /// Throws an [ArgumentError] if the given [field] is `null`.
-  ConfigFieldValidationResult._(
+  FieldValidationResult._(
     this.conclusion,
     this.field, [
     this.additionalContext,
@@ -36,49 +37,63 @@ class ConfigFieldValidationResult {
     ArgumentError.checkNotNull(field, 'field');
   }
 
-  /// Creates an instance of the [ConfigFieldValidationResult] with the given
+  /// Creates an instance of the [FieldValidationResult] with the given
   /// [field] and [additionalContext].
   ///
   /// Represents a successful validation result.
   ///
   /// Throws an [ArgumentError] if the given [field] is `null`.
-  ConfigFieldValidationResult.success(
+  FieldValidationResult.success(
     String field, [
     String additionalContext,
   ]) : this._(
-          ConfigFieldValidationConclusion.valid,
+          FieldValidationConclusion.valid,
           field,
           additionalContext,
         );
 
-  /// Creates an instance of the [ConfigFieldValidationResult] with the given
+  /// Creates an instance of the [FieldValidationResult] with the given
   /// [field] and [additionalContext].
   ///
   /// Represents a failed validation result.
   ///
   /// Throws an [ArgumentError] if the given [field] is `null`.
-  ConfigFieldValidationResult.failure(
+  FieldValidationResult.failure(
     String field, [
     String additionalContext,
   ]) : this._(
-          ConfigFieldValidationConclusion.invalid,
+          FieldValidationConclusion.invalid,
           field,
           additionalContext,
         );
 
-  /// Creates an instance of the [ConfigFieldValidationResult] with the given
+  /// Creates an instance of the [FieldValidationResult] with the given
   /// [field] and [additionalContext].
   ///
   /// Represents an unknown validation result or indicates that the validation
   /// didn't run.
   ///
   /// Throws an [ArgumentError] if the given [field] is `null`.
-  ConfigFieldValidationResult.unknown(
+  FieldValidationResult.unknown(
     String field, [
     String additionalContext,
   ]) : this._(
-          ConfigFieldValidationConclusion.unknown,
+          FieldValidationConclusion.unknown,
           field,
           additionalContext,
         );
+
+  @override
+  String toString() {
+    const conclusionMapper = FieldValidationConclusionMapper();
+    final conclusionValue = conclusionMapper.unmap(conclusion);
+
+    String result = 'Validation result for the $field: $conclusionValue.';
+
+    if (additionalContext != null) {
+      result = '$result Additional context: $additionalContext';
+    }
+
+    return result;
+  }
 }
