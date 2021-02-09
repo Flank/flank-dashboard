@@ -112,7 +112,7 @@ return resultBuilder.build();
 Consider the following steps needed to be able to validate the given configuration file:
 
 1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ValidationResult`, `SourceValidationResult`, `DestinationValidationResult`, `ValidationResultBuilder`, `SourceValidationResultBuilder`, `DestinationValidationResultBuilder`, and `FieldValidationResult`.
-2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ValidationResult`, `ValidationResultBuilder` `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
+2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ValidationResult`, `ValidationResultBuilder`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
 3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
 4. Create a `ValidateCommand` class.
 5. Register the `ValidateCommand` in the `CiIntegrationsRunner`.
