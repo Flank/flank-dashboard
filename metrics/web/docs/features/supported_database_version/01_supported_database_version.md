@@ -43,6 +43,8 @@ To be able to detect whether the application is compatible with the current data
 Let's review the way of getting each of them separately: 
 
 ## Supported Database Version
+> Explain the process of getting the supported database version.
+
 
 Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` environment variable (based on the [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md#supported-database-version) document), we can get this value in the application from the environment with the following code: 
 
@@ -51,32 +53,36 @@ Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` en
 The way of fetching this value is common for all Metrics applications, so we should place the class responsible for retrieving this value to the `core` library to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
 
 ## Database Metadata
+> Explain the way of loading the database metadata.
 
 Also, to detect whether the current application is compatible with the database, we should load the database metadata from the Firestore database. To do so, we should implement the following application layers: 
 
 ### Domain Layer
+> Explain the structure of the metadata domain layer.
 
 To load the database version, we should create a `DatabaseMetadata` entity in the domain layer. Also, we should have a `DatabaseMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveDatabaseMetadataUpdates` use case. 
 
 Let's review domain layer classes and their relationships on the class diagram below: 
 
-![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_domain_class_diagram.puml)
+![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_domain_class_diagram.puml)
 
 ### Data Layer
+> Explain the structure of the metadata data layer.
 
 To load the data from the Firestore database, we should implement a `DatabaseMetadataRepository` and create a `DatabaseMetadataData` data model class used to map the JSON-encodable objects to the `DatabaseMetadata` entity and back.
 
 Let's consider the class diagram of the data layer: 
 
-![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_data_class_diagram.puml)
+![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_data_class_diagram.puml)
 
 ### Presentation Layer
+> Explain the structure of the metadata presentation layer.
 
 Once we have domain and data layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingPage` and `ApplicationIsOutdatedPage` pages to notify users about the database currently cannot handle any requests. Since `ApplicationUpdatingPage` and `ApplicationIsOutdatedPage` pages are pretty similar for now, we should create a common widget that will contain the common part (literally everything except displayed text) for these pages.
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
-![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_presentation_class_diagram.puml)
+![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_presentation_class_diagram.puml)
 
 # Making things work
 > Describe the way of blocking the application from accessing the database. 
@@ -89,13 +95,13 @@ To do so, we should add a listener to the `MetadataNotifier` in the `InjectionCo
 
 Let's consider the following sequence diagram explaining this process: 
 
-![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_sequence_diagram.puml)
+![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_sequence_diagram.puml)
 
 Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the MetadataNotifier changes on the LoadingPage to detect whether the application finished initializing.
 
 Another thing we should do is refresh the application page once the database finishes updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
 
-![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/database_finished_updating_sequence_diagram.puml)
+![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/database_finished_updating_sequence_diagram.puml)
 
 # Dependencies
 
