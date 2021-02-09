@@ -87,7 +87,7 @@ jobs:
 
       - name: Generate Linux SHA256 Hash
         if: matrix.os == 'ubuntu-latest'
-        run: shasum metrics/ci_integrations/ci_integrations_linux > metrics/ci_integrations/ci_integrations_linux.sha256
+        run: shasum -a 256 metrics/ci_integrations/ci_integrations_linux > metrics/ci_integrations/ci_integrations_linux.sha256
 
       - name: Upload Linux SHA256 Hash
         if: matrix.os == 'ubuntu-latest'

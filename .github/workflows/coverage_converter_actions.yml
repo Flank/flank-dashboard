@@ -92,7 +92,7 @@ jobs:
         working-directory: metrics/coverage_converter/
 
       - name: Generate SHA256 Hash
-        run: shasum metrics/coverage_converter/coverage_converter_linux > metrics/coverage_converter/coverage_converter_linux.sha256
+        run: shasum -a 256 metrics/coverage_converter/coverage_converter_linux > metrics/coverage_converter/coverage_converter_linux.sha256
 
       - name: Upload SHA256 Hash
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
