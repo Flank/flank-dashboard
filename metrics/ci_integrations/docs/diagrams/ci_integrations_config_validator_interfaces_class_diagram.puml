@@ -1,0 +1,133 @@
+@startuml ci_integrations_config_validator_class_diagram
+
+    package integration.interface {
+        package base {
+            package party {
+                interface IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
+                    + clientFactory : IntegrationClientFactory<T, K>
+                    + configParser : ConfigParser<T>
+                    + configValidatorFactory : ConfigValidatorFactory<V>
+                }
+            }
+
+            package config {
+                package model {
+                    interface Config {}
+
+                    package builder {
+                        abstract class ValidationResultBuilder<T extends ValidationResult> {
+                            + authValidationResult : FieldValidationResult
+                            + interruptReason : String
+
+                            + T build()
+                            + void setAuthValidationResult(FieldValidationResult authValidationResult)
+                            + void setInterruptReason(String reason)
+                        }
+                    }
+
+                    interface ValidationResult {
+                        + authValidationResult : FieldValidationResult
+
+                        + String toString()
+                    }
+                }
+
+                package validator {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
+                        + validationDelegate : V
+                        + validationResultBuilder : ValidationResultBuilder<R>
+
+                        + Future<R> validate(T config)
+                    }
+                }
+
+                package validation_delegate as base_validation_delegate {
+                    interface ValidationDelegate {
+                        + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                    }
+                }
+
+                package validator_factory {
+                    interface ConfigValidatorFactory<V extends ConfigValidator> {
+                        + V create()
+                    }
+                }
+            }
+        }
+        
+        package source.config {
+            package validation_delegate as source_validation_delegate {
+                interface SourceValidationDelegate {
+                    + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
+                }
+            }
+
+            package model as source_model {
+                interface SourceValidationResult {
+                    + sourceProjectIdValidationResult : FieldValidationResult
+                }
+
+                package builder as source_builder {
+                    abstract class SourceValidationResultBuilder<T extends SourceValidationResult> {
+                        + sourceProjectIdFieldValidationResult : FieldValidationResult
+
+                        + void setSourceProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
+                    }
+                }
+            }
+        }
+
+        package destination.config {
+            package validation_delegate as destination_validation_delegate {
+                interface DestinationValidationDelegate {
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+                }
+            }
+
+            package model as destination_model {
+                interface DestinationValidationResult {
+                    + destinationProjectIdValidationResult : FieldValidationResult
+                }
+
+                package builder as destination_builder {
+                    abstract class DestinationValidationResultBuilder<T extends DestinationValidationResult> {
+                        + destinationProjectIdFieldValidationResult : FieldValidationResult
+
+                        + void setDestinationProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
+                    }
+                }
+            }
+        }
+    }
+
+    IntegrationParty --> ConfigValidatorFactory : uses
+
+    ConfigValidatorFactory --> ConfigValidator : uses
+
+    ConfigValidator -left-> ValidationDelegate : uses
+    ConfigValidator --> ValidationResult : provides
+    ConfigValidator --> ValidationResultBuilder : uses
+    ConfigValidator --> Config : uses
+
+    ValidationResultBuilder --> ValidationResult : builds
+
+    SourceValidationDelegate -left-|> ValidationDelegate
+    DestinationValidationDelegate -right-|> ValidationDelegate
+
+    SourceValidationResult -left-|> ValidationResult
+    DestinationValidationResult -right-|> ValidationResult
+
+    SourceValidationResultBuilder -left-|> ValidationResultBuilder
+    DestinationValidationResultBuilder -right-|> ValidationResultBuilder
+
+    SourceValidationResultBuilder -down-> SourceValidationResult : builds
+    DestinationValidationResultBuilder -down-> DestinationValidationResult : builds
+
+    Config -[hidden]down-> ValidationResultBuilder
+
+    DestinationValidationDelegate -[hidden]down-> DestinationValidationResultBuilder
+    SourceValidationDelegate -[hidden]down-> SourceValidationResultBuilder
+
+    SourceValidationResultBuilder -[hidden]down-> SourceValidationResult
+    DestinationValidationResultBuilder -[hidden]down-> DestinationValidationResult
+@enduml

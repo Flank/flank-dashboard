@@ -13,7 +13,7 @@ For example, if the configuration file contains a non-valid email/password used 
 ## Goals
 > Identify success metrics and measurable goals.
 
-This document aims the following goals: 
+This document aims the following goals:
 - Create a clear design of the CI Integrations Config Validator.
 - Provide an overview of steps the new CI Integrations Config Validator requires.
 
@@ -23,81 +23,134 @@ This document aims the following goals:
 ### Main interfaces and classes
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ConfigValidator` is a class that provides the validation functionality and throws a `ConfigValidationError` if the given config is not valid.
+- A `ValidationResult` is a class that holds the validation conclusions on each config's field.
+- A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
+- A `ConfigValidator` is a class responsible for validating the configuration. The `validate` method of this class returns a `ValidationResult` as an output.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
+- A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult` and has the main `build` method that returns a `ValidationResult`. See [output generation](#output-generation) for more details.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
-Consider the following steps needed to be able to validate the given configuration file:
+Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
 
-1. Create the following abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate` and `ConfigValidatorFactory`.
-2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
-3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
-4. Create a `ValidateCommand` class.
-5. Registrate the `ValidateCommand` in the `CiIntegrationsRunner`. 
-6. Create the source and the destination config validators and call them within the `validate` command.
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_interfaces_class_diagram.puml)
 
-Consider the following class diagram that demonstrates the required changes using the destination `CoolIntegration` as an example:
+Consider the following package structure for the abstract and base classes of the config validation feature: 
 
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_class_diagram.puml)
-
-#### Package Structure
-
-Consider the package structure using the `CoolIntegration` as an example:
-
-> * cli/
->   * command/
->     * validate_command.dart
 > * integration/
 >   * interface/
 >     * base/
 >       * config/
+>         * model/
+>           * builder/
+>             * validation_result_builder.dart
+>           * validation_result.dart
+>           * field_validation_result.dart
+>           * field_validation_conclusion.dart
 >         * validator/
->           * config_validator.dart   
+>           * config_validator.dart
 >         * validator_factory/
->           * config_validator_factory.dart  
+>           * config_validator_factory.dart
 >         * validation_delegate/
 >           * validation_delegate.dart
 >     * source/
 >       * config/
 >         * validation_delegate/
 >           * source_validation_delegate.dart
+>         * model/
+>           * builder/
+>             * source_validation_result_builder.dart
+>           * source_validation_result.dart
 >     * destination/
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
->   * error/
->     * config_validation_error.dart 
-> * destination/
->   * cool_integration/
->     * config/   
->       * validator/
->         * cool_integration_destination_config_validator.dart
->       * validator_factory/
->         * cool_integration_config_validator_factory.dart
->       * validation_delegate/
->         * cool_integration_destination_validation_delegate.dart
-> * source/
->   * cool_integration/
->     * config/   
->       * validator/
->         * cool_integration_source_config_validator.dart
->       * validator_factory/
->         * cool_integration_config_validator_factory.dart
->       * validation_delegate/
->         * cool_integration_source_validation_delegate.dart
-> * client/  
->   * cool_integration/
->     * cool_integration_client.dart
+>         * model/
+>           * builder/
+>             * destination_validation_result_builder.dart
+>           * destination_validation_result.dart
+
+
+#### Output Generation
+
+It is very necessary to provide a clear and understandable output and at the same time keep the code clean and testable. To do that, let's use the `ValidationResultBuilder` class. This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step. Consider the following code that demonstrates the `ValidationResultBuilder` usage within the `validate` method of the `ConfigValidator`:
+
+```dart
+
+final resultBuilder = ValidationResultBuilder();
+
+// validating auth
+final accessToken = config.accessToken;
+final auth = AuthorizationBase(accessToken);
+final authInteraction = validationDelegate.validateAuth(auth);
+
+// auth is not valid
+if (authInteraction.isError) {
+  final authAdditionalContext = authInteraction.message;
+  final authResult = FieldValidationResult.failure('accessToken', authAdditionalContext)
+  resultBuilder.setAuthResult(authResult);
+  
+  // terminating validation as the auth needed for validation is invalid
+  final interruptReason = 'Cannot continue the validation, as the provided access token is invalid.';
+  resultBuilder.setInterruptReason(interuptReason);
+
+  return resultBuilder.build();
+}
+
+// auth is valid, validation is continued
+final authResult = FieldValidationResult.success('accessToken');
+resultBuilder.setAuthResult(authResult);
+
+// other fields validation
+...
+
+return resultBuilder.build();
+
+```
 
 ## Making things work
-Consider the following sequence diagram that illustrates the process of the configuration file validation:
 
-![Sequence class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
+Consider the following steps needed to be able to validate the given configuration file:
+
+1. Create the main abstract classes: `ConfigValidator`, `ValidationDelegate`, `SourceValidationDelegate`, `DestinationValidationDelegate`, `ConfigValidatorFactory`, `ValidationResult`, `SourceValidationResult`, `DestinationValidationResult`, `ValidationResultBuilder`, `SourceValidationResultBuilder`, `DestinationValidationResultBuilder`, and `FieldValidationResult`.
+2. For each source or destination party, implement its specific `ConfigValidator`, `ValidationDelegate`, `ValidationResult`, `ValidationResultBuilder`, and `ConfigValidatorFactory`. Implement the validation-required methods in the integration-specific clients.
+3. Add the `configValidatorFactory` to the `IntegrationParty` abstract class and provide its implementers with their party-specific config validator factories.
+4. Create a `ValidateCommand` class.
+5. Register the `ValidateCommand` in the `CiIntegrationsRunner`.
+6. Create the source and the destination config validators and call them within the `validate` command.
+
+Assume a `CoolIntegration` as a destination party for which we want to provide the config validation. Consider the following diagrams that demonstrate the implementation of the config validation for the `CoolIntegration`:
+
+- Class diagram:
+
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_destination_class_diagram.puml)
+
+- Sequence diagram:
+
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_config_validator_sequence_diagram.puml)
+
+Consider the following package structure for the `CoolIntegration` config validation feature:
+
+> * destination/
+>   * cool_integration/
+>     * config/
+>       * validator/
+>         * cool_integration_destination_validator.dart
+>       * validator_factory/
+>         * cool_integration_validator_factory.dart
+>       * validation_delegate/
+>         * cool_integration_destination_validation_delegate.dart
+>       * model/
+>         * builder/
+>           * cool_integration_destination_validation_result_builder.dart
+>         * cool_integration_destination_validation_result.dart
+> * client/
+>   * cool_integration/
+>     * cool_integration_client.dart
 
 ## Testing
 > How will the project be tested?
 
-The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a validation client that performs direct HTTP calls. 
+The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used to test new methods of the clients that perform direct HTTP calls.
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
@@ -106,5 +159,5 @@ The project will be unit-tested using the Dart's core [test](https://pub.dev/pac
     - Pros:
         - Can be enabled by default to detect invalid configuration fields before synchronization.
     - Cons:
-        - No ability to validate a config file without performing synchronization. 
-        - Validation process may need extra permissions that are not essential for the synchronization.
+        - No ability to validate a config file without performing synchronization.
+        - The validation process may need extra permissions that are not essential for synchronization.

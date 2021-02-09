@@ -1,0 +1,142 @@
+@startuml ci_integrations_config_validator_class_diagram
+
+    package integration.interface {
+
+        package base.config {
+            abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
+                + validationDelegate : V
+                + validationResultBuilder : ValidationResultBuilder<R>
+
+                + Future<R> validate(T config)
+            }
+        }
+
+        package destination.config as interface_config {
+
+            package validation_delegate as interface_delegate {
+                interface DestinationValidationDelegate {
+                    + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+                }
+            }
+
+            package validator_factory as interface_factory {
+                interface ConfigValidatorFactory<V extends ConfigValidator> {
+                    + V create()
+                }
+            }
+
+            package model as interface_model {
+                package builder {
+                    abstract class DestinationValidationResultBuilder {
+                        + authValidationResult : FieldValidationResult
+                        + destinationProjectIdValidationResult : FieldValidationResult
+
+                        + void setAuthValidationResult(FieldValidationResult authValidationResult)
+                        + void setDestinationProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
+                    }
+                }
+
+                interface DestinationValidationResult {
+                    + authValidationResult : FieldValidationResult
+                    + destinationProjectIdValidationResult : FieldValidationResult
+                }
+            }
+
+        }
+    }
+
+    package destination.cool_integration {
+
+        package party {
+            class CoolIntegrationDestinationParty {
+                + validatorFactory : CoolIntegrationValidatorFactory
+            }
+        }
+
+        package config as cool_integration_config {
+            package validator as cool_integration_validator {
+                class CoolIntegrationDestinationValidator {
+                    + validationResultBuilder : CoolIntegrationDestinationValidationResultBuilder
+                    + validationDelegate : CoolIntegrationDestinationValidationDelegate
+
+                    + Future<CoolIntegrationDestinationValidationResult> validate(T config)
+                }
+            }
+
+            package validator_factory as cool_integration_validator_validator_factory {
+                class CoolIntegrationValidatorFactory {}
+            }
+
+            package validation_delegate {
+                class CoolIntegrationDestinationValidationDelegate {
+                    - _client: CoolIntegrationClient
+
+                    + Future<InteractionResult> validateExtraField()
+                }
+            }
+
+            package model as cool_integration_model {
+                package builder as cool_integration_builder {
+                    class CoolIntegrationDestinationValidationResultBuilder {
+                        + coolFieldValidationResult : FieldValidationResult
+
+                        + setCoolFieldValidationResult(FieldValidationResult coolFieldValidationResult)
+                    }
+                }
+
+                class CoolIntegrationDestinationValidationResult {
+                    + coolFieldValidationResult : FieldValidationResult
+                }
+            }
+        }
+    }
+
+    package client.cool_integration as client_cool_integration {
+        class CoolIntegrationClient {}
+    }
+
+    package cli.command {
+        abstract class CiIntegrationCommand {}
+
+        class ValidateCommand {
+            + name : String
+            + description : String
+            + supportedParties : SupportedIntegrationParties
+            - _integrationConfigParser : RawIntegrationConfigParser
+
+            + void run()
+        }
+    }
+
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationDelegate : uses
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationClient : uses
+    CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidator : creates
+    CoolIntegrationValidatorFactory --> CoolIntegrationClient : creates
+    CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
+
+    ValidateCommand -down-|> CiIntegrationCommand
+    ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
+    ValidateCommand -left-> CoolIntegrationValidatorFactory : uses
+    ValidateCommand -left-> CoolIntegrationDestinationParty : uses
+
+    CoolIntegrationDestinationParty -right-> CoolIntegrationValidatorFactory : provides
+
+    CoolIntegrationDestinationValidationDelegate .left.|> DestinationValidationDelegate
+    CoolIntegrationDestinationValidationResult -down-|> DestinationValidationResult
+    CoolIntegrationDestinationValidationResultBuilder -down-|> DestinationValidationResultBuilder
+    
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResultBuilder : uses
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResult : provides
+    CoolIntegrationDestinationValidator -down-|> ConfigValidator
+
+    CoolIntegrationDestinationValidationResultBuilder -right-> CoolIntegrationDestinationValidationResult : builds
+
+    CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
+
+    CoolIntegrationValidatorFactory -[hidden]left-> CoolIntegrationClient
+    DestinationValidationDelegate -[hidden]right-> DestinationValidationResult
+
+    DestinationValidationResult -[hidden]left-> CoolIntegrationDestinationValidationResultBuilder
+
+@enduml

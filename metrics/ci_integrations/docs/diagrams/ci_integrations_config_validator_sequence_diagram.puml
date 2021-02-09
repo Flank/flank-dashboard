@@ -10,6 +10,7 @@ participant CiIntegrationsRunner
 participant ValidateCommand
 participant CoolIntegrationConfigValidatorFactory
 participant CoolIntegrationConfigValidator
+participant CoolIntegrationValidationResultBuilder
 participant CoolIntegrationValidationDelegate
 participant CoolIntegrationClient
 
@@ -42,36 +43,52 @@ activate CoolIntegrationValidationDelegate
 CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
 activate  CoolIntegrationClient
 
-CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+alt auth is valid
+
+    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+    CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
+    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAuthResult(FieldValidationResult.success('auth'))
+    activate CoolIntegrationValidationResultBuilder
+
+
+else auth is not valid
+
+    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
+    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
+    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAuthResult(FieldValidationResult.failure, additionalContext)
+    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setInterruptReason('The auth is not valid. Can't continue the validation.')
+    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : build()
+    CoolIntegrationValidationResultBuilder --> CoolIntegrationConfigValidator : validationResult
+
+    CoolIntegrationConfigValidator --> ValidateCommand : validationResult
+    ValidateCommand --> Bob : provides detailed conclusion on config validation
+
+end
+
 
 CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
 CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
 
-alt config is valid
+CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+deactivate CoolIntegrationClient
 
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
+CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
+deactivate CoolIntegrationValidationDelegate
 
-    CoolIntegrationConfigValidator --> ValidateCommand : config is valid
-    ValidateCommand --> Bob : prints the validation successful message
+CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAnotherFieldResult(FieldValidationResult.success('anotherField'))
+CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : build()
+CoolIntegrationValidationResultBuilder --> CoolIntegrationConfigValidator : validationResult
 
-else config is not valid
+deactivate CoolIntegrationValidationResultBuilder
 
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
-    deactivate CoolIntegrationClient
+CoolIntegrationConfigValidator --> ValidateCommand : validationResult
 
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
-    deactivate CoolIntegrationValidationDelegate
+deactivate CoolIntegrationConfigValidator
 
-    CoolIntegrationConfigValidator -> CoolIntegrationConfigValidator : adds an error message to the error buffer
+ValidateCommand --> Bob : provides detailed conclusion on config validation
 
-    CoolIntegrationConfigValidator --> ValidateCommand : throw ConfigValidationError(message)
-    deactivate CoolIntegrationConfigValidator
-
-    ValidateCommand --> Bob : prints the validation error message
-    deactivate ValidateCommand
-
-end
+deactivate ValidateCommand
 
 @enduml
