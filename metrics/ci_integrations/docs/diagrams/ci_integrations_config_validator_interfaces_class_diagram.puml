@@ -30,25 +30,6 @@
 
                         + String toString()
                     }
-
-                    enum FieldValidationConclusion {
-                        + valid
-                        + invalid
-                        + unknown
-                    }
-
-                    class FieldValidationResult {
-                        + conclusion : FieldValidationConclusion
-                        + field : String
-                        + additionalContext : String
-
-                        + FieldValidationResult success(String field, String additionalContext)
-                        + FieldValidationResult failure(String field, String additionalContext)
-                        + FieldValidationResult unknown(String field, String additionalContext)
-                        + String toString()
-
-                        - FieldValidationResult _(FieldValidationConclusion conclusion, String field, String additionalContext)
-                    }
                 }
 
                 package validator {
@@ -129,11 +110,6 @@
     ConfigValidator --> Config : uses
 
     ValidationResultBuilder --> ValidationResult : builds
-    ValidationResultBuilder --> FieldValidationResult : uses
-
-    ValidationResult --> FieldValidationResult : uses
-
-    FieldValidationResult --> FieldValidationConclusion : uses
 
     SourceValidationDelegate -left-|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
