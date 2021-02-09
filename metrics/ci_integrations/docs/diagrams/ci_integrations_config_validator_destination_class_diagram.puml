@@ -12,35 +12,46 @@
             }
 
             package model as interface_model {
+                package builder {
+                    abstract class DestinationValidationResultBuilder {}
+                }
+
                 abstract class DestinationValidationResult {}
-                
-                abstract class DestinationValidationResultBuilder {}
             }
 
         }
     }
 
-    package destination.cool_integration.config as cool_integration_config {
-        package validator as cool_integration_validator {
-            class CoolIntegrationDestinationValidator {}
+    package destination.cool_integration {
+
+        package party {
+            class CoolIntegrationDestinationParty {}
         }
 
-        package validator_factory as cool_integration_validator_validator_factory {
-            class CoolIntegrationValidatorFactory {}
-        }
-
-        package validation_delegate {
-            class CoolIntegrationDestinationValidationDelegate {
-                - _client: CoolIntegrationClient
-
-                + Future<InteractionResult> validateExtraField()
+        package config as cool_integration_config {
+            package validator as cool_integration_validator {
+                class CoolIntegrationDestinationValidator {}
             }
-        }
 
-        package model as cool_integration_model {
-            class CoolIntegrationDestinationValidationResultBuilder {}
+            package validator_factory as cool_integration_validator_validator_factory {
+                class CoolIntegrationValidatorFactory {}
+            }
 
-            class CoolIntegrationDestinationValidationResult {}
+            package validation_delegate {
+                class CoolIntegrationDestinationValidationDelegate {
+                    - _client: CoolIntegrationClient
+
+                    + Future<InteractionResult> validateExtraField()
+                }
+            }
+
+            package model as cool_integration_model {
+                package builder as cool_integration_builder {
+                    class CoolIntegrationDestinationValidationResultBuilder {}
+                }
+
+                class CoolIntegrationDestinationValidationResult {}
+            }
         }
     }
 
@@ -70,6 +81,9 @@
     ValidateCommand -down-|> CiIntegrationCommand
     ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
     ValidateCommand -left-> CoolIntegrationValidatorFactory : uses
+    ValidateCommand -left-> CoolIntegrationDestinationParty : uses
+
+    CoolIntegrationDestinationParty -right-> CoolIntegrationValidatorFactory : provides
 
     CoolIntegrationDestinationValidationDelegate .left.|> DestinationValidationDelegate
     CoolIntegrationDestinationValidationResult -down-|> DestinationValidationResult
