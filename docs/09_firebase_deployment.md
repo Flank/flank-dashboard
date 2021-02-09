@@ -86,7 +86,7 @@ to be able to connect your web application with the Firestore database:
 5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SDK-configuration).
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
- 
+
 The deployment process described more detailed in the [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
 
 Finally, your Firebase project configured and it's time to configure the Firebase SDK in your Flutter for the Web application.
@@ -190,9 +190,9 @@ To enable the Google sign-in option, consider the following steps:
 3. Press the `Google` item in the `Sign-in providers` table.
 4. Enable the `Email/Password` sign-in method using the toggle in the opened menu.
 5. Expand `Web SDK Configuration` panel in the opened menu and copy `Web client ID`, and press `Save` to save configurations.
-6. Open `web/index.html` and replace `content` of `meta` tag with `name="google-signin-client_id"` with the value from the clipboard.
+6. Open `metrics/web/web/metric_config.js` and replace `this.googleSignInClientId =  "$GOOGLE_SIGN_IN_CLIENT_ID";` with your OAuth Client ID.
 
-Once the Google sign-in option is enabled, you should populate the Authorized JavaScript origins with your URLs so you can use the Google sign-in within applications hosted by these URLs. Consider the following steps:
+Once the Google sign-in option is enabled it should work out of the box on default hosting domain. If you would like to add additional domains you should populate the `Authorized JavaScript origins` with URLs related to these domains. Consider the following steps:
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
@@ -228,7 +228,7 @@ First, let's restrict the browser key:
 6. In the opened dropdown, enable the following APIs: `Google Identity Toolkit API`, `Token Service API`, `Firebase Installations API`, and `Firebase Management API`.
 7. Click the `Save` button.
 
-To be able to synchronize the build data using the CI Integrations tool, we need to set up a new API key. The following steps are required to do so: 
+To be able to synchronize the build data using the CI Integrations tool, we need to set up a new API key. The following steps are required to do so:
 
 1. Go back to the [Credentials](https://console.cloud.google.com/apis/credentials) section.
 2. Click the `Create Credentials` button at the top of the page and select `API Key`.
@@ -266,12 +266,12 @@ flutter config --enable-web
 
 ### Building Flutter application
 
-Once you've installed Flutter you can build the application to deploy it then to the Firebase Hosting as described in the next section. To build Metrics Web Application consider the following steps: 
+Once you've installed Flutter you can build the application to deploy it then to the Firebase Hosting as described in the next section. To build Metrics Web Application consider the following steps:
 
 1. Open the terminal and navigate to the `metrics/web` project folder.
-2. Run the `flutter build web --release` to build the release version of the application. 
+2. Run the `flutter build web --release` to build the release version of the application.
 
-The built application is located under the `build/web` folder. By default, Flutter builds a version that uses the HTML renderer that lacks performance on the desktop. Instead, one can use the Skia renderer that significantly improves performance on the desktop but breaks the application on mobile. The solution is to use auto renderer that automatically chooses which renderer to use. To enable auto renderer it is required to set the `FLUTTER_WEB_AUTO_DETECT` flag to `true` using the `--dart-define` argument of the `flutter build` command. Consider the following example: 
+The built application is located under the `build/web` folder. By default, Flutter builds a version that uses the HTML renderer that lacks performance on the desktop. Instead, one can use the Skia renderer that significantly improves performance on the desktop but breaks the application on mobile. The solution is to use auto renderer that automatically chooses which renderer to use. To enable auto renderer it is required to set the `FLUTTER_WEB_AUTO_DETECT` flag to `true` using the `--dart-define` argument of the `flutter build` command. Consider the following example:
 
 ```bash
 flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
@@ -297,7 +297,7 @@ Once you've built the application, you can proceed to deploying to the Firebase 
 
 You can deploy the built application to the Firebase Hosting using the `firebase` CLI. Consider the following steps:
 
-1. Open the terminal and navigate to the `metrics` project folder.
+1. Open the terminal and navigate to the `metrics/web` project folder.
 2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account. Use the same account that you used to create your Firebase project (or the one that has access to it).
 3. Run the `firebase use --add` command and select the ID of the project created in previous steps.
 4. Run the `firebase target:apply hosting metrics <YOUR_HOSTING_NAME>` to specify the hosting deploy to. You can find the `<YOUR_HOSTING_NAME>` within the `Hosting` section in the Firebase console.
@@ -313,9 +313,11 @@ Once you've deployed the metrics application to Firebase Hosting, you should fin
 The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps:
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
-2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`.
-3. Run the `firebase deploy` command to deploy all components.
-4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
+2. Install ESLint `npm install -g eslint`.
+3. Open the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`. There are [known issues](https://stackoverflow.com/questions/64437656/gcp-cloud-function-error-fetching-storage-source-during-build-deploy) regarding deploying Cloud Functions using Node 15.6.x.
+4. Run the `firebase use --add` command and select current project ID.
+5. Run the `firebase deploy` command to deploy all components.
+6. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
 Now you can create test projects in your Firestore database:
 
@@ -337,7 +339,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-To validate user's email domain when they sign in with Google, the application uses the `validateEmailDomain` cloud function deployed previously. If user signs in using the email and password method then no domain validation happens. To enable this validation, you should enable the `validateEmailDomain` for all users. Consider the following steps: 
+To validate user's email domain when they sign in with Google, the application uses the `validateEmailDomain` cloud function deployed previously. If user signs in using the email and password method then no domain validation happens. To enable this validation, you should enable the `validateEmailDomain` for all users. Consider the following steps:
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `Cloud Functions` section.
