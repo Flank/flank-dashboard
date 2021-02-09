@@ -2,13 +2,12 @@ steps:
   - label: "Dummy step"
     key: "dummy"
     commands:
-      - DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl 
-      - curl -L https://raw.githubusercontent.com/jdzsz/randomsleep/main/randomsleep.sh -o randomsleep.sh
-      - bash randomsleep.sh 
+      - bash scripts/random_sleep.sh
     plugins:
       - docker-compose:
           config: ".buildkite/compose-files/docker-compose.yml"
           run: ubuntu
+          workdir: /monorepo
 
   - label: "Finalize build"
     key: "finalize"

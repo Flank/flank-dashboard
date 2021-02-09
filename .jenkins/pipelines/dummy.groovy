@@ -13,11 +13,17 @@ pipeline {
     }
     stages {
 
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/platform-platform/monorepo.git'
+            }
+        }
+
         stage('Fake builder') {
             steps {
-                sh 'DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl '
-                sh 'curl -L https://raw.githubusercontent.com/jdzsz/randomsleep/main/randomsleep.sh -o randomsleep.sh'
-                sh 'bash randomsleep.sh'
+                dir('scripts/random_sleep') {
+                    sh 'bash random_sleep.sh'
+                }
             }
         }
 

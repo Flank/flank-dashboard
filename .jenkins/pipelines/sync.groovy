@@ -36,7 +36,7 @@ pipeline {
                             }
                         }
                     }
-                    sh './ci_integrations sync --config-file config.yml'
+                    sh './ci_integrations sync --config-file config.yml --no-coverage'
                 }
             }
         }
