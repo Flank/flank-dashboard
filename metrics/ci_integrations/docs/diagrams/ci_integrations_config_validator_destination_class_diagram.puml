@@ -57,7 +57,7 @@
         package config as cool_integration_config {
             package validator as cool_integration_validator {
                 class CoolIntegrationDestinationValidator {
-                    + resultBuilder : CoolIntegrationDestinationValidationResultBuilder
+                    + validationResultBuilder : CoolIntegrationDestinationValidationResultBuilder
                     + validationDelegate : CoolIntegrationDestinationValidationDelegate
 
                     + Future<CoolIntegrationDestinationValidationResult> validate(T config)
