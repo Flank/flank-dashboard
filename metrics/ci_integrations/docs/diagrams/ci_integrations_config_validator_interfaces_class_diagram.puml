@@ -105,7 +105,7 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator -left-> ValidationDelegate : uses
-    ConfigValidator --> ValidationResult : uses
+    ConfigValidator --> ValidationResult : provides
     ConfigValidator --> ValidationResultBuilder : uses
     ConfigValidator --> Config : uses
 

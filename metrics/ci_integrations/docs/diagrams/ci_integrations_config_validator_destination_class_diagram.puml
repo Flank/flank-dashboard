@@ -103,7 +103,7 @@
     CoolIntegrationDestinationValidationResultBuilder -down-|> DestinationValidationResultBuilder
     
     CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResultBuilder : uses
-    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResult : uses
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationValidationResult : provides
     CoolIntegrationDestinationValidator -down-|> ConfigValidator
 
     CoolIntegrationDestinationValidationResultBuilder -right-> CoolIntegrationDestinationValidationResult : builds
