@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
+import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:grpc/grpc.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -35,7 +36,9 @@ class FirestoreDestinationClientAdapter
           await _firestore.collection('projects').document(projectId).get();
 
       if (!project.exists) {
-        throw GrpcError.notFound('Project with id $projectId was not found');
+        throw ArgumentError(
+          'Project with the given ID $projectId is not found',
+        );
       }
 
       final collection = _firestore.collection('build');
@@ -49,13 +52,13 @@ class FirestoreDestinationClientAdapter
         await collection.document(documentId).create(map);
         logger.info('Added build id $documentId.');
       }
-    } on GrpcError catch (_) {
+    } on GrpcError catch (e) {
       if (buildJson != null) {
         logger.info('Failed to add build: $buildJson');
         buildJson = null;
       }
 
-      rethrow;
+      throw DestinationError(message: '$e');
     }
   }
 
