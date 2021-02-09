@@ -103,7 +103,7 @@ void main() {
 
     test(
       ".addBuilds() throws a DestinationError if fetching a project throws",
-      () async {
+      () {
         whenFetchProject().thenThrow(grpcError);
 
         final result = adapter.addBuilds(testProjectId, []);
@@ -139,7 +139,7 @@ void main() {
 
     test(
       ".addBuilds() throws a DestinationError if creating a build throws",
-      () async {
+      () {
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
         when(_documentMock.exists).thenReturn(true);
         when(_documentMock.id).thenReturn(testProjectId);
@@ -152,7 +152,7 @@ void main() {
             .thenAnswer((_) => Future.error(grpcError));
 
         final result = adapter.addBuilds(testProjectId, builds);
-        await expectLater(result, throwsDestinationError);
+        expect(result, throwsDestinationError);
       },
     );
 

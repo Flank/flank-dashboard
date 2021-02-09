@@ -3,7 +3,7 @@
 
 import 'package:meta/meta.dart';
 
-/// A class that represents a destination [Error].
+/// A class that represents an [Error] thrown by the destination integration.
 @immutable
 class DestinationError extends Error {
   /// A [String] description of this error.
