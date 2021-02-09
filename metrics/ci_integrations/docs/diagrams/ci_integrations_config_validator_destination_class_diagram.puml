@@ -3,25 +3,44 @@
     package integration.interface {
 
         package base.config {
-            abstract class ConfigValidator {}
+            abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
+                + validationDelegate : V
+                + validationResultBuilder : ValidationResultBuilder<R>
+
+                + Future<R> validate(T config)
+            }
         }
 
         package destination.config as interface_config {
 
             package validation_delegate as interface_delegate {
-                interface DestinationValidationDelegate {}
+                interface DestinationValidationDelegate {
+                    + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+                }
             }
 
             package validator_factory as interface_factory {
-                interface ConfigValidatorFactory {}
+                interface ConfigValidatorFactory<V extends ConfigValidator> {
+                    + V create()
+                }
             }
 
             package model as interface_model {
                 package builder {
-                    abstract class DestinationValidationResultBuilder {}
+                    abstract class DestinationValidationResultBuilder {
+                        + authValidationResult : FieldValidationResult
+                        + destinationProjectIdValidationResult : FieldValidationResult
+
+                        + void setAuthValidationResult(FieldValidationResult authValidationResult)
+                        + void setDestinationProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
+                    }
                 }
 
-                abstract class DestinationValidationResult {}
+                abstract class DestinationValidationResult {
+                    + authValidationResult : FieldValidationResult
+                    + destinationProjectIdValidationResult : FieldValidationResult
+                }
             }
 
         }
@@ -37,7 +56,12 @@
 
         package config as cool_integration_config {
             package validator as cool_integration_validator {
-                class CoolIntegrationDestinationValidator {}
+                class CoolIntegrationDestinationValidator {
+                    + resultBuilder : CoolIntegrationDestinationValidationResultBuilder
+                    + validationDelegate : CoolIntegrationDestinationValidationDelegate
+
+                    + Future<CoolIntegrationDestinationValidationResult> validate(T config)
+                }
             }
 
             package validator_factory as cool_integration_validator_validator_factory {
