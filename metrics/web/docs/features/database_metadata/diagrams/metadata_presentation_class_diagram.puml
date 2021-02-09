@@ -28,18 +28,18 @@ package metadata {
             class MetadataNotifier {
                 - receiveDatabaseMetadataUpdates : ReceiveDatabaseMetadataUpdates
                 - applicationMetadata : ApplicationMetadata
-                + isDbSupported : bool 
+                + isDbSupported : bool
                 + isDbUpdating : bool
-                + isIntialized : bool 
+                + isIntialized : bool
             }
         }
 
         package pages {
             class ApplicationUpdatingPage {
-                + build() : Widget
+                + build(BuildContext context) : Widget
             }
             class ApplicationIsOutdatedPage {
-                + build() : Widget
+                + build(BuildContext context) : Widget
             }
         }
 

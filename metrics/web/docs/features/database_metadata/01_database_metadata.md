@@ -46,7 +46,7 @@ Let's review the way of getting each of them separately:
 
 Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` environment variable, we can get this value in the application from the environment with the following code: 
 
-`String.fromEnvironment('APPLICATION_VERSION')`
+`String.fromEnvironment('SUPPORTED_DATABASE_VERSION')`
 
 The way of fetching this value is common for all Metrics applications, so we should place the class responsible for getting this value to the `core` library to be able to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
 
@@ -91,7 +91,7 @@ Let's consider the following sequence diagram explaining this process:
 
 ![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_sequence_diagram.puml)
 
-Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the `MetadataNotifier` changes on the `LoadingScreen` to be able to detect whether the application is fully initialized. 
+Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the `MetadataNotifier` changes on the `LoadingPage` to be able to detect whether the application is fully initialized. 
 
 The another thing we should do is refresh the application page once the database finishing updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
 

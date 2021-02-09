@@ -29,7 +29,7 @@ package metadata.domain {
 
 }
 
-ReceiveDatabaseMetadataUpdates --> DatabaseMetadataRepository : uses
+ReceiveDatabaseMetadataUpdates --> DatabaseMetadataRepository : provides
 DatabaseMetadataRepository --> DatabaseMetadata : provides
 ReceiveDatabaseMetadataUpdates --> DatabaseMetadata : uses
 

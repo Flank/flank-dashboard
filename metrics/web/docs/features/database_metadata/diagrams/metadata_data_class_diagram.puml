@@ -17,7 +17,7 @@ package metadata {
         }
 
         package repositories as domain.repositories {
-            class DatabaseMetadataRepository {
+            interface DatabaseMetadataRepository {
                 + databaseMetadataStream() : Stream<DatabaseMetadata>
             }
         }
