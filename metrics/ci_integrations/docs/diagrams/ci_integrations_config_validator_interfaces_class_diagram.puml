@@ -20,8 +20,9 @@
                             + interruptReason : String
 
                             + T build()
-                            + void setAuthValidationResult(FieldValidationResult authResult)
+                            + void setAuthValidationResult(FieldValidationResult authValidationResult)
                             + void setInterruptReason(String reason)
+                            + void reset()
                         }
                     }
 
@@ -35,7 +36,7 @@
                 package validator {
                     abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
                         + validationDelegate : V
-                        + validationResultBuilder : ConfigValidationResultBuilder<R>
+                        + validationResultBuilder : ValidationResultBuilder<R>
 
                         + Future<R> validate(T config)
                     }
@@ -71,7 +72,7 @@
                     abstract class SourceValidationResultBuilder<T extends SourceValidationResult> {
                         + sourceProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setSourceProjectIdValidationResult(FieldValidationResult sourceProjectIdResult)
+                        + void setSourceProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
                     }
                 }
             }
@@ -93,7 +94,7 @@
                     abstract class DestinationValidationResultBuilder<T extends DestinationValidationResult> {
                         + destinationProjectIdFieldValidationResult : FieldValidationResult
 
-                        + void setDestinationProjectIdValidationResult(FieldValidationResult destinationProjectIdResult)
+                        + void setDestinationProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
                     }
                 }
             }
