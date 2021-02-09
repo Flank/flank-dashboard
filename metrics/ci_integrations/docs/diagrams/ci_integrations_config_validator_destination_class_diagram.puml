@@ -37,7 +37,7 @@
                     }
                 }
 
-                abstract class DestinationValidationResult {
+                interface DestinationValidationResult {
                     + authValidationResult : FieldValidationResult
                     + destinationProjectIdValidationResult : FieldValidationResult
                 }
