@@ -1,7 +1,7 @@
 # Metrics Web Supported Database Version
 > Summary of the proposed change
 
-Have the supported database version in the Metrics Web Application to block the application during the database updates or when the Metrics Web application does not supports the current database version.
+Have the supported database version in the Metrics Web Application to block the application during the database updates or when the Metrics Web application does not support the current database version.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -11,7 +11,7 @@ Have the supported database version in the Metrics Web Application to block the 
 # Motivation
 > What problem is this project solving?
 
-Notify the users about the application update is in progress, or the application version is not compatible with the database version.
+Notify the users about the application update is in progress or the application version is not compatible with the database version.
 
 # Goals
 
@@ -27,7 +27,7 @@ This document has the following goals:
 
 > Identify what's not in scope.
 
-This document does not describes the way of storing the database and supported database versions. See [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md) document to get more info about these details.
+This document does not describe the way of storing the database and supported database versions. See [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md) document to get more info about these details.
 
 # Design
 
@@ -37,26 +37,26 @@ This document does not describes the way of storing the database and supported d
 
 To be able to detect whether the application is compatible with the current database, we should get the following values: 
 
-- Supported database version of this application
-- Database metadata
+- [Supported database version](#Supported-Database-Version) of this application
+- [Database metadata](#Database-Metadata)
 
 Let's review the way of getting each of them separately: 
 
 ## Supported Database Version
 
-Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` environment variable, we can get this value in the application from the environment with the following code: 
+Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` environment variable (based on the [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md#supported-database-version) document), we can get this value in the application from the environment with the following code: 
 
 `String.fromEnvironment('SUPPORTED_DATABASE_VERSION')`
 
-The way of fetching this value is common for all Metrics applications, so we should place the class responsible for getting this value to the `core` library to be able to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
+The way of fetching this value is common for all Metrics applications, so we should place the class responsible for retrieving this value to the `core` library to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
 
-## Database Version
+## Database Metadata
 
 Also, to detect whether the current application is compatible with the database, we should load the database metadata from the Firestore database. To do so, we should implement the following application layers: 
 
 ### Domain Layer
 
-To load the database version we should create a `DatabaseMetadata` entity in the domain layer. Also, we should have an `DatabaseMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveDatabaseMetadataUpdates` use case. 
+To load the database version, we should create a `DatabaseMetadata` entity in the domain layer. Also, we should have a `DatabaseMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveDatabaseMetadataUpdates` use case. 
 
 Let's review domain layer classes and their relationships on the class diagram below: 
 
@@ -72,7 +72,7 @@ Let's consider the class diagram of the data layer:
 
 ### Presentation Layer
 
-Once we have a `domain` and a `data` layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` to show them if the database currently cannot handle any requests. Since `ApplicationUpdatingScreen` and `ApplicationIsOutdatedPage` pages are pretty similar for now, we should create a common widget that will contain the common part (literally everything except of displayed text) for these pages.
+Once we have domain and data layers, we should implement the `MetadataNotifier` to block the application once the database version is not supported or the database is updating. Also, we should implement the `ApplicationUpdatingPage` and `ApplicationIsOutdatedPage` pages to notify users about the database currently cannot handle any requests. Since `ApplicationUpdatingPage` and `ApplicationIsOutdatedPage` pages are pretty similar for now, we should create a common widget that will contain the common part (literally everything except displayed text) for these pages.
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
@@ -83,7 +83,7 @@ Let's examine the following class diagram that displays the main classes of the 
 
 Once we have a `domain`, `data`, and `presentation` layers ready, we can make these things work with other components of the Metrics Web Application. 
 
-To block the application when its version is not compatible with the database version, we should connect the `MetadataNotifier` with the `NavigationNotifier` to navigate to the specific pages when the application is not available, and the `AuthNotifier` to log out a user once the application becomes unavailable. 
+To block the application when it is not compatible with the database version, we should connect the `MetadataNotifier` with the `NavigationNotifier` to navigate to the specific pages when the application is not available, and the `AuthNotifier` to log out a user once the application becomes unavailable. 
 
 To do so, we should add a listener to the `MetadataNotifier` in the `InjectionContainer` widget so that should log out a user from the app and notify the `NavigationNotifier` about the application become unavailable.
 
@@ -91,9 +91,9 @@ Let's consider the following sequence diagram explaining this process:
 
 ![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/metadata_sequence_diagram.puml)
 
-Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the `MetadataNotifier` changes on the `LoadingPage` to be able to detect whether the application is fully initialized. 
+Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the MetadataNotifier changes on the LoadingPage to detect whether the application finished initializing.
 
-The another thing we should do is refresh the application page once the database finishing updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
+Another thing we should do is refresh the application page once the database finishes updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
 
 ![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/database_metadata/diagrams/database_finished_updating_sequence_diagram.puml)
 
@@ -109,10 +109,10 @@ This project will impact the process of initializing the Metrics Web Application
 
 > How will the project be tested?
 
-This project will be tested using unit, widget, and integration tests.
+This project will be tested using the unit, widget, and integration tests.
 
 # Results
 
 > What was the outcome of the project?
 
-This document described the process of getting the database and supported database versions. Also, it explains the way of blocking the Metrics Web Application to avoid changing database during its updates.
+This document described the process of getting the database and supported database versions. Also, it explains the way of blocking the Metrics Web Application to avoid changing the database during its updates.

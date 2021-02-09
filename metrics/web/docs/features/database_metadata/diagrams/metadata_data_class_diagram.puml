@@ -42,6 +42,7 @@ package metadata {
 
 FirestoreDatabaseMetadataRepository --> DatabaseMetadataData : provides
 
+DatabaseMetadataRepository -> DatabaseMetadata : provides
 
 
 @enduml
