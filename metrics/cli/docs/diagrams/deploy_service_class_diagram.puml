@@ -1,0 +1,111 @@
+@startuml deploy_service_class_diagram
+
+package cli {
+    class FlutterCli {
+        + version(): Future<void>
+        + enableWeb(): Future<void>
+        + buildWeb(String workingDir): Future<void>
+    }
+
+    class FirebaseCli {
+         + login(): Future<void>
+         + addFirebase(String projectId, String firebaseToken): Future<void>
+         + createWebApp(String projectId, String firebaseToken): Future<void>
+         + initFirebaseProject(String projectId, String workingDir, String firebaseToken): Future<void>
+         + clearTarget(String workingDir, String firebaseToken): Future<void>
+         + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
+         + deployHosting(String workingDir, String firebaseToken): Future<void>
+         + deployFirestore(String workingDir, String firebaseToken): Future<void>
+         + deployFunctions(String workingDir, String firebaseToken): Future<void>
+         + version(): Future<void>
+    }
+
+
+    class GitCli {
+        + clone(String repoURL, String srcPath): Future<void>
+        + version(): Future<void>
+    }
+
+    class GcloudCli {
+        + login(): Future<void>
+        + addProject(): Future<String>
+        + selectProject(): Future<String>
+        + setProject(): Future<void>
+        + selectRegion(): Future<String>
+        + addProjectApp(String region, String projectId): Future<void>
+        + createDatabase(String region, String projectId): Future<void>
+        + version() : Future<void>
+    }
+
+    class NpmCli {
+        + install(String workingDir): Future<void>
+        + version(): Future<void>
+    }
+}
+
+package strings {
+    class PromptStrings{}
+}
+
+package constants {
+    class ConfigConstants{}
+}
+
+package util {
+    package prompt {
+        class PromptHelper {
+            - {static} _promptWriter : PromptWriter
+            + {static} init(PromptWriter promptWriter) : void
+            + {static} prompt(String text) : Future<String>
+            + {static} promptConfirm(String text) : Future<bool>
+            + {static} promptTerminate() : Future<void>
+        }
+    }
+
+    package file {
+        class FileHelper {
+            + deleteDirectory(Directory directory) : Future<void>
+        }
+    }
+}
+
+package deploy{
+    package service {
+        interface DeployService {
+            + initGcloud() : Future<String>
+            + initFirebase() : Future<String>
+            + clone() : Future<void>
+            + build() : Future<void>
+            + deploy() : Future<void>
+            + cleanup() : Future<void>
+        }
+
+        class DeployCliService implements DeployService {
+            - _firebaseCli : FirebaseCli
+            - _gcloudCli : GcloudCli
+            - _gitCli : GitCli
+            - _flutterCli : FlutterCli
+            - _npmCli : NpmCli
+            - _fileHelper : FileHelper
+            + initGcloud() : Future<String>
+            + initFirebase() : Future<String>
+            + clone() : Future<void>
+            + build() : Future<void>
+            + deploy() : Future<void>
+            + cleanup() : Future<void>
+        }
+    }
+}
+
+DeployCliService --> FirebaseCli : uses
+DeployCliService --> GcloudCli : uses
+DeployCliService --> FlutterCli : uses
+DeployCliService --> NpmCli : uses
+DeployCliService --> GitCli : uses
+
+DeployCliService --> PromptHelper : uses
+DeployCliService --> ConfigConstants : uses
+DeployCliService --> PromptStrings : uses
+DeployCliService --> FileHelper : uses
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml prompt_helper_class_diagram
+
+package util {
+    package file {
+        class FileHelper {
+            + deleteDirectory(Directory directory) : Future<void>
+        }
+    }
+
+    package prompt {
+        package writer{
+            class PromptWriter {
+                + prompt(String text) : Future<String>
+                + promptConfirm(String text) : Future<bool>
+                + promptTerminate() : Future<void>
+            }
+
+
+            class PromptCliWriter implements PromptWriter {
+                - _stdin: Stream<List<int>>
+                + prompt(String text) : Future<String>
+                + promptConfirm(String text) : Future<bool>
+                + promptTerminate() : Future<void>
+            }
+        }
+
+        class PromptHelper {
+            - {static} _promptWriter : PromptWriter
+            + {static} init(PromptWriter promptWriter) : void
+            + {static} prompt(String text) : Future<String>
+            + {static} promptConfirm(String text) : Future<bool>
+            + {static} promptTerminate() : Future<void>
+        }
+    }
+}
+
+PromptHelper --> PromptWriter : uses
+
+@enduml

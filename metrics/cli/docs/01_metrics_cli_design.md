@@ -36,18 +36,6 @@ To simplify the deployment process, the Metrics CLI should have the following co
 
 Let's take a look at the classes the Metrics CLI tool requires.
 
-### CLI Wrappers
-
-Since the Metrics CLI uses the third-party CLIs to deploy the Metrics applications, we should implement classes used to interact with these CLIs. 
-These classes should encapsulate the CLI commands invocation in its methods. 
-To deploy the Metrics Web Application, we should have the following classes:
-
-- `FirebaseCliWrapper` used to work with firebase CLI;
-- `FlutterCliWrapper` used to work with flutter CLI;
-- `GCloudCliWrapper` used to work with gcloud CLI;
-- `GitCliWrapper` used to work with git CLI;
-- `NpmCliWrapper` used to work with npm CLI.
-
 ### DoctorCommand
 
 To simplify the Metrics CLI setup, we should implement the `Doctor` command to provide an ability to simply check whether all required tools installed and get their versions.
@@ -74,6 +62,49 @@ The following class diagram demonstrates the structure of the `DeployCommand`:
 The following sequence diagram demonstrates how the `DeployCommand` works:
 
 ![Deploy Command Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+
+### CLIs
+
+Since the Metrics CLI uses the third-party CLIs to deploy the Metrics applications, we should implement classes used to interact with these CLIs. 
+These classes should encapsulate the CLI commands invocation in its methods. 
+To deploy the Metrics Web Application, we should have the following classes:
+
+- `FirebaseCli` used to work with firebase CLI;
+- `FlutterCli` used to work with flutter CLI;
+- `GCloudCli` used to work with gcloud CLI;
+- `GitCli` used to work with git CLI;
+- `NpmCli` used to work with npm CLI.
+
+The following class diagram demonstrates the structure of the CLIs:
+
+![CLIs Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/cli_class_diagram.puml)
+
+### Services
+
+Also, we're using classes named `services`, which help us to provide a simplified interface for the complicated commands flow.
+These classes can use any other classes to fulfill their purpose, which are specified in the service interface contract.
+
+For now, we're using two services:
+- `DeployService` provides a simplified interface for the [DeployCommand](#DeployCommand)
+- `DoctorService` provides a simplified interface for the [DoctorCommand](#DoctorCommand)
+
+The following class diagram demonstrates the structure of the `DeployService`:
+![Deploy Service Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/deploy_service_class_diagram.puml)
+
+The following class diagram demonstrates the structure of the `DoctorService`:
+![Doctor Service Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/doctor_service_class_diagram.puml)
+
+### MetricsCommandRunner
+
+The `MetricsCommandRunner` is a class that extends a `CommandRunner` and used for registering and running [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands.
+
+The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
+
+![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
+
+### Helper classes
+
+### Making Things Work
 
 ## Usage
 
@@ -110,14 +141,6 @@ To start the `deploy` process, run the following command in the directory contai
 ```bash
 ./metrics deploy
 ```
-
-### MetricsCommandRunner
-
-The `MetricsCommandRunner` is a class that extends a `CommandRunner` and used for registering and running [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands.
-
-The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
-
-![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
 
 ## Testing
 
