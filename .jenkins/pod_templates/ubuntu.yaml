@@ -1,0 +1,16 @@
+spec:
+  containers:
+  - name: jnlp
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: jnlp
+  - name: ubuntu
+    image: ubuntu:focal
+    command:
+    - cat
+    tty: true
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: ubuntu
+  securityContext:
+   runAsUser: 0
