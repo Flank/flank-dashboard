@@ -64,7 +64,7 @@ To load the database version, we should create a `DatabaseMetadata` entity in th
 
 Let's review domain layer classes and their relationships on the class diagram below: 
 
-![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_domain_class_diagram.puml)
+![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_domain_class_diagram.puml)
 
 ### Data Layer
 > Explain the structure of the metadata data layer.
@@ -73,7 +73,7 @@ To load the data from the Firestore database, we should implement a `DatabaseMet
 
 Let's consider the class diagram of the data layer: 
 
-![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_data_class_diagram.puml)
+![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_data_class_diagram.puml)
 
 ### Presentation Layer
 > Explain the structure of the metadata presentation layer.
@@ -82,7 +82,7 @@ Once we have domain and data layers, we should implement the `MetadataNotifier` 
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
-![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_presentation_class_diagram.puml)
+![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_presentation_class_diagram.puml)
 
 # Making things work
 > Describe the way of blocking the application from accessing the database. 
@@ -95,13 +95,13 @@ To do so, we should add a listener to the `MetadataNotifier` in the `InjectionCo
 
 Let's consider the following sequence diagram explaining this process: 
 
-![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/metadata_sequence_diagram.puml)
+![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_sequence_diagram.puml)
 
 Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the MetadataNotifier changes on the LoadingPage to detect whether the application finished initializing.
 
 Another thing we should do is refresh the application page once the database finishes updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
 
-![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/web_app_version/metrics/web/docs/features/supported_database_version/diagrams/database_finished_updating_sequence_diagram.puml)
+![Database Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/database_finished_updating_sequence_diagram.puml)
 
 # Dependencies
 
