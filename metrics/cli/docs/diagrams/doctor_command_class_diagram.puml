@@ -3,27 +3,33 @@
 package doctor {
     package command {
         class DoctorCommand {
-         - doctorService : DoctorService
+         - doctor : Doctor
          + run() : Future<void>
         }
     }
 
-    package service {
-        interface DoctorService {
+    class Doctor {
+            - _firebaseService : FirebaseService
+            - _gcloudService : GcloudService
+            - _flutterService : FlutterService
+            - _gitService : GitService
+            - _npmService : NpmService
             + version() : Future<void>
-        }
-
-        class DoctorCliService implements DoctorService {
-            - _firebaseCli : FirebaseCli
-            - _gcloudCli : GcloudCli
-            - _flutterCli : FlutterCli
-            - _gitCli : GitCli
-            - _npmCli : NpmCli
-            + version() : Future<void>
-        }
     }
 }
 
-DoctorCommand --> DoctorService : uses
+package cli {
+    class FirebaseService {}
+    class GcloudService {}
+    class FlutterService {}
+    class GitService {}
+    class NpmService {}
+}
 
+DoctorCommand --> Doctor : uses
+Doctor --> FirebaseService : uses
+Doctor --> GcloudService : uses
+Doctor --> FlutterService : uses
+Doctor --> GitService : uses
+Doctor --> NpmService : uses
 @enduml

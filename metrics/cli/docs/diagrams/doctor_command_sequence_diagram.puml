@@ -6,52 +6,72 @@ skinparam BoxPadding 10
 actor Bob
 
 box Doctor Command
-    participant CLI
-    participant DoctorCommand
-    participant FlutterCommand
-    participant FirebaseCommand
-    participant GCloudCommand
-    participant GitCommand
-    participant NpmCommand
+participant CLI
+participant DoctorCommand
+participant Doctor
+
+participant FlutterService
+participant FirebaseService
+participant GCloudService
+participant GitService
+participant NpmService
+
+participant FlutterCli
+participant FirebaseCli
+participant GCloudCli
+participant GitCli
+participant NpmCli
+
 end box
 
 participant flutter
-
 participant firebase
-
 participant gcloud
-
 participant git
-
 participant npm
+
 
 Bob -> CLI ++ : run doctor command
 CLI -> DoctorCommand ++ : run()
-DoctorCommand -> FlutterCommand ++ : version()
-FlutterCommand -> flutter ++ : request flutter version
+DoctorCommand -> Doctor ++ : version()
+
+Doctor -> FlutterService ++ : version()
+FlutterService -> FlutterCli ++ : version()
+FlutterCli -> flutter ++ : request flutter version
 flutter --> Bob -- : print Flutter version
-FlutterCommand --
+FlutterService --
+FlutterCli --
 
-DoctorCommand -> FirebaseCommand ++ : version()
-FirebaseCommand -> firebase ++ : request firebase CLI version
+Doctor -> FirebaseService ++ : version()
+FirebaseService -> FirebaseCli ++ : version()
+FirebaseCli -> firebase ++ : request firebase CLI version
 firebase --> Bob -- : print Firebase version
-FirebaseCommand --
+FirebaseService --
+FirebaseCli --
 
-DoctorCommand -> GCloudCommand ++ : version()
-GCloudCommand -> gcloud ++ : request gcloud CLI version
+Doctor -> GCloudService ++ : version()
+GCloudService -> GCloudCli ++ : version()
+GCloudCli -> gcloud ++ : request gcloud CLI version
 gcloud --> Bob -- : print GCloud version
-GCloudCommand --
+GCloudService --
+GCloudCli --
 
-DoctorCommand -> GitCommand ++ : version()
-GitCommand -> git ++ : request git CLI version
+Doctor -> GitService ++ : version()
+GitService -> GitCli ++ : version()
+GitCli -> git ++ : request git CLI version
 git --> Bob -- : print Git version
-GitCommand --
+GitService --
+GitCli --
 
-DoctorCommand -> NpmCommand ++ : version()
-NpmCommand -> npm ++ : request npm CLI version
+Doctor -> NpmService ++ : version()
+NpmService -> NpmCli ++ : version()
+NpmCli -> npm ++ : request npm CLI version
 npm --> Bob -- : print Npm version
-NpmCommand --
-DoctorCommand --
+NpmService --
+NpmCli --
+
+Doctor --> DoctorCommand -- : versions have been printed
+DoctorCommand --> CLI -- : doctor finished
 
 CLI --> Bob -- : terminate
 
