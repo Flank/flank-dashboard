@@ -69,46 +69,44 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
       buildResults: _barsData,
     );
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        SizedBox(
-          height: 60.0,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    _missingBarsCount,
-                    (index) => const BuildResultBar(),
-                  ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(
+        height: 60.0,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                  _missingBarsCount,
+                  (index) => const BuildResultBar(),
                 ),
               ),
-              BarGraph(
-                graphPadding: graphPadding,
-                data: _barsData.map((data) {
-                  return data.duration.inMilliseconds;
-                }).toList(),
-                barBuilder: (index, height) {
-                  final data = _barsData[index];
+            ),
+            BarGraph(
+              graphPadding: graphPadding,
+              data: _barsData.map((data) {
+                return data.duration.inMilliseconds;
+              }).toList(),
+              barBuilder: (index, height) {
+                final data = _barsData[index];
 
-                  return Container(
-                    constraints: BoxConstraints(
-                      minHeight: height,
-                    ),
-                    child: BuildResultBar(
-                      strategy: barStrategy,
-                      buildResult: data,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+                return Container(
+                  constraints: BoxConstraints(
+                    minHeight: height,
+                  ),
+                  child: BuildResultBar(
+                    strategy: barStrategy,
+                    buildResult: data,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
