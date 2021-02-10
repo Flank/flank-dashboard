@@ -1,40 +1,171 @@
 @startuml deploy_command_class_diagram
 
-package deploy {
-    package command {
-     class DeployCommand {
-      deployService : DeployService
-      + run() : Future<void>
-     }
+package firebase {
+    package service as firebase.service {
+        interface FirebaseService {
+            + login(): void
+            + addProject(String gcloudProjectId, String firebaseToken): void
+            + deployHosting(String appPath, String firebaseToken): void
+            + deployFirestore(String firestorePath, String firebaseToken): void
+        }
+        class FirebaseCliService {
+            - _firebaseCli: FirebaseCli
+        }
     }
-
-    package service {
-        interface DeployService {
-            + initGcloud() : Future<String>
-            + initFirebase() : Future<String>
-            + clone() : Future<void>
-            + build() : Future<void>
-            + deploy() : Future<void>
-            + cleanup() : Future<void>
-        }
-
-        class DeployCliService implements DeployService {
-            - _firebaseCli : FirebaseCli
-            - _gcloudCli : GcloudCli
-            - _gitCli : GitCli
-            - _flutterCli : FlutterCli
-            - _npmCli : NpmCli
-            - _fileHelper : FileHelper
-            + initGcloud() : Future<String>
-            + initFirebase() : Future<String>
-            + clone() : Future<void>
-            + build() : Future<void>
-            + deploy() : Future<void>
-            + cleanup() : Future<void>
-        }
+    class FirebaseCli {
+        + login(): Future<void>
+        + addFirebase(String projectId, String firebaseToken): Future<void>
+        + selectFirebaseWebApp(String projectId, String firebaseToken): Future<void>
+        + createWebApp(String projectId, String firebaseToken): Future<void>
+        + setFirebaseProject(String projectId, String workingDir, String firebaseToken): Future<void>
+        + clearTarget(String workingDir, String firebaseToken): Future<void>
+        + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
+        + deployHosting(String workingDir, String firebaseToken): Future<void>
+        + deployRules(String workingDir, String firebaseToken): Future<void>
+        + deployFunctions(String workingDir, String firebaseToken): Future<void>
+        + version(): Future<void>
     }
 }
 
-DeployCommand --> DeployService : uses
+package gcould {
+    package service as gcould.service {
+        interface GCloudService {
+            + login() : void
+            + createProject() : void
+        }
+        class GCloudCliService {
+            gcloudCli : GСloudCli
+        }
+    }
+    class GСloudCli {
+        + login(): Future<void>
+        + addProject(): Future<String>
+        + selectProject(): Future<String>
+        + setProject(): Future<void>
+        + selectRegion(): Future<String>
+        + addProjectApp(String region, String projectId): Future<void>
+        + createDatabase(String region, String projectId): Future<void>
+        + version() : Future<void>
+    }
+}
+
+package flutter {
+    package service as flutter.service {
+        interface FlutterService  {
+            + build(Directory appPath) : void
+        }
+        class FlutterCliService  {
+            - _flutterCli : FlutterCli
+        }
+    }
+    class FlutterCli {
+        + version(): Future<void>
+        + enableWeb(): Future<void>
+        + buildWeb(String workingDir): Future<void>
+    }
+}
+
+package git {
+    package service as git.service{
+        interface GitService  {
+            + checkout() : void
+        }
+        class GitCliService {
+            - _gitCli : GitCli
+        }
+    }
+    class GitCli {
+        + clone(String repoURL, String srcPath): Future<void>
+        + version(): Future<void>
+    }
+}
+
+package npm {
+    package service as npm.service {
+        interface NpmService  {
+            + installDependencies(String path) : void
+        }
+        class NpmCliService  {
+            - _npmCli : NpmCli
+        }
+    }
+    class NpmCli {
+        + install(String workingDir): Future<void>
+        + version(): Future<void>
+    }
+}
+
+package deploy {
+    package command {
+        class DeployCommand {
+            - _appDistributor : AppDistributor
+            + run() : Future<void>
+        }
+    }
+    package constants {
+        class DeployConstants{}
+    }
+    class AppDistributor {
+        - _fileHelper: FileHelper
+        - _npmService : NpmService
+        - _gitService : GitService
+        - _flutterService : FlutterService
+        - _gcloudService : GCloudService
+        - _firebaseService : FirebaseService
+        + deploy() : void
+    }
+}
+
+package prompt {
+    package writer {
+        class PromptWriter {
+            + prompt(String text, {Stream<List<int>> stdin}) : Future<String>
+            + promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+            + promptTerminate() : Future<void>
+        }
+    }
+    package strings {
+        class PromptStrings{}
+    }
+    class PromptHelper {
+        - {static} _promptWrapper : PromptWrapper
+        + {static} init(PromptWrapper promptWrapper) : void
+        + {static} prompt(String text, {Stream<List<int>> stdin}) : Future<String>
+        + {static} promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+        + {static} promptTerminate() : Future<void>
+    }
+}
+
+package utils {
+    class FileHelper {
+        + deleteDirectory(Directory directory) : Future<void>
+    }
+}
+
+AppDistributor -down-> NpmService : uses
+AppDistributor -down-> GitService : uses
+AppDistributor -down-> FlutterService : uses
+AppDistributor -down-> GCloudService : uses
+AppDistributor -down-> FirebaseService : uses
+AppDistributor -left-> FileHelper : uses
+AppDistributor -> DeployConstants : uses
+DeployCommand -down-> AppDistributor : uses
+FirebaseCliService .left.|> FirebaseService
+GCloudCliService .left.|> GCloudService
+FlutterCliService .left.|> FlutterService
+GitCliService .left.|> GitService
+NpmCliService .left.|> NpmService
+FirebaseCliService --> FirebaseCli : uses
+GCloudCliService --> GСloudCli : uses
+FlutterCliService --> FlutterCli : uses
+GitCliService --> GitCli : uses
+NpmCliService --> NpmCli : uses
+PromptHelper --> PromptWriter : uses
+FirebaseCliService ---> PromptHelper : uses
+GCloudCliService ---> PromptHelper : uses
+FlutterCliService ---> PromptHelper : uses
+GitCliService ---> PromptHelper : uses
+NpmCliService ---> PromptHelper : uses
+GitCliService --> DeployConstants : uses
 
 @enduml

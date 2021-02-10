@@ -1,0 +1,11 @@
+@startuml deploy_activity_diagram
+(*) --> “User execute the Deploy command”
+--> “The command initialize GCloud”
+--> “The command initialize Firebase”
+--> “The command checkout project”
+--> “The command build web”
+--> “The command hosting web app”
+--> “The command deploy firebase rules and functions”
+--> “The command cleanup resources”
+--> (*)
+@enduml
