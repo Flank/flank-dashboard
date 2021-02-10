@@ -1,8 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/firestore.dart' as client;
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
+import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:firedart/firedart.dart';
 import 'package:grpc/grpc.dart';
@@ -25,12 +26,22 @@ void main() {
       'url': 'testUrl',
       'coverage': 0.1,
     };
-
+    const testProjectIds = [
+      '${testProjectId}_1',
+      '${testProjectId}_2',
+    ];
+    const builds = [
+      BuildData(buildNumber: 1),
+      BuildData(buildNumber: 2),
+    ];
     final _firestoreMock = _FirestoreMock();
     final _collectionReferenceMock = _CollectionReferenceMock();
     final _documentReferenceMock = _DocumentReferenceMock();
     final _documentMock = _DocumentMock();
     final adapter = FirestoreDestinationClientAdapter(_firestoreMock);
+    final grpcError = GrpcError.cancelled();
+
+    final Matcher throwsDestinationError = throwsA(isA<DestinationError>());
 
     PostExpectation<Future<Document>> whenFetchProject({
       String collectionId = 'projects',
@@ -79,66 +90,82 @@ void main() {
     );
 
     test(
-      ".addBuilds() returns normally if firestore throws GrpcError.notFound",
+      ".addBuilds() throws an ArgumentError if a project with the given id does not exist",
       () {
-        whenFetchProject().thenThrow(GrpcError.notFound());
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(false);
 
         final result = adapter.addBuilds(testProjectId, []);
 
-        expect(result, completes);
+        expect(result, throwsArgumentError);
       },
     );
 
     test(
-      ".addBuilds() throws an exception if the firestore throws exception different from GrpcError.notFound",
+      ".addBuilds() throws a DestinationError if fetching a project throws",
       () {
-        whenFetchProject().thenThrow(Exception());
+        whenFetchProject().thenThrow(grpcError);
 
         final result = adapter.addBuilds(testProjectId, []);
 
-        expect(result, throwsException);
-      },
-    );
-
-    test(
-      ".addBuilds() rethrows GrpcError with status different from 'notFound'",
-      () {
-        final error = GrpcError.cancelled();
-        whenFetchProject().thenThrow(error);
-
-        final result = adapter.addBuilds(testProjectId, []);
-
-        expect(result, throwsA(equals(error)));
+        expect(result, throwsDestinationError);
       },
     );
 
     test(
       ".addBuilds() does not add builds if fetching the project throws",
-      () async {
-        whenFetchProject().thenThrow(GrpcError.notFound());
+      () {
+        whenFetchProject().thenThrow(grpcError);
 
-        await adapter.addBuilds(testProjectId, []);
+        final result = adapter.addBuilds(testProjectId, []);
 
+        expect(result, throwsDestinationError);
         verifyNever(_firestoreMock.collection('build'));
+      },
+    );
+
+    test(
+      ".addBuilds() does not add builds if a project with the given id does not exist",
+      () {
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(false);
+
+        final result = adapter.addBuilds(testProjectId, []);
+
+        expect(result, throwsArgumentError);
+        verifyNever(_firestoreMock.collection('build'));
+      },
+    );
+
+    test(
+      ".addBuilds() throws a DestinationError if creating a build throws",
+      () {
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(true);
+        when(_documentMock.id).thenReturn(testProjectId);
+        when(_firestoreMock.collection('build'))
+            .thenReturn(_collectionReferenceMock);
+        when(_collectionReferenceMock.document(
+          argThat(anyOf(testProjectIds)),
+        )).thenReturn(_documentReferenceMock);
+        when(_documentReferenceMock.create(argThat(anything)))
+            .thenAnswer((_) => Future.error(grpcError));
+
+        final result = adapter.addBuilds(testProjectId, builds);
+        expect(result, throwsDestinationError);
       },
     );
 
     test(
       ".addBuilds() adds given builds for the given project",
       () async {
-        const builds = [
-          BuildData(buildNumber: 1),
-          BuildData(buildNumber: 2),
-        ];
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(true);
         when(_documentMock.id).thenReturn(testProjectId);
         when(_firestoreMock.collection('build'))
             .thenReturn(_collectionReferenceMock);
         when(_collectionReferenceMock.document(
-          argThat(anyOf([
-            '${testProjectId}_1',
-            '${testProjectId}_2',
-          ])),
+          argThat(anyOf(testProjectIds)),
         )).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.create(argThat(anything)))
             .thenAnswer((_) => Future.value(_documentMock));
@@ -162,6 +189,7 @@ void main() {
             .toList();
 
         whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.exists).thenReturn(true);
         when(_documentMock.id).thenReturn(testProjectId);
         when(_firestoreMock.collection('build'))
             .thenReturn(_collectionReferenceMock);
@@ -174,10 +202,10 @@ void main() {
           buildsData[2],
         )))).thenAnswer((_) => Future.value(_documentMock));
         when(_documentReferenceMock.create(buildsData[1]))
-            .thenAnswer((_) => Future.error(Exception()));
+            .thenAnswer((_) => Future.error(grpcError));
 
         final result = adapter.addBuilds(testProjectId, builds);
-        await expectLater(result, throwsException);
+        await expectLater(result, throwsDestinationError);
 
         verify(_documentReferenceMock.create(any)).called(2);
         verifyNever(_documentReferenceMock.create(buildsData[2]));
@@ -194,6 +222,7 @@ void main() {
           .toList();
 
       whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+      when(_documentMock.exists).thenReturn(true);
       when(_documentMock.id).thenReturn(testProjectId);
       when(_firestoreMock.collection('build'))
           .thenReturn(_collectionReferenceMock);

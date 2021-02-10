@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
+import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:grpc/grpc.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -34,6 +35,12 @@ class FirestoreDestinationClientAdapter
       final project =
           await _firestore.collection('projects').document(projectId).get();
 
+      if (!project.exists) {
+        throw ArgumentError(
+          'Project with the given ID $projectId is not found',
+        );
+      }
+
       final collection = _firestore.collection('build');
 
       logger.info('Adding ${builds.length} builds...');
@@ -51,11 +58,7 @@ class FirestoreDestinationClientAdapter
         buildJson = null;
       }
 
-      if (e.code == StatusCode.notFound) {
-        logger.info('Project with id $projectId was not found.');
-        return;
-      }
-      rethrow;
+      throw DestinationError(message: '$e');
     }
   }
 
