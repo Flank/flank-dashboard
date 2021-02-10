@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -27,4 +27,5 @@ class ColorConfig {
   static const Color inputSecondaryTextColor = Color(0xFF545459);
   static const Color inkResponseColor = Colors.transparent;
   static const Color tooltipIconHoverColor = Color(0xFF4F4F56);
+  static const Color black = Color(0xFF0d0d0d);
 }

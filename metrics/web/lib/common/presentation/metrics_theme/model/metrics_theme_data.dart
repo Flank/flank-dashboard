@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/gra
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
@@ -79,6 +80,9 @@ class MetricsThemeData {
   /// A theme for the build number scorecard.
   final ScorecardThemeData buildNumberScorecardTheme;
 
+  /// A theme for the build result bar graph.
+  final BuildResultBarGraphThemeData buildResultBarGraphTheme;
+
   /// The theme for the performance sparkline.
   final SparklineThemeData performanceSparklineTheme;
 
@@ -140,6 +144,7 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
+    BuildResultBarGraphThemeData buildResultBarGraphTheme,
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
@@ -176,6 +181,8 @@ class MetricsThemeData {
             projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
         buildNumberScorecardTheme =
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
+        buildResultBarGraphTheme =
+            buildResultBarGraphTheme ?? const BuildResultBarGraphThemeData(),
         performanceSparklineTheme =
             performanceSparklineTheme ?? const SparklineThemeData(),
         projectBuildStatusTheme =
@@ -219,6 +226,7 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
+    BuildResultBarGraphThemeData buildResultBarGraphTheme,
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
@@ -256,6 +264,8 @@ class MetricsThemeData {
           projectMetricsTableTheme ?? this.projectMetricsTableTheme,
       buildNumberScorecardTheme:
           buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
+      buildResultBarGraphTheme:
+          buildResultBarGraphTheme ?? this.buildResultBarGraphTheme,
       performanceSparklineTheme:
           performanceSparklineTheme ?? this.performanceSparklineTheme,
       projectBuildStatusTheme:

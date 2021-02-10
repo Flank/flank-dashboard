@@ -2,9 +2,11 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
@@ -69,44 +71,59 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
       buildResults: _barsData,
     );
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        height: 60.0,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(
-                  _missingBarsCount,
-                  (index) => const BuildResultBar(),
+    final buildResultBarGraphTheme =
+        MetricsTheme.of(context).buildResultBarGraphTheme;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 3.0),
+            child: Text(
+              _buildResultDateRange(),
+              style: buildResultBarGraphTheme.textStyle,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 60.0,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    _missingBarsCount,
+                    (index) => const BuildResultBar(),
+                  ),
                 ),
               ),
-            ),
-            BarGraph(
-              graphPadding: graphPadding,
-              data: _barsData.map((data) {
-                return data.duration.inMilliseconds;
-              }).toList(),
-              barBuilder: (index, height) {
-                final data = _barsData[index];
+              BarGraph(
+                graphPadding: graphPadding,
+                data: _barsData.map((data) {
+                  return data.duration.inMilliseconds;
+                }).toList(),
+                barBuilder: (index, height) {
+                  final data = _barsData[index];
 
-                return Container(
-                  constraints: BoxConstraints(
-                    minHeight: height,
-                  ),
-                  child: BuildResultBar(
-                    strategy: barStrategy,
-                    buildResult: data,
-                  ),
-                );
-              },
-            ),
-          ],
+                  return Container(
+                    constraints: BoxConstraints(
+                      minHeight: height,
+                    ),
+                    child: BuildResultBar(
+                      strategy: barStrategy,
+                      buildResult: data,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -123,5 +140,20 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     } else {
       _missingBarsCount = numberOfBars - _barsData.length;
     }
+  }
+
+  /// Returns a string representation between min and max date range
+  /// of the [_barsData].
+  String _buildResultDateRange() {
+    if (_barsData.isEmpty) return '';
+
+    const dateFormat = 'd MMM';
+    final firstDate = _barsData.first.date;
+    final lastDate = _barsData.last.date;
+
+    final firstDateFormat = DateFormat(dateFormat).format(firstDate);
+    final lastDateFormat = DateFormat(dateFormat).format(lastDate);
+
+    return '$firstDateFormat - $lastDateFormat';
   }
 }
