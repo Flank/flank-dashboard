@@ -85,5 +85,7 @@ class _ConfigValidatorFake extends ConfigValidator {
   ) : super(validationDelegate, validationResultBuilder);
 
   @override
-  Future<void> validate(Config config) async {}
+  Future<ValidationResult> validate(Config config) {
+    return Future.value();
+  }
 }

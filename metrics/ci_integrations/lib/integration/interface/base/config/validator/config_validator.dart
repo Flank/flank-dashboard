@@ -33,5 +33,5 @@ abstract class ConfigValidator<T extends Config, V extends ValidationDelegate,
   /// Validates the given [config].
   ///
   /// Throws a [ConfigValidationError] if the given [config] is not valid.
-  Future<void> validate(T config);
+  Future<R> validate(T config);
 }
