@@ -1,7 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/integration/interface/base/config/model/builder/validation_result_builder.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
+import 'package:ci_integration/integration/interface/base/config/model/validation_result.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -12,23 +14,24 @@ import 'package:test/test.dart';
 
 void main() {
   group("ConfigValidator", () {
-    const configField = 'field';
-    const additionalContext = 'context';
-
     final validationDelegate = _ValidationDelegateStub();
-    final configValidator = _ConfigValidatorFake(
-      validationDelegate,
-    );
-
-    tearDown(() {
-      configValidator.reset();
-    });
+    final validationResultBuilder = _ValidationResultBuilderStub();
 
     test(
       "throws an ArgumentError if the given validation delegate is null",
       () {
         expect(
-          () => _ConfigValidatorFake(null),
+          () => _ConfigValidatorFake(null, validationResultBuilder),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given validation result builder is null",
+      () {
+        expect(
+          () => _ConfigValidatorFake(validationDelegate, null),
           throwsArgumentError,
         );
       },
@@ -39,58 +42,17 @@ void main() {
       () {
         final configValidator = _ConfigValidatorFake(
           validationDelegate,
+          validationResultBuilder,
         );
 
         expect(
           configValidator.validationDelegate,
           equals(validationDelegate),
         );
-      },
-    );
-
-    test(
-      ".addErrorMessage() adds an error message to the error buffer",
-      () {
-        configValidator.addErrorMessage(configField, additionalContext);
-
-        expect(configValidator.errorBuffer, isNotEmpty);
-      },
-    );
-
-    test(
-      ".addErrorMessage() adds an error message that contains the given config field",
-      () {
-        configValidator.addErrorMessage(configField, additionalContext);
-
-        final errorBuffer = configValidator.errorBuffer;
-        final message = errorBuffer.toString();
-
-        expect(message, contains(configField));
-      },
-    );
-
-    test(
-      ".addErrorMessage() does not add the additional context if the given one is null",
-      () {
-        const additionalContext = 'Additional context';
-        configValidator.addErrorMessage(configField, null);
-
-        final errorBuffer = configValidator.errorBuffer;
-        final message = errorBuffer.toString();
-
-        expect(message, isNot(contains(additionalContext)));
-      },
-    );
-
-    test(
-      ".addErrorMessage() adds an error message that contains the given additional context when it is not null",
-      () {
-        configValidator.addErrorMessage(configField, additionalContext);
-
-        final errorBuffer = configValidator.errorBuffer;
-        final message = errorBuffer.toString();
-
-        expect(message, contains(additionalContext));
+        expect(
+          configValidator.validationResultBuilder,
+          equals(validationResultBuilder),
+        );
       },
     );
   });
@@ -105,6 +67,13 @@ class _ValidationDelegateStub implements ValidationDelegate {
   }
 }
 
+/// A stub implementation of a [ValidationResultBuilder] abstract class
+/// providing a test implementation.
+class _ValidationResultBuilderStub extends ValidationResultBuilder {
+  @override
+  ValidationResult build() => null;
+}
+
 /// A fake implementation of a [ConfigValidator] abstract class that is used
 /// to test non-abstract methods.
 class _ConfigValidatorFake extends ConfigValidator {
@@ -112,13 +81,9 @@ class _ConfigValidatorFake extends ConfigValidator {
   /// [validationDelegate].
   _ConfigValidatorFake(
     ValidationDelegate validationDelegate,
-  ) : super(validationDelegate);
+    ValidationResultBuilder validationResultBuilder,
+  ) : super(validationDelegate, validationResultBuilder);
 
   @override
   Future<void> validate(Config config) async {}
-
-  /// Resets this validator by clearing the [errorBuffer].
-  void reset() {
-    errorBuffer.clear();
-  }
 }

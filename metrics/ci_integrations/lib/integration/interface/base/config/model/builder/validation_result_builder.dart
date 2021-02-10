@@ -7,28 +7,14 @@ import 'package:ci_integration/integration/interface/base/config/model/validatio
 /// A class that provides an ability to build a [ValidationResult].
 abstract class ValidationResultBuilder<T extends ValidationResult> {
   /// A [FieldValidationResult] of the authorization validation.
-  FieldValidationResult _authValidationResult;
-
-  /// Provides a result of the authorization validation.
-  FieldValidationResult get authValidationResult => _authValidationResult;
+  FieldValidationResult authValidationResult;
 
   /// A [String] representing a validation interruption reason.
-  String _interruptReason;
-
-  /// Provides a validation interruption reason.
-  String get interruptReason => _interruptReason;
+  String interruptReason;
 
   /// Creates a new instance of the [ValidationResultBuilder].
   ValidationResultBuilder();
 
   /// Builds a [ValidationResult] using provided [FieldValidationResult]s.
   T build();
-
-  ///
-  void setAuthResult(FieldValidationResult authValidationResult) {
-    _authValidationResult = authValidationResult;
-  }
-
-  ///
-  void setInterruptReason(String reason) {}
 }

@@ -1,52 +1,37 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/integration/interface/base/config/model/builder/validation_result_builder.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
+import 'package:ci_integration/integration/interface/base/config/model/validation_result.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 
 /// An abstract class responsible for validating the [Config].
-abstract class ConfigValidator<T extends Config> {
+abstract class ConfigValidator<T extends Config, V extends ValidationDelegate,
+    R extends ValidationResult> {
   /// A [ValidationDelegate] this validator uses for [Config]'s
   /// specific fields validation.
-  final ValidationDelegate validationDelegate;
+  final V validationDelegate;
 
-  /// A [StringBuffer] that this validator uses to accumulate error messages.
-  final StringBuffer errorBuffer = StringBuffer();
+  /// A [ValidationResultBuilder] this validator uses
+  /// to create a [ValidationResult].
+  final ValidationResultBuilder<R> validationResultBuilder;
 
   /// Creates a new instance of the [ConfigValidator] with the
-  /// given [validationDelegate].
+  /// given [validationDelegate] and [validationResultBuilder].
   ///
-  /// Throws an [ArgumentError] if the [validationDelegate] is `null`.
+  /// Throws an [ArgumentError] if the [validationDelegate]
+  /// or [validationResultBuilder] is `null`.
   ConfigValidator(
     this.validationDelegate,
+    this.validationResultBuilder,
   ) {
     ArgumentError.checkNotNull(validationDelegate);
+    ArgumentError.checkNotNull(validationResultBuilder);
   }
 
   /// Validates the given [config].
   ///
   /// Throws a [ConfigValidationError] if the given [config] is not valid.
   Future<void> validate(T config);
-
-  /// Adds an error message to the [errorBuffer] based on the given
-  /// [configField] and [additionalContext].
-  void addErrorMessage(String configField, [String additionalContext]) {
-    final errorMessage = _generateErrorMessage(configField, additionalContext);
-
-    errorBuffer.writeln(errorMessage);
-  }
-
-  /// Generates an error message from the given [configField]
-  /// and [additionalContext].
-  ///
-  /// Does not add the [additionalContext] if it is `null`.
-  String _generateErrorMessage(String configField, [String additionalContext]) {
-    String message = 'A $configField from the $T may be incorrect.';
-
-    if (additionalContext != null) {
-      message = '$message \nAdditional context: $additionalContext';
-    }
-
-    return message;
-  }
 }
