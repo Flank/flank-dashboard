@@ -122,19 +122,6 @@ void main() {
     );
 
     testWidgets(
-      "displays the given status",
-      (tester) async {
-        const status = Text("status");
-
-        await tester.pumpWidget(
-          const _MetricsTableRowTestbed(status: status),
-        );
-
-        expect(find.byWidget(status), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "displays the given name",
       (tester) async {
         const name = Text(nameText);

@@ -59,19 +59,19 @@ class MetricsTableRow extends StatelessWidget {
           status,
           Flexible(
             child: SizedBox(
-              width: 304.0,
+              width: 326.0,
               child: name,
             ),
           ),
           SizedBox(
-            width: 778.0,
+            width: 756.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
                   padding: padding,
                   child: SizedBox(
-                    width: 298.0,
+                    width: 276.0,
                     child: buildResults,
                   ),
                 ),
