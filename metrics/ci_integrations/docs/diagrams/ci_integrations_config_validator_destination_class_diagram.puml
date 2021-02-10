@@ -3,11 +3,11 @@
     package integration.interface {
 
         package base.config {
-            abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
+            abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResultBuilder> {
                 + validationDelegate : V
-                + validationResultBuilder : ValidationResultBuilder<R>
+                + validationResultBuilder : R
 
-                + Future<R> validate(T config)
+                + Future<ValidationResult> validate(T config)
             }
         }
 
@@ -60,7 +60,7 @@
                     + validationResultBuilder : CoolIntegrationDestinationValidationResultBuilder
                     + validationDelegate : CoolIntegrationDestinationValidationDelegate
 
-                    + Future<CoolIntegrationDestinationValidationResult> validate(T config)
+                    + Future<ValidationResult> validate(CoolIntegrationDestinationConfig config)
                 }
             }
 

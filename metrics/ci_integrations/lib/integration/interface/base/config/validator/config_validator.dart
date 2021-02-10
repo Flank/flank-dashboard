@@ -8,14 +8,14 @@ import 'package:ci_integration/integration/interface/base/config/validation_dele
 
 /// An abstract class responsible for validating the [Config].
 abstract class ConfigValidator<T extends Config, V extends ValidationDelegate,
-    R extends ValidationResult> {
+    R extends ValidationResultBuilder> {
   /// A [ValidationDelegate] this validator uses for [Config]'s
   /// specific fields validation.
   final V validationDelegate;
 
   /// A [ValidationResultBuilder] this validator uses
   /// to create a [ValidationResult].
-  final ValidationResultBuilder<R> validationResultBuilder;
+  final R validationResultBuilder;
 
   /// Creates a new instance of the [ConfigValidator] with the
   /// given [validationDelegate] and [validationResultBuilder].
@@ -33,5 +33,5 @@ abstract class ConfigValidator<T extends Config, V extends ValidationDelegate,
   /// Validates the given [config].
   ///
   /// Throws a [ConfigValidationError] if the given [config] is not valid.
-  Future<R> validate(T config);
+  Future<ValidationResult> validate(T config);
 }

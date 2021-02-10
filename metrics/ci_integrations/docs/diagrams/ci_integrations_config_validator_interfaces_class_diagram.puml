@@ -33,11 +33,11 @@
                 }
 
                 package validator {
-                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
+                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResultBuilder> {
                         + validationDelegate : V
-                        + validationResultBuilder : ValidationResultBuilder<R>
+                        + validationResultBuilder : R
 
-                        + Future<R> validate(T config)
+                        + Future<ValidationResult> validate(T config)
                     }
                 }
 
