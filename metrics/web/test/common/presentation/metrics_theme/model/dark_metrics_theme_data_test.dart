@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
@@ -25,6 +25,7 @@ void main() {
         expect(darkMetricsThemeData.loginTheme, isNotNull);
         expect(darkMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(darkMetricsThemeData.buildNumberScorecardTheme, isNotNull);
+        expect(darkMetricsThemeData.buildResultBarGraphTheme, isNotNull);
         expect(darkMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(darkMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(darkMetricsThemeData.toggleTheme, isNotNull);

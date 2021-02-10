@@ -80,7 +80,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
       children: [
         Flexible(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 3.0),
+            padding: const EdgeInsets.only(bottom: 7.0),
             child: Text(
               _buildResultDateRange(),
               style: buildResultBarGraphTheme.textStyle,
@@ -88,7 +88,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
           ),
         ),
         SizedBox(
-          height: 60.0,
+          height: 56.0,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -144,16 +144,23 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   /// Returns a string representation between min and max date range
   /// of the [_barsData].
+  ///
+  /// Returns an empty string if the [_barsData] is empty.
+  /// Returns only one date if the min and max dates are equals.
   String _buildResultDateRange() {
     if (_barsData.isEmpty) return '';
 
     const dateFormat = 'd MMM';
-    final firstDate = _barsData.first.date;
-    final lastDate = _barsData.last.date;
+    final minDate = _barsData.first.date;
+    final maxDate = _barsData.last.date;
 
-    final firstDateFormat = DateFormat(dateFormat).format(firstDate);
-    final lastDateFormat = DateFormat(dateFormat).format(lastDate);
+    final minDateFormat = DateFormat(dateFormat).format(minDate);
+    final maxDateFormat = DateFormat(dateFormat).format(maxDate);
 
-    return '$firstDateFormat - $lastDateFormat';
+    if (minDate.difference(maxDate).inMilliseconds == 0) {
+      return minDateFormat;
+    }
+
+    return '$minDateFormat - $maxDateFormat';
   }
 }

@@ -1,11 +1,13 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -34,6 +36,89 @@ void main() {
         );
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "applies the text style from the metrics theme",
+      (WidgetTester tester) async {
+        const expectedTextStyle = TextStyle(color: Colors.red);
+        const theme = MetricsThemeData(
+          buildResultBarGraphTheme: BuildResultBarGraphThemeData(
+            textStyle: expectedTextStyle,
+          ),
+        );
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          theme: theme,
+        ));
+
+        final actualTextStyle = tester.widget<Text>(find.byType(Text)).style;
+
+        expect(actualTextStyle, equals(expectedTextStyle));
+      },
+    );
+
+    testWidgets(
+      "displays a date range",
+      (WidgetTester tester) async {
+        final minDate = buildResults.first.date;
+        final maxDate = buildResults.last.date;
+        final minDateFormat = DateFormat('d MMM').format(minDate);
+        final maxDateFormat = DateFormat('d MMM').format(maxDate);
+
+        final expected = '$minDateFormat - $maxDateFormat';
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        expect(find.text(expected), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays a single date",
+      (WidgetTester tester) async {
+        final minDate = buildResults.first.date;
+        final expected = DateFormat('d MMM').format(minDate);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView([
+              buildResults.first,
+              buildResults.first,
+            ]),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        expect(find.text(expected), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays an empty string if the list of build results is empty",
+      (WidgetTester tester) async {
+        final emptyBuildResults = <BuildResultViewModel>[];
+
+        const expected = '';
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(emptyBuildResults),
+            numberOfBuildsToDisplay: emptyBuildResults.length,
+          ),
+        ));
+
+        expect(find.text(expected), findsOneWidget);
       },
     );
 
@@ -253,13 +338,13 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     ),
     BuildResultViewModel(
       duration: const Duration(seconds: 5),
-      date: DateTime.now(),
+      date: DateTime.now().add(const Duration(days: 1)),
       buildStatus: BuildStatus.failed,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
     BuildResultViewModel(
       duration: const Duration(seconds: 5),
-      date: DateTime.now(),
+      date: DateTime.now().add(const Duration(days: 2)),
       buildStatus: BuildStatus.unknown,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
