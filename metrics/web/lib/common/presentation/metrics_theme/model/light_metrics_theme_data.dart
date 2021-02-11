@@ -66,9 +66,11 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
   static const Color _inactiveButtonHoverColor = Color(0xFFcccccc);
   static const Color _inactiveTextColor = Color(0xff040d14);
+  static const Color _userMenuTextColor = Color(0xFF0d0d0d);
   static const Color _cardHoverColor = Color(0xFFf6f8f9);
   static const Color _borderColor = Color(0xFFe3e9ed);
   static const Color _tableHeaderColor = Color(0xFF79858b);
+  static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.5);
@@ -88,6 +90,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveStatusColor = Color(0xFF43494D);
   static const Color _iconColor = Color(0xFF2d2d33);
   static const Color _performanceBackgroundColor = Color(0xFFf5f8fa);
+  static const Color _buildResultDateRangeTextColor = Color(0xFF0D0D0D);
 
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
@@ -381,7 +384,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           buildResultBarGraphTheme: const BuildResultBarGraphThemeData(
             textStyle: MetricsTextStyle(
-              color: ColorConfig.gray900,
+              color: _buildResultDateRangeTextColor,
               fontWeight: FontWeight.bold,
               lineHeightInPixels: 13.0,
               fontSize: 14.0,
@@ -444,17 +447,17 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
-            dividerColor: ColorConfig.gray200,
+            dividerColor: _textPlaceholderColor,
             shadowColor: _shadowColor,
             contentTextStyle: MetricsTextStyle(
-              color: ColorConfig.gray900,
+              color: _userMenuTextColor,
               lineHeightInPixels: 20.0,
               fontSize: 16.0,
             ),
           ),
           textPlaceholderTheme: const TextPlaceholderThemeData(
             textStyle: MetricsTextStyle(
-              color: ColorConfig.gray200,
+              color: _textPlaceholderColor,
               fontSize: 14.0,
               lineHeightInPixels: 18.0,
             ),
@@ -500,7 +503,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 backgroundColor: inputColor,
                 valueColor: _inactiveStatusColor,
                 valueStyle: TextStyle(
-                  color: ColorConfig.gray900,
+                  color: _userMenuTextColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
@@ -556,7 +559,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             sectionContentTextStyle: MetricsTextStyle(
-              color: ColorConfig.gray900,
+              color: _userMenuTextColor,
               lineHeightInPixels: 20.0,
               fontSize: 16.0,
             ),

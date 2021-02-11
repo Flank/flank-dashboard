@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -144,7 +144,7 @@ class _MetricsAppState extends State<MetricsApp> {
                     scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
                     inputDecorationTheme: const InputDecorationTheme(
                       filled: true,
-                      fillColor: ColorConfig.gray900,
+                      fillColor: DarkMetricsThemeData.inputColor,
                       hoverColor: Colors.black,
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,
