@@ -1,7 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 
 /// A widget that displays a circle as an indicator for the graphs
 /// or graph elements.
@@ -20,7 +21,7 @@ class CircleGraphIndicator extends StatelessWidget {
 
   /// Creates a new instance of the [CircleGraphIndicator].
   ///
-  /// The [outerColor] default value is [Colors.black].
+  /// The [outerColor] default value is [MetricsColors.black].
   /// The [innerColor] default value is [Colors.white].
   ///
   /// The given [outerDiameter] must be greater than the given [innerDiameter].
@@ -28,7 +29,7 @@ class CircleGraphIndicator extends StatelessWidget {
     Key key,
     @required this.outerDiameter,
     @required this.innerDiameter,
-    this.outerColor = Colors.black,
+    this.outerColor = MetricsColors.black,
     this.innerColor = Colors.white,
   })  : assert(outerDiameter != null),
         assert(innerDiameter != null),

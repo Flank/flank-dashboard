@@ -13,6 +13,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -234,33 +235,33 @@ class DarkMetricsThemeData extends MetricsThemeData {
           metricsButtonTheme: const MetricsButtonThemeData(
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
-                color: ColorConfig.primaryColor,
+                color: MetricsColors.green500,
                 labelStyle: TextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray900,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               neutral: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
+                color: MetricsColors.gray700,
                 labelStyle: TextStyle(
-                  color: Colors.white,
+                  color: MetricsColors.white,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               negative: MetricsButtonStyle(
-                color: ColorConfig.accentColor,
+                color: MetricsColors.orange500,
                 labelStyle: TextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray900,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
+                color: MetricsColors.gray700,
                 labelStyle: TextStyle(
-                  color: ColorConfig.inactiveTextColor,
+                  color: MetricsColors.gray800,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -268,12 +269,12 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           textFieldTheme: const TextFieldThemeData(
-            focusColor: Colors.black,
-            hoverBorderColor: _dropdownHoverBorderColor,
-            prefixIconColor: _inactiveColor,
-            focusedPrefixIconColor: Colors.white,
+            focusColor: MetricsColors.black,
+            hoverBorderColor: MetricsColors.gray500,
+            prefixIconColor: MetricsColors.gray400,
+            focusedPrefixIconColor: MetricsColors.white,
             textStyle: MetricsTextStyle(
-              color: Colors.white,
+              color: MetricsColors.white,
               fontSize: 16.0,
               lineHeightInPixels: 20.0,
             ),
@@ -298,27 +299,27 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(
-              color: Colors.white,
+              color: MetricsColors.white,
               fontSize: 26.0,
               fontWeight: FontWeight.bold,
             ),
             loginOptionButtonStyle: MetricsButtonStyle(
-              color: Colors.white,
-              hoverColor: _loginOptionHoverColor,
+              color: MetricsColors.white,
+              hoverColor: MetricsColors.gray100,
               labelStyle: MetricsTextStyle(
                 lineHeightInPixels: 20.0,
-                color: _loginOptionTextColor,
+                color: MetricsColors.gray300,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            passwordVisibilityIconColor: Colors.white,
+            passwordVisibilityIconColor: MetricsColors.white,
             inactiveLoginOptionButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.inactiveColor,
-              hoverColor: ColorConfig.inactiveColor,
+              color: MetricsColors.gray700,
+              hoverColor: MetricsColors.gray700,
               labelStyle: MetricsTextStyle(
                 lineHeightInPixels: 20.0,
-                color: ColorConfig.inactiveTextColor,
+                color: MetricsColors.gray800,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
               ),
