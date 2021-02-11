@@ -68,13 +68,10 @@ void main() {
       "displays a date range text",
       (WidgetTester tester) async {
         final dateFormat = DateFormat('d MMM');
-
         final firstDate = buildResults.first.date;
         final lastDate = buildResults.last.date;
-
         final firstDateFormatted = dateFormat.format(firstDate);
         final lastDateFormatted = dateFormat.format(lastDate);
-
         final expected = '$firstDateFormatted - $lastDateFormatted';
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
