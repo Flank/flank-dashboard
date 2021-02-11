@@ -40,7 +40,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style from the metrics theme",
+      "applies a text style from the metrics theme",
       (WidgetTester tester) async {
         const expectedTextStyle = TextStyle(color: Colors.red);
         const theme = MetricsThemeData(
@@ -64,7 +64,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a date range",
+      "displays a date range string",
       (WidgetTester tester) async {
         final minDate = buildResults.first.date;
         final maxDate = buildResults.last.date;
@@ -85,7 +85,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a single date",
+      "displays a single date string if dates in build results are equal",
       (WidgetTester tester) async {
         final minDate = buildResults.first.date;
         final expected = DateFormat('d MMM').format(minDate);

@@ -58,7 +58,6 @@ import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_but
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Color(0xFF1b1b1d);
-  static const Color inputColor = Color(0xFF0d0d0d);
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: ColorConfig.shimmerColor),
   );
@@ -82,8 +81,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _tileLoadingBackgroundColor = Color(0xFF242425);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _tableHeaderLoadingBackgroundColor = Color(0xFF363537);
-  static const Color _metricsLightGrey = Color(0xFFDCDCE5);
-  static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
   static const Color _sparklineTextColor = Color(0xFFD7D7E5);
   static const Color _sparklineFillColor = Color(0xFF29292B);
   static const Color _inactiveToggleColor = Color(0xFF1B1B1D);
@@ -283,8 +280,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             hoverBackgroundColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
             openedButtonBorderColor: ColorConfig.shimmerColor,
-            closedButtonBackgroundColor: inputColor,
-            closedButtonBorderColor: inputColor,
+            closedButtonBackgroundColor: ColorConfig.gray900,
+            closedButtonBorderColor: ColorConfig.gray900,
             textStyle: _defaultDropdownTextStyle,
             shadowColor: _shadowColor,
             iconColor: Colors.white,
@@ -356,19 +353,19 @@ class DarkMetricsThemeData extends MetricsThemeData {
             valueTextStyle: MetricsTextStyle(
               fontSize: 24.0,
               lineHeightInPixels: 24.0,
-              color: _metricsLightGrey,
+              color: ColorConfig.gray200,
               fontWeight: FontWeight.bold,
             ),
             descriptionTextStyle: MetricsTextStyle(
               fontSize: 14.0,
               lineHeightInPixels: 14.0,
-              color: _metricsLightGrey,
+              color: ColorConfig.gray200,
               fontWeight: FontWeight.bold,
             ),
           ),
           buildResultBarGraphTheme: const BuildResultBarGraphThemeData(
             textStyle: MetricsTextStyle(
-              color: _metricsLightGrey,
+              color: ColorConfig.gray200,
               fontWeight: FontWeight.bold,
               lineHeightInPixels: 13.0,
               fontSize: 14.0,
@@ -381,7 +378,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 22.0,
               lineHeightInPixels: 26.0,
             ),
-            strokeColor: _sparklineStrokeColor,
+            strokeColor: ColorConfig.gray200,
             fillColor: _sparklineFillColor,
           ),
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
@@ -468,7 +465,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
-            backgroundColor: inputColor,
+            backgroundColor: ColorConfig.gray900,
             shimmerColor: ColorConfig.shimmerColor,
           ),
           toastTheme: const ToastThemeData(
