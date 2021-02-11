@@ -128,7 +128,7 @@ The `PromptWriter` is an interface that provides methods for prompts. This class
 
 ### Doctor
 
-The `Doctor` is a class used to check whether all required third-party `CLI`s are installed and get their version. This class encapsulates the logic of the `DoctorCommand` in it and uses the `Service`s to interact with the external `CLI`s. To create a `Doctor` inside the `DoctorCommand` we are using the `DoctorFactory`. It allows us to easilly tests the `DoctorCommand` and keep it SRP.
+The `Doctor` is a class used to check whether all required third-party `CLI`s are installed and get their version. This class encapsulates the logic of the [`DoctorCommand`](#doctorcommand) in it and uses the [`Service`](#service)s to interact with the external `CLI`s. To create a `Doctor` inside the `DoctorCommand` we are using the `DoctorFactory`. It allows us to easily tests the `DoctorCommand` and keep it SRP.
 
 The following class diagram demonstrates how the classes described above interact:
 
@@ -136,7 +136,7 @@ The following class diagram demonstrates how the classes described above interac
 
 ### AppDistributor
 
-The `AppDistributor` class is needed to separate the deployment logic from the [DeployCommand](#DeployCommand). It has the `deploy` method that encapsulates the interaction with the external `Service`s and deploys the Metrics Web Application. To create an `AppDistributor` inside the `DeployCommand` we are using the `AppDistributorFactory`. It allows us to easilly tests the `DeployCommand` and keep it SRP.
+The `AppDistributor` class is needed to separate the deployment logic from the [`DeployCommand`](#DeployCommand). It has the `deploy` method that encapsulates the interaction with the external [`Service`](#service)s and deploys the Metrics Web Application. To create an `AppDistributor` inside the `DeployCommand` we are using the `AppDistributorFactory`. It allows us to easily tests the `DeployCommand` and keep it SRP.
 
 The following class diagram demonstrates how the classes described above interact:
 
