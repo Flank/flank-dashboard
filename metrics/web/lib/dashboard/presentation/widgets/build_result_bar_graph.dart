@@ -146,7 +146,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
   /// of the [_barsData].
   ///
   /// Returns an empty string if the [_barsData] is empty.
-  /// Returns only one date if the min and max dates are equals.
+  /// Returns only one date if the min and max dates are equal.
   String _buildResultDateRange() {
     if (_barsData.isEmpty) return '';
 
