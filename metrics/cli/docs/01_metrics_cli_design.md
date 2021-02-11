@@ -42,7 +42,7 @@ The `DoctorCommand` is the `Metrics CLI` command that provides the ability to si
 
 The following activity diagram shows a top-level flow of the `DoctorCommand`:
 
-![Doctor Command Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/doctor_command_activity_diagram.puml)
+![Doctor Command Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_activity_diagram.puml)
 
 ### DeployCommand
 
@@ -50,7 +50,7 @@ The `DeployCommand` is the `Metrics CLI` command that is responsible for the Met
 
 The following activity diagram shows a top-level flow of the `DeployCommand`:
 
-![Deploy Command Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/deploy_command_activity_diagram.puml)
+![Deploy Command Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_activity_diagram.puml)
 
 ### Metrics CLI interfaces
 
@@ -79,7 +79,7 @@ To make the `Metrics CLI` more clean and structured, we should define interfaces
 
 The following class diagram demonstrates the relationships between [CLIs](#CLI) and [Services](#Service):
 
-![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
+![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
 
 Let's review the main `service` interfaces we need to deploy the Metrics Web Application: 
     
@@ -103,7 +103,7 @@ Since we have interfaces for each service and `CLI`s implemented, we should adap
 
 Let's review the class diagram representing the `Metrics CLI` services and `CLI`s with relationships between them: 
 
-![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/services_class_diagram.puml)
+![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
 
 ### Prompt
 
@@ -114,7 +114,7 @@ To interact with a user during the deployment process, we should include prompts
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
 
-![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
+![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
 
 Let's take a look at the classes the prompts integration requires in more details: 
 
@@ -132,7 +132,7 @@ The `Doctor` is a class used to check whether all required third-party `CLI`s ar
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
+![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
 
 ### AppDistributor
 
@@ -140,7 +140,7 @@ The `AppDistributor` class is needed to separate the deployment logic from the [
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
+![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
 ### Making Things Work
 
@@ -148,15 +148,15 @@ The `MetricsCommandRunner` is a class that extends a `CommandRunner` and is used
 
 The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
 
-![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
+![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DoctorCommand`:
 
-![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
+![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DeployCommand`:
 
-![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
 
 ## Usage
 
