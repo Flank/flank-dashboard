@@ -57,21 +57,25 @@ void main() {
           theme: theme,
         ));
 
-        final actualTextStyle = tester.widget<Text>(find.byType(Text)).style;
+        final textWidget = tester.widget<Text>(find.byType(Text));
+        final actualTextStyle = textWidget.style;
 
         expect(actualTextStyle, equals(expectedTextStyle));
       },
     );
 
     testWidgets(
-      "displays a date range string",
+      "displays a date range text",
       (WidgetTester tester) async {
-        final minDate = buildResults.first.date;
-        final maxDate = buildResults.last.date;
-        final minDateFormat = DateFormat('d MMM').format(minDate);
-        final maxDateFormat = DateFormat('d MMM').format(maxDate);
+        final dateFormat = DateFormat('d MMM');
 
-        final expected = '$minDateFormat - $maxDateFormat';
+        final firstDate = buildResults.first.date;
+        final lastDate = buildResults.last.date;
+
+        final firstDateFormatted = dateFormat.format(firstDate);
+        final lastDateFormatted = dateFormat.format(lastDate);
+
+        final expected = '$firstDateFormatted - $lastDateFormatted';
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
@@ -85,10 +89,10 @@ void main() {
     );
 
     testWidgets(
-      "displays a single date string if dates in build results are equal",
+      "displays a text with the single date if dates of build results are equal",
       (WidgetTester tester) async {
-        final minDate = buildResults.first.date;
-        final expected = DateFormat('d MMM').format(minDate);
+        final firstDate = buildResults.first.date;
+        final expected = DateFormat('d MMM').format(firstDate);
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
@@ -105,11 +109,9 @@ void main() {
     );
 
     testWidgets(
-      "displays an empty string if the list of build results is empty",
+      "does not display the date range text if the list of build results is empty",
       (WidgetTester tester) async {
         final emptyBuildResults = <BuildResultViewModel>[];
-
-        const expected = '';
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
@@ -118,7 +120,7 @@ void main() {
           ),
         ));
 
-        expect(find.text(expected), findsOneWidget);
+        expect(find.byType(Text), findsNothing);
       },
     );
 

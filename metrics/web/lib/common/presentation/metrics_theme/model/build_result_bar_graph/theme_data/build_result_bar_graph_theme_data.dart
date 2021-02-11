@@ -10,7 +10,7 @@ class BuildResultBarGraphThemeData {
 
   /// Creates a new instance of the [BuildResultBarGraphThemeData].
   ///
-  /// If the [textStyle] is null, an instance of the `TextStyle` used.
+  /// If the [textStyle] is `null`, an instance of the [TextStyle] is used.
   const BuildResultBarGraphThemeData({
     TextStyle textStyle,
   }) : textStyle = textStyle ?? const TextStyle();

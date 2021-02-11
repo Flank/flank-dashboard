@@ -90,7 +90,6 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveStatusColor = Color(0xFF43494D);
   static const Color _iconColor = Color(0xFF2d2d33);
   static const Color _performanceBackgroundColor = Color(0xFFf5f8fa);
-  static const Color _buildResultDateRangeTextColor = Color(0xFF0D0D0D);
 
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
@@ -384,7 +383,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           buildResultBarGraphTheme: const BuildResultBarGraphThemeData(
             textStyle: MetricsTextStyle(
-              color: _buildResultDateRangeTextColor,
+              color: _userMenuTextColor,
               fontWeight: FontWeight.bold,
               lineHeightInPixels: 13.0,
               fontSize: 14.0,

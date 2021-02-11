@@ -20,6 +20,7 @@ void main() {
 
     test("creates a theme with the given text style", () {
       const textStyle = TextStyle(color: Colors.yellow);
+
       const themeData = BuildResultBarGraphThemeData(textStyle: textStyle);
 
       expect(themeData.textStyle, equals(textStyle));
