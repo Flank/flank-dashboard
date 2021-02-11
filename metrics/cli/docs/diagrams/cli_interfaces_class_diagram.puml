@@ -1,0 +1,38 @@
+@startuml cli_interfaces_class_diagram
+
+package interfaces {
+    package cli {
+        interface Cli {
+            + version() : Future<void>
+        }
+    }
+
+    package service {
+        interface Service {
+            + version() : void
+        }
+    }
+}
+
+package cool {
+    package service as cool.service{
+        interface CoolService extends Service{
+            + coolMethod() : void
+        }
+
+        class CoolCliServiceAdapter implements CoolService {
+            - _coolCli : CoolCli
+        }
+    }
+
+    package cli as cool.cli {
+        class CoolCli implements Cli {
+            + coolCommand() : void
+            + awesomeCommand() : void
+        }
+    }
+}
+
+CoolCliServiceAdapter -> CoolCli : uses
+
+@enduml

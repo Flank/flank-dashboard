@@ -6,9 +6,9 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
-import 'package:deploy/cli/firebase/firebase_command.dart';
-import 'package:deploy/cli/gcloud/gcloud_command.dart';
-import 'package:deploy/cli/git/git_command.dart';
+import 'package:cli/cli/firebase/firebase_command.dart';
+import 'package:cli/cli/gcloud/gcloud_command.dart';
+import 'package:cli/cli/git/git_command.dart';
 
 /// class extending [Command] to facilitate  building GCloud project,build and deploy metrics app.
 class DeployCommand extends Command {

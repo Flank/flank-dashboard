@@ -1,0 +1,88 @@
+@startuml deploy_command_class_diagram
+
+package firebase.service {
+    interface FirebaseService {
+        + login(): Future<String>
+        + addProject(String gcloudProjectId, String firebaseToken): Future<void>
+        + deployHosting(String appPath, String firebaseToken): Future<void>
+        + deployFirestore(String firestorePath, String firebaseToken): Future<void>
+    }
+}
+
+package gcould.service {
+    interface GCloudService {
+        + login() : Future<void>
+        + createProject() : Future<String>
+    }
+}
+
+package flutter.service {
+    interface FlutterService  {
+        + build(Directory appPath) : Future<void>
+    }
+}
+
+package  git.service{
+    interface GitService  {
+        + checkout(String repoUrl, String srcPath) : Future<void>
+    }
+
+}
+
+package  npm.service {
+    interface NpmService  {
+        + installDependencies(String path) : Future<void>
+    }
+
+}
+
+package deploy {
+    package command {
+        class DeployCommand {
+            - _appDistributorFactory : AppDistributorFactory
+            + run() : Future<void>
+        }
+    }
+
+    package constants {
+        class DeployConstants{}
+    }
+
+    package factory {
+        class AppDistributorFactory {
+            + create() : AppDistributor
+        }
+    }
+
+    class AppDistributor {
+        - _fileHelper: FileHelper
+        - _npmService : NpmService
+        - _gitService : GitService
+        - _flutterService : FlutterService
+        - _gcloudService : GCloudService
+        - _firebaseService : FirebaseService
+        + deploy() : Future<void>
+    }
+}
+
+package utils {
+    class FileHelper {
+        + deleteDirectory(Directory directory) : Future<void>
+    }
+}
+
+AppDistributor -down-> NpmService : uses
+AppDistributor -down-> GitService : uses
+AppDistributor -down-> FlutterService : uses
+AppDistributor -down-> GCloudService : uses
+AppDistributor -down-> FirebaseService : uses
+
+AppDistributor -left-> FileHelper : uses
+AppDistributor -> DeployConstants : uses
+
+DeployCommand -down-> AppDistributorFactory : uses
+DeployCommand -down-> AppDistributor : uses
+
+AppDistributorFactory --> AppDistributor : creates
+
+@enduml

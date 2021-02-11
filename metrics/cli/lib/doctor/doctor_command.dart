@@ -2,10 +2,10 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:deploy/cli/firebase/firebase_command.dart';
-import 'package:deploy/cli/flutter/flutter_command.dart';
-import 'package:deploy/cli/gcloud/gcloud_command.dart';
-import 'package:deploy/cli/git/git_command.dart';
+import 'package:cli/cli/firebase/firebase_command.dart';
+import 'package:cli/cli/flutter/flutter_command.dart';
+import 'package:cli/cli/gcloud/gcloud_command.dart';
+import 'package:cli/cli/git/git_command.dart';
 
 /// A class providing doctor command to verify dependencies.
 class DoctorCommand extends Command {

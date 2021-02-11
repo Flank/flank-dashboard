@@ -1,0 +1,194 @@
+@startuml deploy_command_sequence_diagram
+
+scale 1900 height
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box Deploy Command
+participant MetricsCliRunner
+participant DeployCommand
+participant AppDistributor
+participant GCloudService
+participant FirebaseService
+participant FlutterService
+participant GitService
+participant NpmService
+participant FirebaseCli
+participant FlutterCli
+participant GCloudCli
+participant GitCli
+participant NpmCli
+end box
+
+participant gcloud
+participant firebase
+participant git
+participant flutter
+participant npm
+participant FileHelper
+
+Bob -> MetricsCliRunner ++ : run deploy command
+MetricsCliRunner -> DeployCommand ++ : run()
+DeployCommand -> AppDistributor ++ : deploy()
+AppDistributor -> GCloudService ++ : login()
+GCloudService -> GCloudCli ++ : login()
+GCloudCli -> gcloud ++ : login to the google cloud
+gcloud --> Bob -- : starts interactive login
+GCloudCli --
+GCloudService --
+
+Bob -> gcloud ++ : signs in
+gcloud --> AppDistributor -- : login finished
+
+AppDistributor -> GCloudService ++ : createProject()
+
+GCloudService -> GCloudCli ++ : addProject()
+GCloudCli -> gcloud ++ : create a new google cloud project
+gcloud --> GCloudService -- : project has been created
+GCloudCli --
+
+GCloudService -> GCloudCli ++ : setProject()
+GCloudCli -> gcloud ++ : set gcloud config to point to a new project
+gcloud --> GCloudService -- : project has been set
+GCloudCli --
+
+GCloudService -> GCloudCli ++ : selectRegion()
+GCloudCli --> gcloud ++ : request a list of regions
+gcloud --> Bob -- : shows all available regions
+GCloudCli --
+GCloudService --> Bob : asks to enter the regionId
+Bob -> GCloudService : enters the regionId
+
+GCloudService -> GCloudCli ++ : addProjectApp(region, projectID)
+GCloudCli -> gcloud ++ : create project app
+gcloud --> GCloudService -- : project app has been created
+GCloudCli --
+
+GCloudService -> GCloudCli ++ : enableFirestoreApi()
+GCloudCli -> gcloud ++ : enable firestore API
+gcloud --> GCloudService -- : firestore API has been enabled
+GCloudCli --
+
+GCloudService -> GCloudCli ++ : createDatabase(region, projectID)
+GCloudCli -> gcloud ++ : create a database
+gcloud --> GCloudService -- : database has been created
+GCloudCli --
+
+GCloudService --> AppDistributor -- : gcloud project has been created
+
+AppDistributor -> FirebaseService ++ : login()
+FirebaseService -> FirebaseCli ++ : login()
+FirebaseCli -> firebase ++ : login to the firebase
+firebase --> Bob -- : starts interactive login
+FirebaseCli --
+
+Bob -> firebase ++ : signs in
+firebase --> Bob -- : firebase token
+Bob -> FirebaseService : enters firebase token
+FirebaseService --> AppDistributor -- : firebaseToken
+
+AppDistributor -> FirebaseService ++ : addProject(projectId, firebaseToken)
+
+FirebaseService -> FirebaseCli ++ : addFirebase(projectID, firebaseToken)
+FirebaseCli -> firebase ++ : add firebase capabilities to the cloud project
+firebase --> FirebaseService -- : firebase capabilities has been added
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : createWebApp(projectID, firebaseToken)
+FirebaseCli -> firebase ++ : create web app
+firebase --> FirebaseService -- : web app has been created
+FirebaseCli --
+
+FirebaseService --> AppDistributor -- : gcloud project has been created
+
+AppDistributor -> GitService ++ : checkout(repoUrl, srcPath)
+GitService -> GitCli ++ : clone(repoURL, srcPath)
+GitCli -> git ++ : clone the source project
+git --> AppDistributor -- : project has been cloned
+GitCli --
+GitService --
+
+
+AppDistributor -> NpmService ++ : installDependencies(firebasePath)
+NpmService -> NpmCli ++ : install(firebasePath)
+NpmCli -> npm ++ : install npm dependencies into the firebase folder
+npm --> AppDistributor -- : dependencies have been installed
+NpmCli --
+NpmService --
+
+AppDistributor -> NpmService ++ : installDependencies(firebaseFunctionsPath)
+NpmService -> NpmCli ++ : install(firebasePath)
+NpmCli -> npm ++ : install npm dependencies into the functions folder
+npm --> AppDistributor -- : dependencies have been installed
+NpmCli --
+NpmService --
+
+AppDistributor -> FirebaseService ++ : deployFirestore(String firestorePath, String firebaseToken)
+FirebaseService -> FirebaseCli ++ : setFirebaseProject(projectId, firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : choose the firebase project
+firebase --> FirebaseService -- : project has been chosen
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : deployRules(firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the firestore rules to firebase
+firebase --> FirebaseService -- : firestore rules have been deployed
+FirebaseCli --
+
+FirebaseService --> Bob : Blaze billing account warning
+Bob -> FirebaseService : enters any key
+
+FirebaseService -> FirebaseCli ++ : deployFunctions(firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the functions to firebase
+firebase --> FirebaseService -- : functions have been deployed
+FirebaseCli --
+
+FirebaseService --> AppDistributor -- : firestore has been deployed
+
+
+AppDistributor -> FlutterService ++ : build()
+FlutterService -> FlutterCli ++ : enableWeb()
+FlutterCli -> flutter ++ : enable web support
+flutter --> FlutterService -- : web support has been enabled
+FlutterCli --
+FlutterService -> FlutterCli ++ : buildWeb(workingDir)
+FlutterCli -> flutter ++ : build the source project
+flutter --> AppDistributor -- : flutter web app has been built
+FlutterCli --
+FlutterService --
+
+AppDistributor -> FirebaseService ++ : deployHosting(String appPath, String firebaseToken)
+FirebaseService -> FirebaseCli ++ : setFirebaseProject(projectId, webPath, firebaseToken)
+FirebaseCli -> firebase ++ : choose the firebase project
+firebase --> FirebaseService -- : project has been chosen
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : clearTarget(webPath, firebaseToken)
+FirebaseCli -> firebase ++ : clear the firebase target
+firebase --> FirebaseService -- : firebase target has been cleared
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : applyTarget(projectId, webPath, firebaseToken)
+FirebaseCli -> firebase ++ : apply the firebase target
+firebase --> FirebaseService -- : firebase target has been applied
+FirebaseCli --
+
+FirebaseService --> Bob : firebase analytics warning
+Bob -> FirebaseService : enters any key
+
+FirebaseService -> FirebaseCli ++ : deployHosting(webPath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the web application to the hosting
+firebase --> AppDistributor -- : application has been deployed
+FirebaseCli --
+FirebaseService --
+
+AppDistributor -> FileHelper ++: deleteDirectory(directory)
+FileHelper --> AppDistributor --: directory has been cleaned up
+AppDistributor --> DeployCommand --: deploy finished
+DeployCommand --> MetricsCliRunner --: command finished
+MetricsCliRunner --> Bob -- : terminate
+MetricsCliRunner --
+
+@enduml
