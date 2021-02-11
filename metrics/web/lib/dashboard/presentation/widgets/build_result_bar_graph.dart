@@ -142,7 +142,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     }
   }
 
-  /// Returns a string representation between min and max date range
+  /// Returns a text to display as a range between min and max date
   /// of the [_barsData].
   ///
   /// Returns an empty string if the [_barsData] is empty.

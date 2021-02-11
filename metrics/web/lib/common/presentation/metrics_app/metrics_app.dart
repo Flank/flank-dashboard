@@ -144,7 +144,7 @@ class _MetricsAppState extends State<MetricsApp> {
                     scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
                     inputDecorationTheme: const InputDecorationTheme(
                       filled: true,
-                      fillColor: DarkMetricsThemeData.inputColor,
+                      fillColor: ColorConfig.gray900,
                       hoverColor: Colors.black,
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,
