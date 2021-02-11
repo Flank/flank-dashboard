@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
@@ -69,6 +70,7 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.buildResultBarGraphTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
         expect(themeData.userMenuButtonTheme, isNotNull);
@@ -104,6 +106,7 @@ void main() {
           loginTheme: null,
           projectMetricsTableTheme: null,
           buildNumberScorecardTheme: null,
+          buildResultBarGraphTheme: null,
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
           toggleTheme: null,
@@ -135,6 +138,7 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.buildResultBarGraphTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
@@ -242,6 +246,10 @@ void main() {
           valueTextStyle: TextStyle(color: Colors.red),
         );
 
+        const buildResultBarGraphTheme = BuildResultBarGraphThemeData(
+          textStyle: TextStyle(color: Colors.red),
+        );
+
         const performanceSparklineTheme = SparklineThemeData(
           fillColor: primaryColor,
         );
@@ -324,6 +332,7 @@ void main() {
           loginTheme: loginTheme,
           projectMetricsTableTheme: projectMetricsTableTheme,
           buildNumberScorecardTheme: scorecardTheme,
+          buildResultBarGraphTheme: buildResultBarGraphTheme,
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
           toggleTheme: toggleTheme,
@@ -373,6 +382,10 @@ void main() {
           equals(projectMetricsTableTheme),
         );
         expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
+        expect(
+          copiedTheme.buildResultBarGraphTheme,
+          equals(buildResultBarGraphTheme),
+        );
         expect(
           copiedTheme.performanceSparklineTheme,
           equals(performanceSparklineTheme),
@@ -456,6 +469,10 @@ void main() {
         expect(
           themeData.buildNumberScorecardTheme,
           equals(copiedTheme.buildNumberScorecardTheme),
+        );
+        expect(
+          themeData.buildResultBarGraphTheme,
+          equals(copiedTheme.buildResultBarGraphTheme),
         );
         expect(
           themeData.performanceSparklineTheme,

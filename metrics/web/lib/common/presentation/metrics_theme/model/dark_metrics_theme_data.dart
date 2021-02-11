@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -18,6 +18,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
@@ -94,6 +95,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
   static const Color _popupColor = Color(0xFFf5f8fa);
+  static const Color _buildResultDateRangeTextColor = Color(0xFFDCDCE3);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -363,6 +365,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
               lineHeightInPixels: 14.0,
               color: _metricsLightGrey,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          buildResultBarGraphTheme: const BuildResultBarGraphThemeData(
+            textStyle: MetricsTextStyle(
+              color: _buildResultDateRangeTextColor,
+              fontWeight: FontWeight.bold,
+              lineHeightInPixels: 13.0,
+              fontSize: 14.0,
             ),
           ),
           performanceSparklineTheme: const SparklineThemeData(
