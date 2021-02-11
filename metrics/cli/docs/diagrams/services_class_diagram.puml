@@ -8,7 +8,9 @@ package firebase {
             + deployHosting(String appPath, String firebaseToken): Future<void>
             + deployFirestore(String firestorePath, String firebaseToken): Future<void>
         }
+    }
 
+    package adapter as firebase.adapter {
         class FirebaseCliServiceAdapter {
             - _firebaseCli: FirebaseCli
         }
@@ -37,6 +39,9 @@ package gcloud {
             + createProject() : Future<String>
         }
 
+    }
+
+    package adapter as gcloud.adapter {
         class GCloudCliServiceAdapter {
             gcloudCli : GСloudCli
         }
@@ -62,6 +67,9 @@ package flutter {
             + build(Directory appPath) : Future<void>
         }
 
+    }
+
+    package adapter as flutter.adapter {
         class FlutterCliServiceAdapter  {
             - _flutterCli : FlutterCli
         }
@@ -81,7 +89,9 @@ package git {
         interface GitService  {
             + checkout() : Future<void>
         }
+    }
 
+    package adapter as git.adapter {
         class GitCliServiceAdapter {
             - _gitCli : GitCli
         }
@@ -100,7 +110,9 @@ package npm {
         interface NpmService  {
             + installDependencies(String path) : Future<void>
         }
+    }
 
+    package adapter as npm.adapter {
         class NpmCliServiceAdapter  {
             - _npmCli : NpmCli
         }
