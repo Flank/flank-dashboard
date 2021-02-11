@@ -11,6 +11,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
+import 'package:metrics/util/date.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -152,7 +153,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     final firstDateFormatted = dateFormat.format(firstDate);
     final lastDateFormatted = dateFormat.format(lastDate);
 
-    if (firstDate == lastDate) {
+    if (firstDate.date == lastDate.date) {
       return firstDateFormatted;
     }
 
