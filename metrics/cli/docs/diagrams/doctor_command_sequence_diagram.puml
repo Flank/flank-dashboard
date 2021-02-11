@@ -6,8 +6,9 @@ skinparam BoxPadding 10
 actor Bob
 
 box Doctor Command
-participant CLI
+participant MetricsCliRunner
 participant DoctorCommand
+participant DoctorFactory
 participant Doctor
 
 participant FlutterService
@@ -31,9 +32,11 @@ participant git
 participant npm
 
 
-Bob -> CLI ++ : run doctor command
-CLI -> DoctorCommand ++ : run()
-DoctorCommand -> Doctor ++ : version()
+Bob -> MetricsCliRunner ++ : run doctor command
+MetricsCliRunner -> DoctorCommand ++ : run()
+DoctorCommand -> DoctorFactory ++ : create()
+return Doctor instance
+DoctorCommand -> Doctor ++ : checkVersions()
 
 Doctor -> FlutterService ++ : version()
 FlutterService -> FlutterCli ++ : version()
@@ -70,9 +73,9 @@ npm --> Bob -- : print Npm version
 NpmService --
 NpmCli --
 
-Doctor --> DoctorCommand -- : versions have been printed
-DoctorCommand --> CLI -- : doctor finished
+Doctor --> DoctorCommand -- : doctor finished
+DoctorCommand --> MetricsCliRunner -- : command finished
 
-CLI --> Bob -- : terminate
+MetricsCliRunner --> Bob -- : terminate
 
 @enduml

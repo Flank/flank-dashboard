@@ -8,9 +8,14 @@ skinparam BoxPadding 10
 actor Bob
 
 box Deploy Command
-participant CLI
+participant MetricsCliRunner
 participant DeployCommand
-participant DeployCliService
+participant AppDistributor
+participant GCloudService
+participant FirebaseService
+participant FlutterService
+participant GitService
+participant NpmService
 participant FirebaseCli
 participant FlutterCli
 participant GCloudCli
@@ -25,197 +30,165 @@ participant flutter
 participant npm
 participant FileHelper
 
-Bob -> CLI ++ : run deploy command
-CLI -> DeployCommand ++ : run()
-DeployCommand -> DeployCliService ++ : initGcloudCli()
-DeployCliService -> GCloudCli ++ : login()
+Bob -> MetricsCliRunner ++ : run deploy command
+MetricsCliRunner -> DeployCommand ++ : run()
+DeployCommand -> AppDistributor ++ : deploy()
+AppDistributor -> GCloudService ++ : login()
+GCloudService -> GCloudCli ++ : login()
 GCloudCli -> gcloud ++ : login to the google cloud
 gcloud --> Bob -- : starts interactive login
 GCloudCli --
+GCloudService --
 
 Bob -> gcloud ++ : signs in
-gcloud --> DeployCliService -- : login finished
+gcloud --> AppDistributor -- : login finished
 
-DeployCliService --> Bob : asks to create new project
+AppDistributor -> GCloudService ++ : createProject()
 
-alt Agree to create a new project
-    Bob -> DeployCliService : Y
-    DeployCliService -> GCloudCli ++ : addProject()
-    GCloudCli -> gcloud ++ : create a new google cloud project
-    gcloud --> DeployCliService -- : project has been created
-    GCloudCli --
+GCloudService -> GCloudCli ++ : addProject()
+GCloudCli -> gcloud ++ : create a new google cloud project
+gcloud --> GCloudService -- : project has been created
+GCloudCli --
 
-else Do not agree to create a new project
-    Bob -> DeployCliService : N
-    DeployCliService -> GCloudCli ++ : selectProject()
-    GCloudCli -> gcloud ++ : request a list of gcloud projects
-    GCloudCli --
-    gcloud --> Bob -- : shows all available projects
-    DeployCliService --> Bob : asks to enter the project id
-    Bob -> DeployCliService : enters the project id
-end
-
-DeployCliService -> GCloudCli ++ : setProject()
+GCloudService -> GCloudCli ++ : setProject()
 GCloudCli -> gcloud ++ : set gcloud config to point to a new project
+gcloud --> GCloudService -- : project has been set
 GCloudCli --
-gcloud --> DeployCliService -- : project has been set
 
-DeployCliService -> GCloudCli ++ : selectRegion()
+GCloudService -> GCloudCli ++ : selectRegion()
 GCloudCli --> gcloud ++ : request a list of regions
-GCloudCli --
 gcloud --> Bob -- : shows all available regions
-DeployCliService --> Bob : asks to enter the regionId
-Bob -> DeployCliService : enters the regionId
+GCloudCli --
+GCloudService --> Bob : asks to enter the regionId
+Bob -> GCloudService : enters the regionId
 
-DeployCliService --> Bob : asks to add a project app
+GCloudService -> GCloudCli ++ : addProjectApp(region, projectID)
+GCloudCli -> gcloud ++ : create project app
+gcloud --> GCloudService -- : project app has been created
+GCloudCli --
 
-alt Agree to add the project app
-    Bob -> DeployCliService : Y
-    DeployCliService -> GCloudCli ++ : addProjectApp(region, projectID)
-    GCloudCli -> gcloud ++ : create project app
-    gcloud --> DeployCliService -- : project app has been created
-    GCloudCli --
-else Do not agree to add the project app
-    Bob -> DeployCliService : N
-    DeployCliService --> DeployCliService: skipped
-end
+GCloudService -> GCloudCli ++ : enableFirestoreApi()
+GCloudCli -> gcloud ++ : enable firestore API
+gcloud --> GCloudService -- : firestore API has been enabled
+GCloudCli --
 
+GCloudService -> GCloudCli ++ : createDatabase(region, projectID)
+GCloudCli -> gcloud ++ : create a database
+gcloud --> GCloudService -- : database has been created
+GCloudCli --
 
-DeployCliService --> Bob : asks to add a project database
+GCloudService --> AppDistributor -- : gcloud project has been created
 
-alt Agree to add the project database
-    Bob -> DeployCliService : Y
-    DeployCliService -> GCloudCli ++ : createDatabase(region, projectID)
-    GCloudCli -> gcloud ++ : enable firestore API
-    return firestore API has been enabled
-    GCloudCli -> gcloud ++ : create a database
-    gcloud --> DeployCliService -- : database has been created
-    GCloudCli --
-else Do not agree to add the project database
-    Bob -> DeployCliService : N
-    DeployCliService --> DeployCliService: skipped
-end
-DeployCliService --> DeployCommand -- : gcloud project has been initialized
-
-DeployCommand -> DeployCliService ++ : initFirebaseProject()
-DeployCliService -> FirebaseCli ++ : login()
+AppDistributor -> FirebaseService ++ : login()
+FirebaseService -> FirebaseCli ++ : login()
 FirebaseCli -> firebase ++ : login to the firebase
 firebase --> Bob -- : starts interactive login
 FirebaseCli --
 
 Bob -> firebase ++ : signs in
 firebase --> Bob -- : firebase token
-Bob -> DeployCliService : enters firebase token
+Bob -> FirebaseService : enters firebase token
+FirebaseService --> AppDistributor -- : firebaseToken
 
-DeployCliService --> Bob : asks to add a firebase capabilities
+AppDistributor -> FirebaseService ++ : addProject(projectId, firebaseToken)
 
-alt Agree to add the firebase capabilities
-    Bob -> DeployCliService : Y
-    DeployCliService -> FirebaseCli ++ : addFirebase(projectID, firebaseToken)
-    FirebaseCli -> firebase ++ : add firebase capabilities to the cloud project
-    firebase --> DeployCliService -- : firebase capabilities has been added
-    FirebaseCli --
-else Do not agree to add the firebase capabilities
-    Bob -> DeployCliService : N
-    DeployCliService --> DeployCliService : skipped
-end
+FirebaseService -> FirebaseCli ++ : addFirebase(projectID, firebaseToken)
+FirebaseCli -> firebase ++ : add firebase capabilities to the cloud project
+firebase --> FirebaseService -- : firebase capabilities has been added
+FirebaseCli --
 
-DeployCliService --> Bob -- : asks to add a web app
+FirebaseService -> FirebaseCli ++ : createWebApp(projectID, firebaseToken)
+FirebaseCli -> firebase ++ : create web app
+firebase --> FirebaseService -- : web app has been created
+FirebaseCli --
 
-alt Agree to add the web app
-    Bob -> DeployCliService ++ : Y
-    DeployCliService -> FirebaseCli ++ : createWebApp(projectID, firebaseToken)
-    FirebaseCli -> firebase ++ : create web app
-    FirebaseCli --
-    firebase --> DeployCliService -- : web app has been created
-else Do not agree to add the web app
-    Bob -> DeployCliService : N
-    DeployCliService --> DeployCliService: skipped
-end
+FirebaseService --> AppDistributor -- : gcloud project has been created
 
-DeployCliService --> DeployCommand -- : gcloud project has been initialized
-
-DeployCommand -> DeployCliService ++ : clone()
-DeployCliService -> GitCli ++ : clone(repoURL, tempDir)
+AppDistributor -> GitService ++ : checkout(repoUrl, srcPath)
+GitService -> GitCli ++ : clone(repoURL, srcPath)
 GitCli -> git ++ : clone the source project
-git --> DeployCommand -- : project has been cloned
+git --> AppDistributor -- : project has been cloned
 GitCli --
-DeployCliService --
+GitService --
 
-DeployCommand -> DeployCliService ++ : build()
-DeployCliService -> FlutterCli ++ : enableWeb()
-FlutterCli -> flutter ++ : enable web support
-FlutterCli --
-flutter --> DeployCliService -- : web support has been enabled
-DeployCliService -> FlutterCli ++ : buildWeb(webPath)
-FlutterCli -> flutter ++ : build the source project
-flutter --> DeployCliService -- : flutter web app has been built
-FlutterCli --
-DeployCliService --
 
-DeployCommand -> DeployCliService ++ : deploy()
-DeployCliService -> FirebaseCli ++ : initFirebaseProject(projectId, webPath, firebaseToken)
-FirebaseCli -> firebase ++ : choose the firebase project
-firebase --> DeployCliService -- : project has been chosen
-FirebaseCli --
-
-DeployCliService -> FirebaseCli ++ : clearTarget(webPath, firebaseToken)
-FirebaseCli -> firebase ++ : clear the firebase target
-firebase --> DeployCliService -- : firebase target has been cleared
-FirebaseCli --
-
-DeployCliService -> FirebaseCli ++ : applyTarget(projectId, webPath, firebaseToken)
-FirebaseCli -> firebase ++ : apply the firebase target
-firebase --> DeployCliService -- : firebase target has been applied
-FirebaseCli --
-
-DeployCliService --> Bob : firebase analytics warning
-Bob -> DeployCliService : enters any key
-
-DeployCliService -> FirebaseCli ++ : deployHosting(webPath, firebaseToken)
-FirebaseCli -> firebase ++ : deploy the web application to the hosting
-firebase --> DeployCliService -- : application has been deployed
-FirebaseCli --
-
-DeployCliService -> FirebaseCli ++ : initFirebaseProject(projectId, firebasePath, firebaseToken)
-FirebaseCli -> firebase ++ : choose the firebase project
-firebase --> DeployCliService -- : project has been chosen
-FirebaseCli --
-
-DeployCliService -> NpmCli ++ : install(firebasePath)
+AppDistributor -> NpmService ++ : installDependencies(firebasePath)
+NpmService -> NpmCli ++ : install(firebasePath)
 NpmCli -> npm ++ : install npm dependencies into the firebase folder
-npm --> DeployCliService -- : dependencies have been installed
+npm --> AppDistributor -- : dependencies have been installed
 NpmCli --
+NpmService --
 
-DeployCliService -> FirebaseCli ++ : deployFirestore(firebasePath, firebaseToken)
-FirebaseCli -> firebase ++ : deploy the firestore settings to firebase
-firebase --> DeployCliService -- : firestore settings have been deployed
+AppDistributor -> NpmService ++ : installDependencies(firebaseFunctionsPath)
+NpmService -> NpmCli ++ : install(firebasePath)
+NpmCli -> npm ++ : install npm dependencies into the functions folder
+npm --> AppDistributor -- : dependencies have been installed
+NpmCli --
+NpmService --
+
+AppDistributor -> FirebaseService ++ : deployFirestore(String firestorePath, String firebaseToken)
+FirebaseService -> FirebaseCli ++ : setFirebaseProject(projectId, firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : choose the firebase project
+firebase --> FirebaseService -- : project has been chosen
 FirebaseCli --
 
-DeployCliService --> Bob : asks to enable a Blaze billing account for functions deployment
+FirebaseService -> FirebaseCli ++ : deployRules(firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the firestore rules to firebase
+firebase --> FirebaseService -- : firestore rules have been deployed
+FirebaseCli --
 
-alt Agree to enable the Blaze billing account
-    Bob -> DeployCliService : Y
+FirebaseService --> Bob : Blaze billing account warning
+Bob -> FirebaseService : enters any key
 
-    DeployCliService -> NpmCli ++ : install(firebaseFunctionsPath)
-    NpmCli -> npm ++ : install npm dependencies into the functions folder
-    npm --> DeployCliService -- : dependencies have been installed
-    NpmCli --
+FirebaseService -> FirebaseCli ++ : deployFunctions(firebasePath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the functions to firebase
+firebase --> FirebaseService -- : functions have been deployed
+FirebaseCli --
 
-    DeployCliService -> FirebaseCli ++ : deployFunctions(firebasePath, firebaseToken)
-    FirebaseCli -> firebase ++ : deploy the functions to firebase
-    firebase --> DeployCliService -- : functions have been deployed
-    FirebaseCli --
-else Do not agree to enable the Blaze billing account
-    Bob -> DeployCommand : N
-    DeployCliService --> DeployCliService : skipped
-end
+FirebaseService --> AppDistributor -- : firestore has been deployed
 
-DeployCliService -> FileHelper ++: deleteDirectory(directory)
-FileHelper --> DeployCliService --: directory has been cleaned up
-DeployCliService --> DeployCommand --: deploy finished
-DeployCommand --> CLI --: deploy finished
-CLI --> Bob -- : terminate
-CLI --
+
+AppDistributor -> FlutterService ++ : build()
+FlutterService -> FlutterCli ++ : enableWeb()
+FlutterCli -> flutter ++ : enable web support
+flutter --> FlutterService -- : web support has been enabled
+FlutterCli --
+FlutterService -> FlutterCli ++ : buildWeb(workingDir)
+FlutterCli -> flutter ++ : build the source project
+flutter --> AppDistributor -- : flutter web app has been built
+FlutterCli --
+FlutterService --
+
+AppDistributor -> FirebaseService ++ : deployHosting(String appPath, String firebaseToken)
+FirebaseService -> FirebaseCli ++ : setFirebaseProject(projectId, webPath, firebaseToken)
+FirebaseCli -> firebase ++ : choose the firebase project
+firebase --> FirebaseService -- : project has been chosen
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : clearTarget(webPath, firebaseToken)
+FirebaseCli -> firebase ++ : clear the firebase target
+firebase --> FirebaseService -- : firebase target has been cleared
+FirebaseCli --
+
+FirebaseService -> FirebaseCli ++ : applyTarget(projectId, webPath, firebaseToken)
+FirebaseCli -> firebase ++ : apply the firebase target
+firebase --> FirebaseService -- : firebase target has been applied
+FirebaseCli --
+
+FirebaseService --> Bob : firebase analytics warning
+Bob -> FirebaseService : enters any key
+
+FirebaseService -> FirebaseCli ++ : deployHosting(webPath, firebaseToken)
+FirebaseCli -> firebase ++ : deploy the web application to the hosting
+firebase --> AppDistributor -- : application has been deployed
+FirebaseCli --
+FirebaseService --
+
+AppDistributor -> FileHelper ++: deleteDirectory(directory)
+FileHelper --> AppDistributor --: directory has been cleaned up
+AppDistributor --> DeployCommand --: deploy finished
+DeployCommand --> MetricsCliRunner --: command finished
+MetricsCliRunner --> Bob -- : terminate
+MetricsCliRunner --
 
 @enduml

@@ -1,11 +1,16 @@
 @startuml prompt_class_diagram
 
- package prompt {
+package prompt {
     package writer {
-        class PromptWriter {
-            + prompt(String text, {Stream<List<int>> stdin}) : Future<String>
-            + promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+        interface PromptWriter {
+            + prompt(String text) : Future<String>
+            + promptConfirm(String text) : Future<bool>
             + promptTerminate() : Future<void>
+        }
+
+        class IOPromptWriter implements PromptWriter{
+            - _stdin : Stream<List<int>>
+            - _stdout : Sink<List<int>>
         }
     }
 
@@ -16,12 +21,21 @@
     class PromptHelper {
         - {static} _promptWrapper : PromptWrapper
         + {static} init(PromptWrapper promptWrapper) : void
-        + {static} prompt(String text, {Stream<List<int>> stdin}) : Future<String>
-        + {static} promptConfirm(String text, {Stream<List<int>> stdin}) : Future<bool>
+        + {static} prompt(String text) : Future<String>
+        + {static} promptConfirm(String text) : Future<bool>
         + {static} promptTerminate() : Future<void>
     }
 }
 
+package cool.adapter {
+    class CoolCliServiceAdapter {
+
+    }
+}
+
 PromptHelper --> PromptWriter : uses
+
+CoolCliServiceAdapter --> PromptHelper : uses
+CoolCliServiceAdapter --> PromptStrings : uses
 
 @enduml

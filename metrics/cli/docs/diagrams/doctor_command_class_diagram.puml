@@ -1,35 +1,72 @@
 @startuml doctor_command_class_diagram
 
+package firebase.service {
+    interface FirebaseService {
+        + login(): Future<String>
+        + addProject(String gcloudProjectId, String firebaseToken): Future<void>
+        + deployHosting(String appPath, String firebaseToken): Future<void>
+        + deployFirestore(String firestorePath, String firebaseToken): Future<void>
+    }
+}
+
+package gcould.service {
+    interface GCloudService {
+        + login() : Future<void>
+        + createProject() : Future<String>
+    }
+}
+
+package flutter.service {
+    interface FlutterService  {
+        + build(Directory appPath) : Future<void>
+    }
+}
+
+package git.service{
+    interface GitService  {
+        + checkout() : Future<void>
+    }
+}
+
+package npm.service {
+    interface NpmService  {
+        + installDependencies(String path) : Future<void>
+    }
+}
+
 package doctor {
     package command {
         class DoctorCommand {
-         - doctor : Doctor
-         + run() : Future<void>
+            - _doctorFactory : DoctorFactory
+            + run() : Future<void>
+        }
+    }
+
+    package factory {
+        class DoctorFactory {
+            + create() : Doctor
         }
     }
 
     class Doctor {
-            - _firebaseService : FirebaseService
-            - _gcloudService : GcloudService
-            - _flutterService : FlutterService
-            - _gitService : GitService
-            - _npmService : NpmService
-            + version() : Future<void>
+        - _npmService : NpmService
+        - _gitService : GitService
+        - _flutterService : FlutterService
+        - _gcloudService : GCloudService
+        - _firebaseService : FirebaseService
+        + checkVersions() : Future<void>
     }
 }
 
-package cli {
-    class FirebaseService {}
-    class GcloudService {}
-    class FlutterService {}
-    class GitService {}
-    class NpmService {}
-}
+DoctorCommand -down-> Doctor : uses
+DoctorCommand --> DoctorFactory : uses
 
-DoctorCommand --> Doctor : uses
-Doctor --> FirebaseService : uses
-Doctor --> GcloudService : uses
-Doctor --> FlutterService : uses
-Doctor --> GitService : uses
-Doctor --> NpmService : uses
+DoctorFactory --> Doctor : creates
+
+Doctor -down-> NpmService : uses
+Doctor -down-> GitService : uses
+Doctor -down-> FlutterService : uses
+Doctor -down-> GCloudService : uses
+Doctor -down-> FirebaseService : uses
+
 @enduml

@@ -10,17 +10,34 @@ package runner {
 }
 
 package deploy {
-    class DeployCommand {}
+    package command {
+        class DeployCommand {}
+    }
+
+    package factory as deploy.factory{
+        class AppDistributorFactory {}
+    }
 }
 
 package doctor {
-    class DoctorCommand {}
+    package command as doctor.command {
+        class DoctorCommand {}
+    }
+
+    package factory as doctor.factory {
+        class DoctorFactory {}
+    }
 }
 
 MetricsCommandRunner --> DoctorCommand : uses
 MetricsCommandRunner --> DeployCommand : uses
+MetricsCommandRunner --> AppDistributorFactory : uses
+MetricsCommandRunner --> DoctorFactory : uses
+
 DeployCommand --|> Command
 DoctorCommand --|> Command
+
 MetricsCommandRunner --|> CommandRunner
+
 
 @enduml
