@@ -19,7 +19,7 @@ package prompt {
     }
 
     class Prompter {
-        - _promptWrapper : PromptWrapper
+        - _promptWriter : PromptWriter
         + prompt(String text) : Future<String>
         + promptConfirm(String text) : Future<bool>
         + promptTerminate() : Future<void>

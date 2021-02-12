@@ -90,5 +90,7 @@ Doctor -down-> GitService : uses
 Doctor -down-> FlutterService : uses
 Doctor -down-> GCloudService : uses
 Doctor -down-> FirebaseService : uses
+Doctor -> Services : uses
+
 
 @enduml

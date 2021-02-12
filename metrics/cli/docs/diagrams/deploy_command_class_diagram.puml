@@ -94,9 +94,9 @@ Deployer -down-> GitService : uses
 Deployer -down-> FlutterService : uses
 Deployer -down-> GCloudService : uses
 Deployer -down-> FirebaseService : uses
-
 Deployer -left-> FileHelper : uses
 Deployer -> DeployConstants : uses
+Deployer -> Services : uses
 
 DeployCommand -down-> Deployer : uses
 DeployCommand -down-> DeployerFactory : uses
