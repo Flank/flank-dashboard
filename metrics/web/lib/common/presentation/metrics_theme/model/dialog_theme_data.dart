@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 
 /// A class that stores the theme data for the dialogues.
 class DialogThemeData {
@@ -33,7 +32,7 @@ class DialogThemeData {
   /// If the [accentColor] is `null`, the [Colors.red] is used.
   /// If the [backgroundColor] is `null`, the [Colors.white] is used.
   /// If the [barrierColor] is `null`, the [Colors.black45] is used.
-  /// If the [closeIconColor] is `null`, the [MetricsColors.black] is used.
+  /// If the [closeIconColor] is `null`, the [Colors.black] is used.
   const DialogThemeData({
     Color primaryColor,
     Color accentColor,
@@ -46,5 +45,5 @@ class DialogThemeData {
         accentColor = accentColor ?? Colors.red,
         backgroundColor = backgroundColor ?? Colors.white,
         barrierColor = barrierColor ?? Colors.black45,
-        closeIconColor = closeIconColor ?? MetricsColors.black;
+        closeIconColor = closeIconColor ?? Colors.black;
 }

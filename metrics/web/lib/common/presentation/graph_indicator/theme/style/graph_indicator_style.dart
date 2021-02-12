@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 
 /// A class that stores style data for graph indicators.
 class GraphIndicatorStyle {
@@ -15,9 +14,9 @@ class GraphIndicatorStyle {
   /// Creates a new instance of the [GraphIndicatorStyle].
   ///
   /// The [innerColor] defaults to the [Colors.white].
-  /// The [outerColor] defaults to the [MetricsColors.black].
+  /// The [outerColor] defaults to the [Colors.black].
   const GraphIndicatorStyle({
     this.innerColor = Colors.white,
-    this.outerColor = MetricsColors.black,
+    this.outerColor = Colors.black,
   });
 }
