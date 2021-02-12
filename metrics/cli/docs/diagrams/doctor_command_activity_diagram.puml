@@ -1,11 +1,11 @@
 @startuml doctor_command_activity_diagram
 
-(*) --> “User executes the Doctor command”
---> “Print firebase version”
---> “Print gcloud version”
---> “Print flutter version”
---> “Print npm version”
---> “Print git version”
+(*) --> "User executes the Doctor command"
+--> "Print firebase version"
+--> "Print gcloud version"
+--> "Print flutter version"
+--> "Print npm version"
+--> "Print git version"
 --> (*)
 
 @enduml

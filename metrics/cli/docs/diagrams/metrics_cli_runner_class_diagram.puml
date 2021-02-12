@@ -1,4 +1,4 @@
-@startuml metrics_command_runner_class_diagram
+@startuml metrics_cli_runner_class_diagram
 
 package args {
     class CommandRunner{}
@@ -6,7 +6,7 @@ package args {
 }
 
 package runner {
-    class MetricsCommandRunner {}
+    class MetricsCliRunner {}
 }
 
 package deploy {
@@ -29,15 +29,15 @@ package doctor {
     }
 }
 
-MetricsCommandRunner --> DoctorCommand : uses
-MetricsCommandRunner --> DeployCommand : uses
-MetricsCommandRunner --> AppDistributorFactory : uses
-MetricsCommandRunner --> DoctorFactory : uses
+MetricsCliRunner --> DoctorCommand : uses
+MetricsCliRunner --> DeployCommand : uses
+MetricsCliRunner --> AppDistributorFactory : uses
+MetricsCliRunner --> DoctorFactory : uses
 
 DeployCommand --|> Command
 DoctorCommand --|> Command
 
-MetricsCommandRunner --|> CommandRunner
+MetricsCliRunner --|> CommandRunner
 
 
 @enduml

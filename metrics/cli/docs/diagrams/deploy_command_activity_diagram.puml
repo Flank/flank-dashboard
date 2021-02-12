@@ -1,7 +1,7 @@
 @startuml deploy_command_activity_diagram
 
-(*) --> “User execute the Deploy command”
---> “Gcloud login”
+(*) --> "User execute the Deploy command"
+--> "Gcloud login"
 --> "Gcloud create project"
 --> "Gcloud create project app"
 --> "Gcloud create database"
@@ -9,10 +9,10 @@
 --> "Add firebase"
 --> "Create web app"
 --> "Insltall Npm dependencies"
---> “Deploy firebase rules and functions”
---> “Build web app”
---> "Deploying the web app to the hosting”
---> “Cleanup resources”
+--> "Deploy firebase rules and functions"
+--> "Build web app"
+--> "Deploying the web app to the hosting"
+--> "Cleanup resources"
 --> (*)
 
 @enduml
