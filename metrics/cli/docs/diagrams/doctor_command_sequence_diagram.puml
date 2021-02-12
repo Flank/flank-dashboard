@@ -17,19 +17,8 @@ participant GCloudService
 participant GitService
 participant NpmService
 
-participant FlutterCli
-participant FirebaseCli
-participant GCloudCli
-participant GitCli
-participant NpmCli
-
 end box
 
-participant flutter
-participant firebase
-participant gcloud
-participant git
-participant npm
 
 
 Bob -> MetricsCliRunner ++ : run doctor command
@@ -39,39 +28,23 @@ return Doctor instance
 DoctorCommand -> Doctor ++ : checkVersions()
 
 Doctor -> FlutterService ++ : version()
-FlutterService -> FlutterCli ++ : version()
-FlutterCli -> flutter ++ : request flutter version
-flutter --> Bob -- : print Flutter version
+FlutterService --> Bob -- : print Flutter version
 FlutterService --
-FlutterCli --
 
 Doctor -> FirebaseService ++ : version()
-FirebaseService -> FirebaseCli ++ : version()
-FirebaseCli -> firebase ++ : request firebase CLI version
-firebase --> Bob -- : print Firebase version
+FirebaseService --> Bob -- : print Firebase version
 FirebaseService --
-FirebaseCli --
 
 Doctor -> GCloudService ++ : version()
-GCloudService -> GCloudCli ++ : version()
-GCloudCli -> gcloud ++ : request gcloud CLI version
-gcloud --> Bob -- : print GCloud version
+GCloudService --> Bob -- : print GCloud version
 GCloudService --
-GCloudCli --
 
 Doctor -> GitService ++ : version()
-GitService -> GitCli ++ : version()
-GitCli -> git ++ : request git CLI version
-git --> Bob -- : print Git version
+GitService --> Bob -- : print Git version
 GitService --
-GitCli --
 
 Doctor -> NpmService ++ : version()
-NpmService -> NpmCli ++ : version()
-NpmCli -> npm ++ : request npm CLI version
-npm --> Bob -- : print Npm version
-NpmService --
-NpmCli --
+NpmService --> Bob -- : print Npm version
 
 Doctor --> DoctorCommand -- : doctor finished
 DoctorCommand --> MetricsCliRunner -- : command finished

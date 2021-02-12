@@ -3,9 +3,9 @@
 package firebase.service {
     interface FirebaseService {
         + login(): Future<String>
-        + addProject(String gcloudProjectId, String firebaseToken): Future<void>
-        + deployHosting(String appPath, String firebaseToken): Future<void>
-        + deployFirestore(String firestorePath, String firebaseToken): Future<void>
+        + addProject(String gcloudProjectId): Future<void>
+        + deployHosting(String appPath): Future<void>
+        + deployFirestore(String firestorePath): Future<void>
     }
 }
 
@@ -31,6 +31,24 @@ package git.service{
 package npm.service {
     interface NpmService  {
         + installDependencies(String path) : Future<void>
+    }
+}
+
+package common {
+    package model {
+        class Services {
+            + npmService : NpmService
+            + gitService : GitService
+            + flutterService : FlutterService
+            + gcloudService : GCloudService
+            + firebaseService : FirebaseService
+        }
+    }
+
+    package factory as common.factory{
+        class ServicesFactory {
+            + create() : Services
+        }
     }
 }
 
@@ -62,6 +80,9 @@ DoctorCommand -down-> Doctor : uses
 DoctorCommand --> DoctorFactory : uses
 
 DoctorFactory --> Doctor : creates
+DoctorFactory --> ServicesFactory : uses
+
+ServicesFactory --> Services : creates
 
 Doctor -down-> NpmService : uses
 Doctor -down-> GitService : uses

@@ -18,12 +18,11 @@ package prompt {
         class PromptStrings{}
     }
 
-    class PromptHelper {
-        - {static} _promptWrapper : PromptWrapper
-        + {static} init(PromptWrapper promptWrapper) : void
-        + {static} prompt(String text) : Future<String>
-        + {static} promptConfirm(String text) : Future<bool>
-        + {static} promptTerminate() : Future<void>
+    class Prompter {
+        - _promptWrapper : PromptWrapper
+        + prompt(String text) : Future<String>
+        + promptConfirm(String text) : Future<bool>
+        + promptTerminate() : Future<void>
     }
 }
 
