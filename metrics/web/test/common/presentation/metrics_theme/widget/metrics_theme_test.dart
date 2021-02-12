@@ -1,11 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
 void main() {
@@ -13,7 +13,7 @@ void main() {
     testWidgets(
       "can't be created when the child is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsThemeTestbed(child: null));
+        await tester.pumpWidget(_MetricsThemeTestbed(child: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -22,7 +22,7 @@ void main() {
     testWidgets(
       "can't be created without data",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsThemeTestbed(data: null));
+        await tester.pumpWidget(_MetricsThemeTestbed(data: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -89,10 +89,10 @@ class _MetricsThemeTestbed extends StatelessWidget {
   ///
   /// If the [child] is not specified, the [Scaffold] used.
   /// If the [data] is not specified, the [LightMetricsThemeData] used.
-  const _MetricsThemeTestbed({
+  _MetricsThemeTestbed({
     Key key,
     this.child = const Scaffold(),
-    this.data = const LightMetricsThemeData(),
+    this.data = LightMetricsThemeData(),
     this.materialAppKey,
   }) : super(key: key);
 

@@ -13,6 +13,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -94,15 +95,18 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
-  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
-    fontSize: 16.0,
-    color: _inactiveTextColor,
-    lineHeightInPixels: 20.0,
-  );
+
   static const TextStyle hintStyle = MetricsTextStyle(
     color: _inputHintTextColor,
     fontSize: 16.0,
     lineHeightInPixels: 20,
+  );
+
+  /// The default [TextStyle] for dropdown within the application.
+  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
+    fontSize: 16.0,
+    color: _inactiveTextColor,
+    lineHeightInPixels: 20.0,
   );
 
   /// A [TextStyle] of the dialog title.
@@ -113,76 +117,76 @@ class LightMetricsThemeData extends MetricsThemeData {
   );
 
   /// Creates the light theme with the default widget theme configuration.
-  const LightMetricsThemeData()
+  LightMetricsThemeData()
       : super(
-          metricsWidgetTheme: const MetricsWidgetThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.accentColor,
-            backgroundColor: Colors.white,
+          metricsWidgetTheme: MetricsWidgetThemeData(
+            primaryColor: MetricsColors.green[500],
+            accentColor: MetricsColors.green[900],
+            backgroundColor: MetricsColors.white,
             textStyle: TextStyle(
-              color: ColorConfig.primaryColor,
+              color: MetricsColors.green[500],
               fontWeight: FontWeight.bold,
             ),
           ),
-          barGraphPopupTheme: const BarGraphPopupThemeData(
-            color: Colors.white,
-            shadowColor: _shadowColor,
+          barGraphPopupTheme: BarGraphPopupThemeData(
+            color: MetricsColors.white,
+            shadowColor: MetricsColors.shadowColor32,
             titleTextStyle: TextStyleConfig.popupTitleStyle,
             subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
-          tooltipPopupTheme: const TooltipPopupThemeData(
-            backgroundColor: Colors.white,
-            shadowColor: Color.fromRGBO(0, 0, 0, 0.32),
+          tooltipPopupTheme: TooltipPopupThemeData(
+            backgroundColor: MetricsColors.white,
+            shadowColor: MetricsColors.shadowColor32,
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
-          tooltipIconTheme: const TooltipIconThemeData(
-            color: ColorConfig.shimmerColor,
-            hoverColor: ColorConfig.tooltipIconHoverColor,
+          tooltipIconTheme: TooltipIconThemeData(
+            color: MetricsColors.gray[300],
+            hoverColor: MetricsColors.gray[400],
           ),
-          projectGroupCardTheme: const ProjectGroupCardThemeData(
-            borderColor: _borderColor,
-            hoverColor: _cardHoverColor,
-            backgroundColor: scaffoldColor,
+          projectGroupCardTheme: ProjectGroupCardThemeData(
+            borderColor: MetricsColors.gray[200],
+            hoverColor: MetricsColors.gray[100],
+            backgroundColor: MetricsColors.white,
             primaryButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.primaryColor,
-              hoverColor: ColorConfig.primaryButtonHoverColor,
+              color: MetricsColors.green[500],
+              hoverColor: MetricsColors.green[600],
             ),
             accentButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.accentButtonColor,
-              hoverColor: ColorConfig.accentButtonHoverColor,
+              color: MetricsColors.orange[500],
+              hoverColor: MetricsColors.orange[600],
             ),
             titleStyle: MetricsTextStyle(
-              color: _inactiveTextColor,
+              color: MetricsColors.gray[900],
               lineHeightInPixels: 26.0,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
             subtitleStyle: MetricsTextStyle(
-              color: ColorConfig.secondaryTextColor,
+              color: MetricsColors.gray[300],
               lineHeightInPixels: 16.0,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
+          addProjectGroupCardTheme: AddProjectGroupCardThemeData(
             attentionLevel: AddProjectGroupCardAttentionLevel(
               positive: AddProjectGroupCardStyle(
-                backgroundColor: _addProjectGroupCardBackgroundColor,
-                iconColor: ColorConfig.primaryColor,
-                hoverColor: _addProjectGroupCardHoverColor,
+                backgroundColor: MetricsColors.green[100],
+                iconColor: MetricsColors.green[500],
+                hoverColor: MetricsColors.green[200],
                 labelStyle: MetricsTextStyle(
-                  color: ColorConfig.primaryColor,
+                  color: MetricsColors.green[500],
                   lineHeightInPixels: 20.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: AddProjectGroupCardStyle(
-                backgroundColor: _inactiveBackgroundColor,
-                hoverColor: _inactiveBackgroundColor,
-                iconColor: _inactiveButtonHoverColor,
+                backgroundColor: MetricsColors.gray[100],
+                hoverColor: MetricsColors.gray[100],
+                iconColor: MetricsColors.gray[200],
                 labelStyle: MetricsTextStyle(
-                  color: _inactiveButtonHoverColor,
+                  color: MetricsColors.gray[200],
                   lineHeightInPixels: 20.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
@@ -190,34 +194,36 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
             ),
           ),
-          deleteDialogTheme: const DeleteDialogThemeData(
-            backgroundColor: scaffoldColor,
-            closeIconColor: _closeIconColor,
+          deleteDialogTheme: DeleteDialogThemeData(
+            backgroundColor: MetricsColors.white,
+            closeIconColor: MetricsColors.gray[900],
             titleTextStyle: _dialogTitleTextStyle,
             contentTextStyle: MetricsTextStyle(
               fontSize: 16.0,
-              color: _inactiveTextColor,
+              color: MetricsColors.gray[900],
               lineHeightInPixels: 24.0,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
             ),
           ),
-          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            barrierColor: _barrierColor,
-            closeIconColor: _closeIconColor,
-            contentBorderColor: _borderColor,
+          projectGroupDialogTheme: ProjectGroupDialogThemeData(
+            primaryColor: MetricsColors.green[500],
+            barrierColor: MetricsColors.barrierColor,
+            closeIconColor: MetricsColors.gray[900],
+            contentBorderColor: MetricsColors.gray[200],
             titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
-              color: _inactiveTextColor,
+              color: MetricsColors.gray[900],
               fontSize: 14.0,
             ),
             checkedProjectTextStyle: TextStyle(
-              color: _inactiveTextColor,
+              color: MetricsColors.gray[900],
               fontSize: 14.0,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
-            errorTextStyle: TextStyle(color: ColorConfig.accentColor),
+            errorTextStyle: TextStyle(
+              color: MetricsColors.orange[500],
+            ),
           ),
           inactiveWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: inputColor,
@@ -230,41 +236,41 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.bold,
             ),
           ),
-          metricsButtonTheme: const MetricsButtonThemeData(
+          metricsButtonTheme: MetricsButtonThemeData(
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
-                color: ColorConfig.primaryColor,
-                hoverColor: ColorConfig.primaryButtonHoverColor,
+                color: MetricsColors.green[500],
+                hoverColor: MetricsColors.green[600],
                 labelStyle: MetricsTextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray[900],
                   fontSize: 16.0,
                   lineHeightInPixels: 20,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               neutral: MetricsButtonStyle(
-                color: _inactiveButtonColor,
-                hoverColor: _inactiveButtonHoverColor,
+                color: MetricsColors.gray[100],
+                hoverColor: MetricsColors.gray[200],
                 labelStyle: TextStyle(
-                  color: _inactiveTextColor,
+                  color: MetricsColors.gray[900],
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               negative: MetricsButtonStyle(
-                color: ColorConfig.accentColor,
-                hoverColor: ColorConfig.accentButtonHoverColor,
+                color: MetricsColors.orange[500],
+                hoverColor: MetricsColors.orange[600],
                 labelStyle: MetricsTextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray[900],
                   fontSize: 16.0,
                   lineHeightInPixels: 20,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: MetricsButtonStyle(
-                color: _inactiveButtonColor,
+                color: MetricsColors.gray[100],
                 labelStyle: MetricsTextStyle(
-                  color: _inactiveButtonHoverColor,
+                  color: MetricsColors.gray[200],
                   lineHeightInPixels: 20,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
@@ -272,13 +278,13 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
             ),
           ),
-          textFieldTheme: const TextFieldThemeData(
-            focusColor: inputHoverColor,
-            hoverBorderColor: _hoverBorderColor,
-            prefixIconColor: _inputHintTextColor,
-            focusedPrefixIconColor: _inactiveTextColor,
+          textFieldTheme: TextFieldThemeData(
+            focusColor: MetricsColors.gray[100],
+            hoverBorderColor: MetricsColors.gray[300],
+            prefixIconColor: MetricsColors.gray[900],
+            focusedPrefixIconColor: MetricsColors.gray[900],
             textStyle: MetricsTextStyle(
-              color: _inactiveTextColor,
+              color: MetricsColors.gray[100],
               fontSize: 16.0,
               lineHeightInPixels: 20,
             ),

@@ -72,7 +72,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   );
 
   /// The default [TextStyle] for dropdown within the application.
-  static const _defaultDropdownTextStyle = MetricsTextStyle(
+  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
     color: MetricsColors.white,
     fontSize: 16.0,
     lineHeightInPixels: 20.0,
