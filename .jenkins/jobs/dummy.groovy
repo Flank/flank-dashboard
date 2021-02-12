@@ -2,6 +2,15 @@
 
 pipelineJob('dummy') {
     displayName('Dummy')
+
+    properties {
+        pipelineTriggers {
+            triggers {
+                githubPush()
+            }
+        }
+    }
+
     definition {
         cpsScm {
             scm {
