@@ -49,9 +49,13 @@ Let's review a top-level flow of the `DeployCommand`:
 1. Create a new GCloud project.
 2. Add a Firebase project to the created GCloud project.
 3. Deploy the Firebase components like Firestore rules and Firebase Functions.
-4. Build the Metrics Web Application.
-5. Deploy the Metrics Web Application to the Firebase Hosting.
-6. Cleanup the created directories, etc.
+4. Enable Firebase Analytics service.
+5. Enable `Google` and `Email and Password` Firebase Auth providers.
+6. Create Firestore `feature_config` and `metadata` collections.
+7. Configure Sentry.
+8. Build the Metrics Web Application.
+9. Deploy the Metrics Web Application to the Firebase Hosting.
+10. Cleanup the created directories, etc.
 
 ### Metrics CLI interfaces
 
@@ -80,7 +84,7 @@ To make the `Metrics CLI` more clean and structured, we should define interfaces
 
 The following class diagram demonstrates the relationships between [CLIs](#CLI) and [Services](#Service):
 
-![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
+![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
 
 Let's review the main `service` interfaces we need to deploy the Metrics Web Application: 
     
@@ -104,7 +108,7 @@ Since we have interfaces for each service and `CLI`s implemented, we should adap
 
 Let's review the class diagram representing the `Metrics CLI` services and `CLI`s with relationships between them: 
 
-![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/services_class_diagram.puml)
+![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
 
 ### Prompt
 
@@ -115,7 +119,7 @@ To interact with a user during the deployment process, we should include prompts
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
 
-![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
+![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
 
 Let's take a look at the classes the prompts integration requires in more details: 
 
@@ -133,7 +137,7 @@ The `Doctor` is a class used to check whether all required third-party `CLI`s ar
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
+![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
 
 ### Deployer
 
@@ -141,7 +145,7 @@ The `Deployer` class is needed to separate the deployment logic from the [`Deplo
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
+![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
 As we can see, the `Deployer` and `Doctor` classes requires the same services, so we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
 
@@ -151,15 +155,15 @@ The `MetricsCliRunner` is a class that extends a `CommandRunner` and is used to 
 
 The following class diagram demonstrates the structure of the `MetricsCliRunner`:
 
-![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
+![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DoctorCommand`:
 
-![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
+![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DeployCommand`:
 
-![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
 
 ## Usage
 
