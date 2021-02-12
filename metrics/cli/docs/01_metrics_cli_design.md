@@ -110,7 +110,7 @@ Let's review the class diagram representing the `Metrics CLI` services and `CLI`
 
 To interact with a user during the deployment process, we should include prompts in our application. To do so, we are going to implement the following classes: 
 
-- [PromptHelper](#Prompter) - a class used to interact with the user by means of prompts.
+- [Prompter](#Prompter) - a class used to interact with the user by means of prompts.
 - [PromptWriter](#PromptWriter) - a class used in the `Prompter` to write the prompts and get the user responses.
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
