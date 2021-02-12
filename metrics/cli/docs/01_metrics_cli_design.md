@@ -83,7 +83,7 @@ The following class diagram demonstrates the relationships between [CLIs](#CLI) 
 
 Let's review the main `service` interfaces we need to deploy the Metrics Web Application: 
     
-- `BaseService` is a base interface used to define the common methods for our services such as version;
+- `Service` is a base interface used to define the common methods for our services such as version;
 - `FirebaseService` is an interface used to define the following Firebase behavior required for our commands: 
     - Firebase login;
     - Create a Firebase project;
