@@ -10,6 +10,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_color/me
 class MetricsColors {
   static const Color black = Color(0xFF000000);
 
+  static const Color barrierColor = Color.fromRGBO(13, 13, 13, 0.8);
+
   static const MetricsColor gray = MetricsColor(
     0xFF3B3B41,
     <int, Color>{
@@ -49,7 +51,8 @@ class MetricsColors {
     },
   );
 
-  static const Color shadowColor = Color.fromRGBO(0, 0, 0, 0.5);
+  static const Color shadowColor32 = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color shadowColor50 = Color.fromRGBO(0, 0, 0, 0.5);
 
   static const Color white = Color(0xFFFFFFFF);
 
