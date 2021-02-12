@@ -32,9 +32,9 @@ package cool.adapter {
     }
 }
 
-PromptHelper --> PromptWriter : uses
+Prompter --> PromptWriter : uses
 
-CoolCliServiceAdapter --> PromptHelper : uses
+CoolCliServiceAdapter --> Prompter : uses
 CoolCliServiceAdapter --> PromptStrings : uses
 
 @enduml

@@ -49,8 +49,8 @@ Let's review a top-level flow of the `DeployCommand`:
 1. Create a new GCloud project.
 2. Add a Firebase project to the created GCloud project.
 3. Deploy the Firebase components like Firestore rules and Firebase Functions.
-4. Build the Metrics Web Application
-5. Deploy the Metrics Web Application to the Firebase Hosting
+4. Build the Metrics Web Application.
+5. Deploy the Metrics Web Application to the Firebase Hosting.
 6. Cleanup the created directories, etc.
 
 ### Metrics CLI interfaces
@@ -143,7 +143,7 @@ The following class diagram demonstrates how the classes described above interac
 
 ![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_cli_design_update/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
-As we can see, the `Deployer` and `Doctor` classes requires the same services, we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
+As we can see, the `Deployer` and `Doctor` classes requires the same services, so we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
 
 ### Making Things Work
 

@@ -67,6 +67,7 @@ package deploy {
 
     package factory {
         class DeployerFactory {
+            - _servicesFactory : ServicesFactory
             + create() : Deployer
         }
     }
