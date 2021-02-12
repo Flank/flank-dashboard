@@ -148,7 +148,7 @@ The `MetricsCliRunner` is a class that extends a `CommandRunner` and is used to 
 
 The following class diagram demonstrates the structure of the `MetricsCliRunner`:
 
-![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
+![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DoctorCommand`:
 

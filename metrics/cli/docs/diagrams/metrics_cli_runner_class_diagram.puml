@@ -1,4 +1,4 @@
-@startuml metrics_command_runner_class_diagram
+@startuml metrics_cli_runner_class_diagram
 
 package args {
     class CommandRunner{}
