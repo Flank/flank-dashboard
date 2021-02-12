@@ -144,9 +144,9 @@ The following class diagram demonstrates how the classes described above interac
 
 ### Making Things Work
 
-The `MetricsCommandRunner` is a class that extends a `CommandRunner` and is used to expose the [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands to the user.
+The `MetricsCliRunner` is a class that extends a `CommandRunner` and is used to expose the [`deploy`](#deploycommand) and [`doctor`](#doctorcommand) commands to the user.
 
-The following class diagram demonstrates the structure of the `MetricsCommandRunner`:
+The following class diagram demonstrates the structure of the `MetricsCliRunner`:
 
 ![Metrics Command Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_command_runner_class_diagram.puml)
 
