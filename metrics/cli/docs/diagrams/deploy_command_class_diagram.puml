@@ -2,10 +2,10 @@
 
 package firebase.service {
     interface FirebaseService {
-        + login(): Future<String>
-        + addProject(String gcloudProjectId, String firebaseToken): Future<void>
-        + deployHosting(String appPath, String firebaseToken): Future<void>
-        + deployFirestore(String firestorePath, String firebaseToken): Future<void>
+        + login(): Future<void>
+        + addProject(String gcloudProjectId): Future<void>
+        + deployHosting(String appPath): Future<void>
+        + deployFirestore(String firestorePath): Future<void>
     }
 }
 
@@ -26,20 +26,37 @@ package  git.service{
     interface GitService  {
         + checkout(String repoUrl, String srcPath) : Future<void>
     }
-
 }
 
 package  npm.service {
     interface NpmService  {
         + installDependencies(String path) : Future<void>
     }
-
 }
+
+package common {
+    package model {
+        class Services {
+            + npmService : NpmService
+            + gitService : GitService
+            + flutterService : FlutterService
+            + gcloudService : GCloudService
+            + firebaseService : FirebaseService
+        }
+    }
+
+    package factory as common.factory{
+        class ServicesFactory {
+            + create() : Services
+        }
+    }
+}
+
 
 package deploy {
     package command {
         class DeployCommand {
-            - _appDistributorFactory : AppDistributorFactory
+            - _deployerFactory : DeployerFactory
             + run() : Future<void>
         }
     }
@@ -49,12 +66,13 @@ package deploy {
     }
 
     package factory {
-        class AppDistributorFactory {
-            + create() : AppDistributor
+        class DeployerFactory {
+            - _servicesFactory : ServicesFactory
+            + create() : Deployer
         }
     }
 
-    class AppDistributor {
+    class Deployer {
         - _fileHelper: FileHelper
         - _npmService : NpmService
         - _gitService : GitService
@@ -65,24 +83,27 @@ package deploy {
     }
 }
 
-package utils {
+package helper {
     class FileHelper {
         + deleteDirectory(Directory directory) : Future<void>
     }
 }
 
-AppDistributor -down-> NpmService : uses
-AppDistributor -down-> GitService : uses
-AppDistributor -down-> FlutterService : uses
-AppDistributor -down-> GCloudService : uses
-AppDistributor -down-> FirebaseService : uses
+Deployer -down-> NpmService : uses
+Deployer -down-> GitService : uses
+Deployer -down-> FlutterService : uses
+Deployer -down-> GCloudService : uses
+Deployer -down-> FirebaseService : uses
+Deployer -left-> FileHelper : uses
+Deployer -> DeployConstants : uses
+Deployer -> Services : uses
 
-AppDistributor -left-> FileHelper : uses
-AppDistributor -> DeployConstants : uses
+DeployCommand -down-> Deployer : uses
+DeployCommand -down-> DeployerFactory : uses
+DeployerFactory --> ServicesFactory : uses
 
-DeployCommand -down-> AppDistributorFactory : uses
-DeployCommand -down-> AppDistributor : uses
+ServicesFactory --> Services : creates
 
-AppDistributorFactory --> AppDistributor : creates
+DeployerFactory --> Deployer : creates
 
 @enduml

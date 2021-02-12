@@ -18,12 +18,11 @@ package prompt {
         class PromptStrings{}
     }
 
-    class PromptHelper {
-        - {static} _promptWrapper : PromptWrapper
-        + {static} init(PromptWrapper promptWrapper) : void
-        + {static} prompt(String text) : Future<String>
-        + {static} promptConfirm(String text) : Future<bool>
-        + {static} promptTerminate() : Future<void>
+    class Prompter {
+        - _promptWriter : PromptWriter
+        + prompt(String text) : Future<String>
+        + promptConfirm(String text) : Future<bool>
+        + promptTerminate() : Future<void>
     }
 }
 
@@ -33,9 +32,9 @@ package cool.adapter {
     }
 }
 
-PromptHelper --> PromptWriter : uses
+Prompter --> PromptWriter : uses
 
-CoolCliServiceAdapter --> PromptHelper : uses
+CoolCliServiceAdapter --> Prompter : uses
 CoolCliServiceAdapter --> PromptStrings : uses
 
 @enduml

@@ -4,29 +4,30 @@ package firebase {
     package service as firebase.service {
         interface FirebaseService {
             + login(): Future<String>
-            + addProject(String gcloudProjectId, String firebaseToken): Future<void>
-            + deployHosting(String appPath, String firebaseToken): Future<void>
-            + deployFirestore(String firestorePath, String firebaseToken): Future<void>
+            + addProject(String gcloudProjectId): Future<void>
+            + deployHosting(String appPath): Future<void>
+            + deployFirestore(String firestorePath): Future<void>
         }
     }
 
     package adapter as firebase.adapter {
         class FirebaseCliServiceAdapter {
             - _firebaseCli: FirebaseCli
+            - _prompter : Prompter
         }
     }
 
     package cli as firebase.cli {
         class FirebaseCli {
             + login(): Future<void>
-            + addFirebase(String projectId, String firebaseToken): Future<void>
-            + createWebApp(String projectId, String firebaseToken): Future<void>
-            + setFirebaseProject(String projectId, String workingDir, String firebaseToken): Future<void>
-            + clearTarget(String workingDir, String firebaseToken): Future<void>
-            + applyTarget(String projectId, String workingDir, String firebaseToken): Future<void>
-            + deployHosting(String workingDir, String firebaseToken): Future<void>
-            + deployRules(String workingDir, String firebaseToken): Future<void>
-            + deployFunctions(String workingDir, String firebaseToken): Future<void>
+            + addFirebase(String projectId): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + setFirebaseProject(String projectId, String workingDir): Future<void>
+            + clearTarget(String workingDir): Future<void>
+            + applyTarget(String projectId, String workingDir): Future<void>
+            + deployHosting(String workingDir): Future<void>
+            + deployRules(String workingDir): Future<void>
+            + deployFunctions(String workingDir): Future<void>
             + version(): Future<void>
         }
     }
@@ -43,7 +44,8 @@ package gcloud {
 
     package adapter as gcloud.adapter {
         class GCloudCliServiceAdapter {
-            gcloudCli : GCloudCli
+            - _gcloudCli : GCloudCli
+            - _prompter : Prompter
         }
     }
 
@@ -128,7 +130,7 @@ package npm {
 
 package interfaces {
     package service {
-        interface Service {
+        interface InfoService {
             + version() : Future<void>
         }
     }
@@ -162,10 +164,10 @@ NpmCli .down.|> Cli
 firebase --[hidden]right--> gcloud
 Service --[hidden]right--> Cli
 
-FirebaseService -up-|> Service
-GCloudService -up-|> Service
-GitService -down-|> Service
-FlutterService -down-|> Service
-NpmService -down-|> Service
+FirebaseService -up-|> InfoService
+GCloudService -up-|> InfoService
+GitService -down-|> InfoService
+FlutterService -down-|> InfoService
+NpmService -down-|> InfoService
 
 @enduml

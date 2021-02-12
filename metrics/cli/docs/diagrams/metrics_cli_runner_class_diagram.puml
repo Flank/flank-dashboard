@@ -15,7 +15,7 @@ package deploy {
     }
 
     package factory as deploy.factory{
-        class AppDistributorFactory {}
+        class DeployerFactory {}
     }
 }
 
@@ -31,7 +31,7 @@ package doctor {
 
 MetricsCliRunner --> DoctorCommand : uses
 MetricsCliRunner --> DeployCommand : uses
-MetricsCliRunner --> AppDistributorFactory : uses
+MetricsCliRunner --> DeployerFactory : uses
 MetricsCliRunner --> DoctorFactory : uses
 
 DeployCommand --|> Command
