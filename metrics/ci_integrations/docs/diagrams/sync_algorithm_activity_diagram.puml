@@ -1,0 +1,79 @@
+@startuml sync_algorithm_activity_diagram
+'https://plantuml.com/activity-diagram-beta
+skinparam ConditionEndStyle hline
+
+|Re-sync In-Progress Builds|
+split
+-[hidden]->
+
+    start
+    :CiIntegration.sync();
+    :destination.fetchInProgressBuilds() -> **inProgress**;
+    note left
+        fetch //builds// where
+        //state// is //in progress//
+    end note
+
+    repeat
+        :source.fetchBuild() -> **build**;
+
+        if (should force timeout) then (yes) 
+            :force time out -> **newBuild**;
+            note left
+                controlled by CLI option 
+                //--in-progress-timeout//
+                defaults to //120 minutes//
+            end note
+        else (no)
+            :fetch coverage if necessary;
+            :process **build** -> **newBuild**;
+        endif
+
+        :**result**.add(**newBuild**);
+    repeatwhile (for each in **inProgress**)
+
+    :destination.setBuilds(**result**);
+    note left
+        for each //build// in //result//
+        set //new data//
+    end note
+
+    #yellow:(1)
+    detach
+
+|Sync Builds|
+split again
+-[hidden]->
+
+        #yellow:(1)
+
+        :destination.getLastBuild() -> **lastBuild**;
+
+        if (**lastBuild** is **null**) then (yes)
+            :source.fetchBuilds() -> **result**;
+        else (no)
+            :source.fetchBuildsAfter() -> **result**;
+        endif
+
+        :fetch coverage if necessary;
+
+        ' if (fetchCoverage?) then (yes)
+        '     repeat
+        '         :source.fetchCoverage();
+        '     repeatwhile (for each in **result**)
+        ' else (no)
+        ' endif
+
+        :destination.addBuilds(**result**);
+        note right
+            Builds possible states:
+            - **in progress**
+            - successful
+            - failed
+            - unknown
+        end note
+
+stop
+end split
+
+@enduml
