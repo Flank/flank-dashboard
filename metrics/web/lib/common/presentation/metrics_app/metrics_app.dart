@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/common/domain/entities/metrics_config.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
@@ -104,20 +104,19 @@ class _MetricsAppState extends State<MetricsApp> {
                     fontFamily: TextStyleConfig.defaultFontFamily,
                     brightness: Brightness.light,
                     primarySwatch: Colors.teal,
-                    splashColor: ColorConfig.inkResponseColor,
-                    highlightColor: ColorConfig.inkResponseColor,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
                     primaryColorBrightness: Brightness.light,
                     buttonTheme: const ButtonThemeData(
                       height: DimensionsConfig.buttonHeight,
-                      splashColor: ColorConfig.inkResponseColor,
-                      highlightColor: ColorConfig.inkResponseColor,
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
                     ),
-                    scaffoldBackgroundColor:
-                        LightMetricsThemeData.scaffoldColor,
+                    scaffoldBackgroundColor: MetricsColors.white,
                     inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: LightMetricsThemeData.inputColor,
-                      hoverColor: LightMetricsThemeData.inputHoverColor,
+                      fillColor: MetricsColors.gray[100],
+                      hoverColor: MetricsColors.gray[100],
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,
                       focusedBorder: LightMetricsThemeData.inputFocusedBorder,
@@ -125,8 +124,9 @@ class _MetricsAppState extends State<MetricsApp> {
                       errorBorder: TextFieldConfig.errorBorder,
                       focusedErrorBorder: TextFieldConfig.errorBorder,
                       hintStyle: LightMetricsThemeData.hintStyle,
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
                     ),
                     dialogTheme: const DialogTheme(elevation: 0.0),
                   ),
@@ -134,19 +134,19 @@ class _MetricsAppState extends State<MetricsApp> {
                     fontFamily: TextStyleConfig.defaultFontFamily,
                     brightness: Brightness.dark,
                     primarySwatch: Colors.teal,
-                    splashColor: ColorConfig.inkResponseColor,
-                    highlightColor: ColorConfig.inkResponseColor,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
                     primaryColorBrightness: Brightness.dark,
                     buttonTheme: const ButtonThemeData(
                       height: DimensionsConfig.buttonHeight,
-                      splashColor: ColorConfig.inkResponseColor,
-                      highlightColor: ColorConfig.inkResponseColor,
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
                     ),
-                    scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
-                    inputDecorationTheme: const InputDecorationTheme(
+                    scaffoldBackgroundColor: MetricsColors.gray[800],
+                    inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: DarkMetricsThemeData.inputColor,
-                      hoverColor: Colors.black,
+                      fillColor: MetricsColors.gray[900],
+                      hoverColor: MetricsColors.black,
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,
                       focusedBorder: DarkMetricsThemeData.inputFocusedBorder,
@@ -154,7 +154,9 @@ class _MetricsAppState extends State<MetricsApp> {
                       errorBorder: TextFieldConfig.errorBorder,
                       focusedErrorBorder: TextFieldConfig.errorBorder,
                       hintStyle: DarkMetricsThemeData.hintStyle,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
                     ),
                     dialogTheme: const DialogTheme(elevation: 0.0),
                   ),

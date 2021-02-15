@@ -51,8 +51,8 @@ class MetricsColors {
     },
   );
 
-  static const Color shadowColor32 = Color.fromRGBO(0, 0, 0, 0.32);
-  static const Color shadowColor50 = Color.fromRGBO(0, 0, 0, 0.5);
+  static const Color shadow32 = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color shadow50 = Color.fromRGBO(0, 0, 0, 0.5);
 
   static const Color white = Color(0xFFFFFFFF);
 

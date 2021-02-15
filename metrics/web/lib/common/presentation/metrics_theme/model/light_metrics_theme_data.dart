@@ -56,10 +56,6 @@ import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_but
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
-  static const Color scaffoldColor = Colors.white;
-  static const Color inputColor = Color(0xFFF5F8FA);
-  static const Color inputHoverColor = Color(0xfffafbfc);
-
   static final inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: MetricsColors.gray[400],
@@ -100,13 +96,13 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           barGraphPopupTheme: BarGraphPopupThemeData(
             color: MetricsColors.white,
-            shadowColor: MetricsColors.shadowColor32,
+            shadowColor: MetricsColors.shadow32,
             titleTextStyle: TextStyleConfig.popupTitleStyle,
             subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
           tooltipPopupTheme: TooltipPopupThemeData(
             backgroundColor: MetricsColors.white,
-            shadowColor: MetricsColors.shadowColor32,
+            shadowColor: MetricsColors.shadow32,
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: TooltipIconThemeData(
@@ -268,7 +264,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBackgroundColor: MetricsColors.gray[100],
             closedButtonBorderColor: MetricsColors.gray[100],
             textStyle: _defaultDropdownTextStyle,
-            shadowColor: MetricsColors.shadowColor50,
+            shadowColor: MetricsColors.shadow50,
             iconColor: MetricsColors.black,
           ),
           dropdownItemTheme: DropdownItemThemeData(
@@ -424,7 +420,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           userMenuTheme: UserMenuThemeData(
             backgroundColor: MetricsColors.white,
             dividerColor: MetricsColors.gray[200],
-            shadowColor: MetricsColors.shadowColor32,
+            shadowColor: MetricsColors.shadow32,
             contentTextStyle: MetricsTextStyle(
               color: MetricsColors.gray[900],
               lineHeightInPixels: 20.0,
