@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -33,14 +33,14 @@ class MetricsThemeBuilder extends StatelessWidget {
   /// If the [darkTheme] is null, the [DarkMetricsThemeData] used.
   ///
   /// Rebuilds a [MetricsApp] when a [ThemeNotifier] changes.
-  const MetricsThemeBuilder({
+  MetricsThemeBuilder({
     Key key,
     @required this.builder,
     MetricsThemeData lightTheme,
     MetricsThemeData darkTheme,
   })  : assert(builder != null),
-        lightTheme = lightTheme ?? const LightMetricsThemeData(),
-        darkTheme = darkTheme ?? const DarkMetricsThemeData(),
+        lightTheme = lightTheme ?? LightMetricsThemeData(),
+        darkTheme = darkTheme ?? DarkMetricsThemeData(),
         super(key: key);
 
   @override

@@ -9,7 +9,7 @@ void main() {
     test(
       "creates a variation theme",
       () {
-        const lightMetricsThemeData = LightMetricsThemeData();
+        final lightMetricsThemeData = LightMetricsThemeData();
 
         expect(lightMetricsThemeData.metricsWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.metricsColoredBarTheme, isNotNull);
