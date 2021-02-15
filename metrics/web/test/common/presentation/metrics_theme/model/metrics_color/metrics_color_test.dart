@@ -27,6 +27,23 @@ void main() {
     );
 
     test(
+      "creates an instance with shades from the given swatch",
+      () {
+        const swatch = {
+          100: Colors.white,
+          200: Colors.black,
+        };
+
+        const color = MetricsColor(primary, swatch);
+        final metricsColorMatcher = predicate<MetricsColor>(
+          (color) => color[100] == swatch[100] && color[200] == swatch[200],
+        );
+
+        expect(color, metricsColorMatcher);
+      },
+    );
+
+    test(
       "operator [] throws an AssertionError if the given shade does not exist",
       () {
         const nonExistingShade = -1000;
