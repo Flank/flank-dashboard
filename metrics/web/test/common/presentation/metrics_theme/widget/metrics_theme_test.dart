@@ -8,6 +8,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsTheme", () {
     testWidgets(
@@ -92,9 +94,10 @@ class _MetricsThemeTestbed extends StatelessWidget {
   _MetricsThemeTestbed({
     Key key,
     this.child = const Scaffold(),
-    this.data = LightMetricsThemeData(),
     this.materialAppKey,
-  }) : super(key: key);
+    MetricsThemeData data,
+  })  : data = data ?? LightMetricsThemeData(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

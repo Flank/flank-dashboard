@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -114,7 +114,7 @@ class _MetricsAppState extends State<MetricsApp> {
                     ),
                     scaffoldBackgroundColor:
                         LightMetricsThemeData.scaffoldColor,
-                    inputDecorationTheme: const InputDecorationTheme(
+                    inputDecorationTheme: InputDecorationTheme(
                       filled: true,
                       fillColor: LightMetricsThemeData.inputColor,
                       hoverColor: LightMetricsThemeData.inputHoverColor,
@@ -125,7 +125,8 @@ class _MetricsAppState extends State<MetricsApp> {
                       errorBorder: TextFieldConfig.errorBorder,
                       focusedErrorBorder: TextFieldConfig.errorBorder,
                       hintStyle: LightMetricsThemeData.hintStyle,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                     dialogTheme: const DialogTheme(elevation: 0.0),
                   ),
