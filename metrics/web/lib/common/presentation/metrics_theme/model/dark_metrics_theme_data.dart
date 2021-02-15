@@ -54,7 +54,6 @@ import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/toolt
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 // ignore_for_file: public_member_api_docs
-// Looking forward to the color palette from the design team.
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -381,7 +380,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: MetricsColors.green[500],
+                strokeColor: MetricsColors.green[900],
                 backgroundColor: MetricsColors.green[900],
                 valueColor: MetricsColors.green[500],
                 valueStyle: TextStyle(
@@ -391,7 +390,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: MetricsColors.orange[500],
+                strokeColor: MetricsColors.orange[900],
                 backgroundColor: MetricsColors.orange[900],
                 valueColor: MetricsColors.orange[500],
                 valueStyle: TextStyle(
@@ -401,7 +400,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               neutral: CirclePercentageStyle(
-                strokeColor: MetricsColors.yellow[500],
+                strokeColor: MetricsColors.yellow[900],
                 backgroundColor: MetricsColors.yellow[900],
                 valueColor: MetricsColors.yellow[500],
                 valueStyle: TextStyle(

@@ -67,7 +67,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   );
 
   static final TextStyle hintStyle = MetricsTextStyle(
-    color: MetricsColors.gray[100],
+    color: MetricsColors.gray[300],
     fontSize: 16.0,
     lineHeightInPixels: 20,
   );
@@ -251,10 +251,10 @@ class LightMetricsThemeData extends MetricsThemeData {
           textFieldTheme: TextFieldThemeData(
             focusColor: MetricsColors.gray[100],
             hoverBorderColor: MetricsColors.gray[300],
-            prefixIconColor: MetricsColors.gray[900],
+            prefixIconColor: MetricsColors.gray[300],
             focusedPrefixIconColor: MetricsColors.gray[900],
             textStyle: MetricsTextStyle(
-              color: MetricsColors.gray[100],
+              color: MetricsColors.gray[900],
               fontSize: 16.0,
               lineHeightInPixels: 20,
             ),
@@ -324,9 +324,9 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: MetricsColors.white,
-              hoverBackgroundColor: MetricsColors.gray[300],
-              borderColor: MetricsColors.gray[300],
-              hoverBorderColor: MetricsColors.gray[300],
+              hoverBackgroundColor: MetricsColors.gray[100],
+              borderColor: MetricsColors.gray[200],
+              hoverBorderColor: MetricsColors.gray[200],
               textStyle: MetricsTextStyle(
                 fontSize: 24.0,
                 color: MetricsColors.gray[900],
@@ -391,12 +391,12 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           toggleTheme: ToggleThemeData(
             activeColor: MetricsColors.green[500],
-            activeHoverColor: MetricsColors.green[500],
+            activeHoverColor: MetricsColors.green[600],
             inactiveColor: MetricsColors.gray[300],
             inactiveHoverColor: MetricsColors.gray[400],
           ),
           userMenuButtonTheme: UserMenuButtonThemeData(
-            hoverColor: MetricsColors.gray[700],
+            hoverColor: MetricsColors.gray[400],
             color: MetricsColors.gray[900],
           ),
           toastTheme: ToastThemeData(
@@ -445,7 +445,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: MetricsColors.green[500],
+                strokeColor: MetricsColors.green[100],
                 backgroundColor: MetricsColors.green[100],
                 valueColor: MetricsColors.green[500],
                 valueStyle: TextStyle(
@@ -455,7 +455,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: MetricsColors.orange[500],
+                strokeColor: MetricsColors.orange[100],
                 backgroundColor: MetricsColors.orange[100],
                 valueColor: MetricsColors.orange[500],
                 valueStyle: TextStyle(
@@ -465,7 +465,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               neutral: CirclePercentageStyle(
-                strokeColor: MetricsColors.yellow[500],
+                strokeColor: MetricsColors.yellow[100],
                 backgroundColor: MetricsColors.yellow[100],
                 valueColor: MetricsColors.yellow[500],
                 valueStyle: TextStyle(
@@ -475,11 +475,11 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               inactive: CirclePercentageStyle(
-                strokeColor: MetricsColors.green[100],
-                backgroundColor: MetricsColors.green[100],
-                valueColor: MetricsColors.green[900],
+                strokeColor: MetricsColors.gray[100],
+                backgroundColor: MetricsColors.gray[100],
+                valueColor: MetricsColors.gray[900],
                 valueStyle: TextStyle(
-                  color: MetricsColors.green[900],
+                  color: MetricsColors.gray[900],
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
