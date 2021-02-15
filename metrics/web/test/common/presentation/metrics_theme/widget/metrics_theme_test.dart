@@ -91,13 +91,12 @@ class _MetricsThemeTestbed extends StatelessWidget {
   ///
   /// If the [child] is not specified, the [Scaffold] used.
   /// If the [data] is not specified, the [LightMetricsThemeData] used.
-  _MetricsThemeTestbed({
+  const _MetricsThemeTestbed({
     Key key,
     this.child = const Scaffold(),
     this.materialAppKey,
-    MetricsThemeData data,
-  })  : data = data ?? LightMetricsThemeData(),
-        super(key: key);
+    this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
