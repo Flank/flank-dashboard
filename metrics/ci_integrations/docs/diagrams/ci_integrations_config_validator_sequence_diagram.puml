@@ -8,10 +8,10 @@ actor Bob
 participant "CI Integrations"
 participant CiIntegrationsRunner
 participant ValidateCommand
-participant CoolIntegrationConfigValidatorFactory
-participant CoolIntegrationConfigValidator
-participant CoolIntegrationValidationResultBuilder
-participant CoolIntegrationValidationDelegate
+participant CoolIntegrationValidatorFactory
+participant CoolIntegrationDestinationValidator
+participant ValidationResultBuilder
+participant CoolIntegrationDestinationValidationDelegate
 participant CoolIntegrationClient
 
 Bob -> "CI Integrations" : runs validate
@@ -28,64 +28,66 @@ activate ValidateCommand
 ValidateCommand -> ValidateCommand : creates source and destination parties
 ValidateCommand -> ValidateCommand : parses source and destination configs
 
-ValidateCommand -> CoolIntegrationConfigValidatorFactory : create()
-activate CoolIntegrationConfigValidatorFactory
+ValidateCommand -> CoolIntegrationValidatorFactory : create()
+activate CoolIntegrationValidatorFactory
 
-CoolIntegrationConfigValidatorFactory --> ValidateCommand : configValidator
-deactivate CoolIntegrationConfigValidatorFactory
+CoolIntegrationValidatorFactory --> ValidateCommand : configValidator
+deactivate CoolIntegrationValidatorFactory
 
-ValidateCommand -> CoolIntegrationConfigValidator : validate(config)
-activate CoolIntegrationConfigValidator
+ValidateCommand -> CoolIntegrationDestinationValidator : validate(config)
+activate CoolIntegrationDestinationValidator
 
-CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAuth(auth)
-activate CoolIntegrationValidationDelegate
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : .createForFields(CoolIntegrationConfigField.values)
+activate ValidationResultBuilder
 
-CoolIntegrationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAuth(auth)
+
+activate CoolIntegrationDestinationValidationDelegate
+
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
 activate  CoolIntegrationClient
 
 alt auth is valid
 
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
-    CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAuthResult(FieldValidationResult.success('auth'))
-    activate CoolIntegrationValidationResultBuilder
-
+    CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.success
+    CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValidationDelegate : performs additional validation
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(FieldValidationResult.success(CoolIntegrationConfigField.auth), FieldValidationResult.success
 
 else auth is not valid
 
-    CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.error
-    CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.error
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAuthResult(FieldValidationResult.failure, additionalContext)
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setInterruptReason('The auth is not valid. Can't continue the validation.')
-    CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : build()
-    CoolIntegrationValidationResultBuilder --> CoolIntegrationConfigValidator : validationResult
+    CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.error
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.error
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.auth, FieldValidationResult.failure(additionalContext))
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setEmptyFields(FieldValidationResult.unknown('The auth is not valid. Can't continue the validation.'))
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
+    ValidationResultBuilder --> CoolIntegrationDestinationValidator : validationResult
 
-    CoolIntegrationConfigValidator --> ValidateCommand : validationResult
+    CoolIntegrationDestinationValidator --> ValidateCommand : validationResult
     ValidateCommand --> Bob : provides detailed conclusion on config validation
 
 end
 
 
-CoolIntegrationConfigValidator -> CoolIntegrationValidationDelegate : validateAnotherField(anotherField)
-CoolIntegrationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
 
-CoolIntegrationClient --> CoolIntegrationValidationDelegate : InteractionResult.success
+CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.success
 deactivate CoolIntegrationClient
 
-CoolIntegrationValidationDelegate -> CoolIntegrationValidationDelegate : performs additional validation
-CoolIntegrationValidationDelegate --> CoolIntegrationConfigValidator : InteractionResult.success
-deactivate CoolIntegrationValidationDelegate
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValidationDelegate : performs additional validation
+CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
+deactivate CoolIntegrationDestinationValidationDelegate
 
-CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : setAnotherFieldResult(FieldValidationResult.success('anotherField'))
-CoolIntegrationConfigValidator -> CoolIntegrationValidationResultBuilder : build()
-CoolIntegrationValidationResultBuilder --> CoolIntegrationConfigValidator : validationResult
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.anotherField, FieldValidationResult.success('anotherField'))
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
+ValidationResultBuilder --> CoolIntegrationDestinationValidator : validationResult
 
-deactivate CoolIntegrationValidationResultBuilder
+deactivate ValidationResultBuilder
 
-CoolIntegrationConfigValidator --> ValidateCommand : validationResult
+CoolIntegrationDestinationValidator --> ValidateCommand : validationResult
 
-deactivate CoolIntegrationConfigValidator
+deactivate CoolIntegrationDestinationValidator
 
 ValidateCommand --> Bob : provides detailed conclusion on config validation
 

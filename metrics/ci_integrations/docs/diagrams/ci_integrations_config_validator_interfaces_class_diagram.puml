@@ -3,10 +3,10 @@
     package integration.interface {
         package base {
             package party {
-                interface IntegrationParty<T extends Config, K extends IntegrationClient, V extends ConfigValidator> {
-                    + clientFactory : IntegrationClientFactory<T, K>
-                    + configParser : ConfigParser<T>
-                    + configValidatorFactory : ConfigValidatorFactory<V>
+                interface IntegrationParty<T extends Config, K extends IntegrationClient> {
+                    + clientFactory: IntegrationClientFactory<T, K>
+                    + configParser: ConfigParser<T>
+                    + configValidatorFactory: ConfigValidatorFactory<T>
                 }
             }
 
@@ -14,30 +14,36 @@
                 package model {
                     interface Config {}
 
-                    package builder {
-                        abstract class ValidationResultBuilder<T extends ValidationResult> {
-                            + authValidationResult : FieldValidationResult
-                            + interruptReason : String
+                    abstract class ConfigField {
+                        + value: String
 
-                            + T build()
-                            + void setAuthValidationResult(FieldValidationResult authValidationResult)
-                            + void setInterruptReason(String reason)
+                        + String toString()
+                    }
+
+                    package builder {
+                        class ValidationResultBuilder {
+                            - _results: Map<ConfigField, FieldValidationResult>
+                            
+                            + ValidationResultBuilder forFields(List<ConfigField> fields)
+
+                            + ValidationResult build()
+                            + void setResult(ConfigField field, FieldValidationResult result)
+                            + void setEmptyResults(FieldValidationResult result)
                         }
                     }
 
                     interface ValidationResult {
-                        + authValidationResult : FieldValidationResult
+                        + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
 
                         + String toString()
                     }
                 }
 
                 package validator {
-                    abstract class ConfigValidator<T extends Config, V extends ValidationDelegate, R extends ValidationResult> {
-                        + validationDelegate : V
-                        + validationResultBuilder : ValidationResultBuilder<R>
+                    interface ConfigValidator<T extends Config> {
+                        + validationDelegate: ValidationDelegate
 
-                        + Future<R> validate(T config)
+                        + Future<ValidationResult> validate(T config)
                     }
                 }
 
@@ -48,8 +54,8 @@
                 }
 
                 package validator_factory {
-                    interface ConfigValidatorFactory<V extends ConfigValidator> {
-                        + V create()
+                    interface ConfigValidatorFactory<T extends Config> {
+                        + ConfigValidator<T> create(T config)
                     }
                 }
             }
@@ -61,20 +67,6 @@
                     + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
                 }
             }
-
-            package model as source_model {
-                interface SourceValidationResult {
-                    + sourceProjectIdValidationResult : FieldValidationResult
-                }
-
-                package builder as source_builder {
-                    abstract class SourceValidationResultBuilder<T extends SourceValidationResult> {
-                        + sourceProjectIdFieldValidationResult : FieldValidationResult
-
-                        + void setSourceProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
-                    }
-                }
-            }
         }
 
         package destination.config {
@@ -83,51 +75,27 @@
                     + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
                 }
             }
-
-            package model as destination_model {
-                interface DestinationValidationResult {
-                    + destinationProjectIdValidationResult : FieldValidationResult
-                }
-
-                package builder as destination_builder {
-                    abstract class DestinationValidationResultBuilder<T extends DestinationValidationResult> {
-                        + destinationProjectIdFieldValidationResult : FieldValidationResult
-
-                        + void setDestinationProjectIdValidationResult(FieldValidationResult projectIdValidationResult)
-                    }
-                }
-            }
         }
     }
+
+
 
     IntegrationParty --> ConfigValidatorFactory : uses
 
     ConfigValidatorFactory --> ConfigValidator : uses
 
-    ConfigValidator -left-> ValidationDelegate : uses
+    ConfigValidator --> ValidationDelegate : uses
     ConfigValidator --> ValidationResult : provides
     ConfigValidator --> ValidationResultBuilder : uses
     ConfigValidator --> Config : uses
+    ConfigValidator --> ConfigField : uses
 
     ValidationResultBuilder --> ValidationResult : builds
+    ValidationResultBuilder --> ConfigField : uses
 
-    SourceValidationDelegate -left-|> ValidationDelegate
+    ValidationResult --> ConfigField : uses
+
+    SourceValidationDelegate --|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
-
-    SourceValidationResult -left-|> ValidationResult
-    DestinationValidationResult -right-|> ValidationResult
-
-    SourceValidationResultBuilder -left-|> ValidationResultBuilder
-    DestinationValidationResultBuilder -right-|> ValidationResultBuilder
-
-    SourceValidationResultBuilder -down-> SourceValidationResult : builds
-    DestinationValidationResultBuilder -down-> DestinationValidationResult : builds
-
-    Config -[hidden]down-> ValidationResultBuilder
-
-    DestinationValidationDelegate -[hidden]down-> DestinationValidationResultBuilder
-    SourceValidationDelegate -[hidden]down-> SourceValidationResultBuilder
-
-    SourceValidationResultBuilder -[hidden]down-> SourceValidationResult
-    DestinationValidationResultBuilder -[hidden]down-> DestinationValidationResult
 @enduml
+
