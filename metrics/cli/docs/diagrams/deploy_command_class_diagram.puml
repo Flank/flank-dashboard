@@ -1,0 +1,109 @@
+@startuml deploy_command_class_diagram
+
+package firebase.service {
+    interface FirebaseService {
+        + login(): Future<void>
+        + addProject(String gcloudProjectId): Future<void>
+        + deployHosting(String appPath): Future<void>
+        + deployFirestore(String firestorePath): Future<void>
+    }
+}
+
+package gcould.service {
+    interface GCloudService {
+        + login() : Future<void>
+        + createProject() : Future<String>
+    }
+}
+
+package flutter.service {
+    interface FlutterService  {
+        + build(Directory appPath) : Future<void>
+    }
+}
+
+package  git.service{
+    interface GitService  {
+        + checkout(String repoUrl, String srcPath) : Future<void>
+    }
+}
+
+package  npm.service {
+    interface NpmService  {
+        + installDependencies(String path) : Future<void>
+    }
+}
+
+package common {
+    package model {
+        class Services {
+            + npmService : NpmService
+            + gitService : GitService
+            + flutterService : FlutterService
+            + gcloudService : GCloudService
+            + firebaseService : FirebaseService
+        }
+    }
+
+    package factory as common.factory{
+        class ServicesFactory {
+            + create() : Services
+        }
+    }
+}
+
+
+package deploy {
+    package command {
+        class DeployCommand {
+            - _deployerFactory : DeployerFactory
+            + run() : Future<void>
+        }
+    }
+
+    package constants {
+        class DeployConstants{}
+    }
+
+    package factory {
+        class DeployerFactory {
+            - _servicesFactory : ServicesFactory
+            + create() : Deployer
+        }
+    }
+
+    class Deployer {
+        - _fileHelper: FileHelper
+        - _npmService : NpmService
+        - _gitService : GitService
+        - _flutterService : FlutterService
+        - _gcloudService : GCloudService
+        - _firebaseService : FirebaseService
+        + deploy() : Future<void>
+    }
+}
+
+package helper {
+    class FileHelper {
+        + deleteDirectory(Directory directory) : Future<void>
+    }
+}
+
+Deployer -down-> NpmService : uses
+Deployer -down-> GitService : uses
+Deployer -down-> FlutterService : uses
+Deployer -down-> GCloudService : uses
+Deployer -down-> FirebaseService : uses
+Deployer -left-> FileHelper : uses
+Deployer -> DeployConstants : uses
+Deployer -> Services : uses
+
+DeployCommand -down-> Deployer : uses
+DeployCommand -down-> DeployerFactory : uses
+DeployerFactory --> ServicesFactory : uses
+
+ServicesFactory --> Services : creates
+
+DeployerFactory --> Deployer : creates
+
+@enduml

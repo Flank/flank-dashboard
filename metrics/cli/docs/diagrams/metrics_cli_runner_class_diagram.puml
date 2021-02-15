@@ -1,0 +1,43 @@
+@startuml metrics_cli_runner_class_diagram
+
+package args {
+    class CommandRunner{}
+    class Command {}
+}
+
+package runner {
+    class MetricsCliRunner {}
+}
+
+package deploy {
+    package command {
+        class DeployCommand {}
+    }
+
+    package factory as deploy.factory{
+        class DeployerFactory {}
+    }
+}
+
+package doctor {
+    package command as doctor.command {
+        class DoctorCommand {}
+    }
+
+    package factory as doctor.factory {
+        class DoctorFactory {}
+    }
+}
+
+MetricsCliRunner --> DoctorCommand : uses
+MetricsCliRunner --> DeployCommand : uses
+MetricsCliRunner --> DeployerFactory : uses
+MetricsCliRunner --> DoctorFactory : uses
+
+DeployCommand --|> Command
+DoctorCommand --|> Command
+
+MetricsCliRunner --|> CommandRunner
+
+
+@enduml

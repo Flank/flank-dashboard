@@ -1,8 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'ubuntu:focal'
-            args '-u root:root'
+        kubernetes {
+          yamlFile '.jenkins/pod_templates/ubuntu.yaml'
         }
     }
     options {

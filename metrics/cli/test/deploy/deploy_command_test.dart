@@ -2,11 +2,12 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:deploy/doctor/doctor_command.dart';
+import 'package:cli/deploy/deploy_command.dart';
 import 'package:test/test.dart';
 
 void main() {
-  CommandRunner<dynamic> runner;
+  var runner;
+
   const _defaultUsage = '''
 Usage: metrics <command> [arguments]
 
@@ -17,7 +18,7 @@ Available commands:
   help   Display help information for metrics.
 
 Run "metrics help <command>" for more information about a command.''';
-  group("DoctorCommand", () {
+  group("DeployCommand", () {
     setUpAll(() {
       runner = CommandRunner('metrics', 'Metrics installer.');
     });
@@ -27,14 +28,14 @@ Run "metrics help <command>" for more information about a command.''';
         expect(runner.invocation, equals('metrics <command> [arguments]'));
       },
     );
-    test('returns the usage string', () {
+    test("returns the usage string", () {
       expect(runner.usage, equals('''
 Metrics installer.
 
 $_defaultUsage'''));
     });
     test("contains custom commands", () {
-      runner.addCommand(DoctorCommand());
+      runner.addCommand(DeployCommand());
       expect(runner.usage, equals('''
 Metrics installer.
 
@@ -44,7 +45,7 @@ Global options:
 -h, --help    Print this usage information.
 
 Available commands:
-  doctor   Check dependencies.
+  deploy   Creates GCloud and Firebase project and deploy metrics app.
 
 Run "metrics help <command>" for more information about a command.'''));
     });

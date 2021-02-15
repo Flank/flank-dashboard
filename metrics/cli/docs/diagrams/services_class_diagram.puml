@@ -1,0 +1,173 @@
+@startuml services_class_diagram
+
+package firebase {
+    package service as firebase.service {
+        interface FirebaseService {
+            + login(): Future<String>
+            + addProject(String gcloudProjectId): Future<void>
+            + deployHosting(String appPath): Future<void>
+            + deployFirestore(String firestorePath): Future<void>
+        }
+    }
+
+    package adapter as firebase.adapter {
+        class FirebaseCliServiceAdapter {
+            - _firebaseCli: FirebaseCli
+            - _prompter : Prompter
+        }
+    }
+
+    package cli as firebase.cli {
+        class FirebaseCli {
+            + login(): Future<void>
+            + addFirebase(String projectId): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + setFirebaseProject(String projectId, String workingDir): Future<void>
+            + clearTarget(String workingDir): Future<void>
+            + applyTarget(String projectId, String workingDir): Future<void>
+            + deployHosting(String workingDir): Future<void>
+            + deployRules(String workingDir): Future<void>
+            + deployFunctions(String workingDir): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
+package gcloud {
+    package service as gcloud.service {
+        interface GCloudService {
+            + login() : Future<void>
+            + createProject() : Future<String>
+        }
+
+    }
+
+    package adapter as gcloud.adapter {
+        class GCloudCliServiceAdapter {
+            - _gcloudCli : GCloudCli
+            - _prompter : Prompter
+        }
+    }
+
+    package cli as gcloud.cli {
+        class GCloudCli {
+            + login(): Future<void>
+            + addProject(): Future<String>
+            + setProject(): Future<void>
+            + selectRegion(): Future<String>
+            + addProjectApp(String region, String projectId): Future<void>
+            + enableFirestoreApi() : Future<void>
+            + createDatabase(String region, String projectId): Future<void>
+            + version() : Future<void>
+        }
+    }
+}
+
+package flutter {
+    package service as flutter.service {
+        interface FlutterService  {
+            + build(Directory appPath) : Future<void>
+        }
+
+    }
+
+    package adapter as flutter.adapter {
+        class FlutterCliServiceAdapter  {
+            - _flutterCli : FlutterCli
+        }
+    }
+
+    package cli as flutter.cli {
+        class FlutterCli {
+            + version(): Future<void>
+            + enableWeb(): Future<void>
+            + buildWeb(String workingDir): Future<void>
+        }
+    }
+}
+
+package git {
+    package service as git.service{
+        interface GitService  {
+            + checkout() : Future<void>
+        }
+    }
+
+    package adapter as git.adapter {
+        class GitCliServiceAdapter {
+            - _gitCli : GitCli
+        }
+    }
+
+    package cli as git.cli {
+        class GitCli {
+            + clone(String repoURL, String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
+package npm {
+    package service as npm.service {
+        interface NpmService  {
+            + installDependencies(String path) : Future<void>
+        }
+    }
+
+    package adapter as npm.adapter {
+        class NpmCliServiceAdapter  {
+            - _npmCli : NpmCli
+        }
+    }
+
+    package cli as npm.cli {
+        class NpmCli {
+            + install(String workingDir): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
+package interfaces {
+    package service {
+        interface InfoService {
+            + version() : Future<void>
+        }
+    }
+
+    package cli {
+        interface Cli {
+            + version() : Future<void>
+        }
+    }
+}
+
+FirebaseCliServiceAdapter .right.|> FirebaseService
+GCloudCliServiceAdapter .right.|> GCloudService
+FlutterCliServiceAdapter .right.|> FlutterService
+GitCliServiceAdapter .right.|> GitService
+NpmCliServiceAdapter .right.|> NpmService
+
+FirebaseCliServiceAdapter -right-> FirebaseCli : uses
+GCloudCliServiceAdapter -right-> GCloudCli : uses
+FlutterCliServiceAdapter -left-> FlutterCli : uses
+GitCliServiceAdapter -left-> GitCli : uses
+NpmCliServiceAdapter -left-> NpmCli : uses
+
+
+FirebaseCli .up.|> Cli
+GCloudCli .up.|> Cli
+FlutterCli .down.|> Cli
+GitCli .down.|> Cli
+NpmCli .down.|> Cli
+
+firebase --[hidden]right--> gcloud
+Service --[hidden]right--> Cli
+
+FirebaseService -up-|> InfoService
+GCloudService -up-|> InfoService
+GitService -down-|> InfoService
+FlutterService -down-|> InfoService
+NpmService -down-|> InfoService
+
+@enduml
