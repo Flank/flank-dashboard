@@ -65,10 +65,10 @@ class LightMetricsThemeData extends MetricsThemeData {
   static final TextStyle hintStyle = MetricsTextStyle(
     color: MetricsColors.gray[300],
     fontSize: 16.0,
-    lineHeightInPixels: 20,
+    lineHeightInPixels: 20.0,
   );
 
-  /// The default [TextStyle] for dropdown within the application.
+  /// The default [TextStyle] for a dropdown component within the application.
   static final TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
     fontSize: 16.0,
     color: MetricsColors.gray[900],

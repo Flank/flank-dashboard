@@ -1,7 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_color/metrics_color.dart';
@@ -19,50 +18,25 @@ void main() {
     const color = MetricsColor(primary, swatch);
 
     test(
-      "creates an instance with the given swatch",
+      "creates an instance with the given primary value",
       () {
         const color = MetricsColor(primary, swatch);
 
-        expect(color.swatch, equals(swatch));
+        expect(color.value, equals(primary));
       },
     );
 
     test(
-      "uses the given primary value if this metrics color instance is used as a color",
+      "operator [] throws an AssertionError if the given shade does not exist",
       () {
-        const expectedColor = Color(primary);
+        const nonExistingShade = -1000;
 
-        const color = MetricsColor(primary, swatch);
-
-        expect(color.value, equals(expectedColor.value));
+        expect(() => color[nonExistingShade], MatcherUtil.throwsAssertionError);
       },
     );
 
     test(
-      ".swatch is an UnmodifiableMap",
-      () {
-        expect(color.swatch, isA<UnmodifiableMapView>());
-      },
-    );
-
-    test(
-      "throws an UnsupportedError when trying to modify .swatch",
-      () {
-        expect(() => color.swatch[10] = null, throwsUnsupportedError);
-      },
-    );
-
-    test(
-      "[] throws an AssertionError when trying to get not existing shade",
-      () {
-        const notExistingShade = -1000;
-
-        expect(() => color[notExistingShade], MatcherUtil.throwsAssertionError);
-      },
-    );
-
-    test(
-      "[] returns the corresponding color from the swatch",
+      "operator [] returns the corresponding color from the swatch",
       () {
         final expectedColor = swatch[existingShade];
 

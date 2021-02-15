@@ -15,7 +15,10 @@ void main() {
     testWidgets(
       "can't be created when the child is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_MetricsThemeTestbed(child: null));
+        await tester.pumpWidget(_MetricsThemeTestbed(
+          child: null,
+          data: LightMetricsThemeData(),
+        ));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -24,7 +27,7 @@ void main() {
     testWidgets(
       "can't be created without data",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_MetricsThemeTestbed(data: null));
+        await tester.pumpWidget(const _MetricsThemeTestbed(data: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -94,8 +97,8 @@ class _MetricsThemeTestbed extends StatelessWidget {
   const _MetricsThemeTestbed({
     Key key,
     this.child = const Scaffold(),
-    this.materialAppKey,
     this.data,
+    this.materialAppKey,
   }) : super(key: key);
 
   @override

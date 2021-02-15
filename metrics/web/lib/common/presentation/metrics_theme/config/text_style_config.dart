@@ -18,12 +18,6 @@ class TextStyleConfig {
     fontWeight: FontWeight.w500,
   );
 
-  /// A [TextStyle] of the button label.
-  static const TextStyle buttonLabelStyle = TextStyle(
-    fontSize: 16.0,
-    fontWeight: FontWeight.w500,
-  );
-
   /// A [TextStyle] of the popup title.
   static TextStyle popupTitleStyle = MetricsTextStyle(
     fontSize: 13.0,
