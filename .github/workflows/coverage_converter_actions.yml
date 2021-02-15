@@ -57,6 +57,16 @@ jobs:
         run: dart2native bin/main.dart -o ./coverage_converter_macos
         working-directory: metrics/coverage_converter/
 
+      - name: Generate SHA256 Hash
+        run: shasum -a 256 metrics/coverage_converter/coverage_converter_macos > metrics/coverage_converter/coverage_converter_macos.sha256
+
+      - name: Upload SHA256 Hash
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_converter_macos_sha256
+          path: metrics/coverage_converter/coverage_converter_macos.sha256
+          if-no-files-found: error
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -142,6 +152,12 @@ jobs:
           name: coverage_converter_linux
           path: metrics/coverage_converter/
 
+      - name: Download MacOS SHA256 Hash
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage_converter_macos_sha256
+          path: metrics/coverage_converter/
+
       - name: Download Linux SHA256 Hash
         uses: actions/download-artifact@v2
         with:
@@ -154,7 +170,7 @@ jobs:
           git push --delete origin coverage-converter-snapshot
 
       - name: Create release
-        run: gh release create coverage-converter-snapshot metrics/coverage_converter/coverage_converter_macos metrics/coverage_converter/coverage_converter_linux metrics/coverage_converter/coverage_converter_linux.sha256 --prerelease --title 'Coverage converter snapshot'
+        run: gh release create coverage-converter-snapshot metrics/coverage_converter/coverage_converter_macos metrics/coverage_converter/coverage_converter_linux metrics/coverage_converter/coverage_converter_linux.sha256 metrics/coverage_converter/coverage_converter_macos.sha256  --prerelease --title 'Coverage converter snapshot'
 
   notify-actions:
     name: Notify about building finished
