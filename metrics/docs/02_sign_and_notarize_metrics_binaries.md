@@ -1,12 +1,5 @@
-# Analyze and compare tools to sign and notarize Metrics CLI
-
-- [Current state and objectives](#current-state-and-objectives)
-- [Requirements](#requirements)
-- [Analyzing process](#analyzing-process)
-- [Decision](#decision)
-- [References](#references)
-
-## Current state and objectives
+# Motivation
+> What problem is this project solving?
 
 Apple's ongoing initiatives at controlling what runs on their platforms took a new turn with macOS Catalina (10.15), with required app and command-line binary signing.
 
@@ -21,6 +14,23 @@ To solve the described issue, the following steps is required:
 Currently, Metrics binaries for macOS have not signed or notarized.
 
 The document's goal is to investigate and analyze tools and methods that can help in signing and notarizing binaries.
+
+# References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Notarizing macOS Software Before Distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
+- [code signing for macOS](https://wiki.freepascal.org/Code_Signing_for_macOS)
+- [Using app-specific passwords](https://support.apple.com/en-us/HT204397)
+- [gon](https://github.com/mitchellh/gon)
+- [signing_tools](https://github.com/drud/signing_tools)
+- [notarize-cli](https://github.com/bacongravy/notarize-cli)
+- [Import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
+
+# Analyze
+
+- [Requirements](#requirements)
+- [Analyzing process](#analyzing-process)
+- [Decision](#decision)
 
 ## Requirements
 
@@ -164,13 +174,3 @@ Cons:
 So after the above comparison the tool that fits our goals the most is the [gon](#gon).
 
 We can use a single tool for a sign and notarize. To run it, we just need a single config file, where all the options for our release are stored. Also, with the execution flag, we can debug if something went wrong. And it has a good popularity, which means a less chance to get errors using the tool and more chance to take an answer for our questions in usage.
-
-## References
-
-- [Notarizing macOS Software Before Distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
-- [code signing for macOS](https://wiki.freepascal.org/Code_Signing_for_macOS)
-- [Using app-specific passwords](https://support.apple.com/en-us/HT204397)
-- [gon](https://github.com/mitchellh/gon)
-- [signing_tools](https://github.com/drud/signing_tools)
-- [notarize-cli](https://github.com/bacongravy/notarize-cli)
-- [Import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
