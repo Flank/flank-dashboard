@@ -153,7 +153,7 @@ jobs:
           git push --delete origin ci_integrations-snapshot
 
       - name: Create release
-        run: gh release create ci_integrations-snapshot metrics/ci_integrations/ci_integrations_macos metrics/ci_integrations/ci_integrations_linux metrics/ci_integrations/ci_integrations_linux.sha256 metrics/ci_integrations/ci_integrations_macos.sha256 --prerelease --title 'CI Integrations snapshot'
+        run: gh release create ci_integrations-snapshot metrics/ci_integrations/ci_integrations_macos metrics/ci_integrations/ci_integrations_macos.sha256 metrics/ci_integrations/ci_integrations_linux metrics/ci_integrations/ci_integrations_linux.sha256 --prerelease --title 'CI Integrations snapshot'
 
   notify-actions:
     name: Notify about building finished
