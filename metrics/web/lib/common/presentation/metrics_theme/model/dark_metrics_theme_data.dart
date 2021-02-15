@@ -12,7 +12,7 @@ import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_i
 import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -53,135 +53,106 @@ import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/toolt
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 // ignore_for_file: public_member_api_docs
-// Looking forward to the color palette from the design team.
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
-  static const Color scaffoldColor = Color(0xFF1b1b1d);
-  static const Color inputColor = Color(0xFF0d0d0d);
-  static const inputFocusedBorder = OutlineInputBorder(
-    borderSide: BorderSide(color: ColorConfig.shimmerColor),
+  static final inputFocusedBorder = OutlineInputBorder(
+    borderSide: BorderSide(
+      color: MetricsColors.gray[300],
+    ),
   );
 
-  static const TextStyle hintStyle = MetricsTextStyle(
-    color: ColorConfig.inputSecondaryTextColor,
+  static final TextStyle hintStyle = MetricsTextStyle(
+    color: MetricsColors.gray[400],
     fontSize: 16.0,
     lineHeightInPixels: 20,
   );
 
-  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
-  static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
-  static const Color _inactiveBackgroundColor = Color(0xFF242729);
-  static const Color _inactiveColor = Color(0xFF43494d);
-  static const Color _cardHoverColor = Color(0xFF212124);
-  static const Color _borderColor = Color(0xFF2d2d33);
-  static const Color _dividerColor = Color(0xFF252528);
-  static const Color _loginOptionHoverColor = Color(0xFFe5e5e5);
-  static const Color _loginOptionTextColor = Color(0xFF757575);
-  static const Color _tileBorderColor = Color(0xFF0e0d0d);
-  static const Color _tileLoadingBackgroundColor = Color(0xFF242425);
-  static const Color _tableHeaderColor = Color(0xFF79858b);
-  static const Color _tableHeaderLoadingBackgroundColor = Color(0xFF363537);
-  static const Color _metricsLightGrey = Color(0xFFDCDCE5);
-  static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
-  static const Color _sparklineTextColor = Color(0xFFD7D7E5);
-  static const Color _sparklineFillColor = Color(0xFF29292B);
-  static const Color _inactiveToggleColor = Color(0xFF1B1B1D);
-  static const Color _textPlaceholderColor = Color(0xFF51585c);
-  static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
-  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.5);
-  static const Color _positiveStatusColor = Color(0xFF182b27);
-  static const Color _negativeStatusColor = Color(0xFF2d1f1f);
-  static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
-  static const Color _pageTitleIconColor = Color(0xFF4f4f56);
-  static const Color _popupColor = Color(0xFFf5f8fa);
-  static const Color _buildResultDateRangeTextColor = Color(0xFFDCDCE3);
-
   /// The default [TextStyle] for dropdown within the application.
-  static const _defaultDropdownTextStyle = MetricsTextStyle(
-    color: Colors.white,
+  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
+    color: MetricsColors.white,
     fontSize: 16.0,
     lineHeightInPixels: 20.0,
   );
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
-    color: Colors.white,
+    color: MetricsColors.white,
     fontSize: 26.0,
     fontWeight: FontWeight.w500,
   );
 
   /// Creates the dark theme with the default widget theme configuration.
-  const DarkMetricsThemeData()
+  DarkMetricsThemeData()
       : super(
-          metricsWidgetTheme: const MetricsWidgetThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            accentColor: _positiveStatusColor,
-            backgroundColor: scaffoldColor,
+          metricsWidgetTheme: MetricsWidgetThemeData(
+            primaryColor: MetricsColors.green[500],
+            accentColor: MetricsColors.green[900],
+            backgroundColor: MetricsColors.gray[800],
             textStyle: TextStyle(
-              color: ColorConfig.primaryColor,
+              color: MetricsColors.gray[100],
               fontWeight: FontWeight.bold,
             ),
           ),
-          barGraphPopupTheme: const BarGraphPopupThemeData(
-            color: _popupColor,
-            shadowColor: _shadowColor,
+          barGraphPopupTheme: BarGraphPopupThemeData(
+            color: MetricsColors.gray[100],
+            shadowColor: MetricsColors.shadow50,
             titleTextStyle: TextStyleConfig.popupTitleStyle,
             subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
-          tooltipPopupTheme: const TooltipPopupThemeData(
-            backgroundColor: _popupColor,
-            shadowColor: _shadowColor,
+          tooltipPopupTheme: TooltipPopupThemeData(
+            backgroundColor: MetricsColors.gray[100],
+            shadowColor: MetricsColors.shadow50,
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
-          tooltipIconTheme: const TooltipIconThemeData(
-            color: ColorConfig.shimmerColor,
-            hoverColor: ColorConfig.tooltipIconHoverColor,
+          tooltipIconTheme: TooltipIconThemeData(
+            color: MetricsColors.gray[300],
+            hoverColor: MetricsColors.gray[400],
           ),
-          projectGroupCardTheme: const ProjectGroupCardThemeData(
-            borderColor: _borderColor,
-            hoverColor: _cardHoverColor,
-            backgroundColor: scaffoldColor,
+          projectGroupCardTheme: ProjectGroupCardThemeData(
+            borderColor: MetricsColors.gray[500],
+            hoverColor: MetricsColors.gray[700],
+            backgroundColor: MetricsColors.gray[800],
             primaryButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.primaryColor,
-              hoverColor: ColorConfig.primaryButtonHoverColor,
+              color: MetricsColors.green[500],
+              hoverColor: MetricsColors.green[600],
             ),
             accentButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.accentButtonColor,
-              hoverColor: ColorConfig.accentButtonHoverColor,
+              color: MetricsColors.orange[500],
+              hoverColor: MetricsColors.orange[600],
             ),
-            titleStyle: MetricsTextStyle(
-              color: Colors.white,
+            titleStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               fontSize: 22.0,
               lineHeightInPixels: 26.0,
               fontWeight: FontWeight.w500,
             ),
             subtitleStyle: MetricsTextStyle(
-              color: ColorConfig.secondaryTextColor,
+              color: MetricsColors.gray[300],
               fontSize: 13.0,
               lineHeightInPixels: 16.0,
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
+          addProjectGroupCardTheme: AddProjectGroupCardThemeData(
             attentionLevel: AddProjectGroupCardAttentionLevel(
               positive: AddProjectGroupCardStyle(
-                backgroundColor: _positiveStatusColor,
-                iconColor: ColorConfig.primaryColor,
-                hoverColor: _addProjectGroupCardHoverColor,
+                backgroundColor: MetricsColors.green[900],
+                iconColor: MetricsColors.green[500],
+                hoverColor: MetricsColors.green[800],
                 labelStyle: MetricsTextStyle(
-                  color: ColorConfig.primaryColor,
+                  color: MetricsColors.green[500],
                   fontSize: 16.0,
                   lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: AddProjectGroupCardStyle(
-                backgroundColor: _inactiveBackgroundColor,
-                hoverColor: _inactiveBackgroundColor,
-                iconColor: scaffoldColor,
+                backgroundColor: MetricsColors.gray[700],
+                hoverColor: MetricsColors.gray[700],
+                iconColor: MetricsColors.gray[800],
                 labelStyle: MetricsTextStyle(
-                  color: scaffoldColor,
+                  color: MetricsColors.gray[800],
                   fontSize: 16.0,
                   lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
@@ -189,361 +160,367 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
             ),
           ),
-          deleteDialogTheme: const DeleteDialogThemeData(
-            backgroundColor: scaffoldColor,
-            closeIconColor: Colors.white,
+          deleteDialogTheme: DeleteDialogThemeData(
+            backgroundColor: MetricsColors.gray[800],
+            closeIconColor: MetricsColors.white,
             titleTextStyle: _dialogTitleTextStyle,
-            contentTextStyle: MetricsTextStyle(
+            contentTextStyle: const MetricsTextStyle(
               fontSize: 16.0,
               lineHeightInPixels: 24.0,
-              color: Colors.white,
+              color: MetricsColors.white,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
             ),
           ),
-          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            backgroundColor: scaffoldColor,
-            barrierColor: _barrierColor,
-            closeIconColor: Colors.white,
-            contentBorderColor: _borderColor,
+          projectGroupDialogTheme: ProjectGroupDialogThemeData(
+            primaryColor: MetricsColors.green[500],
+            backgroundColor: MetricsColors.gray[800],
+            barrierColor: MetricsColors.barrierColor,
+            closeIconColor: MetricsColors.white,
+            contentBorderColor: MetricsColors.gray[600],
             titleTextStyle: _dialogTitleTextStyle,
-            uncheckedProjectTextStyle: MetricsTextStyle(
-              color: Colors.white,
+            uncheckedProjectTextStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               fontSize: 14.0,
               lineHeightInPixels: 20.0,
             ),
-            checkedProjectTextStyle: MetricsTextStyle(
-              color: Colors.white,
+            checkedProjectTextStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               fontSize: 14.0,
               lineHeightInPixels: 20.0,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
-            errorTextStyle: TextStyle(color: ColorConfig.accentColor),
+            errorTextStyle: TextStyle(
+              color: MetricsColors.orange[500],
+            ),
           ),
-          inactiveWidgetTheme: const MetricsWidgetThemeData(
-            primaryColor: _inactiveColor,
+          inactiveWidgetTheme: MetricsWidgetThemeData(
+            primaryColor: MetricsColors.gray[400],
             accentColor: Colors.transparent,
-            backgroundColor: _inactiveBackgroundColor,
+            backgroundColor: MetricsColors.gray[700],
             textStyle: TextStyle(
-              color: _inactiveColor,
+              color: MetricsColors.gray[400],
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          metricsButtonTheme: const MetricsButtonThemeData(
+          metricsButtonTheme: MetricsButtonThemeData(
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
-                color: ColorConfig.primaryColor,
+                color: MetricsColors.green[500],
+                hoverColor: MetricsColors.green[600],
                 labelStyle: TextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray[900],
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               neutral: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
-                labelStyle: TextStyle(
-                  color: Colors.white,
+                color: MetricsColors.gray[700],
+                hoverColor: MetricsColors.gray[800],
+                labelStyle: const TextStyle(
+                  color: MetricsColors.white,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               negative: MetricsButtonStyle(
-                color: ColorConfig.accentColor,
+                color: MetricsColors.orange[500],
+                hoverColor: MetricsColors.orange[600],
                 labelStyle: TextStyle(
-                  color: Colors.black,
+                  color: MetricsColors.gray[900],
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
+                color: MetricsColors.gray[700],
                 labelStyle: TextStyle(
-                  color: ColorConfig.inactiveTextColor,
+                  color: MetricsColors.gray[800],
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           ),
-          textFieldTheme: const TextFieldThemeData(
-            focusColor: Colors.black,
-            hoverBorderColor: _dropdownHoverBorderColor,
-            prefixIconColor: _inactiveColor,
-            focusedPrefixIconColor: Colors.white,
-            textStyle: MetricsTextStyle(
-              color: Colors.white,
+          textFieldTheme: TextFieldThemeData(
+            focusColor: MetricsColors.black,
+            hoverBorderColor: MetricsColors.gray[500],
+            prefixIconColor: MetricsColors.gray[400],
+            focusedPrefixIconColor: MetricsColors.white,
+            textStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               fontSize: 16.0,
               lineHeightInPixels: 20.0,
             ),
           ),
-          dropdownTheme: const DropdownThemeData(
-            backgroundColor: Colors.black,
-            openedButtonBackgroundColor: Colors.black,
-            hoverBackgroundColor: Colors.black,
-            hoverBorderColor: _dropdownHoverBorderColor,
-            openedButtonBorderColor: ColorConfig.shimmerColor,
-            closedButtonBackgroundColor: inputColor,
-            closedButtonBorderColor: inputColor,
+          dropdownTheme: DropdownThemeData(
+            backgroundColor: MetricsColors.black,
+            openedButtonBackgroundColor: MetricsColors.black,
+            hoverBackgroundColor: MetricsColors.black,
+            hoverBorderColor: MetricsColors.gray[400],
+            openedButtonBorderColor: MetricsColors.gray[300],
+            closedButtonBackgroundColor: MetricsColors.gray[900],
+            closedButtonBorderColor: MetricsColors.gray[900],
             textStyle: _defaultDropdownTextStyle,
-            shadowColor: _shadowColor,
-            iconColor: Colors.white,
+            shadowColor: MetricsColors.shadow32,
+            iconColor: MetricsColors.white,
           ),
-          dropdownItemTheme: const DropdownItemThemeData(
+          dropdownItemTheme: DropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: _dropdownHoverColor,
+            hoverColor: MetricsColors.gray[800],
             textStyle: _defaultDropdownTextStyle,
             hoverTextStyle: _defaultDropdownTextStyle,
           ),
-          loginTheme: const LoginThemeData(
-            titleTextStyle: TextStyle(
-              color: Colors.white,
+          loginTheme: LoginThemeData(
+            titleTextStyle: const TextStyle(
+              color: MetricsColors.white,
               fontSize: 26.0,
               fontWeight: FontWeight.bold,
             ),
             loginOptionButtonStyle: MetricsButtonStyle(
-              color: Colors.white,
-              hoverColor: _loginOptionHoverColor,
+              color: MetricsColors.white,
+              hoverColor: MetricsColors.gray[100],
               labelStyle: MetricsTextStyle(
                 lineHeightInPixels: 20.0,
-                color: _loginOptionTextColor,
+                color: MetricsColors.gray[300],
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            passwordVisibilityIconColor: Colors.white,
+            passwordVisibilityIconColor: MetricsColors.white,
             inactiveLoginOptionButtonStyle: MetricsButtonStyle(
-              color: ColorConfig.inactiveColor,
-              hoverColor: ColorConfig.inactiveColor,
+              color: MetricsColors.gray[700],
+              hoverColor: MetricsColors.gray[700],
               labelStyle: MetricsTextStyle(
                 lineHeightInPixels: 20.0,
-                color: ColorConfig.inactiveTextColor,
+                color: MetricsColors.gray[800],
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          projectMetricsTableTheme: const ProjectMetricsTableThemeData(
+          projectMetricsTableTheme: ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
               textStyle: MetricsTextStyle(
-                color: _tableHeaderColor,
+                color: MetricsColors.gray[300],
                 fontWeight: FontWeight.normal,
                 fontSize: 14.0,
                 lineHeightInPixels: 16.0,
               ),
             ),
             metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(
-              backgroundColor: _tableHeaderLoadingBackgroundColor,
-              shimmerColor: _tileBorderColor,
+              backgroundColor: MetricsColors.gray[500],
+              shimmerColor: MetricsColors.gray[300],
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
-              backgroundColor: scaffoldColor,
-              hoverBackgroundColor: _cardHoverColor,
-              borderColor: _tileBorderColor,
-              hoverBorderColor: _borderColor,
-              textStyle: MetricsTextStyle(
+              backgroundColor: MetricsColors.gray[800],
+              hoverBackgroundColor: MetricsColors.gray[700],
+              borderColor: MetricsColors.gray[900],
+              hoverBorderColor: MetricsColors.gray[900],
+              textStyle: const MetricsTextStyle(
+                color: MetricsColors.white,
                 fontSize: 24.0,
                 lineHeightInPixels: 28.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
             projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
-              backgroundColor: _tileLoadingBackgroundColor,
-              shimmerColor: ColorConfig.shimmerColor,
+              backgroundColor: MetricsColors.gray[700],
+              shimmerColor: MetricsColors.gray[300],
             ),
           ),
-          buildNumberScorecardTheme: const ScorecardThemeData(
+          buildNumberScorecardTheme: ScorecardThemeData(
             valueTextStyle: MetricsTextStyle(
               fontSize: 24.0,
               lineHeightInPixels: 24.0,
-              color: _metricsLightGrey,
+              color: MetricsColors.gray[200],
               fontWeight: FontWeight.bold,
             ),
             descriptionTextStyle: MetricsTextStyle(
               fontSize: 14.0,
               lineHeightInPixels: 14.0,
-              color: _metricsLightGrey,
+              color: MetricsColors.gray[200],
               fontWeight: FontWeight.bold,
             ),
           ),
-          buildResultBarGraphTheme: const BuildResultBarGraphThemeData(
+          buildResultBarGraphTheme: BuildResultBarGraphThemeData(
             textStyle: MetricsTextStyle(
-              color: _buildResultDateRangeTextColor,
+              color: MetricsColors.gray[200],
               fontWeight: FontWeight.bold,
               lineHeightInPixels: 13.0,
               fontSize: 14.0,
             ),
           ),
-          performanceSparklineTheme: const SparklineThemeData(
+          performanceSparklineTheme: SparklineThemeData(
             textStyle: MetricsTextStyle(
-              color: _sparklineTextColor,
+              color: MetricsColors.gray[200],
               fontWeight: FontWeight.bold,
               fontSize: 22.0,
               lineHeightInPixels: 26.0,
             ),
-            strokeColor: _sparklineStrokeColor,
-            fillColor: _sparklineFillColor,
+            strokeColor: MetricsColors.gray[200],
+            fillColor: MetricsColors.gray[700],
           ),
-          projectBuildStatusTheme: const ProjectBuildStatusThemeData(
+          projectBuildStatusTheme: ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
               positive: ProjectBuildStatusStyle(
-                backgroundColor: _positiveStatusColor,
+                backgroundColor: MetricsColors.green[900],
               ),
               negative: ProjectBuildStatusStyle(
-                backgroundColor: _negativeStatusColor,
+                backgroundColor: MetricsColors.orange[900],
               ),
               unknown: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.inactiveColor,
+                backgroundColor: MetricsColors.gray[700],
               ),
             ),
           ),
-          circlePercentageTheme: const CirclePercentageThemeData(
+          circlePercentageTheme: CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: _positiveStatusColor,
-                backgroundColor: _positiveStatusColor,
-                valueColor: ColorConfig.primaryColor,
+                strokeColor: MetricsColors.green[900],
+                backgroundColor: MetricsColors.green[900],
+                valueColor: MetricsColors.green[500],
                 valueStyle: TextStyle(
-                  color: ColorConfig.primaryColor,
+                  color: MetricsColors.green[500],
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: _negativeStatusColor,
-                backgroundColor: _negativeStatusColor,
-                valueColor: ColorConfig.accentColor,
+                strokeColor: MetricsColors.orange[900],
+                backgroundColor: MetricsColors.orange[900],
+                valueColor: MetricsColors.orange[500],
                 valueStyle: TextStyle(
-                  color: ColorConfig.accentColor,
+                  color: MetricsColors.orange[500],
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
               ),
               neutral: CirclePercentageStyle(
-                strokeColor: ColorConfig.yellowTranslucent,
-                backgroundColor: ColorConfig.yellowTranslucent,
-                valueColor: ColorConfig.yellow,
+                strokeColor: MetricsColors.yellow[900],
+                backgroundColor: MetricsColors.yellow[900],
+                valueColor: MetricsColors.yellow[500],
                 valueStyle: TextStyle(
-                  color: ColorConfig.yellow,
+                  color: MetricsColors.yellow[500],
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
               ),
               inactive: CirclePercentageStyle(
-                strokeColor: _inactiveBackgroundColor,
-                backgroundColor: _inactiveBackgroundColor,
-                valueColor: ColorConfig.shimmerColor,
+                strokeColor: MetricsColors.gray[700],
+                backgroundColor: MetricsColors.gray[700],
+                valueColor: MetricsColors.gray[400],
                 valueStyle: TextStyle(
-                  color: _pageTitleIconColor,
+                  color: MetricsColors.gray[400],
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
               ),
             ),
           ),
-          toggleTheme: const ToggleThemeData(
-            activeColor: ColorConfig.primaryColor,
-            activeHoverColor: ColorConfig.primaryButtonHoverColor,
-            inactiveColor: _inactiveToggleColor,
-            inactiveHoverColor: _dividerColor,
+          toggleTheme: ToggleThemeData(
+            activeColor: MetricsColors.green[500],
+            activeHoverColor: MetricsColors.green[600],
+            inactiveColor: MetricsColors.gray[800],
+            inactiveHoverColor: MetricsColors.gray[700],
           ),
-          userMenuButtonTheme: const UserMenuButtonThemeData(
-            hoverColor: ColorConfig.shimmerColor,
-            color: Colors.white,
+          userMenuButtonTheme: UserMenuButtonThemeData(
+            hoverColor: MetricsColors.gray[300],
+            color: MetricsColors.white,
           ),
-          userMenuTheme: const UserMenuThemeData(
-            backgroundColor: Colors.black,
-            dividerColor: _dividerColor,
-            shadowColor: _shadowColor,
-            contentTextStyle: MetricsTextStyle(
-              color: Colors.white,
+          userMenuTheme: UserMenuThemeData(
+            backgroundColor: MetricsColors.black,
+            dividerColor: MetricsColors.gray[700],
+            shadowColor: MetricsColors.shadow32,
+            contentTextStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               lineHeightInPixels: 20.0,
               fontSize: 16.0,
             ),
           ),
-          textPlaceholderTheme: const TextPlaceholderThemeData(
+          textPlaceholderTheme: TextPlaceholderThemeData(
             textStyle: TextStyle(
-              color: _textPlaceholderColor,
+              color: MetricsColors.gray[400],
               fontSize: 14.0,
             ),
           ),
-          inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
-            backgroundColor: inputColor,
-            shimmerColor: ColorConfig.shimmerColor,
+          inputPlaceholderTheme: ShimmerPlaceholderThemeData(
+            backgroundColor: MetricsColors.gray[900],
+            shimmerColor: MetricsColors.gray[300],
           ),
-          toastTheme: const ToastThemeData(
+          toastTheme: ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(
               positive: ToastStyle(
-                backgroundColor: _positiveStatusColor,
+                backgroundColor: MetricsColors.green[900],
                 textStyle: TextStyle(
-                  color: ColorConfig.primaryColor,
+                  color: MetricsColors.green[500],
                   fontSize: 16.0,
                 ),
               ),
               negative: ToastStyle(
-                backgroundColor: _negativeStatusColor,
+                backgroundColor: MetricsColors.orange[900],
                 textStyle: TextStyle(
-                  color: ColorConfig.accentColor,
+                  color: MetricsColors.orange[500],
                   fontSize: 16.0,
                 ),
               ),
             ),
           ),
-          pageTitleTheme: const PageTitleThemeData(
-            iconColor: _pageTitleIconColor,
-            textStyle: MetricsTextStyle(
+          pageTitleTheme: PageTitleThemeData(
+            iconColor: MetricsColors.gray[300],
+            textStyle: const MetricsTextStyle(
               fontSize: 36.0,
               fontWeight: FontWeight.w500,
               lineHeightInPixels: 42.0,
-              color: Colors.white,
+              color: MetricsColors.white,
             ),
           ),
-          graphIndicatorTheme: const GraphIndicatorThemeData(
+          graphIndicatorTheme: GraphIndicatorThemeData(
             attentionLevel: GraphIndicatorAttentionLevel(
               positive: GraphIndicatorStyle(
-                innerColor: ColorConfig.primaryColor,
-                outerColor: Colors.white,
+                innerColor: MetricsColors.green[500],
+                outerColor: MetricsColors.white,
               ),
               negative: GraphIndicatorStyle(
-                innerColor: ColorConfig.accentColor,
-                outerColor: Colors.white,
+                innerColor: MetricsColors.orange[500],
+                outerColor: MetricsColors.white,
               ),
               neutral: GraphIndicatorStyle(
-                innerColor: _pageTitleIconColor,
-                outerColor: Colors.white,
+                innerColor: MetricsColors.gray[400],
+                outerColor: MetricsColors.white,
               ),
             ),
           ),
-          metricsColoredBarTheme: const MetricsColoredBarThemeData(
+          metricsColoredBarTheme: MetricsColoredBarThemeData(
             attentionLevel: MetricsColoredBarAttentionLevel(
               positive: MetricsColoredBarStyle(
-                color: ColorConfig.primaryColor,
-                hoverColor: ColorConfig.primaryButtonHoverColor,
+                color: MetricsColors.green[500],
+                hoverColor: MetricsColors.green[600],
               ),
               negative: MetricsColoredBarStyle(
-                color: ColorConfig.accentColor,
-                hoverColor: ColorConfig.accentButtonHoverColor,
+                color: MetricsColors.orange[500],
+                hoverColor: MetricsColors.orange[600],
               ),
               neutral: MetricsColoredBarStyle(
-                color: ColorConfig.shimmerColor,
-                hoverColor: _pageTitleIconColor,
+                color: MetricsColors.gray[300],
+                hoverColor: MetricsColors.gray[400],
               ),
             ),
           ),
-          debugMenuTheme: const DebugMenuThemeData(
-            sectionHeaderTextStyle: MetricsTextStyle(
-              color: Colors.white,
+          debugMenuTheme: DebugMenuThemeData(
+            sectionHeaderTextStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               lineHeightInPixels: 26.0,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
-            sectionContentTextStyle: MetricsTextStyle(
-              color: Colors.white,
+            sectionContentTextStyle: const MetricsTextStyle(
+              color: MetricsColors.white,
               lineHeightInPixels: 20.0,
               fontSize: 16.0,
             ),
-            sectionDividerColor: _borderColor,
+            sectionDividerColor: MetricsColors.gray[300],
           ),
         );
 }
