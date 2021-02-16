@@ -65,7 +65,7 @@
             }
         }
 
-        package config.validation.model as config_validation_model {
+        package validation.model as config_validation_model {
             package builder {
                 class ValidationResultBuilder {
                     - _results: Map<ConfigField, FieldValidationResult>

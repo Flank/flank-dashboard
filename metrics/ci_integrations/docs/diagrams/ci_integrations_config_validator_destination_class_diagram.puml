@@ -32,7 +32,7 @@
             }
         }
 
-        package config.validation.model as validation_model {
+        package validation.model as validation_model {
             package builder as validation_model_builder {
                 class ValidationResultBuilder {}
             }
