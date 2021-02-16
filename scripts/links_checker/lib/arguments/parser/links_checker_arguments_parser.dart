@@ -29,22 +29,22 @@ class LinksCheckerArgumentsParser {
     argParser.addOption(
       ignore,
       help: 'A string representing the space separated '
-          'paths which should be ignored from analyze.',
+          'paths which should be excluded from analyze.',
       valueHelp: "'.folder/ path/to/folder/'",
       abbr: 'i',
+      defaultsTo: '',
     );
   }
 
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
     final pathsArg = argResults[paths] as String;
-    final pathsList =
-        pathsArg.split(' ').where((path) => path.isNotEmpty).toList();
+    final pathsList = pathsArg.split(' ');
 
     final ignoreArg = argResults[ignore] as String;
-    final ignorePaths =
+    final ignoreList =
         ignoreArg.split(' ').where((path) => path.isNotEmpty).toList();
 
-    return LinksCheckerArguments(paths: pathsList, ignorePaths: ignorePaths);
+    return LinksCheckerArguments(paths: pathsList, ignore: ignoreList);
   }
 }

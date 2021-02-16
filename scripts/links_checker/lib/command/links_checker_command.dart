@@ -45,10 +45,9 @@ class LinksCheckerCommand extends Command<void> {
   void run() {
     final arguments = argumentsParser.parseArgResults(argResults);
 
-    final filteredPaths =
-        _excludeIgnorePaths(arguments.paths, arguments.ignorePaths);
+    final paths = _excludeIgnorePaths(arguments.paths, arguments.ignore);
 
-    final files = fileHelperUtil.getFiles(filteredPaths);
+    final files = fileHelperUtil.getFiles(paths);
 
     linksChecker.checkFiles(files);
   }
