@@ -18,7 +18,7 @@ The document's goal is to investigate and analyze tools and methods that can hel
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [notarizing macOS Software Before Distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
+- [notarizing macOS software before distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
 - [code signing for macOS](https://wiki.freepascal.org/Code_Signing_for_macOS)
 - [using app-specific passwords](https://support.apple.com/en-us/HT204397)
 - [gon](https://github.com/mitchellh/gon)
@@ -33,7 +33,7 @@ The document's goal is to investigate and analyze tools and methods that can hel
 
 The analysis begins with the selection of programs and the study of their work, complexity, and popularity. This provides a comprehensive view of how to solve the given problem.
 
-The research concludes with a short description of the tool(method), an example of the usage, and a list of pros and cons of each.
+The research concludes with a short description of the tool (method), an example of the usage, and a list of pros and cons of each.
 
 ### [gon](https://github.com/mitchellh/gon)
 
@@ -62,7 +62,7 @@ Pros:
  - can be run with `notarization-only` configuration
  - notarize packages and wait for the notarization to complete
  - signed files into a `.dmg` or `.zip`
- - popular tool(top rank on Github for a sign and notarize with more than 800 stars, has a lot of contributors)
+ - popular tool (top rank on Github for a sign and notarize with more than 800 stars, has a lot of contributors)
 
 Cons:
  - can't be used with `sign-only` configuration
@@ -102,7 +102,7 @@ Pros:
 Cons:
  - the script's bash syntax is not easy to understand
  - does not have a single configuration file
- - not a popular tool(only a few GitHub starts, does not have contributors)
+ - not a popular tool (only a few GitHub starts, does not have contributors)
 
 ### [notarize-cli](https://github.com/bacongravy/notarize-cli)
 
