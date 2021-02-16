@@ -7,79 +7,81 @@
         }
     }
 
-    package integration.interface {
-        package base {
-            package party {
-                interface IntegrationParty<T extends Config, K extends IntegrationClient> {
-                    + clientFactory: IntegrationClientFactory<T, K>
-                    + configParser: ConfigParser<T>
-                    + configValidatorFactory: ConfigValidatorFactory<T>
+    package integration {
+        package interface {
+            package base {
+                package party {
+                    interface IntegrationParty<T extends Config, K extends IntegrationClient> {
+                        + clientFactory: IntegrationClientFactory<T, K>
+                        + configParser: ConfigParser<T>
+                        + configValidatorFactory: ConfigValidatorFactory<T>
+                    }
                 }
-            }
 
-            package config {
-                package model {
-                    interface Config {}
+                package config {
+                    package model {
+                        interface Config {}
 
-                    abstract class ConfigField {}
+                        abstract class ConfigField {}
+                    }
 
-                    package builder {
-                        class ValidationResultBuilder {
-                            - _results: Map<ConfigField, FieldValidationResult>
-                            
-                            + ValidationResultBuilder forFields(List<ConfigField> fields)
-                            + ValidationResult build()
-                            + void setResult(ConfigField field, FieldValidationResult result)
-                            + void setEmptyResults(FieldValidationResult result)
+                    package validator {
+                        interface ConfigValidator<T extends Config> {
+                            + validationDelegate: ValidationDelegate
+                            + validationResultBuilder: ValidationResultBuilder
+
+                            + Future<ValidationResult> validate(T config)
                         }
                     }
 
-                    class ValidationResult {
-                        + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
+                    package validation_delegate as base_validation_delegate {
+                        interface ValidationDelegate {
+                            + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                        }
+                    }
+
+                    package validator_factory {
+                        interface ConfigValidatorFactory<T extends Config> {
+                            + ConfigValidator<T> create(T config)
+                        }
                     }
                 }
-
-                package validator {
-                    interface ConfigValidator<T extends Config> {
-                        + validationDelegate: ValidationDelegate
-                        + validationResultBuilder: ValidationResultBuilder
-
-                        + Future<ValidationResult> validate(T config)
+            }
+            
+            package source.config {
+                package validation_delegate as source_validation_delegate {
+                    interface SourceValidationDelegate {
+                        + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
                     }
                 }
+            }
 
-                package validation_delegate as base_validation_delegate {
-                    interface ValidationDelegate {
-                        + Future<InteractionResult> validateAuth(AuthorizationBase auth)
-                    }
-                }
-
-                package validator_factory {
-                    interface ConfigValidatorFactory<T extends Config> {
-                        + ConfigValidator<T> create(T config)
+            package destination.config {
+                package validation_delegate as destination_validation_delegate {
+                    interface DestinationValidationDelegate {
+                        + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
                     }
                 }
             }
         }
-        
-        package source.config {
-            package validation_delegate as source_validation_delegate {
-                interface SourceValidationDelegate {
-                    + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
+
+        package config.validation.model as config_validation_model {
+            package builder {
+                class ValidationResultBuilder {
+                    - _results: Map<ConfigField, FieldValidationResult>
+                    
+                    + ValidationResultBuilder forFields(List<ConfigField> fields)
+                    + ValidationResult build()
+                    + void setResult(ConfigField field, FieldValidationResult result)
+                    + void setEmptyResults(FieldValidationResult result)
                 }
             }
-        }
 
-        package destination.config {
-            package validation_delegate as destination_validation_delegate {
-                interface DestinationValidationDelegate {
-                    + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
-                }
+            class ValidationResult {
+                + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
             }
         }
     }
-
-
 
     IntegrationParty --> ConfigValidatorFactory : uses
 
@@ -93,12 +95,10 @@
 
     ConfigField --|> Enum
 
-    ValidationResultBuilder --> ValidationResult : builds
-    ValidationResultBuilder --> ConfigField : uses
-
-    ValidationResult --> ConfigField : uses
+    ValidationResultBuilder -right-> ValidationResult : builds
 
     SourceValidationDelegate --|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
+
 @enduml
 

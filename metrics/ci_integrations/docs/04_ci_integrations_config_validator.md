@@ -42,12 +42,7 @@ Consider the following package structure for the abstract and base classes of th
 >     * base/
 >       * config/
 >         * model/
->           * builder/
->             * validation_result_builder.dart
 >           * config_field.dart
->           * validation_result.dart
->           * field_validation_result.dart
->           * field_validation_conclusion.dart
 >         * validator/
 >           * config_validator.dart
 >         * validator_factory/
@@ -62,7 +57,14 @@ Consider the following package structure for the abstract and base classes of th
 >       * config/
 >         * validation_delegate/
 >           * destination_validation_delegate.dart
-
+>   * config/
+>     * validation/
+>       * model/
+>         * builder/
+>           * validation_result_builder.dart   
+>         * validation_result.dart
+>         * field_validation_result.dart
+>         * field_validation_conclusion.dart
 
 #### Output Generation
 
