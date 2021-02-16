@@ -1,4 +1,11 @@
 @startuml ci_integrations_config_validator_class_diagram
+    package core.lib.src.domain.entities {
+        abstract class Enum<T> {
+            + value: T
+
+            + String toString()
+        }
+    }
 
     package integration.interface {
         package base {
@@ -14,34 +21,28 @@
                 package model {
                     interface Config {}
 
-                    abstract class ConfigField {
-                        + value: String
-
-                        + String toString()
-                    }
+                    abstract class ConfigField {}
 
                     package builder {
                         class ValidationResultBuilder {
                             - _results: Map<ConfigField, FieldValidationResult>
                             
                             + ValidationResultBuilder forFields(List<ConfigField> fields)
-
                             + ValidationResult build()
                             + void setResult(ConfigField field, FieldValidationResult result)
                             + void setEmptyResults(FieldValidationResult result)
                         }
                     }
 
-                    interface ValidationResult {
+                    class ValidationResult {
                         + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
-
-                        + String toString()
                     }
                 }
 
                 package validator {
                     interface ConfigValidator<T extends Config> {
                         + validationDelegate: ValidationDelegate
+                        + validationResultBuilder: ValidationResultBuilder
 
                         + Future<ValidationResult> validate(T config)
                     }
@@ -89,6 +90,8 @@
     ConfigValidator --> ValidationResultBuilder : uses
     ConfigValidator --> Config : uses
     ConfigValidator --> ConfigField : uses
+
+    ConfigField --|> Enum
 
     ValidationResultBuilder --> ValidationResult : builds
     ValidationResultBuilder --> ConfigField : uses

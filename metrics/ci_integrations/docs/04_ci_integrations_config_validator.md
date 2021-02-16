@@ -23,8 +23,8 @@ This document aims the following goals:
 ### Main interfaces and classes
 
 Let's start with the necessary abstractions. Consider the following classes:
-- A `ValidationResult` is a class that holds the validation results on each config's field.
-- A `ConfigField` is a class that represents a single config's field.
+- A `ValidationResult` is a class that holds the validation results for each config's field.
+- A `ConfigField` is a class that represents a single config's field name.
 - A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
 - A `ConfigValidator` is a class responsible for validating the configuration. The `validate` method of this class returns a `ValidationResult` as an output.
 - A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.

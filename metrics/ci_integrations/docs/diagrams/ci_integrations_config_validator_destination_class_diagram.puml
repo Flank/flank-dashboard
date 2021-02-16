@@ -32,7 +32,22 @@
 
                 class ValidationResult {}
 
+                class FieldValidationResult {
+                    + conclusion : FieldValidationConclusion
+                    + additionalContext : String
+
+                    + FieldValidationResult success(String additionalContext)
+                    + FieldValidationResult failure(String additionalContext)
+                    + FieldValidationResult unknown(String additionalContext)
+                }
+
                 abstract class ConfigField {}
+
+                enum FieldValidationConclusion {
+                    valid
+                    invalid
+                    unknown
+                }
             }
 
         }
@@ -69,10 +84,10 @@
 
             package model as destination_model {
                 class CoolIntegrationDestinationConfigField {
-                    # accessToken: CoolIntegrationDestinationConfigField
-                    # destinationProjectId: CoolIntegrationDestinationConfigField
-                    # someExtraField: CoolIntegrationDestinationConfigField
-                    # fields: List<CoolIntegrationDestinationConfigField>
+                    + {static} accessToken: CoolIntegrationDestinationConfigField
+                    + {static} destinationProjectId: CoolIntegrationDestinationConfigField
+                    + {static} someExtraField: CoolIntegrationDestinationConfigField
+                    + {static} fields: List<CoolIntegrationDestinationConfigField>
                 }
             }
         }
@@ -82,16 +97,26 @@
         class CoolIntegrationClient {}
     }
 
-    package cli.command {
-        abstract class CiIntegrationCommand {}
+    package cli {
+        package command {
+            abstract class CiIntegrationCommand {}
 
-        class ValidateCommand {
-            + name : String
-            + description : String
-            + supportedParties : SupportedIntegrationParties
-            - _integrationConfigParser : RawIntegrationConfigParser
+            class ValidateCommand {
+                + name : String
+                + description : String
+                + supportedParties : SupportedIntegrationParties
+                - _integrationConfigParser : RawIntegrationConfigParser
 
-            + void run()
+                + void run()
+            }
+        }
+
+        package config.printer {
+            class ValidationResultPrinter {
+                - _ioSink : IOSink
+
+                + void print(ValidationResult result)
+            }
         }
     }
 
@@ -103,6 +128,7 @@
     CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
 
     ValidateCommand --|> CiIntegrationCommand
+    ValidateCommand --|> ValidationResultPrinter : uses
 
     ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
     ValidateCommand -down-> CoolIntegrationValidatorFactory : uses
@@ -118,6 +144,13 @@
     CoolIntegrationDestinationValidator -down-> CoolIntegrationDestinationConfigField : uses
     CoolIntegrationDestinationValidator --> ValidationResult : provides
     CoolIntegrationDestinationValidator --> ValidationResultBuilder : uses
+    CoolIntegrationDestinationValidator --> FieldValidationResult : uses
+
+    ValidationResult --> FieldValidationResult : uses
+
+    ValidationResultBuilder --> FieldValidationResult : uses
+
+    FieldValidationResult --> FieldValidationConclusion : uses
 
     CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
 

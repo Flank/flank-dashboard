@@ -52,7 +52,7 @@ alt auth is valid
     CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.success
     CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValidationDelegate : performs additional validation
     CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
-    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(FieldValidationResult.success(CoolIntegrationConfigField.auth), FieldValidationResult.success
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.auth, FieldValidationResult.success())
 
 else auth is not valid
 
@@ -79,7 +79,7 @@ CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValida
 CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
 deactivate CoolIntegrationDestinationValidationDelegate
 
-CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.anotherField, FieldValidationResult.success('anotherField'))
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.anotherField, FieldValidationResult.success())
 CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
 ValidationResultBuilder --> CoolIntegrationDestinationValidator : validationResult
 
