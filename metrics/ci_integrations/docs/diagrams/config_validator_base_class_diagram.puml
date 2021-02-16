@@ -2,11 +2,9 @@
     package core.domain.entities {
         abstract class Enum<T> {
             + value: T
-
             + String toString()
         }
     }
-
     package integration {
         package interface {
             package base {
@@ -21,7 +19,6 @@
                 package config {
                     package model {
                         interface Config {}
-
                         abstract class ConfigField {
                             + value : String
                         }
@@ -31,7 +28,6 @@
                         interface ConfigValidator<T extends Config> {
                             + validationDelegate: ValidationDelegate
                             + validationResultBuilder: ValidationResultBuilder
-
                             + Future<ValidationResult> validate(T config)
                         }
                     }
@@ -49,7 +45,7 @@
                     }
                 }
             }
-            
+
             package source.config {
                 package validation_delegate as source_validation_delegate {
                     interface SourceValidationDelegate {
@@ -71,7 +67,6 @@
             package printer as integration_validation_printer {
                 class ValidationResultPrinter {
                     - _ioSink : IOSink
-
                     + void print(ValidationResult result)
                 }
             }
@@ -80,7 +75,6 @@
                 package builder as validation_model_builder {
                     class ValidationResultBuilder {
                         - _results: Map<ConfigField, FieldValidationResult>
-                        
                         + ValidationResultBuilder forFields(List<ConfigField> fields)
                         + ValidationResult build()
                         + void setResult(ConfigField field, FieldValidationResult result)
@@ -95,7 +89,6 @@
                 class FieldValidationResult {
                     + conclusion : FieldValidationConclusion
                     + additionalContext : String
-
                     + FieldValidationResult success(String additionalContext)
                     + FieldValidationResult failure(String additionalContext)
                     + FieldValidationResult unknown(String additionalContext)
@@ -127,10 +120,8 @@
     ValidationResultBuilder --> FieldValidationResult : uses
 
     FieldValidationResult --> FieldValidationConclusion : uses
-
+ 
     SourceValidationDelegate -up-|> ValidationDelegate
-    DestinationValidationDelegate -right-|> ValidationDelegate
-
-    ValidationResultPrinter -[hidden]down-> ValidationResultBuilder
+    DestinationValidationDelegate -up-|> ValidationDelegate
 
 @enduml
