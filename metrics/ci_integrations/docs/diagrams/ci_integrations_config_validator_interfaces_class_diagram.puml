@@ -1,5 +1,5 @@
-@startuml ci_integrations_config_validator_class_diagram
-    package core.lib.src.domain.entities {
+@startuml config_validator_base_class_diagram
+    package core.domain.entities {
         abstract class Enum<T> {
             + value: T
 
@@ -22,7 +22,9 @@
                     package model {
                         interface Config {}
 
-                        abstract class ConfigField {}
+                        abstract class ConfigField {
+                            + value : String
+                        }
                     }
 
                     package validator {
@@ -65,20 +67,45 @@
             }
         }
 
-        package validation.model as config_validation_model {
-            package builder {
-                class ValidationResultBuilder {
-                    - _results: Map<ConfigField, FieldValidationResult>
-                    
-                    + ValidationResultBuilder forFields(List<ConfigField> fields)
-                    + ValidationResult build()
-                    + void setResult(ConfigField field, FieldValidationResult result)
-                    + void setEmptyResults(FieldValidationResult result)
+        package validation as integration_validation {
+            package printer as integration_validation_printer {
+                class ValidationResultPrinter {
+                    - _ioSink : IOSink
+
+                    + void print(ValidationResult result)
                 }
             }
 
-            class ValidationResult {
-                + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
+            package model as validation_model{
+                package builder as validation_model_builder {
+                    class ValidationResultBuilder {
+                        - _results: Map<ConfigField, FieldValidationResult>
+                        
+                        + ValidationResultBuilder forFields(List<ConfigField> fields)
+                        + ValidationResult build()
+                        + void setResult(ConfigField field, FieldValidationResult result)
+                        + void setEmptyResults(FieldValidationResult result)
+                    }
+                }
+
+                class ValidationResult {
+                    + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
+                }
+
+                class FieldValidationResult {
+                    + conclusion : FieldValidationConclusion
+                    + additionalContext : String
+
+                    + FieldValidationResult success(String additionalContext)
+                    + FieldValidationResult failure(String additionalContext)
+                    + FieldValidationResult unknown(String additionalContext)
+                }
+
+                enum FieldValidationConclusion {
+                    valid
+                    invalid
+                    unknown
+                }
             }
         }
     }
@@ -96,6 +123,10 @@
     ConfigField --|> Enum
 
     ValidationResultBuilder -right-> ValidationResult : builds
+    ValidationResult --> FieldValidationResult : uses
+    ValidationResultBuilder --> FieldValidationResult : uses
+
+    FieldValidationResult --> FieldValidationConclusion : uses
 
     SourceValidationDelegate --|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate

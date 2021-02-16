@@ -1,4 +1,4 @@
-@startuml ci_integrations_config_validator_class_diagram
+@startuml config_validator_destination_class_diagram
 
     package integration {
         package interface {
@@ -31,27 +31,37 @@
                 }
             }
         }
+        
+        package validation as integration_validation {
+            package printer as integration_validation_printer {
+                class ValidationResultPrinter {
+                    - _ioSink : IOSink
 
-        package validation.model as validation_model {
-            package builder as validation_model_builder {
-                class ValidationResultBuilder {}
+                    + void print(ValidationResult result)
+                }
             }
 
-            class ValidationResult {}
+            package model as validation_model{
+                package builder as validation_model_builder {
+                    class ValidationResultBuilder {}
+                }
 
-            class FieldValidationResult {
-                + conclusion : FieldValidationConclusion
-                + additionalContext : String
+                class ValidationResult {}
 
-                + FieldValidationResult success(String additionalContext)
-                + FieldValidationResult failure(String additionalContext)
-                + FieldValidationResult unknown(String additionalContext)
-            }
+                class FieldValidationResult {
+                    + conclusion : FieldValidationConclusion
+                    + additionalContext : String
 
-            enum FieldValidationConclusion {
-                valid
-                invalid
-                unknown
+                    + FieldValidationResult success(String additionalContext)
+                    + FieldValidationResult failure(String additionalContext)
+                    + FieldValidationResult unknown(String additionalContext)
+                }
+
+                enum FieldValidationConclusion {
+                    valid
+                    invalid
+                    unknown
+                }
             }
         }
     }
@@ -111,14 +121,6 @@
                 - _integrationConfigParser : RawIntegrationConfigParser
 
                 + void run()
-            }
-        }
-
-        package config.printer {
-            class ValidationResultPrinter {
-                - _ioSink : IOSink
-
-                + void print(ValidationResult result)
             }
         }
     }

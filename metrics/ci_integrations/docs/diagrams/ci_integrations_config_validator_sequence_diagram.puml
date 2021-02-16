@@ -1,4 +1,4 @@
-@startuml ci_integrations_config_validator_sequence_diagram
+@startuml config_validator_sequence_diagram
 
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
