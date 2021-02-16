@@ -4,12 +4,16 @@
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
+import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 
 /// An abstract class responsible for validating the [Config].
 abstract class ConfigValidator<T extends Config> {
   /// A [ValidationDelegate] this validator uses for [Config]'s
   /// specific fields validation.
   ValidationDelegate get validationDelegate;
+
+  /// A [ValidationDelegate] this validator uses to build the [ValidationResult].
+  ValidationResultBuilder get validationResultBuilder;
 
   /// Validates the given [config].
   Future<ValidationResult> validate(T config);
