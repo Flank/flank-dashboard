@@ -31,14 +31,17 @@ ValidateCommand -> ValidateCommand : parses source and destination configs
 ValidateCommand -> CoolIntegrationValidatorFactory : create()
 activate CoolIntegrationValidatorFactory
 
+CoolIntegrationValidatorFactory -> ValidationResultBuilder : .createForFields(CoolIntegrationConfigField.values)
+activate ValidationResultBuilder
+
+ValidationResultBuilder --> CoolIntegrationValidatorFactory : validationResultBuilder
+
+
 CoolIntegrationValidatorFactory --> ValidateCommand : configValidator
 deactivate CoolIntegrationValidatorFactory
 
 ValidateCommand -> CoolIntegrationDestinationValidator : validate(config)
 activate CoolIntegrationDestinationValidator
-
-CoolIntegrationDestinationValidator -> ValidationResultBuilder : .createForFields(CoolIntegrationConfigField.values)
-activate ValidationResultBuilder
 
 CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAuth(auth)
 

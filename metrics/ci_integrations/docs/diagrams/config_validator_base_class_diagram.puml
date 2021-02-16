@@ -106,6 +106,7 @@
     IntegrationParty --> ConfigValidatorFactory : uses
 
     ConfigValidatorFactory --> ConfigValidator : uses
+    ConfigValidatorFactory --> ValidationResultBuilder : uses
 
     ConfigValidator --> ValidationDelegate : uses
     ConfigValidator -up-> ValidationResult : provides
@@ -115,13 +116,17 @@
 
     ConfigField --|> Enum
 
-    ValidationResultBuilder -right-> ValidationResult : builds
-    ValidationResult --> FieldValidationResult : uses
+    ValidationResultBuilder --> ValidationResult : builds
+    ValidationResult -left-> FieldValidationResult : uses
     ValidationResultBuilder --> FieldValidationResult : uses
+    ValidationResultPrinter -up-> ValidationResult : uses
 
     FieldValidationResult --> FieldValidationConclusion : uses
  
-    SourceValidationDelegate -up-|> ValidationDelegate
-    DestinationValidationDelegate -up-|> ValidationDelegate
+    SourceValidationDelegate --|> ValidationDelegate
+    DestinationValidationDelegate -down-|> ValidationDelegate
 
+
+    Config -[hidden]down-> ConfigField
+    destination.config -[hidden]-> source.config
 @enduml

@@ -43,10 +43,18 @@
 
             package model as validation_model{
                 package builder as validation_model_builder {
-                    class ValidationResultBuilder {}
+                    class ValidationResultBuilder {
+                        - _results: Map<ConfigField, FieldValidationResult>
+                        + ValidationResultBuilder forFields(List<ConfigField> fields)
+                        + ValidationResult build()
+                        + void setResult(ConfigField field, FieldValidationResult result)
+                        + void setEmptyResults(FieldValidationResult result)
+                    }
                 }
 
-                class ValidationResult {}
+                class ValidationResult {
+                    + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
+                }
 
                 class FieldValidationResult {
                     + conclusion : FieldValidationConclusion
@@ -55,12 +63,6 @@
                     + FieldValidationResult success(String additionalContext)
                     + FieldValidationResult failure(String additionalContext)
                     + FieldValidationResult unknown(String additionalContext)
-                }
-
-                enum FieldValidationConclusion {
-                    valid
-                    invalid
-                    unknown
                 }
             }
         }
@@ -78,6 +80,7 @@
             package validator as cool_integration_validator {
                 class CoolIntegrationDestinationValidator {
                     + validationDelegate: CoolIntegrationDestinationValidationDelegate
+                    + validationResultBuilder: ValidationResultBuilder
 
                     + Future<ValidationResult> validate(CoolIntegrationDestinationConfig config)
                 }
@@ -151,11 +154,9 @@
     CoolIntegrationDestinationValidator --> ValidationResultBuilder : uses
     CoolIntegrationDestinationValidator --> FieldValidationResult : uses
 
-    ValidationResultPrinter -left-> ValidationResult : prints
+    ValidationResultPrinter -left-> ValidationResult : uses
     ValidationResult -right-> FieldValidationResult : uses
     ValidationResultBuilder -left-> FieldValidationResult : uses
-
-    FieldValidationResult --> FieldValidationConclusion : uses
 
     CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
 
