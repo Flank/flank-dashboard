@@ -87,7 +87,7 @@
                 class CoolIntegrationValidatorFactory {}
             }
 
-            package validation_delegate as cool_integration_validation_validation_delegate{
+            package validation_delegate as cool_integration_validation_delegate {
                 class CoolIntegrationDestinationValidationDelegate {
                     - _client: CoolIntegrationClient
 
@@ -135,7 +135,7 @@
     ValidateCommand --|> CiIntegrationCommand
     ValidateCommand --|> ValidationResultPrinter : uses
 
-    ValidateCommand -down-> CoolIntegrationDestinationValidator : uses
+    ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
     ValidateCommand -down-> CoolIntegrationValidatorFactory : uses
     ValidateCommand -down-> CoolIntegrationDestinationParty : uses
 
@@ -151,9 +151,9 @@
     CoolIntegrationDestinationValidator --> ValidationResultBuilder : uses
     CoolIntegrationDestinationValidator --> FieldValidationResult : uses
 
-    ValidationResult --> FieldValidationResult : uses
-
-    ValidationResultBuilder --> FieldValidationResult : uses
+    ValidationResultPrinter -left-> ValidationResult : prints
+    ValidationResult -right-> FieldValidationResult : uses
+    ValidationResultBuilder -left-> FieldValidationResult : uses
 
     FieldValidationResult --> FieldValidationConclusion : uses
 

@@ -115,8 +115,8 @@
     ConfigValidatorFactory --> ConfigValidator : uses
 
     ConfigValidator --> ValidationDelegate : uses
-    ConfigValidator --> ValidationResult : provides
-    ConfigValidator --> ValidationResultBuilder : uses
+    ConfigValidator -up-> ValidationResult : provides
+    ConfigValidator -up-> ValidationResultBuilder : uses
     ConfigValidator --> Config : uses
     ConfigValidator --> ConfigField : uses
 
@@ -130,6 +130,8 @@
 
     SourceValidationDelegate --|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
+
+    FieldValidationResult -[hidden]left-> ConfigValidatorFactory
 
 @enduml
 
