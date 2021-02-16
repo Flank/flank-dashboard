@@ -1,69 +1,35 @@
 # Motivation
 > What problem is this project solving?
 
-Apple's ongoing initiatives at controlling what runs on their platforms took a new turn with macOS Catalina (10.15), with required app and command-line binary signing.
+Apple's ongoing initiatives at controlling what runs on their platforms took a new turn with macOS Catalina (10.15), with a required app and command-line binary signing.
 
 [Codesign and notarize](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution) enables programs downloaded from the Internet to be opened without any warnings.
 
-To solve the described issue, the following steps is required:
+To solve the described issue, the following steps are required:
  - signing the binary with a Developer ID Certificate
  - notarization (uploading the binary to Apple for approval)
  - validating code signing
  - validating notarization
 
-Currently, Metrics binaries for macOS have not signed or notarized.
+Currently, Metrics binaries for macOS have not been signed or notarized.
 
 The document's goal is to investigate and analyze tools and methods that can help in signing and notarizing binaries.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Notarizing macOS Software Before Distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
+- [notarizing macOS Software Before Distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
 - [code signing for macOS](https://wiki.freepascal.org/Code_Signing_for_macOS)
-- [Using app-specific passwords](https://support.apple.com/en-us/HT204397)
+- [using app-specific passwords](https://support.apple.com/en-us/HT204397)
 - [gon](https://github.com/mitchellh/gon)
 - [signing_tools](https://github.com/drud/signing_tools)
 - [notarize-cli](https://github.com/bacongravy/notarize-cli)
-- [Import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
+- [generate sha256 hash](https://ss64.com/osx/shasum.html)
+- [import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
 
 # Analyze
 
-- [Requirements](#requirements)
-- [Analyzing process](#analyzing-process)
-- [Decision](#decision)
-
-## Requirements
-
-Before we can use tools, describes below, we need to:
-
- - get an Apple ID
- - generate an [app specific password](https://support.apple.com/en-us/HT204397)
- - get the [Developer ID Application certificate](#developer-id-application)
-
-### Developer ID Application
-
-To get the certificate follow the next steps:
- 1. On macOS open `Keychain Access` and select the `Keychain Access` button on the top left corner of the screen.
- 2. Select the `Certificate Assistant` and then `Request a Certificate from a Certificate Authority`.
- 3. Open the [following link](https://developer.apple.com/).
- 4. Go to `Certificates IDs & Profiles`.
- 5. Create a certificate.
- 6. Choose the `Developer ID Application` from the list.
- 7. Upload the signing request that we’ve created before.
- 8. Download the created certificate and add it to your (default keychains) Keychain Access.
- 9. Export the added certificate with the file format: `Personal information exchange(.p12)`.
-
-Extra step:
-
-To upload the exported certificate to the `Github Secrets`, we need to copy the base64 version:
-
-```
-base64 Certificates.p12 | pbcopy
-```
-
-And then paste the result to the `secrets`.
-
-## Analyzing process
+## Process
 
 The analysis begins with the selection of programs and the study of their work, complexity, and popularity. This provides a comprehensive view of how to solve the given problem.
 
@@ -96,14 +62,14 @@ Pros:
  - can be run with `notarization-only` configuration
  - notarize packages and wait for the notarization to complete
  - signed files into a `.dmg` or `.zip`
- - popular tool
+ - popular tool(top rank on Github for a sign and notarize with more than 800 stars, has a lot of contributors)
 
 Cons:
  - can't be used with `sign-only` configuration
 
 ### [signing_tools](https://github.com/drud/signing_tools)
 
-This is two `.sh` scripts that provides sign and notarize binaries.
+These are two `.sh` scripts that provide sign and notarize binaries.
 
 First, `macos_sign.sh` is the sign script. It accepts the following list of parameters: 
  - `--signing-password` - a password for key-chain, that the tool is creating while running;
@@ -128,7 +94,7 @@ Second, `macos_notarize.sh` is the notarize script. It accepts the following lis
  ```
 
 Pros:
- - separate scripts for sign and notarize step, so the tool can be used just for sign or notarize only
+ - separate scripts for a sign and notarize step, so the tool can be used just for a sign or notarize only
  - notarize step checks if the given binary is already signed
  - notarize step wait until notarization on the Apple's side completes
  - logs issues during the process
@@ -136,17 +102,17 @@ Pros:
 Cons:
  - the script's bash syntax is not easy to understand
  - does not have a single configuration file
- - not popular tool
+ - not a popular tool(only a few GitHub starts, does not have contributors)
 
 ### [notarize-cli](https://github.com/bacongravy/notarize-cli)
 
 This tool is a wrapper for `xcrun altool` and `xcrun stapler`, so it requires Xcode to be installed.
 
 There is a list of parameters:
-  - `--bundle-id` - bundle id of the app to notarize (can pass via ENV)
-  - `--file` - path to the file to notarize
-  - `--password` - password to use for authentication (can pass via ENV)
-  - `--username` - username to use for authentication (can pass via ENV)
+ - `--bundle-id` - bundle id of the app to notarize (can pass via ENV)
+ - `--file` - path to the file to notarize
+ - `--password` - password to use for authentication (can pass via ENV)
+ - `--username` - username to use for authentication (can pass via ENV)
 
 Example of usage:
 
@@ -158,19 +124,41 @@ The tool is just for notarizing we need to sign from within a separate step manu
 
 To do so we can:
  1. use Github Actions (https://github.com/Apple-Actions/import-codesign-certs) to import code-sign certificates
- 2. sign binary using the following command: `codesign --force -s <identity-id> ./path/to/you/app -v`
+ 2. sign binary using the following command:
+  
+ ```
+ codesign --force -s <identity-id> ./path/to/you/app -v
+ ```
 
 Pros:
  - installation is unnecessary via npx
- - wait until notarization on the Apple's side completes
+ - wait until notarization on Apple's side completes
  
 Cons:
  - only for notarize
  - requires xcode
  - does not check if the given file is already signed
 
+### [generate sha256 hash](https://ss64.com/osx/shasum.html)
+
+This method provides an easy way to compute SHA hash for Metrics binaries.
+
+Example of usage:
+ 
+```
+shasum -a 256 /path/to/binary
+```
+
+Pros:
+ - the `shasum` command is already available on macOS
+ - easy to generate with just a single command
+
+Cons:
+ - serve the additional file with a hash
+ - requires an extra step for users to verify the checksum
+
 ## Decision
 
-So after the above comparison the tool that fits our goals the most is the [gon](#gon).
+As we've discovered, binaries compiled via `dart2native` can't be signed and notarized. The existing [issue](https://github.com/dart-lang/sdk/issues/39106) in the `dart-SDK` repo confirmed the problem.
 
-We can use a single tool for a sign and notarize. To run it, we just need a single config file, where all the options for our release are stored. Also, with the execution flag, we can debug if something went wrong. And it has a good popularity, which means a less chance to get errors using the tool and more chance to take an answer for our questions in usage.
+As it is a blocker for the tools that provide codesign and notarize, we should choose the last method to sign the Metrics binaries - [generate sha256](#generate-sha256-hash) until the issue is solved.
