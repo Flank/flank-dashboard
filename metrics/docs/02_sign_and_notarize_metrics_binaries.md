@@ -102,7 +102,7 @@ Pros:
 Cons:
  - the script's bash syntax is not easy to understand
  - does not have a single configuration file
- - not a popular tool (only a few GitHub starts, does not have contributors)
+ - not a popular tool (only a few GitHub stars, does not have contributors)
 
 ### [notarize-cli](https://github.com/bacongravy/notarize-cli)
 
@@ -131,12 +131,12 @@ To do so we can:
  ```
 
 Pros:
- - installation is unnecessary via npx
- - wait until notarization on Apple's side completes
+ - installation is not required (runs via npx)
+ - waits until notarization on Apple's side completes
  
 Cons:
  - only for notarize
- - requires xcode
+ - requires Xcode
  - does not check if the given file is already signed
 
 ### [generate sha256 hash](https://ss64.com/osx/shasum.html)
@@ -156,6 +156,7 @@ Pros:
 Cons:
  - serve the additional file with a hash
  - requires an extra step for users to verify the checksum
+ - no signatures generated and macOS will block such app by default - so users will have to take extra steps to run unsigned apps
 
 ## Decision
 
