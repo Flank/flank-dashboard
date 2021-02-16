@@ -24,6 +24,7 @@ class LinksCheckerArgumentsParser {
           'paths to files to analyze.',
       valueHelp: "'file1 path/to/file2 another/path/to/file3'",
       abbr: 'p',
+      defaultsTo: '',
     );
 
     argParser.addOption(
@@ -39,7 +40,8 @@ class LinksCheckerArgumentsParser {
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
     final pathsArg = argResults[paths] as String;
-    final pathsList = pathsArg.split(' ');
+    final pathsList =
+        pathsArg.split(' ').where((path) => path.isNotEmpty).toList();
 
     final ignoreArg = argResults[ignore] as String;
     final ignoreList =

@@ -50,7 +50,7 @@ void main() {
       ".run() uses the given argument parser's .parseArgResults() to parse arguments",
       () {
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: []));
+            .thenReturn(LinksCheckerArguments(paths: [], ignore: []));
 
         final command = LinksCheckerCommand(argumentsParser: argumentsParser);
         command.run();
@@ -65,7 +65,7 @@ void main() {
         final paths = ['file1', 'path/to/file2'];
         when(fileHelperUtil.getFiles(paths)).thenReturn([]);
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: paths));
+            .thenReturn(LinksCheckerArguments(paths: paths, ignore: []));
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -84,7 +84,7 @@ void main() {
 
         when(linksChecker.checkFiles([])).thenReturn(null);
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: []));
+            .thenReturn(LinksCheckerArguments(paths: [], ignore: []));
 
         final command = LinksCheckerCommand(
           linksChecker: linksChecker,
@@ -93,6 +93,25 @@ void main() {
         command.run();
 
         verify(linksChecker.checkFiles([])).called(equals(1));
+      },
+    );
+
+    test(
+      ".run() excludes files from the analyze based on the given ignore parameter",
+      () {
+        final paths = ['file1', 'path/to/file2'];
+        final ignore = ['path/'];
+        when(fileHelperUtil.getFiles(any)).thenReturn([]);
+        when(argumentsParser.parseArgResults(any))
+            .thenReturn(LinksCheckerArguments(paths: paths, ignore: ignore));
+
+        final command = LinksCheckerCommand(
+          fileHelperUtil: fileHelperUtil,
+          argumentsParser: argumentsParser,
+        );
+        command.run();
+
+        verify(fileHelperUtil.getFiles(['file1'])).called(1);
       },
     );
   });
