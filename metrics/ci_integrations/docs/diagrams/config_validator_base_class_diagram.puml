@@ -128,10 +128,9 @@
 
     FieldValidationResult --> FieldValidationConclusion : uses
 
-    SourceValidationDelegate --|> ValidationDelegate
+    SourceValidationDelegate -up-|> ValidationDelegate
     DestinationValidationDelegate -right-|> ValidationDelegate
 
-    FieldValidationResult -[hidden]left-> ConfigValidatorFactory
+    ValidationResultPrinter -[hidden]down-> ValidationResultBuilder
 
 @enduml
-
