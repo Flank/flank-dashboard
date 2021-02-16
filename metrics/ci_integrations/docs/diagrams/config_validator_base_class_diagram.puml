@@ -1,0 +1,131 @@
+@startuml config_validator_base_class_diagram
+    package core.domain.entities {
+        abstract class Enum<T> {
+            + value: T
+            + String toString()
+        }
+    }
+    package integration {
+        package interface {
+            package base {
+                package party {
+                    interface IntegrationParty<T extends Config, K extends IntegrationClient> {
+                        + clientFactory: IntegrationClientFactory<T, K>
+                        + configParser: ConfigParser<T>
+                        + configValidatorFactory: ConfigValidatorFactory<T>
+                    }
+                }
+
+                package config {
+                    package model {
+                        interface Config {}
+                        abstract class ConfigField {
+                            + value : String
+                        }
+                    }
+
+                    package validator {
+                        interface ConfigValidator<T extends Config> {
+                            + validationDelegate: ValidationDelegate
+                            + validationResultBuilder: ValidationResultBuilder
+                            + Future<ValidationResult> validate(T config)
+                        }
+                    }
+
+                    package validation_delegate as base_validation_delegate {
+                        interface ValidationDelegate {
+                            + Future<InteractionResult> validateAuth(AuthorizationBase auth)
+                        }
+                    }
+
+                    package validator_factory {
+                        interface ConfigValidatorFactory<T extends Config> {
+                            + ConfigValidator<T> create(T config)
+                        }
+                    }
+                }
+            }
+
+            package source.config {
+                package validation_delegate as source_validation_delegate {
+                    interface SourceValidationDelegate {
+                        + Future<InteractionResult> validateSourceProjectId(String sourceProjectId)
+                    }
+                }
+            }
+
+            package destination.config {
+                package validation_delegate as destination_validation_delegate {
+                    interface DestinationValidationDelegate {
+                        + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
+                    }
+                }
+            }
+        }
+
+        package validation as integration_validation {
+            package printer as integration_validation_printer {
+                class ValidationResultPrinter {
+                    - _ioSink : IOSink
+                    + void print(ValidationResult result)
+                }
+            }
+
+            package model as validation_model{
+                package builder as validation_model_builder {
+                    class ValidationResultBuilder {
+                        - _results: Map<ConfigField, FieldValidationResult>
+                        + ValidationResultBuilder forFields(List<ConfigField> fields)
+                        + ValidationResult build()
+                        + void setResult(ConfigField field, FieldValidationResult result)
+                        + void setEmptyResults(FieldValidationResult result)
+                    }
+                }
+
+                class ValidationResult {
+                    + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
+                }
+
+                class FieldValidationResult {
+                    + conclusion : FieldValidationConclusion
+                    + additionalContext : String
+                    + FieldValidationResult success(String additionalContext)
+                    + FieldValidationResult failure(String additionalContext)
+                    + FieldValidationResult unknown(String additionalContext)
+                }
+
+                enum FieldValidationConclusion {
+                    valid
+                    invalid
+                    unknown
+                }
+            }
+        }
+    }
+
+    IntegrationParty --> ConfigValidatorFactory : uses
+
+    ConfigValidatorFactory --> ConfigValidator : uses
+
+    ConfigValidator --> ValidationDelegate : uses
+    ConfigValidator --> ValidationResult : provides
+    ConfigValidator -up-> ValidationResultBuilder : uses
+    ConfigValidator --> Config : uses
+
+    ConfigField --|> Enum
+
+    ValidationResultBuilder -up-> ValidationResult : builds
+    ValidationResult -left-> FieldValidationResult : uses
+    ValidationResultBuilder --> FieldValidationResult : uses
+    ValidationResultPrinter -down-> ValidationResult : uses
+    ValidationResultBuilder --> ConfigField : uses
+
+    FieldValidationResult -up-> FieldValidationConclusion : uses
+ 
+    SourceValidationDelegate --|> ValidationDelegate
+    DestinationValidationDelegate -down-|> ValidationDelegate
+
+
+    Config -[hidden]down-> ConfigField
+    destination.config -[hidden]-> source.config
+@enduml

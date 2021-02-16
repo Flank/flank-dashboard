@@ -1,0 +1,99 @@
+@startuml config_validator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant "CI Integrations"
+participant CiIntegrationsRunner
+participant ValidateCommand
+participant CoolIntegrationValidatorFactory
+participant CoolIntegrationDestinationValidator
+participant ValidationResultBuilder
+participant CoolIntegrationDestinationValidationDelegate
+participant CoolIntegrationClient
+
+Bob -> "CI Integrations" : runs validate
+activate "CI Integrations"
+
+"CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+deactivate "CI Integrations"
+activate CiIntegrationsRunner
+
+CiIntegrationsRunner -> ValidateCommand: run()
+deactivate CiIntegrationsRunner
+activate ValidateCommand
+
+ValidateCommand -> ValidateCommand : creates source and destination parties
+ValidateCommand -> ValidateCommand : parses source and destination configs
+
+ValidateCommand -> CoolIntegrationValidatorFactory : create()
+activate CoolIntegrationValidatorFactory
+
+CoolIntegrationValidatorFactory -> ValidationResultBuilder : .createForFields(CoolIntegrationConfigField.values)
+activate ValidationResultBuilder
+
+ValidationResultBuilder --> CoolIntegrationValidatorFactory : validationResultBuilder
+
+
+CoolIntegrationValidatorFactory --> ValidateCommand : configValidator
+deactivate CoolIntegrationValidatorFactory
+
+ValidateCommand -> CoolIntegrationDestinationValidator : validate(config)
+activate CoolIntegrationDestinationValidator
+
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAuth(auth)
+
+activate CoolIntegrationDestinationValidationDelegate
+
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationClient : authenticate(auth)
+activate  CoolIntegrationClient
+
+alt auth is valid
+
+    CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.success
+    CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValidationDelegate : performs additional validation
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.auth, FieldValidationResult.success())
+
+else auth is not valid
+
+    CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.error
+    CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.error
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.auth, FieldValidationResult.failure(additionalContext))
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : setEmptyFields(FieldValidationResult.unknown('The auth is not valid. Can't continue the validation.'))
+    CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
+    ValidationResultBuilder --> CoolIntegrationDestinationValidator : validationResult
+
+    CoolIntegrationDestinationValidator --> ValidateCommand : validationResult
+    ValidateCommand --> Bob : provides detailed conclusion on config validation
+
+end
+
+
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationClient : anotherMethod(anotherField)
+
+CoolIntegrationClient --> CoolIntegrationDestinationValidationDelegate : InteractionResult.success
+deactivate CoolIntegrationClient
+
+CoolIntegrationDestinationValidationDelegate -> CoolIntegrationDestinationValidationDelegate : performs additional validation
+CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : InteractionResult.success
+deactivate CoolIntegrationDestinationValidationDelegate
+
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(CoolIntegrationConfigField.anotherField, FieldValidationResult.success())
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
+ValidationResultBuilder --> CoolIntegrationDestinationValidator : validationResult
+
+deactivate ValidationResultBuilder
+
+CoolIntegrationDestinationValidator --> ValidateCommand : validationResult
+
+deactivate CoolIntegrationDestinationValidator
+
+ValidateCommand --> Bob : provides detailed conclusion on config validation
+
+deactivate ValidateCommand
+
+@enduml
