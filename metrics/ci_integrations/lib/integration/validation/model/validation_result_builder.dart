@@ -27,10 +27,19 @@ class ValidationResultBuilder {
 
   /// Builds the [ValidationResult] using provided [FieldValidationResult]s.
   ///
-  /// Replaces `null` [FieldValidationResult]s with
-  /// [FieldValidationResult.unknown].
+  /// Throws a [StateError] if there are any fields with no validation results.
   ValidationResult build() {
-    setEmptyResults(FieldValidationResult.unknown());
+    final fields = _results.keys;
+
+    final fieldsWithNoValidationResult = fields.where((field) {
+      return _results[field] == null;
+    });
+
+    if (fieldsWithNoValidationResult.isNotEmpty) {
+      throw StateError(
+        'Cannot create a validation result, as the following fields do not have a validation result: $fieldsWithNoValidationResult',
+      );
+    }
 
     return ValidationResult(_results);
   }

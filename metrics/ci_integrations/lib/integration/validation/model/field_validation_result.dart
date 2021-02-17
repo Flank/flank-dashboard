@@ -13,15 +13,6 @@ class FieldValidationResult {
   /// result.
   final String additionalContext;
 
-  /// Indicates whether this field validation result is successful.
-  bool get isSuccess => conclusion == FieldValidationConclusion.valid;
-
-  /// Indicates whether this field validation result is failure.
-  bool get isFailure => conclusion == FieldValidationConclusion.invalid;
-
-  /// Indicates whether this field validation result is unknown.
-  bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
-
   /// Creates an instance of the [FieldValidationConclusion]
   /// with the given parameters.
   const FieldValidationResult._(

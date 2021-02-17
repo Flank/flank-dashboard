@@ -70,11 +70,13 @@ void main() {
       ".setResult() sets the given field validation result to the given field",
       () {
         builder.setResult(firstField, successResult);
+        builder.setResult(anotherField, failureResult);
 
         final result = builder.build();
         final validationResults = result.results;
 
         expect(validationResults, containsPair(firstField, successResult));
+        expect(validationResults, containsPair(anotherField, failureResult));
       },
     );
 
@@ -105,17 +107,30 @@ void main() {
     );
 
     test(
-      ".build() sets the empty field validation results to unknown field validation results",
+      ".build() throws a StateError if there are fields with not specified validation result",
       () {
-        final result = builder.build();
-        final fieldValidationResults = result.results.values;
+        expect(
+          () => builder.build(),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".build() throws a StateError with a message that contains field names with not specified validation result",
+      () {
+        final emptyFields = [firstField, anotherField];
 
         expect(
-          fieldValidationResults,
-          everyElement(
-            predicate((element) {
-              return element is FieldValidationResult && element.isUnknown;
-            }),
+          () => builder.build(),
+          throwsA(
+            predicate<StateError>(
+              (error) {
+                return emptyFields.every(
+                  (emptyField) => error.message.contains('$emptyField'),
+                );
+              },
+            ),
           ),
         );
       },
