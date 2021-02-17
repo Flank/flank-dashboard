@@ -1,0 +1,57 @@
+@startuml sync_algorithm_class_diagram
+'https://plantuml.com/class-diagram
+
+package integration.interface as Interface {
+    package source {
+        interface SourceClient {
+            + fetchBuild(String projectId, int buildNumber): BuildData
+            + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
+            + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
+            + fetchCoverage(BuildData build): Percent
+            + dispose(): void
+        }
+    }
+
+    package destination {
+        interface DestinationClient {
+            + fetchLastBuild(String projectId): BuildData
+            + fetchBuildsWithStatus(String projectId, BuildStatus status): List<BuildData>
+            + addBuilds(String projectId, List<BuildData> builds): void
+            + updateBuilds(String projectId, List<BuildData> builds): void
+            + dispose(): void
+        }
+    }
+}
+
+package integration.ci as CI {
+    package config.model {
+        class SyncConfig {
+            + sourceProjectId: String
+            + destinationProjectId: String
+            + initialSyncLimit: int
+            + inProgressTimeout: int
+            + coverage: bool
+        }
+    }
+
+    class CiIntegration {
+        + sourceClient: SourceClient
+        + destinationClient: DestinationClient
+        + sync(SyncConfig config): InterationResult
+        - _syncInProgressBuilds(SyncConfig config): void
+        - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
+        - _shouldTimeoutBuild(Duration timeout, BuildData build): bool
+        - _timeoutBuild(Duration timeout, BuildData build): BuildData
+        - _syncBuilds(SyncConfig config): void
+        - _addCoverageData(List<BuildData> builds): List<BuildData>
+    }
+
+    CiIntegration -right-> SyncConfig: uses
+}
+
+Interface -[hidden]down-> CI
+
+CiIntegration -up-> SourceClient: uses
+CiIntegration -up-> DestinationClient: uses
+
+@enduml

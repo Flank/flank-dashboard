@@ -58,7 +58,7 @@ The CI Integrations tool provides several parameters to control the parts of syn
 
 ### Re-Sync In-Progress Builds
 
-The first stage of the synchronization algorithm is to re-sync the store In-Progress builds. These builds have the`BuildStatus.inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to status of the same build from the `source`. The algorithm performs the following steps:
+The first stage of the synchronization algorithm is to re-sync the store In-Progress builds. These builds have the `inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to status of the same build from the `source`. The algorithm performs the following steps:
 
 1. Query builds having In-Progress status from the `destination`.
 2. Re-sync each build from the list of in-progress:
@@ -69,38 +69,84 @@ The first stage of the synchronization algorithm is to re-sync the store In-Prog
 
 You may find the second sub-step a bit tricky, and it is. The reason is that there are some edge cases for in-progress builds. Consider the following possibilities: 
 
-- There are no corresponding build in the `source`. In this case, the algorithm skips checking a new status or timeout duration - the build is considered as finished with unknown status.
+- There is no corresponding build in the `source`. In this case, the algorithm skips checking a new status or timeout duration - the build is considered as finished with unknown status.
 - The corresponding build in the `source` is still running. In this case, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with unknown status. Otherwise, the build stays unchanged.
 
 The following activity diagram describes the re-sync in-progress builds stage:
 
-ci_integrations_sync_doc
 ![Re-sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_stage_activity_diagram.puml)
-
-Points to cover here: 
-- How does the In-Progress build look like?
-- What data is always missing for running build?
-- What changes to Firestore Security rules should be performed?
-- Note that the problem with in-progress builds is that they should be re-synced - smoothly introduce the next section with sync algorithm updates.
 
 #### Timeout In-Progress Builds
 
-Points to cover here: 
-- How to force In-Progress build to finish if it cannot be re-synced?
-- What the status of `force timed out builds`?
-- How to fill missing data for such builds? 
-- Finalize activity diagram here.
+It is possible that the sync algorithm cannot re-sync in-progress build (for example, there no corresponding build in the `source` anymore). In this case, this build may stay in-progress forever, and even worse, there can be many such builds. 
+
+To prevent storing a great number of in-progress builds that likely may never be re-synced, the CI Integrations tool provides an ability to force-timeout such builds. The `--in-progress-timeout` option stands for the duration in minutes. If an in-progress build exceeds this duration, it should be considered as timed out (meaning finished with the `unknown` status).
+
+Let's consider an example to make the described process clearer.
+
+> A user wants to sync builds from Jenkins (as a `source`) with Firestore database (as a `destination`). There are one in-progress build in the database: 
+> ```json
+> {
+>   "buildNumber": 3,
+>   "status": "BuildStatus.inProgress",
+>   "duration": null
+> }
+> ```
+> 
+> However, the user has cleared Jenkins builds recently, and there no corresponding build in Jenkins anymore. In other words, the user deleted the third build in Jenkins, and the sync algorithm cannot resync this build.
+>
+> In this case, the following happens:
+> 1. The user starts the sync process with `--in-progress-timeout=60`.
+> 2. The sync algorithm queries in-progress builds from the Firestore, and tries to re-sync the build with `buildNumber` equal to `3`.
+> 3. The `source` fails to find the corresponding build in Jenkins.
+> 4. The sync algorithm checks the current duration of the build to re-sync (the difference of `build.startedAt` and `DateTime.now()`) and compares it to the `--in-progress-timeout` value. The current duration appears to be greater than 60 minutes (let's assume `61 minutes`).
+> 5. The sync algorithm updates the build object in Firestore with `BuildStatus.unknown` and the duration equal to the current one.
+> 
+> So the result of re-syncing in-progress builds in the user's case is the following: 
+> ```json
+> {
+>   "buildNumber": 3,
+>   "status": "BuildStatus.unknown",
+>   "duration": 3660000
+> }
+> ```
+
+_**Note**: If the `source` loads the corresponding build successfully but this build is still running and exceeds the specified timeout duration, the algorithm forces the in-progress build to timeout as well._
 
 ### Sync Builds
 
+The second stage of the synchronization algorithm is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
+
+1. Fetch the last build from the `destination`.
+2. If the last build is `null`:
+    1. Fetch the `--initial-sync-limit` number of builds from the `source`.
+3. If the last build is not `null`:
+    1. Fetch builds from the `source` that were performed after the last synced build.
+4. Fetch coverage data for builds if necessary.
+5. Add new builds to the `destination`.
+
+Each new build can has one of three possible statuses:
+
+- `inProgress` - means that the build is running.
+- `successful` - means that the build has finished successfully.
+- `failed` - means that the build has finished with an error.
+- `unknown` - means that the build has finished with an unknown status.
+
+_**Note**: The `unknown` status doesn't always mean that the `source` doesn't know the build's status as well. In most of the cases, this means that the Metrics project doesn't support the build's status and maps it to the `unknown` one._
+
+The following activity diagram describes the sync builds stage:
+
+![Sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_stage_activity_diagram.puml)
 
 ### Making Things Work
 
-Points to cover here: 
-- How all the components work together? 
-- Sequence diagram to clarify steps in activity one and make them more clear.
+The above sections describe the details of the sync algorithm and diagrams the behavior of its parts. However, you may be wondering how this behavior looks more detailed and how the sync algorithm uses integrations while running.
+
+The following sequence diagram details the sync algorithm: 
+
+![Sync algorithm sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?
 
-The design describing the synchronization algorithms in details.
+The design describing the synchronization algorithm in details.

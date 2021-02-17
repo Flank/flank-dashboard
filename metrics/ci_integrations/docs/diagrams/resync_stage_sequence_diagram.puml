@@ -1,0 +1,54 @@
+@startuml resync_in_progress_sequence_diagram
+'https://plantuml.com/sequence-diagram
+
+skinparam SequenceMessageAlignment center
+
+participant CiIntegration
+participant SourceClient
+participant DestinationClient
+
+?-> CiIntegration ++ : _syncInProgressBuilds(//config//)
+|||
+CiIntegration -> DestinationClient ++ : fetchBuildsWithStatus(//config.destinationProjectId, BuildStatus.inProgress//)
+return //buildsInProgress//
+
+loop for each //build// in //buildsInProgress//
+    CiIntegration -> SourceClient ++ : fetchBuild(//config.sourceProjectId, build.buildNumber//)
+    return //sourceBuild//
+    CiIntegration -> CiIntegration ++ : _shouldTimeoutBuild(//config.inProgressTimeout//, //sourceBuild//)
+    return //shouldTimeout//
+    |||
+    alt //shouldTimeout// is true
+        ||8||
+        CiIntegration -> CiIntegration ++ : _timeoutBuild(//config.inProgressTimeout, build//)
+        return //newBuild//
+        ||8||
+    else //sourceBuild.status != BuildStatus.inProgress//
+        ||8||
+        CiIntegration --> CiIntegration : //newBuild = sourceBuild.copyWith(id: build.id, projectId: build.projectId)//
+        ||8||
+    else //sourceBuild.status == BuildStatus.inProgress//
+        note right of CiIntegration: keep //build// unchanged
+    end
+    |||
+    CiIntegration --> CiIntegration : //buildsUpdate.add(newBuild)//
+end
+
+opt config.coverage
+    ||8||
+    CiIntegration -> CiIntegration ++ : //_addCoverageData(buildsUpdate)//
+    loop for each //build// in //buildsUpdate//
+        CiIntegration -> SourceClient ++ : fetchCoverage(//build//)
+        return //percent//
+        note right of CiIntegration: add //percent// value to //build// and save to the resulting list
+    end
+    return buildsUpdate
+    ||8||
+end
+
+CiIntegration -> DestinationClient ++ : updateBuilds(//config.destinationProjectId, buildsUpdate//)
+return void
+
+return void
+
+@enduml

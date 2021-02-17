@@ -1,0 +1,26 @@
+@startuml sync_stage_activity_diagram
+'https://plantuml.com/activity-diagram-beta
+skinparam ConditionEndStyle hline
+
+:destination.fetchLastBuild() -> **lastBuild**;
+
+if (**lastBuild** is **null**) then (yes)
+    :source.fetchBuilds() -> **result**;
+else (no)
+    :source.fetchBuildsAfter(**lastBuild**) -> **result**;
+endif
+
+:fetch coverage for builds if necessary;
+
+:destination.addBuilds(**result**);
+note right
+    Builds possible states:
+    - **in progress**
+    - successful
+    - failed
+    - unknown
+end note
+
+end
+
+@enduml

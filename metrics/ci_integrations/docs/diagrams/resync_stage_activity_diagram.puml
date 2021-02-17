@@ -2,7 +2,7 @@
 'https://plantuml.com/activity-diagram-beta
 skinparam ConditionEndStyle hline
 
-:destination.fetchInProgressBuilds() -> **inProgress**;
+:destination.fetchBuildsWithStatus(BuildStatus.inProgress) -> **buildsInProgress**;
 note left
     fetch //builds// where
     //state// is //in progress//
@@ -11,22 +11,22 @@ end note
 repeat
     :source.fetchBuild() -> **build**;
 
-    if (should force timeout) then (yes) 
+    if (should force timeout) then (yes)
         :force time out -> **newBuild**;
         note left
-            controlled by CLI option 
+            controlled by CLI option
             //--in-progress-timeout//
             defaults to //120 minutes//
         end note
     else (no)
-        :fetch coverage if necessary;
         :process **build** -> **newBuild**;
     endif
 
     :**result**.add(**newBuild**);
-repeatwhile (for each in **inProgress**)
+repeatwhile (for each in **buildsInProgress**)
 
-:destination.setBuilds(**result**);
+:fetch coverage for builds if necessary;
+:destination.updateBuilds(**result**);
 note left
     for each //build// in //result//
     set //new data//
