@@ -11,10 +11,7 @@ void main() {
     test(
       "throws an ArgumentError if paths value is null",
       () {
-        expect(
-          () => LinksCheckerArguments(paths: null, ignorePaths: []),
-          throwsArgumentError,
-        );
+        expect(() => LinksCheckerArguments(paths: null), throwsArgumentError);
       },
     );
 
