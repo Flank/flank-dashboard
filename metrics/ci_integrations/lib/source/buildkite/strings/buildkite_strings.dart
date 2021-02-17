@@ -14,4 +14,17 @@ class BuildkiteStrings {
       'The pipeline with such slug does not exist.';
   static const String organizationNotFound =
       'The organization with such slug does not exist.';
+  static const String accessToken = 'accessToken';
+  static const String tokenInvalidInterruptReason =
+      "Can't be validated as the provided access token is invalid.";
+  static const String organizationSlug = 'organizationSlug';
+  static const String noScopesToValidateOrganization =
+      "Organization can`t be validated as the provided access token does not have the 'read_organization' scope.";
+  static const String organizationCantBeValidatedInterruptReason =
+      "Can't be validated as the provided organization slug can't be validated.";
+  static const String organizationInvalidInterruptReason =
+      "Can't be validated as the provided organization slug is invalid.";
+  static const String pipelineSlug = 'pipelineSlug';
+  static const String noScopesToValidatePipeline =
+      "Pipeline can`t be validated as the provided access token does not have the 'read_pipelines' scope.";
 }
