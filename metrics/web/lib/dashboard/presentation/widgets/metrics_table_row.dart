@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -59,19 +59,19 @@ class MetricsTableRow extends StatelessWidget {
           status,
           Flexible(
             child: SizedBox(
-              width: 326.0,
+              width: 334.0,
               child: name,
             ),
           ),
           SizedBox(
-            width: 756.0,
+            width: 748.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
                   padding: padding,
                   child: SizedBox(
-                    width: 276.0,
+                    width: 268.0,
                     child: buildResults,
                   ),
                 ),

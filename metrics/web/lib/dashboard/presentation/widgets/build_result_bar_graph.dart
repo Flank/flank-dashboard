@@ -81,7 +81,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
       children: [
         if (_barsData.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(bottom: 7.0),
+            padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               _buildResultDateRange(),
               style: buildResultBarGraphTheme.textStyle,
