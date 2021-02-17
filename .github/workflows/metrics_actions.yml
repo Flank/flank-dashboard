@@ -244,7 +244,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed}}'
+        run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore='.github/'
 
   check-license-actions:
     name: Check License Actions
