@@ -6,6 +6,6 @@ import 'package:ci_integration/integration/interface/base/config/validator/confi
 
 /// An abstract class that provides a method for creating [ConfigValidator]s.
 abstract class ConfigValidatorFactory<T extends Config> {
-  /// Creates an instance of the [ConfigValidator] with the given [config].
+  /// Creates an instance of the [ConfigValidator] using the given [config].
   ConfigValidator<T> create(T config);
 }

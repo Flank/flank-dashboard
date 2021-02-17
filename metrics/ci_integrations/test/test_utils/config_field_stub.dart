@@ -3,7 +3,7 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config_field.dart';
 
-/// A stub class of the [ConfigField] class to use in tests.
+/// A stub implementation of the [ConfigField] class to use in tests.
 class ConfigFieldStub extends ConfigField {
   /// Creates a new instance of the [ConfigFieldStub] with the given [value].
   ///

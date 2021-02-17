@@ -12,12 +12,12 @@ void main() {
     final firstField = ConfigFieldStub('1');
     final anotherField = ConfigFieldStub('2');
 
-    final fieldResult = FieldValidationResult.success();
-    final anotherFieldResult = FieldValidationResult.failure();
+    final successResult = FieldValidationResult.success();
+    final failureResult = FieldValidationResult.failure();
 
     final results = {
-      firstField: fieldResult,
-      anotherField: anotherFieldResult,
+      firstField: successResult,
+      anotherField: failureResult,
     };
 
     final fields = [
@@ -27,12 +27,12 @@ void main() {
 
     ValidationResultBuilder builder = ValidationResultBuilder.forFields(fields);
 
-    tearDown(() {
+    setUp(() {
       builder = ValidationResultBuilder.forFields(fields);
     });
 
     test(
-      ".forFields() throws an argument error if the given fields is null",
+      ".forFields() throws an ArgumentError if the given fields is null",
       () {
         expect(
           () => ValidationResultBuilder.forFields(null),
@@ -69,43 +69,43 @@ void main() {
     test(
       ".setResult() sets the given field validation result to the given field",
       () {
-        builder.setResult(firstField, fieldResult);
+        builder.setResult(firstField, successResult);
 
         final result = builder.build();
         final validationResults = result.results;
 
-        expect(validationResults, containsPair(firstField, fieldResult));
+        expect(validationResults, containsPair(firstField, successResult));
       },
     );
 
     test(
-      ".setEmptyResults() sets the null field validation results to the given result",
+      ".setEmptyResults() sets the empty field validation results to the given result",
       () {
-        builder.setEmptyResults(fieldResult);
+        builder.setEmptyResults(successResult);
 
         final result = builder.build();
         final fieldValidationResults = result.results.values;
 
-        expect(fieldValidationResults, everyElement(equals(fieldResult)));
+        expect(fieldValidationResults, everyElement(equals(successResult)));
       },
     );
 
     test(
-      ".setEmptyResults() does not override the non-null field validation results",
+      ".setEmptyResults() does not override the non-empty field validation results",
       () {
-        builder.setResult(firstField, anotherFieldResult);
+        builder.setResult(firstField, failureResult);
 
-        builder.setEmptyResults(fieldResult);
+        builder.setEmptyResults(successResult);
 
         final result = builder.build();
         final validationResults = result.results;
 
-        expect(validationResults, containsPair(firstField, anotherFieldResult));
+        expect(validationResults, containsPair(firstField, failureResult));
       },
     );
 
     test(
-      ".build() sets the null field validation results to unknown field validation results",
+      ".build() sets the empty field validation results to unknown field validation results",
       () {
         final result = builder.build();
         final fieldValidationResults = result.results.values;
@@ -122,10 +122,10 @@ void main() {
     );
 
     test(
-      ".build() returns a validation result with the given field validation results",
+      ".build() returns a validation result containing validation results that were set",
       () {
-        builder.setResult(firstField, fieldResult);
-        builder.setResult(anotherField, anotherFieldResult);
+        builder.setResult(firstField, successResult);
+        builder.setResult(anotherField, failureResult);
 
         final result = builder.build();
         final validationResults = result.results;

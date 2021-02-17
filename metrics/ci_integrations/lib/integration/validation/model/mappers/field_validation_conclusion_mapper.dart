@@ -42,8 +42,7 @@ class FieldValidationConclusionMapper
         return invalid;
       case FieldValidationConclusion.unknown:
         return unknown;
-      default:
-        return null;
     }
+    return null;
   }
 }

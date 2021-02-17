@@ -3,23 +3,23 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_conclusion.dart';
-import 'package:ci_integration/integration/validation/model/mappers/field_validation_conclusion_mapper.dart';
 
 /// A class that represents a validation result for a single [Config]'s field.
 class FieldValidationResult {
-  /// A [FieldValidationConclusion] of this validation result.
+  /// A [FieldValidationConclusion] of this field validation result.
   final FieldValidationConclusion conclusion;
 
-  /// A [String] containing additional information about this validation result.
+  /// A [String] containing additional information about this field validation
+  /// result.
   final String additionalContext;
 
-  /// Indicates whether this validation result is successful.
+  /// Indicates whether this field validation result is successful.
   bool get isSuccess => conclusion == FieldValidationConclusion.valid;
 
-  /// Indicates whether this validation result is failure.
+  /// Indicates whether this field validation result is failure.
   bool get isFailure => conclusion == FieldValidationConclusion.invalid;
 
-  /// Indicates whether this validation result is unknown.
+  /// Indicates whether this field validation result is unknown.
   bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
 
   /// Creates an instance of the [FieldValidationConclusion]
@@ -30,9 +30,9 @@ class FieldValidationResult {
   ]);
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext].
+  /// [additionalContext] and [FieldValidationConclusion.valid] conclusion.
   ///
-  /// Represents a successful validation result.
+  /// Represents a successful field validation result.
   FieldValidationResult.success([
     String additionalContext,
   ]) : this._(
@@ -41,9 +41,9 @@ class FieldValidationResult {
         );
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext].
+  /// [additionalContext] and [FieldValidationConclusion.invalid] conclusion.
   ///
-  /// Represents a failed validation result.
+  /// Represents a failed field validation result.
   FieldValidationResult.failure([
     String additionalContext,
   ]) : this._(
@@ -52,29 +52,14 @@ class FieldValidationResult {
         );
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext].
+  /// [additionalContext] and [FieldValidationConclusion.unknown] conclusion.
   ///
-  /// Represents an unknown validation result or indicates that the validation
-  /// didn't run.
+  /// Represents an unknown field validation result or indicates that
+  /// the field validation didn't run.
   FieldValidationResult.unknown([
     String additionalContext,
   ]) : this._(
           FieldValidationConclusion.unknown,
           additionalContext,
         );
-
-  @override
-  String toString() {
-    const conclusionMapper = FieldValidationConclusionMapper();
-
-    final conclusionValue = conclusionMapper.unmap(conclusion);
-
-    String message = '$conclusionValue.';
-
-    if (additionalContext != null) {
-      message = '$message Additional context: $additionalContext';
-    }
-
-    return message;
-  }
 }

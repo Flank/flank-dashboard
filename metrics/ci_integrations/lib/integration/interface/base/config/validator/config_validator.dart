@@ -12,7 +12,8 @@ abstract class ConfigValidator<T extends Config> {
   /// specific fields validation.
   ValidationDelegate get validationDelegate;
 
-  /// A [ValidationDelegate] this validator uses to build the [ValidationResult].
+  /// A [ValidationResultBuilder] this validator uses to build
+  /// the [ValidationResult].
   ValidationResultBuilder get validationResultBuilder;
 
   /// Validates the given [config].

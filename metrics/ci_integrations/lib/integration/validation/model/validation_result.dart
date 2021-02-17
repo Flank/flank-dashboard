@@ -9,7 +9,7 @@ import 'package:equatable/equatable.dart';
 
 /// A class that represents a validation result for a single [Config].
 class ValidationResult extends Equatable {
-  /// A [Map] that holds the validation result values.
+  /// A [Map] that holds the validation result values for each [Config] field.
   final UnmodifiableMapView<ConfigField, FieldValidationResult> results;
 
   @override
