@@ -15,17 +15,12 @@ void main() {
     final successResult = FieldValidationResult.success();
     final failureResult = FieldValidationResult.failure();
 
-    final results = {
-      firstField: successResult,
-      anotherField: failureResult,
-    };
-
     final fields = [
       firstField,
       anotherField,
     ];
 
-    ValidationResultBuilder builder = ValidationResultBuilder.forFields(fields);
+    ValidationResultBuilder builder;
 
     setUp(() {
       builder = ValidationResultBuilder.forFields(fields);
@@ -69,14 +64,15 @@ void main() {
     test(
       ".setResult() sets the given field validation result to the given field",
       () {
-        builder.setResult(firstField, successResult);
-        builder.setResult(anotherField, failureResult);
+        final field = ConfigFieldStub('1');
+        final builder = ValidationResultBuilder.forFields([field]);
+
+        builder.setResult(field, successResult);
 
         final result = builder.build();
         final validationResults = result.results;
 
-        expect(validationResults, containsPair(firstField, successResult));
-        expect(validationResults, containsPair(anotherField, failureResult));
+        expect(validationResults, containsPair(field, successResult));
       },
     );
 
@@ -117,26 +113,6 @@ void main() {
     );
 
     test(
-      ".build() throws a StateError with a message that contains field names with not specified validation result",
-      () {
-        final emptyFields = [firstField, anotherField];
-
-        expect(
-          () => builder.build(),
-          throwsA(
-            predicate<StateError>(
-              (error) {
-                return emptyFields.every(
-                  (emptyField) => error.message.contains('$emptyField'),
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-
-    test(
       ".build() returns a validation result containing validation results that were set",
       () {
         builder.setResult(firstField, successResult);
@@ -145,10 +121,8 @@ void main() {
         final result = builder.build();
         final validationResults = result.results;
 
-        expect(
-          validationResults,
-          equals(results),
-        );
+        expect(validationResults[firstField], equals(successResult));
+        expect(validationResults[anotherField], equals(failureResult));
       },
     );
   });

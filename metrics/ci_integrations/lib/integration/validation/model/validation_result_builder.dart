@@ -29,15 +29,9 @@ class ValidationResultBuilder {
   ///
   /// Throws a [StateError] if there are any fields with no validation results.
   ValidationResult build() {
-    final fields = _results.keys;
-
-    final fieldsWithNoValidationResult = fields.where((field) {
-      return _results[field] == null;
-    });
-
-    if (fieldsWithNoValidationResult.isNotEmpty) {
+    if (_results.containsValue(null)) {
       throw StateError(
-        'Cannot create a validation result, as the following fields do not have a validation result: $fieldsWithNoValidationResult',
+        'Cannot create a validation result, since some fields do not have validation result.',
       );
     }
 
