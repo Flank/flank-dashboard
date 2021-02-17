@@ -7,14 +7,12 @@ class LinksCheckerArguments {
   final List<String> paths;
 
   /// A [List] of paths to exclude from the analyze.
-  final List<String> ignore;
+  final List<String> ignorePaths;
 
   /// Creates a new instance of the [LinksCheckerArguments].
   ///
   /// Throws an [ArgumentError] if the given [paths] is `null`.
-  /// Throws an [ArgumentError] if the given [ignore] is `null`.
-  LinksCheckerArguments({this.paths, this.ignore}) {
+  LinksCheckerArguments({this.paths, this.ignorePaths}) {
     ArgumentError.checkNotNull(paths, 'paths');
-    ArgumentError.checkNotNull(ignore, 'ignore');
   }
 }

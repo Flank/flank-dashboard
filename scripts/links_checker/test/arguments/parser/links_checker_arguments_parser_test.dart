@@ -7,11 +7,12 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksCheckerArgumentsParser", () {
+    const argumentsParser = LinksCheckerArgumentsParser();
+
     test(
       ".configureArguments() configures the given arg parser to accept the paths option",
       () {
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
@@ -25,7 +26,6 @@ void main() {
       ".configureArguments() configures the given arg parser to accept the ignore option",
       () {
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
@@ -36,42 +36,62 @@ void main() {
     );
 
     test(
-      ".parseArgResults() parses the given paths option value to a links checker arguments instance with paths",
+      ".configureArguments() configures the given arg parser to have an empty string as a default paths argument value",
       () {
-        const paths = 'file1 path/to/file2';
-        const options = ['--paths', paths];
-
-        final expected = ['file1', 'path/to/file2'];
-
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
-        final argResults = parser.parse(options);
-        final arguments = argumentsParser.parseArgResults(argResults);
+        final options = parser.options;
+        final pathsOption = options[LinksCheckerArgumentsParser.paths];
 
-        expect(arguments.paths, equals(expected));
+        expect(pathsOption.defaultsTo, equals(''));
       },
     );
 
     test(
-      ".parseArgResults() parses the given ignore option value to a links checker arguments instance with ignore",
+      ".configureArguments() configures the given arg parser to have an empty string as a default ignore argument value",
       () {
-        const ignore = 'path/to/ignore';
-        const options = ['--ignore', ignore];
+        final parser = ArgParser();
 
-        final expected = ['path/to/ignore'];
+        argumentsParser.configureArguments(parser);
+
+        final options = parser.options;
+        final ignoreOption = options[LinksCheckerArgumentsParser.ignore];
+
+        expect(ignoreOption.defaultsTo, equals(''));
+      },
+    );
+
+    test(
+      ".parseArgResults() creates a links checker arguments instance with paths equal to an empty list if the given paths argument equals an empty string",
+      () {
+        const options = ['--paths', ''];
 
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
         final argResults = parser.parse(options);
         final arguments = argumentsParser.parseArgResults(argResults);
 
-        expect(arguments.ignore, equals(expected));
+        expect(arguments.paths, equals([]));
+      },
+    );
+
+    test(
+      ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to an empty list if the given ignore argument equals an empty string",
+      () {
+        const options = ['--ignore', ''];
+
+        final parser = ArgParser();
+
+        argumentsParser.configureArguments(parser);
+
+        final argResults = parser.parse(options);
+        final arguments = argumentsParser.parseArgResults(argResults);
+
+        expect(arguments.ignorePaths, equals([]));
       },
     );
 
@@ -79,7 +99,6 @@ void main() {
       ".parseArgResults() creates a links checker arguments instance with paths equals to an empty list",
       () {
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
@@ -94,14 +113,13 @@ void main() {
       ".parseArgResults() creates a links checker arguments instance with ignore equals to an empty list",
       () {
         final parser = ArgParser();
-        const argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
         final argResults = parser.parse([]);
         final arguments = argumentsParser.parseArgResults(argResults);
 
-        expect(arguments.ignore, equals([]));
+        expect(arguments.ignorePaths, equals([]));
       },
     );
   });

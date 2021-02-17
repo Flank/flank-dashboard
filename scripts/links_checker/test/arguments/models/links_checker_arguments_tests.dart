@@ -12,17 +12,7 @@ void main() {
       "throws an ArgumentError if paths value is null",
       () {
         expect(
-          () => LinksCheckerArguments(paths: null, ignore: []),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if ignore value is null",
-      () {
-        expect(
-          () => LinksCheckerArguments(paths: [], ignore: null),
+          () => LinksCheckerArguments(paths: null, ignorePaths: []),
           throwsArgumentError,
         );
       },
@@ -33,10 +23,11 @@ void main() {
       () {
         const paths = ['1 2'];
         const ignore = ['2 3'];
-        final arguments = LinksCheckerArguments(paths: paths, ignore: ignore);
+        final arguments =
+            LinksCheckerArguments(paths: paths, ignorePaths: ignore);
 
         expect(arguments.paths, equals(paths));
-        expect(arguments.ignore, equals(ignore));
+        expect(arguments.ignorePaths, equals(ignore));
       },
     );
   });

@@ -29,9 +29,9 @@ class LinksCheckerArgumentsParser {
 
     argParser.addOption(
       ignore,
-      help: 'A string representing the space separated '
+      help: 'A string representing the space-separated '
           'paths which should be excluded from analyze.',
-      valueHelp: "'.folder/ path/to/folder/'",
+      valueHelp: "'.folder/ path/to/folder/ file.ext'",
       abbr: 'i',
       defaultsTo: '',
     );
@@ -39,14 +39,16 @@ class LinksCheckerArgumentsParser {
 
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
-    final pathsArg = argResults[paths] as String;
-    final pathsList =
-        pathsArg.split(' ').where((path) => path.isNotEmpty).toList();
+    final pathsList = _getArguments(argResults, paths);
+    final ignoreList = _getArguments(argResults, ignore);
 
-    final ignoreArg = argResults[ignore] as String;
-    final ignoreList =
-        ignoreArg.split(' ').where((path) => path.isNotEmpty).toList();
+    return LinksCheckerArguments(paths: pathsList, ignorePaths: ignoreList);
+  }
 
-    return LinksCheckerArguments(paths: pathsList, ignore: ignoreList);
+  /// Retrieves arguments for the given [option] from the given [argResults].
+  List<String> _getArguments(ArgResults argResults, String option) {
+    final argument = argResults[option] as String;
+
+    return argument.split(' ').where((path) => path.isNotEmpty).toList();
   }
 }

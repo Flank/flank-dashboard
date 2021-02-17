@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:links_checker/arguments/models/links_checker_arguments.dart';
@@ -50,7 +50,7 @@ void main() {
       ".run() uses the given argument parser's .parseArgResults() to parse arguments",
       () {
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: [], ignore: []));
+            .thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
 
         final command = LinksCheckerCommand(argumentsParser: argumentsParser);
         command.run();
@@ -65,7 +65,7 @@ void main() {
         final paths = ['file1', 'path/to/file2'];
         when(fileHelperUtil.getFiles(paths)).thenReturn([]);
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: paths, ignore: []));
+            .thenReturn(LinksCheckerArguments(paths: paths, ignorePaths: []));
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -84,7 +84,7 @@ void main() {
 
         when(linksChecker.checkFiles([])).thenReturn(null);
         when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: [], ignore: []));
+            .thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
 
         final command = LinksCheckerCommand(
           linksChecker: linksChecker,
@@ -99,11 +99,14 @@ void main() {
     test(
       ".run() excludes files from the analyze based on the given ignore parameter",
       () {
-        final paths = ['file1', 'path/to/file2'];
-        final ignore = ['path/'];
+        const ignorePath = 'path/';
+        final paths = ['file1', '${ignorePath}to/file2'];
+        final ignore = [ignorePath];
+        final arguments =
+            LinksCheckerArguments(paths: paths, ignorePaths: ignore);
+
         when(fileHelperUtil.getFiles(any)).thenReturn([]);
-        when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: paths, ignore: ignore));
+        when(argumentsParser.parseArgResults(any)).thenReturn(arguments);
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -111,7 +114,9 @@ void main() {
         );
         command.run();
 
-        verify(fileHelperUtil.getFiles(['file1'])).called(1);
+        verifyNever(
+          fileHelperUtil.getFiles(argThat(contains('path/to/file2'))),
+        );
       },
     );
   });

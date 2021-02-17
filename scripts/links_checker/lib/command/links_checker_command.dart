@@ -44,22 +44,23 @@ class LinksCheckerCommand extends Command<void> {
   @override
   void run() {
     final arguments = argumentsParser.parseArgResults(argResults);
+    final ignorePaths = arguments.ignorePaths;
+    List<String> paths = arguments.paths;
 
-    final paths = _excludeIgnorePaths(arguments.paths, arguments.ignore);
+    if (ignorePaths != null && ignorePaths.isNotEmpty) {
+      paths = _excludeIgnorePaths(arguments.paths, ignorePaths);
+    }
 
     final files = fileHelperUtil.getFiles(paths);
 
     linksChecker.checkFiles(files);
   }
 
-  /// Filters the given [paths] and exclude elements
-  /// based on the given list of [ignorePaths].
+  /// Excludes the given [ignorePaths] from the given [paths].
   List<String> _excludeIgnorePaths(
     List<String> paths,
     List<String> ignorePaths,
   ) {
-    if (ignorePaths.isEmpty) return paths;
-
     return paths.where((path) {
       return !ignorePaths.any((ignorePath) => path.contains(ignorePath));
     }).toList();
