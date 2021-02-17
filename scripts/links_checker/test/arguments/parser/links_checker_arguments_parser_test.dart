@@ -3,11 +3,17 @@
 
 import 'package:args/args.dart';
 import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("LinksCheckerArgumentsParser", () {
     const argumentsParser = LinksCheckerArgumentsParser();
+    final argResultsMock = _ArgResultsMock();
+
+    setUpAll(() {
+      when(argResultsMock[any]).thenReturn('');
+    });
 
     test(
       ".configureArguments() configures the given arg parser to accept the paths option",
@@ -66,14 +72,7 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with paths equal to an empty list if the given paths argument equals an empty string",
       () {
-        const options = ['--paths', ''];
-
-        final parser = ArgParser();
-
-        argumentsParser.configureArguments(parser);
-
-        final argResults = parser.parse(options);
-        final arguments = argumentsParser.parseArgResults(argResults);
+        final arguments = argumentsParser.parseArgResults(argResultsMock);
 
         expect(arguments.paths, equals([]));
       },
@@ -82,14 +81,7 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to an empty list if the given ignore argument equals an empty string",
       () {
-        const options = ['--ignore', ''];
-
-        final parser = ArgParser();
-
-        argumentsParser.configureArguments(parser);
-
-        final argResults = parser.parse(options);
-        final arguments = argumentsParser.parseArgResults(argResults);
+        final arguments = argumentsParser.parseArgResults(argResultsMock);
 
         expect(arguments.ignorePaths, equals([]));
       },
@@ -98,12 +90,7 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with paths equals to an empty list",
       () {
-        final parser = ArgParser();
-
-        argumentsParser.configureArguments(parser);
-
-        final argResults = parser.parse([]);
-        final arguments = argumentsParser.parseArgResults(argResults);
+        final arguments = argumentsParser.parseArgResults(argResultsMock);
 
         expect(arguments.paths, equals([]));
       },
@@ -112,15 +99,12 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with ignore equals to an empty list",
       () {
-        final parser = ArgParser();
-
-        argumentsParser.configureArguments(parser);
-
-        final argResults = parser.parse([]);
-        final arguments = argumentsParser.parseArgResults(argResults);
+        final arguments = argumentsParser.parseArgResults(argResultsMock);
 
         expect(arguments.ignorePaths, equals([]));
       },
     );
   });
 }
+
+class _ArgResultsMock extends Mock implements ArgResults {}
