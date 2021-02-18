@@ -52,11 +52,6 @@ void main() {
       validationResultBuilder,
     );
 
-    tearDown(() {
-      reset(validationDelegate);
-      reset(validationResultBuilder);
-    });
-
     PostExpectation<Future<InteractionResult<BuildkiteToken>>>
         whenValidateAuth() {
       return when(validationDelegate.validateAuth(auth));
@@ -81,6 +76,11 @@ void main() {
         validationDelegate.validateSourceProjectId(pipelineSlug),
       );
     }
+
+    tearDown(() {
+      reset(validationDelegate);
+      reset(validationResultBuilder);
+    });
 
     test(
       "throws an ArgumentError if the given validation delegate is null",

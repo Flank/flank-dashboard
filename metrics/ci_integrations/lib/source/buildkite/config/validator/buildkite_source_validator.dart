@@ -32,8 +32,11 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     this.validationDelegate,
     this.validationResultBuilder,
   ) {
-    ArgumentError.checkNotNull(validationDelegate);
-    ArgumentError.checkNotNull(validationResultBuilder);
+    ArgumentError.checkNotNull(validationDelegate, 'validationDelegate');
+    ArgumentError.checkNotNull(
+      validationResultBuilder,
+      'validationResultBuilder',
+    );
   }
 
   @override
@@ -51,7 +54,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     );
 
     if (tokenInteraction.isError) {
-      return _terminateValidation(BuildkiteStrings.tokenInvalidInterruptReason);
+      return _finalizeValidationResult(
+        BuildkiteStrings.tokenInvalidInterruptReason,
+      );
     }
 
     final token = tokenInteraction.result;
@@ -62,7 +67,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
         BuildkiteStrings.noScopesToValidateOrganization,
       );
 
-      return _terminateValidation(
+      return _finalizeValidationResult(
         BuildkiteStrings.organizationCantBeValidatedInterruptReason,
       );
     }
@@ -77,7 +82,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     );
 
     if (organizationInteraction.isError) {
-      return _terminateValidation(
+      return _finalizeValidationResult(
         BuildkiteStrings.organizationInvalidInterruptReason,
       );
     }
@@ -119,9 +124,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   }
 
   /// Sets the empty results of the [validationResultBuilder] using the given
-  /// [interruptReason] and returns the [ValidationResult]
+  /// [interruptReason] and builds the [ValidationResult]
   /// using the [validationResultBuilder].
-  ValidationResult _terminateValidation(String interruptReason) {
+  ValidationResult _finalizeValidationResult(String interruptReason) {
     _setEmptyFields(interruptReason);
 
     return validationResultBuilder.build();
@@ -137,7 +142,8 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   }
 
   /// Sets the [FieldValidationResult.unknown] with the given
-  /// [additionalContext] to the given [field] of the [validationResultBuilder].
+  /// [additionalContext] to the given [field] using
+  /// the [validationResultBuilder].
   void _setUnknownFieldValidationResult(
     BuildkiteSourceConfigField field,
     String additionalContext,
@@ -150,13 +156,13 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   /// Checks that the given [token] has enough scopes for
   /// [BuildkiteSourceConfigField.organizationSlug] validation.
   bool _canValidateOrganization(BuildkiteToken token) {
-    return _containsScope(token, BuildkiteTokenScope.readOrganizations);
+    return _hasScope(token, BuildkiteTokenScope.readOrganizations);
   }
 
   /// Checks that the given [token] has enough scopes for
   /// [BuildkiteSourceConfigField.pipelineSlug] validation.
   bool _canValidatePipeline(BuildkiteToken token) {
-    return _containsScope(token, BuildkiteTokenScope.readPipelines);
+    return _hasScope(token, BuildkiteTokenScope.readPipelines);
   }
 
   /// Checks that the given [token] has the given [scope].
@@ -167,7 +173,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   /// Returns `true` if the given [token] contains the given [scope].
   ///
   /// Otherwise, returns `false`.
-  bool _containsScope(BuildkiteToken token, BuildkiteTokenScope scope) {
+  bool _hasScope(BuildkiteToken token, BuildkiteTokenScope scope) {
     if (token == null || token.scopes == null) return false;
 
     return token.scopes.contains(scope);
