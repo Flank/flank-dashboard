@@ -40,11 +40,11 @@ class ValidationResultBuilder {
 
   /// Sets the [result] for the given [field].
   ///
-  /// Throws an [ArgumentError] if the given [field] is not included in the
+  /// Throws an [ArgumentError] if the provided [field] is not included in the
   /// [ValidationResult] this builder assembles.
   ///
-  /// Throws a [StateError] if the given [field] already has the
-  /// '[FieldValidationResult].
+  /// Throws a [StateError] if the provided [field] already has the
+  /// [FieldValidationResult].
   void setResult(ConfigField field, FieldValidationResult result) {
     if (!_results.containsKey(field)) {
       throw ArgumentError('The provided field is not available to set.');
