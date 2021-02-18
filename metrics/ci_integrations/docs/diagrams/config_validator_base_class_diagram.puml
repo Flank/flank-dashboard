@@ -89,6 +89,7 @@
                 class FieldValidationResult {
                     + conclusion : FieldValidationConclusion
                     + additionalContext : String
+                    
                     + FieldValidationResult success(String additionalContext)
                     + FieldValidationResult failure(String additionalContext)
                     + FieldValidationResult unknown(String additionalContext)
