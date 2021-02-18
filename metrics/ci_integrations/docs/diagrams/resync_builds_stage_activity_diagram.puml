@@ -1,4 +1,4 @@
-@startuml resync_stage_activity_diagram
+@startuml resync_builds_stage_activity_diagram
 'https://plantuml.com/activity-diagram-beta
 skinparam ConditionEndStyle hline
 

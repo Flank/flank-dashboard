@@ -1,4 +1,4 @@
-@startuml resync_in_progress_sequence_diagram
+@startuml resync_builds_stage_sequence_diagram
 'https://plantuml.com/sequence-diagram
 
 skinparam SequenceMessageAlignment center
