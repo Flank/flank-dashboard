@@ -7,21 +7,22 @@ The CI Integration tool synchronizes builds to make them available for the Metri
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-Links on other documents for CI Integrations tool, project Metrics available, etc.
+- [CI Integrations module architecture](01_ci_integration_module_architecture.md)
+- [CI Integrations user guide](02_ci_integration_user_guide.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
 
 - Describe the synchronization algorithm.
 - Describe In-Progress builds re-syncing.
-- Describe how the sync algorithm uses `Source` and `Destination` integrations.
+- Describe how the sync algorithm uses `source` and `destination` integrations.
 
 ## Non-Goals
 > Identify what's not in scope.
 
 The following points are out of the scope for this document:
-- The way the Metrics Web Application display synced builds and project metrics.
-- The implementation for concrete `Source` and `Destination` integrations.
+- The way the Metrics Web Application displays synced builds and project metrics.
+- The implementation of concrete `source` and `destination` integrations.
 
 
 ## Design
@@ -44,7 +45,7 @@ The following activity diagram demonstrates steps the algorithm performs:
 
 ![Sync activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_activity_diagram.puml)
 
-The below sections discovers two main parts of the sync process ([Re-Sync In-Progress Builds](#re-sync-in-progress-builds) and [Sync Builds](#sync-builds)) but first, let's take a closer look at controlling parameters.
+The below sections discover two main parts of the sync process ([Re-Sync In-Progress Builds](#re-sync-in-progress-builds) and [Sync Builds](#sync-builds)) but first, let's take a closer look at the controlling parameters.
 
 #### Control Synchronization
 
@@ -54,14 +55,14 @@ The CI Integrations tool provides several parameters to control the parts of syn
 |---|---|---|---|
 |`--(no-)coverage`|<nobr>`true` (`--coverage`)</nobr> <br> <nobr>`false` (`--no-coverage`)</nobr>|`true`|Defines whether the CI Integrations tool should fetch coverage data for builds during the sync process. Consider the [Controlling Builds Coverage Synchronization](02_ci_integration_user_guide.md#controlling-builds-coverage-synchronization) section of the User Guide document for more information.|
 |`--initial-sync-limit`|Positive integer|`28`|Defines a number of builds to sync during the very first synchronization of the specified projects. Consider the [Initial Sync Limit](02_ci_integration_user_guide.md#initial-sync-limit) section of the User Guide document for more information.|
-|`--in-progress-timeout`|Positive integer|`120`|Defines a timeout for In-Progress builds. Consider the [Timeout In-Progress Builds](#timeout-in-progress-builds) section for more information.|
+|`--in-progress-timeout`|Positive integer|`120`|Defines a timeout duration in minutes for In-Progress builds. Consider the [Timeout In-Progress Builds](#timeout-in-progress-builds) section for more information.|
 
 ### Re-Sync In-Progress Builds
 
-The first stage of the synchronization algorithm is to re-sync the store In-Progress builds. These builds have the `inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to status of the same build from the `source`. The algorithm performs the following steps:
+The first stage of the synchronization algorithm is to re-sync the stored In-Progress builds. These builds have the `BuildStatus.inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to the status of the same build from the `source`. The algorithm performs the following steps:
 
 1. Query builds having In-Progress status from the `destination`.
-2. Re-sync each build from the list of in-progress:
+2. Re-sync each build from the list of in-progress builds:
     1. Fetch the corresponding build from the `source`.
     2. Change the status of the build to the new from the `source` or force timeout if the build exceeds the `--in-progress-timeout`.
     3. Fetch the build's coverage data if necessary.
@@ -69,12 +70,14 @@ The first stage of the synchronization algorithm is to re-sync the store In-Prog
 
 You may find the second sub-step a bit tricky, and it is. The reason is that there are some edge cases for in-progress builds. Consider the following possibilities: 
 
-- There is no corresponding build in the `source`. In this case, the algorithm skips checking a new status or timeout duration - the build is considered as finished with unknown status.
-- The corresponding build in the `source` is still running. In this case, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with unknown status. Otherwise, the build stays unchanged.
+- The `source` integration failed to fetch the corresponding build.
+- The corresponding build in the `source` is still running. 
+
+In this case, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with unknown status. Otherwise, the build stays unchanged.
 
 The following activity diagram describes the re-sync in-progress builds stage:
 
-![Re-sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_stage_activity_diagram.puml)
+![Re-sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
 
 #### Timeout In-Progress Builds
 
@@ -113,6 +116,18 @@ Let's consider an example to make the described process clearer.
 
 _**Note**: If the `source` loads the corresponding build successfully but this build is still running and exceeds the specified timeout duration, the algorithm forces the in-progress build to timeout as well._
 
+#### Timeout Edge Case
+
+The timeout logic is supposed to use the current date and time to define whether the build should be timed out. The [`DateTime.now()`](https://api.dart.dev/stable/2.10.5/dart-core/DateTime/DateTime.now.html) constructor creates a `DateTime` instance with the current date and time using the corresponding values from the environment (i.e. a machine the code is running on). If there is a bug in the environment related to date and time or these values are forced to be incorrect, the timeout logic is likely to perform wrong. 
+
+The following cases are possible: 
+- The environment date and time are in the _future_. In this case, the in-progress builds will be timed out faster than expected. That may significantly affect the project metrics on the Metrics Web Application providing unreliable information about project performance and results of builds.
+- The environment date and time are in the _past_. In this case, the in-progress builds will never be timed out. That may significantly increase the number of in-progress builds in the `destination`, which are likely to be never re-synced.
+
+The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
+
+According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider these while configuring builds syncing, or automating this process! 
+
 ### Sync Builds
 
 The second stage of the synchronization algorithm is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
@@ -136,15 +151,24 @@ _**Note**: The `unknown` status doesn't always mean that the `source` doesn't kn
 
 The following activity diagram describes the sync builds stage:
 
-![Sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_stage_activity_diagram.puml)
+![Sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_activity_diagram.puml)
 
 ### Making Things Work
 
-The above sections describe the details of the sync algorithm and diagrams the behavior of its parts. However, you may be wondering how this behavior looks more detailed and how the sync algorithm uses integrations while running.
+The above sections describe the sync algorithm and diagram the behavior of its parts. However, you may be wondering how these parts behave more detailed and how the sync algorithm uses integrations while running.
 
-The following sequence diagram details the sync algorithm: 
+Let's consider the following class diagram that contains the main classes and interfaces that participate in the sync process:
 
-![Sync algorithm sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_sequence_diagram.puml)
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
+
+When a user starts synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively. 
+
+The following sequence diagrams detail the two main processes of the sync algorithm:
+- **Re-Syncing In-Progress Builds**:
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
+
+- **Syncing Builds**:
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?
