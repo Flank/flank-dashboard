@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'package:ci_integration/integration/interface/base/config/model/config_field.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 
@@ -20,11 +22,11 @@ class BuildkiteSourceConfigField extends ConfigField {
 
   /// A list containing all [BuildkiteSourceConfigField]s of
   /// the [BuildkiteSourceConfig].
-  static final List<BuildkiteSourceConfigField> values = [
+  static final List<BuildkiteSourceConfigField> values = UnmodifiableListView([
     accessToken,
     organizationSlug,
     pipelineSlug,
-  ];
+  ]);
 
   /// Creates an instance of the [BuildkiteSourceConfigField] with the
   /// given value.
