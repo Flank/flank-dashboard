@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -125,7 +125,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             ),
           ),
           coverage: Padding(
-            padding: const EdgeInsets.only(left: 5.0, right: 6.0),
+            padding: const EdgeInsets.only(left: 11.0),
             child: SizedBox(
               height: 72.0,
               child: LoadingBuilder(
