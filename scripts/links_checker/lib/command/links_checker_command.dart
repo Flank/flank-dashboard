@@ -61,7 +61,7 @@ class LinksCheckerCommand extends Command<void> {
     if (ignorePaths == null || ignorePaths.isEmpty) return paths;
 
     return paths.where((path) {
-      return !ignorePaths.any((ignorePath) => path.contains(ignorePath));
+      return !ignorePaths.any((ignorePath) => path.startsWith(ignorePath));
     }).toList();
   }
 }

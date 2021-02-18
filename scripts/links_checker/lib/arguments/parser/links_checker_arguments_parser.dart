@@ -43,11 +43,11 @@ class LinksCheckerArgumentsParser {
     return LinksCheckerArguments(paths: pathsList, ignorePaths: ignoreList);
   }
 
-  /// Retrieves arguments for the given [option] from the given [argResults].
+  /// Retrieves argument [List] for the given [option] from the given [argResults].
   List<String> _argumentToList(ArgResults argResults, String option) {
     final argument = argResults[option] as String;
 
-    if (argument == null) return [];
+    if (argument == null) return null;
 
     return argument.split(' ').where((path) => path.isNotEmpty).toList();
   }

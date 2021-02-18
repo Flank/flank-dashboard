@@ -57,6 +57,29 @@ void main() {
     );
 
     test(
+      ".parseArgResults() throws an ArgumentError if the given paths argument is null",
+      () {
+        when(argResultsMock['paths']).thenReturn(null);
+
+        expect(
+          () => argumentsParser.parseArgResults(argResultsMock),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to null if the given ignore paths argument is null",
+      () {
+        when(argResultsMock['ignore-paths']).thenReturn(null);
+
+        final arguments = argumentsParser.parseArgResults(argResultsMock);
+
+        expect(arguments.ignorePaths, isNull);
+      },
+    );
+
+    test(
       ".parseArgResults() creates a links checker arguments instance with paths equal to an empty list if the given paths argument equals an empty string",
       () {
         final arguments = argumentsParser.parseArgResults(argResultsMock);
