@@ -10,7 +10,7 @@ import '../../../test_utils/config_field_stub.dart';
 void main() {
   group("ValidationResult", () {
     final field = ConfigFieldStub('value');
-    final fieldResult = FieldValidationResult.success();
+    const fieldResult = FieldValidationResult.success();
 
     final results = {
       field: fieldResult,

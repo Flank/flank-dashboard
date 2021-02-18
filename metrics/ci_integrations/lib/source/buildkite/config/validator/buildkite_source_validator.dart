@@ -51,30 +51,20 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     );
 
     if (tokenInteraction.isError) {
-      const interruptReason = BuildkiteStrings.tokenInvalidInterruptReason;
-      final emptyFieldResult = FieldValidationResult.unknown(interruptReason);
-
-      validationResultBuilder.setEmptyResults(emptyFieldResult);
-
-      return validationResultBuilder.build();
+      return _terminateValidation(BuildkiteStrings.tokenInvalidInterruptReason);
     }
 
     final token = tokenInteraction.result;
 
     if (!_canValidateOrganization(token)) {
-      final organizationValidationResult = FieldValidationResult.unknown(
+      _setUnknownFieldValidationResult(
+        BuildkiteSourceConfigField.organizationSlug,
         BuildkiteStrings.noScopesToValidateOrganization,
       );
 
-      validationResultBuilder.setResult(
-        BuildkiteSourceConfigField.organizationSlug,
-        organizationValidationResult,
+      return _terminateValidation(
+        BuildkiteStrings.organizationCantBeValidatedInterruptReason,
       );
-
-      _setEmptyFields(
-          BuildkiteStrings.organizationCantBeValidatedInterruptReason);
-
-      return validationResultBuilder.build();
     }
 
     final organizationSlug = config.organizationSlug;
@@ -87,19 +77,15 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     );
 
     if (organizationInteraction.isError) {
-      _setEmptyFields(BuildkiteStrings.organizationInvalidInterruptReason);
-
-      return validationResultBuilder.build();
+      return _terminateValidation(
+        BuildkiteStrings.organizationInvalidInterruptReason,
+      );
     }
 
     if (!_canValidatePipeline(token)) {
-      final pipelineValidationResult = FieldValidationResult.unknown(
-        BuildkiteStrings.noScopesToValidatePipeline,
-      );
-
-      validationResultBuilder.setResult(
+      _setUnknownFieldValidationResult(
         BuildkiteSourceConfigField.pipelineSlug,
-        pipelineValidationResult,
+        BuildkiteStrings.noScopesToValidatePipeline,
       );
 
       return validationResultBuilder.build();
@@ -132,7 +118,16 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     validationResultBuilder.setResult(field, fieldValidationResult);
   }
 
-  /// Sets empty fields of the [validationResultBuilder] with the
+  /// Sets the empty results of the [validationResultBuilder] using the given
+  /// [interruptReason] and returns the [ValidationResult]
+  /// using the [validationResultBuilder].
+  ValidationResult _terminateValidation(String interruptReason) {
+    _setEmptyFields(interruptReason);
+
+    return validationResultBuilder.build();
+  }
+
+  /// Sets empty results of the [validationResultBuilder] to the
   /// [FieldValidationResult.unknown] with the given [interruptReason] as
   /// a [FieldValidationResult.additionalContext].
   void _setEmptyFields(String interruptReason) {
@@ -141,26 +136,41 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }
 
-  /// Checks that the given [token] has enough scopes for organization slug
-  /// validation.
-  ///
-  /// Returns `true` if the given [token] has the
-  /// [BuildkiteTokenScope.readOrganizations] scope.
-  ///
-  /// Otherwise, returns `false`.
-  bool _canValidateOrganization(BuildkiteToken token) {
-    return token.scopes.contains(BuildkiteTokenScope.readOrganizations);
+  /// Sets the [FieldValidationResult.unknown] with the given
+  /// [additionalContext] to the given [field] of the [validationResultBuilder].
+  void _setUnknownFieldValidationResult(
+    BuildkiteSourceConfigField field,
+    String additionalContext,
+  ) {
+    final validationResult = FieldValidationResult.unknown(additionalContext);
+
+    validationResultBuilder.setResult(field, validationResult);
   }
 
-  /// Checks that the given [token] has enough scopes for pipeline slug
-  /// validation.
+  /// Checks that the given [token] has enough scopes for
+  /// [BuildkiteSourceConfigField.organizationSlug] validation.
+  bool _canValidateOrganization(BuildkiteToken token) {
+    return _containsScope(token, BuildkiteTokenScope.readOrganizations);
+  }
+
+  /// Checks that the given [token] has enough scopes for
+  /// [BuildkiteSourceConfigField.pipelineSlug] validation.
+  bool _canValidatePipeline(BuildkiteToken token) {
+    return _containsScope(token, BuildkiteTokenScope.readPipelines);
+  }
+
+  /// Checks that the given [token] has the given [scope].
   ///
-  /// Returns `true` if the given [token] has the
-  /// [BuildkiteTokenScope.readPipelines] scope.
+  /// Returns `false` if the given [token] or its
+  /// [BuildkiteToken.scopes] is `null`.
+  ///
+  /// Returns `true` if the given [token] contains the given [scope].
   ///
   /// Otherwise, returns `false`.
-  bool _canValidatePipeline(BuildkiteToken token) {
-    return token.scopes.contains(BuildkiteTokenScope.readPipelines);
+  bool _containsScope(BuildkiteToken token, BuildkiteTokenScope scope) {
+    if (token == null || token.scopes == null) return false;
+
+    return token.scopes.contains(scope);
   }
 
   /// Maps the given [interaction] to a [FieldValidationResult].

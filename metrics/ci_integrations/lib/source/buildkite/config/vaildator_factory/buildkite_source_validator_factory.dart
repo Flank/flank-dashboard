@@ -19,7 +19,7 @@ class BuildkiteSourceValidatorFactory
 
   @override
   ConfigValidator<BuildkiteSourceConfig> create(BuildkiteSourceConfig config) {
-    ArgumentError.checkNotNull(config);
+    ArgumentError.checkNotNull(config, 'config');
 
     final authorization = BearerAuthorization(config.accessToken);
 

@@ -4,7 +4,6 @@
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
@@ -17,7 +16,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/extensions/interaction_result_answer.dart';
-import '../../../../test_utils/matcher_util.dart';
 
 void main() {
   group("BuildkiteSourceValidator", () {
@@ -40,32 +38,23 @@ void main() {
         BuildkiteTokenScope.readPipelines,
       ],
     );
-    const noOrganizationScopeToken = BuildkiteToken(
+    const pipelineScopeToken = BuildkiteToken(
       scopes: [BuildkiteTokenScope.readPipelines],
     );
-    const noPipelineScopeToken = BuildkiteToken(
+    const organizationScopeToken = BuildkiteToken(
       scopes: [BuildkiteTokenScope.readOrganizations],
     );
 
     final validationDelegate = _BuildkiteSourceValidationDelegateMock();
-
-    ValidationResultBuilder validationResultBuilder;
-
-    BuildkiteSourceValidator validator;
-
-    setUp(() {
-      validationResultBuilder = ValidationResultBuilder.forFields(
-        BuildkiteSourceConfigField.values,
-      );
-
-      validator = BuildkiteSourceValidator(
-        validationDelegate,
-        validationResultBuilder,
-      );
-    });
+    final validationResultBuilder = _ValidationResultBuilderMock();
+    final validator = BuildkiteSourceValidator(
+      validationDelegate,
+      validationResultBuilder,
+    );
 
     tearDown(() {
       reset(validationDelegate);
+      reset(validationResultBuilder);
     });
 
     PostExpectation<Future<InteractionResult<BuildkiteToken>>>
@@ -74,9 +63,9 @@ void main() {
     }
 
     PostExpectation<Future<InteractionResult>> whenValidateOrganizationSlug({
-      BuildkiteToken withAccessToken,
+      BuildkiteToken accessToken,
     }) {
-      whenValidateAuth().thenSuccessWith(withAccessToken);
+      whenValidateAuth().thenSuccessWith(accessToken);
 
       return when(
         validationDelegate.validateOrganizationSlug(organizationSlug),
@@ -85,34 +74,12 @@ void main() {
 
     PostExpectation<Future<InteractionResult>> whenValidatePipelineSlug() {
       whenValidateOrganizationSlug(
-        withAccessToken: allRequiredScopesToken,
+        accessToken: allRequiredScopesToken,
       ).thenSuccessWith(null);
 
       return when(
         validationDelegate.validateSourceProjectId(pipelineSlug),
       );
-    }
-
-    /// Returns a [FieldValidationResult] for the
-    /// [BuildkiteSourceConfigField.accessToken] from the given [result].
-    FieldValidationResult _getAuthValidationResult(ValidationResult result) {
-      return result.results[BuildkiteSourceConfigField.accessToken];
-    }
-
-    /// Returns a [FieldValidationResult] for the
-    /// [BuildkiteSourceConfigField.pipelineSlug] from the given [result].
-    FieldValidationResult _getPipelineSlugValidationResult(
-      ValidationResult result,
-    ) {
-      return result.results[BuildkiteSourceConfigField.pipelineSlug];
-    }
-
-    /// Returns a [FieldValidationResult] for the
-    /// [BuildkiteSourceConfigField.organizationSlug] from the given [result].
-    FieldValidationResult _getOrganizationSlugValidationResult(
-      ValidationResult result,
-    ) {
-      return result.results[BuildkiteSourceConfigField.organizationSlug];
     }
 
     test(
@@ -154,7 +121,7 @@ void main() {
     test(
       ".validate() delegates the access token validation to the validation delegate",
       () {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
 
         final expectedAuth = BearerAuthorization(accessToken);
 
@@ -165,176 +132,86 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result with the successful access token field validation result if the access token is valid",
+      ".validate() sets the successful access token field validation result if the access token is valid",
       () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getAuthValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isSuccessfulValidationResult);
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.accessToken,
+            const FieldValidationResult.success(message),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the access token field validation result, having the additional context equal to the message returned by the validation delegate if the access token is valid",
-      () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken, message);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getAuthValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the failure access token field validation result if the access token is invalid",
-      () async {
-        whenValidateAuth().thenErrorWith();
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getAuthValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isFailureValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the access token field validation result, having the additional context equal to the message returned by the validation delegate if the access token is invalid",
+      ".validate() sets the failure access token field validation result if the access token is invalid",
       () async {
         whenValidateAuth().thenErrorWith(null, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getAuthValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.accessToken,
+            const FieldValidationResult.failure(message),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the unknown organization slug field validation result if the access token is invalid",
+      ".validate() sets empty results with the unknown field validation result with the 'token invalid' additional context if the access token validation fails",
       () async {
         whenValidateAuth().thenErrorWith();
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getOrganizationSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
+        verify(
+          validationResultBuilder.setEmptyResults(
+            const FieldValidationResult.unknown(
+              BuildkiteStrings.tokenInvalidInterruptReason,
+            ),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the organization slug field validation result, having the additional context containing the token invalid interrupt reason if the access token is invalid",
+      ".validate() sets the unknown organization slug field validation result with the 'no scopes to validate organization' additional context if the access token has no scope to validate the organization",
       () async {
-        whenValidateAuth().thenErrorWith();
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getOrganizationSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.tokenInvalidInterruptReason),
-        );
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.organizationSlug,
+            const FieldValidationResult.unknown(
+              BuildkiteStrings.noScopesToValidateOrganization,
+            ),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the unknown pipeline slug field validation result if the access token is invalid",
+      ".validate() sets empty results with the unknown field validation result with the 'organization can't be validated' additional context if the access token has no scope to validate the organization",
       () async {
-        whenValidateAuth().thenErrorWith();
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context containing the token invalid interrupt reason if the access token is invalid",
-      () async {
-        whenValidateAuth().thenErrorWith();
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.tokenInvalidInterruptReason),
-        );
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the unknown organization slug field validation result if the access token has no scope to validate the organization",
-      () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getOrganizationSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the organization slug field validation result, having the additional context containing the no scopes to validate organization interrupt reason if the access token has no scope to validate the organization",
-      () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getOrganizationSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.noScopesToValidateOrganization),
-        );
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the unknown pipeline slug field validation result if the access token has no scope to validate the organization",
-      () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context containing the organization can't be validated interrupt reason if the access token has no scope to validate the organization",
-      () async {
-        whenValidateAuth().thenSuccessWith(noOrganizationScopeToken);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.organizationCantBeValidatedInterruptReason),
-        );
+        verify(
+          validationResultBuilder.setEmptyResults(
+            const FieldValidationResult.unknown(
+              BuildkiteStrings.organizationCantBeValidatedInterruptReason,
+            ),
+          ),
+        ).called(1);
       },
     );
 
@@ -342,7 +219,7 @@ void main() {
       ".validate() delegates organization slug validation to the validation delegate",
       () async {
         whenValidateOrganizationSlug(
-          withAccessToken: noPipelineScopeToken,
+          accessToken: organizationScopeToken,
         ).thenSuccessWith(null);
 
         await validator.validate(config);
@@ -354,132 +231,77 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result with the successful organization slug field validation result if the organization slug is valid",
+      ".validate() sets the successful organization slug field validation result if the organization slug is valid",
       () async {
         whenValidateOrganizationSlug(
-          withAccessToken: noPipelineScopeToken,
-        ).thenSuccessWith(null);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getOrganizationSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isSuccessfulValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the organization slug field validation result, having the additional context equal to the message returned the ion delegate if the organization slug is valid",
-      () async {
-        whenValidateOrganizationSlug(
-          withAccessToken: noPipelineScopeToken,
+          accessToken: organizationScopeToken,
         ).thenSuccessWith(null, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getOrganizationSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.organizationSlug,
+            const FieldValidationResult.success(message),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the failure organization slug field validation result if the organization slug is invalid",
+      ".validate() sets the failure organization slug field validation result if the organization slug is invalid",
       () async {
         whenValidateOrganizationSlug(
-          withAccessToken: allRequiredScopesToken,
-        ).thenErrorWith();
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getOrganizationSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isFailureValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the organization slug field validation result, having the additional context equal to the message returned by the validation delegate if the organization slug is invalid",
-      () async {
-        whenValidateOrganizationSlug(
-          withAccessToken: allRequiredScopesToken,
+          accessToken: allRequiredScopesToken,
         ).thenErrorWith(null, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getOrganizationSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.organizationSlug,
+            const FieldValidationResult.failure(message),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the unknown pipeline slug field validation result if the organization slug is invalid",
+      ".validate() sets empty results with the unknown field validation result with the 'organization slug is invalid' additional context after the organization slug validation fails",
       () async {
         whenValidateOrganizationSlug(
-          withAccessToken: allRequiredScopesToken,
+          accessToken: allRequiredScopesToken,
         ).thenErrorWith();
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
+        verify(
+          validationResultBuilder.setEmptyResults(
+            const FieldValidationResult.unknown(
+              BuildkiteStrings.organizationInvalidInterruptReason,
+            ),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context containing the organization invalid interrupt reason if the organization slug is invalid",
+      ".validate() sets the unknown pipeline slug field validation result with the 'no scopes to validate pipeline' if the access token hasn't scope to validate the pipeline slug",
       () async {
         whenValidateOrganizationSlug(
-          withAccessToken: allRequiredScopesToken,
-        ).thenErrorWith();
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.organizationInvalidInterruptReason),
-        );
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the unknown pipeline slug field validation result if the access token hasn't scope to validate the pipeline slug",
-      () async {
-        whenValidateOrganizationSlug(
-          withAccessToken: noPipelineScopeToken,
+          accessToken: organizationScopeToken,
         ).thenSuccessWith(null);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isUnknownValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context containing the no scopes to validate pipeline interrupt reason if the access token hasn't scope to validate the pipeline slug",
-      () async {
-        whenValidateOrganizationSlug(
-          withAccessToken: noPipelineScopeToken,
-        ).thenSuccessWith(null);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.noScopesToValidatePipeline),
-        );
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.pipelineSlug,
+            const FieldValidationResult.unknown(
+              BuildkiteStrings.noScopesToValidatePipeline,
+            ),
+          ),
+        ).called(1);
       },
     );
 
@@ -497,56 +319,34 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result with the successful pipeline slug field validation result if the pipeline slug is valid",
-      () async {
-        whenValidatePipelineSlug().thenSuccessWith(null);
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isSuccessfulValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context equal to the message returned by the validation delegate if the pipeline slug is valid",
+      ".validate() sets the successful pipeline slug field validation result if the pipeline slug is valid",
       () async {
         whenValidatePipelineSlug().thenSuccessWith(null, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.pipelineSlug,
+            const FieldValidationResult.success(message),
+          ),
+        ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result with the failure pipeline slug field validation result if the pipeline slug is invalid",
-      () async {
-        whenValidatePipelineSlug().thenErrorWith();
-
-        final result = await validator.validate(config);
-
-        final validationResult = _getPipelineSlugValidationResult(result);
-
-        expect(validationResult, MatcherUtil.isFailureValidationResult);
-      },
-    );
-
-    test(
-      ".validate() returns a validation result with the pipeline slug field validation result, having the additional context equal to the message returned by the validation delegate if the pipeline slug is invalid",
+      ".validate() sets the failure pipeline slug field validation result if the pipeline slug is invalid",
       () async {
         whenValidatePipelineSlug().thenErrorWith(null, message);
 
-        final result = await validator.validate(config);
+        await validator.validate(config);
 
-        final validationResult = _getPipelineSlugValidationResult(result);
-        final additionalContext = validationResult.additionalContext;
-
-        expect(additionalContext, equals(message));
+        verify(
+          validationResultBuilder.setResult(
+            BuildkiteSourceConfigField.pipelineSlug,
+            const FieldValidationResult.failure(message),
+          ),
+        ).called(1);
       },
     );
   });
@@ -554,3 +354,6 @@ void main() {
 
 class _BuildkiteSourceValidationDelegateMock extends Mock
     implements BuildkiteSourceValidationDelegate {}
+
+class _ValidationResultBuilderMock extends Mock
+    implements ValidationResultBuilder {}

@@ -3,15 +3,19 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_conclusion.dart';
+import 'package:equatable/equatable.dart';
 
 /// A class that represents a validation result for a single [Config]'s field.
-class FieldValidationResult {
+class FieldValidationResult extends Equatable {
   /// A [FieldValidationConclusion] of this field validation result.
   final FieldValidationConclusion conclusion;
 
   /// A [String] containing additional information about this field validation
   /// result.
   final String additionalContext;
+
+  @override
+  List<Object> get props => [conclusion, additionalContext];
 
   /// Creates an instance of the [FieldValidationConclusion]
   /// with the given parameters.
@@ -24,7 +28,7 @@ class FieldValidationResult {
   /// [additionalContext] and [FieldValidationConclusion.valid] conclusion.
   ///
   /// Represents a successful field validation result.
-  FieldValidationResult.success([
+  const FieldValidationResult.success([
     String additionalContext,
   ]) : this._(
           FieldValidationConclusion.valid,
@@ -35,7 +39,7 @@ class FieldValidationResult {
   /// [additionalContext] and [FieldValidationConclusion.invalid] conclusion.
   ///
   /// Represents a failed field validation result.
-  FieldValidationResult.failure([
+  const FieldValidationResult.failure([
     String additionalContext,
   ]) : this._(
           FieldValidationConclusion.invalid,
@@ -47,7 +51,7 @@ class FieldValidationResult {
   ///
   /// Represents an unknown field validation result or indicates that
   /// the field validation didn't run.
-  FieldValidationResult.unknown([
+  const FieldValidationResult.unknown([
     String additionalContext,
   ]) : this._(
           FieldValidationConclusion.unknown,
