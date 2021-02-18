@@ -98,7 +98,7 @@ void main() {
     );
 
     test(
-      ".parseArgResults() correctly parses the given paths argument",
+      ".parseArgResults() parses the given space-separated string of paths to the list of paths",
       () {
         when(argResultsMock['paths']).thenReturn(paths.join(' '));
 
@@ -109,7 +109,7 @@ void main() {
     );
 
     test(
-      ".parseArgResults() correctly parses the given ignore paths argument",
+      ".parseArgResults() parses the given space-separated string of ignore paths to the list of ignore paths",
       () {
         when(argResultsMock['ignore-paths']).thenReturn(paths.join(' '));
 
