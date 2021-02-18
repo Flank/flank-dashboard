@@ -28,7 +28,7 @@ The following points are out of the scope for this document:
 ## Design
 > Explain and diagram the technical design.
 
-The following sections cover the synchronization algorithm of the CI Integration tool and its different concepts. To get more familiar with CI Integration tool, its usage and architecture consider the [CI Integration Module Architecture](01_ci_integration_module_architecture.md) and [CI Integration User Guide](02_ci_integration_user_guide.md) documents.
+The following sections cover the synchronization algorithm of the CI Integration tool and its different concepts. To get more familiar with the CI Integration tool, its usage, and architecture consider the [CI Integration Module Architecture](01_ci_integration_module_architecture.md) and [CI Integration User Guide](02_ci_integration_user_guide.md) documents.
 
 ### Synchronization Algorithm
 
@@ -49,12 +49,12 @@ The below sections discover two main parts of the sync process ([Re-Sync In-Prog
 
 #### Control Synchronization
 
-The CI Integrations tool provides several parameters to control the parts of sync process such as fetching coverage and in-progress builds timeout. The following table lists these parameters with their default values and descriptions.
+The CI Integrations tool provides several parameters to control the parts of the sync process such as fetching coverage and in-progress builds timeout. The following table lists these parameters with their default values and descriptions.
 
 |Name|Allowed values|Default value|Description|
 |---|---|---|---|
 |`--(no-)coverage`|<nobr>`true` (`--coverage`)</nobr> <br> <nobr>`false` (`--no-coverage`)</nobr>|`true`|Defines whether the CI Integrations tool should fetch coverage data for builds during the sync process. Consider the [Controlling Builds Coverage Synchronization](02_ci_integration_user_guide.md#controlling-builds-coverage-synchronization) section of the User Guide document for more information.|
-|`--initial-sync-limit`|Positive integer|`28`|Defines a number of builds to sync during the very first synchronization of the specified projects. Consider the [Initial Sync Limit](02_ci_integration_user_guide.md#initial-sync-limit) section of the User Guide document for more information.|
+|`--initial-sync-limit`|Positive integer|`28`|Defines the number of builds to sync during the very first synchronization of the specified projects. Consider the [Initial Sync Limit](02_ci_integration_user_guide.md#initial-sync-limit) section of the User Guide document for more information.|
 |`--in-progress-timeout`|Positive integer|`120`|Defines a timeout duration in minutes for In-Progress builds. Consider the [Timeout In-Progress Builds](#timeout-in-progress-builds) section for more information.|
 
 ### Re-Sync In-Progress Builds
@@ -81,13 +81,13 @@ The following activity diagram describes the re-sync in-progress builds stage:
 
 #### Timeout In-Progress Builds
 
-It is possible that the sync algorithm cannot re-sync in-progress build (for example, there no corresponding build in the `source` anymore). In this case, this build may stay in-progress forever, and even worse, there can be many such builds. 
+Sometimes, the sync algorithm cannot re-sync in-progress build (for example, there no corresponding build in the `source` anymore). In this case, this build may stay in-progress forever, and even worse, there can be many such builds. 
 
 To prevent storing a great number of in-progress builds that likely may never be re-synced, the CI Integrations tool provides an ability to force-timeout such builds. The `--in-progress-timeout` option stands for the duration in minutes. If an in-progress build exceeds this duration, it should be considered as timed out (meaning finished with the `unknown` status).
 
 Let's consider an example to make the described process clearer.
 
-> A user wants to sync builds from Jenkins (as a `source`) with Firestore database (as a `destination`). There are one in-progress build in the database: 
+> A user wants to sync builds from Jenkins (as a `source`) with the Firestore database (as a `destination`). There is one in-progress build in the database: 
 > ```json
 > {
 >   "buildNumber": 3,
@@ -100,7 +100,7 @@ Let's consider an example to make the described process clearer.
 >
 > In this case, the following happens:
 > 1. The user starts the sync process with `--in-progress-timeout=60`.
-> 2. The sync algorithm queries in-progress builds from the Firestore, and tries to re-sync the build with `buildNumber` equal to `3`.
+> 2. The sync algorithm queries in-progress builds from the Firestore and tries to re-sync the build with `buildNumber` equal to `3`.
 > 3. The `source` fails to find the corresponding build in Jenkins.
 > 4. The sync algorithm checks the current duration of the build to re-sync (the difference of `build.startedAt` and `DateTime.now()`) and compares it to the `--in-progress-timeout` value. The current duration appears to be greater than 60 minutes (let's assume `61 minutes`).
 > 5. The sync algorithm updates the build object in Firestore with `BuildStatus.unknown` and the duration equal to the current one.
@@ -124,13 +124,13 @@ The following cases are possible:
 - The environment date and time are in the _future_. In this case, the in-progress builds will be timed out faster than expected. That may significantly affect the project metrics on the Metrics Web Application providing unreliable information about project performance and results of builds.
 - The environment date and time are in the _past_. In this case, the in-progress builds will never be timed out. That may significantly increase the number of in-progress builds in the `destination`, which are likely to be never re-synced.
 
-The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
+The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically, and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
 
 According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider these while configuring builds syncing, or automating this process! 
 
 ### Sync Builds
 
-The second stage of the synchronization algorithm is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
+The second stage of the synchronization algorithm is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate the `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
 
 1. Fetch the last build from the `destination`.
 2. If the last build is `null`:
@@ -140,14 +140,14 @@ The second stage of the synchronization algorithm is to sync new builds from the
 4. Fetch coverage data for builds if necessary.
 5. Add new builds to the `destination`.
 
-Each new build can has one of three possible statuses:
+Each new build can have one of the possible statuses:
 
 - `inProgress` - means that the build is running.
 - `successful` - means that the build has finished successfully.
 - `failed` - means that the build has finished with an error.
 - `unknown` - means that the build has finished with an unknown status.
 
-_**Note**: The `unknown` status doesn't always mean that the `source` doesn't know the build's status as well. In most of the cases, this means that the Metrics project doesn't support the build's status and maps it to the `unknown` one._
+_**Note**: The `unknown` status doesn't always mean that the `source` doesn't know the build's status as well. In most cases, this means that the Metrics project doesn't support the build's status and maps it to the `unknown` one._
 
 The following activity diagram describes the sync builds stage:
 
@@ -161,7 +161,7 @@ Let's consider the following class diagram that contains the main classes and in
 
 ![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
-When a user starts synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively. 
+When a user starts the synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively. 
 
 The following sequence diagrams detail the two main processes of the sync algorithm:
 - **Re-Syncing In-Progress Builds**:
@@ -173,4 +173,4 @@ The following sequence diagrams detail the two main processes of the sync algori
 ## Results
 > What was the outcome of the project?
 
-The design describing the synchronization algorithm in details.
+The design describing the synchronization algorithm in detail.
