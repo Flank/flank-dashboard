@@ -10,6 +10,7 @@ void main() {
   group("LinksCheckerArgumentsParser", () {
     const argumentsParser = LinksCheckerArgumentsParser();
     final argResultsMock = _ArgResultsMock();
+    const paths = 'file1 path/to/file2';
 
     setUpAll(() {
       when(argResultsMock[any]).thenReturn('');
@@ -74,20 +75,28 @@ void main() {
     );
 
     test(
-      ".parseArgResults() creates a links checker arguments instance with paths equals to an empty list",
+      ".parseArgResults() correctly parses the given paths argument",
       () {
+        final expected = paths.split(' ');
+
+        when(argResultsMock['paths']).thenReturn(paths);
+
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
-        expect(arguments.paths, equals([]));
+        expect(arguments.paths, equals(expected));
       },
     );
 
     test(
-      ".parseArgResults() creates a links checker arguments instance with ignore paths equals to an empty list",
+      ".parseArgResults() correctly parses the given ignore paths argument",
       () {
+        final expected = paths.split(' ');
+
+        when(argResultsMock['ignore-paths']).thenReturn(paths);
+
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
-        expect(arguments.ignorePaths, equals([]));
+        expect(arguments.ignorePaths, equals(expected));
       },
     );
   });
