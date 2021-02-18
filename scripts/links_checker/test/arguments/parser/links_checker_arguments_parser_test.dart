@@ -10,7 +10,7 @@ void main() {
   group("LinksCheckerArgumentsParser", () {
     const argumentsParser = LinksCheckerArgumentsParser();
     final argResultsMock = _ArgResultsMock();
-    const paths = 'file1 path/to/file2';
+    const paths = ['file1', 'path/to/file2'];
 
     setUpAll(() {
       when(argResultsMock[any]).thenReturn('');
@@ -77,26 +77,22 @@ void main() {
     test(
       ".parseArgResults() correctly parses the given paths argument",
       () {
-        final expected = paths.split(' ');
-
-        when(argResultsMock['paths']).thenReturn(paths);
+        when(argResultsMock['paths']).thenReturn(paths.join(' '));
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
-        expect(arguments.paths, equals(expected));
+        expect(arguments.paths, equals(paths));
       },
     );
 
     test(
       ".parseArgResults() correctly parses the given ignore paths argument",
       () {
-        final expected = paths.split(' ');
-
-        when(argResultsMock['ignore-paths']).thenReturn(paths);
+        when(argResultsMock['ignore-paths']).thenReturn(paths.join(' '));
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
-        expect(arguments.ignorePaths, equals(expected));
+        expect(arguments.ignorePaths, equals(paths));
       },
     );
   });
