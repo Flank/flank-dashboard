@@ -32,7 +32,6 @@ class LinksCheckerArgumentsParser {
       help: 'A string representing the space-separated '
           'paths which should be excluded from analyze.',
       valueHelp: "'.folder/ path/to/folder/ file.ext'",
-      abbr: 'i',
     );
   }
 
