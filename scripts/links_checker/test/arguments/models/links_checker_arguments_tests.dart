@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:links_checker/arguments/models/links_checker_arguments.dart';
@@ -19,9 +19,12 @@ void main() {
       "creates an instance with the given parameters",
       () {
         const paths = ['1 2'];
-        final arguments = LinksCheckerArguments(paths: paths);
+        const ignore = ['2 3'];
+        final arguments =
+            LinksCheckerArguments(paths: paths, ignorePaths: ignore);
 
         expect(arguments.paths, equals(paths));
+        expect(arguments.ignorePaths, equals(ignore));
       },
     );
   });

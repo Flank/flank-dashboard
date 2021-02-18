@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
@@ -44,9 +44,24 @@ class LinksCheckerCommand extends Command<void> {
   @override
   void run() {
     final arguments = argumentsParser.parseArgResults(argResults);
+    final ignorePaths = arguments.ignorePaths;
 
-    final files = fileHelperUtil.getFiles(arguments.paths);
+    final paths = _excludeIgnorePaths(arguments.paths, ignorePaths);
+
+    final files = fileHelperUtil.getFiles(paths);
 
     linksChecker.checkFiles(files);
+  }
+
+  /// Excludes the given [ignorePaths] from the given [paths].
+  List<String> _excludeIgnorePaths(
+    List<String> paths,
+    List<String> ignorePaths,
+  ) {
+    if (ignorePaths == null || ignorePaths.isEmpty) return paths;
+
+    return paths.where((path) {
+      return !ignorePaths.any((ignorePath) => path.startsWith(ignorePath));
+    }).toList();
   }
 }
