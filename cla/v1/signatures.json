@@ -1,3 +1,12 @@
 {
-   "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "solid-tetianamovlian",
+      "id": 70527894,
+      "comment_id": 781459077,
+      "created_at": "2021-02-18T16:16:54Z",
+      "repoId": 226459422,
+      "pullRequestNo": 1113
+    }
+  ]
 }
