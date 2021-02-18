@@ -37,7 +37,7 @@ void main() {
 
         final options = parser.options;
 
-        expect(options, contains(LinksCheckerArgumentsParser.ignore));
+        expect(options, contains(LinksCheckerArgumentsParser.ignorePaths));
       },
     );
 
@@ -56,20 +56,6 @@ void main() {
     );
 
     test(
-      ".configureArguments() configures the given arg parser to have an empty string as a default ignore argument value",
-      () {
-        final parser = ArgParser();
-
-        argumentsParser.configureArguments(parser);
-
-        final options = parser.options;
-        final ignoreOption = options[LinksCheckerArgumentsParser.ignore];
-
-        expect(ignoreOption.defaultsTo, equals(''));
-      },
-    );
-
-    test(
       ".parseArgResults() creates a links checker arguments instance with paths equal to an empty list if the given paths argument equals an empty string",
       () {
         final arguments = argumentsParser.parseArgResults(argResultsMock);
@@ -79,7 +65,7 @@ void main() {
     );
 
     test(
-      ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to an empty list if the given ignore argument equals an empty string",
+      ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to an empty list if the given ignore paths argument equals an empty string",
       () {
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
@@ -97,7 +83,7 @@ void main() {
     );
 
     test(
-      ".parseArgResults() creates a links checker arguments instance with ignore equals to an empty list",
+      ".parseArgResults() creates a links checker arguments instance with ignore paths equals to an empty list",
       () {
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 

@@ -10,8 +10,8 @@ class LinksCheckerArgumentsParser {
   /// A name of the paths argument.
   static const String paths = 'paths';
 
-  /// A name of the ignore argument.
-  static const String ignore = 'ignore';
+  /// A name of the ignore paths argument.
+  static const String ignorePaths = 'ignore-paths';
 
   /// Creates a new instance of the [LinksCheckerArgumentsParser].
   const LinksCheckerArgumentsParser();
@@ -28,26 +28,27 @@ class LinksCheckerArgumentsParser {
     );
 
     argParser.addOption(
-      ignore,
+      ignorePaths,
       help: 'A string representing the space-separated '
           'paths which should be excluded from analyze.',
       valueHelp: "'.folder/ path/to/folder/ file.ext'",
       abbr: 'i',
-      defaultsTo: '',
     );
   }
 
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
-    final pathsList = _getArguments(argResults, paths);
-    final ignoreList = _getArguments(argResults, ignore);
+    final pathsList = _argumentToList(argResults, paths);
+    final ignoreList = _argumentToList(argResults, ignorePaths);
 
     return LinksCheckerArguments(paths: pathsList, ignorePaths: ignoreList);
   }
 
   /// Retrieves arguments for the given [option] from the given [argResults].
-  List<String> _getArguments(ArgResults argResults, String option) {
+  List<String> _argumentToList(ArgResults argResults, String option) {
     final argument = argResults[option] as String;
+
+    if (argument == null) return [];
 
     return argument.split(' ').where((path) => path.isNotEmpty).toList();
   }
