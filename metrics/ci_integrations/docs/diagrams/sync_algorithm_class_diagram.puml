@@ -37,12 +37,12 @@ package integration.ci as CI {
     class CiIntegration {
         + sourceClient: SourceClient
         + destinationClient: DestinationClient
-        + sync(SyncConfig config): InterationResult
-        - _syncInProgressBuilds(SyncConfig config): void
+        + sync(SyncConfig config): InteractionResult
+        - _syncInProgressBuilds(SyncConfig config): InteractionResult
         - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
         - _shouldTimeoutBuild(Duration timeout, BuildData build): bool
         - _timeoutBuild(Duration timeout, BuildData build): BuildData
-        - _syncBuilds(SyncConfig config): void
+        - _syncBuilds(SyncConfig config): InteractionResult
         - _addCoverageData(List<BuildData> builds): List<BuildData>
     }
 

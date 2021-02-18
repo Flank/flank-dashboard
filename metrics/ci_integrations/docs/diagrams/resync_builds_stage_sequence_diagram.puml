@@ -49,6 +49,6 @@ end
 CiIntegration -> DestinationClient ++ : updateBuilds(//config.destinationProjectId, buildsUpdate//)
 return void
 
-return void
+return InteractionResult
 
 @enduml
