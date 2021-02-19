@@ -4,6 +4,7 @@
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
+import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
@@ -51,6 +52,12 @@ void main() {
       validationDelegate,
       validationResultBuilder,
     );
+
+    final field = BuildkiteSourceConfigField.pipelineSlug;
+    const result = FieldValidationResult.success();
+    final validationResult = ValidationResult({
+      field: result,
+    });
 
     PostExpectation<Future<InteractionResult<BuildkiteToken>>>
         whenValidateAuth() {
@@ -181,7 +188,41 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown organization slug field validation result with the 'no scopes to validate organization' additional context if the access token has no scope to validate the organization",
+      ".validate() does not validate the organization slug if the access token validation fails",
+      () async {
+        whenValidateAuth().thenErrorWith(null, message);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateOrganizationSlug(any));
+      },
+    );
+
+    test(
+      ".validate() does not validate the pipeline slug if the access token validation fails",
+      () async {
+        whenValidateAuth().thenErrorWith(null, message);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateSourceProjectId(any));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the access token validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidateAuth().thenErrorWith(null, message);
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(result));
+      },
+    );
+
+    test(
+      ".validate() sets the unknown organization slug field validation result with the 'no scopes to validate organization' additional context if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenSuccessWith(pipelineScopeToken);
 
@@ -199,7 +240,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'organization can't be validated' additional context if the access token has no scope to validate the organization",
+      ".validate() sets empty results with the unknown field validation result with the 'organization can't be validated' additional context if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenSuccessWith(pipelineScopeToken);
 
@@ -212,6 +253,40 @@ void main() {
             ),
           ),
         ).called(1);
+      },
+    );
+
+    test(
+      ".validate() does not validate the organization slug if the access token has no scope to validate the organization slug",
+      () async {
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateOrganizationSlug(any));
+      },
+    );
+
+    test(
+      ".validate() does not validate the pipeline slug if the access token has no scope to validate the organization slug",
+      () async {
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateSourceProjectId(any));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the access token has no scope to validate the organization slug",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidateAuth().thenSuccessWith(pipelineScopeToken);
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(result));
       },
     );
 
@@ -286,6 +361,33 @@ void main() {
     );
 
     test(
+      ".validate() does not validate the pipeline slug if the organization slug validation fails",
+      () async {
+        whenValidateOrganizationSlug(
+          accessToken: allRequiredScopesToken,
+        ).thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateSourceProjectId(any));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the organization slug validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidateOrganizationSlug(
+          accessToken: allRequiredScopesToken,
+        ).thenErrorWith();
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(result));
+      },
+    );
+
+    test(
       ".validate() sets the unknown pipeline slug field validation result with the 'no scopes to validate pipeline' if the access token hasn't scope to validate the pipeline slug",
       () async {
         whenValidateOrganizationSlug(
@@ -302,6 +404,33 @@ void main() {
             ),
           ),
         ).called(1);
+      },
+    );
+
+    test(
+      ".validate() does not validate the pipeline slug if the access token hasn't scope to validate the pipeline slug",
+      () async {
+        whenValidateOrganizationSlug(
+          accessToken: organizationScopeToken,
+        ).thenSuccessWith(null);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateSourceProjectId(any));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the access token hasn't scope to validate the pipeline slug",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidateOrganizationSlug(
+          accessToken: organizationScopeToken,
+        ).thenSuccessWith(null);
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(result));
       },
     );
 
@@ -347,6 +476,30 @@ void main() {
             const FieldValidationResult.failure(message),
           ),
         ).called(1);
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the pipeline slug validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidatePipelineSlug().thenErrorWith(null, message);
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(result));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the config is valid",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidatePipelineSlug().thenSuccessWith(null);
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(validationResult));
       },
     );
   });
