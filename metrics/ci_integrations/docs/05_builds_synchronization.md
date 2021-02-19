@@ -65,19 +65,19 @@ The first stage of the synchronization algorithm is to re-sync the stored In-Pro
 2. Re-sync each build from the list of in-progress builds:
     1. Fetch the corresponding build from the `source`.
     2. Change the status of the build to the new from the `source` or force timeout if the build exceeds the `--in-progress-timeout`.
-    3. Fetch the build's coverage data if necessary.
-3. Update the in-progress builds in the `destination` with new data.
+3. Fetch the coverage data for re-synced builds if necessary.
+4. Update the in-progress builds in the `destination` with new data.
 
 You may find the second sub-step a bit tricky, and it is. The reason is that there are some edge cases for in-progress builds. Consider the following possibilities: 
 
 - The `source` integration failed to fetch the corresponding build.
 - The corresponding build in the `source` is still running. 
 
-In this case, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with unknown status. Otherwise, the build stays unchanged.
+In both cases, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with `unknown` status. Otherwise, the build stays unchanged.
 
 The following activity diagram describes the re-sync in-progress builds stage:
 
-![Re-sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
+![Re-sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
 
 #### Timeout In-Progress Builds
 
@@ -103,7 +103,7 @@ Let's consider an example to make the described process clearer.
 > 2. The sync algorithm queries in-progress builds from the Firestore and tries to re-sync the build with `buildNumber` equal to `3`.
 > 3. The `source` fails to find the corresponding build in Jenkins.
 > 4. The sync algorithm checks the current duration of the build to re-sync (the difference of `build.startedAt` and `DateTime.now()`) and compares it to the `--in-progress-timeout` value. The current duration appears to be greater than 60 minutes (let's assume `61 minutes`).
-> 5. The sync algorithm updates the build object in Firestore with `BuildStatus.unknown` and the duration equal to the current one.
+> 5. The sync algorithm updates the build object in Firestore with `BuildStatus.unknown` and the duration equal to the `build.startedAt + 60 minutes`.
 > 
 > So the result of re-syncing in-progress builds in the user's case is the following: 
 > ```json
@@ -126,7 +126,7 @@ The following cases are possible:
 
 The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically, and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
 
-According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider these while configuring builds syncing, or automating this process! 
+According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider this while configuring builds syncing, or automating this process! 
 
 ### Sync Builds
 
@@ -151,7 +151,7 @@ _**Note**: The `unknown` status doesn't always mean that the `source` doesn't kn
 
 The following activity diagram describes the sync builds stage:
 
-![Sync stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_activity_diagram.puml)
+![Sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_activity_diagram.puml)
 
 ### Making Things Work
 
@@ -164,11 +164,14 @@ Let's consider the following class diagram that contains the main classes and in
 When a user starts the synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively. 
 
 The following sequence diagrams detail the two main processes of the sync algorithm:
+
 - **Re-Syncing In-Progress Builds**:
-![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
+
+![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
 - **Syncing Builds**:
-![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
+
+![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?
