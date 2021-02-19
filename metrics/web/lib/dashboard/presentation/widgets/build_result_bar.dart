@@ -71,7 +71,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
     const graphBarWidth = DimensionsConfig.graphBarWidth;
     const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
     const indicatorRadius = indicatorDiameter / 2.0;
-    const indicatorPositionX = (indicatorDiameter - graphBarWidth) / 2.0;
+    const indicatorHorizontalOffset = (graphBarWidth - indicatorDiameter) / 2.0;
 
     if (widget.buildResult == null) {
       final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
@@ -118,7 +118,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
                       ),
                       if (isOpened)
                         Positioned(
-                          right: -indicatorPositionX,
+                          right: indicatorHorizontalOffset,
                           bottom: -indicatorRadius,
                           child: _graphIndicator,
                         ),
