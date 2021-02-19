@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -53,25 +53,25 @@ class MetricsTableRow extends StatelessWidget {
     const padding = EdgeInsets.only(right: 28.0);
 
     return Container(
-      padding: const EdgeInsets.only(left: 32.0, right: 26.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: Row(
         children: <Widget>[
           status,
-          Flexible(
+          Expanded(
             child: SizedBox(
-              width: 326.0,
+              width: 250.0,
               child: name,
             ),
           ),
           SizedBox(
-            width: 756.0,
+            width: 743.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: [
                 Padding(
                   padding: padding,
                   child: SizedBox(
-                    width: 276.0,
+                    width: 268.0,
                     child: buildResults,
                   ),
                 ),
@@ -83,14 +83,14 @@ class MetricsTableRow extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 27.0),
+                  padding: padding,
                   child: SizedBox(
                     width: 74.0,
                     child: buildNumber,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 22.0),
+                  padding: const EdgeInsets.only(right: 16.0),
                   child: SizedBox(
                     width: 74.0,
                     child: stability,

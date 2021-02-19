@@ -13,11 +13,11 @@ class DimensionsConfig {
   static const double buttonHeight = 48.0;
 
   /// An outer diameter of the graph indicator.
-  static const double graphIndicatorOuterDiameter = 5.33;
+  static const double graphIndicatorOuterDiameter = 10.0;
 
   /// An inner diameter of the graph indicator.
-  static const double graphIndicatorInnerDiameter = 2.13;
+  static const double graphIndicatorInnerDiameter = 4.0;
 
   /// A width of the graph bar.
-  static const double graphBarWidth = 5.33;
+  static const double graphBarWidth = 7.0;
 }

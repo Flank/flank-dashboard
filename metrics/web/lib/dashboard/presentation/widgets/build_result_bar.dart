@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -68,12 +68,15 @@ class _BuildResultBarState extends State<BuildResultBar> {
 
   @override
   Widget build(BuildContext context) {
-    const indicatorRadius = DimensionsConfig.graphIndicatorOuterDiameter / 2.0;
+    const graphBarWidth = DimensionsConfig.graphBarWidth;
+    const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
+    const indicatorRadius = indicatorDiameter / 2.0;
+    const indicatorHorizontalOffset = (graphBarWidth - indicatorDiameter) / 2.0;
 
     if (widget.buildResult == null) {
       final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
       return PlaceholderBar(
-        width: DimensionsConfig.graphBarWidth,
+        width: graphBarWidth,
         height: 4.0,
         color: inactiveTheme.primaryColor,
       );
@@ -115,6 +118,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
                       ),
                       if (isOpened)
                         Positioned(
+                          right: indicatorHorizontalOffset,
                           bottom: -indicatorRadius,
                           child: _graphIndicator,
                         ),
