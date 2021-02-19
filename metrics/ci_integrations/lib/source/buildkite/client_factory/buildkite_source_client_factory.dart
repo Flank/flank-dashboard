@@ -25,12 +25,13 @@ class BuildkiteSourceClientFactory
     ArgumentError.checkNotNull(config, 'config');
 
     final authorization = BearerAuthorization(config.accessToken);
+    final headers = {
+      HttpHeaders.userAgentHeader: null,
+    };
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
-      headers: {
-        HttpHeaders.userAgentHeader: null,
-      },
+      headers: headers,
     );
     final buildkiteSourceClientAdapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClient,

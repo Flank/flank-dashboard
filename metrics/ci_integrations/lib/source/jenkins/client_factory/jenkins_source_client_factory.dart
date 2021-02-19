@@ -28,12 +28,14 @@ class JenkinsSourceClientFactory
       authorization = BasicAuthorization(config.username, config.apiKey);
     }
 
+    final headers = {
+      HttpHeaders.userAgentHeader: null,
+    };
+
     final jenkinsClient = JenkinsClient(
       jenkinsUrl: config.url,
       authorization: authorization,
-      headers: {
-        HttpHeaders.userAgentHeader: null,
-      },
+      headers: headers,
     );
 
     return JenkinsSourceClientAdapter(jenkinsClient);

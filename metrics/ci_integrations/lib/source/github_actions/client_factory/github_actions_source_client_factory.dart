@@ -34,13 +34,15 @@ class GithubActionsSourceClientFactory
       authorization = BearerAuthorization(config.accessToken);
     }
 
+    final headers = {
+      HttpHeaders.userAgentHeader: null,
+    };
+
     final githubActionsClient = GithubActionsClient(
       repositoryOwner: config.repositoryOwner,
       repositoryName: config.repositoryName,
       authorization: authorization,
-      headers: {
-        HttpHeaders.userAgentHeader: null,
-      },
+      headers: headers,
     );
 
     final githubActionsSourceClientAdapter = GithubActionsSourceClientAdapter(

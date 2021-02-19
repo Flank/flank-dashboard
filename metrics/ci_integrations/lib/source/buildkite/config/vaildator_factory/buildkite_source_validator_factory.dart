@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
 import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
@@ -23,9 +25,14 @@ class BuildkiteSourceValidatorFactory
 
     final authorization = BearerAuthorization(config.accessToken);
 
+    final headers = {
+      HttpHeaders.userAgentHeader: null,
+    };
+
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
+      headers: headers,
     );
 
     final validationDelegate = BuildkiteSourceValidationDelegate(
