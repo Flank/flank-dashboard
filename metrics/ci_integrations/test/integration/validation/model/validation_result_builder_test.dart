@@ -12,8 +12,8 @@ void main() {
     final firstField = ConfigFieldStub('1');
     final anotherField = ConfigFieldStub('2');
 
-    final successResult = FieldValidationResult.success();
-    final failureResult = FieldValidationResult.failure();
+    const successResult = FieldValidationResult.success();
+    const failureResult = FieldValidationResult.failure();
 
     final fields = [
       firstField,
@@ -54,9 +54,21 @@ void main() {
         expect(
           () => builder.setResult(
             nonAvailableField,
-            FieldValidationResult.success(),
+            const FieldValidationResult.success(),
           ),
           throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".setResult() throws a StateError if the given field already has a field validation result",
+      () {
+        builder.setResult(firstField, successResult);
+
+        expect(
+          () => builder.setResult(firstField, successResult),
+          throwsStateError,
         );
       },
     );

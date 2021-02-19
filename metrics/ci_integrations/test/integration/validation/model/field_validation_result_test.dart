@@ -11,9 +11,9 @@ void main() {
   group("FieldValidationResult", () {
     const additionalContext = 'context';
 
-    final successResult = FieldValidationResult.success();
-    final failureResult = FieldValidationResult.failure();
-    final unknownResult = FieldValidationResult.unknown();
+    const successResult = FieldValidationResult.success();
+    const failureResult = FieldValidationResult.failure();
+    const unknownResult = FieldValidationResult.unknown();
 
     test(
       ".success() creates an instance with the valid field validation conclusion",
@@ -28,7 +28,7 @@ void main() {
     test(
       ".success() creates an instance with the given additional context",
       () {
-        final result = FieldValidationResult.success(additionalContext);
+        const result = FieldValidationResult.success(additionalContext);
 
         expect(result.additionalContext, equals(additionalContext));
       },
@@ -47,7 +47,7 @@ void main() {
     test(
       ".failure() creates an instance with the given additional context",
       () {
-        final result = FieldValidationResult.failure(additionalContext);
+        const result = FieldValidationResult.failure(additionalContext);
 
         expect(result.additionalContext, equals(additionalContext));
       },
@@ -66,7 +66,7 @@ void main() {
     test(
       ".unknown() creates an instance with the given additional context",
       () {
-        final result = FieldValidationResult.unknown(additionalContext);
+        const result = FieldValidationResult.unknown(additionalContext);
 
         expect(result.additionalContext, equals(additionalContext));
       },

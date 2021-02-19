@@ -25,26 +25,20 @@ class ValidationResultBuilder {
     }
   }
 
-  /// Builds the [ValidationResult] using provided [FieldValidationResult]s.
-  ///
-  /// Throws a [StateError] if there are any fields with no validation results.
-  ValidationResult build() {
-    if (_results.containsValue(null)) {
-      throw StateError(
-        'Cannot create a validation result, since some fields do not have validation result.',
-      );
-    }
-
-    return ValidationResult(_results);
-  }
-
   /// Sets the [result] for the given [field].
   ///
   /// Throws an [ArgumentError] if the provided [field] is not included in the
   /// [ValidationResult] this builder assembles.
+  ///
+  /// Throws a [StateError] if the provided [field] already has the
+  /// [FieldValidationResult].
   void setResult(ConfigField field, FieldValidationResult result) {
     if (!_results.containsKey(field)) {
       throw ArgumentError('The provided field is not available to set.');
+    }
+
+    if (_results[field] != null) {
+      throw StateError('The validation result for this field is already set.');
     }
 
     _results[field] = result;
@@ -55,5 +49,18 @@ class ValidationResultBuilder {
     for (final key in _results.keys) {
       _results[key] ??= result;
     }
+  }
+
+  /// Builds the [ValidationResult] using [FieldValidationResult]s.
+  ///
+  /// Throws a [StateError] if there are any fields with no validation results.
+  ValidationResult build() {
+    if (_results.containsValue(null)) {
+      throw StateError(
+        'Cannot create a validation result, since some fields do not have validation result.',
+      );
+    }
+
+    return ValidationResult(_results);
   }
 }

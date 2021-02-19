@@ -11,7 +11,17 @@ class BuildkiteStrings {
   static const String tokenDoesNotHaveReadArtifactsScope =
       "This token does not have the 'read_artifacts' scope, so the 'sync' command should be run with the 'no-coverage' flag or the 'read_artifacts' scope should be provided.";
   static const String pipelineNotFound =
-      'The pipeline with such slug does not exist.';
+      'A pipeline with a specified slug does not exist.';
   static const String organizationNotFound =
-      'The organization with such slug does not exist.';
+      'An organization with a specified slug does not exist.';
+  static const String tokenInvalidInterruptReason =
+      "Can't be validated as the provided access token is invalid.";
+  static const String noScopesToValidateOrganization =
+      "An organization can`t be validated as the provided access token does not have the 'read_organization' scope.";
+  static const String organizationCantBeValidatedInterruptReason =
+      "Can't be validated as the provided organization slug can't be validated.";
+  static const String organizationInvalidInterruptReason =
+      "Can't be validated as the provided organization slug is invalid.";
+  static const String noScopesToValidatePipeline =
+      "A pipeline can`t be validated as the provided access token does not have the 'read_pipelines' scope.";
 }
