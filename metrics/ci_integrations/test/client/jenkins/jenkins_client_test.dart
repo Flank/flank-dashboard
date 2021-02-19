@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
@@ -116,6 +116,15 @@ void main() {
     );
 
     test(
+      ".headers contain the 'user-agent' header with null value",
+      () {
+        final headers = jenkinsClient.headers;
+
+        expect(headers, containsPair(HttpHeaders.userAgentHeader, null));
+      },
+    );
+
+    test(
       ".headers include authorization related header if provided",
       () {
         final headers = jenkinsClient.headers;
@@ -135,6 +144,7 @@ void main() {
         final expectedHeaders = {
           HttpHeaders.contentTypeHeader: ContentType.json.value,
           HttpHeaders.acceptHeader: ContentType.json.value,
+          HttpHeaders.userAgentHeader: null,
         };
 
         expect(headers, equals(expectedHeaders));

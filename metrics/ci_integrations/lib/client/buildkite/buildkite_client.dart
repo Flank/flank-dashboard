@@ -96,6 +96,7 @@ class BuildkiteClient with LoggerMixin {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
+      HttpHeaders.userAgentHeader: null,
       if (authorization != null) ...authorization.toMap(),
     };
   }

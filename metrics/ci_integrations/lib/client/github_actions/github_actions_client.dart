@@ -94,6 +94,7 @@ class GithubActionsClient with LoggerMixin {
   Map<String, String> get headers {
     return <String, String>{
       HttpHeaders.acceptHeader: GithubActionsConstants.acceptHeader,
+      HttpHeaders.userAgentHeader: null,
       if (authorization != null) ...authorization.toMap(),
     };
   }

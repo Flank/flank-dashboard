@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
@@ -138,6 +138,15 @@ void main() {
           headers,
           containsPair(HttpHeaders.acceptHeader, expectedHeaderValue),
         );
+      },
+    );
+
+    test(
+      ".headers contain the 'user-agent' header with null value",
+      () {
+        final headers = client.headers;
+
+        expect(headers, containsPair(HttpHeaders.userAgentHeader, null));
       },
     );
 
