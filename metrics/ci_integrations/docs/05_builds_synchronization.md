@@ -169,6 +169,7 @@ The following sequence diagrams detail the two main processes of the sync algori
 
 ![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
+
 - **Syncing Builds**:
 
 ![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
