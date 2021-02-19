@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -62,6 +62,9 @@ class GithubActionsClient with LoggerMixin {
   /// An HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
 
+  /// A [Map] with HTTP headers, that is added to the default [headers].
+  final Map<String, String> _headers;
+
   /// Creates a new instance of the [GithubActionsClient].
   ///
   /// The [githubApiUrl] defaults to the [GithubActionsConstants.githubApiUrl].
@@ -73,7 +76,8 @@ class GithubActionsClient with LoggerMixin {
     @required this.repositoryName,
     this.githubApiUrl = GithubActionsConstants.githubApiUrl,
     this.authorization,
-  }) {
+    Map<String, String> headers,
+  }) : _headers = headers {
     StringValidator.checkNotNullOrEmpty(githubApiUrl, name: 'githubApiUrl');
     StringValidator.checkNotNullOrEmpty(
       repositoryOwner,
@@ -94,7 +98,7 @@ class GithubActionsClient with LoggerMixin {
   Map<String, String> get headers {
     return <String, String>{
       HttpHeaders.acceptHeader: GithubActionsConstants.acceptHeader,
-      HttpHeaders.userAgentHeader: null,
+      if (_headers != null) ..._headers,
       if (authorization != null) ...authorization.toMap(),
     };
   }

@@ -116,11 +116,21 @@ void main() {
     );
 
     test(
-      ".headers contain the 'user-agent' header with null value",
+      ".headers contains the given additional headers",
       () {
+        final additionalHeaders = {
+          HttpHeaders.userAgentHeader: null,
+        };
+
+        final jenkinsClient = JenkinsClient(
+          jenkinsUrl: jenkinsMockServer.url,
+          headers: additionalHeaders,
+        );
         final headers = jenkinsClient.headers;
 
-        expect(headers, containsPair(HttpHeaders.userAgentHeader, null));
+        final expectedHeader = additionalHeaders.entries.first;
+
+        expect(headers, containsPair(expectedHeader.key, expectedHeader.value));
       },
     );
 
@@ -144,7 +154,6 @@ void main() {
         final expectedHeaders = {
           HttpHeaders.contentTypeHeader: ContentType.json.value,
           HttpHeaders.acceptHeader: ContentType.json.value,
-          HttpHeaders.userAgentHeader: null,
         };
 
         expect(headers, equals(expectedHeaders));

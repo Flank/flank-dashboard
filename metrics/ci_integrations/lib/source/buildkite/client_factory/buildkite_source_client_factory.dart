@@ -1,5 +1,7 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
+
+import 'dart:io';
 
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
@@ -26,6 +28,9 @@ class BuildkiteSourceClientFactory
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
+      headers: {
+        HttpHeaders.userAgentHeader: null,
+      },
     );
     final buildkiteSourceClientAdapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClient,

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:convert';
@@ -32,6 +32,9 @@ class JenkinsClient with LoggerMixin {
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
 
+  /// A [Map] with HTTP headers, that is added to the default [headers].
+  final Map<String, String> _headers;
+
   /// The authorization method used within HTTP requests.
   final AuthorizationBase authorization;
 
@@ -46,7 +49,8 @@ class JenkinsClient with LoggerMixin {
   JenkinsClient({
     @required this.jenkinsUrl,
     this.authorization,
-  }) {
+    Map<String, String> headers,
+  }) : _headers = headers {
     if (jenkinsUrl == null || jenkinsUrl.isEmpty) {
       throw ArgumentError.value(
         jenkinsUrl,
@@ -64,7 +68,7 @@ class JenkinsClient with LoggerMixin {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
-      HttpHeaders.userAgentHeader: null,
+      if (_headers != null) ..._headers,
       if (authorization != null) ...authorization.toMap(),
     };
   }

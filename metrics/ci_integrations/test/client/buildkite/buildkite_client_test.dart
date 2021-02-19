@@ -142,11 +142,24 @@ void main() {
     );
 
     test(
-      ".headers contain the 'user-agent' header with null value",
+      ".headers contains the given additional headers",
       () {
+        final additionalHeaders = {
+          HttpHeaders.userAgentHeader: null,
+        };
+
+        final client = BuildkiteClient(
+          buildkiteApiUrl: buildkiteMockServer.url,
+          organizationSlug: organizationSlug,
+          authorization: authorization,
+          headers: additionalHeaders,
+        );
+
         final headers = client.headers;
 
-        expect(headers, containsPair(HttpHeaders.userAgentHeader, null));
+        final expectedHeader = additionalHeaders.entries.first;
+
+        expect(headers, containsPair(expectedHeader.key, expectedHeader.value));
       },
     );
 

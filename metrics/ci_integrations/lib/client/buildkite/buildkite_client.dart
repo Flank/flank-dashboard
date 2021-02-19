@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -60,6 +60,9 @@ class BuildkiteClient with LoggerMixin {
   /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
   final RegExp _nextUrlRegexp = RegExp('(?<=<)(.*)(?=>)');
 
+  /// A [Map] with HTTP headers, that is added to the default [headers].
+  final Map<String, String> _headers;
+
   /// Creates a new instance of the [BuildkiteClient].
   ///
   /// The [buildkiteApiUrl] defaults to the [BuildkiteConstants.buildkiteApiUrl].
@@ -71,7 +74,8 @@ class BuildkiteClient with LoggerMixin {
     @required this.organizationSlug,
     @required this.authorization,
     this.buildkiteApiUrl = BuildkiteConstants.buildkiteApiUrl,
-  }) {
+    Map<String, String> headers,
+  }) : _headers = headers {
     ArgumentError.checkNotNull(authorization, 'authorization');
     StringValidator.checkNotNullOrEmpty(
       buildkiteApiUrl,
@@ -96,7 +100,7 @@ class BuildkiteClient with LoggerMixin {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
-      HttpHeaders.userAgentHeader: null,
+      if (_headers != null) ..._headers,
       if (authorization != null) ...authorization.toMap(),
     };
   }

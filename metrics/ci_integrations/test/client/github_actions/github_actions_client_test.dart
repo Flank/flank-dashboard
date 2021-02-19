@@ -33,12 +33,14 @@ void main() {
       String repositoryOwner = repositoryOwner,
       String repositoryName = repositoryName,
       AuthorizationBase authorization,
+      Map<String, String> headers,
     }) {
       return GithubActionsClient(
         githubApiUrl: githubApiUrl,
         repositoryOwner: repositoryOwner,
         repositoryName: repositoryName,
         authorization: authorization,
+        headers: headers,
       );
     }
 
@@ -128,11 +130,18 @@ void main() {
     );
 
     test(
-      ".headers contain the 'user-agent' header with null value",
+      ".headers contains the given additional headers",
       () {
+        final additionalHeaders = {
+          HttpHeaders.userAgentHeader: null,
+        };
+
+        final client = _createClient(headers: additionalHeaders);
         final headers = client.headers;
 
-        expect(headers, containsPair(HttpHeaders.userAgentHeader, null));
+        final expectedHeader = additionalHeaders.entries.first;
+
+        expect(headers, containsPair(expectedHeader.key, expectedHeader.value));
       },
     );
 
