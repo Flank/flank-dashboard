@@ -126,7 +126,7 @@ Let's review the pros and cons of the API approach.
 Pros:
 
 - provides an ability to ensure that the required auth providers are enabled to proceed with deployment.
-- user requires less interaction than in the previous [approach](#manual).
+- less user interaction required than in the previous [approach](#manual).
 
 Cons:
 
