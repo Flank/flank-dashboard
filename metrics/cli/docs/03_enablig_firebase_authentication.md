@@ -23,7 +23,7 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 The analysis begins with an overview of enabling Firebase Authentication with necessary providers approaches during Metrics Web application deployment.
 It provides the main pros and cons and a short description of each approach we've investigated.
 
-The research should conclude with a chosen approach and a short description of why did we choose such an approach.
+This research should conclude with a chosen approach and a short explanation of why did we choose such an approach.
 
 #### Manual
 
@@ -39,7 +39,7 @@ Pros:
   
 Cons:
 
-- too many user actions (enable Firebase auth, enable sign-in providers, find & copy & paste the sign-in client id);
+- complex configuration process for users (enable Firebase auth, enable sign-in providers, find & copy & paste the sign-in client id);
 - not amenable to automation.
 
 #### Using an API
@@ -54,13 +54,13 @@ Both endpoints require a token with a `cloud-platform` scope, which GCloud CLI c
 
 Please consider the following steps to receive the token:
 
-1. Download a service account's key:
+1. Download a service account's key using the following command:
 
 ```bash
 gcloud iam service-accounts keys create key.json --iam-account project_id@appspot.gserviceaccount.com
 ```
 
-2. Auth with the service account:
+2. Auth with the service account using the following command:
 
 ```bash
 gcloud auth activate-service-account project_id@appspot.gserviceaccount.com --key-file=key.json
@@ -102,7 +102,7 @@ The request body must contain the following:
 
 The following request requires the client id and client secret from the [GCloud credentials page](https://console.cloud.google.com/apis/credentials) in addition to the token.
 
-Unfortunately, there is unavailable to retrieve them using  GCloud CLI or API, so we should show a prompt, which told the user to go to the[Credentials page](https://console.cloud.google.com/apis/credentials), open the OAuth 2.0 web Client IDs, and asks to copy & paste the client id and client secret into the console.
+Unfortunately, there is unavailable to retrieve them using  GCloud CLI or API, so we should show a prompt, which told the user to go to the [Credentials page](https://console.cloud.google.com/apis/credentials), open the OAuth 2.0 web Client IDs, and asks to copy & paste the client id and client secret into the console.
 
 Then we can request the following endpoint:
 
@@ -125,7 +125,7 @@ Let's review the pros and cons of the API approach.
 
 Pros:
 
-- perhaps in the future, it will be possible to enable the Firebase authentication and download the client keys programmatically, then we will be able to fully automate this process;
+- provides an ability to ensure that the required auth providers are enabled to proceed with deployment.
 - user requires less interaction than in the previous [approach](#manual).
 
 Cons:
