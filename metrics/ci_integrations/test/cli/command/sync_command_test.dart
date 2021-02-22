@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
@@ -11,6 +11,7 @@ import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
 import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
+import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
 import 'package:ci_integration/destination/firestore/config/parser/firestore_destination_config_parser.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -18,6 +19,7 @@ import 'package:ci_integration/integration/interface/destination/client/destinat
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
+import 'package:ci_integration/integration/validation/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/source/jenkins/party/jenkins_source_party.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:firedart/firedart.dart';
@@ -411,6 +413,10 @@ class _FirestoreDestinationPartyStub implements FirestoreDestinationParty {
   @override
   final FirestoreDestinationConfigParser configParser =
       const FirestoreDestinationConfigParser();
+
+  @override
+  ConfigValidatorFactoryStub<FirestoreDestinationConfig>
+      get configValidatorFactory => null;
 
   /// Creates this stub class with the given [firebaseAuth] that is used to create
   /// [FirestoreDestinationClientFactory] allowing to mock authentication related
