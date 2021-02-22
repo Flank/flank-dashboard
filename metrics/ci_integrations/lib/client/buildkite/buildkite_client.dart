@@ -60,7 +60,7 @@ class BuildkiteClient with LoggerMixin {
   /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
   final RegExp _nextUrlRegexp = RegExp('(?<=<)(.*)(?=>)');
 
-  /// A [Map] with HTTP headers, that is added to the default [headers].
+  /// A [Map] with HTTP headers to add to the default [headers] of this client.
   final Map<String, String> _headers;
 
   /// Creates a new instance of the [BuildkiteClient].

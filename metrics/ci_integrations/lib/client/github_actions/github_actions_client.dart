@@ -62,7 +62,7 @@ class GithubActionsClient with LoggerMixin {
   /// An HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
 
-  /// A [Map] with HTTP headers, that is added to the default [headers].
+  /// A [Map] with HTTP headers to add to the default [headers] of this client.
   final Map<String, String> _headers;
 
   /// Creates a new instance of the [GithubActionsClient].

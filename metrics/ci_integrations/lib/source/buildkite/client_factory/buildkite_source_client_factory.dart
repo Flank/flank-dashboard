@@ -1,9 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
 import 'package:ci_integration/source/buildkite/adapter/buildkite_source_client_adapter.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
@@ -25,13 +24,11 @@ class BuildkiteSourceClientFactory
     ArgumentError.checkNotNull(config, 'config');
 
     final authorization = BearerAuthorization(config.accessToken);
-    final headers = {
-      HttpHeaders.userAgentHeader: null,
-    };
+
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
-      headers: headers,
+      headers: HttpConstants.headers,
     );
     final buildkiteSourceClientAdapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClient,

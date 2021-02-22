@@ -1,10 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:archive/archive.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
 import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
@@ -34,15 +33,11 @@ class GithubActionsSourceClientFactory
       authorization = BearerAuthorization(config.accessToken);
     }
 
-    final headers = {
-      HttpHeaders.userAgentHeader: null,
-    };
-
     final githubActionsClient = GithubActionsClient(
       repositoryOwner: config.repositoryOwner,
       repositoryName: config.repositoryName,
       authorization: authorization,
-      headers: headers,
+      headers: HttpConstants.headers,
     );
 
     final githubActionsSourceClientAdapter = GithubActionsSourceClientAdapter(

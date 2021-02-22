@@ -118,8 +118,10 @@ void main() {
     test(
       ".headers contains the given additional headers",
       () {
-        final additionalHeaders = {
-          HttpHeaders.userAgentHeader: null,
+        const expectedKey = 'test-header';
+        const expectedValue = 'test-value';
+        const additionalHeaders = {
+          expectedKey: expectedValue,
         };
 
         final jenkinsClient = JenkinsClient(
@@ -128,9 +130,7 @@ void main() {
         );
         final headers = jenkinsClient.headers;
 
-        final expectedHeader = additionalHeaders.entries.first;
-
-        expect(headers, containsPair(expectedHeader.key, expectedHeader.value));
+        expect(headers, containsPair(expectedKey, expectedValue));
       },
     );
 

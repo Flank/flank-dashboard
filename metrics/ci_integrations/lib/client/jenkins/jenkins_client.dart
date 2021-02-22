@@ -32,7 +32,7 @@ class JenkinsClient with LoggerMixin {
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
 
-  /// A [Map] with HTTP headers, that is added to the default [headers].
+  /// A [Map] with HTTP headers to add to the default [headers] of this client.
   final Map<String, String> _headers;
 
   /// The authorization method used within HTTP requests.
