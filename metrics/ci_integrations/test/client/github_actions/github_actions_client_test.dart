@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
@@ -33,12 +33,14 @@ void main() {
       String repositoryOwner = repositoryOwner,
       String repositoryName = repositoryName,
       AuthorizationBase authorization,
+      Map<String, String> headers,
     }) {
       return GithubActionsClient(
         githubApiUrl: githubApiUrl,
         repositoryOwner: repositoryOwner,
         repositoryName: repositoryName,
         authorization: authorization,
+        headers: headers,
       );
     }
 
@@ -124,6 +126,22 @@ void main() {
           headers,
           containsPair(HttpHeaders.acceptHeader, expectedHeaderValue),
         );
+      },
+    );
+
+    test(
+      ".headers contains the given additional headers",
+      () {
+        const expectedKey = 'test-header';
+        const expectedValue = 'test-value';
+        const additionalHeaders = {
+          expectedKey: expectedValue,
+        };
+
+        final client = _createClient(headers: additionalHeaders);
+        final headers = client.headers;
+
+        expect(headers, containsPair(expectedKey, expectedValue));
       },
     );
 
