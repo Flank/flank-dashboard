@@ -27,7 +27,7 @@ class BuildkiteSourceValidatorFactory
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
-      headers: HttpConstants.headers,
+      headers: HttpConstants.defaultHeaders,
     );
 
     final validationDelegate = BuildkiteSourceValidationDelegate(

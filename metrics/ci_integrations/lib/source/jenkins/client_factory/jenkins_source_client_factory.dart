@@ -30,7 +30,7 @@ class JenkinsSourceClientFactory
     final jenkinsClient = JenkinsClient(
       jenkinsUrl: config.url,
       authorization: authorization,
-      headers: HttpConstants.headers,
+      headers: HttpConstants.defaultHeaders,
     );
 
     return JenkinsSourceClientAdapter(jenkinsClient);

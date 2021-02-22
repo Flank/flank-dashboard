@@ -37,7 +37,7 @@ class GithubActionsSourceClientFactory
       repositoryOwner: config.repositoryOwner,
       repositoryName: config.repositoryName,
       authorization: authorization,
-      headers: HttpConstants.headers,
+      headers: HttpConstants.defaultHeaders,
     );
 
     final githubActionsSourceClientAdapter = GithubActionsSourceClientAdapter(

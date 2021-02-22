@@ -28,7 +28,7 @@ class BuildkiteSourceClientFactory
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
-      headers: HttpConstants.headers,
+      headers: HttpConstants.defaultHeaders,
     );
     final buildkiteSourceClientAdapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClient,
