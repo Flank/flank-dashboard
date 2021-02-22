@@ -8,16 +8,8 @@ void main() {
   group("Artifact", () {
     const id = 1;
     const name = 'test';
-
-    final artifactJson = <String, dynamic>{
-      'id': id,
-      'name': name,
-    };
-
-    const expectedArtifact = Artifact(
-      id: id,
-      name: name,
-    );
+    const artifact = Artifact(id: id, name: name);
+    final artifactJson = {'id': id, 'name': name};
 
     test("creates an instance with the given values", () {
       const artifact = Artifact(
@@ -36,9 +28,9 @@ void main() {
     });
 
     test(".fromJson() creates an instance from the given json", () {
-      final artifact = Artifact.fromJson(artifactJson);
+      final actualArtifact = Artifact.fromJson(artifactJson);
 
-      expect(artifact, equals(expectedArtifact));
+      expect(actualArtifact, equals(artifact));
     });
 
     test(".listFromJson() maps a null list to null", () {
@@ -63,11 +55,11 @@ void main() {
       final jsonList = [artifactJson, anotherArtifactJson];
       final artifacts = Artifact.listFromJson(jsonList);
 
-      expect(artifacts, equals([expectedArtifact, anotherArtifact]));
+      expect(artifacts, equals([artifact, anotherArtifact]));
     });
 
     test(".toJson() converts an instance to the json map", () {
-      final json = expectedArtifact.toJson();
+      final json = artifact.toJson();
 
       expect(json, equals(artifactJson));
     });

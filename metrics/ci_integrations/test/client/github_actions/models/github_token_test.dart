@@ -18,13 +18,8 @@ void main() {
       GithubTokenScope.readDiscussion,
     ];
 
-    const tokenJson = {
-      'scopes': scopeStrings,
-    };
-
-    const expectedToken = GithubToken(
-      scopes: scopes,
-    );
+    const tokenJson = {'scopes': scopeStrings};
+    const token = GithubToken(scopes: scopes);
 
     test(
       "creates an instance with the given parameters",
@@ -47,9 +42,9 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final token = GithubToken.fromJson(tokenJson);
+        final actualToken = GithubToken.fromJson(tokenJson);
 
-        expect(token, equals(expectedToken));
+        expect(actualToken, equals(token));
       },
     );
 
@@ -77,7 +72,7 @@ void main() {
         const anotherTokenJson = {'scopes': []};
         const anotherToken = GithubToken(scopes: []);
         const jsonList = [tokenJson, anotherTokenJson];
-        const expectedList = [expectedToken, anotherToken];
+        const expectedList = [token, anotherToken];
 
         final tokenList = GithubToken.listFromJson(jsonList);
 
@@ -88,7 +83,7 @@ void main() {
     test(
       ".toJson converts an instance to the json encodable map",
       () {
-        final json = expectedToken.toJson();
+        final json = token.toJson();
 
         expect(json, equals(tokenJson));
       },

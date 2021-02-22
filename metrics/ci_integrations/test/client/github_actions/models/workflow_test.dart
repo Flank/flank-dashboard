@@ -18,7 +18,7 @@ void main() {
       'path': path,
     };
 
-    const expectedWorkflow = Workflow(id: id, name: name, path: path);
+    const workflow = Workflow(id: id, name: name, path: path);
 
     test(
       "creates an instance with the given values",
@@ -43,9 +43,9 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final workflow = Workflow.fromJson(workflowJson);
+        final actualWorkflow = Workflow.fromJson(workflowJson);
 
-        expect(workflow, equals(expectedWorkflow));
+        expect(actualWorkflow, equals(workflow));
       },
     );
 
@@ -73,7 +73,7 @@ void main() {
         final anotherJson = {'id': 2, 'name': 'name2', 'path': 'path2'};
         final anotherWorkflow = Workflow.fromJson(anotherJson);
         final jsonList = [workflowJson, anotherJson];
-        final expectedList = [expectedWorkflow, anotherWorkflow];
+        final expectedList = [workflow, anotherWorkflow];
 
         final workflows = Workflow.listFromJson(jsonList);
 
@@ -84,7 +84,7 @@ void main() {
     test(
       ".toJson() converts an instance to the json encodable map",
       () {
-        final json = expectedWorkflow.toJson();
+        final json = workflow.toJson();
 
         expect(json, equals(workflowJson));
       },
