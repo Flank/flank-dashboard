@@ -53,7 +53,7 @@ void main() {
       expect(artifacts, isEmpty);
     });
 
-    test(".listFromJson() maps a list of build's artifacts", () {
+    test(".listFromJson() maps a list of artifacts", () {
       final anotherArtifactJson = <String, dynamic>{
         'id': 2,
         'name': "test2",

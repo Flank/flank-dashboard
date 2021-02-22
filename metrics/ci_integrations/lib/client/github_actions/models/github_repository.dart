@@ -25,7 +25,8 @@ class GithubRepository extends Equatable {
   @override
   List<Object> get props => [id, name, owner];
 
-  /// Creates a new instance of the [GithubRepository] from the decoded JSON object.
+  /// Creates a new instance of the [GithubRepository]
+  /// from the decoded JSON object.
   ///
   /// Returns `null` if the given [json] is `null`.
   factory GithubRepository.fromJson(Map<String, dynamic> json) {

@@ -9,12 +9,12 @@ class GithubTokenScopeMapper implements Mapper<String, GithubTokenScope> {
   /// A token scope that allows to access to private and public repositories.
   static const String repo = 'repo';
 
-  /// A token scope that allows to read and write access to public and private
-  /// repository commit statuses.
+  /// A token scope that allows to read and write access
+  /// to public and private repository commit statuses.
   static const String repoStatus = 'repo:status';
 
-  /// A token scope that allows accessing deployment statuses for public and
-  /// private repositories.
+  /// A token scope that allows accessing deployment statuses
+  /// for public and private repositories.
   static const String repoDeployment = 'repo_deployment';
 
   /// A token scope that allows to read and write access to code, commit statuses,
@@ -37,8 +37,8 @@ class GithubTokenScopeMapper implements Mapper<String, GithubTokenScope> {
   /// in public or private repositories.
   static const String writeRepoHook = 'write:repo_hook';
 
-  /// A token scope that allows to read and ping access to hooks in public
-  /// or private repositories.
+  /// A token scope that allows to read and ping access to hooks
+  /// in public or private repositories.
   static const String readRepoHook = 'read:repo_hook';
 
   /// A token scope that allows to manage the organization and its teams,
