@@ -9,13 +9,11 @@ import 'package:test/test.dart';
 void main() {
   group("GithubToken", () {
     const scopeStrings = [
-      GithubTokenScopeMapper.writeDiscussion,
-      GithubTokenScopeMapper.readDiscussion,
+      GithubTokenScopeMapper.repo,
     ];
 
     const scopes = [
-      GithubTokenScope.writeDiscussion,
-      GithubTokenScope.readDiscussion,
+      GithubTokenScope.repo,
     ];
 
     const tokenJson = {'scopes': scopeStrings};
