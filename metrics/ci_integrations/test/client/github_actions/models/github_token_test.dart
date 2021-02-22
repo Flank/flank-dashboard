@@ -22,7 +22,7 @@ void main() {
       'scopes': scopeStrings,
     };
 
-    const token = GithubToken(
+    const expectedToken = GithubToken(
       scopes: scopes,
     );
 
@@ -47,37 +47,37 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final actualToken = GithubToken.fromJson(tokenJson);
+        final token = GithubToken.fromJson(tokenJson);
 
-        expect(actualToken, equals(token));
+        expect(token, equals(expectedToken));
       },
     );
 
     test(
       ".listFromJson() returns null if the given list is null",
       () {
-        final list = GithubToken.listFromJson(null);
+        final tokenList = GithubToken.listFromJson(null);
 
-        expect(list, isNull);
+        expect(tokenList, isNull);
       },
     );
 
     test(
       ".listFromJson() returns an empty list if the given one is empty",
       () {
-        final list = GithubToken.listFromJson([]);
+        final tokenList = GithubToken.listFromJson([]);
 
-        expect(list, isEmpty);
+        expect(tokenList, isEmpty);
       },
     );
 
     test(
       ".listFromJson() creates a list of GithubToken tokens from the given list of JSON encodable objects",
       () {
-        const anotherJson = {'scopes': []};
+        const anotherTokenJson = {'scopes': []};
         const anotherToken = GithubToken(scopes: []);
-        const jsonList = [tokenJson, anotherJson];
-        const expectedList = [token, anotherToken];
+        const jsonList = [tokenJson, anotherTokenJson];
+        const expectedList = [expectedToken, anotherToken];
 
         final tokenList = GithubToken.listFromJson(jsonList);
 
@@ -88,7 +88,7 @@ void main() {
     test(
       ".toJson converts an instance to the json encodable map",
       () {
-        final json = token.toJson();
+        final json = expectedToken.toJson();
 
         expect(json, equals(tokenJson));
       },
