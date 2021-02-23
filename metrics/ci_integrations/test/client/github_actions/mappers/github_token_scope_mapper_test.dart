@@ -30,6 +30,15 @@ void main() {
     );
 
     test(
+      ".map() returns null if the given value does not match any GithubTokenScope value",
+      () {
+        final scope = mapper.map('test');
+
+        expect(scope, isNull);
+      },
+    );
+
+    test(
       ".unmap() unmaps the GithubTokenScope.repo to the repo scope value",
       () {
         const expectedScope = GithubTokenScopeMapper.repo;
@@ -48,18 +57,5 @@ void main() {
         expect(scope, isNull);
       },
     );
-
-    test(
-      ".unmap() returns null if the given value does not match any enum value",
-      () {
-        final scope = mapper.unmap(GithubTokenScopeStub.test);
-
-        expect(scope, isNull);
-      },
-    );
   });
-}
-
-extension GithubTokenScopeStub on GithubTokenScope {
-  static GithubTokenScope test;
 }
