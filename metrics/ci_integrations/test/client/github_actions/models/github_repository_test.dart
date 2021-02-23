@@ -26,8 +26,11 @@ void main() {
     test(
       "creates an instance with the given parameters",
       () {
-        const githubRepository =
-            GithubRepository(id: id, name: name, owner: owner);
+        const githubRepository = GithubRepository(
+          id: id,
+          name: name,
+          owner: owner,
+        );
 
         expect(githubRepository.id, equals(id));
         expect(githubRepository.name, equals(name));
@@ -41,6 +44,17 @@ void main() {
         final githubRepository = GithubRepository.fromJson(null);
 
         expect(githubRepository, isNull);
+      },
+    );
+
+    test(
+      ".fromJson() creates an instance from the given json",
+      () {
+        final actualGithubRepository = GithubRepository.fromJson(
+          githubRepositoryJson,
+        );
+
+        expect(actualGithubRepository, equals(githubRepository));
       },
     );
 

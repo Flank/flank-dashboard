@@ -27,8 +27,8 @@ class GithubTokenScopeMapper implements Mapper<String, GithubTokenScope> {
     switch (value) {
       case GithubTokenScope.repo:
         return repo;
-      default:
-        return null;
     }
+
+    return null;
   }
 }

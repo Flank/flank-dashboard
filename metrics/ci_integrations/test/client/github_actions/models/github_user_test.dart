@@ -36,6 +36,15 @@ void main() {
     );
 
     test(
+      ".fromJson() creates an instance from the given json",
+      () {
+        final actualGithubUser = GithubUser.fromJson(githubUserJson);
+
+        expect(actualGithubUser, equals(githubUser));
+      },
+    );
+
+    test(
       ".listFromJson() returns null if the given list is null",
       () {
         final list = GithubUser.listFromJson(null);

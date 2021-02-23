@@ -21,6 +21,15 @@ void main() {
     );
 
     test(
+      ".map() maps the null token scope to null",
+      () {
+        final scope = mapper.map(null);
+
+        expect(scope, isNull);
+      },
+    );
+
+    test(
       ".unmap() unmaps the GithubTokenScope.repo to the repo scope value",
       () {
         const expectedScope = GithubTokenScopeMapper.repo;
@@ -30,5 +39,27 @@ void main() {
         expect(scope, equals(expectedScope));
       },
     );
+
+    test(
+      ".unmap() unmaps null token scope to null",
+      () {
+        final scope = mapper.unmap(null);
+
+        expect(scope, isNull);
+      },
+    );
+
+    test(
+      ".unmap() returns null if the given value does not match any enum value",
+      () {
+        final scope = mapper.unmap(GithubTokenScopeStub.test);
+
+        expect(scope, isNull);
+      },
+    );
   });
+}
+
+extension GithubTokenScopeStub on GithubTokenScope {
+  static GithubTokenScope test;
 }

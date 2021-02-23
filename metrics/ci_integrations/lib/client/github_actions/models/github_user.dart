@@ -8,7 +8,7 @@ class GithubUser extends Equatable {
   /// A unique identifier of this user.
   final int id;
 
-  /// A login string of this user.
+  /// A login of this user.
   final String login;
 
   /// Creates an instance of the [GithubUser] with the given parameters.
@@ -44,7 +44,7 @@ class GithubUser extends Equatable {
 
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'login': login,
     };

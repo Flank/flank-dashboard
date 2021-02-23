@@ -3,8 +3,8 @@
 
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 
-/// An [Enum] that represents a scope of the [GithubToken].
+/// An enum that represents the scope of the [GithubToken].
 enum GithubTokenScope {
-  /// A token scope that allows to access to private and public repositories.
+  /// A token scope that allows access to private and public repositories.
   repo,
 }

@@ -67,7 +67,7 @@ void main() {
     test(
       ".listFromJson() creates a list of GithubToken tokens from the given list of JSON encodable objects",
       () {
-        const anotherTokenJson = {'scopes': []};
+        const anotherTokenJson = <String, List<String>>{'scopes': []};
         const anotherToken = GithubToken(scopes: []);
         const jsonList = [tokenJson, anotherTokenJson];
         const expectedList = [token, anotherToken];

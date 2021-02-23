@@ -4,7 +4,7 @@
 import 'package:equatable/equatable.dart';
 
 /// A class that represents a Github Actions workflow.
-class Workflow extends Equatable {
+class GithubActionsWorkflow extends Equatable {
   /// A unique identifier of this workflow.
   final int id;
 
@@ -14,8 +14,8 @@ class Workflow extends Equatable {
   /// A path to the workflow configuration file.
   final String path;
 
-  /// Creates an instance of the [Workflow] with the given parameters.
-  const Workflow({
+  /// Creates an instance of the [GithubActionsWorkflow] with the given parameters.
+  const GithubActionsWorkflow({
     this.id,
     this.name,
     this.path,
@@ -24,32 +24,33 @@ class Workflow extends Equatable {
   @override
   List<Object> get props => [id, name, path];
 
-  /// Creates a new instance of the [Workflow] from the decoded JSON object.
+  /// Creates a new instance of the [GithubActionsWorkflow] from the decoded JSON object.
   ///
   /// Returns `null` if the given [json] is `null`.
-  factory Workflow.fromJson(Map<String, dynamic> json) {
+  factory GithubActionsWorkflow.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    return Workflow(
+    return GithubActionsWorkflow(
       id: json['id'] as int,
       name: json['name'] as String,
       path: json['path'] as String,
     );
   }
 
-  /// Creates a list of [Workflow] from the given [list] of decoded JSON
+  /// Creates a list of [GithubActionsWorkflow] from the given [list] of decoded JSON
   /// objects.
   ///
   /// Returns `null` if the given [list] is `null`.
-  static List<Workflow> listFromJson(List<dynamic> list) {
+  static List<GithubActionsWorkflow> listFromJson(List<dynamic> list) {
     return list
-        ?.map((json) => Workflow.fromJson(json as Map<String, dynamic>))
+        ?.map((json) =>
+            GithubActionsWorkflow.fromJson(json as Map<String, dynamic>))
         ?.toList();
   }
 
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'name': name,
       'path': path,

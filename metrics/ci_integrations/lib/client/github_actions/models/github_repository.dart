@@ -53,7 +53,7 @@ class GithubRepository extends Equatable {
 
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'name': name,
       'owner': owner?.toJson(),

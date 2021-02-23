@@ -26,8 +26,7 @@ class GithubToken extends Equatable {
     if (json == null) return null;
 
     const scopeMapper = GithubTokenScopeMapper();
-    final scopesValue = json['scopes'] as List<dynamic>;
-    final scopesList = scopesValue?.map((element) => '$element');
+    final scopesList = json['scopes'] as List<String>;
 
     final scopes = scopesList?.map(scopeMapper.map)?.toList();
 
@@ -50,7 +49,7 @@ class GithubToken extends Equatable {
 
     final scopesList = scopes?.map(scopeMapper.unmap)?.toList();
 
-    return <String, dynamic>{
+    return {
       'scopes': scopesList,
     };
   }
