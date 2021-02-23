@@ -48,17 +48,12 @@ class GithubActionsWorkflow extends Equatable {
         ?.toList();
   }
 
-  /// Converts this run instance into the JSON encodable [Map].
+  /// Converts this workflow instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'path': path,
     };
-  }
-
-  @override
-  String toString() {
-    return 'Workflow ${toJson()}';
   }
 }

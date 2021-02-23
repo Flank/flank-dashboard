@@ -42,16 +42,11 @@ class GithubUser extends Equatable {
         ?.toList();
   }
 
-  /// Converts this run instance into the JSON encodable [Map].
+  /// Converts this user instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'login': login,
     };
-  }
-
-  @override
-  String toString() {
-    return 'GithubUser ${toJson()}';
   }
 }

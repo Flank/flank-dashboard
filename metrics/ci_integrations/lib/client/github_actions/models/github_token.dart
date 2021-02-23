@@ -5,7 +5,7 @@ import 'package:ci_integration/client/github_actions/mappers/github_token_scope_
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:equatable/equatable.dart';
 
-/// A class that represents a Github access token needed for authorization.
+/// A class that represents a Github access token used for API requests authorization.
 class GithubToken extends Equatable {
   /// A [List] of [GithubTokenScope]s of this token.
   final List<GithubTokenScope> scopes;
@@ -52,10 +52,5 @@ class GithubToken extends Equatable {
     return {
       'scopes': scopesList,
     };
-  }
-
-  @override
-  String toString() {
-    return 'GithubToken ${toJson()}';
   }
 }
