@@ -527,11 +527,11 @@ class GithubActionsClient with LoggerMixin {
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
-  Future<InteractionResult<GithubRepository>> fetchGithubRepository(
+  Future<InteractionResult<GithubRepository>> fetchGithubRepository({
     AuthorizationBase auth,
     String repositoryName,
     String repositoryOwnerName,
-  ) {
+  }) {
     ArgumentError.checkNotNull(auth, 'auth');
     ArgumentError.checkNotNull(repositoryName, 'repositoryName');
     ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
@@ -561,12 +561,12 @@ class GithubActionsClient with LoggerMixin {
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
-  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow(
+  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow({
     AuthorizationBase auth,
     String repositoryName,
     String repositoryOwnerName,
     String workflowId,
-  ) {
+  }) {
     ArgumentError.checkNotNull(auth, 'auth');
     ArgumentError.checkNotNull(repositoryName, 'repositoryName');
     ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
