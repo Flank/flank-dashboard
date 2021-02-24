@@ -728,33 +728,31 @@ void main() {
     );
 
     test(
-      ".fetchRepositoryOwner() throws an ArgumentError if the given repository owner name is null",
+      ".fetchUser() throws an ArgumentError if the given name is null",
       () async {
         expect(
-          () => client.fetchRepositoryOwner(null),
+          () => client.fetchUser(null),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchRepositoryOwner() returns a github user if the given repository owner name is valid",
+      ".fetchUser() returns a github user if the given name is valid",
       () async {
-        final interactionResult = await client.fetchRepositoryOwner(
-          repositoryOwner,
-        );
-        final owner = interactionResult.result;
+        final interactionResult = await client.fetchUser(repositoryOwner);
+        final user = interactionResult.result;
 
-        expect(owner.login, equals(repositoryOwner));
+        expect(user.login, equals(repositoryOwner));
       },
     );
 
     test(
-      ".fetchRepositoryOwner() returns an error result if there is no owner with the given name",
+      ".fetchUser() returns an error result if there is no user with the given name",
       () async {
-        const invalidOwner = 'owner2';
+        const invalidUser = 'owner2';
 
-        final result = await client.fetchRepositoryOwner(invalidOwner);
+        final result = await client.fetchUser(invalidUser);
 
         expect(result.isError, isTrue);
       },

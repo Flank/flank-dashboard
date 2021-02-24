@@ -499,17 +499,17 @@ class GithubActionsClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [GithubUser] by the given [repositoryOwnerName].
+  /// Fetches a [GithubUser] by the given [name].
   ///
-  /// Throws an [ArgumentError] if the given [repositoryOwnerName] is `null`.
-  Future<InteractionResult<GithubUser>> fetchRepositoryOwner(
-    String repositoryOwnerName,
+  /// Throws an [ArgumentError] if the given [name] is `null`.
+  Future<InteractionResult<GithubUser>> fetchUser(
+    String name,
   ) {
-    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+    ArgumentError.checkNotNull(name, 'name');
 
     final url = UrlUtils.buildUrl(
       githubApiUrl,
-      path: 'users/$repositoryOwnerName',
+      path: 'users/$name',
     );
 
     return _handleResponse(
@@ -523,7 +523,7 @@ class GithubActionsClient with LoggerMixin {
   }
 
   /// Fetches a [GithubRepository]
-  /// by the given [auth], [repositoryName] and [repositoryOwner].
+  /// by the given [auth], [repositoryName] and [repositoryOwnerName].
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
@@ -556,8 +556,8 @@ class GithubActionsClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [GithubActionsWorkflow]
-  /// by the given [auth], [repositoryName], [repositoryOwner] and [workflowId].
+  /// Fetches a [GithubActionsWorkflow] by the given [auth], [repositoryName],
+  /// [repositoryOwnerName] and [workflowId].
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
