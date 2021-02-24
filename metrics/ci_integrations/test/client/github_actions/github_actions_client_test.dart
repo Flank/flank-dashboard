@@ -750,9 +750,7 @@ void main() {
     test(
       ".fetchGithubUser() returns an error result if there is no user with the given name",
       () async {
-        const invalidUserName = 'owner2';
-
-        final result = await client.fetchGithubUser(invalidUserName);
+        final result = await client.fetchGithubUser('owner2');
 
         expect(result.isError, isTrue);
       },
@@ -801,7 +799,7 @@ void main() {
     );
 
     test(
-      ".fetchGithubRepository() returns a github repository if the given repository owner name and repository name are valid",
+      ".fetchGithubRepository() returns a github repository if the given parameters are valid",
       () async {
         final interactionResult = await client.fetchGithubRepository(
           auth: authorization,
@@ -818,11 +816,9 @@ void main() {
     test(
       ".fetchGithubRepository() returns an error result if the given repository owner does not have a repository with the given name",
       () async {
-        const invalidRepositoryName = 'name2';
-
         final result = await client.fetchGithubRepository(
           auth: authorization,
-          repositoryName: invalidRepositoryName,
+          repositoryName: 'name2',
           repositoryOwnerName: repositoryOwner,
         );
 
@@ -926,15 +922,41 @@ void main() {
     );
 
     test(
+      ".fetchWorkflow() returns an error result if the given repository name is not valid",
+      () async {
+        final result = await client.fetchWorkflow(
+          auth: authorization,
+          repositoryName: 'name2',
+          repositoryOwnerName: repositoryOwner,
+          workflowId: workflowId,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchWorkflow() returns an error result if the given repository owner name is not valid",
+      () async {
+        final result = await client.fetchWorkflow(
+          auth: authorization,
+          repositoryName: repositoryName,
+          repositoryOwnerName: 'owner2',
+          workflowId: workflowId,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
       ".fetchWorkflow() returns an error result if the given workflow id is not valid",
       () async {
-        const invalidWorkflowId = 'workflow_id2';
-
         final result = await client.fetchWorkflow(
           auth: authorization,
           repositoryName: repositoryName,
           repositoryOwnerName: repositoryOwner,
-          workflowId: invalidWorkflowId,
+          workflowId: 'workflow_id2',
         );
 
         expect(result.isError, isTrue);
