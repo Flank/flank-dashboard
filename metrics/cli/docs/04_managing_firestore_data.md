@@ -45,7 +45,14 @@ Example of creating document using dart package:
   final firebase = await Firebase.initialize('projectId', serviceAccount);
 
   Firestore.initialize(firebase: firebase);
-  await Firestore.instance.collection('collection').document('doc_id').create({});
+
+  const data = {
+    name: 'name',
+    state: 'state',
+    country: 'country'
+  };
+
+  await Firestore.instance.collection('collection').document('doc_id').create(data);
 ```
 
 Let's review the pros and cons of this approach.
@@ -64,17 +71,6 @@ Cons:
 
 The second approach is to use the [Cloud Functions](https://firebase.google.com/docs/functions), which will manage the Firestore data using the [JavaScript Admin SDK](https://firebase.google.com/docs/admin/setup) and the Metrics CLI will call it using the HTTP requests.
 
-Example of enabling `Admin SDK` in Cloud function:
-
-```js
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
-const functions = require('firebase-functions');
-
-// The Firebase Admin SDK to access Firestore.
-const admin = require('firebase-admin');
-admin.initializeApp();
-```
-
 The following steps describe the flow of this approach:
 
 1. create an [HTTP Cloud function](https://cloud.google.com/functions/docs/writing/http), which should initialize required collections using `Admin SDK`;
@@ -84,6 +80,22 @@ The following steps describe the flow of this approach:
 3. deploy the created Cloud function using `firebase deploy --only functions` command;
 
 4. trigger the deployed Cloud function via an HTTP(s) request.
+
+Example of the Cloud function, which creates the document:
+
+```js
+const data = {
+  name: 'name',
+  state: 'state',
+  country: 'country'
+};
+
+exports.seedData = functions.https.onRequest(async (req, res) => {
+  await admin.firestore().collection('collection').document('doc_id').create(data);
+ 
+  res.status(200).send('The document successfully created');
+});
+```
 
 Let's review the pros and cons of this approach.
 
