@@ -52,7 +52,7 @@ Example of creating document using dart package:
     country: 'country'
   };
 
-  await Firestore.instance.collection('collection').document('doc_id').create(data);
+  await Firestore.instance.collection('collection').document('doc_id').set(data);
 ```
 
 Let's review the pros and cons of this approach.
@@ -91,7 +91,7 @@ const data = {
 };
 
 exports.seedData = functions.https.onRequest(async (req, res) => {
-  await admin.firestore().collection('collection').document('doc_id').create(data);
+  await admin.firestore().collection('collection').document('doc_id').set(data);
  
   res.status(200).send('The document successfully created');
 });
