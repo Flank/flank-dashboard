@@ -20,12 +20,15 @@ void main() {
     const githubApiUrl = 'url';
     const repositoryOwner = 'owner';
     const repositoryName = 'name';
+    const invalidRepositoryOwner = 'owner2';
+    const invalidRepositoryName = 'name2';
 
     const testPageNumber = 1;
     const workflowId = 'workflow_id';
     const runId = 1;
 
     final authorization = BearerAuthorization('token');
+    final invalidAuthorization = BearerAuthorization('invalidToken');
     final githubActionsMockServer = GithubActionsMockServer();
 
     GithubActionsClient _createClient({
@@ -717,8 +720,6 @@ void main() {
     test(
       ".fetchAuthenticatedGithubUser() returns an error result if the given authorization is not valid",
       () async {
-        final invalidAuthorization = BearerAuthorization('invalidToken');
-
         final result = await client.fetchAuthenticatedGithubUser(
           invalidAuthorization,
         );
@@ -750,7 +751,7 @@ void main() {
     test(
       ".fetchGithubUser() returns an error result if there is no user with the given name",
       () async {
-        final result = await client.fetchGithubUser('owner2');
+        final result = await client.fetchGithubUser(invalidRepositoryOwner);
 
         expect(result.isError, isTrue);
       },
@@ -814,12 +815,38 @@ void main() {
     );
 
     test(
+      ".fetchGithubRepository() returns an error result if the given authorization is not valid",
+      () async {
+        final result = await client.fetchGithubRepository(
+          auth: invalidAuthorization,
+          repositoryName: repositoryName,
+          repositoryOwnerName: repositoryOwner,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
       ".fetchGithubRepository() returns an error result if the given repository owner does not have a repository with the given name",
       () async {
         final result = await client.fetchGithubRepository(
           auth: authorization,
-          repositoryName: 'name2',
+          repositoryName: invalidRepositoryName,
           repositoryOwnerName: repositoryOwner,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() returns an error result if the given repository owner is not valid",
+      () async {
+        final result = await client.fetchGithubRepository(
+          auth: authorization,
+          repositoryName: repositoryName,
+          repositoryOwnerName: invalidRepositoryOwner,
         );
 
         expect(result.isError, isTrue);
@@ -922,11 +949,25 @@ void main() {
     );
 
     test(
+      ".fetchWorkflow() returns an error result if the given authorization is not valid",
+      () async {
+        final result = await client.fetchWorkflow(
+          auth: invalidAuthorization,
+          repositoryName: repositoryName,
+          repositoryOwnerName: repositoryOwner,
+          workflowId: workflowId,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
       ".fetchWorkflow() returns an error result if the given repository name is not valid",
       () async {
         final result = await client.fetchWorkflow(
           auth: authorization,
-          repositoryName: 'name2',
+          repositoryName: invalidRepositoryName,
           repositoryOwnerName: repositoryOwner,
           workflowId: workflowId,
         );
@@ -941,7 +982,7 @@ void main() {
         final result = await client.fetchWorkflow(
           auth: authorization,
           repositoryName: repositoryName,
-          repositoryOwnerName: 'owner2',
+          repositoryOwnerName: invalidRepositoryOwner,
           workflowId: workflowId,
         );
 
