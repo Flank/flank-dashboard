@@ -162,7 +162,7 @@ GitCli .down.|> Cli
 NpmCli .down.|> Cli
 
 firebase --[hidden]right--> gcloud
-Service --[hidden]right--> Cli
+InfoService --[hidden]right--> Cli
 
 FirebaseService -up-|> InfoService
 GCloudService -up-|> InfoService
