@@ -3,7 +3,7 @@
 ## Motivation
 > What problem is this project solving?
 
-Since, the Metrics App stores [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-allowed_email_domains-collection) and [feature config](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) collections in Cloud Firestore and these collections are protected by the Firebase rules from the reading and writing, so we should find an approach of managing Firestore data using [Admin SDK](https://developers.google.com/admin-sdk).
+Since the Metrics App stores [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-allowed_email_domains-collection) and [feature config](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) collections in Cloud Firestore and these collections are protected by the Firebase rules from the writing, we should find an approach of managing Firestore data using [Admin SDK](https://developers.google.com/admin-sdk).
 
 Therefore, the document's goal is to investigate all approaches of managing Cloud Firestore data using [Admin SDK](https://developers.google.com/admin-sdk) to make the Metrics CLI the most usable.
 
@@ -41,8 +41,8 @@ gcloud iam service-accounts keys create key.json --iam-account project_id@appspo
 Example of creating document using dart package:
 
 ```dart
-  final keyJson = await ServiceAccount.fromFile('key.json');
-  final firebase = await Firebase.initialize('projectId', keyJson);
+  final serviceAccount = await ServiceAccount.fromFile('key.json');
+  final firebase = await Firebase.initialize('projectId', serviceAccount);
 
   Firestore.initialize(firebase: firebase);
   await Firestore.instance.collection('collection').document('doc_id').create({});
@@ -52,7 +52,9 @@ Let's review the pros and cons of this approach.
 
 Pros:
 
-- fully automated.
+- does not require user interaction;
+
+- easy to maintain since we're using the Dart package.
 
 Cons:
 
@@ -60,7 +62,7 @@ Cons:
 
 #### Using Cloud Functions for Firebase
 
-The second approach is to use the [Cloud Functions](https://firebase.google.com/docs/functions), which can work with `Admin SDK` using Node modules `require` statements.
+The second approach is to use the [Cloud Functions](https://firebase.google.com/docs/functions), which will manage the Firestore data using the [JavaScript Admin SDK](https://firebase.google.com/docs/admin/setup) and the Metrics CLI will call it using the HTTP requests.
 
 Example of enabling `Admin SDK` in Cloud function:
 
@@ -77,19 +79,23 @@ The following steps describe the flow of this approach:
 
 1. create an [HTTP Cloud function](https://cloud.google.com/functions/docs/writing/http), which should initialize required collections using `Admin SDK`;
 
-2. deploy the created Cloud function using `firebase deploy --only functions` command;
+2. enable at least a Blaze billing plan since the deployment of the functions [requires it](https://firebase.google.com/support/faq#expandable-9);
 
-3. trigger the deployed Cloud function via an HTTP(s) request.
+3. deploy the created Cloud function using `firebase deploy --only functions` command;
+
+4. trigger the deployed Cloud function via an HTTP(s) request.
 
 Let's review the pros and cons of this approach.
 
 Pros:
 
-- encapsulates the Cloud Firestore data management logic in the Cloud function; 
+- encapsulates the Cloud Firestore data management logic in the Cloud function.
 
 Cons:
 
-- requires steps from the user side (configure billing account);
+- requires Firebase billing plan;
+
+- requires steps from the user side (configure billing plan).
 
 ### Decision
 
