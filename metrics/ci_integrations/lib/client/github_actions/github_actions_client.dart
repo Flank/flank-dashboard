@@ -471,7 +471,7 @@ class GithubActionsClient with LoggerMixin {
     }
   }
 
-  /// Fetches a [GithubUser] by the given [auth].
+  /// Fetches an authenticated [GithubUser] by the given [auth].
   ///
   /// Throws an [ArgumentError] if the given [auth] is `null`.
   Future<InteractionResult<GithubUser>> fetchAuthenticatedGithubUser(

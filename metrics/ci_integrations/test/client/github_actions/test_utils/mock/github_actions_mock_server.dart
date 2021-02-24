@@ -146,7 +146,7 @@ class GithubActionsMockServer extends ApiMockServer {
         AuthCredentials(token: 'Bearer token'),
       ];
 
-  /// Responses with a [GithubUser].
+  /// Responses with a [GithubUser] for the given [request].
   Future<void> _userResponse(HttpRequest request) async {
     const user = GithubUser(id: 1, login: 'owner');
 
@@ -155,7 +155,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await MockServerUtils.writeResponse(request, userJson);
   }
 
-  /// Responses with a [GithubRepository].
+  /// Responses with a [GithubRepository] for the given [request].
   Future<void> _repositoryResponse(HttpRequest request) async {
     const user = GithubUser(id: 1, login: 'owner');
     const repository = GithubRepository(id: 1, name: 'name', owner: user);
@@ -165,7 +165,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await MockServerUtils.writeResponse(request, repositoryJson);
   }
 
-  /// Responses with a [GithubActionsWorkflow].
+  /// Responses with a [GithubActionsWorkflow] for the given [request].
   Future<void> _workflowResponse(HttpRequest request) async {
     const workflow = GithubActionsWorkflow(
       id: 1,
