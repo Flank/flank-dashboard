@@ -474,7 +474,7 @@ class GithubActionsClient with LoggerMixin {
   /// Fetches a [GithubUser] by the given [auth].
   ///
   /// Throws an [ArgumentError] if the given [auth] is `null`.
-  Future<InteractionResult<GithubUser>> fetchAuthenticatedUser(
+  Future<InteractionResult<GithubUser>> fetchAuthenticatedGithubUser(
     AuthorizationBase auth,
   ) {
     ArgumentError.checkNotNull(auth, 'auth');
@@ -492,9 +492,9 @@ class GithubActionsClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: requestHeaders),
       (json, _) {
-        final user = GithubUser.fromJson(json);
+        final githubUser = GithubUser.fromJson(json);
 
-        return InteractionResult.success(result: user);
+        return InteractionResult.success(result: githubUser);
       },
     );
   }
@@ -502,7 +502,7 @@ class GithubActionsClient with LoggerMixin {
   /// Fetches a [GithubUser] by the given [name].
   ///
   /// Throws an [ArgumentError] if the given [name] is `null`.
-  Future<InteractionResult<GithubUser>> fetchUser(
+  Future<InteractionResult<GithubUser>> fetchGithubUser(
     String name,
   ) {
     ArgumentError.checkNotNull(name, 'name');
@@ -515,9 +515,9 @@ class GithubActionsClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: headers),
       (json, _) {
-        final user = GithubUser.fromJson(json);
+        final githubUser = GithubUser.fromJson(json);
 
-        return InteractionResult.success(result: user);
+        return InteractionResult.success(result: githubUser);
       },
     );
   }
@@ -527,7 +527,7 @@ class GithubActionsClient with LoggerMixin {
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
-  Future<InteractionResult<GithubRepository>> fetchRepository(
+  Future<InteractionResult<GithubRepository>> fetchGithubRepository(
     AuthorizationBase auth,
     String repositoryName,
     String repositoryOwnerName,
@@ -549,9 +549,9 @@ class GithubActionsClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: requestHeaders),
       (json, _) {
-        final repository = GithubRepository.fromJson(json);
+        final githubRepository = GithubRepository.fromJson(json);
 
-        return InteractionResult.success(result: repository);
+        return InteractionResult.success(result: githubRepository);
       },
     );
   }

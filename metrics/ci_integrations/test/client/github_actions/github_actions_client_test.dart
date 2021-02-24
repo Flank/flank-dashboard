@@ -693,19 +693,19 @@ void main() {
     );
 
     test(
-      ".fetchAuthenticatedUser() throws an ArgumentError if the given auth is null",
+      ".fetchAuthenticatedGithubUser() throws an ArgumentError if the given auth is null",
       () async {
         expect(
-          () => client.fetchAuthenticatedUser(null),
+          () => client.fetchAuthenticatedGithubUser(null),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchAuthenticatedUser() returns a github user if the given authorization is valid",
+      ".fetchAuthenticatedGithubUser() returns a github user if the given authorization is valid",
       () async {
-        final interactionResult = await client.fetchAuthenticatedUser(
+        final interactionResult = await client.fetchAuthenticatedGithubUser(
           authorization,
         );
         final githubUser = interactionResult.result;
@@ -715,11 +715,11 @@ void main() {
     );
 
     test(
-      ".fetchAuthenticatedUser() returns an error result if the given authorization is not valid",
+      ".fetchAuthenticatedGithubUser() returns an error result if the given authorization is not valid",
       () async {
         final invalidAuthorization = BearerAuthorization('invalidToken');
 
-        final result = await client.fetchAuthenticatedUser(
+        final result = await client.fetchAuthenticatedGithubUser(
           invalidAuthorization,
         );
 
@@ -728,87 +728,99 @@ void main() {
     );
 
     test(
-      ".fetchUser() throws an ArgumentError if the given name is null",
+      ".fetchGithubUser() throws an ArgumentError if the given name is null",
       () async {
         expect(
-          () => client.fetchUser(null),
+          () => client.fetchGithubUser(null),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchUser() returns a github user if the given name is valid",
+      ".fetchGithubUser() returns a github user if the given name is valid",
       () async {
-        final interactionResult = await client.fetchUser(repositoryOwner);
-        final user = interactionResult.result;
+        final interactionResult = await client.fetchGithubUser(repositoryOwner);
+        final githubUser = interactionResult.result;
 
-        expect(user.login, equals(repositoryOwner));
+        expect(githubUser.login, equals(repositoryOwner));
       },
     );
 
     test(
-      ".fetchUser() returns an error result if there is no user with the given name",
+      ".fetchGithubUser() returns an error result if there is no user with the given name",
       () async {
         const invalidUser = 'owner2';
 
-        final result = await client.fetchUser(invalidUser);
+        final result = await client.fetchGithubUser(invalidUser);
 
         expect(result.isError, isTrue);
       },
     );
 
     test(
-      ".fetchRepository() throws an ArgumentError if the given auth is null",
+      ".fetchGithubRepository() throws an ArgumentError if the given auth is null",
       () async {
         expect(
-          () => client.fetchRepository(null, repositoryName, repositoryOwner),
+          () => client.fetchGithubRepository(
+            null,
+            repositoryName,
+            repositoryOwner,
+          ),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchRepository() throws an ArgumentError if the given repository name is null",
+      ".fetchGithubRepository() throws an ArgumentError if the given repository name is null",
       () async {
         expect(
-          () => client.fetchRepository(authorization, null, repositoryOwner),
+          () => client.fetchGithubRepository(
+            authorization,
+            null,
+            repositoryOwner,
+          ),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchRepository() throws an ArgumentError if the given repository owner is null",
+      ".fetchGithubRepository() throws an ArgumentError if the given repository owner name is null",
       () async {
         expect(
-          () => client.fetchRepository(authorization, repositoryName, null),
+          () => client.fetchGithubRepository(
+            authorization,
+            repositoryName,
+            null,
+          ),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".fetchRepository() returns a github repository if the given repository owner and repository name are valid",
+      ".fetchGithubRepository() returns a github repository if the given repository owner name and repository name are valid",
       () async {
-        final interactionResult = await client.fetchRepository(
+        final interactionResult = await client.fetchGithubRepository(
           authorization,
           repositoryName,
           repositoryOwner,
         );
-        final repository = interactionResult.result;
+        final githubRepository = interactionResult.result;
 
-        expect(repository.owner.login, equals(repositoryOwner));
-        expect(repository.name, equals(repositoryName));
+        expect(githubRepository.owner.login, equals(repositoryOwner));
+        expect(githubRepository.name, equals(repositoryName));
       },
     );
 
     test(
-      ".fetchRepository() returns an error result if the given repository owner does not have a repository with the given name",
+      ".fetchGithubRepository() returns an error result if the given repository owner does not have a repository with the given name",
       () async {
         const invalidRepositoryName = 'name2';
 
-        final result = await client.fetchRepository(
+        final result = await client.fetchGithubRepository(
           authorization,
           invalidRepositoryName,
           repositoryOwner,
@@ -849,7 +861,7 @@ void main() {
     );
 
     test(
-      ".fetchWorkflow() throws an ArgumentError if the given repository owner is null",
+      ".fetchWorkflow() throws an ArgumentError if the given repository owner name is null",
       () async {
         expect(
           () => client.fetchWorkflow(
