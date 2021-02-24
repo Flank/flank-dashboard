@@ -19,6 +19,9 @@ import '../../../test_utils/mock_server_utils.dart';
 
 /// A mock server for the Github Actions API.
 class GithubActionsMockServer extends ApiMockServer {
+  /// A default [GithubUser] used in HTTP responses.
+  static const _githubUser = GithubUser(id: 1, login: 'owner');
+
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
 
@@ -148,17 +151,18 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Responses with a [GithubUser] for the given [request].
   Future<void> _userResponse(HttpRequest request) async {
-    const user = GithubUser(id: 1, login: 'owner');
-
-    final userJson = user.toJson();
+    final userJson = _githubUser.toJson();
 
     await MockServerUtils.writeResponse(request, userJson);
   }
 
   /// Responses with a [GithubRepository] for the given [request].
   Future<void> _repositoryResponse(HttpRequest request) async {
-    const user = GithubUser(id: 1, login: 'owner');
-    const repository = GithubRepository(id: 1, name: 'name', owner: user);
+    const repository = GithubRepository(
+      id: 1,
+      name: 'name',
+      owner: _githubUser,
+    );
 
     final repositoryJson = repository.toJson();
 
