@@ -4,7 +4,7 @@
 import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
 import 'package:ci_integration/destination/firestore/config/parser/firestore_destination_config_parser.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
-import 'package:ci_integration/integration/validation/validator_factory/config_validator_factory_stub.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:test/test.dart';
 
 void main() {

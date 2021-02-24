@@ -4,7 +4,7 @@
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
 import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
-import 'package:ci_integration/integration/validation/validator/validator_stub.dart';
+import 'package:ci_integration/integration/stub/base/config/validator/validator_stub.dart';
 
 /// A stub implementation of the [ConfigValidatorFactory].
 class ConfigValidatorFactoryStub<T extends Config>

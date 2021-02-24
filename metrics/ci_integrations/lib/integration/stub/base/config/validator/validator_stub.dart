@@ -6,7 +6,7 @@ import 'package:ci_integration/integration/interface/base/config/validation_dele
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
-import 'package:ci_integration/integration/validation/validation_delegate/validation_delegate_stub.dart';
+import 'package:ci_integration/integration/stub/base/config/validation_delegate/validation_delegate_stub.dart';
 
 /// A stub implementation of the [ConfigValidator].
 class ValidatorStub<T extends Config> implements ConfigValidator<T> {

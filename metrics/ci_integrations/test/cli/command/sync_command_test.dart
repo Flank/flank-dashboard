@@ -19,7 +19,7 @@ import 'package:ci_integration/integration/interface/destination/client/destinat
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
-import 'package:ci_integration/integration/validation/validator_factory/config_validator_factory_stub.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/source/jenkins/party/jenkins_source_party.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:firedart/firedart.dart';
