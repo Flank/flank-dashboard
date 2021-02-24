@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
@@ -8,6 +8,9 @@ import 'package:api_mock_server/api_mock_server.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
+import 'package:ci_integration/client/github_actions/models/github_repository.dart';
+import 'package:ci_integration/client/github_actions/models/github_user.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
@@ -24,6 +27,54 @@ class GithubActionsMockServer extends ApiMockServer {
 
   @override
   List<RequestHandler> get handlers => [
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/user',
+          ),
+          dispatcher: _userResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/users/owner',
+          ),
+          dispatcher: _userResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/users/owner2',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/repos/owner/name',
+          ),
+          dispatcher: _repositoryResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/repos/owner/name2',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/workflows/1',
+          ),
+          dispatcher: _workflowResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/workflows/test.yml',
+          ),
+          dispatcher: _workflowResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/workflows/workflow_id2',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
             '$basePath/workflows/workflow_id/runs',
@@ -89,6 +140,43 @@ class GithubActionsMockServer extends ApiMockServer {
           dispatcher: MockServerUtils.downloadResponse,
         ),
       ];
+
+  @override
+  List<AuthCredentials> get authCredentials => const [
+        AuthCredentials(token: 'Bearer token'),
+      ];
+
+  /// Responses with a [GithubUser].
+  Future<void> _userResponse(HttpRequest request) async {
+    const user = GithubUser(id: 1, login: 'owner');
+
+    final userJson = user.toJson();
+
+    await MockServerUtils.writeResponse(request, userJson);
+  }
+
+  /// Responses with a [GithubRepository].
+  Future<void> _repositoryResponse(HttpRequest request) async {
+    const user = GithubUser(id: 1, login: 'owner');
+    const repository = GithubRepository(id: 1, name: 'name', owner: user);
+
+    final repositoryJson = repository.toJson();
+
+    await MockServerUtils.writeResponse(request, repositoryJson);
+  }
+
+  /// Responses with a [GithubActionsWorkflow].
+  Future<void> _workflowResponse(HttpRequest request) async {
+    const workflow = GithubActionsWorkflow(
+      id: 1,
+      name: 'name',
+      path: '.github/workflows/test.yml',
+    );
+
+    final workflowJson = workflow.toJson();
+
+    await MockServerUtils.writeResponse(request, workflowJson);
+  }
 
   /// Responses with a workflow run for the given [request].
   Future<void> _workflowRunResponse(HttpRequest request) async {

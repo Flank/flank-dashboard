@@ -11,6 +11,9 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
+import 'package:ci_integration/client/github_actions/models/github_repository.dart';
+import 'package:ci_integration/client/github_actions/models/github_user.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
@@ -466,6 +469,128 @@ class GithubActionsClient with LoggerMixin {
         message: 'Failed to perform an operation. Error details: $error',
       );
     }
+  }
+
+  /// Fetches a [GithubUser] by the given [auth].
+  ///
+  /// Throws an [ArgumentError] if the given [auth] is `null`.
+  Future<InteractionResult<GithubUser>> fetchAuthenticatedUser(
+    AuthorizationBase auth,
+  ) {
+    ArgumentError.checkNotNull(auth, 'auth');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'user',
+    );
+
+    final requestHeaders = {
+      ...headers,
+      ...auth.toMap(),
+    };
+
+    return _handleResponse(
+      _client.get(url, headers: requestHeaders),
+      (json, _) {
+        final user = GithubUser.fromJson(json);
+
+        return InteractionResult.success(result: user);
+      },
+    );
+  }
+
+  /// Fetches a [GithubUser] by the given [repositoryOwnerName].
+  ///
+  /// Throws an [ArgumentError] if the given [repositoryOwnerName] is `null`.
+  Future<InteractionResult<GithubUser>> fetchRepositoryOwner(
+    String repositoryOwnerName,
+  ) {
+    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'users/$repositoryOwnerName',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final user = GithubUser.fromJson(json);
+
+        return InteractionResult.success(result: user);
+      },
+    );
+  }
+
+  /// Fetches a [GithubRepository]
+  /// by the given [auth], [repositoryName] and [repositoryOwner].
+  ///
+  /// Throws an [ArgumentError] if at least one of the given parameters
+  /// is `null`.
+  Future<InteractionResult<GithubRepository>> fetchRepository(
+    AuthorizationBase auth,
+    String repositoryName,
+    String repositoryOwnerName,
+  ) {
+    ArgumentError.checkNotNull(auth, 'auth');
+    ArgumentError.checkNotNull(repositoryName, 'repositoryName');
+    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'repos/$repositoryOwnerName/$repositoryName',
+    );
+
+    final requestHeaders = {
+      ...headers,
+      ...auth.toMap(),
+    };
+
+    return _handleResponse(
+      _client.get(url, headers: requestHeaders),
+      (json, _) {
+        final repository = GithubRepository.fromJson(json);
+
+        return InteractionResult.success(result: repository);
+      },
+    );
+  }
+
+  /// Fetches a [GithubActionsWorkflow]
+  /// by the given [auth], [repositoryName], [repositoryOwner] and [workflowId].
+  ///
+  /// Throws an [ArgumentError] if at least one of the given parameters
+  /// is `null`.
+  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow(
+    AuthorizationBase auth,
+    String repositoryName,
+    String repositoryOwnerName,
+    String workflowId,
+  ) {
+    ArgumentError.checkNotNull(auth, 'auth');
+    ArgumentError.checkNotNull(repositoryName, 'repositoryName');
+    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+    ArgumentError.checkNotNull(workflowId, 'workflowId');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path:
+          'repos/$repositoryOwnerName/$repositoryName/actions/workflows/$workflowId',
+    );
+
+    final requestHeaders = {
+      ...headers,
+      ...auth.toMap(),
+    };
+
+    return _handleResponse(
+      _client.get(url, headers: requestHeaders),
+      (json, _) {
+        final workflow = GithubActionsWorkflow.fromJson(json);
+
+        return InteractionResult.success(result: workflow);
+      },
+    );
   }
 
   /// Processes the given [currentPage] and delegates fetching to the given
