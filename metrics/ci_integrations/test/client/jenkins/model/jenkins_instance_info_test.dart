@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsInstanceInfo", () {
     const version = "version";
-    const instanceInfoJson = {
+    const instanceInfoMap = {
       'X-Jenkins': version,
     };
     const instanceInfo = JenkinsInstanceInfo(version: version);
@@ -22,66 +22,38 @@ void main() {
     );
 
     test(
-      ".fromJson() returns null if the given json is null",
+      ".fromMap() returns null if the given map is null",
       () {
-        final instanceInfo = JenkinsInstanceInfo.fromJson(null);
+        final instanceInfo = JenkinsInstanceInfo.fromMap(null);
 
         expect(instanceInfo, isNull);
       },
     );
 
     test(
-      ".fromJson() creates an instance from the given json",
+      ".fromMap() creates an instance from the given map",
       () {
-        final actualInstanceInfo =
-            JenkinsInstanceInfo.fromJson(instanceInfoJson);
+        final actualInstanceInfo = JenkinsInstanceInfo.fromMap(instanceInfoMap);
 
         expect(actualInstanceInfo, equals(instanceInfo));
       },
     );
 
     test(
-      ".listFromJson() returns null if the given list is null",
+      ".toMap() converts an instance to the map",
       () {
-        final list = JenkinsInstanceInfo.listFromJson(null);
+        final map = instanceInfo.toMap();
 
-        expect(list, isNull);
+        expect(map, equals(instanceInfoMap));
       },
     );
 
     test(
-      ".listFromJson() returns an empty list if the given one is empty",
+      ".toString() contains the map representaton of the jenkins info instance",
       () {
-        final list = JenkinsInstanceInfo.listFromJson([]);
+        final map = '${instanceInfo.toMap()}';
 
-        expect(list, isEmpty);
-      },
-    );
-
-    test(
-      ".listFromJson() creates a list of Jenkins instance infos from the given list of JSON encodable objects",
-      () {
-        const anotherJson = {
-          'X-Jenkins': '',
-        };
-        const anotherInstanceInfo = JenkinsInstanceInfo(
-          version: '',
-        );
-        const jsonList = [instanceInfoJson, anotherJson];
-        const expectedList = [instanceInfo, anotherInstanceInfo];
-
-        final instanceList = JenkinsInstanceInfo.listFromJson(jsonList);
-
-        expect(instanceList, equals(expectedList));
-      },
-    );
-
-    test(
-      ".toJson() converts an instance to the json encodable map",
-      () {
-        final json = instanceInfo.toJson();
-
-        expect(json, equals(instanceInfoJson));
+        expect(instanceInfo.toString(), contains(map));
       },
     );
   });

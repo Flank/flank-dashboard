@@ -13,33 +13,21 @@ class JenkinsInstanceInfo extends Equatable {
 
   /// Creates a new instance of the [JenkinsInstanceInfo] with the given
   /// [version].
-  const JenkinsInstanceInfo({this.version});
+  const JenkinsInstanceInfo({this.version,});
 
-  /// Creates a new instance of the [JenkinsInstanceInfo] from the decoded JSON
-  /// object.
+  /// Creates a new instance of the [JenkinsInstanceInfo] from the given [map].
   ///
-  /// Returns `null` if the given [json] is `null`.
-  factory JenkinsInstanceInfo.fromJson(Map<String, dynamic> json) {
-    if (json == null) return null;
+  /// Returns `null` if the given [map] is `null`.
+  factory JenkinsInstanceInfo.fromMap(Map<String, String> map) {
+    if (map == null) return null;
 
     return JenkinsInstanceInfo(
-      version: json['X-Jenkins'] as String,
+      version: map['X-Jenkins'],
     );
   }
 
-  /// Creates a list of [JenkinsInstanceInfo]s from the given [list] of decoded
-  /// JSON objects.
-  ///
-  /// Returns `null` if the given [list] is `null`.
-  static List<JenkinsInstanceInfo> listFromJson(List<dynamic> list) {
-    return list?.map((json) {
-      return JenkinsInstanceInfo.fromJson(json as Map<String, dynamic>);
-    })?.toList();
-  }
-
-  /// Converts this Jenkins instance information into the JSON encodable
-  /// [Map].
-  Map<String, dynamic> toJson() {
+  /// Converts this Jenkins instance information into the [Map].
+  Map<String, String> toMap() {
     return {
       'X-Jenkins': version,
     };
@@ -47,6 +35,6 @@ class JenkinsInstanceInfo extends Equatable {
 
   @override
   String toString() {
-    return 'JenkinsInstanceInfo ${toJson()}';
+    return 'JenkinsInstanceInfo ${toMap()}';
   }
 }

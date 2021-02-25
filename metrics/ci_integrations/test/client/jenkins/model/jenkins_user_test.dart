@@ -90,5 +90,14 @@ void main() {
         expect(json, equals(userJson));
       },
     );
+
+    test(
+      ".toString() contains the json representaton of the jenkins user instance",
+      () {
+        final json = '${user.toJson()}';
+
+        expect(user.toString(), contains(json));
+      },
+    );
   });
 }
