@@ -20,7 +20,7 @@ abstract class IntegrationParty<T extends Config, K extends IntegrationClient> {
   /// Used to parse configurations related to this integration party.
   ConfigParser<T> get configParser;
 
-  /// A config validator factory for this integration party.
+  /// A configuration validator factory for this integration party.
   ///
   /// Used to create [ConfigValidator]s for this integration party.
   ConfigValidatorFactory<T> get configValidatorFactory;

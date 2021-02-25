@@ -19,6 +19,8 @@ class ValidatorStub<T extends Config> implements ConfigValidator<T> {
 
   @override
   Future<ValidationResult> validate(T config) {
-    return Future.value();
+    return Future.value(
+      ValidationResult(const {}),
+    );
   }
 }
