@@ -19,6 +19,8 @@ void main() {
     const tokenJson = {'scopes': scopeStrings};
     const token = GithubToken(scopes: scopes);
 
+    final headers = {'test': 'test', 'x-oauth-scopes': 'repo'};
+
     test(
       "creates an instance with the given parameters",
       () {
@@ -43,6 +45,33 @@ void main() {
         final actualToken = GithubToken.fromJson(tokenJson);
 
         expect(actualToken, equals(token));
+      },
+    );
+
+    test(
+      ".fromMap() returns null if the given headers map is null",
+      () {
+        final token = GithubToken.fromMap(null);
+
+        expect(token, isNull);
+      },
+    );
+
+    test(
+      ".fromMap() creates an instance from the given headers map",
+      () {
+        final actualToken = GithubToken.fromMap(headers);
+
+        expect(actualToken, equals(token));
+      },
+    );
+
+    test(
+      ".fromMap() creates an instance with scopes equal to 'x-oauth-scopes' header's value",
+      () {
+        final token = GithubToken.fromMap(headers);
+
+        expect(token.scopes, equals(scopes));
       },
     );
 

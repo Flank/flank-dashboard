@@ -33,6 +33,19 @@ class GithubToken extends Equatable {
     return GithubToken(scopes: scopes);
   }
 
+  /// Creates a new instance of the [GithubToken]
+  /// from the [Map] of HTTP headers.
+  ///
+  /// Returns `null` if the given [headers] is `null`.
+  factory GithubToken.fromMap(Map<String, String> headers) {
+    if (headers == null) return null;
+
+    final scopes = headers['x-oauth-scopes'] ?? '';
+    final scopesList = scopes.split(',').map((e) => e.trim()).toList();
+
+    return GithubToken.fromJson({'scopes': scopesList});
+  }
+
   /// Creates a list of [GithubToken]s
   /// from the given [list] of decoded JSON objects.
   ///

@@ -493,10 +493,7 @@ class GithubActionsClient with LoggerMixin {
     return _handleResponse(
       _client.get(url, headers: requestHeaders),
       (_, headers) {
-        final scopes = headers['x-oauth-scopes'] ?? '';
-        final scopesList = scopes.split(',').map((e) => e.trim()).toList();
-
-        final githubToken = GithubToken.fromJson({'scopes': scopesList});
+        final githubToken = GithubToken.fromMap(headers);
 
         return InteractionResult.success(result: githubToken);
       },
@@ -526,17 +523,15 @@ class GithubActionsClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [GithubRepository]
-  /// by the given [auth], [repositoryName] and [repositoryOwnerName].
+  /// Fetches a [GithubRepository] by the given [repositoryName]
+  /// and [repositoryOwnerName].
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
   Future<InteractionResult<GithubRepository>> fetchGithubRepository({
-    AuthorizationBase auth,
     String repositoryName,
     String repositoryOwnerName,
   }) {
-    ArgumentError.checkNotNull(auth, 'auth');
     ArgumentError.checkNotNull(repositoryName, 'repositoryName');
     ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
 
@@ -545,13 +540,8 @@ class GithubActionsClient with LoggerMixin {
       path: 'repos/$repositoryOwnerName/$repositoryName',
     );
 
-    final requestHeaders = {
-      ...headers,
-      ...auth.toMap(),
-    };
-
     return _handleResponse(
-      _client.get(url, headers: requestHeaders),
+      _client.get(url, headers: headers),
       (json, _) {
         final githubRepository = GithubRepository.fromJson(json);
 
@@ -560,35 +550,21 @@ class GithubActionsClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [GithubActionsWorkflow] by the given [auth], [repositoryName],
-  /// [repositoryOwnerName] and [workflowId].
+  /// Fetches a [GithubActionsWorkflow] by the given [workflowId].
   ///
-  /// Throws an [ArgumentError] if at least one of the given parameters
-  /// is `null`.
-  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow({
-    AuthorizationBase auth,
-    String repositoryName,
-    String repositoryOwnerName,
+  /// Throws an [ArgumentError] if the given [workflowId] is `null`.
+  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow(
     String workflowId,
-  }) {
-    ArgumentError.checkNotNull(auth, 'auth');
-    ArgumentError.checkNotNull(repositoryName, 'repositoryName');
-    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+  ) {
     ArgumentError.checkNotNull(workflowId, 'workflowId');
 
     final url = UrlUtils.buildUrl(
-      githubApiUrl,
-      path:
-          'repos/$repositoryOwnerName/$repositoryName/actions/workflows/$workflowId',
+      basePath,
+      path: 'workflows/$workflowId',
     );
 
-    final requestHeaders = {
-      ...headers,
-      ...auth.toMap(),
-    };
-
     return _handleResponse(
-      _client.get(url, headers: requestHeaders),
+      _client.get(url, headers: headers),
       (json, _) {
         final workflow = GithubActionsWorkflow.fromJson(json);
 
