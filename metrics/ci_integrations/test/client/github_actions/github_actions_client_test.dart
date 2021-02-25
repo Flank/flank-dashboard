@@ -715,8 +715,6 @@ void main() {
     test(
       ".fetchToken() returns an error result if the given authorization is not valid",
       () async {
-        final invalidAuthorization = BearerAuthorization('invalidToken');
-
         final result = await client.fetchToken(invalidAuthorization);
 
         expect(result.isError, isTrue);
