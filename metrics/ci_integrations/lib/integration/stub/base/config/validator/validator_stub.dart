@@ -11,11 +11,11 @@ import 'package:ci_integration/integration/stub/base/config/validation_delegate/
 /// A stub implementation of the [ConfigValidator].
 class ValidatorStub<T extends Config> implements ConfigValidator<T> {
   @override
-  ValidationResultBuilder get validationResultBuilder =>
+  final ValidationResultBuilder validationResultBuilder =
       ValidationResultBuilder.forFields([]);
 
   @override
-  ValidationDelegate get validationDelegate => ValidationDelegateStub();
+  final ValidationDelegate validationDelegate = ValidationDelegateStub();
 
   @override
   Future<ValidationResult> validate(T config) {
