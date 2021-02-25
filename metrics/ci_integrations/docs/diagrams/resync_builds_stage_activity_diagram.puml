@@ -11,7 +11,7 @@ end note
 partition "for each **build** in **buildsInProgress**" {
     :source.fetchBuild() -> **sourceBuild**;
 
-    if (**sourceBuild** is in-rogress) then (yes)
+    if (**sourceBuild** is finished) then (no)
         if (should force timeout) then (yes)
             :force time out -> **newBuild**;
             note left
@@ -21,7 +21,7 @@ partition "for each **build** in **buildsInProgress**" {
             end note
         else (no)
         endif
-    else (no) 
+    else (yes) 
         :process **build** -> **newBuild**;
     endif
 
