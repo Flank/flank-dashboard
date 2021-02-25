@@ -13,6 +13,7 @@ import 'package:ci_integration/client/github_actions/mappers/github_action_statu
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
 import 'package:ci_integration/client/github_actions/models/github_repository.dart';
+import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_user.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
@@ -471,10 +472,10 @@ class GithubActionsClient with LoggerMixin {
     }
   }
 
-  /// Fetches an authenticated [GithubUser] by the given [auth].
+  /// Fetches a [GithubToken] by the given [auth].
   ///
   /// Throws an [ArgumentError] if the given [auth] is `null`.
-  Future<InteractionResult<GithubUser>> fetchAuthenticatedGithubUser(
+  Future<InteractionResult<GithubToken>> fetchToken(
     AuthorizationBase auth,
   ) {
     ArgumentError.checkNotNull(auth, 'auth');
@@ -491,10 +492,13 @@ class GithubActionsClient with LoggerMixin {
 
     return _handleResponse(
       _client.get(url, headers: requestHeaders),
-      (json, _) {
-        final githubUser = GithubUser.fromJson(json);
+      (_, headers) {
+        final scopes = headers['x-oauth-scopes'] ?? '';
+        final scopesList = scopes.split(',').map((e) => e.trim()).toList();
 
-        return InteractionResult.success(result: githubUser);
+        final githubToken = GithubToken.fromJson({'scopes': scopesList});
+
+        return InteractionResult.success(result: githubToken);
       },
     );
   }

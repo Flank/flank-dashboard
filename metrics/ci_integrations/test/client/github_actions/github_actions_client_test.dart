@@ -696,33 +696,28 @@ void main() {
     );
 
     test(
-      ".fetchAuthenticatedGithubUser() throws an ArgumentError if the given auth is null",
+      ".fetchToken() throws an ArgumentError if the given auth is null",
       () async {
-        expect(
-          () => client.fetchAuthenticatedGithubUser(null),
-          throwsArgumentError,
-        );
+        expect(() => client.fetchToken(null), throwsArgumentError);
       },
     );
 
     test(
-      ".fetchAuthenticatedGithubUser() returns a github user if the given authorization is valid",
+      ".fetchToken() returns a github token if the given authorization is valid",
       () async {
-        final interactionResult = await client.fetchAuthenticatedGithubUser(
-          authorization,
-        );
-        final githubUser = interactionResult.result;
+        final interactionResult = await client.fetchToken(authorization);
+        final githubToken = interactionResult.result;
 
-        expect(githubUser, isNotNull);
+        expect(githubToken, isNotNull);
       },
     );
 
     test(
-      ".fetchAuthenticatedGithubUser() returns an error result if the given authorization is not valid",
+      ".fetchToken() returns an error result if the given authorization is not valid",
       () async {
-        final result = await client.fetchAuthenticatedGithubUser(
-          invalidAuthorization,
-        );
+        final invalidAuthorization = BearerAuthorization('invalidToken');
+
+        final result = await client.fetchToken(invalidAuthorization);
 
         expect(result.isError, isTrue);
       },
