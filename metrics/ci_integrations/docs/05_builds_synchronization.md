@@ -41,7 +41,7 @@ The synchronization is performed by the `CiIntegration.sync` method that orchest
 
 The above table is not complete meaning that the sync algorithm can throw an error at some point if something went wrong. These errors are strongly related to concrete implementations of `source` and `destination` integrations and thus are not examined.
 
-The following activity diagram demonstrates steps the algorithm performs:
+The following activity diagram demonstrates main stages of the algorithm:
 
 ![Sync activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_activity_diagram.puml)
 
@@ -64,7 +64,7 @@ The first stage of the synchronization algorithm is to re-sync the stored In-Pro
 1. Query builds having In-Progress status from the `destination`.
 2. Re-sync each build from the list of in-progress builds:
     1. Fetch the corresponding build from the `source`.
-    2. Change the status of the build to the new from the `source` or force timeout if the build exceeds the `--in-progress-timeout`.
+    2. Change the status of the build to the new from the `source` or force timeout if the build exceeds the `--in-progress-timeout` and still has in-progress status.
 3. Fetch the coverage data for re-synced builds if necessary.
 4. Update the in-progress builds in the `destination` with new data.
 
@@ -81,7 +81,7 @@ The following activity diagram describes the re-sync in-progress builds stage:
 
 #### Timeout In-Progress Builds
 
-Sometimes, the sync algorithm cannot re-sync in-progress build (for example, there no corresponding build in the `source` anymore). In this case, this build may stay in-progress forever, and even worse, there can be many such builds. 
+Sometimes, the sync algorithm cannot re-sync in-progress build (for example, there is no corresponding build in the `source` anymore). In this case, this build may stay in-progress forever, and even worse, there can be many such builds so with each sync amount of builds to re-sync will grow potentially extending API load/costs dramatically.
 
 To prevent storing a great number of in-progress builds that likely may never be re-synced, the CI Integrations tool provides an ability to force-timeout such builds. The `--in-progress-timeout` option stands for the duration in minutes. If an in-progress build exceeds this duration, it should be considered as timed out (meaning finished with the `unknown` status).
 
@@ -122,7 +122,7 @@ The timeout logic is supposed to use the current date and time to define whether
 
 The following cases are possible: 
 - The environment date and time are in the _future_. In this case, the in-progress builds will be timed out faster than expected. That may significantly affect the project metrics on the Metrics Web Application providing unreliable information about project performance and results of builds.
-- The environment date and time are in the _past_. In this case, the in-progress builds will never be timed out. That may significantly increase the number of in-progress builds in the `destination`, which are likely to be never re-synced.
+- The environment date and time are in the _past_. In this case, the in-progress builds will never be timed out. That may significantly increase the number of in-progress builds in the `destination`, which are likely never finish re-syncing unless the date and time are updated.
 
 The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically, and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
 

@@ -10,7 +10,18 @@ else (no)
     :source.fetchBuildsAfter(**lastBuild**) -> **result**;
 endif
 
-:fetch coverage for builds if necessary;
+if (should fetch coverage) then (yes)
+    partition "for each **build** in **result**" {
+        :source.fetchCoverage(**build**) -> **coverage**;
+        :update **build** with **coverage**;
+    }
+else (no)
+endif
+note right
+    controlled by CLI flag
+    //--coverage// or //--no-coverage//
+    defaults to //on// (//--coverage//)
+end note
 
 :destination.addBuilds(**result**);
 note right

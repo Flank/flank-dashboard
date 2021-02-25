@@ -8,24 +8,42 @@ note left
     //state// is //in progress//
 end note
 
-repeat
-    :source.fetchBuild() -> **build**;
+partition "for each **build** in **buildsInProgress**" {
+    :source.fetchBuild() -> **sourceBuild**;
 
-    if (should force timeout) then (yes)
-        :force time out -> **newBuild**;
-        note left
-            controlled by CLI option
-            //--in-progress-timeout//
-            defaults to //120 minutes//
-        end note
-    else (no)
+    if (**sourceBuild** is in-rogress) then (yes)
+        if (should force timeout) then (yes)
+            :force time out -> **newBuild**;
+            note left
+                controlled by CLI option
+                //--in-progress-timeout//
+                defaults to //120 minutes//
+            end note
+        else (no)
+        endif
+    else (no) 
         :process **build** -> **newBuild**;
     endif
 
-    :**result**.add(**newBuild**);
-repeatwhile (for each in **buildsInProgress**)
+    if (**newBuild** is not **null**) then (yes)
+        :**result**.add(**newBuild**);
+    else(no)
+    endif
+}
 
-:fetch coverage for builds if necessary;
+if (should fetch coverage) then (yes)
+    partition "for each **build** in result" {
+        :source.fetchCoverage(**build**) -> **coverage**;
+        :update **build** with **coverage**;
+    }
+else (no)
+endif
+note left
+    controlled by CLI flag
+    //--coverage// or //--no-coverage//
+    defaults to //on// (//--coverage//)
+end note
+
 :destination.updateBuilds(**result**);
 note left
     for each //build// in //result//
