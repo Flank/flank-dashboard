@@ -13,7 +13,9 @@ class JenkinsInstanceInfo extends Equatable {
 
   /// Creates a new instance of the [JenkinsInstanceInfo] with the given
   /// [version].
-  const JenkinsInstanceInfo({this.version,});
+  const JenkinsInstanceInfo({
+    this.version,
+  });
 
   /// Creates a new instance of the [JenkinsInstanceInfo] from the given [map].
   ///
