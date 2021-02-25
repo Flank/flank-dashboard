@@ -1,0 +1,46 @@
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
+
+import 'dart:io';
+
+import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
+import 'package:ci_integration/cli/config/parser/raw_integration_config_parser.dart';
+import 'package:ci_integration/util/file/file_reader.dart';
+
+/// A class that is resposible for creating [RawIntegrationConfigParser].
+class RawIntegrationConfigFactory {
+  /// A [FileReader] this factory uses to read the contents of the YAML
+  /// configuration file.
+  final FileReader fileReader;
+
+  /// A [RawIntegrationConfigParser] this factory uses to parse the contents
+  /// of the YAML configuration file to the [RawIntegrationConfig].
+  final RawIntegrationConfigParser rawConfigParser;
+
+  /// Creates a new instance of the [RawIntegrationConfigFactory] with the given
+  /// [fileReader] and [rawConfigParser].
+  ///
+  /// If the given [fileReader] is `null`, a new instance of the [FileReader]
+  /// is used.
+  ///
+  /// If the given [rawConfigParser] is `null`, a new instance
+  /// of the [RawIntegrationConfigParser] is used.
+  const RawIntegrationConfigFactory({
+    FileReader fileReader,
+    RawIntegrationConfigParser rawConfigParser,
+  })  : fileReader = fileReader ?? const FileReader(),
+        rawConfigParser = rawConfigParser ?? const RawIntegrationConfigParser();
+
+  /// Creates a [RawIntegrationConfig] using the given [path].
+  ///
+  /// A [path] is a [File.path] of the YAML configuration file.
+  ///
+  /// Throws an [ArgumentError] if the given [path] is `null`.
+  RawIntegrationConfig create(String path) {
+    ArgumentError.checkNotNull(path, 'path');
+
+    final fileContent = fileReader.read(path);
+
+    return rawConfigParser.parse(fileContent);
+  }
+}

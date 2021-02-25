@@ -12,11 +12,11 @@ class FileReader {
 
   /// Creates a new instance of the [FileReader] with the given [fileHelper].
   ///
-  /// If the given [fileHelper] is `null`, an instance of the [FileHelper]
+  /// If the given [fileHelper] is `null`, a new instance of the [FileHelper]
   /// is used.
-  const FileReader(
+  const FileReader([
     FileHelper fileHelper,
-  ) : fileHelper = fileHelper ?? const FileHelper();
+  ]) : fileHelper = fileHelper ?? const FileHelper();
 
   /// Returns the contents of the [File] located by the given [path].
   ///
