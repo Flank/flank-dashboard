@@ -524,20 +524,20 @@ class GithubActionsClient with LoggerMixin {
   }
 
   /// Fetches a [GithubRepository] by the given [repositoryName]
-  /// and [repositoryOwnerName].
+  /// and [repositoryOwner].
   ///
   /// Throws an [ArgumentError] if at least one of the given parameters
   /// is `null`.
   Future<InteractionResult<GithubRepository>> fetchGithubRepository({
     String repositoryName,
-    String repositoryOwnerName,
+    String repositoryOwner,
   }) {
     ArgumentError.checkNotNull(repositoryName, 'repositoryName');
-    ArgumentError.checkNotNull(repositoryOwnerName, 'repositoryOwnerName');
+    ArgumentError.checkNotNull(repositoryOwner, 'repositoryOwner');
 
     final url = UrlUtils.buildUrl(
       githubApiUrl,
-      path: 'repos/$repositoryOwnerName/$repositoryName',
+      path: 'repos/$repositoryOwner/$repositoryName',
     );
 
     return _handleResponse(

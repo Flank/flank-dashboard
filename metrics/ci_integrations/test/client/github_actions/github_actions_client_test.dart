@@ -756,7 +756,7 @@ void main() {
         expect(
           () => client.fetchGithubRepository(
             repositoryName: null,
-            repositoryOwnerName: repositoryOwner,
+            repositoryOwner: repositoryOwner,
           ),
           throwsArgumentError,
         );
@@ -764,12 +764,12 @@ void main() {
     );
 
     test(
-      ".fetchGithubRepository() throws an ArgumentError if the given repository owner name is null",
+      ".fetchGithubRepository() throws an ArgumentError if the given repository owner is null",
       () async {
         expect(
           () => client.fetchGithubRepository(
             repositoryName: repositoryName,
-            repositoryOwnerName: null,
+            repositoryOwner: null,
           ),
           throwsArgumentError,
         );
@@ -781,7 +781,7 @@ void main() {
       () async {
         final interactionResult = await client.fetchGithubRepository(
           repositoryName: repositoryName,
-          repositoryOwnerName: repositoryOwner,
+          repositoryOwner: repositoryOwner,
         );
         final githubRepository = interactionResult.result;
 
@@ -794,7 +794,7 @@ void main() {
       () async {
         final result = await client.fetchGithubRepository(
           repositoryName: invalidRepositoryName,
-          repositoryOwnerName: repositoryOwner,
+          repositoryOwner: repositoryOwner,
         );
 
         expect(result.isError, isTrue);
@@ -806,7 +806,7 @@ void main() {
       () async {
         final result = await client.fetchGithubRepository(
           repositoryName: repositoryName,
-          repositoryOwnerName: invalidRepositoryOwner,
+          repositoryOwner: invalidRepositoryOwner,
         );
 
         expect(result.isError, isTrue);
