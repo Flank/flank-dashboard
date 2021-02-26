@@ -24,11 +24,11 @@ This document aims the goal to describe:
 
 1. Create a `FileReader` and a `FileHelper` classes that provide methods for working with the file system.
 2. Create a `RawIntegrationConfigFactory` class that creates the `RawIntegrationConfig` by the provided config file path, and inject it into a `ValidateCommand`.
-3. Add a `acceptsConfig(Map<String, dynamic> configMap)` method to the `IntegrationParty` class, that returns `true`, if this integration party can use this config, and `false` otherwise.
-4. Add a `getParty(Map<String, dynamic> configMap)` method to the `Parties` abstract class. This method returns an `IntegrationParty` that can use this config, or throws an `UnimplementedError` if the party that accepts the given config is not found.
-5. Create an `ConfiguredParty` that holds the `IntegrationParty` and the `Config` this party accepts. Create `ConfiguredSourceParty` and `ConfiguredDestinationParty` that extend the `ConfiguredParty` abstract class.
-6. Create the `ConfiguredParties` class that holds source and destination configured parties.
-7. Create an `ConfiguredPartiesFactory` class that creates the `ConfiguredParties` from the `RawIntegrationConfig` and the `SupportedIntegrationParties`.
+3. Add an `acceptsConfig(Map<String, dynamic> configMap)` method to the `IntegrationParty` class, that returns `true`, if this integration party can use this config, and `false` otherwise.
+4. Add a `getParty(Map<String, dynamic> configMap)` method to the `Parties` abstract class. This method returns an `IntegrationParty` that can use this config or throws an `UnimplementedError` if the party that accepts the given config is not found.
+5. Create a `ConfiguredParty` that holds the `IntegrationParty` and the `Config` this party accepts. Create `ConfiguredSourceParty` and `ConfiguredDestinationParty` that extend the `ConfiguredParty` abstract class.
+6. Create a `ConfiguredParties` class that holds source and destination configured parties.
+7. Create a `ConfiguredPartiesFactory` class that creates the `ConfiguredParties` from the `RawIntegrationConfig` and the `SupportedIntegrationParties`.
 
 ## Comparison Of Old And New Approaches
 
