@@ -1,6 +1,6 @@
 # Project name
 
-> Summary of the proposed change
+> Summary of the proposed change.
 
 # References
 
@@ -20,9 +20,9 @@
 
 # Design
 
-> Explain and diagram the technical design
+> Explain and diagram the technical design.
 >
-> Identify risks and edge cases
+> Identify risks and edge cases.
 
 # API
 
@@ -40,7 +40,7 @@
 
 # Alternatives Considered
 
-> Summarize alternative designs (pros & cons)
+> Summarize alternative designs (pros & cons).
 
 # Timeline
 
