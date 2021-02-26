@@ -1,15 +1,15 @@
-# Sync And Validate Commands Code Sharing
+# Commands Code Sharing
 
 ## Motivation
 > What problem is this project solving?
 
-The implementation of the `Validate` command requires the similar functionality used by the `Sync` command, such as:
-- Reading the config file.
+The implementation of the `ci_integrations` commands may require the same functionality currently contained in the `SyncCommand`, such as:
+- Reading the configuration from the file.
 - Parsing the `RawIntegrationConfig` from the config file content.
-- Searching for the `IntegrationParty` that accepts the given source and the destination config.
-- Parsing the source or the destination config to the party-specific `Config`.
+- Selecting the `IntegrationParty` that accepts the given source and the destination config.
+- Parsing the source or the destination config to the party-specific `Config` instance.
 
-So, the motivation of this document is to describe the code sharing between the `Sync` and the `Validate` commands.
+So, the motivation of this document is to describe the code sharing between the commands.
 
 ## Goals
 > Identify success metrics and measurable goals.
@@ -17,22 +17,22 @@ So, the motivation of this document is to describe the code sharing between the 
 This document aims the goal to describe:
 - Config file reading code sharing.
 - `RawIntegrationConfig` parsing code sharing.
-- `IntegrationParty` parsing code sharing.
+- Sharing the code of selecting the `IntegrationParty` depending on the provided configuration.
 - `IntegrationParty` - specific `Config` parsing code sharing.
 
 ## Proposed Change
 
 1. Create a `FileReader` and a `FileHelper` classes that provide methods for working with the file system.
-2. Create a `RawIntegrationConfigFactory` class that creates the `RawIntegrationConfig` by the provided config file path, and inject it into a `ValidateCommand`.
+2. Create a `RawIntegrationConfigFactory` class that creates the `RawIntegrationConfig` by the provided config file path, and inject it into a specific command.
 3. Add an `acceptsConfig(Map<String, dynamic> configMap)` method to the `IntegrationParty` class, that returns `true`, if this integration party can use this config, and `false` otherwise.
 4. Add a `getParty(Map<String, dynamic> configMap)` method to the `Parties` abstract class. This method returns an `IntegrationParty` that can use this config or throws an `UnimplementedError` if the party that accepts the given config is not found.
 5. Create a `ConfiguredParty` that holds the `IntegrationParty` and the `Config` this party accepts. Create `ConfiguredSourceParty` and `ConfiguredDestinationParty` that extend the `ConfiguredParty` abstract class.
 6. Create a `ConfiguredParties` class that holds source and destination configured parties.
 7. Create a `ConfiguredPartiesFactory` class that creates the `ConfiguredParties` from the `RawIntegrationConfig` and the `SupportedIntegrationParties`.
 
-## Comparison Of Old And New Approaches
+## Approaches Comparison
 
-Consider the following code snippets that show how the proposed changes may simplify the codebase, assuming that the desired code goal is to parse the source and destination `IntegrationParties` with their specific `Config`s.
+Consider the following code snippets that show how the proposed changes may simplify the codebase, assuming that the desired code goal is to get the source and destination `IntegrationParties` and parse their specific `Config`s.
 
 ### Before
 
@@ -112,7 +112,7 @@ Consider the following code snippets that show how the proposed changes may simp
 ### After
 
 ``` dart
-  ValidateCommand({
+  CoolCommand({
     this.rawIntegrationConfigFactory,
     this.configuredPartiesFactory,
   });
@@ -142,6 +142,6 @@ Consider the following code snippets that show how the proposed changes may simp
 
 ## General Class Diagram
 
-Consider the following class diagram, that describes the required changes to share the code between the `Sync` and the `Validate`commands.
+Consider the following class diagram that describes the required classes and interfaces used to share the code between commands:
 
 ![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/code_sharing_document/metrics/ci_integrations/docs/diagrams/commands_code_sharing.puml)

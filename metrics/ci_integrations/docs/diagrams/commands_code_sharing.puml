@@ -6,7 +6,7 @@ package cli {
             + dynamic getArgumentValue(String argumentName)
         }
 
-        class ValidateCommand {
+        class CoolCommand {
             + rawIntegrationConfigFactory : RawIntegrationConfigFactory
             + configuredPartiesFactory : ConfiguredPartiesFactory
 
@@ -25,7 +25,10 @@ package cli {
 
         class SupportedDestinationParties {}
 
-        class SupportedIntegrationParties {}
+        class SupportedIntegrationParties {
+            + sourceParties : Parties<SourceParty> 
+            + destinationParties : Parties<DestinatinoParty>
+        }
 
         package configured_parties {
             package factory as configured_parties_factory {
@@ -41,7 +44,7 @@ package cli {
                     + configuredDestinationParty : ConfiguredDestinationParty
                 }
 
-            abstract class ConfiguredParty<T extends Config, P extends Party> {
+            interface class ConfiguredParty<T extends Config, P extends Party> {
                 + config : T
                 + party : P
             }
@@ -102,21 +105,23 @@ package integration.interface {
     }
 }
 
-SourceParty -up-|> IntegrationParty
-DestinationParty -up-|> IntegrationParty
+SourceParty -down-|> IntegrationParty
+DestinationParty -down-|> IntegrationParty
 
-Parties -right-> IntegrationParty : uses
+Parties --> IntegrationParty : uses
 
-SupportedSourceParties --|> Parties
-SupportedDestinationParties --|> Parties
+SupportedSourceParties ..|> Parties
+SupportedDestinationParties ..|> Parties
 
 SupportedIntegrationParties --> SupportedSourceParties : uses
 SupportedIntegrationParties --> SupportedDestinationParties : uses
+SupportedIntegrationParties -down-> SourceParty : uses
+SupportedIntegrationParties --> DestinationParty : uses
 
-ValidateCommand -up-|> CiIntegrationCommand
-ValidateCommand --> SupportedIntegrationParties : uses
-ValidateCommand -right-> RawIntegrationConfigFactory : uses
-ValidateCommand --> ConfiguredPartiesFactory : uses
+CoolCommand -up-|> CiIntegrationCommand
+CoolCommand --> SupportedIntegrationParties : uses
+CoolCommand -right-> RawIntegrationConfigFactory : uses
+CoolCommand --> ConfiguredPartiesFactory : uses
 
 RawIntegrationConfigFactory -left-> FileReader : uses
 RawIntegrationConfigFactory --> RawIntegrationConfigParser : creates
@@ -129,7 +134,7 @@ ConfiguredPartiesFactory -right-> SupportedIntegrationParties : uses
 ConfiguredParties --> ConfiguredSourceParty : uses
 ConfiguredParties --> ConfiguredDestinationParty : uses
 
-ConfiguredSourceParty --|> ConfiguredParty
-ConfiguredDestinationParty --|> ConfiguredParty
+ConfiguredSourceParty ..|> ConfiguredParty
+ConfiguredDestinationParty ..|> ConfiguredParty
 
 @enduml
