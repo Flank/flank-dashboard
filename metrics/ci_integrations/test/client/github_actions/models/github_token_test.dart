@@ -49,7 +49,7 @@ void main() {
     );
 
     test(
-      ".fromMap() returns null if the given headers map is null",
+      ".fromMap() returns null if the given map is null",
       () {
         final token = GithubToken.fromMap(null);
 
