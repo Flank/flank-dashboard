@@ -88,15 +88,6 @@ void main() {
     );
 
     test(
-      ".fromMap() creates an instance with scopes equal to 'x-oauth-scopes' value",
-      () {
-        final token = GithubToken.fromMap(map);
-
-        expect(token.scopes, equals(scopes));
-      },
-    );
-
-    test(
       ".listFromJson() returns null if the given list is null",
       () {
         final tokenList = GithubToken.listFromJson(null);
