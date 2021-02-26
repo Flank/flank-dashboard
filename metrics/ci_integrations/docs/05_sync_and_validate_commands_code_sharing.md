@@ -34,96 +34,84 @@ This document aims the goal to describe:
 
 Consider the following code snippets that show how the proposed changes may simplify the codebase, assuming that the desired code goal is to parse the source and destination `IntegrationParties` with their specific `Config`s.
 
-<table>
-<tr>
-  <th>
-  Before
-  </th>
-  <th>
-  After
-  </th>
-</tr>
+### Before
 
-<tr>
-  <td VALIGN=TOP style="width: 50%">
-
-  ```dart
+```dart
   @override
-    Future<void> run() async {
-      final configFilePath = getArgumentValue(_configFileOptionName) as String;
-      final file = getConfigFile(configFilePath);
+  Future<void> run() async {
+    final configFilePath = getArgumentValue(_configFileOptionName) as String;
+    final file = getConfigFile(configFilePath);
 
-      if (file.existsSync()) {
-        try {
-          logger.info('Parsing the given config file...');
-          final rawConfig = parseConfigFileContent(file);
+    if (file.existsSync()) {
+      try {
+        logger.info('Parsing the given config file...');
+        final rawConfig = parseConfigFileContent(file);
 
-          logger.info('Creating integration parties...');
-          final sourceParty = getParty(
-            rawConfig.sourceConfigMap,
-            supportedParties.sourceParties,
-          );
-          final destinationParty = getParty(
-            rawConfig.destinationConfigMap,
-            supportedParties.destinationParties,
-          );
+        logger.info('Creating integration parties...');
+        final sourceParty = getParty(
+          rawConfig.sourceConfigMap,
+          supportedParties.sourceParties,
+        );
+        final destinationParty = getParty(
+          rawConfig.destinationConfigMap,
+          supportedParties.destinationParties,
+        );
 
-          logger.info('Creating source configs...');
-          final sourceConfig = parseConfig(
-            rawConfig.sourceConfigMap,
-            sourceParty,
-          );
-          final destinationConfig = parseConfig(
-            rawConfig.destinationConfigMap,
-            destinationParty,
-          );
-          // specific logic here
-        }
+        logger.info('Creating source configs...');
+        final sourceConfig = parseConfig(
+          rawConfig.sourceConfigMap,
+          sourceParty,
+        );
+        final destinationConfig = parseConfig(
+          rawConfig.destinationConfigMap,
+          destinationParty,
+        );
+        // specific logic here
       }
+    }
+  }
 
-    File getConfigFile(String configFilePath) {
-      return File(configFilePath);
+  File getConfigFile(String configFilePath) {
+    return File(configFilePath);
+  }
+
+  RawIntegrationConfig parseConfigFileContent(File file) {
+    final content = file.readAsStringSync();
+    return _rawConfigParser.parse(content);
+  }
+
+  T getParty<T extends IntegrationParty>(
+    Map<String, dynamic> configMap,
+    Parties<T> supportedParties,
+  ) {
+    final party = supportedParties.parties.firstWhere(
+      (party) => party.configParser.canParse(configMap),
+      orElse: () => null,
+    );
+
+    if (party == null) {
+      throw UnimplementedError('The given source config is unknown');
     }
 
-    RawIntegrationConfig parseConfigFileContent(File file) {
-      final content = file.readAsStringSync();
-      return _rawConfigParser.parse(content);
-    }
+    logger.info('$party was created.');
 
-    T getParty<T extends IntegrationParty>(
-      Map<String, dynamic> configMap,
-      Parties<T> supportedParties,
-    ) {
-      final party = supportedParties.parties.firstWhere(
-        (party) => party.configParser.canParse(configMap),
-        orElse: () => null,
-      );
+    return party;
+  }
 
-      if (party == null) {
-        throw UnimplementedError('The given source config is unknown');
-      }
+  T parseConfig<T extends Config>(
+    Map<String, dynamic> configMap,
+    IntegrationParty<T, IntegrationClient> party,
+  ) {
+    final config = party.configParser.parse(configMap);
+    logger.info('$config was created.');
 
-      logger.info('$party was created.');
+    return config;
+  }
+```
 
-      return party;
-    }
+### After
 
-    T parseConfig<T extends Config>(
-      Map<String, dynamic> configMap,
-      IntegrationParty<T, IntegrationClient> party,
-    ) {
-      final config = party.configParser.parse(configMap);
-      logger.info('$config was created.');
-
-      return config;
-    }
-
-  ```
-  </td>
-
-  <td VALIGN=TOP style="width: 50%">
-
-  ``` dart
+``` dart
   ValidateCommand({
     this.rawIntegrationConfigFactory,
     this.configuredPartiesFactory,
@@ -150,11 +138,7 @@ Consider the following code snippets that show how the proposed changes may simp
       // specific logic here
     }
   }
-  ```
-
-  </td>
-</tr>
-</table>
+```
 
 ## General Class Diagram
 
