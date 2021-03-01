@@ -24,26 +24,40 @@ This document aims the goal to describe:
 
 ### Configuration File Reading
 
-Consider the following steps needed to read the configuration files:
+First, we need to share the code that helps us to read the configuration file contents by the provided configuration file path.
 
-1. Create a `FileHelper` class for working with the file system.
-2. Create a `FileReader` class for reading files. Inject the `FileHelper` into it.
+To do that, we need to implement the following classes:
+
+1. A `FileHelper` that provides the `File` with the given file path.
+2. A `FileReader` class that reads the `File` contents by the given file path. The `FileHelper` needs to be into it for testing purposes.
 
 ### RawIntegrationConfig parsing
 
-In order to parse the raw integration config we need to create a `RawIntegrationConfigFactory` class that creates the `RawIntegrationConfig` by the provided config file path, and inject it into a specific command.
+A `RawIntegrationConfig` is a class that stores the source, and the destination config map. 
 
+In order to create the `RawIntegrationConfig`, let's create a `RawIntegrationConfigFactory` that creates the `RawIntegrationConfig` by the provided config file path.
+To keep this class testable, we need to inject a `FileReader` into it.
 
 ### Selecting the `IntegrationParty`
 
-Consider the following steps needed to select the integration party:
+Now, when we've parsed the source, and the destination config map, we need to select the right `IntegrationParty`s that accept these configs.
+
+Consider the following steps needed to do that:
 
 1. Add an `acceptsConfig(Map<String, dynamic> configMap)` method to the `IntegrationParty` class, that returns `true`, if this integration party can use this config, and `false` otherwise.
 2. Add a `getParty(Map<String, dynamic> configMap)` method to the `Parties` abstract class. This method returns an `IntegrationParty` that can use this config or throws an `UnimplementedError` if the party that accepts the given config is not found.
 
+Now, to select the `IntegrationParty` that accepts the specific config, we just need to call the `.getParty(configMap)` method.
+
 ### Parsing the specific `Config`s from the `RawIntegrationConfig`
 
-Consider the following steps needed to parse the specific configs:
+A `Config` is an `IntegrationParty`-specific config, that can be used by the `ConfigValidator`, or `IntegrationClientFactory` classes.
+
+To share the `Config` parsing code, let's create a `ConfiguredParty` class. This class stores the parsed `Config` and an `IntegrationParty` that accepts this config. As we need the source and the destination `ConfiguredParty`, let's create a `ConfiguredParties` class that stores the `ConfiguredSourceParty` and the `ConfiguredDestinationParty`.
+
+After we've implemented the base classes, we need to implement a `ConfiguredPartiesFactory` that shares the `Config` parsing and `IntegrationParty` selection code.
+
+Consider the following steps needed to do that:
 
 1. Create a `ConfiguredParty` that holds the `IntegrationParty` and the `Config` this party accepts. Create `ConfiguredSourceParty` and `ConfiguredDestinationParty` that extend the `ConfiguredParty` abstract class.
 2. Create a `ConfiguredParties` class that holds source and destination configured parties.
