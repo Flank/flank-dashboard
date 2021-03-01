@@ -29,30 +29,30 @@ package cli {
             + sourceParties : Parties<SourceParty> 
             + destinationParties : Parties<DestinatinoParty>
         }
+    }
 
-        package configured_parties {
-            package factory as configured_parties_factory {
-                class ConfiguredPartiesFactory {
-                    + supportedIntegrationParties : SupportedIntegrationParties
+    package configured_parties {
+        package factory as configured_parties_factory {
+            class ConfiguredPartiesFactory {
+                + supportedIntegrationParties : SupportedIntegrationParties
 
-                    + ConfiguredParties create(RawIntegrationConfig config)
-                }   
+                + ConfiguredParties create(RawIntegrationConfig config)
             }
-
-            class ConfiguredParties {
-                    + configuredSourceParty : ConfiguredSourceParty
-                    + configuredDestinationParty : ConfiguredDestinationParty
-            }
-
-            abstract class ConfiguredParty<T extends Config, P extends Party> {
-                + config : T
-                + party : P
-            }
-
-            class ConfiguredSourceParty<SourceConfig, SourceParty> {}
-            
-            class ConfiguredDestinationParty<DestinationConfig, DestinationParty> {}
         }
+
+        class ConfiguredParties {
+                + configuredSourceParty : ConfiguredSourceParty
+                + configuredDestinationParty : ConfiguredDestinationParty
+        }
+
+        abstract class ConfiguredParty<T extends Config, P extends IntegrationParty> {
+            + config : T
+            + party : P
+        }
+
+        class ConfiguredSourceParty<SourceConfig, SourceParty> {}
+
+        class ConfiguredDestinationParty<DestinationConfig, DestinationParty> {}
     }
     
     package config {
