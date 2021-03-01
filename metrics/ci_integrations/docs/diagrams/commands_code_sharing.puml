@@ -110,8 +110,8 @@ DestinationParty -down-|> IntegrationParty
 
 Parties --> IntegrationParty : uses
 
-SupportedSourceParties ..|> Parties
-SupportedDestinationParties ..|> Parties
+SupportedSourceParties --|> Parties
+SupportedDestinationParties --|> Parties
 
 SupportedIntegrationParties --> SupportedSourceParties : uses
 SupportedIntegrationParties --> SupportedDestinationParties : uses
@@ -134,7 +134,7 @@ ConfiguredPartiesFactory -right-> SupportedIntegrationParties : uses
 ConfiguredParties --> ConfiguredSourceParty : uses
 ConfiguredParties --> ConfiguredDestinationParty : uses
 
-ConfiguredSourceParty ..|> ConfiguredParty
-ConfiguredDestinationParty ..|> ConfiguredParty
+ConfiguredSourceParty --|> ConfiguredParty
+ConfiguredDestinationParty --|> ConfiguredParty
 
 @enduml
