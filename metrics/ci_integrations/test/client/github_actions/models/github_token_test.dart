@@ -31,24 +31,6 @@ void main() {
     );
 
     test(
-      ".fromJson() returns null if the given json is null",
-      () {
-        final token = GithubToken.fromJson(null);
-
-        expect(token, isNull);
-      },
-    );
-
-    test(
-      ".fromJson() creates an instance from the given json",
-      () {
-        final actualToken = GithubToken.fromJson(tokenJson);
-
-        expect(actualToken, equals(token));
-      },
-    );
-
-    test(
       ".fromMap() returns null if the given map is null",
       () {
         final token = GithubToken.fromMap(null);
@@ -82,38 +64,6 @@ void main() {
         final token = GithubToken.fromMap(map);
 
         expect(token.scopes, isEmpty);
-      },
-    );
-
-    test(
-      ".listFromJson() returns null if the given list is null",
-      () {
-        final tokenList = GithubToken.listFromJson(null);
-
-        expect(tokenList, isNull);
-      },
-    );
-
-    test(
-      ".listFromJson() returns an empty list if the given one is empty",
-      () {
-        final tokenList = GithubToken.listFromJson([]);
-
-        expect(tokenList, isEmpty);
-      },
-    );
-
-    test(
-      ".listFromJson() creates a list of GithubToken tokens from the given list of JSON encodable objects",
-      () {
-        const anotherTokenJson = <String, List<String>>{'scopes': []};
-        const anotherToken = GithubToken(scopes: []);
-        const jsonList = [tokenJson, anotherTokenJson];
-        const expectedList = [token, anotherToken];
-
-        final tokenList = GithubToken.listFromJson(jsonList);
-
-        expect(tokenList, equals(expectedList));
       },
     );
 
