@@ -25,11 +25,7 @@ class GithubToken extends Equatable {
     if (map == null) return null;
 
     final scopesValue = map['x-oauth-scopes'] ?? '';
-    print('scopesValue: $scopesValue');
     final scopesList = scopesValue.split(', ');
-
-    // final scopesValue = map['x-oauth-scopes'] as List<String>;
-    // final scopesList = scopesValue?.map((element) => '$element');
 
     List<GithubTokenScope> scopes = [];
 
