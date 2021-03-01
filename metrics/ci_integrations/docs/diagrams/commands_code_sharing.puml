@@ -124,7 +124,7 @@ CoolCommand -right-> RawIntegrationConfigFactory : uses
 CoolCommand --> ConfiguredPartiesFactory : uses
 
 RawIntegrationConfigFactory -left-> FileReader : uses
-RawIntegrationConfigFactory --> RawIntegrationConfigParser : creates
+RawIntegrationConfigFactory --> RawIntegrationConfigParser : uses
 
 FileReader --> FileHelper : uses
 
