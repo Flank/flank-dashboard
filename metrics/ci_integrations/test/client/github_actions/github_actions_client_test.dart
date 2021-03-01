@@ -20,12 +20,15 @@ void main() {
     const githubApiUrl = 'url';
     const repositoryOwner = 'owner';
     const repositoryName = 'name';
+    const invalidRepositoryOwner = 'owner2';
+    const invalidRepositoryName = 'name2';
 
     const testPageNumber = 1;
     const workflowId = 'workflow_id';
     const runId = 1;
 
     final authorization = BearerAuthorization('token');
+    final invalidAuthorization = BearerAuthorization('invalidToken');
     final githubActionsMockServer = GithubActionsMockServer();
 
     GithubActionsClient _createClient({
@@ -48,7 +51,10 @@ void main() {
 
     setUpAll(() async {
       await githubActionsMockServer.start();
-      client = _createClient(githubApiUrl: githubActionsMockServer.url);
+      client = _createClient(
+        githubApiUrl: githubActionsMockServer.url,
+        authorization: authorization,
+      );
     });
 
     tearDownAll(() async {
@@ -160,6 +166,7 @@ void main() {
     test(
       ".headers do not include authorization info if the authorization is not given",
       () {
+        final client = _createClient();
         final headers = client.headers;
 
         final authHeader = authorization.toMap().entries.first;
@@ -685,6 +692,169 @@ void main() {
         final isError = interactionResult.isError;
 
         expect(isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchToken() throws an ArgumentError if the given auth is null",
+      () async {
+        expect(() => client.fetchToken(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchToken() returns a github token if the given authorization is valid",
+      () async {
+        final interactionResult = await client.fetchToken(authorization);
+        final githubToken = interactionResult.result;
+
+        expect(githubToken, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchToken() returns an error result if the given authorization is not valid",
+      () async {
+        final result = await client.fetchToken(invalidAuthorization);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchGithubUser() throws an ArgumentError if the given name is null",
+      () async {
+        expect(
+          () => client.fetchGithubUser(null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchGithubUser() returns a github user if the given name is valid",
+      () async {
+        final interactionResult = await client.fetchGithubUser(repositoryOwner);
+        final githubUser = interactionResult.result;
+
+        expect(githubUser, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchGithubUser() returns an error result if there is no user with the given name",
+      () async {
+        final result = await client.fetchGithubUser(invalidRepositoryOwner);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() throws an ArgumentError if the given repository name is null",
+      () async {
+        expect(
+          () => client.fetchGithubRepository(
+            repositoryName: null,
+            repositoryOwner: repositoryOwner,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() throws an ArgumentError if the given repository owner is null",
+      () async {
+        expect(
+          () => client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() returns a github repository if the given parameters are valid",
+      () async {
+        final interactionResult = await client.fetchGithubRepository(
+          repositoryName: repositoryName,
+          repositoryOwner: repositoryOwner,
+        );
+        final githubRepository = interactionResult.result;
+
+        expect(githubRepository, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() returns an error result if the given repository owner does not have a repository with the given name",
+      () async {
+        final result = await client.fetchGithubRepository(
+          repositoryName: invalidRepositoryName,
+          repositoryOwner: repositoryOwner,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchGithubRepository() returns an error result if the given repository owner is not valid",
+      () async {
+        final result = await client.fetchGithubRepository(
+          repositoryName: repositoryName,
+          repositoryOwner: invalidRepositoryOwner,
+        );
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchWorkflow() throws an ArgumentError if the given workflow id is null",
+      () async {
+        expect(
+          () => client.fetchWorkflow(null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchWorkflow() returns a github actions workflow if the given workflow id is valid",
+      () async {
+        const workflowId = 1;
+
+        final interactionResult = await client.fetchWorkflow(
+          workflowId.toString(),
+        );
+        final workflow = interactionResult.result;
+
+        expect(workflow, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflow() returns a github actions workflow if the given workflow file name is valid",
+      () async {
+        const fileName = 'test.yml';
+
+        final interactionResult = await client.fetchWorkflow(fileName);
+        final workflow = interactionResult.result;
+
+        expect(workflow, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflow() returns an error result if the given workflow id is not valid",
+      () async {
+        final result = await client.fetchWorkflow('workflow_id2');
+
+        expect(result.isError, isTrue);
       },
     );
   });

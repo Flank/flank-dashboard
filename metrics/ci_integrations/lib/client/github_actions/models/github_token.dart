@@ -18,39 +18,34 @@ class GithubToken extends Equatable {
     this.scopes,
   });
 
-  /// Creates a new instance of the [GithubToken]
-  /// from the decoded JSON object.
+  /// Creates a new instance of the [GithubToken] from the given [map].
   ///
-  /// Returns `null` if the given [json] is `null`.
-  factory GithubToken.fromJson(Map<String, dynamic> json) {
-    if (json == null) return null;
+  /// Returns `null` if the given [map] is `null`.
+  factory GithubToken.fromMap(Map<String, String> map) {
+    if (map == null) return null;
 
-    const scopeMapper = GithubTokenScopeMapper();
-    final scopesList = json['scopes'] as List<String>;
+    final scopesValue = map['x-oauth-scopes'] ?? '';
 
-    final scopes = scopesList?.map(scopeMapper.map)?.toList();
+    List<GithubTokenScope> scopes = [];
+
+    if (scopesValue.isNotEmpty) {
+      final scopesList = scopesValue.split(', ');
+
+      const scopeMapper = GithubTokenScopeMapper();
+      scopes = scopesList?.map(scopeMapper.map)?.toList();
+    }
 
     return GithubToken(scopes: scopes);
   }
 
-  /// Creates a list of [GithubToken]s
-  /// from the given [list] of decoded JSON objects.
-  ///
-  /// Returns `null` if the given [list] is `null`.
-  static List<GithubToken> listFromJson(List<dynamic> list) {
-    return list?.map((json) {
-      return GithubToken.fromJson(json as Map<String, dynamic>);
-    })?.toList();
-  }
-
-  /// Converts this token instance into the JSON encodable [Map].
-  Map<String, dynamic> toJson() {
+  /// Converts this token instance to the scope's [Map].
+  Map<String, String> toMap() {
     const scopeMapper = GithubTokenScopeMapper();
 
-    final scopesList = scopes?.map(scopeMapper.unmap)?.toList();
+    final scopesList = scopes?.map(scopeMapper.unmap);
 
     return {
-      'scopes': scopesList,
+      'x-oauth-scopes': scopesList.join(', '),
     };
   }
 }
