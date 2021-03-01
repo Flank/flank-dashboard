@@ -35,7 +35,7 @@ To do that, we need to implement the following classes:
 
 A `RawIntegrationConfig` is a class that stores the source, and the destination config map. 
 
-In order to create the `RawIntegrationConfig`, let's create a `RawIntegrationConfigFactory` that creates the `RawIntegrationConfig` by the provided config file path.
+To create the `RawIntegrationConfig`, let's create a `RawIntegrationConfigFactory` that creates the `RawIntegrationConfig` by the provided config file path.
 To keep this class testable, we need to inject a `FileReader`, and a `RawIntegrationConfigParser` into it.
 
 Now, to create a `RawIntegrationConfig`, we just need to create a `RawIntegrationConfigFactory` and call its `.create(configFilePath)` method.
