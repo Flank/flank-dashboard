@@ -18,7 +18,7 @@ This document aims the goal to describe:
 - [Config file reading code sharing](#configuration-file-reading).
 - [`RawIntegrationConfig` parsing code sharing](#rawintegrationconfig-parsing).
 - [Sharing the code of selecting the `IntegrationParty` depending on the provided configuration](#selecting-the-integrationparty).
-- [`IntegrationParty` - specific `Config` parsing code sharing](#parsing-the-specific-configs-from-the-rawintegrationconfig).
+- [`IntegrationParty` - specific `Config` parsing code sharing](#integration-specific-config-parsing).
 
 ## Proposed Change
 
@@ -51,7 +51,7 @@ Consider the following steps needed to do that:
 
 Now, just call the `Parties.getParty(configMap)` method to select the right `IntegrationParty` that accepts the given config.
 
-### Parsing the specific `Config`s from the `RawIntegrationConfig`
+### Integration-specific `Config` parsing
 
 A `Config` is an `IntegrationParty`-specific config, that can be used by the `ConfigValidator`, or `IntegrationClientFactory` classes.
 
