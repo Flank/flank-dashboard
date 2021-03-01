@@ -21,9 +21,9 @@ package cli {
             + T getParty(Map<String, dynamic> config)
         }
 
-        class SupportedSourceParties {}
+        class SupportedSourceParties<SourceParty> {}
 
-        class SupportedDestinationParties {}
+        class SupportedDestinationParties<DestinationParty> {}
 
         class SupportedIntegrationParties {
             + sourceParties : Parties<SourceParty> 
@@ -86,40 +86,63 @@ package cli {
 }
 
 package integration.interface {
-    package base.party{
-        abstract class IntegrationParty<T extends Config, K extends IntegrationClient> {
-            + clientFactory : IntegrationClientFactory<T, K>
-            + configParser : ConfigParser<T>
-            + configValidatorFactory : ConfigValidatorFactory<T>
-        
-            + bool acceptsConfig(Map<String, dynamic> config)
+    package base {
+        package party as base_party {
+            abstract class IntegrationParty<T extends Config, K extends IntegrationClient> {
+                + clientFactory : IntegrationClientFactory<T, K>
+                + configParser : ConfigParser<T>
+                + configValidatorFactory : ConfigValidatorFactory<T>
+
+                + bool acceptsConfig(Map<String, dynamic> config)
+            }
+        }
+
+        package config as base_config {
+            interface Config {}
         }
     }
 
-    package source.party {
-        abstract class SourceParty {}
+    package source {
+        package party as source_party {
+            abstract class SourceParty {}
+        }
+
+        package config as source_config {
+            interface SourceConfig {
+                + sourceProjectId : String
+            }
+        }
     }
-    
-    package destination.party {
-        abstract class DestinationParty {}
+
+    package destination {
+        package party as destination_party {
+            abstract class DestinationParty {}
+        }
+
+        package config as destination_config {
+            interface DestinationConfig {
+                + getDestinationProjectId : String
+            }
+        }
     }
 }
 
-SourceParty -down-|> IntegrationParty
-DestinationParty -down-|> IntegrationParty
 
-Parties --> IntegrationParty : uses
+SourceParty -up-|> IntegrationParty
+DestinationParty -up-|> IntegrationParty
 
 SupportedSourceParties --|> Parties
 SupportedDestinationParties --|> Parties
 
+Parties --> IntegrationParty : uses
+
+SourceConfig --|> Config
+DestinationConfig --|> Config
+
 SupportedIntegrationParties --> SupportedSourceParties : uses
 SupportedIntegrationParties --> SupportedDestinationParties : uses
-SupportedIntegrationParties -down-> SourceParty : uses
-SupportedIntegrationParties --> DestinationParty : uses
 
 CoolCommand -up-|> CiIntegrationCommand
-CoolCommand --> SupportedIntegrationParties : uses
 CoolCommand -right-> RawIntegrationConfigFactory : uses
 CoolCommand --> ConfiguredPartiesFactory : uses
 
@@ -136,5 +159,8 @@ ConfiguredParties --> ConfiguredDestinationParty : uses
 
 ConfiguredSourceParty --|> ConfiguredParty
 ConfiguredDestinationParty --|> ConfiguredParty
+
+ConfiguredParty --> IntegrationParty : uses
+ConfiguredParty --> Config : uses
 
 @enduml
