@@ -68,11 +68,11 @@ void main() {
     );
 
     test(
-      ".toJson converts an instance to the json encodable map",
+      ".toMap() converts an instance to the json encodable map",
       () {
-        final json = token.toJson();
+        final map = token.toMap();
 
-        expect(json, equals(tokenJson));
+        expect(map, equals(tokenJson));
       },
     );
   });
