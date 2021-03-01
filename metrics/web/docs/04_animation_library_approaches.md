@@ -4,9 +4,9 @@
 
 > What problem is this project solving?
 
-In order to improve the user experience of the Metrics Web Application we need to add some animated visual effects.
+To improve the user experience of the Metrics Web Application, we need to add some animated visual effects.
 
-Therefore, the document's goal is to investigate main approaches of animations displaying in Flutter considering both web and mobile, and select the best approach for the Metrics Web Application.
+Therefore, the document's goal is to investigate the main approaches of animations displaying in Flutter considering both web and mobile and select the best approach for the Metrics Web Application.
 
 ## References
 
@@ -29,7 +29,7 @@ The research should conclude with a chosen approach and a short description of w
 The first approach is to create the animations using Flutter's built-in animations without using any 3-rd party packages.
 
 Pros:
-- Allows to build fully customizable animations from scratch. 
+- Allows building fully customizable animations from scratch. 
 
 Cons:
 - Hard to implement complex pixel-perfect animation.
@@ -37,7 +37,7 @@ Cons:
 #### Lottie
 
 The second approach is to utilize [`lottie_package`](https://pub.dev/packages/lottie).
-Lottie is a library created by Airbnb that parses Adobe After Effects animations exported as json and renders them natively in the application.
+Lottie is a library created by Airbnb that parses Adobe After Effects animations exported as JSON and renders them natively in the application.
 
 Pros:
 - Provides Flutter-like widgets to render animation: `Lottie.asset`, `Lottie.network`, etc.
@@ -57,4 +57,4 @@ Pros:
 
 ### Decision
 
-As we've analyzed above, despite the fact that the `Lottie` library has a better developer experience, it is not suitable for mobile at the moment, so we are going to use the `Rive` package to render the animations for the Metrics Web Application.
+As we've analyzed above, even though the `Lottie` library has a better developer experience, it is not suitable for mobile at the moment, so we are going to use the `Rive` package to render the animations for the Metrics Web Application.
