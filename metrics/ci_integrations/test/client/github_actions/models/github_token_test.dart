@@ -78,12 +78,10 @@ void main() {
     test(
       ".fromMap() creates an instance with an empty scopes if the given map does not have the 'x-oauth-scopes' key",
       () {
-        const expectedScopes = [null];
-
         final map = {'test': 'test'};
         final token = GithubToken.fromMap(map);
 
-        expect(token.scopes, equals(expectedScopes));
+        expect(token.scopes, isEmpty);
       },
     );
 

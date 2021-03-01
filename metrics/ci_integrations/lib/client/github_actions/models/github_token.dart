@@ -30,6 +30,10 @@ class GithubToken extends Equatable {
 
     final scopes = scopesList?.map(scopeMapper.map)?.toList();
 
+    if (scopes.length == 1 && scopes.first == null) {
+      return const GithubToken(scopes: []);
+    }
+
     return GithubToken(scopes: scopes);
   }
 
