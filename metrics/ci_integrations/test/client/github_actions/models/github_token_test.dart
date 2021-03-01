@@ -16,7 +16,7 @@ void main() {
       GithubTokenScope.repo,
     ];
 
-    const tokenJson = {'scopes': scopeStrings};
+    final tokenMap = {'x-oauth-scopes': scopeStrings.toString()};
     const token = GithubToken(scopes: scopes);
 
     final map = {'test': 'test', 'x-oauth-scopes': 'repo'};
@@ -72,7 +72,7 @@ void main() {
       () {
         final map = token.toMap();
 
-        expect(map, equals(tokenJson));
+        expect(map, equals(tokenMap));
       },
     );
   });

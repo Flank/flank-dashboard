@@ -25,26 +25,30 @@ class GithubToken extends Equatable {
     if (map == null) return null;
 
     final scopesValue = map['x-oauth-scopes'] ?? '';
-
-    if (scopesValue.isEmpty) return const GithubToken(scopes: []);
-
+    print('scopesValue: $scopesValue');
     final scopesList = scopesValue.split(', ');
 
-    const scopeMapper = GithubTokenScopeMapper();
+    // final scopesValue = map['x-oauth-scopes'] as List<String>;
+    // final scopesList = scopesValue?.map((element) => '$element');
 
-    final scopes = scopesList?.map(scopeMapper.map)?.toList();
+    List<GithubTokenScope> scopes = [];
+
+    if (scopesValue.isNotEmpty) {
+      const scopeMapper = GithubTokenScopeMapper();
+      scopes = scopesList?.map(scopeMapper.map)?.toList();
+    }
 
     return GithubToken(scopes: scopes);
   }
 
   /// Converts this token instance into the JSON encodable [Map].
-  Map<String, dynamic> toMap() {
+  Map<String, String> toMap() {
     const scopeMapper = GithubTokenScopeMapper();
 
     final scopesList = scopes?.map(scopeMapper.unmap)?.toList();
 
     return {
-      'scopes': scopesList,
+      'x-oauth-scopes': scopesList.toString(),
     };
   }
 }
