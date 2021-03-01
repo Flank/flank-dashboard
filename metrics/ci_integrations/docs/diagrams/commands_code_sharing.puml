@@ -42,9 +42,9 @@ package cli {
             class ConfiguredParties {
                     + configuredSourceParty : ConfiguredSourceParty
                     + configuredDestinationParty : ConfiguredDestinationParty
-                }
+            }
 
-            interface ConfiguredParty<T extends Config, P extends Party> {
+            abstract class ConfiguredParty<T extends Config, P extends Party> {
                 + config : T
                 + party : P
             }
