@@ -10,8 +10,10 @@ import 'package:ci_integration/integration/interface/destination/party/destinati
 import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 
 /// An integration party for the Firestore destination integration.
-class FirestoreDestinationParty extends DestinationParty<
-    FirestoreDestinationConfig, FirestoreDestinationClientAdapter> {
+class FirestoreDestinationParty
+    implements
+        DestinationParty<FirestoreDestinationConfig,
+            FirestoreDestinationClientAdapter> {
   @override
   final FirestoreDestinationClientFactory clientFactory =
       const FirestoreDestinationClientFactory();

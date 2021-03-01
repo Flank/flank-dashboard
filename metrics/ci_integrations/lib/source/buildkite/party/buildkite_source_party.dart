@@ -11,7 +11,8 @@ import 'package:ci_integration/source/buildkite/config/vaildator_factory/buildki
 
 /// An integration party for the Buildkite source integration.
 class BuildkiteSourceParty
-    extends SourceParty<BuildkiteSourceConfig, BuildkiteSourceClientAdapter> {
+    implements
+        SourceParty<BuildkiteSourceConfig, BuildkiteSourceClientAdapter> {
   @override
   final BuildkiteSourceClientFactory clientFactory =
       const BuildkiteSourceClientFactory();

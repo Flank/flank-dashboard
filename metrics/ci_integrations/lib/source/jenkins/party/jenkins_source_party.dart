@@ -11,7 +11,7 @@ import 'package:ci_integration/source/jenkins/config/parser/jenkins_source_confi
 
 /// An integration party for the Jenkins source integration.
 class JenkinsSourceParty
-    extends SourceParty<JenkinsSourceConfig, JenkinsSourceClientAdapter> {
+    implements SourceParty<JenkinsSourceConfig, JenkinsSourceClientAdapter> {
   @override
   final JenkinsSourceClientFactory clientFactory =
       const JenkinsSourceClientFactory();

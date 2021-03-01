@@ -24,11 +24,4 @@ abstract class IntegrationParty<T extends Config, K extends IntegrationClient> {
   ///
   /// Used to create [ConfigValidator]s for this integration party.
   ConfigValidatorFactory<T> get configValidatorFactory;
-
-  /// Returns `true` if this party accepts the given [config].
-  ///
-  /// Otherwise, returns `false`.
-  bool acceptsConfig(Map<String, dynamic> config) {
-    return configParser.canParse(config);
-  }
 }
