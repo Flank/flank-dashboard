@@ -38,7 +38,7 @@ class GithubToken extends Equatable {
     return GithubToken(scopes: scopes);
   }
 
-  /// Converts this token instance into the JSON encodable [Map].
+  /// Converts this token instance to the scope's [Map].
   Map<String, String> toMap() {
     const scopeMapper = GithubTokenScopeMapper();
 

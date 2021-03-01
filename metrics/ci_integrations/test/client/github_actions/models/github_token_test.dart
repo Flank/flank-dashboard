@@ -1,16 +1,22 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("GithubToken", () {
+    const scopeStrings = [
+      GithubTokenScopeMapper.repo,
+    ];
+
     const scopes = [
       GithubTokenScope.repo,
     ];
 
+    final tokenScopesMap = {'x-oauth-scopes': scopeStrings.join(', ')};
     const token = GithubToken(scopes: scopes);
 
     final map = {'test': 'test', 'x-oauth-scopes': 'repo'};
@@ -62,13 +68,11 @@ void main() {
     );
 
     test(
-      ".toMap() converts an instance to the json encodable map",
+      ".toMap() converts an instance to the scope's map",
       () {
-        final map = token.toMap();
+        final scopesMap = token.toMap();
 
-        final fromMap = GithubToken.fromMap(map);
-
-        expect(token, equals(fromMap));
+        expect(scopesMap, equals(tokenScopesMap));
       },
     );
   });
