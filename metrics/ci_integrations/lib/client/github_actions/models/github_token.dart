@@ -25,14 +25,17 @@ class GithubToken extends Equatable {
     if (map == null) return null;
 
     final scopesValue = map['x-oauth-scopes'] ?? '';
-    final scopesList = scopesValue.split(', ');
 
     List<GithubTokenScope> scopes = [];
 
     if (scopesValue.isNotEmpty) {
+      final scopesList = scopesValue.split(', ');
+
       const scopeMapper = GithubTokenScopeMapper();
       scopes = scopesList?.map(scopeMapper.map)?.toList();
     }
+
+    print('scopes: $scopes');
 
     return GithubToken(scopes: scopes);
   }
@@ -41,10 +44,10 @@ class GithubToken extends Equatable {
   Map<String, String> toMap() {
     const scopeMapper = GithubTokenScopeMapper();
 
-    final scopesList = scopes?.map(scopeMapper.unmap)?.toList();
+    final scopesList = scopes?.map(scopeMapper.unmap);
 
     return {
-      'x-oauth-scopes': scopesList.toString(),
+      'x-oauth-scopes': scopesList.join(', '),
     };
   }
 }
