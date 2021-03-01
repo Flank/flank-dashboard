@@ -35,8 +35,6 @@ class GithubToken extends Equatable {
       scopes = scopesList?.map(scopeMapper.map)?.toList();
     }
 
-    print('scopes: $scopes');
-
     return GithubToken(scopes: scopes);
   }
 
