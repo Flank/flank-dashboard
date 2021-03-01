@@ -44,7 +44,7 @@ package cli {
                     + configuredDestinationParty : ConfiguredDestinationParty
                 }
 
-            interface class ConfiguredParty<T extends Config, P extends Party> {
+            interface ConfiguredParty<T extends Config, P extends Party> {
                 + config : T
                 + party : P
             }
