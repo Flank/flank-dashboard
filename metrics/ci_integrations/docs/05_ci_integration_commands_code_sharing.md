@@ -18,7 +18,7 @@ This document aims the goal to describe:
 - [Config file reading code sharing](#configuration-file-reading).
 - [`RawIntegrationConfig` parsing code sharing](#rawintegrationconfig-parsing).
 - [Sharing the code of selecting the `IntegrationParty` depending on the provided configuration](#selecting-the-integrationparty).
-- [`IntegrationParty` - specific `Config` parsing code sharing](#integration-specific-config-parsing).
+- [Integration-specific `Config` parsing code sharing](#integration-specific-config-parsing).
 
 ## Proposed Change
 
