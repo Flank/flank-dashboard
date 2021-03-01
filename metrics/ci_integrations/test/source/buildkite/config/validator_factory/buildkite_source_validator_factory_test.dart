@@ -4,7 +4,6 @@
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/vaildator_factory/buildkite_source_validator_factory.dart';
-import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/config/validator/buildkite_source_validator.dart';
 import 'package:test/test.dart';
 
@@ -33,18 +32,6 @@ void main() {
         final validator = validatorFactory.create(config);
 
         expect(validator, isA<BuildkiteSourceValidator>());
-      },
-    );
-
-    test(
-      ".create() returns a buildkite source validator with the buildkite source validation delegate",
-      () {
-        final validator = validatorFactory.create(config);
-
-        expect(
-          validator.validationDelegate,
-          isA<BuildkiteSourceValidationDelegate>(),
-        );
       },
     );
 

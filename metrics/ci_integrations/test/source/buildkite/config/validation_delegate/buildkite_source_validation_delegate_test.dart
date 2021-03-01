@@ -233,13 +233,13 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error if the interaction with the client is not successful",
+      ".validatePipelineSlug() returns an error if the interaction with the client is not successful",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateSourceProjectId(
+        final interactionResult = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 
@@ -248,13 +248,13 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an interaction with the pipeline not found message if the interaction with the client is not successful",
+      ".validatePipelineSlug() returns an interaction with the pipeline not found message if the interaction with the client is not successful",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateSourceProjectId(
+        final interactionResult = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
         final message = interactionResult.message;
@@ -264,13 +264,13 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an error if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns an error if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateSourceProjectId(
+        final interactionResult = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 
@@ -279,13 +279,13 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns an interaction with the pipeline not found message if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns an interaction with the pipeline not found message if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateSourceProjectId(
+        final interactionResult = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
         final message = interactionResult.message;
@@ -295,13 +295,13 @@ void main() {
     );
 
     test(
-      ".validateSourceProjectId() returns a successful interaction if the given pipeline slug is valid",
+      ".validatePipelineSlug() returns a successful interaction if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(buildkitePipeline);
 
-        final interactionResult = await delegate.validateSourceProjectId(
+        final interactionResult = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 

@@ -4,13 +4,12 @@
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/integration/interface/source/config/validation_delegate/source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
 /// A [SourceValidationDelegate] for the Buildkite source integration.
-class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
+class BuildkiteSourceValidationDelegate {
   /// A [List] containing all required [BuildkiteTokenScope]s.
   static const List<BuildkiteTokenScope> _requiredTokenScopes = [
     BuildkiteTokenScope.readBuilds,
@@ -26,7 +25,7 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
     ArgumentError.checkNotNull(_client);
   }
 
-  @override
+  /// Validates the given [auth].
   Future<InteractionResult<BuildkiteToken>> validateAuth(
     AuthorizationBase auth,
   ) async {
@@ -63,8 +62,8 @@ class BuildkiteSourceValidationDelegate implements SourceValidationDelegate {
     return tokenInteraction;
   }
 
-  @override
-  Future<InteractionResult<void>> validateSourceProjectId(
+  /// Validates the given [pipelineSlug].
+  Future<InteractionResult<void>> validatePipelineSlug(
     String pipelineSlug,
   ) async {
     final pipelineInteraction = await _client.fetchPipeline(pipelineSlug);

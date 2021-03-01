@@ -17,7 +17,8 @@ import 'package:meta/meta.dart';
 
 /// A class responsible for validating the [BuildkiteSourceConfig].
 class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
-  @override
+  /// A [BuildkiteSourceValidationDelegate] this validator uses
+  /// for [BuildkiteSourceConfig]'s fields validation.
   final BuildkiteSourceValidationDelegate validationDelegate;
 
   @override
@@ -97,8 +98,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     }
 
     final pipelineSlug = config.pipelineSlug;
-    final pipelineInteraction =
-        await validationDelegate.validateSourceProjectId(pipelineSlug);
+    final pipelineInteraction = await validationDelegate.validatePipelineSlug(
+      pipelineSlug,
+    );
 
     _processInteraction(
       interaction: pipelineInteraction,
