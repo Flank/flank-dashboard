@@ -36,7 +36,9 @@ To do that, we need to implement the following classes:
 A `RawIntegrationConfig` is a class that stores the source, and the destination config map. 
 
 In order to create the `RawIntegrationConfig`, let's create a `RawIntegrationConfigFactory` that creates the `RawIntegrationConfig` by the provided config file path.
-To keep this class testable, we need to inject a `FileReader` into it.
+To keep this class testable, we need to inject a `FileReader`, and a `RawIntegrationConfigParser` into it.
+
+Now, to create a `RawIntegrationConfig`, we just need to create a `RawIntegrationConfigFactory` and call its `.create(configFilePath)` method.
 
 ### Selecting the `IntegrationParty`
 
@@ -47,21 +49,23 @@ Consider the following steps needed to do that:
 1. Add an `acceptsConfig(Map<String, dynamic> configMap)` method to the `IntegrationParty` class, that returns `true`, if this integration party can use this config, and `false` otherwise.
 2. Add a `getParty(Map<String, dynamic> configMap)` method to the `Parties` abstract class. This method returns an `IntegrationParty` that can use this config or throws an `UnimplementedError` if the party that accepts the given config is not found.
 
-Now, to select the `IntegrationParty` that accepts the specific config, we just need to call the `.getParty(configMap)` method.
+Now, just call the `.getParty(configMap)` method to select the right `IntegrationParty` that accepts the given config.
 
 ### Parsing the specific `Config`s from the `RawIntegrationConfig`
 
 A `Config` is an `IntegrationParty`-specific config, that can be used by the `ConfigValidator`, or `IntegrationClientFactory` classes.
 
-To share the `Config` parsing code, let's create a `ConfiguredParty` class. This class stores the parsed `Config` and an `IntegrationParty` that accepts this config. As we need the source and the destination `ConfiguredParty`, let's create a `ConfiguredParties` class that stores the `ConfiguredSourceParty` and the `ConfiguredDestinationParty`.
+First, let's create a `ConfiguredParty` class. This class stores the parsed `Config` and an `IntegrationParty` that accepts this config. As we need the source and the destination `ConfiguredParty`, let's create a `ConfiguredParties` class that stores the `ConfiguredSourceParty` and the `ConfiguredDestinationParty`.
 
-After we've implemented the base classes, we need to implement a `ConfiguredPartiesFactory` that shares the `Config` parsing and `IntegrationParty` selection code.
+After we've implemented the base classes, it's time to implement a `ConfiguredPartiesFactory` that shares the `Config` parsing and `IntegrationParty` selection code.
 
 Consider the following steps needed to do that:
 
 1. Create a `ConfiguredParty` that holds the `IntegrationParty` and the `Config` this party accepts. Create `ConfiguredSourceParty` and `ConfiguredDestinationParty` that extend the `ConfiguredParty` abstract class.
 2. Create a `ConfiguredParties` class that holds source and destination configured parties.
 3. Create a `ConfiguredPartiesFactory` class that creates the `ConfiguredParties` from the `RawIntegrationConfig` and the `SupportedIntegrationParties`.
+
+Now, we can use this factory to create the `ConfiguredSourceParties` and access the source, and the destination `IntegrationParty` and its specific `Config`.
 
 ## Approaches Comparison
 
