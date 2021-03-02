@@ -38,8 +38,8 @@ class RawIntegrationConfigFactory {
   RawIntegrationConfig create(String configPath) {
     ArgumentError.checkNotNull(configPath, 'configPath');
 
-    final fileContent = fileReader.read(configPath);
+    final configFileContent = fileReader.read(configPath);
 
-    return rawConfigParser.parse(fileContent);
+    return rawConfigParser.parse(configFileContent);
   }
 }

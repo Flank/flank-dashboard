@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-/// A helper class that provides methods for working with file system.
+/// A helper class that provides methods for working with [File]s.
 class FileHelper {
   /// Creates a new instance of the [FileHelper].
   const FileHelper();

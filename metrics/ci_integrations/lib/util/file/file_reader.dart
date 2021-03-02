@@ -7,7 +7,7 @@ import 'package:ci_integration/util/file/file_helper.dart';
 
 /// A class that provides methods for reading [File]s.
 class FileReader {
-  /// A [FileHelper] of this reader uses to work with the file system.
+  /// A [FileHelper] of this reader uses to work with [File]s.
   final FileHelper fileHelper;
 
   /// Creates a new instance of the [FileReader] with the given [fileHelper].

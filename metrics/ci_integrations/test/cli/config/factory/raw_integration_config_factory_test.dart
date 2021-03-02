@@ -54,7 +54,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default raw integration config parser, if the given raw integration config parser is null",
+      "creates an instance with the default raw config parser, if the given one is null",
       () {
         final rawConfigFactory = RawIntegrationConfigFactory(
           fileReader: fileReader,

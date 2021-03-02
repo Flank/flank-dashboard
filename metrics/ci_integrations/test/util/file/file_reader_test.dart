@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default file helper, if the given file helper is null",
+      "creates an instance with the default file helper, if the given one is null",
       () {
         const reader = FileReader(fileHelper: null);
 
