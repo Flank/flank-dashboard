@@ -55,7 +55,7 @@ void main() {
 /// A fake implementation of the [ConfiguredParty] class needed to test the
 /// [ConfiguredParty] abstract class.
 class _ConfiguredPartyFake extends ConfiguredParty {
-  /// Creates a new intance of the [_ConfiguredPartyFake] with the given
+  /// Creates a new instance of the [_ConfiguredPartyFake] with the given
   /// parameters.
   _ConfiguredPartyFake({
     Config config,
