@@ -97,8 +97,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     }
 
     final pipelineSlug = config.pipelineSlug;
-    final pipelineInteraction =
-        await validationDelegate.validateSourceProjectId(pipelineSlug);
+    final pipelineInteraction = await validationDelegate.validatePipelineSlug(
+      pipelineSlug,
+    );
 
     _processInteraction(
       interaction: pipelineInteraction,
