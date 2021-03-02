@@ -2,9 +2,10 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
-import 'package:ci_integration/cli/parties/configured_parties/configured_destination_party.dart';
-import 'package:ci_integration/cli/parties/configured_parties/configured_parties.dart';
-import 'package:ci_integration/cli/parties/configured_parties/configured_source_party.dart';
+import 'package:ci_integration/cli/configured_parties/configured_destination_party.dart';
+import 'package:ci_integration/cli/configured_parties/configured_parties.dart';
+import 'package:ci_integration/cli/configured_parties/configured_source_party.dart';
+
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 
 /// A class that provides methods for creating [ConfiguredParties].
@@ -47,12 +48,12 @@ class ConfiguredPartiesFactory {
     );
 
     final configuredSourceParty = ConfiguredSourceParty(
-      sourceConfig,
-      sourceParty,
+      config: sourceConfig,
+      party: sourceParty,
     );
     final configuredDestinationParty = ConfiguredDestinationParty(
-      destinationConfig,
-      destinationParty,
+      config: destinationConfig,
+      party: destinationParty,
     );
 
     return ConfiguredParties(configuredSourceParty, configuredDestinationParty);

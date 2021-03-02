@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
-import 'package:ci_integration/cli/parties/configured_parties/factory/configured_parties_factory.dart';
+import 'package:ci_integration/cli/configured_parties/factory/configured_parties_factory.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
@@ -11,10 +11,10 @@ import 'package:ci_integration/integration/interface/source/party/source_party.d
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_util/destination_config_stub.dart';
-import '../../../test_util/mock/config_parser_mock.dart';
-import '../../../test_util/mock/parties_mock.dart';
-import '../../../test_util/source_config_stub.dart';
+import '../../test_util/destination_config_stub.dart';
+import '../../test_util/mock/config_parser_mock.dart';
+import '../../test_util/mock/parties_mock.dart';
+import '../../test_util/source_config_stub.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
