@@ -18,9 +18,9 @@ class ConfiguredPartiesFactory {
   ///
   /// If the given [supportedParties] is `null`, a new instance
   /// of the [SupportedIntegrationParties] is used.
-  ConfiguredPartiesFactory(
+  ConfiguredPartiesFactory({
     SupportedIntegrationParties supportedParties,
-  ) : supportedParties = supportedParties ?? SupportedIntegrationParties();
+  }) : supportedParties = supportedParties ?? SupportedIntegrationParties();
 
   /// Creates an instance of the [ConfiguredParties] using
   /// the given [rawIntegrationConfig].

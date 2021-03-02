@@ -39,7 +39,9 @@ void main() {
       destinationParties: destinationParties,
     );
 
-    final configuredPartiesFactory = ConfiguredPartiesFactory(supportedParties);
+    final configuredPartiesFactory = ConfiguredPartiesFactory(
+      supportedParties: supportedParties,
+    );
 
     final sourceParty = _SourcePartyMock();
     final destinationParty = _DestinationPartyMock();
@@ -82,7 +84,7 @@ void main() {
       "creates an instance with the given supported integration parties",
       () {
         final configuredPartiesFactory = ConfiguredPartiesFactory(
-          supportedParties,
+          supportedParties: supportedParties,
         );
 
         expect(
@@ -93,9 +95,11 @@ void main() {
     );
 
     test(
-      "creates an instance with the default supported integration parties, if the given supported integration parties is null",
+      "creates an instance with the default supported integration parties, if the given one is null",
       () {
-        final configuredPartiesFactory = ConfiguredPartiesFactory(null);
+        final configuredPartiesFactory = ConfiguredPartiesFactory(
+          supportedParties: null,
+        );
 
         expect(configuredPartiesFactory.supportedParties, isNotNull);
       },
