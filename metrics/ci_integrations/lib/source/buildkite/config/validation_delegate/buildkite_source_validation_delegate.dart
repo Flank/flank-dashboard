@@ -9,7 +9,7 @@ import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
-/// A [SourceValidationDelegate] for the Buildkite source integration.
+/// A [ValidationDelegate] for the Buildkite source integration.
 class BuildkiteSourceValidationDelegate implements ValidationDelegate {
   /// A [List] containing all required [BuildkiteTokenScope]s.
   static const List<BuildkiteTokenScope> _requiredTokenScopes = [
