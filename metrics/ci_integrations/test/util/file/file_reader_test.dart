@@ -20,7 +20,7 @@ void main() {
 
     final reader = FileReader(fileHelper: fileHelper);
 
-    PostExpectation whenFileExists() {
+    PostExpectation<bool> whenFileExists() {
       when(fileHelper.getFile(path)).thenReturn(file);
       return when(file.existsSync());
     }

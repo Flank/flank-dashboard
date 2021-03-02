@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("RawIntegrationConfigFactory", () {
-    const path = 'path';
+    const configPath = 'configPath';
     const content = 'content';
 
     final fileReader = _FileReaderMock();
@@ -75,18 +75,18 @@ void main() {
     test(
       ".create() reads the config file contents of the configuration file using the given file reader",
       () {
-        configFactory.create(path);
+        configFactory.create(configPath);
 
-        verify(fileReader.read(path)).called(1);
+        verify(fileReader.read(configPath)).called(1);
       },
     );
 
     test(
       ".create() parses the config file content using the given raw integration config parser",
       () {
-        when(fileReader.read(path)).thenReturn(content);
+        when(fileReader.read(configPath)).thenReturn(content);
 
-        configFactory.create(path);
+        configFactory.create(configPath);
 
         verify(rawConfigParser.parse(content)).called(1);
       },
@@ -101,7 +101,7 @@ void main() {
         );
         when(rawConfigParser.parse(any)).thenReturn(expectedConfig);
 
-        final config = configFactory.create(path);
+        final config = configFactory.create(configPath);
 
         expect(config, equals(expectedConfig));
       },

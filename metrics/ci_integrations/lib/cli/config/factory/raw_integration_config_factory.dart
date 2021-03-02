@@ -30,15 +30,15 @@ class RawIntegrationConfigFactory {
   })  : fileReader = fileReader ?? const FileReader(),
         rawConfigParser = rawConfigParser ?? const RawIntegrationConfigParser();
 
-  /// Creates a [RawIntegrationConfig] using the given [path].
+  /// Creates a [RawIntegrationConfig] using the given [configPath].
   ///
-  /// A [path] is a [File.path] of the YAML configuration file.
+  /// A [configPath] is a [File.path] of the YAML configuration file.
   ///
-  /// Throws an [ArgumentError] if the given [path] is `null`.
-  RawIntegrationConfig create(String path) {
-    ArgumentError.checkNotNull(path, 'path');
+  /// Throws an [ArgumentError] if the given [configPath] is `null`.
+  RawIntegrationConfig create(String configPath) {
+    ArgumentError.checkNotNull(configPath, 'configPath');
 
-    final fileContent = fileReader.read(path);
+    final fileContent = fileReader.read(configPath);
 
     return rawConfigParser.parse(fileContent);
   }
