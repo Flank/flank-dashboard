@@ -80,7 +80,7 @@ void main() {
       ).thenSuccessWith(null);
 
       return when(
-        validationDelegate.validateSourceProjectId(pipelineSlug),
+        validationDelegate.validatePipelineSlug(pipelineSlug),
       );
     }
 
@@ -205,7 +205,7 @@ void main() {
 
         await validator.validate(config);
 
-        verifyNever(validationDelegate.validateSourceProjectId(any));
+        verifyNever(validationDelegate.validatePipelineSlug(any));
       },
     );
 
@@ -274,7 +274,7 @@ void main() {
 
         await validator.validate(config);
 
-        verifyNever(validationDelegate.validateSourceProjectId(any));
+        verifyNever(validationDelegate.validatePipelineSlug(any));
       },
     );
 
@@ -369,7 +369,7 @@ void main() {
 
         await validator.validate(config);
 
-        verifyNever(validationDelegate.validateSourceProjectId(any));
+        verifyNever(validationDelegate.validatePipelineSlug(any));
       },
     );
 
@@ -416,7 +416,7 @@ void main() {
 
         await validator.validate(config);
 
-        verifyNever(validationDelegate.validateSourceProjectId(any));
+        verifyNever(validationDelegate.validatePipelineSlug(any));
       },
     );
 
@@ -442,7 +442,7 @@ void main() {
         await validator.validate(config);
 
         verify(
-          validationDelegate.validateSourceProjectId(pipelineSlug),
+          validationDelegate.validatePipelineSlug(pipelineSlug),
         ).called(1);
       },
     );
