@@ -9,7 +9,7 @@ import 'package:ci_integration/integration/interface/destination/config/model/de
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 
 /// A stub implementation of the [DestinationParty] to use in tests.
-class DestinationPartyStub extends DestinationParty {
+class DestinationPartyStub implements DestinationParty {
   @override
   IntegrationClientFactory<DestinationConfig, DestinationClient>
       get clientFactory => null;

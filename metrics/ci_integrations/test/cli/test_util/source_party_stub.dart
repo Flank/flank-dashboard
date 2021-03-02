@@ -9,7 +9,7 @@ import 'package:ci_integration/integration/interface/source/config/model/source_
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
 
 /// A stub implementation of the [SourceParty] to use in tests.
-class SourcePartyStub extends SourceParty {
+class SourcePartyStub implements SourceParty {
   @override
   IntegrationClientFactory<SourceConfig, SourceClient> get clientFactory =>
       null;

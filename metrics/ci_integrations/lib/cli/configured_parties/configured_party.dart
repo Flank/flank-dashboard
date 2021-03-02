@@ -3,11 +3,13 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
+import 'package:meta/meta.dart';
 
 /// An abstract class that represents a [Config] and an [IntegrationParty]
 /// that accepts this [Config].
+@immutable
 abstract class ConfiguredParty<T extends Config, P extends IntegrationParty> {
-  /// A parsed [Config] that the [party] accepts.
+  /// An integration configuration that is acceptable by the [party].
   final T config;
 
   /// An [IntegrationParty] of this configured party.

@@ -1,11 +1,11 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/cli/parties/configured_parties/configured_source_party.dart';
+import 'package:ci_integration/cli/configured_parties/configured_source_party.dart';
 import 'package:test/test.dart';
 
-import '../../test_util/source_config_stub.dart';
-import '../../test_util/source_party_stub.dart';
+import '../test_util/source_config_stub.dart';
+import '../test_util/source_party_stub.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -19,8 +19,8 @@ void main() {
       () {
         expect(
           () => ConfiguredSourceParty(
-            null,
-            party,
+            config: null,
+            party: party,
           ),
           throwsArgumentError,
         );
@@ -32,8 +32,8 @@ void main() {
       () {
         expect(
           () => ConfiguredSourceParty(
-            config,
-            null,
+            config: config,
+            party: null,
           ),
           throwsArgumentError,
         );
@@ -44,8 +44,8 @@ void main() {
       "creates an instance with the given parameters",
       () {
         final configuredParty = ConfiguredSourceParty(
-          config,
-          party,
+          config: config,
+          party: party,
         );
 
         expect(configuredParty.config, equals(config));

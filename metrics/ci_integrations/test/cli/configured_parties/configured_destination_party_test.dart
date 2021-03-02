@@ -1,11 +1,11 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/cli/parties/configured_parties/configured_destination_party.dart';
+import 'package:ci_integration/cli/configured_parties/configured_destination_party.dart';
 import 'package:test/test.dart';
 
-import '../../test_util/destination_config_stub.dart';
-import '../../test_util/destination_party_stub.dart';
+import '../test_util/destination_config_stub.dart';
+import '../test_util/destination_party_stub.dart';
 
 void main() {
   group("ConfiguredDestinationParty", () {
@@ -17,8 +17,8 @@ void main() {
       () {
         expect(
           () => ConfiguredDestinationParty(
-            null,
-            party,
+            config: null,
+            party: party,
           ),
           throwsArgumentError,
         );
@@ -30,8 +30,8 @@ void main() {
       () {
         expect(
           () => ConfiguredDestinationParty(
-            config,
-            null,
+            config: config,
+            party: null,
           ),
           throwsArgumentError,
         );
@@ -42,8 +42,8 @@ void main() {
       "creates an instance with the given parameters",
       () {
         final configuredParty = ConfiguredDestinationParty(
-          config,
-          party,
+          config: config,
+          party: party,
         );
 
         expect(configuredParty.config, equals(config));
