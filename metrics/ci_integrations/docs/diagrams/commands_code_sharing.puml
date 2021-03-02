@@ -1,0 +1,166 @@
+@startuml commands_code_sharing
+
+package cli {
+    package command {
+        abstract class CiIntegrationCommand {
+            + dynamic getArgumentValue(String argumentName)
+        }
+
+        class CoolCommand {
+            + rawIntegrationConfigFactory : RawIntegrationConfigFactory
+            + configuredPartiesFactory : ConfiguredPartiesFactory
+
+            + Future<void> run()
+        }
+    }
+
+    package parties as cli_parties {
+        abstract class Parties<T extends IntegrationParty> {
+            + parties : List<T>
+
+            + T getParty(Map<String, dynamic> config)
+        }
+
+        class SupportedSourceParties<SourceParty> {}
+
+        class SupportedDestinationParties<DestinationParty> {}
+
+        class SupportedIntegrationParties {
+            + sourceParties : Parties<SourceParty> 
+            + destinationParties : Parties<DestinatinoParty>
+        }
+    }
+
+    package configured_parties {
+        package factory as configured_parties_factory {
+            class ConfiguredPartiesFactory {
+                + supportedIntegrationParties : SupportedIntegrationParties
+
+                + ConfiguredParties create(RawIntegrationConfig config)
+            }
+        }
+
+        class ConfiguredParties {
+                + configuredSourceParty : ConfiguredSourceParty
+                + configuredDestinationParty : ConfiguredDestinationParty
+        }
+
+        abstract class ConfiguredParty<T extends Config, P extends IntegrationParty> {
+            + config : T
+            + party : P
+        }
+
+        class ConfiguredSourceParty<SourceConfig, SourceParty> {}
+
+        class ConfiguredDestinationParty<DestinationConfig, DestinationParty> {}
+    }
+    
+    package config {
+        package parser {
+            class RawIntegrationConfigParser {
+                + RawIntegrationConfig parse(String configYaml)
+            }
+        }
+
+        package factory {
+            class RawIntegrationConfigFactory {
+                + fileReader : FileReader
+                + rawIntegrationConfigParser : RawIntegrationConfigParser
+
+                + RawIntegrationConfig create(String path)
+            }
+        }
+    }
+    
+    package util {
+        class FileHelper {
+            + File getFile(String path)
+        }
+        
+        class FileReader {
+            + fileHelper : FileHelper
+            
+            + String read(String path)
+        }
+    }
+}
+
+package integration.interface {
+    package base {
+        package party as base_party {
+            abstract class IntegrationParty<T extends Config, K extends IntegrationClient> {
+                + clientFactory : IntegrationClientFactory<T, K>
+                + configParser : ConfigParser<T>
+                + configValidatorFactory : ConfigValidatorFactory<T>
+
+                + bool acceptsConfig(Map<String, dynamic> config)
+            }
+        }
+
+        package config as base_config {
+            interface Config {}
+        }
+    }
+
+    package source {
+        package party as source_party {
+            abstract class SourceParty {}
+        }
+
+        package config as source_config {
+            interface SourceConfig {
+                + sourceProjectId : String
+            }
+        }
+    }
+
+    package destination {
+        package party as destination_party {
+            abstract class DestinationParty {}
+        }
+
+        package config as destination_config {
+            interface DestinationConfig {
+                + getDestinationProjectId : String
+            }
+        }
+    }
+}
+
+
+SourceParty -up-|> IntegrationParty
+DestinationParty -up-|> IntegrationParty
+
+SupportedSourceParties --|> Parties
+SupportedDestinationParties --|> Parties
+
+Parties --> IntegrationParty : uses
+
+SourceConfig --|> Config
+DestinationConfig --|> Config
+
+SupportedIntegrationParties --> SupportedSourceParties : uses
+SupportedIntegrationParties --> SupportedDestinationParties : uses
+
+CoolCommand -up-|> CiIntegrationCommand
+CoolCommand -right-> RawIntegrationConfigFactory : uses
+CoolCommand --> ConfiguredPartiesFactory : uses
+
+RawIntegrationConfigFactory -left-> FileReader : uses
+RawIntegrationConfigFactory --> RawIntegrationConfigParser : uses
+
+FileReader --> FileHelper : uses
+
+ConfiguredPartiesFactory --> ConfiguredParties : creates
+ConfiguredPartiesFactory -right-> SupportedIntegrationParties : uses
+
+ConfiguredParties --> ConfiguredSourceParty : uses
+ConfiguredParties --> ConfiguredDestinationParty : uses
+
+ConfiguredSourceParty --|> ConfiguredParty
+ConfiguredDestinationParty --|> ConfiguredParty
+
+ConfiguredParty --> IntegrationParty : uses
+ConfiguredParty --> Config : uses
+
+@enduml

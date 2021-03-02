@@ -1,7 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
 import 'package:ci_integration/source/github_actions/client_factory/github_actions_source_client_factory.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
@@ -19,4 +21,8 @@ class GithubActionsSourceParty
   @override
   final GithubActionsSourceConfigParser configParser =
       const GithubActionsSourceConfigParser();
+
+  @override
+  final ConfigValidatorFactory<GithubActionsSourceConfig>
+      configValidatorFactory = const ConfigValidatorFactoryStub();
 }

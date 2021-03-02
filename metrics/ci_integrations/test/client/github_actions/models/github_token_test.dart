@@ -16,8 +16,10 @@ void main() {
       GithubTokenScope.repo,
     ];
 
-    const tokenJson = {'scopes': scopeStrings};
+    final tokenScopesMap = {'x-oauth-scopes': scopeStrings.join(', ')};
     const token = GithubToken(scopes: scopes);
+
+    final map = {'test': 'test', 'x-oauth-scopes': 'repo'};
 
     test(
       "creates an instance with the given parameters",
@@ -29,61 +31,48 @@ void main() {
     );
 
     test(
-      ".fromJson() returns null if the given json is null",
+      ".fromMap() returns null if the given map is null",
       () {
-        final token = GithubToken.fromJson(null);
+        final token = GithubToken.fromMap(null);
 
         expect(token, isNull);
       },
     );
 
     test(
-      ".fromJson() creates an instance from the given json",
+      ".fromMap() creates an instance from the given map",
       () {
-        final actualToken = GithubToken.fromJson(tokenJson);
+        final actualToken = GithubToken.fromMap(map);
 
         expect(actualToken, equals(token));
       },
     );
 
     test(
-      ".listFromJson() returns null if the given list is null",
+      ".fromMap() creates an instance with scopes equal to 'x-oauth-scopes' value",
       () {
-        final tokenList = GithubToken.listFromJson(null);
+        final token = GithubToken.fromMap(map);
 
-        expect(tokenList, isNull);
+        expect(token.scopes, equals(scopes));
       },
     );
 
     test(
-      ".listFromJson() returns an empty list if the given one is empty",
+      ".fromMap() creates an instance with an empty scopes if the given map does not have the 'x-oauth-scopes' key",
       () {
-        final tokenList = GithubToken.listFromJson([]);
+        final map = {'test': 'test'};
+        final token = GithubToken.fromMap(map);
 
-        expect(tokenList, isEmpty);
+        expect(token.scopes, isEmpty);
       },
     );
 
     test(
-      ".listFromJson() creates a list of GithubToken tokens from the given list of JSON encodable objects",
+      ".toMap() converts an instance to the scope's map",
       () {
-        const anotherTokenJson = <String, List<String>>{'scopes': []};
-        const anotherToken = GithubToken(scopes: []);
-        const jsonList = [tokenJson, anotherTokenJson];
-        const expectedList = [token, anotherToken];
+        final scopesMap = token.toMap();
 
-        final tokenList = GithubToken.listFromJson(jsonList);
-
-        expect(tokenList, equals(expectedList));
-      },
-    );
-
-    test(
-      ".toJson converts an instance to the json encodable map",
-      () {
-        final json = token.toJson();
-
-        expect(json, equals(tokenJson));
+        expect(scopesMap, equals(tokenScopesMap));
       },
     );
   });

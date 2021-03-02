@@ -15,7 +15,7 @@ Therefore, the document's goal is to investigate all approaches of managing Clou
 - [Admin SDK](https://developers.google.com/admin-sdk)
 - [dartbase_admin package](https://pub.dev/packages/dartbase_admin)
 
-## Analyze
+## Analysis
 
 ### Process
 

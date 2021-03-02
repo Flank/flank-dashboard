@@ -27,7 +27,7 @@ The document's goal is to investigate and analyze tools and methods that can hel
 - [generate sha256 hash](https://ss64.com/osx/shasum.html)
 - [import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
 
-# Analyze
+# Analysis
 
 ## Process
 

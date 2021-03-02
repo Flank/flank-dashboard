@@ -11,6 +11,10 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
+import 'package:ci_integration/client/github_actions/models/github_repository.dart';
+import 'package:ci_integration/client/github_actions/models/github_token.dart';
+import 'package:ci_integration/client/github_actions/models/github_user.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
@@ -466,6 +470,107 @@ class GithubActionsClient with LoggerMixin {
         message: 'Failed to perform an operation. Error details: $error',
       );
     }
+  }
+
+  /// Fetches a [GithubToken] by the given [auth].
+  ///
+  /// Throws an [ArgumentError] if the given [auth] is `null`.
+  Future<InteractionResult<GithubToken>> fetchToken(
+    AuthorizationBase auth,
+  ) {
+    ArgumentError.checkNotNull(auth, 'auth');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'user',
+    );
+
+    final requestHeaders = {
+      ...headers,
+      ...auth.toMap(),
+    };
+
+    return _handleResponse(
+      _client.get(url, headers: requestHeaders),
+      (_, headers) {
+        final githubToken = GithubToken.fromMap(headers);
+
+        return InteractionResult.success(result: githubToken);
+      },
+    );
+  }
+
+  /// Fetches a [GithubUser] by the given [name].
+  ///
+  /// Throws an [ArgumentError] if the given [name] is `null`.
+  Future<InteractionResult<GithubUser>> fetchGithubUser(
+    String name,
+  ) {
+    ArgumentError.checkNotNull(name, 'name');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'users/$name',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final githubUser = GithubUser.fromJson(json);
+
+        return InteractionResult.success(result: githubUser);
+      },
+    );
+  }
+
+  /// Fetches a [GithubRepository] by the given [repositoryName]
+  /// and [repositoryOwner].
+  ///
+  /// Throws an [ArgumentError] if at least one of the given parameters
+  /// is `null`.
+  Future<InteractionResult<GithubRepository>> fetchGithubRepository({
+    String repositoryName,
+    String repositoryOwner,
+  }) {
+    ArgumentError.checkNotNull(repositoryName, 'repositoryName');
+    ArgumentError.checkNotNull(repositoryOwner, 'repositoryOwner');
+
+    final url = UrlUtils.buildUrl(
+      githubApiUrl,
+      path: 'repos/$repositoryOwner/$repositoryName',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final githubRepository = GithubRepository.fromJson(json);
+
+        return InteractionResult.success(result: githubRepository);
+      },
+    );
+  }
+
+  /// Fetches a [GithubActionsWorkflow] by the given [workflowId].
+  ///
+  /// Throws an [ArgumentError] if the given [workflowId] is `null`.
+  Future<InteractionResult<GithubActionsWorkflow>> fetchWorkflow(
+    String workflowId,
+  ) {
+    ArgumentError.checkNotNull(workflowId, 'workflowId');
+
+    final url = UrlUtils.buildUrl(
+      basePath,
+      path: 'workflows/$workflowId',
+    );
+
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (json, _) {
+        final workflow = GithubActionsWorkflow.fromJson(json);
+
+        return InteractionResult.success(result: workflow);
+      },
+    );
   }
 
   /// Processes the given [currentPage] and delegates fetching to the given

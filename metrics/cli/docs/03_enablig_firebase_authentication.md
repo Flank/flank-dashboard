@@ -16,7 +16,7 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [gcloud CLI auth](https://cloud.google.com/sdk/gcloud/reference/auth)
 
-## Analyze
+## Analysis
 
 ### Process
 
