@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/integration/stub/base/config/validation_delegate/validation_delegate_stub.dart';
 import 'package:ci_integration/integration/stub/base/config/validator/validator_stub.dart';
 import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
@@ -19,6 +20,17 @@ void main() {
         final result = configFactory.create(config);
 
         expect(result, isA<ValidatorStub>());
+      },
+    );
+
+    test(
+      ".create() returns a validator stub with the validation delegate stub as a validation delegate",
+      () {
+        final result = configFactory.create(config);
+
+        final delegate = result.validationDelegate;
+
+        expect(delegate, isA<ValidationDelegateStub>());
       },
     );
 

@@ -4,12 +4,13 @@
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
+import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
 /// A [SourceValidationDelegate] for the Buildkite source integration.
-class BuildkiteSourceValidationDelegate {
+class BuildkiteSourceValidationDelegate implements ValidationDelegate {
   /// A [List] containing all required [BuildkiteTokenScope]s.
   static const List<BuildkiteTokenScope> _requiredTokenScopes = [
     BuildkiteTokenScope.readBuilds,

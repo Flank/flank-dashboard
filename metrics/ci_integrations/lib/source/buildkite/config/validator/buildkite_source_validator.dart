@@ -17,8 +17,7 @@ import 'package:meta/meta.dart';
 
 /// A class responsible for validating the [BuildkiteSourceConfig].
 class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
-  /// A [BuildkiteSourceValidationDelegate] this validator uses
-  /// for [BuildkiteSourceConfig]'s fields validation.
+  @override
   final BuildkiteSourceValidationDelegate validationDelegate;
 
   @override

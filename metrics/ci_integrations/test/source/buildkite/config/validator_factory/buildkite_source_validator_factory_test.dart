@@ -39,8 +39,7 @@ void main() {
     test(
       ".create() returns a buildkite source validator with the buildkite source validation delegate",
       () {
-        final validator =
-            validatorFactory.create(config) as BuildkiteSourceValidator;
+        final validator = validatorFactory.create(config);
 
         expect(
           validator.validationDelegate,
