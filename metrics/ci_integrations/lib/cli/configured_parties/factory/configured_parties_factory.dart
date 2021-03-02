@@ -56,6 +56,9 @@ class ConfiguredPartiesFactory {
       party: destinationParty,
     );
 
-    return ConfiguredParties(configuredSourceParty, configuredDestinationParty);
+    return ConfiguredParties(
+      configuredSourceParty: configuredSourceParty,
+      configuredDestinationParty: configuredDestinationParty,
+    );
   }
 }

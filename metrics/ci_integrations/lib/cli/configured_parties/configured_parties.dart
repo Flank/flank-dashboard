@@ -7,6 +7,7 @@ import 'package:ci_integration/integration/interface/destination/config/model/de
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 import 'package:ci_integration/integration/interface/source/config/model/source_config.dart';
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
+import 'package:meta/meta.dart';
 
 /// A class that holds a [ConfiguredSourceParty] and a
 /// [ConfiguredDestinationParty].
@@ -23,10 +24,10 @@ class ConfiguredParties {
   /// [configuredSourceParty] and [configuredDestinationParty].
   ///
   /// Throws an [ArgumentError] if any of the given parameters is `null`.
-  ConfiguredParties(
-    this.configuredSourceParty,
-    this.configuredDestinationParty,
-  ) {
+  ConfiguredParties({
+    @required this.configuredSourceParty,
+    @required this.configuredDestinationParty,
+  }) {
     ArgumentError.checkNotNull(configuredSourceParty, 'configuredSourceParty');
     ArgumentError.checkNotNull(
       configuredDestinationParty,

@@ -30,7 +30,10 @@ void main() {
       "throws an ArgumentError if the given configured source party is null",
       () {
         expect(
-          () => ConfiguredParties(null, configuredDestinationParty),
+          () => ConfiguredParties(
+            configuredSourceParty: null,
+            configuredDestinationParty: configuredDestinationParty,
+          ),
           throwsArgumentError,
         );
       },
@@ -40,7 +43,10 @@ void main() {
       "throws an ArgumentError if the given configured destination party is null",
       () {
         expect(
-          () => ConfiguredParties(configuredSourceParty, null),
+          () => ConfiguredParties(
+            configuredSourceParty: configuredSourceParty,
+            configuredDestinationParty: null,
+          ),
           throwsArgumentError,
         );
       },
@@ -50,8 +56,8 @@ void main() {
       "creates an instance with the given parameters",
       () {
         final configuredParties = ConfiguredParties(
-          configuredSourceParty,
-          configuredDestinationParty,
+          configuredSourceParty: configuredSourceParty,
+          configuredDestinationParty: configuredDestinationParty,
         );
 
         final resultSourceParty = configuredParties.configuredSourceParty;
