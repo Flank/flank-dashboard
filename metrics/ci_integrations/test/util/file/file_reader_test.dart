@@ -18,7 +18,12 @@ void main() {
     final fileHelper = _FileHelperMock();
     final file = FileMock();
 
-    final reader = FileReader(fileHelper);
+    final reader = FileReader(fileHelper: fileHelper);
+
+    PostExpectation whenFileExists() {
+      when(fileHelper.getFile(path)).thenReturn(file);
+      return when(file.existsSync());
+    }
 
     tearDown(() {
       reset(fileHelper);
@@ -28,7 +33,7 @@ void main() {
     test(
       "creates an instance with the given file helper",
       () {
-        final reader = FileReader(fileHelper);
+        final reader = FileReader(fileHelper: fileHelper);
 
         expect(reader.fileHelper, equals(fileHelper));
       },
@@ -37,7 +42,7 @@ void main() {
     test(
       "creates an instance with the default file helper, if the given file helper is null",
       () {
-        const reader = FileReader(null);
+        const reader = FileReader(fileHelper: null);
 
         expect(reader.fileHelper, isNotNull);
       },
@@ -46,8 +51,7 @@ void main() {
     test(
       ".read() gets the file with the given path using the given file helper",
       () {
-        when(fileHelper.getFile(path)).thenReturn(file);
-        when(file.existsSync()).thenReturn(true);
+        whenFileExists().thenReturn(true);
 
         reader.read(path);
 
@@ -58,8 +62,7 @@ void main() {
     test(
       ".read() throws a StateError if the file with the given path does not exist",
       () {
-        when(fileHelper.getFile(path)).thenReturn(file);
-        when(file.existsSync()).thenReturn(false);
+        whenFileExists().thenReturn(false);
 
         expect(() => reader.read(path), throwsStateError);
       },
@@ -68,8 +71,7 @@ void main() {
     test(
       ".read() returns the contents of the file",
       () {
-        when(fileHelper.getFile(path)).thenReturn(file);
-        when(file.existsSync()).thenReturn(true);
+        whenFileExists().thenReturn(true);
         when(file.readAsStringSync()).thenReturn(content);
 
         final fileContent = reader.read(path);

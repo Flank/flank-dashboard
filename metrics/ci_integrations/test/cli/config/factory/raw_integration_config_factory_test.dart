@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default file reader, if the given file reader is null",
+      "creates an instance with the default file reader, if the given one is null",
       () {
         final rawConfigFactory = RawIntegrationConfigFactory(
           fileReader: null,
@@ -75,8 +75,6 @@ void main() {
     test(
       ".create() reads the config file contents of the configuration file using the given file reader",
       () {
-        when(fileReader.read(path)).thenReturn(content);
-
         configFactory.create(path);
 
         verify(fileReader.read(path)).called(1);
@@ -101,8 +99,7 @@ void main() {
           sourceConfigMap: const {},
           destinationConfigMap: const {},
         );
-        when(fileReader.read(path)).thenReturn(content);
-        when(rawConfigParser.parse(content)).thenReturn(expectedConfig);
+        when(rawConfigParser.parse(any)).thenReturn(expectedConfig);
 
         final config = configFactory.create(path);
 

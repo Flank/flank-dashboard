@@ -7,7 +7,7 @@ import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
 import 'package:ci_integration/cli/config/parser/raw_integration_config_parser.dart';
 import 'package:ci_integration/util/file/file_reader.dart';
 
-/// A class that is resposible for creating [RawIntegrationConfigParser].
+/// A class that is responsible for creating [RawIntegrationConfigParser].
 class RawIntegrationConfigFactory {
   /// A [FileReader] this factory uses to read the contents of the YAML
   /// configuration file.
@@ -20,10 +20,9 @@ class RawIntegrationConfigFactory {
   /// Creates a new instance of the [RawIntegrationConfigFactory] with the given
   /// [fileReader] and [rawConfigParser].
   ///
-  /// If the given [fileReader] is `null`, a new instance of the [FileReader]
+  /// If the given [fileReader] is `null`, an instance of the [FileReader]
   /// is used.
-  ///
-  /// If the given [rawConfigParser] is `null`, a new instance
+  /// If the given [rawConfigParser] is `null`, an instance
   /// of the [RawIntegrationConfigParser] is used.
   const RawIntegrationConfigFactory({
     FileReader fileReader,
