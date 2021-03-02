@@ -1,0 +1,74 @@
+@startuml firestore_managing_data_class_diagram
+
+package firebase {
+    package service as firebase.service {
+        interface FirebaseService {
+            + login(): Future<String>
+            + addProject(String gcloudProjectId): Future<void>
+            + initAdminFirestore(String projectId, String service) : Future<void>
+            + seedFirestoreData() : Future<void>
+            + deployHosting(String appPath): Future<void>
+            + deployFirestore(String firestorePath): Future<void>
+        }
+    }
+
+    package adapter as firebase.adapter {
+        class FirebaseServiceAdapter {
+            - _firebaseCli: FirebaseCli
+            - _firestoreConfigRepository: FirestoreConfigRepository
+        }
+    }
+
+    package cli as firebase.cli {
+        class FirebaseCli {
+        }
+    }
+
+    package repository as firebase.repository {
+        class FirestoreConfigRepository {
+            - _firestore : Firestore
+            + addAllowedDomain(String domain) : Future<void>
+            + setFeatureConfig(bool isPasswordSignInOptionEnabled, bool isDebugMenuEnabled): Future<void>
+        }
+    }
+}
+
+package interfaces {
+    package service {
+        interface InfoService {
+            + version() : Future<void>
+        }
+    }
+}
+
+package core {
+    package data.model {
+        class FeatureConfigData {
+            + Map<String, dynamic> toJson()
+            + factory fromJson(Map<String, dynamic> json)
+        }
+    }
+
+    package domain.entities {
+        class FeatureConfig {
+            + isPasswordSignInOptionEnabled : bool
+            + isDebugMenuEnabled : bool
+        }
+    }
+}
+
+package dartbase_admin {
+}
+
+FirebaseService --|> InfoService
+FeatureConfigData --|> FeatureConfig
+
+FirebaseServiceAdapter ..|> FirebaseService
+FirebaseServiceAdapter --> FirebaseCli : uses
+FirebaseServiceAdapter --> FirestoreConfigRepository : uses
+FirebaseServiceAdapter -up-> dartbase_admin : uses
+
+FirestoreConfigRepository -up-> dartbase_admin : uses
+FirestoreConfigRepository --> FeatureConfigData : uses
+
+@enduml

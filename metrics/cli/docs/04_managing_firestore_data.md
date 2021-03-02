@@ -34,9 +34,17 @@ The `dartbase_admin` package requires the following parameters:
 
 2. The JSON of the service account's key, which can be downloaded using the following command:
 
-```bash
-gcloud iam service-accounts keys create key.json --iam-account project_id@appspot.gserviceaccount.com
-```
+    ```bash
+    gcloud iam service-accounts keys create key.json --iam-account project_id@appspot.gserviceaccount.com
+    ```
+
+    _**Note**: The above-described key is a `private key` for the chosen service account, which requires additional secure factors when working with it. 
+    Therefore, to make sure the user does not need to worry about managing created `private key`, the CLI tool should deactivate the `key` after finishing work with it using the following command:_
+ 
+    ```bash
+    gcloud iam service-accounts keys delete KEY-ID --iam-account=project_id@appspot.gserviceaccount.com
+    ```
+
 
 Example of creating document using dart package:
 
@@ -112,3 +120,34 @@ Cons:
 ### Decision
 
 As we've analyzed above, the [Cloud Functions](#using-cloud-functions-for-firebase) does not allow us to automate the Cloud Firestore data managing, so we should choose the [Dart Package](#using-dart-package) since it provides a more clean and fully automated way of managing Cloud Firestore data.
+
+## Design
+
+The following sections provide an implementation of managing Firestore data integration into the Metrics CLI tool. 
+
+Let's take a look on the main classes the managing firestore data integration requires.
+
+### FirestoreConfigRepository
+
+The `FirestoreConfigRepository` is a repository, which provides methods for managing the [feature config](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) 
+and [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-allowed_email_domains-collection) collections data. For this, purposes the repository using the [dartbase_admin package](https://pub.dev/packages/dartbase_admin) as described in the [decision](#decision).
+
+### FirebaseService
+
+The `FirebaseService` is an existing service interface, in which we should add the following methods required for this integration:
+- `seedFirestoreData` - seeds Firestore database with required data;
+- `initAdminFirestore` - initializes Firestore database with Admin privileges.
+
+### GcloudService
+
+The `GcloudService` is an existing service interface, in which we should add the following methods required for this integration:
+- `downloadServiceKey` - downloads a service account's key;
+- `deactivateServiceKey` - deactivates a service account's key.
+
+### FirebaseServiceAdapter
+
+The `FirebaseServiceAdapter` is an adapter for the [`FirebaseService`](#FirebaseService), which implements new added features using the [`FirestoreConfigRepository`](#FirestoreConfigRepository) and the [dartbase_admin package](https://pub.dev/packages/dartbase_admin).
+
+Here is a class diagram, which demonstrates the structure and relationships of classes the Managing Firestore data integration requires:
+
+![Managing Firestore Data class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/design_doc_firestore_data/metrics/cli/docs/diagrams/managing_firestore_data_class_diagram.puml)
