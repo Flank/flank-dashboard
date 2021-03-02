@@ -47,18 +47,20 @@ Consider the following code snippet that demonstrates the usage of the `Lottie` 
 ```dart
 @override
 Widget build(Buildcontext context) {
-  return Lottie.network(
+  return Lottie.asset(
     'web/animation_name.json',
     alignment: Alignment.center,
     animate: true,
+    bundle: assetBundle,
     controller: controller,
     framerate: FrameRate(50),
   );
 }
 ```
 
+For testing purposes we can mock the `AssetBundle` and pass it with the constructor or use the `Lottie.network` constructor and mock the `HttpClient` under tests.
+
 Pros:
-- Provides good Flutter-like API.
 - Well customizable.
 - Good performance.
 
@@ -116,17 +118,16 @@ class _SomeAnimationWidgetState extends State<SomeAnimationWidget> {
 }
 ```
 
-To test the `Rive` package, we will need to inject the `RootBundle` to be able to mock the animation asset bytes.
+To test the `Rive` package, we can inject the `AssetBundle` to mock the animation assets.
 
 Pros:
 - Animations are rendered as expected on both web and mobile. 
 - Good performance.
 
 Cons:
-- Has worse API comparing to the [Lottie](#lottie).
 - Needs additional setup for testing.
 
 
 ### Decision
 
-As we've analyzed above, even though the `Lottie` library has a better developer experience, it is not suitable for mobile at the moment, so we are going to use the `Rive` package to render the animations for the Metrics Web Application.
+As we've analyzed above the `Lottie` library is not suitable for mobile at the moment, so we are going to use the `Rive` package to render the animations for the Metrics Web Application.
