@@ -39,6 +39,7 @@ package integration.ci as CI {
         + destinationClient: DestinationClient
         + sync(SyncConfig config): InteractionResult
         - _syncInProgressBuilds(SyncConfig config): InteractionResult
+        - _syncInProgressBuild(SyncConfig config, BuildData build): BuildData
         - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
         - _shouldTimeoutBuild(Duration timeout, BuildData build): bool
         - _timeoutBuild(Duration timeout, BuildData build): BuildData

@@ -11,38 +11,20 @@ participant DestinationClient
 |||
 CiIntegration -> DestinationClient ++ : fetchBuildsWithStatus(//config.destinationProjectId, BuildStatus.inProgress//)
 return //buildsInProgress//
-
+note right of CiIntegration: //final buildsUpdate = []//
 loop for each //build// in //buildsInProgress//
-    CiIntegration -> SourceClient ++ : fetchBuild(//config.sourceProjectId, build.buildNumber//)
-    return //sourceBuild//
-    CiIntegration -> CiIntegration ++ : _shouldTimeoutBuild(//config.inProgressTimeout//, //sourceBuild//)
-    return //shouldTimeout//
+    CiIntegration -> CiIntegration ++ : _syncInProgressBuild(//config, build//)
+    return //refreshedBuild//
     |||
-    alt //shouldTimeout// is true
-        ||8||
-        CiIntegration -> CiIntegration ++ : _timeoutBuild(//config.inProgressTimeout, build//)
-        return //newBuild//
-        ||8||
-    else //sourceBuild.status != BuildStatus.inProgress//
-        ||8||
-        CiIntegration --> CiIntegration : //newBuild = sourceBuild.copyWith(id: build.id, projectId: build.projectId)//
-        ||8||
-    else //sourceBuild.status == BuildStatus.inProgress//
-        note right of CiIntegration: keep //build// unchanged
+    opt //refreshedBuild// != null
+        note right of CiIntegration: //buildsUpdate.add(refreshedBuild)//
     end
-    |||
-    CiIntegration --> CiIntegration : //buildsUpdate.add(newBuild)//
 end
-
+|||
 opt config.coverage
     ||8||
     CiIntegration -> CiIntegration ++ : //_addCoverageData(buildsUpdate)//
-    loop for each //build// in //buildsUpdate//
-        CiIntegration -> SourceClient ++ : fetchCoverage(//build//)
-        return //percent//
-        note right of CiIntegration: add //percent// value to //build// and save to the resulting list
-    end
-    return buildsUpdate
+    return //buildsUpdate//
     ||8||
 end
 

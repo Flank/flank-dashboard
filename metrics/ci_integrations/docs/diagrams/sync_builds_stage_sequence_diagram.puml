@@ -27,11 +27,6 @@ end
 opt config.coverage
     ||8||
     CiIntegration -> CiIntegration ++ : //_addCoverageData(builds)//
-    loop for each //build// in //builds//
-        CiIntegration -> SourceClient ++ : fetchCoverage(//build//)
-        return //percent//
-        note right of CiIntegration: add //percent// value to //build// and save to the resulting list
-    end
     return builds
     ||8||
 end

@@ -64,18 +64,30 @@ The first stage of the synchronization algorithm is to re-sync the stored In-Pro
 1. Query builds having In-Progress status from the `destination`.
 2. Re-sync each build from the list of in-progress builds:
     1. Fetch the corresponding build from the `source`.
-    2. Change the status of the build to the new from the `source` or force timeout if the build exceeds the `--in-progress-timeout` and still has in-progress status.
+    2. If the `source` failed to load the corresponding build:
+        1. If the build exceeds the `--in-progress-timeout`, time-out the build.
+        2. Otherwise, keep the in-progress build unchanged.
+    3. If the corresponding build is still running:
+        1. If the build exceeds the `--in-progress-timeout`, time-out the build.
+        2. Otherwise, keep the in-progress build unchanged.
+    4. If the corresponding build is finished:
+        1. Change the status of the in-progress build to the new one.
 3. Fetch the coverage data for re-synced builds if necessary.
 4. Update the in-progress builds in the `destination` with new data.
 
-You may find the second sub-step a bit tricky, and it is. The reason is that there are some edge cases for in-progress builds. Consider the following possibilities: 
+The following activity diagram details the second step for a single in-progress build:
 
-- The `source` integration failed to fetch the corresponding build.
-- The corresponding build in the `source` is still running. 
+![Re-sync single build activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_single_build_activity_diagram.puml)
 
-In both cases, the algorithm checks whether the build exceeds the specified `--in-progress-timeout`. If yes, the build is considered as finished with `unknown` status. Otherwise, the build stays unchanged.
+More precisely, the code snippet below demonstrates the meaning of the *should force timeout* statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
 
-The following activity diagram describes the re-sync in-progress builds stage:
+```dart
+    final now = DateTime.now();
+    final duration = now.difference(build.startedAt);
+    final shouldTimeout = duration > config.inProgressTimeout;
+```
+
+Finally, the following activity diagram describes the re-sync in-progress builds stage:
 
 ![Re-sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
 
@@ -87,7 +99,7 @@ To prevent storing a great number of in-progress builds that likely may never be
 
 Let's consider an example to make the described process clearer.
 
-> A user wants to sync builds from Jenkins (as a `source`) with the Firestore database (as a `destination`). There is one in-progress build in the database: 
+> A user wants to sync builds from Jenkins (as a `source`) with the Firestore database (as a `destination`). There is one in-progress build in the database:
 > ```json
 > {
 >   "buildNumber": 3,
@@ -105,7 +117,7 @@ Let's consider an example to make the described process clearer.
 > 4. The sync algorithm checks the current duration of the build to re-sync (the difference of `build.startedAt` and `DateTime.now()`) and compares it to the `--in-progress-timeout` value. The current duration appears to be greater than 60 minutes (let's assume `61 minutes`).
 > 5. The sync algorithm updates the build object in Firestore with `BuildStatus.unknown` and the duration equal to the `build.startedAt + 60 minutes`.
 > 
-> So the result of re-syncing in-progress builds in the user's case is the following: 
+> So the result of re-syncing in-progress builds in the user's case is the following:
 > ```json
 > {
 >   "buildNumber": 3,
@@ -118,15 +130,15 @@ _**Note**: If the `source` loads the corresponding build successfully but this b
 
 #### Timeout Edge Case
 
-The timeout logic is supposed to use the current date and time to define whether the build should be timed out. The [`DateTime.now()`](https://api.dart.dev/stable/2.10.5/dart-core/DateTime/DateTime.now.html) constructor creates a `DateTime` instance with the current date and time using the corresponding values from the environment (i.e. a machine the code is running on). If there is a bug in the environment related to date and time or these values are forced to be incorrect, the timeout logic is likely to perform wrong. 
+The timeout logic is supposed to use the current date and time to define whether the build should be timed out. The [`DateTime.now()`](https://api.dart.dev/stable/2.10.5/dart-core/DateTime/DateTime.now.html) constructor creates a `DateTime` instance with the current date and time using the corresponding values from the environment (i.e. a machine the code is running on). If there is a bug in the environment related to date and time or these values are forced to be incorrect, the timeout logic is likely to perform wrong.
 
-The following cases are possible: 
+The following cases are possible:
 - The environment date and time are in the _future_. In this case, the in-progress builds will be timed out faster than expected. That may significantly affect the project metrics on the Metrics Web Application providing unreliable information about project performance and results of builds.
 - The environment date and time are in the _past_. In this case, the in-progress builds will never be timed out. That may significantly increase the number of in-progress builds in the `destination`, which are likely never finish re-syncing unless the date and time are updated.
 
 The described issues with date and time are strongly related to the environment the CI Integration tool is running on. Also, these issues are hard to detect programmatically, and attempts to solve them lead to boilerplate code. However, the mentioned problems are very unlikely and tend to be noticed very soon as they appear.
 
-According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider this while configuring builds syncing, or automating this process! 
+According to the noticed points, the CI Integration tool considers that the environment's date and time are correct. This means that the tool doesn't attempt to solve the possible problems related to incorrect environment's date and time. Please consider this while configuring builds syncing, or automating this process!
 
 ### Sync Builds
 
@@ -161,18 +173,23 @@ Let's consider the following class diagram that contains the main classes and in
 
 ![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
-When a user starts the synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively. 
+When a user starts the synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively.
 
-The following sequence diagrams detail the two main processes of the sync algorithm:
-
-- **Re-Syncing In-Progress Builds**:
+First, the `CiIntegration.sync` calls the `_syncInProgressBuilds` method that re-syncs in-progress builds. The sequence diagram below details the method's algorithm:
 
 ![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
+In the above diagram, the method `_syncInProgressBuild` re-syncs a single in-progress build returning either a new build data to store or `null` (meaning the build has no updates). The following sequence diagram explains the activity diagram for a single build from the [Re-Sync In-Progress Builds](#re-sync-in-progress-builds) section:
 
-- **Syncing Builds**:
+![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
+
+After the re-syncing process completes, the sync algorithm proceeds to the sync builds stage and calls the `_syncBuilds` method. The sequence diagram below details the method's algorithm:
 
 ![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
+
+Both of the above stages uses the `_addCoverageData` method to fetch coverage for builds if the appropriate configuration is enabled. The diagram below examines the coverage fetching for the given list of builds:
+
+![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_sync_doc/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?

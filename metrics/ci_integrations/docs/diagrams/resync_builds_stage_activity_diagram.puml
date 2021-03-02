@@ -1,5 +1,6 @@
 @startuml resync_builds_stage_activity_diagram
 'https://plantuml.com/activity-diagram-beta
+
 skinparam ConditionEndStyle hline
 
 :destination.fetchBuildsWithStatus(BuildStatus.inProgress) -> **buildsInProgress**;
@@ -9,30 +10,15 @@ note left
 end note
 
 partition "for each **build** in **buildsInProgress**" {
-    :source.fetchBuild() -> **sourceBuild**;
-
-    if (**sourceBuild** is finished) then (no)
-        if (should force timeout) then (yes)
-            :force time out -> **newBuild**;
-            note left
-                controlled by CLI option
-                //--in-progress-timeout//
-                defaults to //120 minutes//
-            end note
-        else (no)
-        endif
-    else (yes) 
-        :process **build** -> **newBuild**;
-    endif
-
-    if (**newBuild** is not **null**) then (yes)
+    :resync **build** -> **newBuild**;
+    if (**newBuild** is **null**) then (yes)
+    else (no)
         :**result**.add(**newBuild**);
-    else(no)
     endif
 }
 
 if (should fetch coverage) then (yes)
-    partition "for each **build** in result" {
+    partition "for each **build** in **result**" {
         :source.fetchCoverage(**build**) -> **coverage**;
         :update **build** with **coverage**;
     }
