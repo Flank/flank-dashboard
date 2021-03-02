@@ -125,12 +125,13 @@ As we've analyzed above, the [Cloud Functions](#using-cloud-functions-for-fireba
 
 The following sections provide an implementation of managing Firestore data integration into the Metrics CLI tool. 
 
-Let's take a look on the main classes the managing firestore data integration requires.
+Let's take a look on the main classes the managing Firestore data integration requires.
 
 ### FirestoreConfigRepository
 
 The `FirestoreConfigRepository` is a repository, which provides methods for managing the [feature config](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) 
-and [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-allowed_email_domains-collection) collections data. For this, purposes the repository using the [dartbase_admin package](https://pub.dev/packages/dartbase_admin) as described in the [decision](#decision).
+and [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-allowed_email_domains-collection) collections data. 
+To implement these methods, the repository using the [dartbase_admin package](https://pub.dev/packages/dartbase_admin) as described in the [decision](#decision).
 
 ### FirebaseService
 
@@ -146,8 +147,8 @@ The `GcloudService` is an existing service interface, in which we should add the
 
 ### FirebaseServiceAdapter
 
-The `FirebaseServiceAdapter` is an adapter for the [`FirebaseService`](#FirebaseService), which implements new added features using the [`FirestoreConfigRepository`](#FirestoreConfigRepository) and the [dartbase_admin package](https://pub.dev/packages/dartbase_admin).
+The `FirebaseServiceAdapter` is an adapter for the [`FirebaseService`](#FirebaseService), which implements new added methods using the [`FirestoreConfigRepository`](#FirestoreConfigRepository) and the [dartbase_admin package](https://pub.dev/packages/dartbase_admin).
 
-Here is a class diagram, which demonstrates the structure and relationships of classes the Managing Firestore data integration requires:
+Here is a class diagram, which demonstrates the structure and relationships of classes the managing Firestore data integration requires:
 
 ![Managing Firestore Data class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/design_doc_firestore_data/metrics/cli/docs/diagrams/managing_firestore_data_class_diagram.puml)

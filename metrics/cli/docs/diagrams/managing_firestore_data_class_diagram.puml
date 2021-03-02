@@ -1,11 +1,23 @@
 @startuml firestore_managing_data_class_diagram
 
+package deploy {
+    class Deployer {
+        - _fileHelper: FileHelper
+        - _npmService : NpmService
+        - _gitService : GitService
+        - _flutterService : FlutterService
+        - _gcloudService : GCloudService
+        - _firebaseService : FirebaseService
+        + deploy() : Future<void>
+    }
+}
+
 package firebase {
     package service as firebase.service {
         interface FirebaseService {
             + login(): Future<String>
             + addProject(String gcloudProjectId): Future<void>
-            + initAdminFirestore(String projectId, String service) : Future<void>
+            + initAdminFirestore(String projectId, String servicePath) : Future<void>
             + seedFirestoreData() : Future<void>
             + deployHosting(String appPath): Future<void>
             + deployFirestore(String firestorePath): Future<void>
@@ -16,11 +28,7 @@ package firebase {
         class FirebaseServiceAdapter {
             - _firebaseCli: FirebaseCli
             - _firestoreConfigRepository: FirestoreConfigRepository
-        }
-    }
-
-    package cli as firebase.cli {
-        class FirebaseCli {
+            - _ prompter: Prompter
         }
     }
 
@@ -29,14 +37,6 @@ package firebase {
             - _firestore : Firestore
             + addAllowedDomain(String domain) : Future<void>
             + setFeatureConfig(bool isPasswordSignInOptionEnabled, bool isDebugMenuEnabled): Future<void>
-        }
-    }
-}
-
-package interfaces {
-    package service {
-        interface InfoService {
-            + version() : Future<void>
         }
     }
 }
@@ -57,14 +57,23 @@ package core {
     }
 }
 
-package dartbase_admin {
+package dartbase_admin {}
+
+package gcloud {
+    interface GCloudService {
+        + login() : Future<void>
+        + createProject() : Future<String>
+        + downloadServiceKey(String path, String serviceEmail) : Future<void>
+        + deactivateServiceKey(String path) : Future<void>
+    }
 }
 
-FirebaseService --|> InfoService
+Deployer --> FirebaseServiceAdapter : uses
+Deployer --> GCloudService : uses
+
 FeatureConfigData --|> FeatureConfig
 
 FirebaseServiceAdapter ..|> FirebaseService
-FirebaseServiceAdapter --> FirebaseCli : uses
 FirebaseServiceAdapter --> FirestoreConfigRepository : uses
 FirebaseServiceAdapter -up-> dartbase_admin : uses
 
