@@ -41,8 +41,7 @@ package integration.ci as CI {
         - _syncInProgressBuilds(SyncConfig config): InteractionResult
         - _syncInProgressBuild(SyncConfig config, BuildData build): BuildData
         - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
-        - _shouldTimeoutBuild(Duration timeout, BuildData build): bool
-        - _timeoutBuild(Duration timeout, BuildData build): BuildData
+        - _shouldTimeoutBuild(DateTime startedAt, Duration timeout): bool
         - _syncBuilds(SyncConfig config): InteractionResult
         - _addCoverageData(List<BuildData> builds): List<BuildData>
     }
