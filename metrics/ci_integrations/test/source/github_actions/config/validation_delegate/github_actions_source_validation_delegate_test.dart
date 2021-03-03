@@ -164,7 +164,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful interaction if the fetched Github token has required scopes",
+      ".validateAuth() returns a successful interaction if the fetched Github token has required scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -177,7 +177,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction containing the fetched Github token if the fetched Github token has required scopes",
+      ".validateAuth() returns an interaction containing the fetched Github token if the fetched Github token has required scope",
       () async {
         when(
           client.fetchToken(auth),
