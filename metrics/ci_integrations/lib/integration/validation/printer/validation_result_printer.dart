@@ -44,9 +44,9 @@ class ValidationResultPrinter {
   /// Builds the message that provides the information
   /// about the [fieldValidationResult] for the given [field].
   String _buildValidationResultMessage(
-      ConfigField field,
-      FieldValidationResult fieldValidationResult,
-      ) {
+    ConfigField field,
+    FieldValidationResult fieldValidationResult,
+  ) {
     final conclusionMarker = _getConclusionMarker(
       fieldValidationResult.conclusion,
     );
@@ -63,8 +63,8 @@ class ValidationResultPrinter {
   ///
   /// Specifies the [validationResult.additionalContext] if it is not `null`.
   String _fieldValidationResultToString(
-      FieldValidationResult validationResult,
-      ) {
+    FieldValidationResult validationResult,
+  ) {
     const conclusionMapper = FieldValidationConclusionMapper();
 
     final conclusionValue = conclusionMapper.unmap(validationResult.conclusion);

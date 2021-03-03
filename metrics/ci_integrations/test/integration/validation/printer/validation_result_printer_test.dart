@@ -53,8 +53,8 @@ void main() {
     }
 
     Matcher containsFieldValidationConclusion(
-        FieldValidationConclusion conclusion,
-        ) {
+      FieldValidationConclusion conclusion,
+    ) {
       const conclusionMapper = FieldValidationConclusionMapper();
 
       final expectedConclusion = conclusionMapper.unmap(conclusion);
@@ -67,9 +67,9 @@ void main() {
     }
 
     Matcher validationResultMessageMatcher(
-        ConfigField field,
-        FieldValidationResult result,
-        ) {
+      ConfigField field,
+      FieldValidationResult result,
+    ) {
       final conclusion = result.conclusion;
       final additionalContext = result.additionalContext;
 
@@ -91,7 +91,7 @@ void main() {
 
     test(
       "creates an instance with the default stdout iosink, if the given one is null",
-          () {
+      () {
         final printer = ValidationResultPrinter(ioSink: null);
 
         expect(printer.ioSink, equals(stdout));
@@ -100,7 +100,7 @@ void main() {
 
     test(
       "creates an instance with the given iosink",
-          () {
+      () {
         final printer = ValidationResultPrinter(ioSink: ioSink);
 
         expect(printer.ioSink, equals(ioSink));
@@ -109,7 +109,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the '+' conclusion marker for the successful field validation result",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: successResult,
         });
@@ -124,7 +124,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the '-' conclusion marker for the failure field validation result",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: failureResult,
         });
@@ -139,7 +139,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the '?' conclusion marker for the unknown field validation result",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: unknownResult,
         });
@@ -154,7 +154,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with containing the validated field name",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: successResult,
         });
@@ -169,7 +169,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the string representation of the successful field validation conclusion",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: successResult,
         });
@@ -184,7 +184,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the string representation of the failure field validation conclusion",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: failureResult,
         });
@@ -199,7 +199,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the string representation of the unknown field validation conclusion",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: unknownResult,
         });
@@ -214,7 +214,7 @@ void main() {
 
     test(
       ".print() prints the validation result message to the iosink with the additional context if it is not null",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: successResult,
         });
@@ -229,7 +229,7 @@ void main() {
 
     test(
       ".print() prints validation result messages for all fields",
-          () {
+      () {
         final validationResult = ValidationResult({
           firstField: successResult,
           secondField: failureResult,
