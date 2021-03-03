@@ -13,7 +13,7 @@ import 'package:ci_integration/source/github_actions/strings/github_actions_stri
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
-/// A [SourceValidationDelegate] for the Github Actions source integration.
+/// A [ValidationDelegate] for the Github Actions source integration.
 class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   /// A [List] containing all required [GithubTokenScope]s.
   static const List<GithubTokenScope> _requiredTokenScopes = [
@@ -108,7 +108,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (workflowInteraction.isError || workflowInteraction.result == null) {
       return const InteractionResult.error(
-        message: GithubActionsStrings.workflowNotFround,
+        message: GithubActionsStrings.workflowNotFound,
       );
     }
 

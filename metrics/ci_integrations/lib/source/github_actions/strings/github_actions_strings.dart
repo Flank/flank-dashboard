@@ -10,7 +10,7 @@ class GithubActionsStrings {
       'A repository owner with a specified name does not exist.';
   static const String repositoryNotFound =
       'A repository with a specified name does not exist.';
-  static const String workflowNotFround =
+  static const String workflowNotFound =
       'A workflow with a specified identifier does not exist.';
   static const String workflowIdentifierInvalid =
       'The workflow identifier is invalid.';

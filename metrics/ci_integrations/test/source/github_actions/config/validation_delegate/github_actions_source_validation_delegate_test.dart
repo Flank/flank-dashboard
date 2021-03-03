@@ -15,7 +15,6 @@ import 'package:ci_integration/source/github_actions/config/validation_delegate/
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -55,15 +54,10 @@ void main() {
       path: workflowId,
     );
 
-    final testData = GithubActionsTestDataGenerator(
+    const testData = GithubActionsTestDataGenerator(
       workflowIdentifier: workflowId,
       jobName: jobName,
       coverageArtifactName: coverageArtifactName,
-      coverage: Percent(0.6),
-      url: 'url',
-      startDateTime: DateTime(2020),
-      completeDateTime: DateTime(2021),
-      duration: DateTime(2021).difference(DateTime(2020)),
     );
 
     const emptyRunsPage = WorkflowRunsPage(values: []);
@@ -72,6 +66,7 @@ void main() {
         runNumbers: [1],
       ),
     );
+    final workflowRunId = defaultRunsPage.values.first?.id;
     final emptyJobsPage = WorkflowRunJobsPage(
       page: 1,
       nextPageUrl: testData.url,
@@ -228,7 +223,20 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction containing the fetched Github token has required scopes",
+      ".validateAuth() returns a successful interaction if the fetched Github token has required scopes",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(githubToken);
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns an interaction containing the fetched Github token if the fetched Github token has required scopes",
       () async {
         when(
           client.fetchToken(auth),
@@ -428,7 +436,7 @@ void main() {
         final interactionResult = await delegate.validateWorkflowId(workflowId);
         final message = interactionResult.message;
 
-        expect(message, equals(GithubActionsStrings.workflowNotFround));
+        expect(message, equals(GithubActionsStrings.workflowNotFound));
       },
     );
 
@@ -455,7 +463,7 @@ void main() {
         final interactionResult = await delegate.validateWorkflowId(workflowId);
         final message = interactionResult.message;
 
-        expect(message, equals(GithubActionsStrings.workflowNotFround));
+        expect(message, equals(GithubActionsStrings.workflowNotFound));
       },
     );
 
@@ -473,7 +481,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns error",
+      ".validateJobName() returns an error if fetching the workflow runs page fails",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenErrorWith();
 
@@ -487,7 +495,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns workflow id invalid message ",
+      ".validateJobName() returns an interaction with the workflow identifier invalid message if fetching the the workflow runs page fails",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenErrorWith();
 
@@ -502,7 +510,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns error if null",
+      ".validateJobName() returns an error if the result of fetching the the workflow runs page is null",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenSuccessWith(
           null,
@@ -518,7 +526,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns workflow id invalid message",
+      ".validateJobName() returns an interaction with the workflow identifier invalid message if the result of fetching the workflow runs page is null",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenSuccessWith(
           null,
@@ -535,7 +543,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() return error if empty ",
+      ".validateJobName() return an error if the fetched workflow runs are empty",
       () async {
         whenFetchWorkflowRuns(withJobsPage: emptyJobsPage)
             .thenSuccessWith(emptyRunsPage);
@@ -550,7 +558,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() if empty msg",
+      ".validateJobName() returns an interaction with the no workflow runs to validate job name message if the fetched workflow runs are empty",
       () async {
         whenFetchWorkflowRuns(withJobsPage: emptyJobsPage)
             .thenSuccessWith(emptyRunsPage);
@@ -561,23 +569,19 @@ void main() {
         );
         final message = interactionResult.message;
 
-        expect(message,
-            equals(GithubActionsStrings.noWorkflowRunsToValidateJobName));
+        expect(
+          message,
+          equals(GithubActionsStrings.noWorkflowRunsToValidateJobName),
+        );
       },
     );
 
     test(
-      ".validateJobName() is Error ",
+      ".validateJobName() returns an error if fetching the workflow run jobs page fails",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenErrorWith();
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -589,17 +593,11 @@ void main() {
     );
 
     test(
-      ".validateJobName() is error msg ",
+      ".validateJobName() returns an interaction with the no jobs to validate job name message if fetching the workflow run jobs page fails",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenErrorWith();
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -612,17 +610,11 @@ void main() {
     );
 
     test(
-      ".validateJobName() is Error if null ",
+      ".validateJobName() returns an error if the result of fetching the workflow run jobs page is null",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenSuccessWith(null);
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -634,17 +626,11 @@ void main() {
     );
 
     test(
-      ".validateJobName() is error null msg ",
+      ".validateJobName() returns an interaction with the no jobs to validate job name message if the result of fetching the workflow run jobs page is null",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenSuccessWith(null);
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -657,33 +643,12 @@ void main() {
     );
 
     test(
-      ".validateJobName() not valid job ",
+      ".validateJobName() returns an error if there is no job with the given job name",
       () async {
-        final testData = GithubActionsTestDataGenerator(
-          workflowIdentifier: workflowId,
-          jobName: 'job2',
-          coverageArtifactName: 'coverage-summary.json',
-          coverage: Percent(0.6),
-          url: 'url',
-          startDateTime: DateTime(2020),
-          completeDateTime: DateTime(2021),
-          duration: DateTime(2021).difference(DateTime(2020)),
-        );
-
-        final defaultJobsPage = WorkflowRunJobsPage(
-          values: [testData.generateWorkflowRunJob()],
-        );
-
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenSuccessWith(
-          defaultJobsPage,
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenSuccessWith(
+          emptyJobsPage,
         );
 
         final interactionResult = await delegate.validateJobName(
@@ -696,33 +661,12 @@ void main() {
     );
 
     test(
-      ".validateJobName() not valid job message",
+      ".validateJobName() returns an interaction with the job name invalid message if there is no job with the given job name",
       () async {
-        final testData = GithubActionsTestDataGenerator(
-          workflowIdentifier: workflowId,
-          jobName: 'job2',
-          coverageArtifactName: 'coverage-summary.json',
-          coverage: Percent(0.6),
-          url: 'url',
-          startDateTime: DateTime(2020),
-          completeDateTime: DateTime(2021),
-          duration: DateTime(2021).difference(DateTime(2020)),
-        );
-
-        final defaultJobsPage = WorkflowRunJobsPage(
-          values: [testData.generateWorkflowRunJob()],
-        );
-
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenSuccessWith(
-          defaultJobsPage,
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenSuccessWith(
+          emptyJobsPage,
         );
 
         final interactionResult = await delegate.validateJobName(
@@ -736,17 +680,11 @@ void main() {
     );
 
     test(
-      ".validateJobName() success",
+      ".validateJobName() returns a successful interaction if the given job name is valid",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunJobs(workflowRuns.first?.id)).thenSuccessWith(
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunJobs(workflowRunId)).thenSuccessWith(
           defaultJobsPage,
         );
 
@@ -760,7 +698,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns error",
+      ".validateCoverageArtifactName() returns an error if fetching the workflow runs page fails",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenErrorWith();
 
@@ -774,7 +712,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns error message",
+      ".validateCoverageArtifactName() returns an interaction with the workflow identifier invalid message if fetching workflow runs page fails",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenErrorWith();
 
@@ -789,7 +727,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns error if null",
+      ".validateCoverageArtifactName() returns an error if the result of fetching the workflow runs page is null",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenSuccessWith(
           null,
@@ -805,7 +743,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns msg ",
+      ".validateCoverageArtifactName() returns an interaction with the workflow identifier invalid message if the result of fetching the workflow runs page is null",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage).thenSuccessWith(
           null,
@@ -822,7 +760,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() error if empty ",
+      ".validateCoverageArtifactName() return an error if the fetched workflow runs are empty",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
             .thenSuccessWith(emptyRunsPage);
@@ -837,7 +775,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() empty msg ",
+      ".validateCoverageArtifactName() returns an interaction with the no workflow runs to validate job name message if the fetched workflow runs are empty",
       () async {
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
             .thenSuccessWith(emptyRunsPage);
@@ -854,17 +792,11 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() is Error ",
+      ".validateCoverageArtifactName() returns an error if fetching the workflow run artifacts page fails",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenErrorWith();
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenErrorWith();
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
@@ -876,17 +808,11 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() is error msg ",
+      ".validateCoverageArtifactName() returns an interaction with the no artifacts to validate name message if fetching the workflow run artifacts page fails",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenErrorWith();
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenErrorWith();
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
@@ -899,18 +825,11 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() is Error null ",
+      ".validateCoverageArtifactName() returns an error if the result of fetching the workflow run artifacts page is null",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id))
-            .thenSuccessWith(null);
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
@@ -922,17 +841,11 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() is Error msg ",
+      ".validateCoverageArtifactName() returns an interaction with the with the no artifacts to validate name message if the result of fetching the workflow run artifacts page is null",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenSuccessWith(
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenSuccessWith(
           null,
         );
 
@@ -947,22 +860,12 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() not valid job ",
+      ".validateCoverageArtifactName() returns an error if there is no artifact with the given coverage artifact name",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-        final artifactsPage = WorkflowRunArtifactsPage(
-          values: const [WorkflowRunArtifact()],
-          nextPageUrl: testData.url,
-        );
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenSuccessWith(
-          artifactsPage,
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenSuccessWith(
+          emptyArtifactsPage,
         );
 
         final interactionResult = await delegate.validateCoverageArtifactName(
@@ -975,22 +878,12 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() not valid job message",
+      ".validateCoverageArtifactName() returns an interaction with the coverage artifact name invalid if there is no artifact with the given coverage artifact name",
       () async {
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-        final artifactsPage = WorkflowRunArtifactsPage(
-          values: const [WorkflowRunArtifact()],
-          nextPageUrl: testData.url,
-        );
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenSuccessWith(
-          artifactsPage,
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenSuccessWith(
+          emptyArtifactsPage,
         );
 
         final interactionResult = await delegate.validateCoverageArtifactName(
@@ -1005,35 +898,11 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() success",
+      ".validateCoverageArtifactName() returns a successful interaction if the given coverage artifact name is valid",
       () async {
-        final testData = GithubActionsTestDataGenerator(
-          workflowIdentifier: workflowId,
-          jobName: jobName,
-          coverageArtifactName: coverageArtifactName,
-          coverage: Percent(0.6),
-          url: 'url',
-          startDateTime: DateTime(2020),
-          completeDateTime: DateTime(2021),
-          duration: DateTime(2021).difference(DateTime(2020)),
-        );
-
-        final defaultJobsPage = WorkflowRunJobsPage(
-          values: [testData.generateWorkflowRunJob()],
-        );
-
-        final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: List.generate(30, (index) => index),
-        );
-
-        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
-        final defaultArtifactsPage = WorkflowRunArtifactsPage(values: [
-          WorkflowRunArtifact(name: testData.coverageArtifactName),
-        ]);
-
         whenFetchWorkflowRuns(withJobsPage: defaultJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-        when(client.fetchRunArtifacts(workflowRuns.first?.id)).thenSuccessWith(
+            .thenSuccessWith(defaultRunsPage);
+        when(client.fetchRunArtifacts(workflowRunId)).thenSuccessWith(
           defaultArtifactsPage,
         );
 
