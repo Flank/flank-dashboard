@@ -4,7 +4,6 @@
 skinparam ConditionEndStyle hline
 
 :source.fetchBuild() -> **sourceBuild**;
-:**newBuild** = null]
 
 if (failed to load **sourceBuild**) then (yes)
     #yellow:(1)
@@ -13,19 +12,21 @@ else (no)
         :process **build** with new data -> **newBuild**;
     else (yes)
         #yellow:(1)
+        floating note right
+            should force timeout is
+            controlled by the CLI option
+            //--in-progress-timeout// and
+            defaults to //120 minutes//
+        end note
         if (should force timeout) then (yes)
             :force time out **build** -> **newBuild**;
-            note left
-                controlled by CLI option
-                //--in-progress-timeout//
-                defaults to //120 minutes//
-            end note
         else (no)
+            :**newBuild** = null;
         endif
     endif
 endif
 
-:finish with the **newBuild**|
+:return **newBuild**|
 
 end
 
