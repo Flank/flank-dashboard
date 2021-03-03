@@ -33,16 +33,6 @@ void main() {
     const workflowId = 'workflow_id';
     const jobName = 'job';
     const coverageArtifactName = 'coverage_report';
-    final testData = GithubActionsTestDataGenerator(
-      workflowIdentifier: workflowId,
-      jobName: jobName,
-      coverageArtifactName: coverageArtifactName,
-      coverage: Percent(0.6),
-      url: 'url',
-      startDateTime: DateTime(2020),
-      completeDateTime: DateTime(2021),
-      duration: DateTime(2021).difference(DateTime(2020)),
-    );
 
     const githubToken = GithubToken(
       scopes: [
@@ -65,29 +55,39 @@ void main() {
       path: workflowId,
     );
 
-    final emptyWorkflowRunJobsPage = WorkflowRunJobsPage(
+    final testData = GithubActionsTestDataGenerator(
+      workflowIdentifier: workflowId,
+      jobName: jobName,
+      coverageArtifactName: coverageArtifactName,
+      coverage: Percent(0.6),
+      url: 'url',
+      startDateTime: DateTime(2020),
+      completeDateTime: DateTime(2021),
+      duration: DateTime(2021).difference(DateTime(2020)),
+    );
+
+    const emptyRunsPage = WorkflowRunsPage(values: []);
+    final defaultRunsPage = WorkflowRunsPage(
+      values: testData.generateWorkflowRunsByNumbers(
+        runNumbers: [1],
+      ),
+    );
+    final emptyJobsPage = WorkflowRunJobsPage(
       page: 1,
       nextPageUrl: testData.url,
       values: const [],
     );
-    final defaultRunsPage = WorkflowRunsPage(
-      values: testData.generateWorkflowRunsByNumbers(
-        runNumbers: [2, 1],
-      ),
-    );
-    const emptyRunsPage = WorkflowRunsPage(values: []);
 
     final defaultJobsPage = WorkflowRunJobsPage(
       values: [testData.generateWorkflowRunJob()],
     );
+    final emptyArtifactsPage = WorkflowRunArtifactsPage(
+      values: const [],
+      nextPageUrl: testData.url,
+    );
     final defaultArtifactsPage = WorkflowRunArtifactsPage(values: [
       WorkflowRunArtifact(name: testData.coverageArtifactName),
     ]);
-
-    final artifactsPage = WorkflowRunArtifactsPage(
-      values: const [WorkflowRunArtifact()],
-      nextPageUrl: testData.url,
-    );
 
     final auth = BearerAuthorization('token');
 
@@ -537,7 +537,7 @@ void main() {
     test(
       ".validateJobName() return error if empty ",
       () async {
-        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+        whenFetchWorkflowRuns(withJobsPage: emptyJobsPage)
             .thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(
@@ -552,7 +552,7 @@ void main() {
     test(
       ".validateJobName() if empty msg",
       () async {
-        whenFetchWorkflowRuns(withJobsPage: emptyWorkflowRunJobsPage)
+        whenFetchWorkflowRuns(withJobsPage: emptyJobsPage)
             .thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(

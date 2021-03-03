@@ -8,13 +8,13 @@ import 'package:ci_integration/client/github_actions/models/github_token_scope.d
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
-import 'package:ci_integration/integration/interface/source/config/validation_delegate/source_validation_delegate.dart';
+import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 
 /// A [SourceValidationDelegate] for the Github Actions source integration.
-class GithubActionsSourceValidationDelegate {
+class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   /// A [List] containing all required [GithubTokenScope]s.
   static const List<GithubTokenScope> _requiredTokenScopes = [
     GithubTokenScope.repo,
@@ -105,7 +105,6 @@ class GithubActionsSourceValidationDelegate {
     String workflowId,
   ) async {
     final workflowInteraction = await _client.fetchWorkflow(workflowId);
-    print(workflowInteraction);
 
     if (workflowInteraction.isError || workflowInteraction.result == null) {
       return const InteractionResult.error(
@@ -121,7 +120,6 @@ class GithubActionsSourceValidationDelegate {
     String workflowId,
     String jobName,
   }) async {
-    print('in job name');
     final workflowRunsInteraction = await _fetchWorkflowRunsPage(
       workflowId,
     );
@@ -165,7 +163,6 @@ class GithubActionsSourceValidationDelegate {
   Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRunsPage(
     String workflowId,
   ) async {
-    print('in _fetchWorkflowRunsPage');
     final workflowRunsInteraction = await _client.fetchWorkflowRuns(
       workflowId,
       status: GithubActionStatus.completed,
@@ -197,9 +194,7 @@ class GithubActionsSourceValidationDelegate {
     int workflowRunId,
     String jobName,
   ) async {
-    print('_fetchWorkflowRunJobsPage');
     final jobsInteraction = await _client.fetchRunJobs(workflowRunId);
-    print(jobsInteraction);
 
     if (jobsInteraction.isError || jobsInteraction.result == null) {
       return const InteractionResult.error(
