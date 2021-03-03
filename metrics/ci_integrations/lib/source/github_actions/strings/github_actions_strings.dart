@@ -12,17 +12,6 @@ class GithubActionsStrings {
       'A repository with a specified name does not exist.';
   static const String workflowNotFound =
       'A workflow with a specified identifier does not exist.';
-  static const String workflowIdentifierInvalid =
-      'The workflow identifier is invalid.';
-  static const String noWorkflowRunsToValidateJobName =
-      "A job name can`t be validated as there are no workflow runs.";
-  static const String noJobsToValidateJobName =
-      "A job name can`t be validated as there are no workflow run jobs.";
-  static const String jobNameInvalid = 'The job name is invalid.';
-  static const String noArtifactsToValidateName =
-      'An coverage artifact name can`t be validated as there are no workflow run artifacts.';
-  static const String coverageArtifactNameInvalid =
-      'The coverage artifact name is invalid.';
 
   static String tokenScopeNotFound(String token) {
     return 'The access token does not have the required $token scope.';
