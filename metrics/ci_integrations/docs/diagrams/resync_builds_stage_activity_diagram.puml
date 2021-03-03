@@ -1,0 +1,41 @@
+@startuml resync_builds_stage_activity_diagram
+'https://plantuml.com/activity-diagram-beta
+
+skinparam ConditionEndStyle hline
+
+:destination.fetchBuildsWithStatus(BuildStatus.inProgress) -> **buildsInProgress**;
+note left
+    fetch //builds// where
+    //state// is //in progress//
+end note
+
+partition "for each **build** in **buildsInProgress**" {
+    :resync **build** -> **newBuild**;
+    if (**newBuild** is **null**) then (yes)
+    else (no)
+        :**result**.add(**newBuild**);
+    endif
+}
+
+if (should fetch coverage) then (yes)
+    partition "for each **build** in **result**" {
+        :source.fetchCoverage(**build**) -> **coverage**;
+        :update **build** with **coverage**;
+    }
+else (no)
+endif
+note left
+    controlled by CLI flag
+    //--coverage// or //--no-coverage//
+    defaults to //on// (//--coverage//)
+end note
+
+:destination.updateBuilds(**result**);
+note left
+    for each //build// in //result//
+    set //new data//
+end note
+
+end
+
+@enduml

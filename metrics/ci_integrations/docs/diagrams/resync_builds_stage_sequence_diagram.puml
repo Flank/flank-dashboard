@@ -1,0 +1,36 @@
+@startuml resync_builds_stage_sequence_diagram
+'https://plantuml.com/sequence-diagram
+
+skinparam SequenceMessageAlignment center
+
+participant CiIntegration
+participant SourceClient
+participant DestinationClient
+
+?-> CiIntegration ++ : _syncInProgressBuilds(//config//)
+|||
+CiIntegration -> DestinationClient ++ : fetchBuildsWithStatus(//config.destinationProjectId, BuildStatus.inProgress//)
+return //buildsInProgress//
+note right of CiIntegration: //final buildsUpdate = []//
+loop for each //build// in //buildsInProgress//
+    CiIntegration -> CiIntegration ++ : _syncInProgressBuild(//config, build//)
+    return //refreshedBuild//
+    |||
+    opt //refreshedBuild// != null
+        note right of CiIntegration: //buildsUpdate.add(refreshedBuild)//
+    end
+end
+|||
+opt config.coverage
+    ||8||
+    CiIntegration -> CiIntegration ++ : //_addCoverageData(buildsUpdate)//
+    return //buildsUpdate//
+    ||8||
+end
+
+CiIntegration -> DestinationClient ++ : updateBuilds(//config.destinationProjectId, buildsUpdate//)
+return void
+
+return InteractionResult
+
+@enduml
