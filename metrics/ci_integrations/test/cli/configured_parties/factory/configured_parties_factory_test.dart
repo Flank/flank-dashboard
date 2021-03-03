@@ -3,7 +3,10 @@
 
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
 import 'package:ci_integration/cli/configured_parties/factory/configured_parties_factory.dart';
+import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
+import 'package:ci_integration/integration/interface/base/config/parser/config_parser.dart';
+import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
 import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 import 'package:ci_integration/integration/interface/source/config/model/source_config.dart';
@@ -49,6 +52,36 @@ void main() {
     final sourceConfigParser = ConfigParserMock<SourceConfig>();
     final destinationConfigParser = ConfigParserMock<DestinationConfig>();
 
+    void setupParties(
+      Parties parties,
+      Map<String, dynamic> configMap,
+      IntegrationParty party,
+      ConfigParser configParser,
+    ) {
+      when(parties.getParty(configMap)).thenReturn(party);
+      when(party.configParser).thenReturn(configParser);
+    }
+
+    PostExpectation<SourceConfig> whenParseSourceConfig() {
+      setupParties(
+        sourceParties,
+        sourceConfigMap,
+        sourceParty,
+        sourceConfigParser,
+      );
+      return when(sourceConfigParser.parse(sourceConfigMap));
+    }
+
+    PostExpectation<DestinationConfig> whenParseDestinationConfig() {
+      setupParties(
+        destinationParties,
+        destinationConfigMap,
+        destinationParty,
+        destinationConfigParser,
+      );
+      return when(destinationConfigParser.parse(destinationConfigMap));
+    }
+
     tearDown(() {
       reset(sourceParties);
       reset(destinationParties);
@@ -57,28 +90,6 @@ void main() {
       reset(sourceConfigParser);
       reset(destinationConfigParser);
     });
-
-    PostExpectation<SourceConfig> whenParseSourceConfig({
-      Map<String, dynamic> withSourceConfigMap,
-    }) {
-      when(sourceParties.getParty(withSourceConfigMap)).thenReturn(
-        sourceParty,
-      );
-      when(sourceParty.configParser).thenReturn(sourceConfigParser);
-
-      return when(sourceConfigParser.parse(withSourceConfigMap));
-    }
-
-    PostExpectation<DestinationConfig> whenParseDestinationConfig({
-      Map<String, dynamic> withDestinationConfigMap,
-    }) {
-      when(
-        destinationParties.getParty(withDestinationConfigMap),
-      ).thenReturn(destinationParty);
-      when(destinationParty.configParser).thenReturn(destinationConfigParser);
-
-      return when(destinationConfigParser.parse(withDestinationConfigMap));
-    }
 
     test(
       "creates an instance with the given supported integration parties",
@@ -116,14 +127,10 @@ void main() {
     );
 
     test(
-      ".create() calls .getParty() of the source parties to determine the source party that accepts the source config",
+      ".create() gets the source party from the supported integration parties",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         configuredPartiesFactory.create(rawConfig);
 
@@ -134,12 +141,8 @@ void main() {
     test(
       ".create() parses the source config map to the source config using the source config parser",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         configuredPartiesFactory.create(rawConfig);
 
@@ -150,12 +153,8 @@ void main() {
     test(
       ".create() calls .getParty() of the destination parties to determine the destination party that accepts the destination config",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         configuredPartiesFactory.create(rawConfig);
 
@@ -166,12 +165,8 @@ void main() {
     test(
       ".create() parses the destination config map to the destination config using the destination config parser",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         configuredPartiesFactory.create(rawConfig);
 
@@ -180,14 +175,10 @@ void main() {
     );
 
     test(
-      ".create() returns the configured parties with the configured source party with the source party that accepts the given source config",
+      ".create() returns the configured parties with the configured source party containing the source party",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         final configuredParties = configuredPartiesFactory.create(rawConfig);
 
@@ -198,14 +189,10 @@ void main() {
     );
 
     test(
-      ".create() returns the configured parties with the configured source party with the parsed source config",
+      ".create() returns the configured parties with the configured source party containing the parsed source config",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         final configuredParties = configuredPartiesFactory.create(rawConfig);
 
@@ -216,14 +203,10 @@ void main() {
     );
 
     test(
-      ".create() returns the configured parties with the configured destination party with the destination party that accepts the given destination config",
+      ".create() returns the configured parties with the configured destination party containing the destination party",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         final configuredParties = configuredPartiesFactory.create(rawConfig);
 
@@ -235,14 +218,10 @@ void main() {
     );
 
     test(
-      ".create() returns the configured parties with the configured destination party with the parsed destination config",
+      ".create() returns the configured parties with the configured destination party containing the parsed destination config",
       () {
-        whenParseSourceConfig(
-          withSourceConfigMap: sourceConfigMap,
-        ).thenReturn(sourceConfig);
-        whenParseDestinationConfig(
-          withDestinationConfigMap: destinationConfigMap,
-        ).thenReturn(destinationConfig);
+        whenParseSourceConfig().thenReturn(sourceConfig);
+        whenParseDestinationConfig().thenReturn(destinationConfig);
 
         final configuredParties = configuredPartiesFactory.create(rawConfig);
 

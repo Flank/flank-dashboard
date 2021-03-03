@@ -19,7 +19,7 @@ abstract class Parties<T extends IntegrationParty> {
       (party) => party.acceptsConfig(config),
       orElse: () {
         throw UnimplementedError(
-          'The party that accepts the given config is unknown.',
+          'The given config is unknown.',
         );
       },
     );

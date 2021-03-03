@@ -58,7 +58,7 @@ void main() {
   });
 }
 
-/// A fake class needed to test the [Parties] abstract class.
+/// A fake class needed to test the [Parties] non-abstract methods.
 class _PartiesFake extends Parties {
   @override
   final List<IntegrationParty> parties;

@@ -33,30 +33,21 @@ void main() {
     );
 
     test(
-      ".canServeConfig() returns true, if the config parser can parse the config",
+      ".canServeConfig() returns the result of the config parser's .canParse() method",
       () {
-        when(configParser.canParse(config)).thenReturn(true);
+        const expectedResult = true;
+
+        when(configParser.canParse(config)).thenReturn(expectedResult);
 
         final result = integrationParty.acceptsConfig(config);
 
-        expect(result, isTrue);
-      },
-    );
-
-    test(
-      ".canServeConfig() returns false, if the config parser can't parse the config",
-      () {
-        when(configParser.canParse(config)).thenReturn(false);
-
-        final result = integrationParty.acceptsConfig(config);
-
-        expect(result, isFalse);
+        expect(result, equals(expectedResult));
       },
     );
   });
 }
 
-/// A fake class needed to test the [IntegrationParty] abstract class.
+/// A fake class needed to test the [IntegrationParty] non-abstract methods.
 class _IntegrationPartyFake extends IntegrationParty {
   @override
   final ConfigParser<Config> configParser;

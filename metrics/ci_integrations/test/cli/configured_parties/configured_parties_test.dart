@@ -60,12 +60,12 @@ void main() {
           configuredDestinationParty: configuredDestinationParty,
         );
 
-        final resultSourceParty = configuredParties.configuredSourceParty;
-        final resultDestinationParty =
+        final actualSourceParty = configuredParties.configuredSourceParty;
+        final actualDestinationParty =
             configuredParties.configuredDestinationParty;
 
-        expect(resultSourceParty, equals(configuredSourceParty));
-        expect(resultDestinationParty, equals(configuredDestinationParty));
+        expect(actualSourceParty, equals(configuredSourceParty));
+        expect(actualDestinationParty, equals(configuredDestinationParty));
       },
     );
   });

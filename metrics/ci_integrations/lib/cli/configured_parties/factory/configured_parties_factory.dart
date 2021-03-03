@@ -16,7 +16,7 @@ class ConfiguredPartiesFactory {
   /// Creates a new instance of the [ConfiguredPartiesFactory] with the given
   /// [supportedParties].
   ///
-  /// If the given [supportedParties] is `null`, a new instance
+  /// If the given [supportedParties] is `null`, an instance
   /// of the [SupportedIntegrationParties] is used.
   ConfiguredPartiesFactory({
     SupportedIntegrationParties supportedParties,
