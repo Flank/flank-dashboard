@@ -27,23 +27,24 @@ class ValidationResultPrinter {
   void print(ValidationResult result) {
     final validationResults = result.results;
 
-    final fields = validationResults.keys;
+    final validationResultEntries = validationResults.entries;
 
-    for (final field in fields) {
-      final fieldValidationResult = validationResults[field];
+    for (final entry in validationResultEntries) {
+      final field = entry.key;
+      final result = entry.value;
 
-      final message = _buildValidationResultMessage(
+      final message = _buildFieldValidationOutput(
         field,
-        fieldValidationResult,
+        result,
       );
 
       ioSink.writeln(message);
     }
   }
 
-  /// Builds the message that provides the information
+  /// Builds the output that provides the information
   /// about the [fieldValidationResult] for the given [field].
-  String _buildValidationResultMessage(
+  String _buildFieldValidationOutput(
     ConfigField field,
     FieldValidationResult fieldValidationResult,
   ) {
@@ -51,9 +52,9 @@ class ValidationResultPrinter {
       fieldValidationResult.conclusion,
     );
     final fieldName = field.value;
-    final result = _fieldValidationResultToString(fieldValidationResult);
+    final result = _getFieldValidationResultMessage(fieldValidationResult);
 
-    return '$conclusionMarker $fieldName: $result';
+    return '[$conclusionMarker] $fieldName: $result';
   }
 
   /// Converts the given [validationResult] to its [String] representation.
@@ -62,21 +63,21 @@ class ValidationResultPrinter {
   /// using the [FieldValidationConclusionMapper].
   ///
   /// Specifies the [validationResult.additionalContext] if it is not `null`.
-  String _fieldValidationResultToString(
+  String _getFieldValidationResultMessage(
     FieldValidationResult validationResult,
   ) {
     const conclusionMapper = FieldValidationConclusionMapper();
 
     final conclusionValue = conclusionMapper.unmap(validationResult.conclusion);
 
-    String result = '$conclusionValue.';
+    final resultMessage = '$conclusionValue.';
 
     final additionalContext = validationResult.additionalContext;
     if (additionalContext != null) {
-      result = '$result Additional context: $additionalContext';
+      return '$resultMessage Additional context: $additionalContext';
     }
 
-    return result;
+    return resultMessage;
   }
 
   /// Returns a marker that illustrates the given [conclusion].

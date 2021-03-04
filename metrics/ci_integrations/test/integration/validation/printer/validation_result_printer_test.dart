@@ -38,11 +38,11 @@ void main() {
     Matcher startsWithConclusionMarker(FieldValidationConclusion conclusion) {
       switch (conclusion) {
         case FieldValidationConclusion.valid:
-          return startsWith('+');
+          return startsWith('[+]');
         case FieldValidationConclusion.invalid:
-          return startsWith('-');
+          return startsWith('[-]');
         case FieldValidationConclusion.unknown:
-          return startsWith('?');
+          return startsWith('[?]');
       }
 
       return null;
@@ -153,7 +153,7 @@ void main() {
     );
 
     test(
-      ".print() prints the validation result message to the iosink with containing the validated field name",
+      ".print() prints the validation result message to the iosink containing the validated field name",
       () {
         final validationResult = ValidationResult({
           firstField: successResult,
@@ -228,25 +228,39 @@ void main() {
     );
 
     test(
-      ".print() prints validation result messages for all fields",
+      ".print() prints the validation result message to the iosink without the additional context if it is null",
       () {
         final validationResult = ValidationResult({
           firstField: successResult,
-          secondField: failureResult,
-          thirdField: unknownResult,
         });
 
         resultPrinter.print(validationResult);
 
-        verify(ioSink.writeln(argThat(
-          validationResultMessageMatcher(firstField, successResult),
-        ))).called(1);
-        verify(ioSink.writeln(argThat(
-          validationResultMessageMatcher(secondField, failureResult),
-        ))).called(1);
-        verify(ioSink.writeln(argThat(
-          validationResultMessageMatcher(thirdField, unknownResult),
-        ))).called(1);
+        final containsAdditionalContext = contains('Additional Context');
+
+        verify(
+          ioSink.writeln(argThat(isNot(containsAdditionalContext))),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".print() prints validation result messages for all fields",
+      () {
+        final results = {
+          firstField: successResult,
+          secondField: failureResult,
+          thirdField: unknownResult,
+        };
+        final validationResult = ValidationResult(results);
+
+        resultPrinter.print(validationResult);
+
+        results.forEach((field, result) {
+          verify(ioSink.writeln(argThat(
+            validationResultMessageMatcher(field, result),
+          ))).called(1);
+        });
       },
     );
   });
