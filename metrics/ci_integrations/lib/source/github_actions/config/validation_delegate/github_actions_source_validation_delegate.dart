@@ -3,6 +3,7 @@
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
+import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
@@ -27,7 +28,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [auth].
-  Future<InteractionResult> validateAuth(
+  Future<InteractionResult<GithubToken>> validateAuth(
     AuthorizationBase auth,
   ) async {
     final interaction = await _client.fetchToken(auth);
@@ -41,17 +42,18 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     final token = interaction.result;
     final tokenScopes = token.scopes ?? [];
 
-    final requiredTokenScope = _requiredTokenScopes.firstWhere(
+    final missingRequiredScopes = _requiredTokenScopes.where(
       (scope) => !tokenScopes.contains(scope),
-      orElse: () => null,
     );
 
-    if (requiredTokenScope != null) {
+    if (missingRequiredScopes.isNotEmpty) {
       const mapper = GithubTokenScopeMapper();
+      final misssingRequiredTokenScopes =
+          missingRequiredScopes.map((scope) => mapper.unmap(scope)).toList();
 
       return InteractionResult.error(
         message: GithubActionsStrings.tokenScopeNotFound(
-          mapper.unmap(requiredTokenScope),
+          misssingRequiredTokenScopes,
         ),
       );
     }

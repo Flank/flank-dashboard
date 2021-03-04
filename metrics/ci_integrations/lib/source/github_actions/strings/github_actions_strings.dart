@@ -13,7 +13,7 @@ class GithubActionsStrings {
   static const String workflowNotFound =
       'A workflow with a specified identifier does not exist.';
 
-  static String tokenScopeNotFound(String token) {
-    return 'The access token does not have the required $token scope.';
+  static String tokenScopeNotFound(List<String> scopes) {
+    return 'The access token does not have the required ${scopes.join(', ')} scope(s).';
   }
 }

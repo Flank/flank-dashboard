@@ -76,7 +76,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the interaction with the client is not successful",
+      ".validateAuth() returns an error if the token fetching failed",
       () async {
         when(
           client.fetchToken(auth),
@@ -89,7 +89,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the interaction with the client is not successful",
+      ".validateAuth() returns an interaction with the token invalid message if the token fetching failed",
       () async {
         when(
           client.fetchToken(auth),
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the result of an interaction with the client is null",
+      ".validateAuth() returns an error if the token fetching result is null",
       () async {
         when(
           client.fetchToken(auth),
@@ -116,7 +116,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the result of an interaction with the client is null",
+      ".validateAuth() returns an interaction with the token invalid message if the token fetching result is null",
       () async {
         when(
           client.fetchToken(auth),
@@ -145,13 +145,43 @@ void main() {
     test(
       ".validateAuth() returns an interaction with the token scope not found message if the fetched token does not have the required scope",
       () async {
-        const requiredTokenScope = GithubTokenScope.repo;
-        const mapper = GithubTokenScopeMapper();
-        final requiredScope = mapper.unmap(requiredTokenScope);
+        final requiredScope = [GithubTokenScopeMapper.repo];
 
         when(
           client.fetchToken(auth),
         ).thenSuccessWith(const GithubToken(scopes: []));
+
+        final interactionResult = await delegate.validateAuth(auth);
+        final message = interactionResult.message;
+
+        expect(
+          message,
+          equals(GithubActionsStrings.tokenScopeNotFound(requiredScope)),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns an error if the fetched token scopes are null",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(const GithubToken(scopes: null));
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".validateAuth() returns an interaction with the token scope not found message if the fetched token scopes are null",
+      () async {
+        final requiredScope = [GithubTokenScopeMapper.repo];
+
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(const GithubToken(scopes: null));
 
         final interactionResult = await delegate.validateAuth(auth);
         final message = interactionResult.message;
@@ -191,7 +221,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns an error if the interaction with the client is not successful",
+      ".validateRepositoryOwner() returns an error if the repository owner fetching failed",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
@@ -206,7 +236,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the interaction with the client is not successful",
+      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching failed",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
@@ -222,7 +252,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns an error if the result of an interaction with the client is null",
+      ".validateRepositoryOwner() returns an error if the repository owner fetching result is null",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
@@ -237,7 +267,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the result of an interaction with the client is null",
+      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching result is null",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
@@ -268,7 +298,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns an error if the interaction with the client is not successful",
+      ".validateRepositoryName() returns an error if the github repository fetching failed",
       () async {
         when(client.fetchGithubRepository(
           repositoryName: repositoryName,
@@ -285,7 +315,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns an interaction with the repository not found message if the interaction with the client is not successful",
+      ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching failed",
       () async {
         when(client.fetchGithubRepository(
           repositoryName: repositoryName,
@@ -303,7 +333,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns an error if the result of an interaction with the client is null",
+      ".validateRepositoryName() returns an error if the github repository fetching result is null",
       () async {
         when(client.fetchGithubRepository(
           repositoryName: repositoryName,
@@ -320,7 +350,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns an interaction with the repository not found message if the result of an interaction with the client is null",
+      ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching result is null",
       () async {
         when(client.fetchGithubRepository(
           repositoryName: repositoryName,
@@ -355,7 +385,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns an error if the interaction with the client is not successful",
+      ".validateWorkflowId() returns an error if the workflow fetching failed",
       () async {
         when(
           client.fetchWorkflow(workflowId),
@@ -368,7 +398,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns an interaction with the workflow not found message if the interaction with the client is not successful",
+      ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching failed",
       () async {
         when(
           client.fetchWorkflow(workflowId),
@@ -382,7 +412,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns an error if the result of an interaction with the client is null",
+      ".validateWorkflowId() returns an error if the workflow fetching result is null",
       () async {
         when(
           client.fetchWorkflow(workflowId),
@@ -395,7 +425,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns an interaction with the workflow not found message if the result of an interaction with the client is null",
+      ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching result is null",
       () async {
         when(
           client.fetchWorkflow(workflowId),
