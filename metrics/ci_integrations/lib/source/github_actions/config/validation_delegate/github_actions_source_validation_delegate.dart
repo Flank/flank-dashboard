@@ -48,12 +48,12 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (missingRequiredScopes.isNotEmpty) {
       const mapper = GithubTokenScopeMapper();
-      final misssingRequiredTokenScopes =
+      final missingRequiredScopesList =
           missingRequiredScopes.map((scope) => mapper.unmap(scope)).toList();
 
       return InteractionResult.error(
         message: GithubActionsStrings.tokenScopeNotFound(
-          misssingRequiredTokenScopes,
+          missingRequiredScopesList,
         ),
       );
     }
