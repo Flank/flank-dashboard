@@ -5,6 +5,7 @@ import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
 import 'package:ci_integration/cli/configured_parties/factory/configured_parties_factory.dart';
 import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
+import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/parser/config_parser.dart';
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
 import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
@@ -52,34 +53,34 @@ void main() {
     final sourceConfigParser = ConfigParserMock<SourceConfig>();
     final destinationConfigParser = ConfigParserMock<DestinationConfig>();
 
-    void setupParties(
+    PostExpectation<T> whenParseConfig<T extends Config>(
       Parties parties,
       Map<String, dynamic> configMap,
       IntegrationParty party,
-      ConfigParser configParser,
+      ConfigParser<T> configParser,
     ) {
       when(parties.getParty(configMap)).thenReturn(party);
       when(party.configParser).thenReturn(configParser);
+
+      return when(configParser.parse(configMap));
     }
 
     PostExpectation<SourceConfig> whenParseSourceConfig() {
-      setupParties(
+      return whenParseConfig<SourceConfig>(
         sourceParties,
         sourceConfigMap,
         sourceParty,
         sourceConfigParser,
       );
-      return when(sourceConfigParser.parse(sourceConfigMap));
     }
 
     PostExpectation<DestinationConfig> whenParseDestinationConfig() {
-      setupParties(
+      return whenParseConfig<DestinationConfig>(
         destinationParties,
         destinationConfigMap,
         destinationParty,
         destinationConfigParser,
       );
-      return when(destinationConfigParser.parse(destinationConfigMap));
     }
 
     tearDown(() {
@@ -127,7 +128,7 @@ void main() {
     );
 
     test(
-      ".create() gets the source party from the supported integration parties",
+      ".create() gets the source party from the supported integration parties' source parties",
       () {
         whenParseSourceConfig().thenReturn(sourceConfig);
         whenParseDestinationConfig().thenReturn(destinationConfig);
@@ -151,7 +152,7 @@ void main() {
     );
 
     test(
-      ".create() calls .getParty() of the destination parties to determine the destination party that accepts the destination config",
+      ".create() gets the destination party from the supported integration parties' destination parties",
       () {
         whenParseSourceConfig().thenReturn(sourceConfig);
         whenParseDestinationConfig().thenReturn(destinationConfig);

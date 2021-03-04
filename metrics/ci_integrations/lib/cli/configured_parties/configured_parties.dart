@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 
 /// A class that holds a [ConfiguredSourceParty] and a
 /// [ConfiguredDestinationParty].
+@immutable
 class ConfiguredParties {
   /// A [ConfiguredSourceParty] that holds the [SourceConfig]
   /// and the [SourceParty] that accepts this config.
