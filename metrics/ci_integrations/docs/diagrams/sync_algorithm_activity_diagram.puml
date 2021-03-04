@@ -1,0 +1,24 @@
+@startuml sync_algorithm_activity_diagram
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+:**Re-Sync In-Progress Builds**;
+note left
+    Query in-progress builds, stored
+    in the //destination// database, and re-sync 
+    them to match the current state of 
+    corresponding builds from the //source//.
+end note
+
+:**Sync New Builds**;
+note right
+    Query new builds from the //source//, 
+    and add them to the //destination// 
+    database to make them available 
+    on the Metrics Web Application.
+end note
+
+stop
+
+@enduml

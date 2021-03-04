@@ -1,0 +1,34 @@
+@startuml resync_single_build_sequence_diagram
+'https://plantuml.com/sequence-diagram
+
+skinparam SequenceMessageAlignment center
+
+participant CiIntegration
+participant SourceClient
+
+?-> CiIntegration ++ : _syncInProgressBuild(//config, build//)
+note right of CiIntegration: //BuildData newBuild//
+||8||
+CiIntegration -> CiIntegration ++ : _fetchBuild(//config.sourceProjectId, build.buildNumber//)
+group try [build fetched successfully]
+    CiIntegration -> SourceClient ++ : fetchBuild(//config.sourceProjectId, build.buildNumber//)
+    return //sourceBuild//
+    note right of CiIntegration: //refreshedBuild = sourceBuild//
+else catch error
+    note right of CiIntegration: //refreshedBuild = null//
+end
+return //refreshedBuild//
+||8||
+alt refreshedBuild == null || refreshedBuild.status == BuildStatus.inProgress
+    opt _shouldTimeout(build.startedAt, config.inProgressTimeout)
+        note right of CiIntegration
+            //final duration = config.inProgressTimeout//
+            //newBuild = build.copyWith(duration: duration, status: BuildStatus.unknown)//
+        end note
+    end
+else refreshedBuild is finished
+    note right of CiIntegration: //newBuild = refreshedBuild.copyWith(id: build.id, projectId: build.projectId)//
+end
+return newBuild
+
+@enduml

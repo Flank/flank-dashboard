@@ -1,0 +1,39 @@
+@startuml resync_in_progress_sequence_diagram
+'https://plantuml.com/sequence-diagram
+
+skinparam SequenceMessageAlignment center
+
+participant CiIntegration
+participant SourceClient
+participant DestinationClient
+
+?-> CiIntegration ++ : _syncBuilds(//config//)
+|||
+CiIntegration -> DestinationClient ++ : fetchLastBuild(//config.destinationProjectId//)
+return //lastBuild//
+
+alt //lastBuild == null//
+    ||8||
+    CiIntegration -> SourceClient ++: fetchBuilds(//config.sourceProjectId, config.initialSyncLimit//)
+    return //builds//
+    ||8||
+else  //lastBuild != null//
+    ||8||
+    CiIntegration -> SourceClient ++: fetchBuildsAfter(//config.sourceProjectId, lastBuild//)
+    return //builds//
+    ||8||
+end
+
+opt config.coverage
+    ||8||
+    CiIntegration -> CiIntegration ++ : //_addCoverageData(builds)//
+    return builds
+    ||8||
+end
+
+CiIntegration -> DestinationClient ++ : addBuilds(//config.destinationProjectId, builds//)
+return void
+
+return InteractionResult
+
+@enduml

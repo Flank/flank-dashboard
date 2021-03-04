@@ -1,0 +1,22 @@
+@startuml add_coverage_data_sequence_diagram
+'https://plantuml.com/sequence-diagram
+
+skinparam SequenceMessageAlignment center
+skinparam ParticipantPadding 80
+
+participant CiIntegration
+participant SourceClient
+
+?-> CiIntegration ++ : _addCoverageData(//builds//)
+note right of CiIntegration: //final result = []//
+||8||
+loop for each //build// in //builds//
+    CiIntegration -> SourceClient ++ : fetchCoverage(//build//)
+    return //coverage//
+    note right of CiIntegration: //final newBuild = build.copyWith(coverage: coverage)//
+    note right of CiIntegration: //result.add(newBuild)//
+end
+||8||
+return result
+
+@enduml
