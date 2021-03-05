@@ -52,8 +52,8 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
           missingRequiredScopes.map((scope) => mapper.unmap(scope)).toList();
 
       return InteractionResult.error(
-        message: GithubActionsStrings.tokenScopeNotFound(
-          missingRequiredScopesList,
+        message: GithubActionsStrings.tokenMissingScopes(
+          missingRequiredScopesList.join(', '),
         ),
       );
     }

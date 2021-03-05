@@ -78,9 +78,7 @@ void main() {
     test(
       ".validateAuth() returns an error if the token fetching failed",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenErrorWith();
+        when(client.fetchToken(auth)).thenErrorWith();
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -91,9 +89,7 @@ void main() {
     test(
       ".validateAuth() returns an interaction with the token invalid message if the token fetching failed",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenErrorWith();
+        when(client.fetchToken(auth)).thenErrorWith();
 
         final interactionResult = await delegate.validateAuth(auth);
         final message = interactionResult.message;
@@ -105,9 +101,7 @@ void main() {
     test(
       ".validateAuth() returns an error if the token fetching result is null",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(null);
+        when(client.fetchToken(auth)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -118,9 +112,7 @@ void main() {
     test(
       ".validateAuth() returns an interaction with the token invalid message if the token fetching result is null",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(null);
+        when(client.fetchToken(auth)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateAuth(auth);
         final message = interactionResult.message;
@@ -145,7 +137,7 @@ void main() {
     test(
       ".validateAuth() returns an interaction with the token scope not found message if the fetched token does not have the required scope",
       () async {
-        final requiredScope = [GithubTokenScopeMapper.repo];
+        final requiredScope = GithubTokenScopeMapper.repo;
 
         when(
           client.fetchToken(auth),
@@ -156,7 +148,9 @@ void main() {
 
         expect(
           message,
-          equals(GithubActionsStrings.tokenScopeNotFound(requiredScope)),
+          equals(
+            GithubActionsStrings.tokenMissingScopes(requiredScope),
+          ),
         );
       },
     );
@@ -164,9 +158,7 @@ void main() {
     test(
       ".validateAuth() returns an error if the fetched token scopes are null",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(const GithubToken(scopes: null));
+        when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -177,18 +169,16 @@ void main() {
     test(
       ".validateAuth() returns an interaction with the token scope not found message if the fetched token scopes are null",
       () async {
-        final requiredScope = [GithubTokenScopeMapper.repo];
+        final requiredScope = GithubTokenScopeMapper.repo;
 
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(const GithubToken(scopes: null));
+        when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
 
         final interactionResult = await delegate.validateAuth(auth);
         final message = interactionResult.message;
 
         expect(
           message,
-          equals(GithubActionsStrings.tokenScopeNotFound(requiredScope)),
+          equals(GithubActionsStrings.tokenMissingScopes(requiredScope)),
         );
       },
     );
@@ -196,9 +186,7 @@ void main() {
     test(
       ".validateAuth() returns a successful interaction if the fetched Github token has required scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(githubToken);
+        when(client.fetchToken(auth)).thenSuccessWith(githubToken);
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -209,9 +197,7 @@ void main() {
     test(
       ".validateAuth() returns an interaction containing the fetched Github token if the fetched Github token has required scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(githubToken);
+        when(client.fetchToken(auth)).thenSuccessWith(githubToken);
 
         final interactionResult = await delegate.validateAuth(auth);
         final token = interactionResult.result;
@@ -223,9 +209,7 @@ void main() {
     test(
       ".validateRepositoryOwner() returns an error if the repository owner fetching failed",
       () async {
-        when(
-          client.fetchGithubUser(repositoryOwner),
-        ).thenErrorWith();
+        when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
         final interactionResult = await delegate.validateRepositoryOwner(
           repositoryOwner,
@@ -238,9 +222,7 @@ void main() {
     test(
       ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching failed",
       () async {
-        when(
-          client.fetchGithubUser(repositoryOwner),
-        ).thenErrorWith();
+        when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
         final interactionResult = await delegate.validateRepositoryOwner(
           repositoryOwner,
@@ -254,9 +236,7 @@ void main() {
     test(
       ".validateRepositoryOwner() returns an error if the repository owner fetching result is null",
       () async {
-        when(
-          client.fetchGithubUser(repositoryOwner),
-        ).thenSuccessWith(null);
+        when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateRepositoryOwner(
           repositoryOwner,
@@ -269,9 +249,7 @@ void main() {
     test(
       ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching result is null",
       () async {
-        when(
-          client.fetchGithubUser(repositoryOwner),
-        ).thenSuccessWith(null);
+        when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateRepositoryOwner(
           repositoryOwner,
@@ -300,10 +278,12 @@ void main() {
     test(
       ".validateRepositoryName() returns an error if the github repository fetching failed",
       () async {
-        when(client.fetchGithubRepository(
-          repositoryName: repositoryName,
-          repositoryOwner: repositoryOwner,
-        )).thenErrorWith();
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenErrorWith();
 
         final interactionResult = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
@@ -317,10 +297,12 @@ void main() {
     test(
       ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching failed",
       () async {
-        when(client.fetchGithubRepository(
-          repositoryName: repositoryName,
-          repositoryOwner: repositoryOwner,
-        )).thenErrorWith();
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenErrorWith();
 
         final interactionResult = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
@@ -335,10 +317,12 @@ void main() {
     test(
       ".validateRepositoryName() returns an error if the github repository fetching result is null",
       () async {
-        when(client.fetchGithubRepository(
-          repositoryName: repositoryName,
-          repositoryOwner: repositoryOwner,
-        )).thenSuccessWith(null);
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
@@ -352,10 +336,12 @@ void main() {
     test(
       ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching result is null",
       () async {
-        when(client.fetchGithubRepository(
-          repositoryName: repositoryName,
-          repositoryOwner: repositoryOwner,
-        )).thenSuccessWith(null);
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
@@ -370,10 +356,12 @@ void main() {
     test(
       ".validateRepositoryName() returns a successful interaction if the given repository name is valid",
       () async {
-        when(client.fetchGithubRepository(
-          repositoryName: repositoryName,
-          repositoryOwner: repositoryOwner,
-        )).thenSuccessWith(githubRepository);
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenSuccessWith(githubRepository);
 
         final interactionResult = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
@@ -387,9 +375,7 @@ void main() {
     test(
       ".validateWorkflowId() returns an error if the workflow fetching failed",
       () async {
-        when(
-          client.fetchWorkflow(workflowId),
-        ).thenErrorWith();
+        when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
         final interactionResult = await delegate.validateWorkflowId(workflowId);
 
@@ -400,9 +386,7 @@ void main() {
     test(
       ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching failed",
       () async {
-        when(
-          client.fetchWorkflow(workflowId),
-        ).thenErrorWith();
+        when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
         final interactionResult = await delegate.validateWorkflowId(workflowId);
         final message = interactionResult.message;
@@ -414,9 +398,7 @@ void main() {
     test(
       ".validateWorkflowId() returns an error if the workflow fetching result is null",
       () async {
-        when(
-          client.fetchWorkflow(workflowId),
-        ).thenSuccessWith(null);
+        when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateWorkflowId(workflowId);
 
@@ -427,9 +409,7 @@ void main() {
     test(
       ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching result is null",
       () async {
-        when(
-          client.fetchWorkflow(workflowId),
-        ).thenSuccessWith(null);
+        when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateWorkflowId(workflowId);
         final message = interactionResult.message;
