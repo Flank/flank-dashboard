@@ -161,7 +161,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     return artifactsInteraction;
   }
 
-  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun].
+  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun]s.
   Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRunsPage(
     String workflowId,
   ) async {
