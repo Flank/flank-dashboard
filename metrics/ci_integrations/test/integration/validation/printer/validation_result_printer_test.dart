@@ -271,7 +271,7 @@ void main() {
     );
 
     test(
-      ".print() prints the validation result in the correct order",
+      ".print() prints the validation result in the given order",
       () {
         final results = {
           firstField: successResult,
@@ -294,7 +294,6 @@ void main() {
         verifyInOrder(
           expectedMessages.map(ioSink.writeln).toList(),
         );
-        verifyNoMoreInteractions(ioSink);
       },
     );
   });
