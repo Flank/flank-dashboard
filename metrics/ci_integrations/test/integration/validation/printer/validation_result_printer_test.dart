@@ -36,16 +36,20 @@ void main() {
     );
 
     Matcher startsWithConclusionMarker(FieldValidationConclusion conclusion) {
+      String conclusionMarker;
       switch (conclusion) {
         case FieldValidationConclusion.valid:
-          return startsWith('[+]');
+          conclusionMarker = '+';
+          break;
         case FieldValidationConclusion.invalid:
-          return startsWith('[-]');
+          conclusionMarker = '-';
+          break;
         case FieldValidationConclusion.unknown:
-          return startsWith('[?]');
+          conclusionMarker = '?';
+          break;
       }
 
-      return null;
+      return startsWith('[$conclusionMarker]');
     }
 
     Matcher containsFieldName(ConfigField field) {
@@ -62,8 +66,8 @@ void main() {
       return contains(expectedConclusion);
     }
 
-    Matcher containsAdditionalContext(String additionalContext) {
-      return contains('Additional context: $additionalContext');
+    Matcher endsWithAdditionalContext(String additionalContext) {
+      return endsWith('Additional context: $additionalContext');
     }
 
     Matcher validationResultMessageMatcher(
@@ -74,8 +78,8 @@ void main() {
       final additionalContext = result.additionalContext;
 
       final additionalContextMatcher = additionalContext != null
-          ? containsAdditionalContext(additionalContext)
-          : isNot(containsAdditionalContext(additionalContext));
+          ? endsWithAdditionalContext(additionalContext)
+          : isNot(endsWithAdditionalContext(additionalContext));
 
       return allOf(
         startsWithConclusionMarker(conclusion),
@@ -222,7 +226,7 @@ void main() {
         resultPrinter.print(validationResult);
 
         verify(ioSink.writeln(argThat(
-          containsAdditionalContext(successResult.additionalContext),
+          endsWithAdditionalContext(successResult.additionalContext),
         ))).called(1);
       },
     );
@@ -257,10 +261,40 @@ void main() {
         resultPrinter.print(validationResult);
 
         results.forEach((field, result) {
-          verify(ioSink.writeln(argThat(
-            validationResultMessageMatcher(field, result),
-          ))).called(1);
+          verify(
+            ioSink.writeln(argThat(
+              validationResultMessageMatcher(field, result),
+            )),
+          ).called(1);
         });
+      },
+    );
+
+    test(
+      ".print() prints the validation result in the correct order",
+      () {
+        final results = {
+          firstField: successResult,
+          secondField: failureResult,
+          thirdField: unknownResult,
+        };
+        final validationResult = ValidationResult(results);
+
+        resultPrinter.print(validationResult);
+
+        final expectedMessages = results.entries.map((entry) {
+          final field = entry.key;
+          final result = entry.value;
+
+          return argThat(
+            validationResultMessageMatcher(field, result),
+          );
+        });
+
+        verifyInOrder(
+          expectedMessages.map(ioSink.writeln).toList(),
+        );
+        verifyNoMoreInteractions(ioSink);
       },
     );
   });
