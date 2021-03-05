@@ -1,9 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/command/sync_command.dart';
+import 'package:ci_integration/cli/command/validate_command.dart';
 import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
-import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
+import 'package:ci_integration/cli/runner/ci_integrations_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -37,6 +38,18 @@ void main() {
         final commands = runner.argParser.commands;
 
         expect(commands, contains(syncCommandName));
+      },
+    );
+
+    test(
+      "registers a validate command on create",
+      () {
+        final validateCommand = ValidateCommand();
+        final validateCommandName = validateCommand.name;
+
+        final commands = runner.argParser.commands;
+
+        expect(commands, contains(validateCommandName));
       },
     );
 
