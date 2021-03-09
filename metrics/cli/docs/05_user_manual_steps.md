@@ -5,6 +5,13 @@
 
 The motivation for this document is to describe all user's manual steps to implement them easily using prompt in the Metrics CLI and to be able to automate them in the future.
 
+## References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Sentry documentation](https://docs.sentry.io/)
+- [Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md)
+- [Security audit](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md)
+
 ## Goals
 > Identify success metrics and measurable goals.
 
@@ -34,7 +41,7 @@ Please enter the region name that suits you best:
 
 ### Blaze account configuration
 
-The Metrics Web application uses the Firebase functions that are not available in the Free Firebase plan, so the user should enable the Blaze billing plan. 
+The Metrics Web application uses the Firebase functions that are not available in the Spark Firebase plan, so the user should enable the Blaze billing plan. 
 To simplify this process, we should add the following prompt containing detailed instructions on how to enable the Blaze plan: 
 
 ```text
@@ -43,6 +50,8 @@ To configure the Blaze billing plan for the Firebase project, consider the follo
 1. Follow the link and press continue in the open modal window: https://console.firebase.google.com/project/${project_id}/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow
 2. Select your country and press "Confirm"
 3. Enter your customer info, choose payment method and press "Confirm Purchase"
+
+Consider the following link to find out more about Firebase plans' pricing: https://firebase.google.com/pricing
 
 Press any key to continue once the billing plan configured: 
 ```
@@ -62,7 +71,7 @@ To initialize Firestore data for the currently deploying project, consider the f
 5. Create a document with the "feature_config" identifier.
 6. Add the following boolean fields to the feature_config document:
    - "isDebugMenuEnabled" - Indicates whether the Debug Menu feature is enabled.
-   - "isPasswordSignInOptionEnabled" - Indicates whether the Email and Password sign in option is enabled.
+   - "isPasswordSignInOptionEnabled" - Indicates whether the Email and Password sign-in option is enabled.
 
 Consider the following link for a more detailed guide of creating "allowed_email_domains" collection: 
 https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#google-sign-in-allowed-domains-configuration
@@ -114,7 +123,7 @@ Paste your Web client Id here:
 Since the Metrics Web application uses Sentry, we should provide detailed instruction to help a user configure a Sentry release during the Metrics application deployment process.
 Let's review prompts instructions that will help configure a new Sentry release.
 
-The first required thing for the Sentry release is an `Organization Slug`. The `Organization Slug` is a unique identifier of the user's organization and is required for the Sentry CLI commands. 
+The first required thing for the Sentry release is an `Organization Slug` - a unique identifier of the user's Sentry organization. The slug is used to associate the Metrics application with a certain Sentry organization.
 
 Here is a prompt for authorizing to the Sentry and retrieving the `Organization Slug`:
 ```text
@@ -127,7 +136,7 @@ The following steps help to find an `Organization Slug` for the Sentry account:
 Paste the `Organization Slug` here:
 ```
 
-The second required thing is a `Project Slug`. The `Project Slug` is a unique identifier of the user's project and is required for the Sentry CLI commands. 
+The second required thing is a `Project Slug` - a unique identifier of the user's Sentry project. The slug is used to associate the Metrics application with a certain Sentry project.
 
 Here is a prompt for retrieving the `Project Slug`:
 ```text
@@ -139,7 +148,7 @@ The following steps help to find a `Project Slug` for the Sentry account:
 Paste the `Project Name` here:
 ```
 
-The third required thing is a [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/). The `DSN` is a public client key, which tells the SDK where to send the events and is required for the Sentry SDK initialization.
+The third required thing is a [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/). The `DSN` is a public client key, which tells the SDK where to send the events.
 
 Here is a prompt for retrieving the `DSN`:
 ```text
@@ -150,7 +159,7 @@ The following steps help to find a `DSN` for the Sentry account:
 
 Paste the DSN here:
 ```
-The final required thing is a `Sentry release name`. The release name is used as a parameter in the Sentry CLI commands for updating source maps. Also, it's required for the Sentry SDK initialization.
+The final required thing is a `Sentry release name`. The release name is an identifier used for [release management](https://docs.sentry.io/product/cli/releases/) on Sentry. The release management allows to create, edit, and delete releases as well as upload release artifacts for them. 
 
 Here is a final prompt for retrieving the `Sentry release name`:
 ```text
@@ -164,3 +173,4 @@ While creating a release name, consider it cannot:
 Please enter your Sentry release name:
 ```
 
+_**Note**: The Metrics CLI does not collect any data you pass and using them only during the Metrics deployment by the machine on which the CLI runs._
