@@ -9,6 +9,7 @@ import 'dart:typed_data';
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
@@ -233,6 +234,35 @@ class GithubActionsClient with LoggerMixin {
         if (json == null) return const InteractionResult.success();
 
         return InteractionResult.success(result: WorkflowRun.fromJson(json));
+      },
+    );
+  }
+
+  /// Fetches a last [WorkflowRun] by the given [workflowIdentifier].
+  Future<InteractionResult<WorkflowRun>> fetchLastWorkflowRun(
+    String workflowIdentifier,
+  ) {
+    final url = UrlUtils.buildUrl(
+      basePath,
+      path: 'workflows/$workflowIdentifier/runs',
+      queryParameters: {
+        'status': GithubActionConclusionMapper.success,
+        'page': '1',
+        'per_page': '1',
+      },
+    );
+
+    return _handleResponse<WorkflowRun>(
+      _client.get(url, headers: headers),
+      (Map<String, dynamic> json, _) {
+        if (json == null) return const InteractionResult.success();
+
+        final workflowRunsList = json['workflow_runs'] as List<dynamic>;
+        final workflowRun = WorkflowRun.listFromJson(workflowRunsList)?.first;
+
+        if (workflowRun == null) return const InteractionResult.success();
+
+        return InteractionResult.success(result: workflowRun);
       },
     );
   }

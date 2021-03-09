@@ -197,7 +197,9 @@ class GithubActionsMockServer extends ApiMockServer {
     final runsPerPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
 
-    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
+    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(
+      status,
+    ).reversed.toList();
 
     _setNextPageUrlHeader(
       request,
