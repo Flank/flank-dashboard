@@ -84,6 +84,16 @@ void main() {
       WorkflowRunArtifact(name: testData.coverageArtifactName),
     ]);
 
+    const workflowRunsPageHasNext = WorkflowRunJobsPage(
+      values: [],
+      nextPageUrl: 'url',
+    );
+
+    const artifactsPageHasNext = WorkflowRunArtifactsPage(
+      values: [],
+      nextPageUrl: 'url',
+    );
+
     final auth = BearerAuthorization('token');
 
     final client = GithubActionsClientMock();
@@ -563,6 +573,42 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a successful interaction with null result if the next workflow run jobs page fetching failed",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
+        when(
+          client.fetchRunJobsNext(workflowRunsPageHasNext),
+        ).thenErrorWith();
+
+        final interactionResult = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
+      ".validateJobName() returns a successful interaction with null result if the next workflow run jobs page fetching result is null",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
+        when(
+          client.fetchRunJobsNext(workflowRunsPageHasNext),
+        ).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
       ".validateJobName() returns an error if there is no job with the given job name",
       () async {
         whenFetchRunJobs().thenSuccessWith(emptyJobsPage);
@@ -654,36 +700,6 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with null result if the next workflow run fetching result failed",
-      () async {
-        whenFetchRunArtifacts().thenErrorWith();
-
-        final interactionResult = await delegate.validateCoverageArtifactName(
-          workflowId: workflowId,
-          coverageArtifactName: coverageArtifactName,
-        );
-
-        expect(interactionResult.isSuccess, isTrue);
-        expect(interactionResult.result, isNull);
-      },
-    );
-
-    test(
-      ".validateCoverageArtifactName() returns a successful interaction with null result if the next workflow run fetching result is null",
-      () async {
-        whenFetchRunArtifacts().thenSuccessWith(null);
-
-        final interactionResult = await delegate.validateCoverageArtifactName(
-          workflowId: workflowId,
-          coverageArtifactName: coverageArtifactName,
-        );
-
-        expect(interactionResult.isSuccess, isTrue);
-        expect(interactionResult.result, isNull);
-      },
-    );
-
-    test(
       ".validateCoverageArtifactName() returns a successful interaction with null result if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
@@ -702,6 +718,42 @@ void main() {
       ".validateCoverageArtifactName() returns a successful interaction with null result if the workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a successful interaction with null result if the next workflow run artifacts page fetching failed",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
+        when(
+          client.fetchRunArtifactsNext(artifactsPageHasNext),
+        ).thenErrorWith();
+
+        final interactionResult = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a successful interaction with null result if the next workflow run artifacts page fetching result is null",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
+        when(
+          client.fetchRunArtifactsNext(artifactsPageHasNext),
+        ).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
