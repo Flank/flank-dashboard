@@ -1,8 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/cli/command/sync_command.dart';
+import 'package:ci_integration/cli/command/validate_command.dart';
 import 'package:ci_integration/cli/logger/factory/logger_factory.dart';
 import 'package:ci_integration/cli/logger/manager/logger_manager.dart';
 
@@ -21,6 +22,7 @@ class CiIntegrationsRunner extends CommandRunner<void> {
     );
 
     addCommand(SyncCommand());
+    addCommand(ValidateCommand());
   }
 
   @override
