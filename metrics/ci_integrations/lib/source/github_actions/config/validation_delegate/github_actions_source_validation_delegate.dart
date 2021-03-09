@@ -137,7 +137,10 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     }
 
     final jobs = jobsInteraction.result.values;
-    final runJob = jobs.firstWhere((job) => job.name == jobName);
+    final runJob = jobs.firstWhere(
+      (job) => job.name == jobName,
+      orElse: () => null,
+    );
 
     if (runJob == null) {
       return const InteractionResult.error(
@@ -173,6 +176,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     final coverageArtifact = artifacts.firstWhere(
       (artifact) => artifact.name == coverageArtifactName,
+      orElse: () => null,
     );
 
     if (coverageArtifact == null) {
