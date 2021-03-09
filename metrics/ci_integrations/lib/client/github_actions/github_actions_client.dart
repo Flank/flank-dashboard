@@ -260,8 +260,6 @@ class GithubActionsClient with LoggerMixin {
         final workflowRunsList = json['workflow_runs'] as List<dynamic>;
         final workflowRun = WorkflowRun.listFromJson(workflowRunsList)?.first;
 
-        if (workflowRun == null) return const InteractionResult.success();
-
         return InteractionResult.success(result: workflowRun);
       },
     );
