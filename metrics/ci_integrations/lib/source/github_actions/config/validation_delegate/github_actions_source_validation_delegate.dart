@@ -37,7 +37,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   ) async {
     final interaction = await _client.fetchToken(auth);
 
-    if (interaction.isError || interaction.result == null) {
+    if (_isInteractionFailed(interaction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.tokenInvalid,
       );
@@ -73,8 +73,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
       repositoryOwner,
     );
 
-    if (repositoryOwnerInteraction.isError ||
-        repositoryOwnerInteraction.result == null) {
+    if (_isInteractionFailed(repositoryOwnerInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.repositoryOwnerNotFound,
       );
@@ -93,7 +92,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
       repositoryOwner: repositoryOwner,
     );
 
-    if (repositoryInteraction.isError || repositoryInteraction.result == null) {
+    if (_isInteractionFailed(repositoryInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.repositoryNotFound,
       );
@@ -108,7 +107,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   ) async {
     final workflowInteraction = await _client.fetchWorkflow(workflowId);
 
-    if (workflowInteraction.isError || workflowInteraction.result == null) {
+    if (_isInteractionFailed(workflowInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.workflowNotFound,
       );
@@ -172,8 +171,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
       perPage: 1,
     );
 
-    if (workflowRunsInteraction.isError ||
-        workflowRunsInteraction.result == null) {
+    if (_isInteractionFailed(workflowRunsInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.workflowIdentifierInvalid,
       );
@@ -190,15 +188,15 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     return workflowRunsInteraction;
   }
 
-  /// Fetches a [WorkflowRunJobsPage]
-  /// by the given [workflowRunId] and [jobName].
+  /// Fetches a [WorkflowRunJobsPage] by the given [workflowRunId]
+  /// and [jobName].
   Future<InteractionResult<WorkflowRunJobsPage>> _fetchWorkflowRunJobsPage(
     int workflowRunId,
     String jobName,
   ) async {
     final jobsInteraction = await _client.fetchRunJobs(workflowRunId);
 
-    if (jobsInteraction.isError || jobsInteraction.result == null) {
+    if (_isInteractionFailed(jobsInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.noJobsToValidateJobName,
       );
@@ -217,8 +215,8 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     return const InteractionResult.success();
   }
 
-  /// Fetches a [WorkflowRunArtifactsPage]
-  /// by the given [workflowRunId] and [coverageArtifactName].
+  /// Fetches a [WorkflowRunArtifactsPage] by the given [workflowRunId]
+  /// and [coverageArtifactName].
   Future<InteractionResult<WorkflowRunArtifactsPage>>
       _fetchWorkflowRunArtifactsPage(
     int workflowRunId,
@@ -226,7 +224,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   ) async {
     final artifactsInteraction = await _client.fetchRunArtifacts(workflowRunId);
 
-    if (artifactsInteraction.isError || artifactsInteraction.result == null) {
+    if (_isInteractionFailed(artifactsInteraction)) {
       return const InteractionResult.error(
         message: GithubActionsStrings.noArtifactsToValidateName,
       );
@@ -234,16 +232,21 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     final artifacts = artifactsInteraction.result.values;
 
-    final nameIsNotValid = !artifacts.any(
+    final containsCoverageArtifact = artifacts.any(
       (artifact) => artifact.name == coverageArtifactName,
     );
 
-    if (nameIsNotValid) {
+    if (!containsCoverageArtifact) {
       return const InteractionResult.error(
         message: GithubActionsStrings.coverageArtifactNameInvalid,
       );
     }
 
     return const InteractionResult.success();
+  }
+
+  /// Determines if the given [interactionResult] is failed or not.
+  bool _isInteractionFailed(InteractionResult interactionResult) {
+    return interactionResult.isError || interactionResult.result == null;
   }
 }
