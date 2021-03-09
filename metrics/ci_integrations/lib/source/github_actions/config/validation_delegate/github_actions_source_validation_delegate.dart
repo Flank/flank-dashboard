@@ -131,7 +131,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     }
 
     final workflowRun = workflowRunInteraction.result;
-    final jobsInteraction = await _fetchJobName(workflowRun, jobName);
+    final jobsInteraction = await _fetchJob(workflowRun, jobName);
 
     if (jobsInteraction.isError) {
       return const InteractionResult.success();
@@ -185,7 +185,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
   /// Fetches a [WorkflowRunJob] for the given [workflowRun]
   /// by the [jobName].
-  Future<InteractionResult<WorkflowRunJob>> _fetchJobName(
+  Future<InteractionResult<WorkflowRunJob>> _fetchJob(
     WorkflowRun workflowRun,
     String jobName,
   ) async {
