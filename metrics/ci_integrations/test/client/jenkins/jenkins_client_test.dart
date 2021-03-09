@@ -623,7 +623,7 @@ void main() {
     );
 
     test(
-      ".fetchJenkinsInstanceInfo() returns success if the given auth is valid",
+      ".fetchJenkinsUser() returns success if the given auth is valid",
       () async {
         final interactionResult = await jenkinsClient.fetchJenkinsUser(
           authorization,
