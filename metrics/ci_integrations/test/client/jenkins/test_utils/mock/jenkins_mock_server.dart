@@ -10,6 +10,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_instance_info.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
@@ -85,7 +86,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/login',
           ),
-          dispatcher: _jenkinsVersionResponse,
+          dispatcher: _jenkinsInstanceInfoResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -293,14 +294,14 @@ class JenkinsMockServer extends ApiMockServer {
     await MockServerUtils.writeResponse(request, body: artifactContent);
   }
 
-  /// Responses with the Jenkins instance version in response headers
+  /// Responses with the Jenkins instance info in response headers
   /// and an empty body.
-  Future<void> _jenkinsVersionResponse(HttpRequest request) async {
-    const jenkinsVersionHeader = 'X-Jenkins';
+  Future<void> _jenkinsInstanceInfoResponse(HttpRequest request) async {
+    const jenkinsInstanceInfo = JenkinsInstanceInfo(version: '1.0');
 
-    const headers = {jenkinsVersionHeader: '1.0'};
+    final responseHeaders = jenkinsInstanceInfo.toMap();
 
-    await MockServerUtils.writeResponse(request, headers: headers);
+    await MockServerUtils.writeResponse(request, headers: responseHeaders);
   }
 
   /// Responses with the [JenkinsUser] for the given [request].
