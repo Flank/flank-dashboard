@@ -121,9 +121,9 @@ class BuildkiteMockServer extends ApiMockServer {
 
     builds = MockServerUtils.paginate(builds, perPage, pageNumber);
 
-    final _response = builds.map((build) => build.toJson()).toList();
+    final response = builds.map((build) => build.toJson()).toList();
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Responses with a list of [BuildkiteArtifact]s.
@@ -141,9 +141,9 @@ class BuildkiteMockServer extends ApiMockServer {
 
     artifacts = MockServerUtils.paginate(artifacts, perPage, pageNumber);
 
-    final _response = artifacts.map((artifact) => artifact.toJson()).toList();
+    final response = artifacts.map((artifact) => artifact.toJson()).toList();
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Responses with a [BuildkiteToken].

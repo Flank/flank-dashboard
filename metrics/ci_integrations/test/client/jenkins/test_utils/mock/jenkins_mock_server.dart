@@ -260,7 +260,7 @@ class JenkinsMockServer extends ApiMockServer {
 
   /// Responses with a list of [JenkinsBuildArtifact]s for the given [request].
   Future<void> _artifactsResponse(HttpRequest request) async {
-    final _response = {
+    final response = {
       'artifacts': [
         const JenkinsBuildArtifact(
           fileName: 'coverage.json',
@@ -275,11 +275,11 @@ class JenkinsMockServer extends ApiMockServer {
 
     final limits = _extractLimits(request, 'artifacts');
     if (limits != null) {
-      _response['artifacts'] = _response['artifacts']
+      response['artifacts'] = response['artifacts']
           .sublist(limits.lower, limits.upper == 0 ? 0 : limits.upper - 1);
     }
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Responses with artifact content for the given [request].

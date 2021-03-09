@@ -212,12 +212,12 @@ class GithubActionsMockServer extends ApiMockServer {
       pageNumber,
     );
 
-    final _response = {
+    final response = {
       'total_count': workflowRuns.length,
       'workflow_runs': workflowRuns.map((run) => run.toJson()).toList(),
     };
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Responses with a list of all workflow run jobs for a specific workflow run.
@@ -241,12 +241,12 @@ class GithubActionsMockServer extends ApiMockServer {
       pageNumber,
     );
 
-    final _response = {
+    final response = {
       'total_count': workflowRunJobs.length,
       'jobs': workflowRunJobs.map((run) => run.toJson()).toList(),
     };
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Responses with a list of artifacts for a specific workflow run.
@@ -260,12 +260,12 @@ class GithubActionsMockServer extends ApiMockServer {
 
     artifacts = MockServerUtils.paginate(artifacts, runsPerPage, pageNumber);
 
-    final _response = {
+    final response = {
       'total_count': artifacts.length,
       'artifacts': artifacts.map((artifact) => artifact.toJson()).toList(),
     };
 
-    await MockServerUtils.writeResponse(request, body: _response);
+    await MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Redirects to the artifact download URL.

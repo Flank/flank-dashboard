@@ -577,6 +577,19 @@ void main() {
     );
 
     test(
+      ".fetchJenkinsInstanceInfo() returns success if the given jenkins url is valid",
+      () async {
+        final jenkinsUrl = jenkinsMockServer.url;
+
+        final interactionResult = await jenkinsClient.fetchJenkinsInstanceInfo(
+          jenkinsUrl,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
       ".fetchJenkinsInstanceInfo() returns jenkins instance info if the given jenkins url is valid",
       () async {
         final jenkinsUrl = jenkinsMockServer.url;
@@ -606,6 +619,17 @@ void main() {
         final interactionResult = await jenkinsClient.fetchJenkinsUser(auth);
 
         expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchJenkinsInstanceInfo() returns success if the given auth is valid",
+      () async {
+        final interactionResult = await jenkinsClient.fetchJenkinsUser(
+          authorization,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
       },
     );
 

@@ -105,7 +105,7 @@ void main() {
     );
 
     test(
-      ".toString() contains the json representaton of the jenkins user instance",
+      ".toString() contains the json representation of the jenkins user instance",
       () {
         final json = '${user.toJson()}';
 

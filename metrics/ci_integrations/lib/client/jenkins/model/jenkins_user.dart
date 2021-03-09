@@ -8,7 +8,7 @@ class JenkinsUser extends Equatable {
   /// A name of this user.
   final String name;
 
-  /// A flag that indicates whether the user is authenicated or not.
+  /// A flag that indicates whether the user is authenticated or not.
   final bool authenticated;
 
   /// A flag that indicates whether the user is anonymous or not.

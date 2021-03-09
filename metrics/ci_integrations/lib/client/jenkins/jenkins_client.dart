@@ -394,20 +394,14 @@ class JenkinsClient with LoggerMixin {
 
     final url = '$jenkinsUrl/login';
 
-    try {
-      return _handleResponse(
-        _client.get(url, headers: headers),
-        (_, headers) {
-          final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(headers);
+    return _handleResponse(
+      _client.get(url, headers: headers),
+      (_, headers) {
+        final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(headers);
 
-          return InteractionResult.success(result: jenkinsInstanceInfo);
-        },
-      );
-    } on SocketException {
-      return InteractionResult.error(
-        message: 'The given URL ($jenkinsUrl) does not exist.',
-      );
-    }
+        return InteractionResult.success(result: jenkinsInstanceInfo);
+      },
+    );
   }
 
   /// Fetches the [JenkinsUser] using the given [auth].

@@ -18,10 +18,10 @@ class MockServerUtils {
     }
 
     if (headers != null) {
-      for (final header in headers.keys) {
-        final value = headers[header];
+      for (final headerName in headers.keys) {
+        final value = headers[headerName];
 
-        request.response.headers.set(header, value, preserveHeaderCase: true);
+        request.response.headers.set(headerName, value, preserveHeaderCase: true);
       }
     }
 
