@@ -18,11 +18,11 @@ class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A name of the option that holds a path to the YAML configuration file.
   static const _configFileOptionName = 'config-file';
 
-  /// A [RawIntegrationConfigFactory] this comamand uses to create a
+  /// A [RawIntegrationConfigFactory] this command uses to create a
   /// [RawIntegrationConfig].
   final RawIntegrationConfigFactory rawIntegrationConfigFactory;
 
-  /// A [ConfiguredPartiesFactory] this comamand uses to create a
+  /// A [ConfiguredPartiesFactory] this command uses to create a
   /// [ConfiguredParties].
   final ConfiguredPartiesFactory configuredPartiesFactory;
 

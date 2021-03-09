@@ -17,6 +17,8 @@ import 'package:ci_integration/integration/interface/base/config/validator_facto
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:ci_integration/integration/interface/source/config/model/source_config.dart';
+import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
@@ -52,16 +54,16 @@ void main() {
     final rawIntegrationConfigFactory = _RawIntegrationConfigFactoryMock();
     final configuredPartiesFactory = _ConfiguredPartiesFactoryMock();
     final validationResultPrinter = _ValidationResultPrinterMock();
-    final sourceParty = SourcePartyMock<SourceConfigStub, SourceClient>();
+    final sourceParty = SourcePartyMock<SourceConfig, SourceClient>();
     final destinationParty =
-        DestinationPartyMock<DestinationConfigStub, DestinationClient>();
+        DestinationPartyMock<DestinationConfig, DestinationClient>();
     final sourceConfigValidatorFactory =
-        _ConfigValidatorFactoryMock<SourceConfigStub>();
+        _ConfigValidatorFactoryMock<SourceConfig>();
     final destinationConfigValidatorFactory =
-        _ConfigValidatorFactoryMock<DestinationConfigStub>();
-    final sourceConfigValidator = _ConfigValidatorMock<SourceConfigStub>();
+        _ConfigValidatorFactoryMock<DestinationConfig>();
+    final sourceConfigValidator = _ConfigValidatorMock<SourceConfig>();
     final destinationConfigValidator =
-        _ConfigValidatorMock<DestinationConfigStub>();
+        _ConfigValidatorMock<DestinationConfig>();
 
     final sourceConfig = SourceConfigStub();
     final configuredSourceParty = ConfiguredSourceParty(
@@ -327,6 +329,8 @@ void main() {
           (_) => Future.value(destinationValidationResult),
         );
 
+        final sourceConfig = configuredParties.configuredSourceParty.config;
+
         commandStub.run();
 
         verify(sourceConfigValidatorFactory.create(sourceConfig)).called(1);
@@ -343,6 +347,8 @@ void main() {
         whenValidateDestinationConfig().thenAnswer(
           (_) => Future.value(destinationValidationResult),
         );
+
+        final sourceConfig = configuredParties.configuredSourceParty.config;
 
         commandStub.run();
 
@@ -361,6 +367,8 @@ void main() {
           (_) => Future.value(destinationValidationResult),
         );
 
+        final sourceConfig = configuredParties.configuredSourceParty.config;
+
         await commandStub.run();
 
         verify(writerMock.write(argThat(
@@ -374,7 +382,7 @@ void main() {
       () {
         whenCreateConfiguredParties().thenReturn(configuredParties);
         whenValidateSourceConfig().thenAnswer(
-          (_) => throw Exception(),
+          (_) => Future.error(Exception()),
         );
 
         expect(() => commandStub.run(), throwsConfigValidationError);
@@ -409,6 +417,9 @@ void main() {
           (_) => Future.value(destinationValidationResult),
         );
 
+        final destinationConfig =
+            configuredParties.configuredDestinationParty.config;
+
         await commandStub.run();
 
         verify(
@@ -427,6 +438,9 @@ void main() {
         whenValidateDestinationConfig().thenAnswer(
           (_) => Future.value(destinationValidationResult),
         );
+
+        final destinationConfig =
+            configuredParties.configuredDestinationParty.config;
 
         await commandStub.run();
 
@@ -447,6 +461,9 @@ void main() {
           (_) => Future.value(destinationValidationResult),
         );
 
+        final destinationConfig =
+            configuredParties.configuredDestinationParty.config;
+
         await commandStub.run();
 
         verify(writerMock.write(argThat(
@@ -463,7 +480,7 @@ void main() {
           (_) => Future.value(sourceValidationResult),
         );
         whenValidateDestinationConfig().thenAnswer(
-          (_) => throw Exception(),
+          (_) => Future.error(Exception()),
         );
 
         expect(() => commandStub.run(), throwsConfigValidationError);
