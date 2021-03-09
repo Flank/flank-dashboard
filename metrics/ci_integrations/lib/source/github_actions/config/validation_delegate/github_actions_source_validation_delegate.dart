@@ -6,6 +6,9 @@ import 'package:ci_integration/client/github_actions/mappers/github_token_scope_
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
@@ -115,102 +118,107 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [jobName].
-  Future<InteractionResult> validateJobName({
+  Future<InteractionResult<WorkflowRunJob>> validateJobName({
     String workflowId,
     String jobName,
   }) async {
-    final workflowRunsInteraction = await _fetchWorkflowRunsPage(
-      workflowId,
-    );
+    final workflowRunInteraction = await _fetchLastWorkflowRun(workflowId);
 
-    if (workflowRunsInteraction.isError) return workflowRunsInteraction;
+    if (_isInteractionFailed(workflowRunInteraction)) {
+      return const InteractionResult.success();
+    }
 
-    final workflowRuns = workflowRunsInteraction.result.values;
-    final workflowRunId = workflowRuns.first?.id;
+    final workflowRun = workflowRunInteraction.result;
 
-    final jobsInteraction = await _client.fetchRunJobs(workflowRunId);
+    final jobsInteraction = await _client.fetchRunJobs(workflowRun.id);
 
     if (_isInteractionFailed(jobsInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.noJobsToValidateJobName,
-      );
+      return const InteractionResult.success();
     }
 
     final jobs = jobsInteraction.result.values;
-    final containsJob = jobs.any((job) => job.name == jobName);
+    final runJob = jobs.firstWhere((job) => job.name == jobName);
 
-    if (!containsJob) {
+    if (runJob == null) {
       return const InteractionResult.error(
         message: GithubActionsStrings.jobNameInvalid,
       );
     }
 
-    return const InteractionResult.success();
+    return InteractionResult.success(result: runJob);
   }
 
   /// Validates the given [coverageArtifactName].
-  Future<InteractionResult> validateCoverageArtifactName({
+  Future<InteractionResult<WorkflowRunArtifact>> validateCoverageArtifactName({
     String workflowId,
     String coverageArtifactName,
   }) async {
-    final workflowRunsInteraction = await _fetchWorkflowRunsPage(
-      workflowId,
+    final workflowRunInteraction = await _fetchLastWorkflowRun(workflowId);
+
+    if (_isInteractionFailed(workflowRunInteraction)) {
+      return const InteractionResult.success();
+    }
+
+    final workflowRun = workflowRunInteraction.result;
+
+    final artifactsInteraction = await _client.fetchRunArtifacts(
+      workflowRun.id,
     );
 
-    if (workflowRunsInteraction.isError) return workflowRunsInteraction;
-
-    final workflowRuns = workflowRunsInteraction.result.values;
-    final workflowRunId = workflowRuns.first?.id;
-
-    final artifactsInteraction = await _client.fetchRunArtifacts(workflowRunId);
-
     if (_isInteractionFailed(artifactsInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.noArtifactsToValidateName,
-      );
+      return const InteractionResult.success();
     }
 
     final artifacts = artifactsInteraction.result.values;
 
-    final containsCoverageArtifact = artifacts.any(
+    final coverageArtifact = artifacts.firstWhere(
       (artifact) => artifact.name == coverageArtifactName,
     );
 
-    if (!containsCoverageArtifact) {
+    if (coverageArtifact == null) {
       return const InteractionResult.error(
         message: GithubActionsStrings.coverageArtifactNameInvalid,
       );
     }
 
-    return const InteractionResult.success();
+    return InteractionResult.success(result: coverageArtifact);
   }
 
-  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun]s.
-  Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRunsPage(
+  /// Fetches a last [WorkflowRun] by the given [workflowId].
+  Future<InteractionResult<WorkflowRun>> _fetchLastWorkflowRun(
     String workflowId,
   ) async {
     final workflowRunsInteraction = await _client.fetchWorkflowRuns(
       workflowId,
       status: GithubActionStatus.completed,
-      page: 1,
-      perPage: 1,
     );
 
     if (_isInteractionFailed(workflowRunsInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.workflowIdentifierInvalid,
-      );
+      return const InteractionResult.error();
     }
 
-    final workflowRuns = workflowRunsInteraction.result?.values ?? [];
+    WorkflowRunsPage workflowRunsPage = workflowRunsInteraction.result;
+    WorkflowRun lastWorkflowRun;
+    bool hasNext = true;
 
-    if (workflowRuns.isEmpty) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.noWorkflowRunsToValidateJobName,
-      );
-    }
+    do {
+      hasNext = workflowRunsPage.hasNextPage;
+      lastWorkflowRun = workflowRunsPage.values?.last;
 
-    return workflowRunsInteraction;
+      if (hasNext) {
+        final interaction = await _client.fetchWorkflowRunsNext(
+          workflowRunsPage,
+        );
+
+        if (_isInteractionFailed(interaction)) {
+          return const InteractionResult.error();
+        }
+
+        workflowRunsPage = interaction.result;
+      }
+    } while (hasNext);
+
+    return InteractionResult.success(result: lastWorkflowRun);
   }
 
   /// Determines whether the given [interactionResult] is failed or not.
