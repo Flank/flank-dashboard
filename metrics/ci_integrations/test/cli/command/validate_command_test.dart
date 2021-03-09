@@ -263,12 +263,8 @@ void main() {
       ".run() creates the raw integration config using the raw integration config factory and the config file path",
       () {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         commandStub.run();
 
@@ -291,12 +287,8 @@ void main() {
       ".run() creates the configured parties using the configured parties factory and the raw integration config",
       () {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         commandStub.run();
 
@@ -308,10 +300,7 @@ void main() {
       ".run() throws a ConfigValidationError if there is an error occurred during the configured parties creation",
       () {
         when(
-          rawIntegrationConfigFactory.create(configFilePath),
-        ).thenReturn(rawIntegrationConfig);
-        when(
-          configuredPartiesFactory.create(rawIntegrationConfig),
+          configuredPartiesFactory.create(any),
         ).thenThrow(Exception());
 
         expect(() => commandStub.run(), throwsConfigValidationError);
@@ -322,12 +311,8 @@ void main() {
       ".run() creates the source config validator using the config validator factory and the config from the configured source party",
       () {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final sourceConfig = configuredParties.configuredSourceParty.config;
 
@@ -338,15 +323,21 @@ void main() {
     );
 
     test(
+      ".run() throws a ConfigValidationError if there is an error occurred during the source config validator creation",
+      () {
+        whenCreateConfiguredParties().thenReturn(configuredParties);
+        when(sourceConfigValidatorFactory.create(any)).thenThrow(Exception());
+
+        expect(() => commandStub.run(), throwsConfigValidationError);
+      },
+    );
+
+    test(
       ".run() validates the source config using the source config validator",
       () {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final sourceConfig = configuredParties.configuredSourceParty.config;
 
@@ -360,12 +351,8 @@ void main() {
       ".run() logs a message when validating the source config",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final sourceConfig = configuredParties.configuredSourceParty.config;
 
@@ -396,9 +383,7 @@ void main() {
         whenValidateSourceConfig().thenAnswer(
           (_) => Future.value(sourceValidationResult),
         );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         await commandStub.run();
 
@@ -410,12 +395,8 @@ void main() {
       ".run() creates the destination config validator using the config validator factory and the config from the configured destination party",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final destinationConfig =
             configuredParties.configuredDestinationParty.config;
@@ -429,15 +410,24 @@ void main() {
     );
 
     test(
+      ".run() throws a ConfigValidationError if there is an error occurred during the destination config validator creation",
+      () {
+        whenCreateConfiguredParties().thenReturn(configuredParties);
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        when(
+          destinationConfigValidatorFactory.create(any),
+        ).thenThrow(Exception());
+
+        expect(() => commandStub.run(), throwsConfigValidationError);
+      },
+    );
+
+    test(
       ".run() validates the destination config using the destination config validator",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final destinationConfig =
             configuredParties.configuredDestinationParty.config;
@@ -454,12 +444,8 @@ void main() {
       ".run() logs a message when validating the destination config",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
-        whenValidateDestinationConfig().thenAnswer(
-          (_) => Future.value(destinationValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
+        whenValidateDestinationConfig().thenAnswer((_) => Future.value());
 
         final destinationConfig =
             configuredParties.configuredDestinationParty.config;
@@ -476,9 +462,7 @@ void main() {
       ".run() throws a ConfigValidationError if there is an error occurred during the destination config validation",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
         whenValidateDestinationConfig().thenAnswer(
           (_) => Future.error(Exception()),
         );
@@ -491,9 +475,7 @@ void main() {
       ".run() prints the destination config's validation result",
       () async {
         whenCreateConfiguredParties().thenReturn(configuredParties);
-        whenValidateSourceConfig().thenAnswer(
-          (_) => Future.value(sourceValidationResult),
-        );
+        whenValidateSourceConfig().thenAnswer((_) => Future.value());
         whenValidateDestinationConfig().thenAnswer(
           (_) => Future.value(destinationValidationResult),
         );

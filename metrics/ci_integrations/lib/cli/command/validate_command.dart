@@ -9,7 +9,6 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/error/config_validation_error.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
 
@@ -89,12 +88,11 @@ class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
   }
 
   /// Creates the [ConfigValidator] and runs the validation
-  /// for the [configuredParty]'s [Config].
+  /// for the given [ConfiguredParty.party].
   Future<void> _validate(ConfiguredParty configuredParty) async {
-    final party = configuredParty.party;
     final config = configuredParty.config;
 
-    final configValidator = _createConfigValidator(party, config);
+    final configValidator = _createConfigValidator(configuredParty);
 
     logger.message('Validating ${config.runtimeType}...');
 
@@ -103,11 +101,13 @@ class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
     validationResultPrinter.print(validationResult);
   }
 
-  /// Creates the [ConfigValidator] using the given [party] and [config].
+  /// Creates the [ConfigValidator] using the given [configuredParty].
   ConfigValidator _createConfigValidator(
-    IntegrationParty party,
-    Config config,
+    ConfiguredParty configuredParty,
   ) {
+    final party = configuredParty.party;
+    final config = configuredParty.config;
+
     final configValidatorFactory = party.configValidatorFactory;
 
     return configValidatorFactory.create(config);
