@@ -138,7 +138,6 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     }
 
     final job = jobsInteraction.result;
-    ;
 
     if (job == null) {
       return const InteractionResult.error(
