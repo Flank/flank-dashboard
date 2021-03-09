@@ -40,7 +40,7 @@ To simplify this process, we should add the following prompt containing detailed
 ```text
 To configure the Blaze billing plan for the Firebase project, consider the following steps:
 
-1. Follow the link and press continue in the open modal window: https://console.firebase.google.com/project/project_id/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow
+1. Follow the link and press continue in the open modal window: https://console.firebase.google.com/project/${project_id}/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow
 2. Select your country and press "Confirm"
 3. Enter your customer info, choose payment method and press "Confirm Purchase"
 
@@ -55,7 +55,7 @@ we should provide a detailed instruction describing the initialization of the Fi
 ```text
 To initialize Firestore data for the currently deploying project, consider the following steps:
 
-1. Follow the link to open the Firestore database: https://console.firebase.google.com/project/project_id/firestore
+1. Follow the link to open the Firestore database: https://console.firebase.google.com/project/${project_id}/firestore
 2. Create a collection with the "allowed_email_domains" identifier.
 3. Create document(s) with the "domain" identifier without any fields.
 4. Create a collection with the "feature_config" identifier.
@@ -82,7 +82,7 @@ During the deployment process, we should display the following prompt explaining
 ```text
 To enable Firebase analytics for the currently deploying project, follow the next steps:
 
-1. Follow the link and click an "Enable Google Analytics" button: https://console.firebase.google.com/project/project_id/settings/integrations/analytics
+1. Follow the link and click an "Enable Google Analytics" button: https://console.firebase.google.com/project/${project_id}/settings/integrations/analytics
 
 Once you are done, press any key to continue:
 ```
@@ -100,8 +100,8 @@ Consider the following prompt instructions helping to configure the Firebase Aut
 ```text
 To enable the Firebase Auth for the Metrics Web application, consider the following steps:
 
-1. Follow the link and click a "Get started" button: https://console.firebase.google.com/project/project_id/authentication
-2. Navigate to the 'Sign-in method' tab on the Firebase auth page or use the following link: https://console.firebase.google.com/project/project_id/authentication/providers
+1. Follow the link and click a "Get started" button: https://console.firebase.google.com/project/${project_id}/authentication
+2. Navigate to the 'Sign-in method' tab on the Firebase auth page or use the following link: https://console.firebase.google.com/project/${project_id}/authentication/providers
 3. Enable an Email/Password provider by clicking on provider name and toggling the `Enable` switch.
 4. Enable a Google provider by clicking on provider name and toggling the `Enable` switch.
 5. On the 'Google' provider popup, open the 'Web SDK configuration' tab, copy the Web client ID and paste it to the console
@@ -114,10 +114,10 @@ Paste your Web client Id here:
 Since the Metrics Web application uses Sentry, we should provide detailed instruction to help a user configure a Sentry release during the Metrics application deployment process.
 Let's review prompts instructions that will help configure a new Sentry release.
 
-The first prompt for authorizing to the Sentry and retrieving an `Organization Slug`:
-```text
-To enable Sentry for the Metrics Web application, consider the following steps:
+The first required thing for the Sentry release is an `Organization Slug`. The `Organization Slug` is a unique identifier of the user's organization and is required for the Sentry CLI commands. 
 
+Here is a prompt for authorizing to the Sentry and retrieving the `Organization Slug`:
+```text
 The following steps help to find an `Organization Slug` for the Sentry account:
 
 1. Visit the following link and authorize: https://sentry.io
@@ -127,33 +127,36 @@ The following steps help to find an `Organization Slug` for the Sentry account:
 Paste the `Organization Slug` here:
 ```
 
-The prompt for retrieving a `Project Slug`:
+The second required thing is a `Project Slug`. The `Project Slug` is a unique identifier of the user's project and is required for the Sentry CLI commands. 
+
+Here is a prompt for retrieving the `Project Slug`:
 ```text
 The following steps help to find a `Project Slug` for the Sentry account:
 
-1. Navigate to the Sentry's `Settings` tab
-2. Navigate tp the `Projects` tab and copy a required `Project Slug`
+1. Visit the following link: https://sentry.io/settings/${organization_slug}/projects/
+2. Select a required project and copy a `Project Name` field
 
-Paste the `Project Slug` here:
+Paste the `Project Name` here:
 ```
 
-The prompt for retrieving a `DSN`:
+The third required thing is a [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/). The `DSN` is a public client key, which tells the SDK where to send the events and is required for the Sentry SDK initialization.
+
+Here is a prompt for retrieving the `DSN`:
 ```text
 The following steps help to find a `DSN` for the Sentry account:
 
-1. Navigate to the Sentry's `Settings` tab
-2. Navigate to the `Projects` tab
-3. Select a required project 
-4. Navigate to the Client Keys (DSN) tab and copy your DSN
+1. Visit the following link: https://sentry.io/settings/${organization_slug}/projects/${project_slug}/keys/
+2. Copy your DSN
 
 Paste the DSN here:
 ```
+The final required thing is a `Sentry release name`. The release name is used as a parameter in the Sentry CLI commands for updating source maps. Also, it's required for the Sentry SDK initialization.
 
-The final prompt for retrieving a `Sentry release name`:
+Here is a final prompt for retrieving the `Sentry release name`:
 ```text
 The last thing required for the Sentry configuration is a release name. The Sentry web page will display the entered release name in the issues tags.
 
-While creating a release name, consider the following restrictions for it:  
+While creating a release name, consider it cannot:  
 - contain newlines, tabulator characters, forward slashes(/), or back slashes()
 - be (in their entirety) period (.), double period (..), or space ( )
 - exceed 200 characters
