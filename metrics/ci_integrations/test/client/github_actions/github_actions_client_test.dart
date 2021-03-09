@@ -372,6 +372,21 @@ void main() {
     );
 
     test(
+      ".fetchLastWorkflowRun() fetches the last completed workflow run by the given workflow id",
+      () async {
+        final interactionResult = await client.fetchWorkflowRuns(workflowId);
+        final workflowRunsPage = interactionResult.result;
+        final lastWorkflowRun = workflowRunsPage.values.first;
+
+        final interaction = await client.fetchLastWorkflowRun(workflowId);
+        final actualWorkflowRun = interaction.result;
+
+        expect(lastWorkflowRun.id, equals(actualWorkflowRun.id));
+        expect(lastWorkflowRun.status, equals(actualWorkflowRun.status));
+      },
+    );
+
+    test(
       ".fetchRunJobs() fails if an associated workflow run with such id is not found",
       () async {
         final interactionResult = await client.fetchRunJobs(10);

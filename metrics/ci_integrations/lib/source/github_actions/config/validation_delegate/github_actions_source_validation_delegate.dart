@@ -3,13 +3,10 @@
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -122,7 +119,9 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     String workflowId,
     String jobName,
   }) async {
-    final workflowRunInteraction = await _fetchLastWorkflowRun(workflowId);
+    final workflowRunInteraction = await _client.fetchLastWorkflowRun(
+      workflowId,
+    );
 
     if (_isInteractionFailed(workflowRunInteraction)) {
       return const InteractionResult.success();
@@ -156,7 +155,9 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     String workflowId,
     String coverageArtifactName,
   }) async {
-    final workflowRunInteraction = await _fetchLastWorkflowRun(workflowId);
+    final workflowRunInteraction = await _client.fetchLastWorkflowRun(
+      workflowId,
+    );
 
     if (_isInteractionFailed(workflowRunInteraction)) {
       return const InteractionResult.success();
@@ -186,43 +187,6 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     }
 
     return InteractionResult.success(result: coverageArtifact);
-  }
-
-  /// Fetches a last [WorkflowRun] by the given [workflowId].
-  Future<InteractionResult<WorkflowRun>> _fetchLastWorkflowRun(
-    String workflowId,
-  ) async {
-    final workflowRunsInteraction = await _client.fetchWorkflowRuns(
-      workflowId,
-      status: GithubActionStatus.completed,
-    );
-
-    if (_isInteractionFailed(workflowRunsInteraction)) {
-      return const InteractionResult.error();
-    }
-
-    WorkflowRunsPage workflowRunsPage = workflowRunsInteraction.result;
-    WorkflowRun lastWorkflowRun;
-    bool hasNext = true;
-
-    do {
-      hasNext = workflowRunsPage.hasNextPage;
-      lastWorkflowRun = workflowRunsPage.values?.last;
-
-      if (hasNext) {
-        final interaction = await _client.fetchWorkflowRunsNext(
-          workflowRunsPage,
-        );
-
-        if (_isInteractionFailed(interaction)) {
-          return const InteractionResult.error();
-        }
-
-        workflowRunsPage = interaction.result;
-      }
-    } while (hasNext);
-
-    return InteractionResult.success(result: lastWorkflowRun);
   }
 
   /// Determines whether the given [interactionResult] is failed or not.
