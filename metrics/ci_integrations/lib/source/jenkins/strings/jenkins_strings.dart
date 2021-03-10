@@ -13,6 +13,6 @@ class JenkinsStrings {
       'A job with such name does not exist, or the provided authorization credentials lack permissions to access a job with this name.';
   static const String anonymousUser =
       'The user with these authorization credentials is an anonymous user.';
-  static const String unAuthenticatedUser =
+  static const String unauthenticatedUser =
       'The user with these authorization credentials is not authenticated.';
 }

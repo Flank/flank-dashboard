@@ -18,15 +18,14 @@ import '../../test_utils/jenkins_client_mock.dart';
 void main() {
   group("JenkinsSourceValidationDelegate", () {
     const url = 'url';
-    const message = 'message';
     final auth = BearerAuthorization('token');
     const jobName = 'job';
 
     const nullVersionInstanceInfo = JenkinsInstanceInfo(version: null);
 
     const anonymousUser = JenkinsUser(anonymous: true);
-    const unAuthenticatedUser = JenkinsUser(authenticated: false);
-    const anonymousUnAuthenticatedUser = JenkinsUser(
+    const unauthenticatedUser = JenkinsUser(authenticated: false);
+    const anonymousUnauthenticatedUser = JenkinsUser(
       authenticated: false,
       anonymous: true,
     );
@@ -77,6 +76,7 @@ void main() {
     test(
       ".validateJenkinsUrl() returns an interaction with the message from the client if it is not null, and the interaction is not successful",
       () async {
+        const message = 'message';
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith(null, message);
 
         final interactionResult = await delegate.validateJenkinsUrl(url);
@@ -99,7 +99,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an error if the interaction with the client is null",
+      ".validateJenkinsUrl() returns an error if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
 
@@ -234,7 +234,7 @@ void main() {
       () async {
         when(
           client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(unAuthenticatedUser);
+        ).thenSuccessWith(unauthenticatedUser);
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -247,12 +247,12 @@ void main() {
       () async {
         when(
           client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(unAuthenticatedUser);
+        ).thenSuccessWith(unauthenticatedUser);
 
         final interactionResult = await delegate.validateAuth(auth);
         final resultMessage = interactionResult.message;
 
-        expect(resultMessage, contains(JenkinsStrings.unAuthenticatedUser));
+        expect(resultMessage, contains(JenkinsStrings.unauthenticatedUser));
       },
     );
 
@@ -261,7 +261,7 @@ void main() {
       () async {
         when(
           client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(anonymousUnAuthenticatedUser);
+        ).thenSuccessWith(anonymousUnauthenticatedUser);
 
         final interactionResult = await delegate.validateAuth(auth);
 
@@ -274,13 +274,18 @@ void main() {
       () async {
         when(
           client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(anonymousUnAuthenticatedUser);
+        ).thenSuccessWith(anonymousUnauthenticatedUser);
 
         final interactionResult = await delegate.validateAuth(auth);
         final resultMessage = interactionResult.message;
 
-        expect(resultMessage, contains(JenkinsStrings.anonymousUser));
-        expect(resultMessage, contains(JenkinsStrings.unAuthenticatedUser));
+        expect(
+          resultMessage,
+          containsAll([
+            JenkinsStrings.anonymousUser,
+            JenkinsStrings.unauthenticatedUser,
+          ]),
+        );
       },
     );
 

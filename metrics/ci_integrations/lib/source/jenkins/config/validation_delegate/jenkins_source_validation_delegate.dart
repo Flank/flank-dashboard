@@ -26,16 +26,11 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
       jenkinsUrl,
     );
 
-    if (instanceInfoInteraction.isError) {
-      final message =
-          instanceInfoInteraction.message ?? JenkinsStrings.notAJenkinsUrl;
-
-      return InteractionResult.error(message: message);
-    }
-
     final instanceInfo = instanceInfoInteraction.result;
 
-    if (instanceInfo == null || instanceInfo.version == null) {
+    if (instanceInfoInteraction.isError ||
+        instanceInfo == null ||
+        instanceInfo.version == null) {
       return const InteractionResult.error(
         message: JenkinsStrings.notAJenkinsUrl,
       );
@@ -54,21 +49,21 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
 
     final jenkinsUser = userInteraction.result;
 
-    final authenticationInfo = StringBuffer();
+    String authenticationInfo = '';
 
     final isAnonymous = jenkinsUser.anonymous ?? true;
     if (isAnonymous) {
-      authenticationInfo.writeln(JenkinsStrings.anonymousUser);
+      authenticationInfo = JenkinsStrings.anonymousUser;
     }
 
     final isAuthenticated = jenkinsUser.authenticated ?? false;
     if (!isAuthenticated) {
-      authenticationInfo.write(JenkinsStrings.unAuthenticatedUser);
+      authenticationInfo =
+          '$authenticationInfo ${JenkinsStrings.unauthenticatedUser}';
     }
 
     if (authenticationInfo.isNotEmpty) {
-      final information = '$authenticationInfo'.replaceAll('\n', ' ');
-      final message = 'Note: $information';
+      final message = 'Note: $authenticationInfo';
 
       return InteractionResult.success(message: message);
     }
