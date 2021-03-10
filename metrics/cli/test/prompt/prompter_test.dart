@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 
 void main() {
   const promptText = 'promptText';
-  final Matcher throwsAssertionError = throwsA(isA<AssertionError>());
   final writerMock = _MockPromptWriter();
 
   tearDown(() {
@@ -16,28 +15,9 @@ void main() {
     test(
       ".initialize() throws an AssertionError if the given prompt writer is null",
       () {
+        final throwsAssertionError = throwsA(isA<AssertionError>());
+
         expect(() => Prompter.initialize(null), throwsAssertionError);
-      },
-    );
-
-    test(
-      ".prompt() throws an AssertionError if the prompter is not initialized",
-      () {
-        expect(() => Prompter.prompt('text'), throwsAssertionError);
-      },
-    );
-
-    test(
-      ".promptConfirm() throws an AssertionError if the prompter is not initialized",
-      () {
-        expect(() => Prompter.promptConfirm('text'), throwsAssertionError);
-      },
-    );
-
-    test(
-      ".promptTerminate() throws an AssertionError if the prompter is not initialized",
-      () {
-        expect(() => Prompter.promptTerminate(), throwsAssertionError);
       },
     );
 
