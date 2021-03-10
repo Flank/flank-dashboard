@@ -269,7 +269,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     WorkflowRunArtifactsPage page = runArtifactInteraction.result;
     WorkflowRunArtifact artifact;
-    bool hasNext = false;
+    bool hasNext;
 
     do {
       final artifacts = page.values;

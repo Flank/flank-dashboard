@@ -199,7 +199,7 @@ class GithubActionsClient with LoggerMixin {
   /// If the given value of [perPage] is greater than its limit,
   /// the upper bound is used.
   ///
-  /// For example, performing requests with non-`null` status query:
+  /// For example, performing requests with non-`null` conclusion query:
   /// ```dart
   ///   // initialize client
   ///   final fetchResult = await client.fetchWorkflowRunsWithConclusion(
