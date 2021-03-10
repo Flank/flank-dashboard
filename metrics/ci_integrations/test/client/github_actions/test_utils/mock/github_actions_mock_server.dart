@@ -285,9 +285,10 @@ class GithubActionsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
-  /// Generates a list of [WorkflowRun]s with the given [status].
+  /// Generates a list of [WorkflowRun]s with the given [status] and [conclusion].
   ///
   /// If the given [status] is null, the [GithubActionStatus.completed] is used.
+  /// If the given [conclusion] is null, the [GithubActionConclusion.success] is used.
   List<WorkflowRun> _generateWorkflowRuns({
     GithubActionStatus status,
     GithubActionConclusion conclusion,
