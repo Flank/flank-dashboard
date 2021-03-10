@@ -28,7 +28,7 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
 
     if (instanceInfoInteraction.isError) {
       final message =
-          instanceInfoInteraction?.message ?? JenkinsStrings.notAJenkinsUrl;
+          instanceInfoInteraction.message ?? JenkinsStrings.notAJenkinsUrl;
 
       return InteractionResult.error(message: message);
     }

@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the not a jenkins url message if the message from the client is null, and the interaction is not successful",
+      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the message from the client is null, and the interaction is not successful",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
 
@@ -110,7 +110,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the not a jenkins url message if the interaction with the client is null",
+      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the interaction with the client is null",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
 
@@ -135,7 +135,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the not a jenkins url message if the fetched instance info has the version equal to null",
+      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the fetched instance info has the version equal to null",
       () async {
         when(
           client.fetchJenkinsInstanceInfo(url),
@@ -172,7 +172,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the auth invalid message if the interaction with the client is not successful",
+      ".validateAuth() returns an interaction with the 'auth invalid' message if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsUser(auth)).thenErrorWith();
 
@@ -195,7 +195,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the auth invalid message if the interaction with the client is null",
+      ".validateAuth() returns an interaction with the 'auth invalid' message if the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
@@ -203,17 +203,6 @@ void main() {
         final resultMessage = interactionResult.message;
 
         expect(resultMessage, equals(JenkinsStrings.authInvalid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a successful interaction if the given auth is valid",
-      () async {
-        when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
-
-        final interactionResult = await delegate.validateAuth(auth);
-
-        expect(interactionResult.isSuccess, isTrue);
       },
     );
 
@@ -229,7 +218,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the anonymous user message if the fetched user is anonymous",
+      ".validateAuth() returns an interaction with the 'anonymous user' message if the fetched user is anonymous",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
 
@@ -254,7 +243,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the unauthenticated user message if the fetched user is unauthenticated",
+      ".validateAuth() returns an interaction with the 'unauthenticated user' message if the fetched user is unauthenticated",
       () async {
         when(
           client.fetchJenkinsUser(auth),
@@ -281,7 +270,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the unauthenticated user and anonymous user messages if the fetched user is unauthenticated and anonymous",
+      ".validateAuth() returns an interaction with the 'unauthenticated user' and 'anonymous user' messages if the fetched user is unauthenticated and anonymous",
       () async {
         when(
           client.fetchJenkinsUser(auth),
@@ -296,7 +285,18 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an error if the interaction with the client is error",
+      ".validateAuth() returns a successful interaction if the given auth is valid",
+      () async {
+        when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
+
+        final interactionResult = await delegate.validateAuth(auth);
+
+        expect(interactionResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".validateJobName() returns an error if the interaction with the client is not successful",
       () async {
         when(client.fetchJob(jobName)).thenErrorWith();
 
@@ -307,7 +307,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the job does not exist message if the interaction with the client is error",
+      ".validateJobName() returns an interaction with the 'job does not exist' message if the interaction with the client is not successful",
       () async {
         when(client.fetchJob(jobName)).thenErrorWith();
 
@@ -330,7 +330,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the job does not exist message if the interaction with the client is null",
+      ".validateJobName() returns an interaction with the 'job does not exist' message if the interaction with the client is null",
       () async {
         when(client.fetchJob(jobName)).thenSuccessWith(null);
 
