@@ -39,7 +39,7 @@ Bob -> GCloudService : enters the regionId
 GCloudService --> Deployer -- : gcloud project has been created
 
 Deployer -> FirebaseService ++ : login()
-FirebaseService --> Bob : staarts interactive login
+FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in
 FirebaseService --> Deployer -- : sign in finished
 
