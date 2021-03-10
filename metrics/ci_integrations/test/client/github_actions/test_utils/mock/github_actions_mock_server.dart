@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:api_mock_server/api_mock_server.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -194,10 +195,14 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
     final status = _extractRunStatus(request);
+    final conclusion = _extractRunConclusion(request);
     final runsPerPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
 
-    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
+    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(
+      status: status,
+      conclusion: conclusion,
+    );
 
     _setNextPageUrlHeader(
       request,
@@ -283,7 +288,10 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Generates a list of [WorkflowRun]s with the given [status].
   ///
   /// If the given [status] is null, the [GithubActionStatus.completed] is used.
-  List<WorkflowRun> _generateWorkflowRuns(GithubActionStatus status) {
+  List<WorkflowRun> _generateWorkflowRuns({
+    GithubActionStatus status,
+    GithubActionConclusion conclusion,
+  }) {
     const count = 100;
     final runs = List.generate(count, (index) {
       final runNumber = count - index;
@@ -292,6 +300,7 @@ class GithubActionsMockServer extends ApiMockServer {
         id: runNumber,
         number: runNumber,
         url: 'url',
+        conclusion: conclusion ?? GithubActionConclusion.success,
         status: status ?? GithubActionStatus.completed,
         createdAt: DateTime.now().toUtc(),
       );
@@ -343,6 +352,14 @@ class GithubActionsMockServer extends ApiMockServer {
     final status = request.uri.queryParameters['status'];
 
     return const GithubActionStatusMapper().map(status);
+  }
+
+  /// Returns the [GithubActionConclusion], based on the `status` query parameter
+  /// of the given [request].
+  GithubActionConclusion _extractRunConclusion(HttpRequest request) {
+    final status = request.uri.queryParameters['status'];
+
+    return const GithubActionConclusionMapper().map(status);
   }
 
   /// Returns the `per_page` query parameter of the given [request].
