@@ -3,7 +3,7 @@
 
 import 'package:ci_integration/source/buildkite/client_factory/buildkite_source_client_factory.dart';
 import 'package:ci_integration/source/buildkite/config/parser/buildkite_source_config_parser.dart';
-import 'package:ci_integration/source/buildkite/config/vaildator_factory/buildkite_source_validator_factory.dart';
+import 'package:ci_integration/source/buildkite/config/validator_factory/buildkite_source_validator_factory.dart';
 import 'package:ci_integration/source/buildkite/party/buildkite_source_party.dart';
 import 'package:test/test.dart';
 
