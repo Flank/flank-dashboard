@@ -217,7 +217,7 @@ void main() {
 
         final result = await validator.validate(config);
 
-        expect(result, equals(result));
+        expect(result, equals(validationResult));
       },
     );
 
@@ -286,7 +286,7 @@ void main() {
 
         final result = await validator.validate(config);
 
-        expect(result, equals(result));
+        expect(result, equals(validationResult));
       },
     );
 
@@ -383,7 +383,7 @@ void main() {
 
         final result = await validator.validate(config);
 
-        expect(result, equals(result));
+        expect(result, equals(validationResult));
       },
     );
 
@@ -430,7 +430,7 @@ void main() {
 
         final result = await validator.validate(config);
 
-        expect(result, equals(result));
+        expect(result, equals(validationResult));
       },
     );
 
@@ -487,7 +487,7 @@ void main() {
 
         final result = await validator.validate(config);
 
-        expect(result, equals(result));
+        expect(result, equals(validationResult));
       },
     );
 
