@@ -74,19 +74,6 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the message from the client if it is not null, and the interaction is not successful",
-      () async {
-        const message = 'message';
-        when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith(null, message);
-
-        final interactionResult = await delegate.validateJenkinsUrl(url);
-        final resultMessage = interactionResult.message;
-
-        expect(resultMessage, equals(message));
-      },
-    );
-
-    test(
       ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the message from the client is null, and the interaction is not successful",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
@@ -281,7 +268,7 @@ void main() {
 
         expect(
           resultMessage,
-          containsAll([
+          stringContainsInOrder([
             JenkinsStrings.anonymousUser,
             JenkinsStrings.unauthenticatedUser,
           ]),
