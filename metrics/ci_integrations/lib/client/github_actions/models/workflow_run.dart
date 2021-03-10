@@ -1,7 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:equatable/equatable.dart';
 
@@ -22,11 +24,14 @@ class WorkflowRun extends Equatable {
   /// A status of this workflow run.
   final GithubActionStatus status;
 
+  /// A conclusion of this workflow run.
+  final GithubActionConclusion conclusion;
+
   /// A timestamp this workflow run has started at.
   final DateTime createdAt;
 
   @override
-  List<Object> get props => [id, number, url, status, createdAt];
+  List<Object> get props => [id, number, url, status, conclusion, createdAt];
 
   /// Creates a new instance of the [WorkflowRun].
   const WorkflowRun({
@@ -35,6 +40,7 @@ class WorkflowRun extends Equatable {
     this.url,
     this.apiUrl,
     this.status,
+    this.conclusion,
     this.createdAt,
   });
 
@@ -47,6 +53,9 @@ class WorkflowRun extends Equatable {
     const statusMapper = GithubActionStatusMapper();
     final status = statusMapper.map(json['status'] as String);
 
+    const conclusionMapper = GithubActionConclusionMapper();
+    final conclusion = conclusionMapper.map(json['conclusion'] as String);
+
     final createdAt = json['created_at'] == null
         ? null
         : DateTime.parse(json['created_at'] as String);
@@ -57,6 +66,7 @@ class WorkflowRun extends Equatable {
       url: json['html_url'] as String,
       apiUrl: json['url'] as String,
       status: status,
+      conclusion: conclusion,
       createdAt: createdAt,
     );
   }
@@ -74,6 +84,7 @@ class WorkflowRun extends Equatable {
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     const statusMapper = GithubActionStatusMapper();
+    const conclusionMapper = GithubActionConclusionMapper();
 
     return <String, dynamic>{
       'id': id,
@@ -81,6 +92,7 @@ class WorkflowRun extends Equatable {
       'url': apiUrl,
       'html_url': url,
       'status': statusMapper.unmap(status),
+      'conclusion': conclusionMapper.unmap(conclusion),
       'created_at': createdAt?.toIso8601String(),
     };
   }

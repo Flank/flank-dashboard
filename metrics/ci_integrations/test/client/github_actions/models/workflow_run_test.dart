@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0 
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:test/test.dart';
@@ -14,6 +15,7 @@ void main() {
     const apiUrl = 'api-url';
     const url = 'url';
     const status = 'queued';
+    const conclusion = 'success';
     final createdAt = DateTime(2020).toUtc();
 
     final runJson = <String, dynamic>{
@@ -22,6 +24,7 @@ void main() {
       'url': apiUrl,
       'html_url': url,
       'status': status,
+      'conclusion': conclusion,
       'created_at': createdAt.toIso8601String(),
     };
 
@@ -31,11 +34,13 @@ void main() {
       apiUrl: apiUrl,
       url: url,
       status: GithubActionStatus.queued,
+      conclusion: GithubActionConclusion.success,
       createdAt: createdAt,
     );
 
     test("creates an instance with the given values", () {
       const status = GithubActionStatus.inProgress;
+      const conclusion = GithubActionConclusion.failure;
 
       final run = WorkflowRun(
         id: id,
@@ -43,6 +48,7 @@ void main() {
         apiUrl: apiUrl,
         url: url,
         status: status,
+        conclusion: conclusion,
         createdAt: createdAt,
       );
 
@@ -51,6 +57,7 @@ void main() {
       expect(run.apiUrl, equals(apiUrl));
       expect(run.url, equals(url));
       expect(run.status, equals(status));
+      expect(run.conclusion, equals(conclusion));
       expect(run.createdAt, equals(createdAt));
     });
 
@@ -99,6 +106,7 @@ void main() {
           'apiUrl': 'api-url2',
           'url': 'url2',
           'status': 'completed',
+          'conclusion': 'success',
           'created_at': DateTime(2019).toUtc().toIso8601String(),
         };
         final anotherRun = WorkflowRun.fromJson(anotherJson);

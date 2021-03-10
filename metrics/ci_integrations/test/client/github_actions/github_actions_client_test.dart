@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
@@ -436,6 +438,31 @@ void main() {
         final runs = interactionResult.result.values;
 
         expect(runs, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page containing workflow runs with the given conclusion",
+      () async {
+        const expectedColclusion = GithubActionConclusion.skipped;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          conclusion: expectedColclusion,
+        );
+
+        final runs = interactionResult.result.values;
+
+        expect(
+          runs,
+          everyElement(
+            isA<WorkflowRun>().having(
+              (run) => run.conclusion,
+              'conclusion',
+              equals(expectedColclusion),
+            ),
+          ),
+        );
       },
     );
 
