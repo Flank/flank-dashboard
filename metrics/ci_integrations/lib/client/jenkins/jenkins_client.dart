@@ -412,9 +412,9 @@ class JenkinsClient with LoggerMixin {
   ) async {
     ArgumentError.checkNotNull(auth, 'auth');
 
-    logger.info('Fetching Jenkins user info from the url: $jenkinsUrl');
-
     final url = _jenkinsUrlBuilder.build(jenkinsUrl, path: 'whoAmI');
+
+    logger.info('Fetching Jenkins user info from the url: $url');
 
     final requestHeaders = {
       ...headers,
