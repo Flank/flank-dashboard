@@ -131,19 +131,26 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message: GithubActionsStrings.workflowIdInvalidInterruptReason,
+      );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message: GithubActionsStrings.emptyWorkflowRunsInterruptReason,
+      );
     }
 
     final jobsInteraction = await _fetchJob(workflowRuns.first, jobName);
 
     if (jobsInteraction.isError) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message:
+            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+      );
     }
 
     final job = jobsInteraction.result;
@@ -170,13 +177,17 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message: GithubActionsStrings.workflowIdInvalidInterruptReason,
+      );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message: GithubActionsStrings.emptyWorkflowRunsInterruptReason,
+      );
     }
 
     final artifactsInteraction = await _fetchCoverageArtifact(
@@ -185,7 +196,10 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (artifactsInteraction.isError) {
-      return const InteractionResult.success();
+      return const InteractionResult.success(
+        message: GithubActionsStrings
+            .fetchingWorkflowRunArtifactsFailedInterruptReason,
+      );
     }
 
     final artifact = artifactsInteraction.result;
@@ -213,7 +227,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     WorkflowRunJobsPage page = runJobInteraction.result;
     WorkflowRunJob job;
-    bool hasNext = false;
+    bool hasNext;
 
     do {
       final jobs = page.values;

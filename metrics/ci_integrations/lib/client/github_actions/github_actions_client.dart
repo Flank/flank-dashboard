@@ -109,7 +109,7 @@ class GithubActionsClient with LoggerMixin {
     };
   }
 
-  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
+  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun]s by the
   /// given [workflowIdentifier]. A [workflowIdentifier] is either a workflow
   /// id or a name of the file that defines the workflow.
   ///
@@ -167,12 +167,12 @@ class GithubActionsClient with LoggerMixin {
     logger.info('Fetching runs for workflow $workflowIdentifier...');
 
     const statusMapper = GithubActionStatusMapper();
-    final _page = _getValidPageNumber(page);
+    final pageNumber = _getValidPageNumber(page);
 
     final queryParameters = {
       if (status != null) 'status': statusMapper.unmap(status),
       if (perPage != null) 'per_page': '$perPage',
-      'page': '$_page',
+      'page': '$pageNumber',
     };
 
     final url = UrlUtils.buildUrl(
@@ -181,10 +181,10 @@ class GithubActionsClient with LoggerMixin {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRunsPage(url, _page, perPage);
+    return _fetchWorkflowRunsPage(url, pageNumber, perPage);
   }
 
-  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
+  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun]s by the
   /// given [workflowIdentifier]. A [workflowIdentifier] is either
   /// a workflow id or a name of the file that defines the workflow.
   ///
@@ -194,8 +194,8 @@ class GithubActionsClient with LoggerMixin {
   /// A [perPage] is used for limiting the number of runs and pagination in pair
   /// with the [page] parameter. It defaults to `10` and satisfies the following
   /// statements:
-  /// - if the given [status] is `null`, the [perPage] is limited to `100`;
-  /// - if the given [status] is not `null`, the [perPage] is limited to `25`.
+  /// - if the given [conclusion] is `null`, the [perPage] is limited to `100`;
+  /// - if the given [conclusion] is not `null`, the [perPage] is limited to `25`.
   /// If the given value of [perPage] is greater than its limit,
   /// the upper bound is used.
   ///
@@ -204,7 +204,7 @@ class GithubActionsClient with LoggerMixin {
   ///   // initialize client
   ///   final fetchResult = await client.fetchWorkflowRunsWithConclusion(
   ///     'id',
-  ///     status: GithubActionConclusion.success,
+  ///     conclusion: GithubActionConclusion.success,
   ///     page: 3,
   ///     perPage: 1000,
   ///   );
@@ -215,7 +215,7 @@ class GithubActionsClient with LoggerMixin {
   ///   print(runs.values.length); // prints 25
   /// ```
   ///
-  /// In the case of `null` status query:
+  /// In the case of `null` conclusion query:
   /// ```dart
   ///   // initialize client
   ///   final fetchResult = await client.fetchWorkflowRunsWithConclusion(
@@ -239,15 +239,17 @@ class GithubActionsClient with LoggerMixin {
     int perPage = 10,
     int page,
   }) async {
-    logger.info('Fetching runs for workflow $workflowIdentifier...');
+    logger.info(
+      'Fetching runs for workflow $workflowIdentifier with conclusion $conclusion...',
+    );
 
     const conclusionMapper = GithubActionConclusionMapper();
-    final _page = _getValidPageNumber(page);
+    final pageNumber = _getValidPageNumber(page);
 
     final queryParameters = {
       if (conclusion != null) 'status': conclusionMapper.unmap(conclusion),
       if (perPage != null) 'per_page': '$perPage',
-      'page': '$_page',
+      'page': '$pageNumber',
     };
 
     final url = UrlUtils.buildUrl(
@@ -256,7 +258,7 @@ class GithubActionsClient with LoggerMixin {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRunsPage(url, _page, perPage);
+    return _fetchWorkflowRunsPage(url, pageNumber, perPage);
   }
 
   /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
@@ -314,7 +316,7 @@ class GithubActionsClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [WorkflowRunJobsPage] with a list of [WorkflowRunJob] by the
+  /// Fetches a [WorkflowRunJobsPage] with a list of [WorkflowRunJob]s by the
   /// given [runId]. A [runId] is a unique identifier of the [WorkflowRun] the
   /// [WorkflowRunJob]s belong to.
   ///
@@ -373,12 +375,12 @@ class GithubActionsClient with LoggerMixin {
 
     const statusMapper = GithubActionStatusMapper();
 
-    final _page = _getValidPageNumber(page);
+    final pageNumber = _getValidPageNumber(page);
 
     final queryParameters = {
       if (status != null) 'status': statusMapper.unmap(status),
       if (perPage != null) 'per_page': '$perPage',
-      'page': '$_page',
+      'page': '$pageNumber',
     };
 
     final url = UrlUtils.buildUrl(
@@ -387,7 +389,7 @@ class GithubActionsClient with LoggerMixin {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunJobsPage(url, _page, perPage);
+    return _fetchRunJobsPage(url, pageNumber, perPage);
   }
 
   /// Fetches the next [WorkflowRunJobsPage] of the given [currentPage].
@@ -463,11 +465,11 @@ class GithubActionsClient with LoggerMixin {
   }) {
     logger.info('Fetching run artifacts for run $runId...');
 
-    final _page = _getValidPageNumber(page);
+    final pageNumber = _getValidPageNumber(page);
 
     final queryParameters = {
       if (perPage != null) 'per_page': '$perPage',
-      'page': '$_page',
+      'page': '$pageNumber',
     };
 
     final url = UrlUtils.buildUrl(
@@ -476,7 +478,7 @@ class GithubActionsClient with LoggerMixin {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunArtifactsPage(url, _page, perPage);
+    return _fetchRunArtifactsPage(url, pageNumber, perPage);
   }
 
   /// Fetches the next [WorkflowRunArtifactsPage] of the given [currentPage].
