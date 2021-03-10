@@ -69,11 +69,11 @@ To initialize Firestore data for the currently deploying project, consider the f
 3. Create document(s) with the 'domain' identifier without any fields.
 4. Create a collection with the 'feature_config' identifier.
 5. Create a document with the 'feature_config' identifier.
-6. Add the following boolean fields to the feature_config document:
-   - 'isDebugMenuEnabled' - Indicates whether the Debug Menu feature is enabled;
-   - 'isPasswordSignInOptionEnabled' - Indicates whether the Email and Password sign-in option is enabled.
+6. Add the following boolean fields to the 'feature_config' document:
+   - 'isDebugMenuEnabled' - indicates whether the Debug Menu feature is enabled;
+   - 'isPasswordSignInOptionEnabled' - indicates whether the Email and Password sign-in option is enabled.
 
-Consider the following link for a more detailed guide of creating 'allowed_email_domains' collection: 
+To get more info about creating the 'allowed_email_domains' collection, see the following document: 
 https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#google-sign-in-allowed-domains-configuration.
 
 Consider the following link for a detailed structure of the 'feature_config' collection:
@@ -138,19 +138,19 @@ Paste the 'Organization Slug' here:
 
 The next we should receive is a `Project Slug` - a unique identifier of the user's Sentry project used to associate the Metrics application with a definite Sentry project.
 
-Here is a prompt for retrieving the `Project Slug`:
+The following prompt helps to find the `Project Slug`:
 ```text
 The following steps help to find a 'Project Slug' for the Sentry account:
 
 1. Visit the following link: https://sentry.io/settings/${organization_slug}/projects/.
-2. Select a required project and copy a 'Project Name' field.
+2. Select a required project and copy a project name.
 
-Paste the 'Project Name' here:
+The project name equals to its slug, so paste it here:
 ```
 
 The one more thing the Sentry requires is a [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/). The `DSN` is a public client key, which tells the SDK where to send the events.
 
-Here is a prompt for retrieving the `DSN`:
+Let's review the prompt helping to find the `DSN` field:
 ```text
 The following steps help to find a 'DSN' for the Sentry account:
 
@@ -161,7 +161,7 @@ Paste the 'DSN' here:
 ```
 The final required property is a `Sentry release name`. The release name is an identifier used for [release management](https://docs.sentry.io/product/cli/releases/) on Sentry. The release management allows to create, edit, and delete releases as well as upload release artifacts for them. 
 
-Here is a final prompt for retrieving the `Sentry release name`:
+The next prompt explains the creation of the `Sentry release name`:
 ```text
 The last thing required for the Sentry configuration is a release name. The Sentry web page will display the entered release name in the issues tags.
 
