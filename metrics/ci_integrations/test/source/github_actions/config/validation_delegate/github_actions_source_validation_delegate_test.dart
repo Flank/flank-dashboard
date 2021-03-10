@@ -7,6 +7,7 @@ import 'package:ci_integration/client/github_actions/models/github_repository.da
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/client/github_actions/models/github_user.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
@@ -779,6 +780,28 @@ void main() {
     );
 
     test(
+      ".validateJobName() does not fetch the next workflow runs page if the first one contains a job with the given name",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(
+          const WorkflowRunJobsPage(
+            values: [WorkflowRunJob(name: jobName)],
+            nextPageUrl: 'url',
+          ),
+        );
+        when(
+          client.fetchRunJobsNext(workflowRunsPageHasNext),
+        ).thenSuccessWith(null);
+
+        await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+
+        verifyNever(client.fetchRunJobsNext(any));
+      },
+    );
+
+    test(
       ".validateJobName() returns a successful interaction if the successful next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
@@ -1195,6 +1218,28 @@ void main() {
                 .fetchingWorkflowRunArtifactsFailedInterruptReason,
           ),
         );
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page if the first one contains an artifact with the given name",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(
+          const WorkflowRunArtifactsPage(
+            values: [WorkflowRunArtifact(name: coverageArtifactName)],
+            nextPageUrl: 'url',
+          ),
+        );
+        when(
+          client.fetchRunArtifactsNext(artifactsPageHasNext),
+        ).thenErrorWith();
+
+        await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+
+        verifyNever(client.fetchRunArtifactsNext(any));
       },
     );
 
