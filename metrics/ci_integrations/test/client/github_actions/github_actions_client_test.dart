@@ -444,11 +444,11 @@ void main() {
     test(
       ".fetchWorkflowRunsWithConclusion() returns a workflow runs page containing workflow runs with the given conclusion",
       () async {
-        const expectedColclusion = GithubActionConclusion.skipped;
+        const expectedConclusion = GithubActionConclusion.skipped;
 
         final interactionResult = await client.fetchWorkflowRunsWithConclusion(
           workflowId,
-          conclusion: expectedColclusion,
+          conclusion: expectedConclusion,
         );
 
         final runs = interactionResult.result.values;
@@ -459,7 +459,7 @@ void main() {
             isA<WorkflowRun>().having(
               (run) => run.conclusion,
               'conclusion',
-              equals(expectedColclusion),
+              equals(expectedConclusion),
             ),
           ),
         );
