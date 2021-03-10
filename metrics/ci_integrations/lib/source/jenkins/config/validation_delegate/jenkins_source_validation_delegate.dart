@@ -67,7 +67,8 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
     }
 
     if (authenticationInfo.isNotEmpty) {
-      final message = 'Note: $authenticationInfo'.replaceAll('\n', ' ');
+      final information = '$authenticationInfo'.replaceAll('\n', ' ');
+      final message = 'Note: $information';
 
       return InteractionResult.success(message: message);
     }
