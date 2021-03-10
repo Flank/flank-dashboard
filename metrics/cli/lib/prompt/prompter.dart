@@ -9,7 +9,7 @@ import 'package:cli/prompt/writer/prompt_writer.dart';
 /// Before calling any methods, this should be initialized with the
 /// [PromptWriter] using the [Prompter.initialize] method.
 class Prompter {
-  /// A [PromptWriter] this prompter uses to work with prompts.
+  /// A [PromptWriter] this prompter uses to write prompts.
   static PromptWriter _promptWriter;
 
   /// Initializes this prompter with the given [promptWriter].
