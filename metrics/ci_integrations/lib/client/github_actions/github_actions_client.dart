@@ -11,6 +11,7 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_actions_workflow.dart';
 import 'package:ci_integration/client/github_actions/models/github_repository.dart';
@@ -183,6 +184,81 @@ class GithubActionsClient with LoggerMixin {
     return _fetchWorkflowRunsPage(url, _page, perPage);
   }
 
+  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
+  /// given [workflowIdentifier]. A [workflowIdentifier] is either a workflow
+  /// id or a name of the file that defines the workflow.
+  ///
+  /// A [conclusion] is used as a filter query parameter to define the
+  /// conclusion of runs to fetch.
+  ///
+  /// A [perPage] is used for limiting the number of runs and pagination in pair
+  /// with the [page] parameter. It defaults to `10` and satisfies the following
+  /// statements:
+  /// - if the given [status] is `null`, the [perPage] is limited to `100`;
+  /// - if the given [status] is not `null`, the [perPage] is limited to `25`.
+  /// If the given value of [perPage] is greater than its limit,
+  /// the upper bound is used.
+  ///
+  /// For example, performing requests with non-`null` status query:
+  /// ```dart
+  ///   // initialize client
+  ///   final fetchResult = await client.fetchWorkflowRunsWithConclusion(
+  ///     'id',
+  ///     status: GithubActionConclusion.success,
+  ///     page: 3,
+  ///     perPage: 1000,
+  ///   );
+  ///
+  ///   final runs = fetchResult.result;
+  ///   print(runs.perPage); // prints 1000
+  ///   print(runs.page); // prints 3
+  ///   print(runs.values.length); // prints 25
+  /// ```
+  ///
+  /// In the case of `null` status query:
+  /// ```dart
+  ///   // initialize client
+  ///   final fetchResult = await client.fetchWorkflowRunsWithConclusion(
+  ///     'id',
+  ///     page: 3,
+  ///     perPage: 1000,
+  ///   );
+  ///
+  ///   final runs = fetchResult.result;
+  ///   print(runs.perPage); // prints 1000
+  ///   print(runs.page); // prints 3
+  ///   print(runs.values.length); // prints 100
+  /// ```
+  ///
+  /// A [page] is used for pagination and defines a page of runs to fetch.
+  /// If the [page] is `null`, less than or equals to zero,
+  /// the first page is fetched.
+  Future<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsWithConclusion(
+    String workflowIdentifier, {
+    GithubActionConclusion conclusion,
+    int perPage = 10,
+    int page,
+  }) async {
+    logger.info('Fetching runs for workflow $workflowIdentifier...');
+
+    const conclusionMapper = GithubActionConclusionMapper();
+    final _page = _getValidPageNumber(page);
+
+    final queryParameters = {
+      if (conclusion != null) 'status': conclusionMapper.unmap(conclusion),
+      if (perPage != null) 'per_page': '$perPage',
+      'page': '$_page',
+    };
+
+    final url = UrlUtils.buildUrl(
+      basePath,
+      path: 'workflows/$workflowIdentifier/runs',
+      queryParameters: queryParameters,
+    );
+
+    return _fetchWorkflowRunsPage(url, _page, perPage);
+  }
+
   /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
   FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
@@ -234,33 +310,6 @@ class GithubActionsClient with LoggerMixin {
         if (json == null) return const InteractionResult.success();
 
         return InteractionResult.success(result: WorkflowRun.fromJson(json));
-      },
-    );
-  }
-
-  /// Fetches a last [WorkflowRun] by the given [workflowIdentifier].
-  Future<InteractionResult<WorkflowRun>> fetchLastWorkflowRun(
-    String workflowIdentifier,
-  ) {
-    final url = UrlUtils.buildUrl(
-      basePath,
-      path: 'workflows/$workflowIdentifier/runs',
-      queryParameters: {
-        'status': GithubActionConclusionMapper.success,
-        'page': '1',
-        'per_page': '1',
-      },
-    );
-
-    return _handleResponse<WorkflowRun>(
-      _client.get(url, headers: headers),
-      (Map<String, dynamic> json, _) {
-        if (json == null) return const InteractionResult.success();
-
-        final workflowRunsList = json['workflow_runs'] as List<dynamic>;
-        final workflowRun = WorkflowRun.listFromJson(workflowRunsList)?.first;
-
-        return InteractionResult.success(result: workflowRun);
       },
     );
   }
