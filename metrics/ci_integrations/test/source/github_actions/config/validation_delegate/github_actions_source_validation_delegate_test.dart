@@ -60,19 +60,20 @@ void main() {
       jobName: jobName,
       coverageArtifactName: coverageArtifactName,
     );
-
+    final emptyRunsPage = WorkflowRunsPage(
+      values: const [],
+      nextPageUrl: testData.url,
+    );
     final defaultRunsPage = WorkflowRunsPage(
       values: testData.generateWorkflowRunsByNumbers(
         runNumbers: [1],
       ),
     );
-
     final emptyJobsPage = WorkflowRunJobsPage(
       page: 1,
       nextPageUrl: testData.url,
       values: const [],
     );
-
     final defaultJobsPage = WorkflowRunJobsPage(
       values: [testData.generateWorkflowRunJob()],
     );
@@ -99,11 +100,30 @@ void main() {
     final client = GithubActionsClientMock();
     final delegate = GithubActionsSourceValidationDelegate(client);
 
+    PostExpectation<Future<InteractionResult<WorkflowRunsPage>>>
+        whenFetchWorkflowRunsWithConclusion(
+      String workflowIdentifier,
+    ) {
+      return when(
+        client.fetchWorkflowRunsWithConclusion(
+          workflowIdentifier,
+          conclusion: anyNamed('conclusion'),
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
+
     PostExpectation<Future<InteractionResult<WorkflowRunJobsPage>>>
         whenFetchRunJobs() {
       when(
-        client.fetchLastWorkflowRun(any),
-      ).thenSuccessWith(defaultRunsPage.values.first);
+        client.fetchWorkflowRunsWithConclusion(
+          any,
+          conclusion: anyNamed('conclusion'),
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      ).thenSuccessWith(defaultRunsPage);
 
       return when(client.fetchRunJobs(
         any,
@@ -116,8 +136,13 @@ void main() {
     PostExpectation<Future<InteractionResult<WorkflowRunArtifactsPage>>>
         whenFetchRunArtifacts() {
       when(
-        client.fetchLastWorkflowRun(any),
-      ).thenSuccessWith(defaultRunsPage.values.first);
+        client.fetchWorkflowRunsWithConclusion(
+          any,
+          conclusion: anyNamed('conclusion'),
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      ).thenSuccessWith(defaultRunsPage);
 
       return when(client.fetchRunArtifacts(
         any,
@@ -509,11 +534,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with null result if the last workflow run fetching failed",
+      ".validateJobName() returns a successful interaction with null result if the workflow runs with conclusion fetching failed",
       () async {
-        when(
-          client.fetchLastWorkflowRun(workflowId),
-        ).thenErrorWith();
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -526,11 +549,26 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with null result if the last workflow run fetching result is null",
+      ".validateJobName() returns a successful interaction with null result if the workflow runs with conclusion fetching result is null",
       () async {
-        when(
-          client.fetchLastWorkflowRun(workflowId),
-        ).thenSuccessWith(null);
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
+      ".validateJobName() returns a successful interaction with null result if the workflow runs with conclusion fetching result contains an empty list of workflow runs",
+      () async {
+        whenFetchWorkflowRunsWithConclusion(
+          workflowId,
+        ).thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -666,11 +704,9 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with null result if the last workflow run fetching failed",
+      ".validateCoverageArtifactName() returns a successful interaction with null result if the workflow runs with conclusion fetching failed",
       () async {
-        when(
-          client.fetchLastWorkflowRun(workflowId),
-        ).thenErrorWith();
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
@@ -683,11 +719,26 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with null result if the last workflow run fetching result is null",
+      ".validateCoverageArtifactName() returns a successful interaction with null result if the workflow runs with conclusion fetching result is null",
       () async {
-        when(
-          client.fetchLastWorkflowRun(workflowId),
-        ).thenSuccessWith(null);
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+
+        final interactionResult = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNull);
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a successful interaction with null result if the workflow runs with conclusion fetching result contains an empty list of workflow runs",
+      () async {
+        whenFetchWorkflowRunsWithConclusion(
+          workflowId,
+        ).thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           workflowId: workflowId,

@@ -3,6 +3,7 @@
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
@@ -122,16 +123,24 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     String workflowId,
     String jobName,
   }) async {
-    final workflowRunInteraction = await _client.fetchLastWorkflowRun(
+    final interaction = await _client.fetchWorkflowRunsWithConclusion(
       workflowId,
+      conclusion: GithubActionConclusion.success,
+      page: 1,
+      perPage: 1,
     );
 
-    if (_isInteractionFailed(workflowRunInteraction)) {
+    if (_isInteractionFailed(interaction)) {
       return const InteractionResult.success();
     }
 
-    final workflowRun = workflowRunInteraction.result;
-    final jobsInteraction = await _fetchJob(workflowRun, jobName);
+    final workflowRuns = interaction.result.values ?? [];
+
+    if (workflowRuns.isEmpty) {
+      return const InteractionResult.success();
+    }
+
+    final jobsInteraction = await _fetchJob(workflowRuns.first, jobName);
 
     if (jobsInteraction.isError) {
       return const InteractionResult.success();
@@ -153,17 +162,25 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     String workflowId,
     String coverageArtifactName,
   }) async {
-    final workflowRunInteraction = await _client.fetchLastWorkflowRun(
+    final interaction = await _client.fetchWorkflowRunsWithConclusion(
       workflowId,
+      conclusion: GithubActionConclusion.success,
+      page: 1,
+      perPage: 1,
     );
 
-    if (_isInteractionFailed(workflowRunInteraction)) {
+    if (_isInteractionFailed(interaction)) {
       return const InteractionResult.success();
     }
 
-    final workflowRun = workflowRunInteraction.result;
+    final workflowRuns = interaction.result.values ?? [];
+
+    if (workflowRuns.isEmpty) {
+      return const InteractionResult.success();
+    }
+
     final artifactsInteraction = await _fetchCoverageArtifact(
-      workflowRun,
+      workflowRuns.first,
       coverageArtifactName,
     );
 

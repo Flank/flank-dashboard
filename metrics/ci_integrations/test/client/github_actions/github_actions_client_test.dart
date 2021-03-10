@@ -309,6 +309,124 @@ void main() {
       },
     );
 
+    // start
+    test(
+      ".fetchWorkflowRunsWithConclusion() fails if there is no workflow with such identifier",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          "test",
+        );
+        final isError = interactionResult.isError;
+
+        expect(isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() applies the default per page parameter if it is not specified",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.perPage, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the given per page parameter",
+      () async {
+        const expectedPerPage = 3;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          perPage: expectedPerPage,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.perPage, equals(expectedPerPage));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is null",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: null,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is less than zero",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: -1,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the given page parameter",
+      () async {
+        const expectedPage = 2;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: expectedPage,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(expectedPage));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the next page url",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.nextPageUrl, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the null next page url if there are no more pages available",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          perPage: 100,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.nextPageUrl, isNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with a list of workflow runs",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runs = interactionResult.result.values;
+
+        expect(runs, isNotNull);
+      },
+    );
+
     test(
       ".fetchWorkflowRunsNext() returns a next workflow runs page after the given one",
       () async {
@@ -368,21 +486,6 @@ void main() {
         final result = interaction.result;
 
         expect(result, equals(expected));
-      },
-    );
-
-    test(
-      ".fetchLastWorkflowRun() fetches the last completed workflow run by the given workflow id",
-      () async {
-        final interactionResult = await client.fetchWorkflowRuns(workflowId);
-        final workflowRunsPage = interactionResult.result;
-        final lastWorkflowRun = workflowRunsPage.values.first;
-
-        final interaction = await client.fetchLastWorkflowRun(workflowId);
-        final actualWorkflowRun = interaction.result;
-
-        expect(lastWorkflowRun.id, equals(actualWorkflowRun.id));
-        expect(lastWorkflowRun.status, equals(actualWorkflowRun.status));
       },
     );
 
