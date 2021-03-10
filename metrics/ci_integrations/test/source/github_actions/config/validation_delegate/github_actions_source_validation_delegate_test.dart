@@ -785,9 +785,6 @@ void main() {
       ".validateJobName() does not fetch the next workflow runs page if the first one contains a job with the given name",
       () async {
         whenFetchRunJobs().thenSuccessWith(defaultJobsPage);
-        when(
-          client.fetchRunJobsNext(workflowRunsPageHasNext),
-        ).thenSuccessWith(null);
 
         await delegate.validateJobName(
           workflowId: workflowId,
@@ -1222,9 +1219,6 @@ void main() {
       ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page if the first one contains an artifact with the given name",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(defaultArtifactsPage);
-        when(
-          client.fetchRunArtifactsNext(artifactsPageHasNext),
-        ).thenErrorWith();
 
         await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
