@@ -197,9 +197,7 @@ class GithubActionsMockServer extends ApiMockServer {
     final runsPerPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
 
-    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(
-      status,
-    ).reversed.toList();
+    List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
     _setNextPageUrlHeader(
       request,
@@ -286,8 +284,9 @@ class GithubActionsMockServer extends ApiMockServer {
   ///
   /// If the given [status] is null, the [GithubActionStatus.completed] is used.
   List<WorkflowRun> _generateWorkflowRuns(GithubActionStatus status) {
-    final runs = List.generate(100, (index) {
-      final runNumber = index + 1;
+    const count = 100;
+    final runs = List.generate(count, (index) {
+      final runNumber = count - index;
 
       return WorkflowRun(
         id: runNumber,

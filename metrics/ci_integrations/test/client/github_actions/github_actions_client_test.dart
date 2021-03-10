@@ -309,7 +309,6 @@ void main() {
       },
     );
 
-    // start
     test(
       ".fetchWorkflowRunsWithConclusion() fails if there is no workflow with such identifier",
       () async {
@@ -368,6 +367,19 @@ void main() {
         final interactionResult = await client.fetchWorkflowRunsWithConclusion(
           workflowId,
           page: -1,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is zero",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: 0,
         );
         final runsPage = interactionResult.result;
 

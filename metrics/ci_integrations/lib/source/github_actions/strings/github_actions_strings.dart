@@ -14,7 +14,15 @@ class GithubActionsStrings {
       'A workflow with a specified identifier does not exist.';
   static const String workflowIdentifierInvalid =
       'The workflow identifier is invalid.';
+  static const String workflowIdInvalidInterruptReason =
+      "Can't be validated as the provided workflow identifier is invalid.";
   static const String jobNameInvalid = 'The job name is invalid.';
+  static const String emptyWorkflowRunsInterruptReason =
+      "Can't be validated as the list of workflow runs is empty.";
+  static const String fetchingWorkflowRunJobsFailedInterruptReason =
+      "Can't be validated as there is an error while fetching workflow run jobs.";
+  static const String fetchingWorkflowRunArtifactsFailedInterruptReason =
+      "Can't be validated as there is an error while fetching workflow run artifacts.";
   static const String coverageArtifactNameInvalid =
       'The coverage artifact name is invalid.';
 
