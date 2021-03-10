@@ -7,7 +7,6 @@ import 'package:ci_integration/client/github_actions/models/github_repository.da
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/client/github_actions/models/github_user.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
@@ -76,15 +75,18 @@ void main() {
       values: const [],
     );
     final defaultJobsPage = WorkflowRunJobsPage(
-      values: [testDataGenerator.generateWorkflowRunJob()],
-    );
+        values: [testDataGenerator.generateWorkflowRunJob()],
+        nextPageUrl: 'url');
     final emptyArtifactsPage = WorkflowRunArtifactsPage(
       values: const [],
       nextPageUrl: testDataGenerator.url,
     );
-    final defaultArtifactsPage = WorkflowRunArtifactsPage(values: [
-      WorkflowRunArtifact(name: testDataGenerator.coverageArtifactName),
-    ]);
+    final defaultArtifactsPage = WorkflowRunArtifactsPage(
+      values: [
+        WorkflowRunArtifact(name: testDataGenerator.coverageArtifactName),
+      ],
+      nextPageUrl: 'url',
+    );
 
     const workflowRunsPageHasNext = WorkflowRunJobsPage(
       values: [],
@@ -782,12 +784,7 @@ void main() {
     test(
       ".validateJobName() does not fetch the next workflow runs page if the first one contains a job with the given name",
       () async {
-        whenFetchRunJobs().thenSuccessWith(
-          const WorkflowRunJobsPage(
-            values: [WorkflowRunJob(name: jobName)],
-            nextPageUrl: 'url',
-          ),
-        );
+        whenFetchRunJobs().thenSuccessWith(defaultJobsPage);
         when(
           client.fetchRunJobsNext(workflowRunsPageHasNext),
         ).thenSuccessWith(null);
@@ -797,7 +794,7 @@ void main() {
           jobName: jobName,
         );
 
-        verifyNever(client.fetchRunJobsNext(any));
+        verifyNever(client.fetchRunJobsNext(defaultJobsPage));
       },
     );
 
@@ -1224,12 +1221,7 @@ void main() {
     test(
       ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page if the first one contains an artifact with the given name",
       () async {
-        whenFetchRunArtifacts().thenSuccessWith(
-          const WorkflowRunArtifactsPage(
-            values: [WorkflowRunArtifact(name: coverageArtifactName)],
-            nextPageUrl: 'url',
-          ),
-        );
+        whenFetchRunArtifacts().thenSuccessWith(defaultArtifactsPage);
         when(
           client.fetchRunArtifactsNext(artifactsPageHasNext),
         ).thenErrorWith();
@@ -1239,7 +1231,7 @@ void main() {
           coverageArtifactName: coverageArtifactName,
         );
 
-        verifyNever(client.fetchRunArtifactsNext(any));
+        verifyNever(client.fetchRunArtifactsNext(defaultArtifactsPage));
       },
     );
 
