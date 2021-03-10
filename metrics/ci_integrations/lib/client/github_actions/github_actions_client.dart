@@ -185,8 +185,8 @@ class GithubActionsClient with LoggerMixin {
   }
 
   /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
-  /// given [workflowIdentifier]. A [workflowIdentifier] is either a workflow
-  /// id or a name of the file that defines the workflow.
+  /// given [workflowIdentifier]. A [workflowIdentifier] is either
+  /// a workflow id or a name of the file that defines the workflow.
   ///
   /// A [conclusion] is used as a filter query parameter to define the
   /// conclusion of runs to fetch.
