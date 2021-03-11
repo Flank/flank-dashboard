@@ -74,7 +74,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the message from the client is null, and the interaction is not successful",
+      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
 
