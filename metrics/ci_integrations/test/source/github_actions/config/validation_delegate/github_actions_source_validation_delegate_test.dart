@@ -64,7 +64,7 @@ void main() {
       values: const [],
       nextPageUrl: testDataGenerator.url,
     );
-    final defaultRunsPage = WorkflowRunsPage(
+    final runsPage = WorkflowRunsPage(
       values: testDataGenerator.generateWorkflowRunsByNumbers(
         runNumbers: [1],
       ),
@@ -74,14 +74,14 @@ void main() {
       nextPageUrl: testDataGenerator.url,
       values: const [],
     );
-    final defaultJobsPage = WorkflowRunJobsPage(
+    final jobsPage = WorkflowRunJobsPage(
         values: [testDataGenerator.generateWorkflowRunJob()],
         nextPageUrl: 'url');
     final emptyArtifactsPage = WorkflowRunArtifactsPage(
       values: const [],
       nextPageUrl: testDataGenerator.url,
     );
-    final defaultArtifactsPage = WorkflowRunArtifactsPage(
+    final artifactsPage = WorkflowRunArtifactsPage(
       values: [
         WorkflowRunArtifact(name: testDataGenerator.coverageArtifactName),
       ],
@@ -104,6 +104,20 @@ void main() {
     final delegate = GithubActionsSourceValidationDelegate(client);
 
     PostExpectation<Future<InteractionResult<WorkflowRunsPage>>>
+        whenFetchWorkflowRuns(
+      String workflowIdentifier,
+    ) {
+      return when(
+        client.fetchWorkflowRuns(
+          workflowIdentifier,
+          status: anyNamed('status'),
+          perPage: anyNamed('perPage'),
+          page: anyNamed('page'),
+        ),
+      );
+    }
+
+    PostExpectation<Future<InteractionResult<WorkflowRunsPage>>>
         whenFetchWorkflowRunsWithConclusion(
       String workflowIdentifier,
     ) {
@@ -120,13 +134,13 @@ void main() {
     PostExpectation<Future<InteractionResult<WorkflowRunJobsPage>>>
         whenFetchRunJobs() {
       when(
-        client.fetchWorkflowRunsWithConclusion(
+        client.fetchWorkflowRuns(
           any,
-          conclusion: anyNamed('conclusion'),
+          status: anyNamed('status'),
           perPage: anyNamed('perPage'),
           page: anyNamed('page'),
         ),
-      ).thenSuccessWith(defaultRunsPage);
+      ).thenSuccessWith(runsPage);
 
       return when(client.fetchRunJobs(
         any,
@@ -145,7 +159,7 @@ void main() {
           perPage: anyNamed('perPage'),
           page: anyNamed('page'),
         ),
-      ).thenSuccessWith(defaultRunsPage);
+      ).thenSuccessWith(runsPage);
 
       return when(client.fetchRunArtifacts(
         any,
@@ -537,9 +551,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction if the successful workflow runs fetching failed",
+      ".validateJobName() returns a successful interaction if the workflow runs fetching failed",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
+        whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -551,9 +565,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful workflow runs fetching failed",
+      ".validateJobName() returns an interaction with a null result if the workflow runs fetching failed",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
+        whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -565,9 +579,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching failed",
+      ".validateJobName() returns an interaction with the workflow id invalid interrupt reason message if the workflow runs fetching failed",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
+        whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -586,7 +600,7 @@ void main() {
     test(
       ".validateJobName() returns a successful interaction if the successful workflow runs fetching result is null",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -598,9 +612,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful workflow runs fetching result is null",
+      ".validateJobName() returns an interaction with a null result if the successful workflow runs fetching result is null",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -612,9 +626,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
+      ".validateJobName() returns an interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
       () async {
-        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -633,9 +647,7 @@ void main() {
     test(
       ".validateJobName() returns a successful interaction if there are no successful workflow runs",
       () async {
-        whenFetchWorkflowRunsWithConclusion(
-          workflowId,
-        ).thenSuccessWith(emptyRunsPage);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -647,11 +659,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if there are no successful workflow runs",
+      ".validateJobName() returns an interaction with a null result if there are no successful workflow runs",
       () async {
-        whenFetchWorkflowRunsWithConclusion(
-          workflowId,
-        ).thenSuccessWith(emptyRunsPage);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -663,11 +673,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
+      ".validateJobName() returns an interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
       () async {
-        whenFetchWorkflowRunsWithConclusion(
-          workflowId,
-        ).thenSuccessWith(emptyRunsPage);
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -678,13 +686,13 @@ void main() {
 
         expect(
           message,
-          equals(GithubActionsStrings.emptyWorkflowRunsInterruptReason),
+          equals(GithubActionsStrings.noSuccessfulWorkflowRun),
         );
       },
     );
 
     test(
-      ".validateJobName() returns a successful interaction if the successful workflow run jobs page fetching failed",
+      ".validateJobName() returns a successful interaction if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
 
@@ -698,7 +706,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful workflow run jobs page fetching failed",
+      ".validateJobName() returns an interaction with a null result if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
 
@@ -712,7 +720,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the fetching workflow run jobs failed interrupt reason message if the successful workflow run jobs page fetching failed",
+      ".validateJobName() returns an interaction with the fetching workflow run jobs failed interrupt reason message if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
 
@@ -726,7 +734,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+            GithubActionsStrings.jobsFetchingFailed,
           ),
         );
       },
@@ -747,7 +755,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful workflow run jobs page fetching result is null",
+      ".validateJobName() returns an interaction with a null result if the successful workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(null);
 
@@ -761,7 +769,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the fetching workflow run jobs failed interrupt reason message if the successful workflow run jobs page fetching result is null",
+      ".validateJobName() returns an interaction with the fetching workflow run jobs failed interrupt reason message if the successful workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(null);
 
@@ -775,7 +783,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+            GithubActionsStrings.jobsFetchingFailed,
           ),
         );
       },
@@ -784,19 +792,19 @@ void main() {
     test(
       ".validateJobName() does not fetch the next workflow runs page if the first one contains a job with the given name",
       () async {
-        whenFetchRunJobs().thenSuccessWith(defaultJobsPage);
+        whenFetchRunJobs().thenSuccessWith(jobsPage);
 
         await delegate.validateJobName(
           workflowId: workflowId,
           jobName: jobName,
         );
 
-        verifyNever(client.fetchRunJobsNext(defaultJobsPage));
+        verifyNever(client.fetchRunJobsNext(jobsPage));
       },
     );
 
     test(
-      ".validateJobName() returns a successful interaction if the successful next workflow run jobs page fetching failed",
+      ".validateJobName() returns a successful interaction if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -813,7 +821,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful next workflow run jobs page fetching failed",
+      ".validateJobName() returns an interaction with a null result if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -830,7 +838,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the fetching workflow run jobs failed interrupt reason message if the successful next workflow run jobs page fetching failed",
+      ".validateJobName() returns an interaction with the fetching workflow run jobs failed interrupt reason message if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -847,7 +855,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+            GithubActionsStrings.jobsFetchingFailed,
           ),
         );
       },
@@ -871,7 +879,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with a null result if the successful next workflow run jobs page fetching result is null",
+      ".validateJobName() returns an interaction with a null result if the successful next workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -888,7 +896,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction with the fetching workflow run jobs failed interrupt reason message if the successful next workflow run jobs page fetching result is null",
+      ".validateJobName() returns an interaction with the fetching workflow run jobs failed interrupt reason message if the successful next workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -905,7 +913,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+            GithubActionsStrings.jobsFetchingFailed,
           ),
         );
       },
@@ -943,7 +951,7 @@ void main() {
     test(
       ".validateJobName() returns a successful interaction if the given job name is valid",
       () async {
-        whenFetchRunJobs().thenSuccessWith(defaultJobsPage);
+        whenFetchRunJobs().thenSuccessWith(jobsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -955,9 +963,9 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a successful interaction containing the workflow run job",
+      ".validateJobName() returns an interaction containing the workflow run job",
       () async {
-        whenFetchRunJobs().thenSuccessWith(defaultJobsPage);
+        whenFetchRunJobs().thenSuccessWith(jobsPage);
 
         final interactionResult = await delegate.validateJobName(
           workflowId: workflowId,
@@ -969,7 +977,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction if the successful workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns a successful interaction if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -983,7 +991,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -997,7 +1005,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with the workflow id invalid interrupt reason message if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -1030,7 +1038,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful workflow runs fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
 
@@ -1044,7 +1052,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
 
@@ -1079,7 +1087,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if there are no successful workflow runs",
+      ".validateCoverageArtifactName() returns an interaction with a null result if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRunsWithConclusion(
           workflowId,
@@ -1095,7 +1103,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
+      ".validateCoverageArtifactName() returns an interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRunsWithConclusion(
           workflowId,
@@ -1110,13 +1118,13 @@ void main() {
 
         expect(
           message,
-          equals(GithubActionsStrings.emptyWorkflowRunsInterruptReason),
+          equals(GithubActionsStrings.noSuccessfulWorkflowRun),
         );
       },
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction if the successful workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns a successful interaction if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
 
@@ -1130,7 +1138,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
 
@@ -1144,7 +1152,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the fetching workflow run artifacts failed interrupt reason message if the successful workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns a successful interaction with the fetching workflow run artifacts failed interrupt reason message if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
 
@@ -1158,8 +1166,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings
-                .fetchingWorkflowRunArtifactsFailedInterruptReason,
+            GithubActionsStrings.artifactFetchingFailed,
           ),
         );
       },
@@ -1180,7 +1187,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the successful workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(null);
 
@@ -1194,7 +1201,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the fetching workflow run artifacts failed interrupt reason message if the successful workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with the fetching workflow run artifacts failed interrupt reason message if the successful workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(null);
 
@@ -1208,8 +1215,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings
-                .fetchingWorkflowRunArtifactsFailedInterruptReason,
+            GithubActionsStrings.artifactFetchingFailed,
           ),
         );
       },
@@ -1218,19 +1224,19 @@ void main() {
     test(
       ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page if the first one contains an artifact with the given name",
       () async {
-        whenFetchRunArtifacts().thenSuccessWith(defaultArtifactsPage);
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
 
         await delegate.validateCoverageArtifactName(
           workflowId: workflowId,
           coverageArtifactName: coverageArtifactName,
         );
 
-        verifyNever(client.fetchRunArtifactsNext(defaultArtifactsPage));
+        verifyNever(client.fetchRunArtifactsNext(artifactsPage));
       },
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction if the successful next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns a successful interaction if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1247,7 +1253,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1264,7 +1270,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the fetching workflow run artifacts failed interrupt reason message if the successful next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with the fetching workflow run artifacts failed interrupt reason message if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1281,8 +1287,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings
-                .fetchingWorkflowRunArtifactsFailedInterruptReason,
+            GithubActionsStrings.artifactFetchingFailed,
           ),
         );
       },
@@ -1306,7 +1311,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a null result if the successful next workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with a null result if the successful next workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1323,7 +1328,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with the fetching workflow run artifacts failed interrupt reason message if the successful next workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with the fetching workflow run artifacts failed interrupt reason message if the successful next workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1340,8 +1345,7 @@ void main() {
         expect(
           message,
           equals(
-            GithubActionsStrings
-                .fetchingWorkflowRunArtifactsFailedInterruptReason,
+            GithubActionsStrings.artifactFetchingFailed,
           ),
         );
       },
@@ -1382,7 +1386,7 @@ void main() {
     test(
       ".validateCoverageArtifactName() returns a successful interaction if the given coverage artifact name is valid",
       () async {
-        whenFetchRunArtifacts().thenSuccessWith(defaultArtifactsPage);
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           coverageArtifactName: coverageArtifactName,
@@ -1393,9 +1397,9 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful interaction with a workflow run artifact if the given coverage artifact name is valid",
+      ".validateCoverageArtifactName() returns an interaction with a workflow run artifact if the given coverage artifact name is valid",
       () async {
-        whenFetchRunArtifacts().thenSuccessWith(defaultArtifactsPage);
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
 
         final interactionResult = await delegate.validateCoverageArtifactName(
           coverageArtifactName: coverageArtifactName,

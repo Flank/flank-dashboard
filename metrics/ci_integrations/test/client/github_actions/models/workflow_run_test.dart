@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
@@ -105,8 +105,8 @@ void main() {
           'run_number': 2,
           'apiUrl': 'api-url2',
           'url': 'url2',
-          'status': 'completed',
-          'conclusion': 'success',
+          'status': status,
+          'conclusion': conclusion,
           'created_at': DateTime(2019).toUtc().toIso8601String(),
         };
         final anotherRun = WorkflowRun.fromJson(anotherJson);

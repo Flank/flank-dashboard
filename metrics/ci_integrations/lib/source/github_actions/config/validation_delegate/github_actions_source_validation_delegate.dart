@@ -4,6 +4,7 @@
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
@@ -123,9 +124,9 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     String workflowId,
     String jobName,
   }) async {
-    final interaction = await _client.fetchWorkflowRunsWithConclusion(
+    final interaction = await _client.fetchWorkflowRuns(
       workflowId,
-      conclusion: GithubActionConclusion.success,
+      status: GithubActionStatus.completed,
       page: 1,
       perPage: 1,
     );
@@ -140,7 +141,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (workflowRuns.isEmpty) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.emptyWorkflowRunsInterruptReason,
+        message: GithubActionsStrings.noSuccessfulWorkflowRun,
       );
     }
 
@@ -148,8 +149,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (jobsInteraction.isError) {
       return const InteractionResult.success(
-        message:
-            GithubActionsStrings.fetchingWorkflowRunJobsFailedInterruptReason,
+        message: GithubActionsStrings.jobsFetchingFailed,
       );
     }
 
@@ -186,7 +186,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (workflowRuns.isEmpty) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.emptyWorkflowRunsInterruptReason,
+        message: GithubActionsStrings.noSuccessfulWorkflowRun,
       );
     }
 
@@ -197,8 +197,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (artifactsInteraction.isError) {
       return const InteractionResult.success(
-        message: GithubActionsStrings
-            .fetchingWorkflowRunArtifactsFailedInterruptReason,
+        message: GithubActionsStrings.artifactFetchingFailed,
       );
     }
 

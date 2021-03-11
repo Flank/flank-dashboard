@@ -17,11 +17,11 @@ class GithubActionsStrings {
   static const String workflowIdInvalidInterruptReason =
       "Can't be validated as the provided workflow identifier is invalid.";
   static const String jobNameInvalid = 'The job name is invalid.';
-  static const String emptyWorkflowRunsInterruptReason =
-      "Can't be validated as the list of workflow runs is empty.";
-  static const String fetchingWorkflowRunJobsFailedInterruptReason =
+  static const String noSuccessfulWorkflowRun =
+      "Can't be validated as there are no successful workflow runs.";
+  static const String jobsFetchingFailed =
       "Can't be validated as there is an error while fetching workflow run jobs.";
-  static const String fetchingWorkflowRunArtifactsFailedInterruptReason =
+  static const String artifactFetchingFailed =
       "Can't be validated as there is an error while fetching workflow run artifacts.";
   static const String coverageArtifactNameInvalid =
       'The coverage artifact name is invalid.';
