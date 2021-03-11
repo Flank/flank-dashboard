@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
@@ -15,6 +15,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/extensions/interaction_result_answer.dart';
+import '../test_utils/jenkins_client_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -36,7 +37,7 @@ void main() {
     final defaultBuild = BuildData(coverage: defaultCoverage);
     const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
 
-    final jenkinsClientMock = _JenkinsClientMock();
+    final jenkinsClientMock = JenkinsClientMock();
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
@@ -677,8 +678,6 @@ void main() {
     });
   });
 }
-
-class _JenkinsClientMock extends Mock implements JenkinsClient {}
 
 /// A class that provides methods for building [_JenkinsClientMock] responses.
 class _JenkinsClientResponse {
