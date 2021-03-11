@@ -15,7 +15,9 @@ class GithubActionsStrings {
   static const String workflowIdentifierInvalid =
       'The workflow identifier is invalid.';
   static const String jobNameInvalid = 'The job name is invalid.';
-  static const String noSuccessfulWorkflowRun =
+  static const String noCompletedWorkflowRuns =
+      "Can't be validated as there are no completed workflow runs.";
+  static const String noSuccessfulWorkflowRuns =
       "Can't be validated as there are no successful workflow runs.";
   static const String jobsFetchingFailed =
       "Can't be validated as there is an error while fetching workflow run jobs.";

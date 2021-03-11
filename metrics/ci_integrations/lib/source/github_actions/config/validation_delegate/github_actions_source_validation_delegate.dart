@@ -141,7 +141,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (workflowRuns.isEmpty) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.noSuccessfulWorkflowRun,
+        message: GithubActionsStrings.noCompletedWorkflowRuns,
       );
     }
 
@@ -186,7 +186,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (workflowRuns.isEmpty) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.noSuccessfulWorkflowRun,
+        message: GithubActionsStrings.noSuccessfulWorkflowRuns,
       );
     }
 

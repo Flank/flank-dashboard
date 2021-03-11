@@ -667,7 +667,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
+      ".validateJobName() returns an interaction with the no completed workflow runs message if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
 
@@ -680,7 +680,7 @@ void main() {
 
         expect(
           message,
-          equals(GithubActionsStrings.noSuccessfulWorkflowRun),
+          equals(GithubActionsStrings.noCompletedWorkflowRuns),
         );
       },
     );
@@ -1091,7 +1091,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an interaction with the empty workflow runs interrupt reason message if there are no successful workflow runs",
+      ".validateCoverageArtifactName() returns an interaction with the no successful workflow runs message if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRunsWithConclusion(
           workflowId,
@@ -1104,10 +1104,7 @@ void main() {
 
         final message = interactionResult.message;
 
-        expect(
-          message,
-          equals(GithubActionsStrings.noSuccessfulWorkflowRun),
-        );
+        expect(message, equals(GithubActionsStrings.noSuccessfulWorkflowRuns));
       },
     );
 
