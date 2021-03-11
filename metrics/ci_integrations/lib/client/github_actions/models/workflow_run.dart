@@ -31,7 +31,15 @@ class WorkflowRun extends Equatable {
   final DateTime createdAt;
 
   @override
-  List<Object> get props => [id, number, url, status, conclusion, createdAt];
+  List<Object> get props => [
+        id,
+        number,
+        url,
+        status,
+        conclusion,
+        createdAt,
+        apiUrl,
+      ];
 
   /// Creates a new instance of the [WorkflowRun].
   const WorkflowRun({

@@ -1225,7 +1225,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an interaction with the artifacts fetching failed  message if the next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with the artifacts fetching failed message if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
