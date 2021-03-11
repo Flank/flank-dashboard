@@ -1,8 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// Represents a Firebase error code.
-enum FirebaseAuthErrorCode {
+/// Represents a Firebase Auth exception code.
+enum FirebaseAuthExceptionCode {
   /// Indicates whether the Firebase API key is not valid.
   invalidApiKey,
 
