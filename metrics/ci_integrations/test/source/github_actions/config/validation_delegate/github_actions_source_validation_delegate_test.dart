@@ -81,9 +81,9 @@ void main() {
       values: const [],
       nextPageUrl: testDataGenerator.url,
     );
-    final artifactsPage = WorkflowRunArtifactsPage(
+    const artifactsPage = WorkflowRunArtifactsPage(
       values: [
-        WorkflowRunArtifact(name: testDataGenerator.coverageArtifactName),
+        WorkflowRunArtifact(name: coverageArtifactName),
       ],
       nextPageUrl: 'url',
     );
