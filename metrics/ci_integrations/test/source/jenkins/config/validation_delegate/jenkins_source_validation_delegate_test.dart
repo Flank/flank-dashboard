@@ -97,7 +97,7 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the interaction with the client is null",
+      ".validateJenkinsUrl() returns an interaction with the 'not a jenkins url' message if the result of interaction with the client is null",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
 
@@ -171,7 +171,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the interaction with the client is null",
+      ".validateAuth() returns an error if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
@@ -182,7 +182,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an interaction with the 'auth invalid' message if the interaction with the client is null",
+      ".validateAuth() returns an interaction with the 'auth invalid' message if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
@@ -311,7 +311,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an error if the interaction with the client is null",
+      ".validateJobName() returns an error if the result of the interaction with the client is null",
       () async {
         when(client.fetchJob(jobName)).thenSuccessWith(null);
 
@@ -322,7 +322,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the 'job does not exist' message if the interaction with the client is null",
+      ".validateJobName() returns an interaction with the 'job does not exist' message if the result of the interaction with the client is null",
       () async {
         when(client.fetchJob(jobName)).thenSuccessWith(null);
 
