@@ -185,7 +185,8 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Responses with a workflow run for the given [request].
   Future<void> _workflowRunResponse(HttpRequest request) async {
-    const workflowRun = WorkflowRun(id: 1);
+    final apiUrl = '$url${request.uri}';
+    final workflowRun = WorkflowRun(id: 1, apiUrl: apiUrl);
 
     final response = workflowRun.toJson();
 
