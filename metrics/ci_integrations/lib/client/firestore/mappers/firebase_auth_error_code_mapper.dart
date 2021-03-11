@@ -1,20 +1,21 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/client/firestore/model/firebase_error_code.dart';
+import 'package:ci_integration/client/firestore/model/firebase_auth_error_code.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
-/// A class that provides methods for mapping [FirebaseErrorCode]s.
-class FirebaseAuthErrorCodeMapper implements Mapper<String, FirebaseErrorCode> {
-  /// An auth error code indicating that the Firebase API key is invalid.
+/// A class that provides methods for mapping [FirebaseAuthErrorCode]s.
+class FirebaseAuthErrorCodeMapper
+    implements Mapper<String, FirebaseAuthErrorCode> {
+  /// An auth error code indicating that the given Firebase API key is not valid.
   static const String invalidApiKey =
       'API key not valid. Please pass a valid API key.';
 
-  /// An auth error code indicating that the email with the given
+  /// An auth error code indicating that the user with the given
   /// email is not found.
   static const String emailNotFound = 'EMAIL_NOT_FOUND';
 
-  /// An auth error code indicating that the password is invalid.
+  /// An auth error code indicating that the given password is invalid.
   static const String invalidPassword = 'INVALID_PASSWORD';
 
   /// An auth error code indicating that the password sign-in option
@@ -25,31 +26,31 @@ class FirebaseAuthErrorCodeMapper implements Mapper<String, FirebaseErrorCode> {
   const FirebaseAuthErrorCodeMapper();
 
   @override
-  FirebaseErrorCode map(String value) {
+  FirebaseAuthErrorCode map(String value) {
     switch (value) {
       case invalidApiKey:
-        return FirebaseErrorCode.invalidApiKey;
+        return FirebaseAuthErrorCode.invalidApiKey;
       case emailNotFound:
-        return FirebaseErrorCode.emailNotFound;
+        return FirebaseAuthErrorCode.emailNotFound;
       case invalidPassword:
-        return FirebaseErrorCode.invalidPassword;
+        return FirebaseAuthErrorCode.invalidPassword;
       case passwordLoginDisabled:
-        return FirebaseErrorCode.passwordLoginDisabled;
+        return FirebaseAuthErrorCode.passwordLoginDisabled;
       default:
         return null;
     }
   }
 
   @override
-  String unmap(FirebaseErrorCode value) {
+  String unmap(FirebaseAuthErrorCode value) {
     switch (value) {
-      case FirebaseErrorCode.invalidApiKey:
+      case FirebaseAuthErrorCode.invalidApiKey:
         return invalidApiKey;
-      case FirebaseErrorCode.emailNotFound:
+      case FirebaseAuthErrorCode.emailNotFound:
         return emailNotFound;
-      case FirebaseErrorCode.invalidPassword:
+      case FirebaseAuthErrorCode.invalidPassword:
         return invalidPassword;
-      case FirebaseErrorCode.passwordLoginDisabled:
+      case FirebaseAuthErrorCode.passwordLoginDisabled:
         return passwordLoginDisabled;
     }
     return null;

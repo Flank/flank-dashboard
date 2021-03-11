@@ -1,8 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/client/firestore/mappers/firebase_error_code_mapper.dart';
-import 'package:ci_integration/client/firestore/model/firebase_error_code.dart';
+import 'package:ci_integration/client/firestore/mappers/firebase_auth_error_code_mapper.dart';
+import 'package:ci_integration/client/firestore/model/firebase_auth_error_code.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +12,7 @@ void main() {
     test(
       ".map() maps the email not found auth error code to FirebaseAuthErrorCode.emailNotFound",
       () {
-        const expectedCode = FirebaseErrorCode.emailNotFound;
+        const expectedCode = FirebaseAuthErrorCode.emailNotFound;
 
         final code = mapper.map(FirebaseAuthErrorCodeMapper.emailNotFound);
 
@@ -23,7 +23,7 @@ void main() {
     test(
       ".map() maps the invalid api key auth error code to FirebaseAuthErrorCode.invalidApiKey",
       () {
-        const expectedCode = FirebaseErrorCode.invalidApiKey;
+        const expectedCode = FirebaseAuthErrorCode.invalidApiKey;
 
         final code = mapper.map(FirebaseAuthErrorCodeMapper.invalidApiKey);
 
@@ -34,7 +34,7 @@ void main() {
     test(
       ".map() maps the invalid password auth error code to FirebaseAuthErrorCode.invalidPassword",
       () {
-        const expectedCode = FirebaseErrorCode.invalidPassword;
+        const expectedCode = FirebaseAuthErrorCode.invalidPassword;
 
         final code = mapper.map(FirebaseAuthErrorCodeMapper.invalidPassword);
 
@@ -45,7 +45,7 @@ void main() {
     test(
       ".map() maps the password login disabled auth error code to FirebaseAuthErrorCode.passwordLoginDisabled",
       () {
-        const expectedCode = FirebaseErrorCode.passwordLoginDisabled;
+        const expectedCode = FirebaseAuthErrorCode.passwordLoginDisabled;
 
         final code =
             mapper.map(FirebaseAuthErrorCodeMapper.passwordLoginDisabled);
@@ -77,7 +77,7 @@ void main() {
       () {
         const expectedCode = FirebaseAuthErrorCodeMapper.emailNotFound;
 
-        final code = mapper.unmap(FirebaseErrorCode.emailNotFound);
+        final code = mapper.unmap(FirebaseAuthErrorCode.emailNotFound);
 
         expect(code, equals(expectedCode));
       },
@@ -88,7 +88,7 @@ void main() {
       () {
         const expectedCode = FirebaseAuthErrorCodeMapper.invalidApiKey;
 
-        final code = mapper.unmap(FirebaseErrorCode.invalidApiKey);
+        final code = mapper.unmap(FirebaseAuthErrorCode.invalidApiKey);
 
         expect(code, equals(expectedCode));
       },
@@ -99,7 +99,7 @@ void main() {
       () {
         const expectedCode = FirebaseAuthErrorCodeMapper.invalidPassword;
 
-        final code = mapper.unmap(FirebaseErrorCode.invalidPassword);
+        final code = mapper.unmap(FirebaseAuthErrorCode.invalidPassword);
 
         expect(code, equals(expectedCode));
       },
@@ -110,7 +110,7 @@ void main() {
       () {
         const expectedCode = FirebaseAuthErrorCodeMapper.passwordLoginDisabled;
 
-        final code = mapper.unmap(FirebaseErrorCode.passwordLoginDisabled);
+        final code = mapper.unmap(FirebaseAuthErrorCode.passwordLoginDisabled);
 
         expect(code, equals(expectedCode));
       },

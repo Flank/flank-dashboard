@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 /// Represents a Firebase error code.
-enum FirebaseErrorCode {
-  /// Indicates whether the Firebase API key is invalid.
+enum FirebaseAuthErrorCode {
+  /// Indicates whether the Firebase API key is not valid.
   invalidApiKey,
 
   /// Indicates whether the user with such email is not found.
@@ -12,15 +12,6 @@ enum FirebaseErrorCode {
   /// Indicates whether the password is invalid.
   invalidPassword,
 
-  /// Indicates whether the password login is disabled.
+  /// Indicates whether the password sign-in option is disabled.
   passwordLoginDisabled,
-
-  /// Indicates whether the
-  consumerInvalid,
-
-  ///
-  notFound,
-
-  /// Indicates whether the project is deleted.
-  projectDeleted
 }
