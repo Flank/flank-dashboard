@@ -579,7 +579,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the workflow id invalid interrupt reason message if the workflow runs fetching failed",
+      ".validateJobName() returns an interaction with the workflow identifier invalid message if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
@@ -590,10 +590,7 @@ void main() {
 
         final message = interactionResult.message;
 
-        expect(
-          message,
-          equals(GithubActionsStrings.workflowIdInvalidInterruptReason),
-        );
+        expect(message, equals(GithubActionsStrings.workflowIdentifierInvalid));
       },
     );
 
@@ -626,7 +623,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
+      ".validateJobName() returns an interaction with the workflow identifier invalid message if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
@@ -637,10 +634,7 @@ void main() {
 
         final message = interactionResult.message;
 
-        expect(
-          message,
-          equals(GithubActionsStrings.workflowIdInvalidInterruptReason),
-        );
+        expect(message, equals(GithubActionsStrings.workflowIdentifierInvalid));
       },
     );
 
@@ -1005,7 +999,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an interaction with the workflow id invalid interrupt reason message if the workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns an interaction with the workflow identifier invalid message if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -1016,10 +1010,7 @@ void main() {
 
         final message = interactionResult.message;
 
-        expect(
-          message,
-          equals(GithubActionsStrings.workflowIdInvalidInterruptReason),
-        );
+        expect(message, equals(GithubActionsStrings.workflowIdentifierInvalid));
       },
     );
 
@@ -1052,7 +1043,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an interaction with the workflow id invalid interrupt reason message if the successful workflow runs fetching result is null",
+      ".validateCoverageArtifactName() returns an interaction with the workflow identifier invalid message if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
 
@@ -1063,10 +1054,7 @@ void main() {
 
         final message = interactionResult.message;
 
-        expect(
-          message,
-          equals(GithubActionsStrings.workflowIdInvalidInterruptReason),
-        );
+        expect(message, equals(GithubActionsStrings.workflowIdentifierInvalid));
       },
     );
 

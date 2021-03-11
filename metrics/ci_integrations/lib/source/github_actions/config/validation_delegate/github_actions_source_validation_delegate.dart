@@ -133,7 +133,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (_isInteractionFailed(interaction)) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdInvalidInterruptReason,
+        message: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
@@ -178,7 +178,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (_isInteractionFailed(interaction)) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdInvalidInterruptReason,
+        message: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
