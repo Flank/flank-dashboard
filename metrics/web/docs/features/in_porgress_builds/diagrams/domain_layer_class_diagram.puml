@@ -1,0 +1,100 @@
+@startuml domain_layer_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package domain {
+    package entities {
+        package collections {
+            class DateTimeSet<T extends DateTimeSetEntry> {}
+
+            interface DateTimeSetEntry {
+                + date: DateTime
+            }
+
+            DateTimeSet "1" o-up- "many" DateTimeSetEntry : contains
+        }
+
+        package metrics {
+            class BuildNumberMetric {
+                + numberOfBuilds: int
+            }
+
+            class BuildPerformance {
+                + date: DateTime
+                + duration: Duration
+            }
+
+            class BuildResult {
+                + date: DateTime
+                + duration: Duration
+                + buildStatus: BuildStatus
+                + url: String
+            }
+
+            class BuildResultMetric {
+                + buildResults: List<BuildResult>
+            }
+
+            class DashboardProjectMetrics {
+                + projectId: String
+                + projectBuildStatusMetric: ProjectBuildStatusMetric
+                + buildNumberMetrics: BuildNumberMetric
+                + performanceMetrics: PerformanceMetric
+                + buildResultMetrics: BuildResultMetric
+                + coverage: Percent
+                + stability: Percent
+            }
+
+            class PerformanceMetric {
+                + buildsPerformance: DateTimeSet<BuildPerformance>
+                + averageBuildDuration: Duration
+            }
+
+            class ProjectBuildStatusMetric {
+                + status: BuildStatus
+            }
+
+            DashboardProjectMetrics *-- BuildResultMetric
+            DashboardProjectMetrics *-- PerformanceMetric
+            DashboardProjectMetrics *-- ProjectBuildStatusMetric
+            DashboardProjectMetrics *-- BuildNumberMetric
+            BuildResultMetric "1" o-down- "0..N" BuildResult : contains
+            PerformanceMetric "1" o-down- "0..N" BuildPerformance : contains
+            BuildPerformance -down-|> DateTimeSetEntry
+        }
+    }
+
+    package usecases {
+        package parameters {
+            class ProjectIdParam {
+                + projectId: String
+            }
+        }
+
+        class ReceiveProjectMetricsUpdates<Stream<DashboardProjectMetrics>, ProjectIdParam> {
+            + {static} //static// buildsToLoadForChartMetrics: int
+            + {static} //static// buildsLoadingPeriod: Duration
+            - _repository: MetricsRepository
+            + call(ProjectIdParam): Stream<DashboardProjectMetrics>
+            ..
+            - _getPerformanceMetrics(List<Build> builds): PerformanceMetric
+            - _getStability(List<Build> builds): Percent
+        }
+
+        ReceiveProjectMetricsUpdates -down-> ProjectIdParam: uses
+        ReceiveProjectMetricsUpdates --> DashboardProjectMetrics: creates
+    }
+
+    package repositories {
+        interface MetricsRepository {
+            + latestProjectBuildsStream(String projectId, int limit): Stream<List<Build>>
+            + projectBuildsFromDateStream(String projectId, DateTime from): Stream<List<Build>>
+            + lastSuccessfulBuildStream(String projectId): Stream<List<Build>>
+        }
+    }
+
+    usecases -[hidden]down-- repositories
+}
+
+@enduml

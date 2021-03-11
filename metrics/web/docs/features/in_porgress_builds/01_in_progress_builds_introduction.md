@@ -1,0 +1,116 @@
+# In-Progress Builds Introduction
+
+## Introduction
+
+The Metrics Web Application displays different project metrics using builds of this project. To make metrics more reliable the application should support in-progress builds. This document describes the design of introduction in-progress builds into the Metrics Web Application.
+
+## References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
+- [Project Metrics Definitions](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md)
+
+## Design
+> Explain and diagram the technical design.
+
+The In-Progress builds introduction requires changes to the both `core` and `web` components. The following subsections discover these changes. First, let's take a look at the what the `in-progress build` means in terms of the application. As this definition affects both Metrics Web Application and CI Integration tool, it is presented within the `core` component.
+
+### Core
+
+The `core` component of the Metrics project contains the `BuildStatus` enum that represents possible statuses of the `Build`. The `in-progress build` means that the `Build` entity has the specific `status` field value that identifies this build as in-progress. This definition requires adding a new `inProgress` value to the `BuildStatus` enum. Thus, the `in-progress build` means that the build has `BuildStatus.inProgress` status.
+
+The following class diagram demonstrates the `core` structure of classes related to builds. Note that the class structure doesn't change but the `BuildStatus` enum contains a new value.
+
+![Build Core Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/build_core_class_diagram.puml)
+
+### Metrics Web Application
+
+The following subsections cover the in-progress builds introduction into Metrics Web Application by layers. To know more about the application's architecture, consider the [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/web_in_progress_builds_doc/metrics/web/docs/01_metrics_web_application_architecture.md) document. Working with builds is concentrated within the `dashboard` package so the following sections' statements are mainly related to the `dashboard` module.
+
+#### Domain Layer
+
+The domain layer of the `dashboard` module provides the `MetricsRepository` interface, use cases to interact with the repository, and entities with metrics data to display on the dashboard page. The `ReceiveProjectMetricsUpdates` use case is responsible for subscribing to project builds and calculating metrics using these builds. The following table describes changes in metrics calculation according to the in-progress builds integration.
+
+|Metric|Required Changes|
+|---|---|
+|Project Status|No changes required.|
+|Builds' Results|No changes required.|
+|Performance|Count only finished builds as in-progress builds has no fixed duration and should be filtered out.|
+|Number of Builds|No changes required.|
+|Stability|Divide the number of successful builds by the number of finished builds. This means that in-progress builds should not participate in the calculation of the stability metric and should be filtered out.|
+|Coverage|No changes required.|
+
+The above changes are related to the `ReceiveProjectMetricsUpdates` use case. The following diagram demonstrates the structure of the domain layer for the `dashboard` module:
+
+![Domain Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/domain_layer_class_diagram.puml)
+
+#### Data Layer
+
+The data layer of the `dashboard` module contains two important classes:
+- `FirestoreMetricsRepository` implementation of the `MetricsRepository` interface - loads builds to display on the dashboard;
+- `BuildDataDeserializer` - deserializes a build using its JSON map. 
+
+Both of these classes use `BuildStatus` in their implementations. However, adding a new value to the `BuildStatus` enum doesn't affect them and therefore doesn't change the data layer implementation. Generally speaking, in-progress builds don't require additional logic to be introduced to the data layer.
+
+To clarify that build's status parsing during the deserialization doesn't requires changes, let's take a look at how this status is parsed: 
+```dart
+    final buildResultValue = json['buildStatus'] as String;
+    final buildStatus = BuildStatus.values.firstWhere(
+      (element) => '$element' == buildResultValue,
+      orElse: () => BuildStatus.unknown,
+    );
+```
+
+The following class diagram demonstrates the structure of the data layer for the `dashboard` module:
+
+![Data Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/data_layer_class_diagram.puml)
+
+#### Presentation Layer
+
+The presentation layer contains the UI-related implementations such as state, pages, widgets, and view models. The in-progress builds introduction evidently requires UI changes to display them. These changes doesn't affect the dashboard page as the page widget just places UI elements, however some of these UI elements - more precisely, dashboard-specific widgets - displays or closely related to displaying builds and their results. Furthermore, the `state` class that provides view models with data to display also needs changes to the entities processing.
+
+##### State & View Models
+
+The state management of the `dashboard` module is represented by the `ProjectMetricsNotifier`. Actually, this class doesn't directly uses the `BuildStatus`, however, as the `ProjectMetricsNotifier` processes entities into view models, it requires changes. More precisely, these changes are related to the view models which stand for the project metrics.
+
+The main idea is to divide the build result view model into two specific `FinishedBuildResultViewModel` and `InProgressBuildResultViewModel` for finished and in-progress builds respectively. This idea is based on the fact that the UI elements responsible for displaying these types significantly differ (consider the [Widgets](#widgets) section to discover the UI elements). This separation is also required according to the fact that in-progress builds has no stable `duration` meaning that it grows until the build is finished.
+
+Furthermore, as the in-progress builds has no stable `duration`, the state and view models should be updated to provide the maximum possible duration for the list of builds in `BuildResultMetricViewModel`. This prevents the graph with build results from displaying bars for in-progress builds significantly larger than bars for finished builds (which have fixed duration). This means that the state should process the list of builds to define the maximum possible duration and provide it with `BuildResultMetricViewModel` instance in the `maxBuildDuration` field.
+
+Also, the `BuildResultPopupViewModel` shouldn't require the given duration to be non-null anymore. This is strongly related to the UI design changes and the fact that the popup doesn't display duration for in-progress builds.
+
+The following class diagram demonstrates the updated structure of view models related to project metrics and builds:
+
+![Presentation Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_class_diagram.puml)
+
+##### Widgets
+
+The introduction of in-progress builds requires changing the UI elements in order they can display such builds. All the UI elements of Metrics Web Application are represented by widgets or their combinations. Widgets that are responsible for displaying build results are placed within the `dashboard` module.
+
+The following table lists the UI elements that requires changes (or should be created) with a short description.
+
+|UI Element|Widget|Classification|Changes description|
+|---|---|---|---|
+|Build result popup|`BuildResultPopupCard`|metrics widget|Hide the subtitle with duration if the given duration is `null`.|
+|Build result bar component|`BuildResultBarComponent`|metrics widget|Create a new widget that displays bar itself and applies a popup with graph indicator to this bar. This allows moving popup displaying logic to the top and separate it from the bar.|
+|Build result bar|`BuildResultBar`|metrics widget|Select a widget to display depending on the build result view model type (either `FinishedBuildResultViewModel` or `InProgressBuildResultViewModel`). Displays either `MetricsColoredBar` or `MetricsAnimatedBar`.|
+|Build result metric graph|`BuildResultsMetricGraph`|metrics widget|Create a new widget that displays date range of builds, missing bars, and `BuildResultBarGraph`.|
+|Build result bar graph|`BuildResultBarGraph`|metrics widget|Change bars displaying to handle in-progress builds with unstable duration. Animate bars if list of results contains in-progress builds.|
+|Animated bar|`MetricsAnimatedBar`|common metrics widget|Create a new widget that displays the given Lottie animation clipping it to the given height.|
+
+The most important fact is that in-progress build should be displayed as animated bar. This results in changes with creating additional widget that would apply build result popup with appropriate graph indicator and padding to the bar itself. This additional widget is `BuildResultBarComponent` meaning that this is not bar itself - it's a component that displays bar. The bar, in it's turn, requires changes to select which of low-level bar implementations to show: `MetricsColoredBar` for finished builds or `MetricsAnimatedBar` for in-progress builds.
+
+The build result bar graph also requires changes with moving part of its logic to the top widget. This simplifies the widget structure and improves testing as the bar graph itself becomes more complex. Thus, the displaying logic with missing bars and builds date range should be a part of `BuildResultsMetricGraph`. And the `BuildResultBarGraph` should be responsible for displaying a graph itself without missing bars. The bar graph also should be changed to support rebuilding bars if the list of build results contains in-progress builds. For this purpose, we should create a `BuildResultDurationStrategy` that would detect the build result type and return the build's duration. Using this strategy, the `BuildResultBarGraph` can provide data to display to the low-level `BarGraph`. Also, when detecting in-progress builds, the `BuildResultBarGraph` should enable a timer that would rebuild a bar graph providing a smooth animation for in-progress builds.
+
+The following class diagram demonstrates the structure of widgets:
+
+![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_widgets_class_diagram.puml)
+
+##### Strategies
+
+Some of the strategies that use the `BuildStatus` also requires changes according to the new `BuildStatus.inProgress` value. Most of these changes are related to selecting an image asset to display. But some of them selects the proper style from theme to use for a widget appearance.
+
+## Results
+> What was the outcome of the project?
+
+The design of the in-progress builds introduction into the Metrics Web Application.
