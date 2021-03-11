@@ -197,7 +197,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
 
     if (artifactsInteraction.isError) {
       return const InteractionResult.success(
-        message: GithubActionsStrings.artifactFetchingFailed,
+        message: GithubActionsStrings.artifactsFetchingFailed,
       );
     }
 

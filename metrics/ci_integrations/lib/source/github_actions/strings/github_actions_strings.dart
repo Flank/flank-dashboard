@@ -21,7 +21,7 @@ class GithubActionsStrings {
       "Can't be validated as there are no successful workflow runs.";
   static const String jobsFetchingFailed =
       "Can't be validated as there is an error while fetching workflow run jobs.";
-  static const String artifactFetchingFailed =
+  static const String artifactsFetchingFailed =
       "Can't be validated as there is an error while fetching workflow run artifacts.";
   static const String coverageArtifactNameInvalid =
       'The coverage artifact name is invalid.';
