@@ -45,7 +45,7 @@ class Prompter {
   ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
-  static Future<void> promptTerminate() async {
+  static Future<void> dispose() async {
     assert(_promptWriter != null);
 
     return _promptWriter.dispose();
