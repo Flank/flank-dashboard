@@ -7,14 +7,15 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const promptText = 'promptText';
-  final writerMock = _MockPromptWriter();
-
-  tearDown(() {
-    reset(writerMock);
-  });
-
   group("Prompter", () {
+    const promptText = 'promptText';
+    const confirmInput = 'yes';
+    final writerMock = _PromptWriterMock();
+
+    tearDown(() {
+      reset(writerMock);
+    });
+
     test(
       ".initialize() throws an AssertionError if the given prompt writer is null",
       () {
@@ -47,21 +48,12 @@ void main() {
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
       () async {
-        await Prompter.promptConfirm(promptText);
+        await Prompter.promptConfirm(promptText, confirmInput);
 
-        verify(writerMock.promptConfirm(promptText)).called(1);
-      },
-    );
-
-    test(
-      ".promptTerminate() terminates a prompt session for the current prompt writer",
-      () async {
-        await Prompter.promptTerminate();
-
-        verify(writerMock.promptTerminate()).called(1);
+        verify(writerMock.promptConfirm(promptText, confirmInput)).called(1);
       },
     );
   });
 }
 
-class _MockPromptWriter extends Mock implements PromptWriter {}
+class _PromptWriterMock extends Mock implements PromptWriter {}
