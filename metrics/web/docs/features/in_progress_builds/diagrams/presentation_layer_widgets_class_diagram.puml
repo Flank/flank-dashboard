@@ -99,6 +99,28 @@ package common.presentation {
         }
     }
 
+    package graph_indicator.widgets {
+        abstract class GraphIndicator {
+            + build(BuildContext): Widget
+            + {abstract} selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class NegativeGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class NeutralGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class PositiveGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+    }
+
     package widgets {
         class MetricsAnimatedBar {
             + lottieAsset: String
@@ -109,5 +131,6 @@ package common.presentation {
 
 BuildResultBar -down-> MetricsColoredBar: uses
 BuildResultBar -down-> MetricsAnimatedBar: uses
+BuildResultBarComponent -down-> GraphIndicator: uses
 
 @enduml

@@ -25,7 +25,7 @@ The following class diagram demonstrates the `core` structure of classes related
 
 ### Metrics Web Application
 
-The following subsections cover the in-progress builds introduction into Metrics Web Application by layers. To know more about the application's architecture, consider the [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/web_in_progress_builds_doc/metrics/web/docs/01_metrics_web_application_architecture.md) document. Working with builds is concentrated within the `dashboard` package so the following sections' statements are mainly related to the `dashboard` module.
+The following subsections cover the in-progress builds introduction into Metrics Web Application by layers. To know more about the application's architecture, consider the [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md) document. Working with builds is concentrated within the `dashboard` package so the following sections' statements are mainly related to the `dashboard` module.
 
 #### Domain Layer
 
@@ -102,13 +102,58 @@ The most important fact is that in-progress build should be displayed as animate
 
 The build result bar graph also requires changes with moving part of its logic to the top widget. This simplifies the widget structure and improves testing as the bar graph itself becomes more complex. Thus, the displaying logic with missing bars and builds date range should be a part of `BuildResultsMetricGraph`. And the `BuildResultBarGraph` should be responsible for displaying a graph itself without missing bars. The bar graph also should be changed to support rebuilding bars if the list of build results contains in-progress builds. For this purpose, we should create a `BuildResultDurationStrategy` that would detect the build result type and return the build's duration. Using this strategy, the `BuildResultBarGraph` can provide data to display to the low-level `BarGraph`. Also, when detecting in-progress builds, the `BuildResultBarGraph` should enable a timer that would rebuild a bar graph providing a smooth animation for in-progress builds.
 
+About other style changes consider the [Appearance Changes Notes](#appearance-changes-notes) section.
+
 The following class diagram demonstrates the structure of widgets:
 
 ![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_widgets_class_diagram.puml)
 
 ##### Strategies
 
-Some of the strategies that use the `BuildStatus` also requires changes according to the new `BuildStatus.inProgress` value. Most of these changes are related to selecting an image asset to display. But some of them selects the proper style from theme to use for a widget appearance.
+Some of the strategies that use the `BuildStatus` also requires changes according to the new `BuildStatus.inProgress` value. Most of these changes are related to selecting an image asset to display. But some of them selects the proper style from the theme to use for a widget appearance.
+
+Image strategies (which selects an image asset to display) require adding new assets specific to the in-progress builds. These assets are to be exported from Figma and then used within `BuildResultPopupImageStrategy` and `ProjectBuildStatusImageStrategy`. For example, in `BuildResultPopupImageStrategy`:
+```dart
+  @override
+  String getImageAsset(BuildStatus value) {
+    switch (value) {
+      case BuildStatus.successful:
+        return "icons/successful.svg";
+      case BuildStatus.failed:
+        return "icons/failed.svg";
+      case BuildStatus.unknown:
+        return "icons/unknown.svg";
+      case BuildStatus.inProgress:
+        return "icons/in_progress.svg";
+    }
+
+    return null;
+  }
+```
+
+The `BuildResultBarAppearanceStrategy` selects the proper `MetricsColoredBarStyle` from the `MetricsColoredBarAttentionLevel` depending on the `BuildStatus` value. This strategy is passed to the `MetricsColoredBar` widget where is used to provide appearance configurations (i.e. style). As the `MetricsColoredBar` isn't used to display in-progress builds, the `BuildResultBarAppearanceStrategy` shouldn't support in-progress status and thus we keep it unchanged.
+
+Also, we should introduce a new `BuildResultDurationStrategy` that returns a build's duration depending on the view model type representing this build. More precisely, if the view model is `FinishedBuildResultViewModel` the strategy returns `FinishedBuildResultViewModel.duration` value as finished builds have fixed duration. For the `InProgressBuildResultViewModel`, the strategy returns the difference between current timestamp and the build start timestamp: 
+```dart
+  final dateTimeNow = DateTime.now();
+  final duration = dateTimeNow.difference(viewModel.startedAt);
+```
+
+About other style changes consider the [Appearance Changes Notes](#appearance-changes-notes) section.
+
+The following class diagram represents the structure of strategies classes:
+
+![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_strategies_class_diagram.puml)
+
+##### Appearance Changes Notes
+
+The in-progress builds introduction definitely affects a lot of `dashboard` module components. However, some of them don't require changes even if such elements evidently should be changed. The reason is that in some cases the `in-progress` status of the build is interpreted in the same way as the `unknown` status. Actually, this makes sense as `in-progress` status is temporary and is to be changed when build is finished.
+
+According to the above, some widgets should have the same appearance as for `unknown` status when working with in-progress builds. And some strategies should act the same as with `unknown` status.
+
+Consider the class diagram from the [Widgets](#widgets) section. You may notice that the `GraphIndicator` has three implementers for each of three possible attention levels: positive, negative and neutral. The neutral level represents the graph indicator for bars with neutral visual feedback - just as the `unknown` build results. The same appearance has graph indicator for in-progress builds. Therefore, no new graph indicator appearance should be implemented.
+
+You can notice the same behavior in the `ProjectBuildStatusStyle` strategy. The style of the project build status metric is the same for both `unknown` and `in-progress` builds though the displayed image changes.
 
 ## Results
 > What was the outcome of the project?
