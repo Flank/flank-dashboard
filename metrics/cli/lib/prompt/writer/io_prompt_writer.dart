@@ -7,7 +7,7 @@ import 'package:cli/prompt/writer/prompt_writer.dart';
 
 /// A [PromptWriter] implementation that uses the [Stdin] and the [Stdout]
 /// to prompt.
-class IOPromptWriter extends PromptWriter {
+class IOPromptWriter implements PromptWriter {
   /// The standard input stream of data used by this writer.
   final Stdin _stdin;
 
