@@ -32,7 +32,7 @@ void main() {
 
         await Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(1);
+        verify(writerMock.prompt(promptText)).called(equals(1));
       },
     );
 
@@ -41,7 +41,7 @@ void main() {
       () async {
         await Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(1);
+        verify(writerMock.prompt(promptText)).called(equals(1));
       },
     );
 
@@ -50,7 +50,8 @@ void main() {
       () async {
         await Prompter.promptConfirm(promptText, confirmInput);
 
-        verify(writerMock.promptConfirm(promptText, confirmInput)).called(1);
+        verify(writerMock.promptConfirm(promptText, confirmInput))
+            .called(equals(1));
       },
     );
   });
