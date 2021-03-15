@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/client/firestore/model/firestore_exception_reason.dart';
+import 'package:ci_integration/client/firestore/models/firestore_exception_reason.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping [FirestoreExceptionReason]s.
@@ -36,11 +36,11 @@ class FirestoreExceptionReasonMapper
         return FirestoreExceptionReason.notFound;
 
       case projectDeleted:
-        return FirestoreExceptionReason.projectDeleted; 
+        return FirestoreExceptionReason.projectDeleted;
 
       case projectInvalid:
-        return FirestoreExceptionReason.projectInvalid; 
-      
+        return FirestoreExceptionReason.projectInvalid;
+
       default:
         return null;
     }
@@ -54,7 +54,7 @@ class FirestoreExceptionReasonMapper
 
       case FirestoreExceptionReason.notFound:
         return notFound;
-      
+
       case FirestoreExceptionReason.projectDeleted:
         return projectDeleted;
 

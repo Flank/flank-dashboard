@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/mappers/firestore_exception_reason_mapper.dart';
-import 'package:ci_integration/client/firestore/model/firestore_exception_reason.dart';
+import 'package:ci_integration/client/firestore/models/firestore_exception_reason.dart';
 import 'package:test/test.dart';
 
 void main() {
