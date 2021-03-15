@@ -7,12 +7,12 @@ import 'dart:async';
 /// for working with prompts.
 abstract class PromptWriter {
   /// Requests an input from the user with a given description [text].
-  FutureOr<String> prompt(String text);
+  String prompt(String text);
 
   /// Requests a [confirmInput] from the user
   /// with a given description [text].
-  FutureOr<bool> promptConfirm(String text, String confirmInput);
+  bool promptConfirm(String text, String confirmInput);
 
   /// Disposes resources.
-  FutureOr<void> dispose();
+  Future<void> dispose();
 }

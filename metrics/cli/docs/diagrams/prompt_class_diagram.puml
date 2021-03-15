@@ -3,9 +3,9 @@
 package prompt {
     package writer {
         interface PromptWriter {
-            + prompt(String text) : FutureOr<String>
-            + promptConfirm(String text, String confirmText) : FutureOr<bool>
-            + dispose() : FutureOr<void>
+            + prompt(String text) : String
+            + promptConfirm(String text, String confirmText) : bool
+            + dispose() : Future<void>
         }
 
         class IOPromptWriter implements PromptWriter{
@@ -20,8 +20,8 @@ package prompt {
 
     class Prompter {
         - _promptWriter : PromptWriter
-        + prompt(String text) : Future<String>
-        + promptConfirm(String text, String confirmText) : Future<bool>
+        + prompt(String text) : String
+        + promptConfirm(String text, {String confirmText}) : bool
         + dispose() : Future<void>
     }
 }

@@ -24,7 +24,7 @@ class Prompter {
   ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
-  static Future<String> prompt(String text) async {
+  static String prompt(String text) {
     assert(_promptWriter != null);
 
     return _promptWriter.prompt(text);
@@ -35,7 +35,10 @@ class Prompter {
   ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
-  static Future<bool> promptConfirm(String text, String confirmInput) async {
+  static bool promptConfirm(
+    String text, {
+    String confirmInput = 'y',
+  }) {
     assert(_promptWriter != null);
 
     return _promptWriter.promptConfirm(text, confirmInput);
