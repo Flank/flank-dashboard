@@ -3,7 +3,9 @@
 package interfaces {
     package cli {
         interface Cli {
+            + name(): String
             + version() : Future<void>
+            + run(List<String> arguments, {bool verbose, String workingDirectory, Stream<List<int>> stdin}) : Future<ProcessResult>
         }
     }
 
