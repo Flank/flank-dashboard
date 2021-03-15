@@ -153,7 +153,7 @@ According to the above, some widgets should have the same appearance as for `unk
 
 Consider the class diagram from the [Widgets](#widgets) section. You may notice that the `GraphIndicator` has three implementers for each of three possible attention levels: positive, negative, and neutral. The neutral level represents the graph indicator for bars with neutral visual feedback - just as the `unknown` build results. The same appearance has the graph indicator for in-progress builds. Therefore, no new graph indicator appearance should be implemented.
 
-You can notice the same behavior in the `ProjectBuildStatusStyle` strategy. The style of the project build status metric is the same for both `unknown` and `in-progress` builds though the displayed image changes.
+You can notice the same behavior in the `ProjectBuildStatusStyle` strategy. The style of the project build status metric is the same for both `unknown` and `in-progress` builds, though the displayed image changes.
 
 ## Results
 > What was the outcome of the project?
