@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Metrics Web Application displays different project metrics using builds of this project. To make metrics more reliable the application should support in-progress builds. This document describes the design of introduction in-progress builds into the Metrics Web Application.
+The Metrics Web Application displays different project metrics using builds of this project. To make metrics more reliable, the application should support in-progress builds. This document describes the design of introduction in-progress builds into the Metrics Web Application.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -13,7 +13,7 @@ The Metrics Web Application displays different project metrics using builds of t
 ## Design
 > Explain and diagram the technical design.
 
-The In-Progress builds introduction requires changes to the both `core` and `web` components. The following subsections discover these changes. First, let's take a look at the what the `in-progress build` means in terms of the application. As this definition affects both Metrics Web Application and CI Integration tool, it is presented within the `core` component.
+The In-Progress builds introduction requires changes to both `core` and `web` components. The following subsections discover these changes. First, let's take a look at what the `in-progress build` means in terms of the application. As this definition affects both Metrics Web Application and CI Integration tool, it is presented within the `core` component.
 
 ### Core
 
@@ -35,7 +35,7 @@ The domain layer of the `dashboard` module provides the `MetricsRepository` inte
 |---|---|
 |Project Status|No changes required.|
 |Builds' Results|No changes required.|
-|Performance|Count only finished builds as in-progress builds has no fixed duration and should be filtered out.|
+|Performance|Count only finished builds as in-progress builds have no fixed duration and should be filtered out.|
 |Number of Builds|No changes required.|
 |Stability|Divide the number of successful builds by the number of finished builds. This means that in-progress builds should not participate in the calculation of the stability metric and should be filtered out.|
 |Coverage|No changes required.|
@@ -67,15 +67,15 @@ The following class diagram demonstrates the structure of the data layer for the
 
 #### Presentation Layer
 
-The presentation layer contains the UI-related implementations such as state, pages, widgets, and view models. The in-progress builds introduction evidently requires UI changes to display them. These changes doesn't affect the dashboard page as the page widget just places UI elements, however some of these UI elements - more precisely, dashboard-specific widgets - displays or closely related to displaying builds and their results. Furthermore, the `state` class that provides view models with data to display also needs changes to the entities processing.
+The presentation layer contains the UI-related implementations such as state, pages, widgets, and view models. The in-progress builds introduction requires UI changes to display them. These changes don't affect the dashboard page as the page widget just places UI elements, however some of these UI elements - more precisely, dashboard-specific widgets - displays or closely related to displaying builds and their results. Furthermore, the `state` class that provides view models with data to display also needs changes to the processing entities.
 
 ##### State & View Models
 
-The state management of the `dashboard` module is represented by the `ProjectMetricsNotifier`. Actually, this class doesn't directly uses the `BuildStatus`, however, as the `ProjectMetricsNotifier` processes entities into view models, it requires changes. More precisely, these changes are related to the view models which stand for the project metrics.
+The state management of the `dashboard` module is represented by the `ProjectMetricsNotifier`. This class doesn't directly use the `BuildStatus`, however, as the `ProjectMetricsNotifier` processes entities into view models, it requires changes. More precisely, these changes are related to the view models which stand for the project metrics.
 
-The main idea is to divide the build result view model into two specific `FinishedBuildResultViewModel` and `InProgressBuildResultViewModel` for finished and in-progress builds respectively. This idea is based on the fact that the UI elements responsible for displaying these types significantly differ (consider the [Widgets](#widgets) section to discover the UI elements). This separation is also required according to the fact that in-progress builds has no stable `duration` meaning that it grows until the build is finished.
+The main idea is to divide the build result view model into two specific `FinishedBuildResultViewModel` and `InProgressBuildResultViewModel` for finished and in-progress builds respectively. This idea is based on the fact that the UI elements responsible for displaying these types significantly differ (consider the [Widgets](#widgets) section to discover the UI elements). This separation is also required according to the fact that in-progress builds have no stable `duration` meaning that it grows until the build is finished.
 
-Furthermore, as the in-progress builds has no stable `duration`, the state and view models should be updated to provide the maximum possible duration for the list of builds in `BuildResultMetricViewModel`. This prevents the graph with build results from displaying bars for in-progress builds significantly larger than bars for finished builds (which have fixed duration). This means that the state should process the list of builds to define the maximum possible duration and provide it with `BuildResultMetricViewModel` instance in the `maxBuildDuration` field.
+Furthermore, as the in-progress builds have no stable `duration`, the state and view models should be updated to provide the maximum possible duration for the list of builds in `BuildResultMetricViewModel`. This prevents the graph with build results from displaying bars for in-progress builds significantly larger than bars for finished builds (which have fixed duration). This means that the state should process the list of builds to define the maximum possible duration and provide it with the `BuildResultMetricViewModel` instance in the `maxBuildDuration` field.
 
 Also, the `BuildResultPopupViewModel` shouldn't require the given duration to be non-null anymore. This is strongly related to the UI design changes and the fact that the popup doesn't display duration for in-progress builds.
 
@@ -85,20 +85,20 @@ The following class diagram demonstrates the updated structure of view models re
 
 ##### Widgets
 
-The introduction of in-progress builds requires changing the UI elements in order they can display such builds. All the UI elements of Metrics Web Application are represented by widgets or their combinations. Widgets that are responsible for displaying build results are placed within the `dashboard` module.
+The introduction of in-progress builds requires changing the UI elements so they can display such builds. All the UI elements of Metrics Web Application are represented by widgets or their combinations. Widgets that are responsible for displaying build results are placed within the `dashboard` module.
 
-The following table lists the UI elements that requires changes (or should be created) with a short description.
+The following table lists the UI elements that require changes (or should be created) with a short description.
 
 |UI Element|Widget|Classification|Changes description|
 |---|---|---|---|
 |Build result popup|`BuildResultPopupCard`|metrics widget|Hide the subtitle with duration if the given duration is `null`.|
-|Build result bar component|`BuildResultBarComponent`|metrics widget|Create a new widget that displays bar itself and applies a popup with graph indicator to this bar. This allows moving popup displaying logic to the top and separate it from the bar.|
+|Build result bar component|`BuildResultBarComponent`|metrics widget|Create a new widget that displays the bar itself and applies a popup with graph indicator to this bar. This allows moving popup displaying logic to the top and separating it from the bar.|
 |Build result bar|`BuildResultBar`|metrics widget|Select a widget to display depending on the build result view model type (either `FinishedBuildResultViewModel` or `InProgressBuildResultViewModel`). Displays either `MetricsColoredBar` or `MetricsAnimatedBar`.|
-|Build result metric graph|`BuildResultsMetricGraph`|metrics widget|Create a new widget that displays date range of builds, missing bars, and `BuildResultBarGraph`.|
-|Build result bar graph|`BuildResultBarGraph`|metrics widget|Change bars displaying to handle in-progress builds with unstable duration. Animate bars if list of results contains in-progress builds.|
+|Build result metric graph|`BuildResultsMetricGraph`|metrics widget|Create a new widget that displays the date range of builds, missing bars, and `BuildResultBarGraph`.|
+|Build result bar graph|`BuildResultBarGraph`|metrics widget|Change bars displaying to handle in-progress builds with unstable duration. Animate bars if the list of results contains in-progress builds.|
 |Animated bar|`MetricsAnimatedBar`|common metrics widget|Create a new widget that displays the given Lottie animation clipping it to the given height.|
 
-The most important fact is that in-progress build should be displayed as animated bar. This results in changes with creating additional widget that would apply build result popup with appropriate graph indicator and padding to the bar itself. This additional widget is `BuildResultBarComponent` meaning that this is not bar itself - it's a component that displays bar. The bar, in it's turn, requires changes to select which of low-level bar implementations to show: `MetricsColoredBar` for finished builds or `MetricsAnimatedBar` for in-progress builds.
+The most important fact is that the in-progress build should be displayed as an animated bar. This results in changes with creating an additional widget that would apply the build result popup with appropriate graph indicator and padding to the bar itself. This additional widget is `BuildResultBarComponent` meaning that this is not the bar itself - it's a component that displays the bar. The bar, in its turn, requires changes to select which of low-level bar implementations to show: `MetricsColoredBar` for finished builds or `MetricsAnimatedBar` for in-progress builds.
 
 The build result bar graph also requires changes with moving part of its logic to the top widget. This simplifies the widget structure and improves testing as the bar graph itself becomes more complex. Thus, the displaying logic with missing bars and builds date range should be a part of `BuildResultsMetricGraph`. And the `BuildResultBarGraph` should be responsible for displaying a graph itself without missing bars. The bar graph also should be changed to support rebuilding bars if the list of build results contains in-progress builds. For this purpose, we should create a `BuildResultDurationStrategy` that would detect the build result type and return the build's duration. Using this strategy, the `BuildResultBarGraph` can provide data to display to the low-level `BarGraph`. Also, when detecting in-progress builds, the `BuildResultBarGraph` should enable a timer that would rebuild a bar graph providing a smooth animation for in-progress builds.
 
@@ -110,7 +110,7 @@ The following class diagram demonstrates the structure of widgets:
 
 ##### Strategies
 
-Some of the strategies that use the `BuildStatus` also requires changes according to the new `BuildStatus.inProgress` value. Most of these changes are related to selecting an image asset to display. But some of them selects the proper style from the theme to use for a widget appearance.
+Some of the strategies that use the `BuildStatus` also require changes according to the new `BuildStatus.inProgress` value. Most of these changes are related to selecting an image asset to display. But some of them select the proper style from the theme to use for a widget appearance.
 
 Image strategies (which selects an image asset to display) require adding new assets specific to the in-progress builds. These assets are to be exported from Figma and then used within `BuildResultPopupImageStrategy` and `ProjectBuildStatusImageStrategy`. For example, in `BuildResultPopupImageStrategy`:
 ```dart
@@ -147,11 +147,11 @@ The following class diagram represents the structure of strategies classes:
 
 ##### Appearance Changes Notes
 
-The in-progress builds introduction definitely affects a lot of `dashboard` module components. However, some of them don't require changes even if such elements evidently should be changed. The reason is that in some cases the `in-progress` status of the build is interpreted in the same way as the `unknown` status. Actually, this makes sense as `in-progress` status is temporary and is to be changed when build is finished.
+The in-progress builds introduction affects a lot of `dashboard` module components. However, some of them don't require changes even if such elements evidently should be changed. The reason is that in some cases the `in-progress` status of the build is interpreted in the same way as the `unknown` status. This makes sense as the `in-progress` status is temporary and is to be changed when a build is finished.
 
 According to the above, some widgets should have the same appearance as for `unknown` status when working with in-progress builds. And some strategies should act the same as with `unknown` status.
 
-Consider the class diagram from the [Widgets](#widgets) section. You may notice that the `GraphIndicator` has three implementers for each of three possible attention levels: positive, negative and neutral. The neutral level represents the graph indicator for bars with neutral visual feedback - just as the `unknown` build results. The same appearance has graph indicator for in-progress builds. Therefore, no new graph indicator appearance should be implemented.
+Consider the class diagram from the [Widgets](#widgets) section. You may notice that the `GraphIndicator` has three implementers for each of three possible attention levels: positive, negative, and neutral. The neutral level represents the graph indicator for bars with neutral visual feedback - just as the `unknown` build results. The same appearance has the graph indicator for in-progress builds. Therefore, no new graph indicator appearance should be implemented.
 
 You can notice the same behavior in the `ProjectBuildStatusStyle` strategy. The style of the project build status metric is the same for both `unknown` and `in-progress` builds though the displayed image changes.
 
