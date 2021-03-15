@@ -22,7 +22,7 @@ class FirebaseAuthCredentials extends Equatable {
   /// Creates a new instance of the [FirebaseAuthCredentials] with the given
   /// parameters.
   ///
-  /// All parameters are required.
+  /// All the parameters are required.
   ///
   /// Throws an [ArgumentError] if any of the given parameters is `null`.
   FirebaseAuthCredentials({
