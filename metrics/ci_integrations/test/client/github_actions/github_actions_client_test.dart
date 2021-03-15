@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
@@ -303,6 +304,161 @@ void main() {
               (run) => run.status,
               'status',
               equals(expectedStatus),
+            ),
+          ),
+        );
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fails if there is no workflow with such identifier",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          "test",
+        );
+        final isError = interactionResult.isError;
+
+        expect(isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() applies the default per page parameter if it is not specified",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.perPage, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the given per page parameter",
+      () async {
+        const expectedPerPage = 3;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          perPage: expectedPerPage,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.perPage, equals(expectedPerPage));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is null",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: null,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is less than zero",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: -1,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() fetches the first page if the given page parameter is zero",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: 0,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the given page parameter",
+      () async {
+        const expectedPage = 2;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          page: expectedPage,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.page, equals(expectedPage));
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the next page url",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.nextPageUrl, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with the null next page url if there are no more pages available",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          perPage: 100,
+        );
+        final runsPage = interactionResult.result;
+
+        expect(runsPage.nextPageUrl, isNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page with a list of workflow runs",
+      () async {
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+        );
+        final runs = interactionResult.result.values;
+
+        expect(runs, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchWorkflowRunsWithConclusion() returns a workflow runs page containing workflow runs with the given conclusion",
+      () async {
+        const expectedConclusion = GithubActionConclusion.skipped;
+
+        final interactionResult = await client.fetchWorkflowRunsWithConclusion(
+          workflowId,
+          conclusion: expectedConclusion,
+        );
+
+        final runs = interactionResult.result.values;
+
+        expect(
+          runs,
+          everyElement(
+            isA<WorkflowRun>().having(
+              (run) => run.conclusion,
+              'conclusion',
+              equals(expectedConclusion),
             ),
           ),
         );
