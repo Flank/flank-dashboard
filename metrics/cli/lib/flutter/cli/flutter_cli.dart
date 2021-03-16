@@ -3,10 +3,10 @@
 
 import 'package:cli/interfaces/cli/cli.dart';
 
-/// A [CLI] implementation for the Flutter.
+/// A class that represents the Flutter [Cli].
 class FlutterCli extends Cli {
   @override
-  String get name => 'flutter';
+  final String executable = 'flutter';
 
   /// Builds a Flutter web application in the given [workingDirectory].
   Future<void> buildWeb(String workingDirectory) async {

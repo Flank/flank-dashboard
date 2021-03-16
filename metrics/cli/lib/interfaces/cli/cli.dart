@@ -8,23 +8,34 @@ import 'package:process_run/process_run.dart' as cmd;
 
 /// A base class for CLIs that provides common methods for them.
 abstract class Cli {
-  /// An executable name of this CLI.
-  String get name;
+  /// A name of the executable for this CLI.
+  String get executable;
 
   /// Shows the version information of this CLI.
   Future<void> version();
 
-  /// Runs the executable by the [name].
+  /// Starts a process running [executable] in the [workingDirectory]
+  /// with the specified [arguments].
+  ///
+  /// Provide the [stdin] to enable the interaction with the [executable].
+  /// The [attachOutput] specifies whether print
+  /// the [executable]'s output or not.
+  ///
+  /// The [attachOutput] default value is `true`.
+  /// If the [workingDirectory] is `null`, the [executable] will run from
+  /// the current terminal's working directory.
+  ///
+  /// The [arguments] must not be `null`.
   Future<ProcessResult> run(
     List<String> arguments, {
-    bool verbose = true,
+    bool attachOutput = true,
     String workingDirectory,
     Stream<List<int>> stdin,
   }) async {
     return cmd.run(
-      name,
+      executable,
       arguments,
-      verbose: verbose,
+      verbose: attachOutput,
       workingDirectory: workingDirectory,
       stdin: stdin,
     );
