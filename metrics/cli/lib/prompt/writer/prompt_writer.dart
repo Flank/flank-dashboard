@@ -5,12 +5,9 @@
 /// for working with prompts.
 abstract class PromptWriter {
   /// Requests an input from the user with a given description [text].
-  Future<String> prompt(String text);
+  String prompt(String text);
 
-  /// Requests a confirmation input from the user
+  /// Requests a [confirmInput] from the user
   /// with a given description [text].
-  Future<bool> promptConfirm(String text);
-
-  /// Terminates a prompt session.
-  Future<void> promptTerminate();
+  bool promptConfirm(String text, String confirmInput);
 }

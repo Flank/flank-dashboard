@@ -3,14 +3,13 @@
 package prompt {
     package writer {
         interface PromptWriter {
-            + prompt(String text) : Future<String>
-            + promptConfirm(String text) : Future<bool>
-            + promptTerminate() : Future<void>
+            + prompt(String text) : String
+            + promptConfirm(String text, String confirmText) : bool
         }
 
         class IOPromptWriter implements PromptWriter{
-            - _stdin : Stream<List<int>>
-            - _stdout : Sink<List<int>>
+            - _stdin : Stdin
+            - _stdout : Stdout
         }
     }
 
@@ -20,9 +19,8 @@ package prompt {
 
     class Prompter {
         - _promptWriter : PromptWriter
-        + prompt(String text) : Future<String>
-        + promptConfirm(String text) : Future<bool>
-        + promptTerminate() : Future<void>
+        + prompt(String text) : String
+        + promptConfirm(String text, {String confirmText}) : bool
     }
 }
 
