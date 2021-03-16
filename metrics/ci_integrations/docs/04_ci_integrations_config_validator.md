@@ -85,6 +85,7 @@ if (authValidationResult.isFailure) {
 // auth is valid, validation is continued
 final anotherField = config.anotherField;
 
+// other fields validation
 final anotherFieldValidationResult = await validationDelegate.validateAnotherField(anotherField);
 resultBuilder.setResult(CoolIntegrationConfigField.anotherField, anotherFieldValidationResult);
 
