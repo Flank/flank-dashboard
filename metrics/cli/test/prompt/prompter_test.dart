@@ -30,7 +30,7 @@ void main() {
       () async {
         Prompter.initialize(writerMock);
 
-        await Prompter.prompt(promptText);
+        Prompter.prompt(promptText);
 
         verify(writerMock.prompt(promptText)).called(equals(1));
       },
@@ -39,7 +39,7 @@ void main() {
     test(
       ".prompt() requests an input from the user with the given description text",
       () async {
-        await Prompter.prompt(promptText);
+        Prompter.prompt(promptText);
 
         verify(writerMock.prompt(promptText)).called(equals(1));
       },
@@ -48,7 +48,7 @@ void main() {
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
       () async {
-        await Prompter.promptConfirm(promptText, confirmInput);
+        Prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
         verify(writerMock.promptConfirm(promptText, confirmInput))
             .called(equals(1));

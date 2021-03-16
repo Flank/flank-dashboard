@@ -84,20 +84,6 @@ void main() {
         expect(actual, isFalse);
       },
     );
-
-    test(".disposes() disposes resources", () async {
-      final writer = IOPromptWriter(
-        inputStream: stdinMock,
-        outputStream: stdoutMock,
-      );
-
-      await writer.dispose();
-
-      verifyInOrder([
-        stdoutMock.flush(),
-        stdoutMock.close(),
-      ]);
-    });
   });
 }
 

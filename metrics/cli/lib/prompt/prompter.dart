@@ -33,6 +33,8 @@ class Prompter {
   /// Requests a [confirmInput] from the user
   /// with a given description [text].
   ///
+  /// The [confirmInput] default value is `y`.
+  ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
   static bool promptConfirm(
@@ -42,15 +44,5 @@ class Prompter {
     assert(_promptWriter != null);
 
     return _promptWriter.promptConfirm(text, confirmInput);
-  }
-
-  /// Disposes this [PromptWriter]'s resources.
-  ///
-  /// Throws an [AssertionError] if the current
-  /// [PromptWriter] instance is `null`.
-  static Future<void> dispose() async {
-    assert(_promptWriter != null);
-
-    return _promptWriter.dispose();
   }
 }

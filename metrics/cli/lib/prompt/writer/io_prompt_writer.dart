@@ -39,11 +39,4 @@ class IOPromptWriter implements PromptWriter {
 
     return userInput?.toLowerCase() == confirmInput?.toLowerCase();
   }
-
-  @override
-  Future<void> dispose() async {
-    await _stdout.flush();
-
-    return _stdout.close();
-  }
 }
