@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:process_run/process_run.dart' as cmd;
+import 'package:process_run/shell_run.dart';
 
 /// A base class for CLIs that provides common methods for them.
 abstract class Cli {
@@ -17,15 +18,17 @@ abstract class Cli {
   /// Starts a process running [executable] in the [workingDirectory]
   /// with the specified [arguments].
   ///
-  /// Provide the [stdin] to enable the interaction with the [executable].
-  /// The [attachOutput] specifies whether print
-  /// the [executable]'s output or not.
+  /// If the [arguments] is `null`, the empty [List] is used.
   ///
+  /// The [attachOutput] specifies whether print the [executable]'s output
+  /// or not.
   /// The [attachOutput] default value is `true`.
+  ///
   /// If the [workingDirectory] is `null`, the [executable] will run from
   /// the current terminal's working directory.
   ///
-  /// The [arguments] must not be `null`.
+  /// Provide the [stdin] to enable the interaction with the [executable].
+  /// If the [stdin] is `null`, the [sharedStdIn] is used.
   Future<ProcessResult> run(
     List<String> arguments, {
     bool attachOutput = true,
@@ -34,10 +37,10 @@ abstract class Cli {
   }) async {
     return cmd.run(
       executable,
-      arguments,
+      arguments ?? [],
       verbose: attachOutput,
       workingDirectory: workingDirectory,
-      stdin: stdin,
+      stdin: stdin ?? sharedStdIn,
     );
   }
 }
