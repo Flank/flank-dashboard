@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/validation/model/field_validation_conclusion.dart';
-import 'package:test/test.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
+import 'package:test/test.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -29,7 +29,10 @@ void main() {
     test(
       ".success() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.success(additionalContext, data);
+        const result = FieldValidationResult.success(
+          additionalContext: additionalContext,
+          data: data,
+        );
 
         expect(result.additionalContext, equals(additionalContext));
         expect(result.data, equals(data));
@@ -70,7 +73,10 @@ void main() {
     test(
       ".failure() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.failure(additionalContext, data);
+        const result = FieldValidationResult.failure(
+          additionalContext: additionalContext,
+          data: data,
+        );
 
         expect(result.additionalContext, equals(additionalContext));
         expect(result.data, equals(data));
@@ -111,7 +117,10 @@ void main() {
     test(
       ".unknown() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.unknown(additionalContext, data);
+        const result = FieldValidationResult.unknown(
+          additionalContext: additionalContext,
+          data: data,
+        );
 
         expect(result.additionalContext, equals(additionalContext));
         expect(result.data, equals(data));

@@ -23,7 +23,7 @@ class FieldValidationResult<T> extends Equatable {
   /// Indicates if this field validation result is failure.
   bool get isFailure => conclusion == FieldValidationConclusion.invalid;
 
-  /// Indicates if this fiels validation result is unknown.
+  /// Indicates if this field validation result is unknown.
   bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
 
   @override
@@ -42,10 +42,10 @@ class FieldValidationResult<T> extends Equatable {
   /// conclusion.
   ///
   /// Represents a successful field validation result.
-  const FieldValidationResult.success([
+  const FieldValidationResult.success({
     String additionalContext,
     T data,
-  ]) : this._(
+  }) : this._(
           FieldValidationConclusion.valid,
           additionalContext,
           data,
@@ -56,10 +56,10 @@ class FieldValidationResult<T> extends Equatable {
   /// conclusion.
   ///
   /// Represents a failed field validation result.
-  const FieldValidationResult.failure([
+  const FieldValidationResult.failure({
     String additionalContext,
     T data,
-  ]) : this._(
+  }) : this._(
           FieldValidationConclusion.invalid,
           additionalContext,
           data,
@@ -71,10 +71,10 @@ class FieldValidationResult<T> extends Equatable {
   ///
   /// Represents an unknown field validation result or indicates that
   /// the field validation didn't run.
-  const FieldValidationResult.unknown([
+  const FieldValidationResult.unknown({
     String additionalContext,
     T data,
-  ]) : this._(
+  }) : this._(
           FieldValidationConclusion.unknown,
           additionalContext,
           data,
