@@ -27,13 +27,13 @@ Let's start with the necessary abstractions. Consider the following classes:
 - A `ConfigField` is a class that represents a single config's field name.
 - A `FieldValidationResult` is a class that represents a validation conclusion for a single config's field and provides some additional context if needed. The `FieldValidationResult` may be `success` - meaning that a field is valid, `failure` - meaning that a field is invalid, and `unknown` - if a field cannot be validated, e.g. the access token has no permissions to use a specific validation API endpoint.
 - A `ConfigValidator` is a class responsible for validating the configuration. The `validate` method of this class returns a `ValidationResult` as an output.
-- A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls.
+- A `ValidationDelegate` is a class that the `ConfigValidator` uses for the validation of specific fields with network calls. The methods of `ValidationDelegate`s return `FieldValidationResult`s which are used by `ConfigValidator`s.
 - A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult` and has the main `build` method that returns a `ValidationResult`. See [output generation](#output-generation) for more details.
 - A `ConfigValidatorFactory` is a class that creates a `ConfigValidator` with its `ValidationDelegate`.
 
 Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_base_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/config_validator_base_class_diagram.puml)
 
 Consider the following package structure for the abstract and base classes of the config validation feature: 
 
@@ -76,14 +76,12 @@ final resultBuilder = ValidationResultBuilder.forFields(CoolIntegrationConfigFie
 // validating auth
 final accessToken = config.accessToken;
 final auth = AuthorizationBase(accessToken);
-final authInteraction = validationDelegate.validateAuth(auth);
+
+final authValidationResult = await validationDelegate.validateAuth(auth);
+resultBuilder.setResult(CoolIntegrationConfigField.auth, authValidationResult);
 
 // auth is not valid
-if (authInteraction.isError) {
-  final authAdditionalContext = authInteraction.message;
-  final authResult = FieldValidationResult.failure(authAdditionalContext)
-  resultBuilder.setResult(CoolIntegrationConfigField.auth, authResult);
-  
+if (authValidationResult.isFailure) {
   // terminating validation as the auth needed for validation is invalid
   final interruptReason = 'Cannot continue the validation, as the provided access token is invalid.';
   final emptyFieldsValidationResult = FieldValidationResult.unknown(interruptReason);
@@ -93,10 +91,11 @@ if (authInteraction.isError) {
 }
 
 // auth is valid, validation is continued
-final authResult = FieldValidationResult.success();
-resultBuilder.setResult(CoolIntegrationConfigField.auth, authResult);
+final anotherField = config.anotherField;
 
-// other fields validation
+final anotherFieldValidationResult = await validationDelegate.validateAnotherField(anotherField);
+resultBuilder.setResult(CoolIntegrationConfigField.anotherField, anotherFieldValidationResult);
+
 ...
 
 return resultBuilder.build();
@@ -118,11 +117,11 @@ Assume a `CoolIntegration` as a destination party for which we want to provide t
 
 - Class diagram:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_destination_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/config_validator_destination_class_diagram.puml)
 
 - Sequence diagram:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_config_validator_design/metrics/ci_integrations/docs/diagrams/config_validator_sequence_diagram.puml)
 
 Consider the following package structure for the `CoolIntegration` config validation feature:
 

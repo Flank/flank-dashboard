@@ -14,20 +14,15 @@
                         + Future<ValidationResult> validate(T config)
                     }
                 }
-            }
-
-            package destination.config as interface_config {
-                package validation_delegate as interface_delegate {
-                    interface DestinationValidationDelegate {
-                        + Future<InteractionResult> validateAuth(AuthorizationBase auth)
-                        + Future<InteractionResult> validateDestinationProjectId(String destinationProjectId)
-                    }
-                }
 
                 package validator_factory as interface_factory {
                     interface ConfigValidatorFactory<T extends Config> {
                         + ConfigValidator<T> create(T config)
                     }
+                }
+
+                package validation_delegate as interface_delegate {
+                    interface ValidationDelegate {}
                 }
             }
         }
@@ -56,13 +51,17 @@
                     + results: UnmodifiableMapView<ConfigField, FieldValidationResult>
                 }
 
-                class FieldValidationResult {
+                class FieldValidationResult<T> {
                     + conclusion : FieldValidationConclusion
                     + additionalContext : String
-
-                    + FieldValidationResult success(String additionalContext)
-                    + FieldValidationResult failure(String additionalContext)
-                    + FieldValidationResult unknown(String additionalContext)
+                    + data : T
+                    + isSuccess : bool
+                    + isFailure : bool
+                    + isUnknown : bool
+                    
+                    + FieldValidationResult success(String additionalContext, T data)
+                    + FieldValidationResult failure(String additionalContext, T data)
+                    + FieldValidationResult unknown(String additionalContext, T data)
                 }
             }
         }
@@ -94,7 +93,7 @@
                 class CoolIntegrationDestinationValidationDelegate {
                     - _client: CoolIntegrationClient
 
-                    + Future<InteractionResult> validateExtraField()
+                    + Future<FieldValidationResult> validateExtraField()
                 }
             }
 
@@ -144,7 +143,7 @@
 
     CoolIntegrationDestinationParty --> CoolIntegrationValidatorFactory : provides
 
-    CoolIntegrationDestinationValidationDelegate ..|> DestinationValidationDelegate
+    CoolIntegrationDestinationValidationDelegate ..|> ValidationDelegate
 
     CoolIntegrationDestinationConfigField --|> ConfigField
 
