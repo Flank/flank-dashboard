@@ -176,6 +176,20 @@ void main() {
     );
 
     test(
+      ".validate() does not validate the access token if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+        final authorization = BearerAuthorization(config.accessToken);
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateAuth(authorization),
+        );
+      },
+    );
+
+    test(
       ".validate() does not validate the repository owner if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
@@ -210,6 +224,19 @@ void main() {
         await validator.validate(config);
 
         verifyNever(validationDelegate.validateWorkflowId(workflowId));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
       },
     );
 
