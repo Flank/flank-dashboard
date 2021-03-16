@@ -20,7 +20,7 @@ class FirestoreExceptionReasonMapper
   static const String projectDeleted = 'PROJECT_DELETED';
 
   /// An exception reason indicating that the provided Firebase project is
-  /// deleted.
+  /// not valid.
   static const String projectInvalid = 'PROJECT_INVALID';
 
   /// Creates a new instance of the [FirestoreExceptionReasonMapper].
