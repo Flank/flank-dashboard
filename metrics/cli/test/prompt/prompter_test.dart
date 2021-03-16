@@ -54,6 +54,18 @@ void main() {
             .called(equals(1));
       },
     );
+
+    test(
+      ".promptConfirm() applies a default confirm input if it's not specified",
+      () {
+        const defaultConfirmInput = 'y';
+
+        Prompter.promptConfirm(promptText);
+
+        verify(writerMock.promptConfirm(promptText, defaultConfirmInput))
+            .called(equals(1));
+      },
+    );
   });
 }
 
