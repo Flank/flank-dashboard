@@ -58,11 +58,9 @@ void main() {
     test(
       ".promptConfirm() applies a default confirm input if it's not specified",
       () {
-        const defaultConfirmInput = 'y';
-
         Prompter.promptConfirm(promptText);
 
-        verify(writerMock.promptConfirm(promptText, defaultConfirmInput))
+        verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
             .called(equals(1));
       },
     );
