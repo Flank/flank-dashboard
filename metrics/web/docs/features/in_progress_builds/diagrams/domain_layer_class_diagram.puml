@@ -12,7 +12,7 @@ package domain {
                 + date: DateTime
             }
 
-            DateTimeSet "1" o-up- "many" DateTimeSetEntry : contains
+            DateTimeSet "1" o-up- "0..N" DateTimeSetEntry: contains
         }
 
         package metrics {
@@ -59,8 +59,8 @@ package domain {
             DashboardProjectMetrics *-- PerformanceMetric
             DashboardProjectMetrics *-- ProjectBuildStatusMetric
             DashboardProjectMetrics *-- BuildNumberMetric
-            BuildResultMetric "1" o-down- "0..N" BuildResult : contains
-            PerformanceMetric "1" o-down- "0..N" BuildPerformance : contains
+            BuildResultMetric "1" *-down- "0..N" BuildResult: contains
+            PerformanceMetric "1" *-down- "0..N" BuildPerformance: contains
             BuildPerformance -down-|> DateTimeSetEntry
         }
     }
@@ -83,7 +83,7 @@ package domain {
         }
 
         ReceiveProjectMetricsUpdates -down-> ProjectIdParam: uses
-        ReceiveProjectMetricsUpdates --> DashboardProjectMetrics: creates
+        ReceiveProjectMetricsUpdates -> DashboardProjectMetrics: creates
     }
 
     package repositories {
@@ -94,7 +94,9 @@ package domain {
         }
     }
 
+    ReceiveProjectMetricsUpdates -up-> MetricsRepository : uses
     usecases -[hidden]down-- repositories
+    entities -[hidden]down-- repositories
 }
 
 @enduml

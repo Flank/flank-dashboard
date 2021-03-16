@@ -29,7 +29,9 @@ The following subsections cover the in-progress builds introduction into Metrics
 
 #### Domain Layer
 
-The domain layer of the `dashboard` module provides the `MetricsRepository` interface, use cases to interact with the repository, and entities with metrics data to display on the dashboard page. The `ReceiveProjectMetricsUpdates` use case is responsible for subscribing to project builds and calculating metrics using these builds. The following table describes changes in metrics calculation according to the in-progress builds integration.
+The domain layer of the `dashboard` module provides the `MetricsRepository` interface, use cases to interact with the repository, and entities with metrics data to display on the dashboard page. The `ReceiveProjectMetricsUpdates` use case is responsible for subscribing to project builds and calculating metrics using these builds. 
+
+The following table describes changes in metrics calculation according to the in-progress builds integration:
 
 |Metric|Required Changes|
 |---|---|
@@ -79,7 +81,15 @@ Furthermore, as the in-progress builds have no stable `duration`, the state and 
 
 Also, the `BuildResultPopupViewModel` shouldn't require the given duration to be non-null anymore. This is strongly related to the UI design changes and the fact that the popup doesn't display duration for in-progress builds.
 
-The following class diagram demonstrates the updated structure of view models related to project metrics and builds:
+##### Timer State
+
+The [Widgets](#widgets) section below describes the changes related to widgets implementation. One of these widgets is the `BuildResultBarGraph` that is to animate a list of bars if this list contains in-progress build(s). To imitate the building process, the graph rebuilds bars every second changing their height that stands for durations of builds. But placing the logic with triggering rebuild every second inside the widget makes this widget too complex and hard to test. Moreover, this solution breaks the requirements of the application's architecture - UI elements should contain as little logic as possible. The `TimerNotifier` is to handle the problem.
+
+The `TimerNotifier` provides a convenient way to work with the `Timer` and subscribe to the timer ticks. Using the `ChangeNotifierProxyProvider` the `ProjectMetricsNotifier` starts timer calling the `TimerNotifier.start(Duration period)` once builds are loaded. The `period` is the duration to pass as a time between ticks of the timer (consider the [Timer.periodic](https://api.dart.dev/stable/2.12.1/dart-async/Timer/Timer.periodic.html) documentation to know more details). The widgets then subscribe to the `TimerNotifier` changes and react on ticks.
+
+To sum up, implementing the `TimerNotifier` simplifies testing bar graphs for builds results, reduces logic within widgets implementation, and optimizes the application.
+
+The following class diagram demonstrates the updated structure of states and view models related to project metrics and builds:
 
 ![Presentation Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/web_in_progress_builds_doc/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_class_diagram.puml)
 
@@ -100,7 +110,7 @@ The following table lists the UI elements that require changes (or should be cre
 
 The most important fact is that the in-progress build should be displayed as an animated bar. This results in changes with creating an additional widget that would apply the build result popup with appropriate graph indicator and padding to the bar itself. This additional widget is `BuildResultBarComponent` meaning that this is not the bar itself - it's a component that displays the bar. The bar, in its turn, requires changes to select which of low-level bar implementations to show: `MetricsColoredBar` for finished builds or `MetricsAnimatedBar` for in-progress builds.
 
-The build result bar graph also requires changes with moving part of its logic to the top widget. This simplifies the widget structure and improves testing as the bar graph itself becomes more complex. Thus, the displaying logic with missing bars and builds date range should be a part of `BuildResultsMetricGraph`. And the `BuildResultBarGraph` should be responsible for displaying a graph itself without missing bars. The bar graph also should be changed to support rebuilding bars if the list of build results contains in-progress builds. For this purpose, we should create a `BuildResultDurationStrategy` that would detect the build result type and return the build's duration. Using this strategy, the `BuildResultBarGraph` can provide data to display to the low-level `BarGraph`. Also, when detecting in-progress builds, the `BuildResultBarGraph` should enable a timer that would rebuild a bar graph providing a smooth animation for in-progress builds.
+The build result bar graph also requires changes with moving part of its logic to the top widget. This simplifies the widget structure and improves testing as the bar graph itself becomes more complex. Thus, the displaying logic with missing bars and builds date range should be a part of `BuildResultsMetricGraph`. And the `BuildResultBarGraph` should be responsible for displaying a graph itself without missing bars. The bar graph also should be changed to support rebuilding bars if the list of build results contains in-progress builds. For this purpose, we should create a `BuildResultDurationStrategy` that would detect the build result type and return the build's duration. Using this strategy, the `BuildResultBarGraph` can provide data to display to the low-level `BarGraph`. Also, when detecting in-progress builds, the `BuildResultBarGraph` should subscribe to the `TimerNotifier` updates and rebuild the graph. This provides a smooth animation for in-progress builds.
 
 About other style changes consider the [Appearance Changes Notes](#appearance-changes-notes) section.
 

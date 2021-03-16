@@ -15,6 +15,13 @@ package presentation {
             - _getBuildResultMetrics(BuildResultMetric metrics): BuildResultMetricViewModel
             ..
         }
+
+        class TimerNotifier {
+            - _timer: Timer
+            + start(Duration period): void
+            + stop(): void
+            - _tick(): void
+        }
     }
 
     package view_models {
