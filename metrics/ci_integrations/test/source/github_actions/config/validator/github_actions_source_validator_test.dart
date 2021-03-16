@@ -34,14 +34,6 @@ void main() {
     );
     const result = FieldValidationResult.success();
 
-    final config = GithubActionsSourceConfig(
-      accessToken: accessToken,
-      repositoryOwner: repositoryOwner,
-      repositoryName: repositoryName,
-      workflowIdentifier: workflowId,
-      jobName: jobName,
-      coverageArtifactName: coverageArtifactName,
-    );
     final auth = BearerAuthorization(accessToken);
     final validationDelegate = _GithubActionsSourceValidationDelegateMock();
     final validationResultBuilder = _ValidationResultBuilderMock();
@@ -53,6 +45,26 @@ void main() {
     final validationResult = ValidationResult({
       field: result,
     });
+
+    GithubActionsSourceConfig config;
+
+    GithubActionsSourceConfig createConfig({
+      String accessToken = accessToken,
+      String repositoryOwner = repositoryOwner,
+      String repositoryName = repositoryName,
+      String workflowIdentifier = workflowId,
+      String jobName = jobName,
+      String coverageArtifactName = coverageArtifactName,
+    }) {
+      return GithubActionsSourceConfig(
+        accessToken: accessToken,
+        repositoryOwner: repositoryOwner,
+        repositoryName: repositoryName,
+        workflowIdentifier: workflowId,
+        jobName: jobName,
+        coverageArtifactName: coverageArtifactName,
+      );
+    }
 
     PostExpectation<Future<InteractionResult<GithubToken>>> whenValidateAuth() {
       return when(validationDelegate.validateAuth(auth));
@@ -86,6 +98,10 @@ void main() {
         validationDelegate.validateWorkflowId(workflowId),
       );
     }
+
+    setUpAll(() async {
+      config = createConfig();
+    });
 
     tearDown(() {
       reset(validationDelegate);
@@ -129,26 +145,48 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'token invalid' additional context if the access token is null",
+      ".validate() sets the unknown access token field validation result with the 'token not specified' additional context if the access token is null",
       () async {
-        final config = GithubActionsSourceConfig(
-          repositoryOwner: repositoryOwner,
-          repositoryName: repositoryName,
-          workflowIdentifier: workflowId,
-          jobName: jobName,
-          coverageArtifactName: coverageArtifactName,
-          accessToken: null,
-        );
+        final config = createConfig(accessToken: null);
+        await validator.validate(config);
 
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.accessToken,
+            const FieldValidationResult.unknown(
+              GithubActionsStrings.tokenNotSpecified,
+            ),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets empty results with the unknown field validation result with the 'token not specified' additional context if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenInvalidInterruptReason,
+              GithubActionsStrings.tokenNotSpecifiedInterruptReason,
             ),
           ),
         ).called(1);
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
       },
     );
 

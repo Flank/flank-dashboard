@@ -6,8 +6,12 @@
 /// Holds the strings used across the Github Actions source integration.
 class GithubActionsStrings {
   static const String tokenInvalid = 'The access token is invalid.';
+  static const String tokenNotSpecified =
+      'The access token is not specified in the provided configuration.';
   static const String tokenInvalidInterruptReason =
       "Can't be validated as the provided access token is invalid.";
+  static const String tokenNotSpecifiedInterruptReason =
+      "Can't be validated since the access token is not specified in the provided configuration.";
   static const String repositoryOwnerNotFound =
       'A repository owner with a specified name does not exist.';
   static const String repositoryOwnerInvalidInterruptReason =

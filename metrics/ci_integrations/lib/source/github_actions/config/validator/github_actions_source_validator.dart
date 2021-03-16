@@ -43,8 +43,13 @@ class GithubActionsSourceValidator
     final accessToken = config.accessToken;
 
     if (accessToken == null) {
+      _setUnknownFieldValidationResult(
+        GithubActionsSourceConfigField.accessToken,
+        GithubActionsStrings.tokenNotSpecified,
+      );
+
       return _finalizeValidationResult(
-        GithubActionsStrings.tokenInvalidInterruptReason,
+        GithubActionsStrings.tokenNotSpecifiedInterruptReason,
       );
     }
 
@@ -146,6 +151,18 @@ class GithubActionsSourceValidator
     }
 
     return FieldValidationResult.success(additionalContext);
+  }
+
+  /// Sets the [FieldValidationResult.unknown] with the given
+  /// [additionalContext] to the given [field] using
+  /// the [validationResultBuilder].
+  void _setUnknownFieldValidationResult(
+    GithubActionsSourceConfigField field,
+    String additionalContext,
+  ) {
+    final validationResult = FieldValidationResult.unknown(additionalContext);
+
+    validationResultBuilder.setResult(field, validationResult);
   }
 
   /// Sets the empty results of the [validationResultBuilder] using
