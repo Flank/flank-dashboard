@@ -46,8 +46,6 @@ void main() {
       field: result,
     });
 
-    GithubActionsSourceConfig config;
-
     GithubActionsSourceConfig createConfig({
       String accessToken = accessToken,
       String repositoryOwner = repositoryOwner,
@@ -65,6 +63,8 @@ void main() {
         coverageArtifactName: coverageArtifactName,
       );
     }
+
+    final config = createConfig();
 
     PostExpectation<Future<InteractionResult<GithubToken>>> whenValidateAuth() {
       return when(validationDelegate.validateAuth(auth));
@@ -98,10 +98,6 @@ void main() {
         validationDelegate.validateWorkflowId(workflowId),
       );
     }
-
-    setUpAll(() async {
-      config = createConfig();
-    });
 
     tearDown(() {
       reset(validationDelegate);
@@ -148,6 +144,7 @@ void main() {
       ".validate() sets the unknown access token field validation result with the 'token not specified' additional context if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
+
         await validator.validate(config);
 
         verify(
@@ -165,6 +162,7 @@ void main() {
       ".validate() sets empty results with the unknown field validation result with the 'token not specified' additional context if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
+
         await validator.validate(config);
 
         verify(
@@ -178,15 +176,40 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result built by the validation result builder if the access token is null",
+      ".validate() does not validate the repository owner if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
 
-        when(validationResultBuilder.build()).thenReturn(validationResult);
+        await validator.validate(config);
 
-        final actualResult = await validator.validate(config);
+        verifyNever(
+          validationDelegate.validateRepositoryOwner(repositoryOwner),
+        );
+      },
+    );
 
-        expect(actualResult, equals(validationResult));
+    test(
+      ".validate() does not validate the repository name if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateRepositoryName(
+          repositoryOwner: repositoryOwner,
+          repositoryName: repositoryName,
+        ));
+      },
+    );
+
+    test(
+      ".validate() does not validate the workflow identifier if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        await validator.validate(config);
+
+        verifyNever(validationDelegate.validateWorkflowId(workflowId));
       },
     );
 
