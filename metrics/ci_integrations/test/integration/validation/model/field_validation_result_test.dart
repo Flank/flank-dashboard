@@ -10,6 +10,7 @@ import 'package:ci_integration/integration/validation/model/field_validation_res
 void main() {
   group("FieldValidationResult", () {
     const additionalContext = 'context';
+    const data = 'data';
 
     const successResult = FieldValidationResult.success();
     const failureResult = FieldValidationResult.failure();
@@ -26,11 +27,33 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with the given additional context",
+      ".success() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.success(additionalContext);
+        const result = FieldValidationResult.success(additionalContext, data);
 
         expect(result.additionalContext, equals(additionalContext));
+        expect(result.data, equals(data));
+      },
+    );
+
+    test(
+      ".isSuccess returns true if the result is successful",
+      () {
+        expect(successResult.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".isFailure returns false if the result is successful",
+      () {
+        expect(successResult.isFailure, isFalse);
+      },
+    );
+
+    test(
+      ".isUnknown returns false if the result is successful",
+      () {
+        expect(successResult.isUnknown, isFalse);
       },
     );
 
@@ -45,11 +68,33 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with the given additional context",
+      ".failure() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.failure(additionalContext);
+        const result = FieldValidationResult.failure(additionalContext, data);
 
         expect(result.additionalContext, equals(additionalContext));
+        expect(result.data, equals(data));
+      },
+    );
+
+    test(
+      ".isSuccess returns false if the result is failure",
+      () {
+        expect(failureResult.isSuccess, isFalse);
+      },
+    );
+
+    test(
+      ".isFailure returns true if the result is failure",
+      () {
+        expect(failureResult.isFailure, isTrue);
+      },
+    );
+
+    test(
+      ".isUnknown returns false if the result is failure",
+      () {
+        expect(failureResult.isUnknown, isFalse);
       },
     );
 
@@ -64,11 +109,33 @@ void main() {
     );
 
     test(
-      ".unknown() creates an instance with the given additional context",
+      ".unknown() creates an instance with the given parameters",
       () {
-        const result = FieldValidationResult.unknown(additionalContext);
+        const result = FieldValidationResult.unknown(additionalContext, data);
 
         expect(result.additionalContext, equals(additionalContext));
+        expect(result.data, equals(data));
+      },
+    );
+
+    test(
+      ".isSuccess returns false if the result is unknown",
+      () {
+        expect(unknownResult.isSuccess, isFalse);
+      },
+    );
+
+    test(
+      ".isFailure returns false if the result is unknown",
+      () {
+        expect(unknownResult.isFailure, isFalse);
+      },
+    );
+
+    test(
+      ".isUnknown returns true if the result is unknown",
+      () {
+        expect(unknownResult.isUnknown, isTrue);
       },
     );
   });
