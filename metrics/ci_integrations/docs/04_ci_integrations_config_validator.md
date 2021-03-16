@@ -49,14 +49,6 @@ Consider the following package structure for the abstract and base classes of th
 >           * config_validator_factory.dart
 >         * validation_delegate/
 >           * validation_delegate.dart
->     * source/
->       * config/
->         * validation_delegate/
->           * source_validation_delegate.dart
->     * destination/
->       * config/
->         * validation_delegate/
->           * destination_validation_delegate.dart
 >   * validation/
 >     * model/
 >       * builder
