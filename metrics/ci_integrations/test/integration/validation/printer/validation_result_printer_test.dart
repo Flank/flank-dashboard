@@ -27,7 +27,9 @@ void main() {
     final secondField = BuildkiteSourceConfigField.organizationSlug;
     final thirdField = BuildkiteSourceConfigField.pipelineSlug;
 
-    const successResult = FieldValidationResult.success(additionalContext);
+    const successResult = FieldValidationResult.success(
+      additionalContext: additionalContext,
+    );
     const failureResult = FieldValidationResult.failure();
     const unknownResult = FieldValidationResult.unknown();
 
