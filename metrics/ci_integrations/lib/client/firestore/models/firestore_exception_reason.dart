@@ -7,11 +7,11 @@ enum FirestoreExceptionReason {
   /// or does not exist.
   consumerInvalid,
 
-  /// Indicates that the provided Firebase project with the given project
+  /// Indicates that the Firebase project with the given project
   /// identifier is not found.
   notFound,
 
-  /// Indicates that the provided Firebase project with the given project
+  /// Indicates that the Firebase project with the given project
   /// identifier is deleted.
   projectDeleted,
 

@@ -11,8 +11,8 @@ class FirestoreExceptionReasonMapper
   /// is not valid or project with such identifier does not exist.
   static const String consumerInvalid = 'CONSUMER_INVALID';
 
-  /// An exception reason indicating that the provided Firebase project with the
-  /// given project identifier is not found.
+  /// An exception reason indicating that the Firebase project with the given
+  /// project identifier is not found.
   static const String notFound = 'NOT_FOUND';
 
   /// An exception reason indicating that the provided Firebase project is
