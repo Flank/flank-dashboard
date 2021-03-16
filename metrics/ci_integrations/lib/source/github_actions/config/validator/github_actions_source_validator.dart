@@ -117,7 +117,44 @@ class GithubActionsSourceValidator
       );
     }
 
-    return _finalizeValidationResult(GithubActionsStrings.notImplemented);
+    final jobName = config.jobName;
+    final jobNameInteraction = await validationDelegate.validateJobName(
+      workflowId: workflowId,
+      jobName: jobName,
+    );
+
+    if (jobNameInteraction.isSuccess && jobNameInteraction.result == null) {
+      _setUnknownFieldValidationResult(
+        GithubActionsSourceConfigField.jobName,
+        jobNameInteraction.message,
+      );
+    } else {
+      _processInteraction(
+        interaction: jobNameInteraction,
+        field: GithubActionsSourceConfigField.jobName,
+      );
+    }
+
+    final coverageArtifact = config.coverageArtifactName;
+    final artifactInteraction =
+        await validationDelegate.validateCoverageArtifactName(
+      workflowId: workflowId,
+      coverageArtifactName: coverageArtifact,
+    );
+
+    if (artifactInteraction.isSuccess && artifactInteraction.result == null) {
+      _setUnknownFieldValidationResult(
+        GithubActionsSourceConfigField.coverageArtifactName,
+        artifactInteraction.message,
+      );
+    } else {
+      _processInteraction(
+        interaction: artifactInteraction,
+        field: GithubActionsSourceConfigField.coverageArtifactName,
+      );
+    }
+
+    return validationResultBuilder.build();
   }
 
   /// Processes the given [interaction].
