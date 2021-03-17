@@ -106,10 +106,6 @@ void main() {
     PostExpectation<Future<InteractionResult<WorkflowRunJob>>>
         whenValidateJobName() {
       whenValidateWorkflowId().thenSuccessWith(null, message);
-      when(validationDelegate.validateCoverageArtifactName(
-        workflowId: workflowId,
-        coverageArtifactName: coverageArtifactName,
-      )).thenErrorWith();
 
       return when(
         validationDelegate.validateJobName(
@@ -122,10 +118,6 @@ void main() {
     PostExpectation<Future<InteractionResult<WorkflowRunArtifact>>>
         whenValidateCoverageArtifactName() {
       whenValidateWorkflowId().thenSuccessWith(null, message);
-      when(validationDelegate.validateJobName(
-        workflowId: workflowId,
-        jobName: jobName,
-      )).thenErrorWith();
 
       return when(
         validationDelegate.validateCoverageArtifactName(
@@ -724,6 +716,7 @@ void main() {
       ".validate() sets the successful workflow identifier field validation result if the workflow identifier is valid",
       () async {
         whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenErrorWith();
         whenValidateWorkflowId().thenSuccessWith(null, message);
 
         await validator.validate(config);
@@ -816,9 +809,10 @@ void main() {
     );
 
     test(
-      ".validate() delegates validate job name validation to the validation delegate",
+      ".validate() delegates job name validation to the validation delegate",
       () async {
         whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenErrorWith();
 
         await validator.validate(config);
 
@@ -832,8 +826,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown job name field validation result if the success job name interaction has a null result",
+      ".validate() sets the unknown job name field validation result if the job name validation succeeds with a null interaction result",
       () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
         whenValidateJobName().thenSuccessWith(null, message);
 
         await validator.validate(config);
@@ -848,8 +843,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the successful job name field validation result if the job name is valid",
+      ".validate() sets the successful job name field validation result if the job name validation succeeds with not null interaction result",
       () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
         whenValidateJobName().thenSuccessWith(job, message);
 
         await validator.validate(config);
@@ -864,8 +860,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the failure job name field validation result if the job name is invalid",
+      ".validate() sets the failure job name field validation result if the job name validation fails",
       () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
         whenValidateJobName().thenErrorWith(null, message);
 
         await validator.validate(config);
@@ -880,8 +877,9 @@ void main() {
     );
 
     test(
-      ".validate() delegates validate coverage artifact name validation to the validation delegate",
+      ".validate() delegates coverage artifact name validation to the validation delegate",
       () async {
+        whenValidateJobName().thenErrorWith();
         whenValidateCoverageArtifactName().thenErrorWith();
 
         await validator.validate(config);
@@ -896,8 +894,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown coverage artifact name field validation result if the success coverage artifact name interaction has a null result",
+      ".validate() sets the unknown coverage artifact name field validation result if the coverage artifact name validation succeeds with a null interaction result",
       () async {
+        whenValidateJobName().thenErrorWith();
         whenValidateCoverageArtifactName().thenSuccessWith(null, message);
 
         await validator.validate(config);
@@ -912,8 +911,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the successful coverage artifact name field validation result if the coverage artifact name is valid",
+      ".validate() sets the successful coverage artifact name field validation result if the coverage artifact name validation succeeds with not null interaction result",
       () async {
+        whenValidateJobName().thenErrorWith();
         whenValidateCoverageArtifactName().thenSuccessWith(
           coverageArtifact,
           message,
@@ -931,8 +931,9 @@ void main() {
     );
 
     test(
-      ".validate() sets the failure coverage artifact name field validation result if the coverage artifact name is invalid",
+      ".validate() sets the failure coverage artifact name field validation result if the coverage artifact name validation fails",
       () async {
+        whenValidateJobName().thenErrorWith();
         whenValidateCoverageArtifactName().thenErrorWith(null, message);
 
         await validator.validate(config);
@@ -951,6 +952,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
 
+        whenValidateJobName().thenSuccessWith(job, message);
         whenValidateCoverageArtifactName().thenSuccessWith(
           coverageArtifact,
           message,

@@ -123,17 +123,10 @@ class GithubActionsSourceValidator
       jobName: jobName,
     );
 
-    if (jobNameInteraction.isSuccess && jobNameInteraction.result == null) {
-      _setUnknownFieldValidationResult(
-        GithubActionsSourceConfigField.jobName,
-        jobNameInteraction.message,
-      );
-    } else {
-      _processInteraction(
-        interaction: jobNameInteraction,
-        field: GithubActionsSourceConfigField.jobName,
-      );
-    }
+    _processInteractionOrSetUnknownResult(
+      interaction: jobNameInteraction,
+      field: GithubActionsSourceConfigField.jobName,
+    );
 
     final coverageArtifact = config.coverageArtifactName;
     final artifactInteraction =
@@ -142,22 +135,34 @@ class GithubActionsSourceValidator
       coverageArtifactName: coverageArtifact,
     );
 
-    if (artifactInteraction.isSuccess && artifactInteraction.result == null) {
-      _setUnknownFieldValidationResult(
-        GithubActionsSourceConfigField.coverageArtifactName,
-        artifactInteraction.message,
-      );
-    } else {
-      _processInteraction(
-        interaction: artifactInteraction,
-        field: GithubActionsSourceConfigField.coverageArtifactName,
-      );
-    }
+    _processInteractionOrSetUnknownResult(
+      interaction: artifactInteraction,
+      field: GithubActionsSourceConfigField.coverageArtifactName,
+    );
 
     return validationResultBuilder.build();
   }
 
-  /// Processes the given [interaction].
+  /// Processes the given [interaction] or sets the [field] validation result
+  /// to [FieldValidationResult.unknown].
+  void _processInteractionOrSetUnknownResult({
+    @required InteractionResult interaction,
+    @required GithubActionsSourceConfigField field,
+  }) {
+    if (interaction.isSuccess && interaction.result == null) {
+      _setUnknownFieldValidationResult(
+        field,
+        interaction.message,
+      );
+    } else {
+      _processInteraction(
+        interaction: interaction,
+        field: field,
+      );
+    }
+  }
+
+  /// Processes the given success or failure [interaction].
   ///
   /// Maps the given [interaction] to a [FieldValidationResult] and
   /// sets the [field] validation result in [validationResultBuilder].
