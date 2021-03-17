@@ -1,0 +1,121 @@
+@startuml presentation_layer_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package presentation {
+    package state {
+        class ProjectMetricsNotifier {
+            - _projectMetrics: Map<String, ProjectMetricsTileViewModel>
+            + projectsMetricsTileViewModels: List<ProjectMetricsTileViewModel>
+            ..
+            --
+            - _createProjectMetrics(DashboardProjectMetrics dashboardMetrics, String projectId): void
+            - _getPerformanceMetrics(PerformanceMetric metric): PerformanceSparklineViewModel
+            - _getBuildResultMetrics(BuildResultMetric metrics): BuildResultMetricViewModel
+            ..
+        }
+
+        class TimerNotifier {
+            - _timer: Timer
+            + start(Duration period): void
+            + stop(): void
+            - _tick(): void
+        }
+    }
+
+    package view_models {
+        class BuildNumberScorecardViewModel {
+            + numberOfBuilds: int
+        }
+
+        class BuildResultMetricViewModel {
+            + buildResults: UnmodifiableListView<BuildResultViewModel>
+            + numberOfBuildsToDisplay: int
+            + maxBuildDuration: Duration
+        }
+
+        class BuildResultPopupViewModel {
+            + date: DateTime
+            + duration: Duration
+            + buildStatus: BuildStatus
+        }
+
+        abstract class BuildResultViewModel {
+            + buildResultPopupViewModel: BuildResultPopupViewModel
+            + date: DateTime
+            + buildStatus: BuildStatus
+            + url: String
+        }
+
+        class FinishedBuildResultViewModel {
+            + buildResultPopupViewModel: BuildResultPopupViewModel
+            + date: DateTime
+            + buildStatus: BuildStatus != BuildStatus.inProgress
+            + url: String
+            + duration: Duration
+        }
+
+        class InProgressBuildResultViewModel {
+            + buildResultPopupViewModel: BuildResultPopupViewModel
+            + date: DateTime
+            + buildStatus: BuildStatus = BuildStatus.inProgress
+            + url: String
+        }
+
+        class PercentViewModel {
+            + value: double
+        }
+
+        class CoverageViewModel {
+            + value: double
+        }
+
+        class StabilityViewModel {
+            + value: double
+        }
+
+        class PerformanceSparklineViewModel {
+            + performance: UnmodifiableListView<Point<int>>
+            + value: Duration
+        }
+
+        class ProjectBuildStatusViewModel {
+            + value: BuildStatus
+        }
+
+        class ProjectMetricsTileViewModel {
+            + projectId: String
+            + projectName: String
+            + buildStatus: ProjectBuildStatusViewModel
+            + coverage: CoverageViewModel
+            + stability: StabilityViewModel
+            + buildNumberMetric: BuildNumberScorecardViewModel
+            + performanceSparkline: PerformanceSparklineViewModel
+            + buildResultMetrics: BuildResultMetricViewModel
+        }
+
+        CoverageViewModel -up-|> PercentViewModel
+        StabilityViewModel -up-|> PercentViewModel
+
+        ProjectMetricsTileViewModel -up-> ProjectBuildStatusViewModel: uses
+        ProjectMetricsTileViewModel -up-> BuildNumberScorecardViewModel: uses
+        ProjectMetricsTileViewModel -up-> PerformanceSparklineViewModel: uses
+        ProjectMetricsTileViewModel -up-> BuildResultMetricViewModel: uses
+        ProjectMetricsTileViewModel -up-> CoverageViewModel: uses
+        ProjectMetricsTileViewModel -up-> StabilityViewModel: uses
+
+        BuildResultMetricViewModel -[hidden]> ProjectBuildStatusViewModel
+        ProjectBuildStatusViewModel -[hidden]> BuildNumberScorecardViewModel
+        BuildNumberScorecardViewModel -[hidden]> PerformanceSparklineViewModel
+
+        BuildResultMetricViewModel "1" o-up- "0..N" BuildResultViewModel: contains
+        BuildResultViewModel -right-> BuildResultPopupViewModel: uses
+        FinishedBuildResultViewModel -down-|> BuildResultViewModel
+        InProgressBuildResultViewModel -down-|> BuildResultViewModel
+    }
+
+    ProjectMetricsNotifier "1" -up-> "0..N" ProjectMetricsTileViewModel: creates
+}
+
+@enduml

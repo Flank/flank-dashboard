@@ -1,0 +1,24 @@
+@startuml data_layer_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package data {
+    package deserializer {
+        class BuildDataDeserializer {
+            + {static} //static// fromJson(Map<String, dynamic> json, String id)
+        }
+    }
+
+    package repositories {
+        class FirestoreMetricsRepository {
+            + latestProjectBuildsStream(String projectId, int limit): Stream<List<Build>>
+            + projectBuildsFromDateStream(String projectId, DateTime from): Stream<List<Build>>
+            + lastSuccessfulBuildStream(String projectId): Stream<List<Build>>
+        }
+    }
+}
+
+FirestoreMetricsRepository -up-> BuildDataDeserializer: uses
+
+@enduml
