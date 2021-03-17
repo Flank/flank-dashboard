@@ -152,7 +152,7 @@
     CoolIntegrationDestinationValidator --> CoolIntegrationDestinationConfigField : uses
     CoolIntegrationDestinationValidator --> ValidationResult : provides
     CoolIntegrationDestinationValidator --> ValidationResultBuilder : uses
-'    CoolIntegrationDestinationValidator --> FieldValidationResult : uses
+    CoolIntegrationDestinationValidator --> FieldValidationResult : uses
 
     ValidationResultPrinter --> ValidationResult : uses
     ValidationResult --> FieldValidationResult : uses
