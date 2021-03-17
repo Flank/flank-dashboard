@@ -134,12 +134,12 @@
     CoolIntegrationValidatorFactory --> CoolIntegrationClient : creates
     CoolIntegrationValidatorFactory --> CoolIntegrationDestinationValidationDelegate : creates
 
-    ValidateCommand --|> CiIntegrationCommand
+    ValidateCommand -up-|> CiIntegrationCommand
     ValidateCommand --|> ValidationResultPrinter : uses
 
-    ValidateCommand -left-> CoolIntegrationDestinationValidator : uses
-    ValidateCommand -down-> CoolIntegrationValidatorFactory : uses
-    ValidateCommand -down-> CoolIntegrationDestinationParty : uses
+    ValidateCommand --> CoolIntegrationDestinationValidator : uses
+    ValidateCommand --> CoolIntegrationValidatorFactory : uses
+    ValidateCommand --> CoolIntegrationDestinationParty : uses
 
     CoolIntegrationDestinationParty --> CoolIntegrationValidatorFactory : provides
 
@@ -149,17 +149,18 @@
     CoolIntegrationDestinationConfigField --|> ConfigField
 
     CoolIntegrationDestinationValidator --|> ConfigValidator
-    CoolIntegrationDestinationValidator -down-> CoolIntegrationDestinationConfigField : uses
+    CoolIntegrationDestinationValidator --> CoolIntegrationDestinationConfigField : uses
     CoolIntegrationDestinationValidator --> ValidationResult : provides
     CoolIntegrationDestinationValidator --> ValidationResultBuilder : uses
-    CoolIntegrationDestinationValidator --> FieldValidationResult : uses
+'    CoolIntegrationDestinationValidator --> FieldValidationResult : uses
 
-    ValidationResultPrinter -left-> ValidationResult : uses
-    ValidationResult -right-> FieldValidationResult : uses
-    ValidationResultBuilder -left-> FieldValidationResult : uses
+    ValidationResultPrinter --> ValidationResult : uses
+    ValidationResult --> FieldValidationResult : uses
+    ValidationResultBuilder --> FieldValidationResult : uses
 
     CoolIntegrationValidatorFactory ..|> ConfigValidatorFactory
 
     CoolIntegrationClient -[hidden]-> CoolIntegrationDestinationValidationDelegate
 
+    ConfigField -[hidden]-> ValidationResultPrinter
 @enduml
