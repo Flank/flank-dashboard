@@ -162,7 +162,7 @@ class GithubActionsSourceValidator
     }
   }
 
-  /// Processes the given success or failure [interaction].
+  /// Processes the given [interaction].
   ///
   /// Maps the given [interaction] to a [FieldValidationResult] and
   /// sets the [field] validation result in [validationResultBuilder].
