@@ -22,12 +22,12 @@ package firebase {
             + login(): Future<void>
             + addFirebase(String projectId): Future<void>
             + createWebApp(String projectId): Future<void>
-            + setFirebaseProject(String projectId, String workingDir): Future<void>
-            + clearTarget(String workingDir): Future<void>
-            + applyTarget(String projectId, String workingDir): Future<void>
-            + deployHosting(String workingDir): Future<void>
-            + deployRules(String workingDir): Future<void>
-            + deployFunctions(String workingDir): Future<void>
+            + setFirebaseProject(String projectId, String workingDirectory): Future<void>
+            + clearTarget(String workingDirectory): Future<void>
+            + applyTarget(String projectId, String workingDirectory): Future<void>
+            + deployHosting(String workingDirectory): Future<void>
+            + deployRules(String workingDirectory): Future<void>
+            + deployFunctions(String workingDirectory): Future<void>
             + version(): Future<void>
         }
     }
@@ -81,7 +81,7 @@ package flutter {
         class FlutterCli {
             + version(): Future<void>
             + enableWeb(): Future<void>
-            + buildWeb(String workingDir): Future<void>
+            + buildWeb(String workingDirectory): Future<void>
         }
     }
 }
@@ -122,7 +122,7 @@ package npm {
 
     package cli as npm.cli {
         class NpmCli {
-            + install(String workingDir): Future<void>
+            + install(String workingDirectory): Future<void>
             + version(): Future<void>
         }
     }
