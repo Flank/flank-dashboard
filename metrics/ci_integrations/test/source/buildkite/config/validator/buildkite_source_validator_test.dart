@@ -134,21 +134,21 @@ void main() {
 
     test(
       ".validate() delegates the access token validation to the validation delegate",
-      () {
+      () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(failureFieldValidationResult),
         );
 
         final expectedAuth = BearerAuthorization(accessToken);
 
-        validator.validate(config);
+        await validator.validate(config);
 
         verify(validationDelegate.validateAuth(expectedAuth)).called(1);
       },
     );
 
     test(
-      ".validate() sets the access token field validation result returned by the validation delegate, if the access token is valid",
+      ".validate() sets the access token field validation result returned by the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
           (_) => Future.value(pipelineScopeTokenResult),
@@ -160,23 +160,6 @@ void main() {
           validationResultBuilder.setResult(
             BuildkiteSourceConfigField.accessToken,
             pipelineScopeTokenResult,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      ".validate() sets the access token field validation result returned by the validation delegate, if the access token is invalid",
-      () async {
-        whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
-        await validator.validate(config);
-
-        verify(
-          validationResultBuilder.setResult(
-            BuildkiteSourceConfigField.accessToken,
-            failureFieldValidationResult,
           ),
         ).called(1);
       },
@@ -337,7 +320,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the organization slug field validation result returned by the validation delegate, if the organization slug is valid",
+      ".validate() sets the organization slug field validation result returned by the validation delegate",
       () async {
         whenValidateOrganizationSlug(
           accessToken: organizationScopeToken,
@@ -349,24 +332,6 @@ void main() {
           validationResultBuilder.setResult(
             BuildkiteSourceConfigField.organizationSlug,
             successFieldValidationResult,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      ".validate() sets the organization slug field validation result returned by the validation delegate, if the organization slug is invalid",
-      () async {
-        whenValidateOrganizationSlug(
-          accessToken: allRequiredScopesToken,
-        ).thenAnswer((_) => Future.value(failureFieldValidationResult));
-
-        await validator.validate(config);
-
-        verify(
-          validationResultBuilder.setResult(
-            BuildkiteSourceConfigField.organizationSlug,
-            failureFieldValidationResult,
           ),
         ).called(1);
       },
@@ -482,7 +447,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the pipeline slug field validation result returned by the validation delegate, if the pipeline slug is valid",
+      ".validate() sets the pipeline slug field validation result returned by the validation delegate",
       () async {
         whenValidatePipelineSlug().thenAnswer(
           (_) => Future.value(successFieldValidationResult),
@@ -494,24 +459,6 @@ void main() {
           validationResultBuilder.setResult(
             BuildkiteSourceConfigField.pipelineSlug,
             successFieldValidationResult,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      ".validate() sets the pipeline slug field validation result returned by the validation delegate, if the pipeline slug is invalid",
-      () async {
-        whenValidatePipelineSlug().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
-
-        await validator.validate(config);
-
-        verify(
-          validationResultBuilder.setResult(
-            BuildkiteSourceConfigField.pipelineSlug,
-            failureFieldValidationResult,
           ),
         ).called(1);
       },
