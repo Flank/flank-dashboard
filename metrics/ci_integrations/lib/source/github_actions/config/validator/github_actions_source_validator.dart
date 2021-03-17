@@ -143,8 +143,13 @@ class GithubActionsSourceValidator
     return validationResultBuilder.build();
   }
 
-  /// Processes the given [interaction] or sets the [field] validation result
-  /// to [FieldValidationResult.unknown].
+  /// Processes the given [interaction] taking into account
+  /// the [InteractionResult.result].
+  ///
+  /// Sets the [FieldValidationResult.unknown] if the [field]'s validation
+  /// succeeds with a `null` interaction result.
+  ///
+  /// Otherwise, delegates the [interaction] to the [_processInteraction].
   void _processInteractionWithResult({
     @required InteractionResult interaction,
     @required GithubActionsSourceConfigField field,
