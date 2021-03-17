@@ -9,12 +9,12 @@ class NpmCli extends Cli {
   final String executable = 'npm';
 
   /// Installs dependency packages to the given [workingDirectory].
-  Future<void> install(String workingDirectory) async {
-    await run(['install'], workingDirectory: workingDirectory);
+  Future<void> install(String workingDirectory) {
+    return run(['install'], workingDirectory: workingDirectory);
   }
 
   @override
-  Future<void> version() async {
-    await run(['--version']);
+  Future<void> version() {
+    return run(['--version']);
   }
 }
