@@ -7,14 +7,15 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const promptText = 'promptText';
-  final writerMock = _MockPromptWriter();
-
-  tearDown(() {
-    reset(writerMock);
-  });
-
   group("Prompter", () {
+    const promptText = 'promptText';
+    const confirmInput = 'yes';
+    final writerMock = _PromptWriterMock();
+
+    tearDown(() {
+      reset(writerMock);
+    });
+
     test(
       ".initialize() throws an AssertionError if the given prompt writer is null",
       () {
@@ -29,39 +30,41 @@ void main() {
       () async {
         Prompter.initialize(writerMock);
 
-        await Prompter.prompt(promptText);
+        Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(1);
+        verify(writerMock.prompt(promptText)).called(equals(1));
       },
     );
 
     test(
       ".prompt() requests an input from the user with the given description text",
       () async {
-        await Prompter.prompt(promptText);
+        Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(1);
+        verify(writerMock.prompt(promptText)).called(equals(1));
       },
     );
 
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
       () async {
-        await Prompter.promptConfirm(promptText);
+        Prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
-        verify(writerMock.promptConfirm(promptText)).called(1);
+        verify(writerMock.promptConfirm(promptText, confirmInput))
+            .called(equals(1));
       },
     );
 
     test(
-      ".promptTerminate() terminates a prompt session for the current prompt writer",
-      () async {
-        await Prompter.promptTerminate();
+      ".promptConfirm() applies a default confirm input if it's not specified",
+      () {
+        Prompter.promptConfirm(promptText);
 
-        verify(writerMock.promptTerminate()).called(1);
+        verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
+            .called(equals(1));
       },
     );
   });
 }
 
-class _MockPromptWriter extends Mock implements PromptWriter {}
+class _PromptWriterMock extends Mock implements PromptWriter {}
