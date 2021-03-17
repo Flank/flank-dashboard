@@ -13,8 +13,8 @@ class GCloudCli extends Cli {
     return run(['auth', 'login']);
   }
 
-  /// Creates a GCloud project.
-  Future<void> addProject(String projectId) {
+  /// Creates a new GCloud project with the given [projectId].
+  Future<void> createProject(String projectId) {
     return run(['projects', 'create', projectId]);
   }
 
@@ -23,12 +23,13 @@ class GCloudCli extends Cli {
     return run(['app', 'regions', 'list']);
   }
 
-  /// Adds a project app to the GCloud project.
-  Future<void> addProjectApp(String region, String projectId) {
+  /// Creates a project app located in the provided [region]
+  /// within the project with the given [projectID].
+  Future<void> createProjectApp(String region, String projectId) {
     return run(['app', 'create', '--region', region, '--project', projectId]);
   }
 
-  /// Enables a Firestore API for the GCloud project.
+  /// Enables a Firestore API for the GCloud project with the given [projectId].
   Future<void> enableFirestoreApi(String projectId) {
     return run([
       'services',
@@ -39,7 +40,8 @@ class GCloudCli extends Cli {
     ]);
   }
 
-  /// Creates a Firestore database with the given [region] and [projectID].
+  /// Creates a Firestore database located in the provided [region]
+  /// within the project with the given [projectID].
   Future<void> createDatabase(String region, String projectId) {
     return run([
       'firestore',

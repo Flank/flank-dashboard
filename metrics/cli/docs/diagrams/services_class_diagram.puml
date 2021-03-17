@@ -52,9 +52,9 @@ package gcloud {
     package cli as gcloud.cli {
         class GCloudCli {
             + login(): Future<void>
-            + addProject(String projectId): Future<void>
+            + createProject(String projectId): Future<void>
             + listRegions(): Future<void>
-            + addProjectApp(String region, String projectId): Future<void>
+            + createProjectApp(String region, String projectId): Future<void>
             + enableFirestoreApi() : Future<void>
             + createDatabase(String region, String projectId): Future<void>
             + version() : Future<void>
