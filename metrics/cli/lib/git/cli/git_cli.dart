@@ -8,10 +8,11 @@ class GitCli extends Cli {
   @override
   final String executable = 'git';
 
-  /// Clones a Git repository from the given [repoUrl] into
-  /// a newly created [directory].
-  Future<void> clone(String repoUrl, String directory) {
-    return run(['clone', repoUrl, directory]);
+  /// Clones a Git repository from the given [repoUrl]
+  /// into the [targetDirectory]. Creates the [targetDirectory]
+  /// if it does not exist.
+  Future<void> clone(String repoUrl, String targetDirectory) {
+    return run(['clone', repoUrl, targetDirectory]);
   }
 
   @override
