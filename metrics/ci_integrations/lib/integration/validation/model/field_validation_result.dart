@@ -17,13 +17,13 @@ class FieldValidationResult<T> extends Equatable {
   /// A validated data of this field validation result.
   final T data;
 
-  /// Indicates if this field validation result is successful.
+  /// Indicates whether this field validation result is successful.
   bool get isSuccess => conclusion == FieldValidationConclusion.valid;
 
-  /// Indicates if this field validation result is failure.
+  /// Indicates whether this field validation result is failure.
   bool get isFailure => conclusion == FieldValidationConclusion.invalid;
 
-  /// Indicates if this field validation result is unknown.
+  /// Indicates whether this field validation result is unknown.
   bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
 
   @override
