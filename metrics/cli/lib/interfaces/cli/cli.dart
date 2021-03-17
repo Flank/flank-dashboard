@@ -22,8 +22,8 @@ abstract class Cli {
   /// the [executable]. If the [arguments] is `null`, the empty [List] is used.
   /// The [attachOutput] specifies whether print the [executable]'s output
   /// or not. The [attachOutput] default value is `true`.
-  /// Use [workingDirectory] to set the working directory the [executable] will
-  /// run from. If the [workingDirectory] is `null`, the [executable] will run
+  /// Use the [workingDirectory] to set the directory from where the [executable]
+  /// will run. If the [workingDirectory] is `null`, the [executable] will run
   /// from the current terminal's working directory.
   /// Provide the [stdin] to enable the interaction with the [executable].
   /// If the [stdin] is `null`, the [sharedStdIn] is used.
