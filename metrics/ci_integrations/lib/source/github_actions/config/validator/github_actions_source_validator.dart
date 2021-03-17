@@ -123,7 +123,7 @@ class GithubActionsSourceValidator
       jobName: jobName,
     );
 
-    _processInteractionOrSetUnknownResult(
+    _processInteractionWithResult(
       interaction: jobNameInteraction,
       field: GithubActionsSourceConfigField.jobName,
     );
@@ -135,7 +135,7 @@ class GithubActionsSourceValidator
       coverageArtifactName: coverageArtifact,
     );
 
-    _processInteractionOrSetUnknownResult(
+    _processInteractionWithResult(
       interaction: artifactInteraction,
       field: GithubActionsSourceConfigField.coverageArtifactName,
     );
@@ -145,7 +145,7 @@ class GithubActionsSourceValidator
 
   /// Processes the given [interaction] or sets the [field] validation result
   /// to [FieldValidationResult.unknown].
-  void _processInteractionOrSetUnknownResult({
+  void _processInteractionWithResult({
     @required InteractionResult interaction,
     @required GithubActionsSourceConfigField field,
   }) {
