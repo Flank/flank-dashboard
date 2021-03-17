@@ -125,7 +125,7 @@ Let's take a look at the classes the prompts integration requires in more detail
 
 #### Prompter
 
-The `Prompter` is a main part of the CLI prompts. This class provides provides methods to interact with a user and uses a [PromptWriter](#PromptWriter) to write the prompts.
+The `Prompter` is a main part of the CLI prompts. This class provides methods to interact with a user and uses a [PromptWriter](#PromptWriter) to write the prompts.
 
 #### PromptWriter
 

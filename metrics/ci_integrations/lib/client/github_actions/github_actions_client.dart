@@ -23,6 +23,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -74,6 +75,7 @@ class GithubActionsClient with LoggerMixin {
   /// Creates a new instance of the [GithubActionsClient].
   ///
   /// The [githubApiUrl] defaults to the [GithubActionsConstants.githubApiUrl].
+  /// The [headers] defaults to the [HttpConstants.defaultHeaders].
   ///
   /// Throws an [ArgumentError] if either [githubApiUrl], [repositoryOwner] or
   /// [repositoryName] is `null` or empty.
@@ -82,7 +84,7 @@ class GithubActionsClient with LoggerMixin {
     @required this.repositoryName,
     this.githubApiUrl = GithubActionsConstants.githubApiUrl,
     this.authorization,
-    Map<String, String> headers,
+    Map<String, String> headers = HttpConstants.defaultHeaders,
   }) : _headers = headers {
     StringValidator.checkNotNullOrEmpty(githubApiUrl, name: 'githubApiUrl');
     StringValidator.checkNotNullOrEmpty(
@@ -573,7 +575,6 @@ class GithubActionsClient with LoggerMixin {
       _client.get(url, headers: requestHeaders),
       (_, headers) {
         final githubToken = GithubToken.fromMap(headers);
-
         return InteractionResult.success(result: githubToken);
       },
     );
