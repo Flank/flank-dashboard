@@ -5,9 +5,9 @@ import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
+import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
 
 /// A [ValidationDelegate] for the Buildkite source integration.
 class BuildkiteSourceValidationDelegate implements ValidationDelegate {
@@ -27,14 +27,14 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [auth].
-  Future<InteractionResult<BuildkiteToken>> validateAuth(
+  Future<FieldValidationResult<BuildkiteToken>> validateAuth(
     AuthorizationBase auth,
   ) async {
     final tokenInteraction = await _client.fetchToken(auth);
 
     if (tokenInteraction.isError || tokenInteraction.result == null) {
-      return const InteractionResult.error(
-        message: BuildkiteStrings.tokenInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: BuildkiteStrings.tokenInvalid,
       );
     }
 
@@ -45,8 +45,8 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       (element) => tokenScopes.contains(element),
     );
     if (!containsRequiredScopes) {
-      return const InteractionResult.error(
-        message: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
+      return const FieldValidationResult.failure(
+        additionalContext: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
       );
     }
 
@@ -54,32 +54,32 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       BuildkiteTokenScope.readArtifacts,
     );
     if (!containsScopesToReadArtifacts) {
-      return InteractionResult.success(
-        result: token,
-        message: BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope,
+      return FieldValidationResult.success(
+        additionalContext: BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope,
+        data: token,
       );
     }
 
-    return tokenInteraction;
+    return FieldValidationResult.success(data: token);
   }
 
   /// Validates the given [pipelineSlug].
-  Future<InteractionResult<void>> validatePipelineSlug(
+  Future<FieldValidationResult<void>> validatePipelineSlug(
     String pipelineSlug,
   ) async {
     final pipelineInteraction = await _client.fetchPipeline(pipelineSlug);
 
     if (pipelineInteraction.isError || pipelineInteraction.result == null) {
-      return const InteractionResult.error(
-        message: BuildkiteStrings.pipelineNotFound,
+      return const FieldValidationResult.failure(
+        additionalContext: BuildkiteStrings.pipelineNotFound,
       );
     }
 
-    return const InteractionResult.success();
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [organizationSlug].
-  Future<InteractionResult<void>> validateOrganizationSlug(
+  Future<FieldValidationResult<void>> validateOrganizationSlug(
     String organizationSlug,
   ) async {
     final organizationInteraction = await _client.fetchOrganization(
@@ -88,11 +88,11 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
 
     if (organizationInteraction.isError ||
         organizationInteraction.result == null) {
-      return const InteractionResult.error(
-        message: BuildkiteStrings.organizationNotFound,
+      return const FieldValidationResult.failure(
+        additionalContext: BuildkiteStrings.organizationNotFound,
       );
     }
 
-    return const InteractionResult.success();
+    return const FieldValidationResult.success();
   }
 }
