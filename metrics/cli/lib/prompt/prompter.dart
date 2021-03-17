@@ -24,30 +24,25 @@ class Prompter {
   ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
-  static Future<String> prompt(String text) {
+  static String prompt(String text) {
     assert(_promptWriter != null);
 
     return _promptWriter.prompt(text);
   }
 
-  /// Requests a confirmation input from the user
+  /// Requests a [confirmInput] from the user
   /// with a given description [text].
   ///
-  /// Throws an [AssertionError] if the current
-  /// [PromptWriter] instance is `null`.
-  static Future<bool> promptConfirm(String text) {
-    assert(_promptWriter != null);
-
-    return _promptWriter.promptConfirm(text);
-  }
-
-  /// Terminates a prompt session.
+  /// The [confirmInput] default value is `y`.
   ///
   /// Throws an [AssertionError] if the current
   /// [PromptWriter] instance is `null`.
-  static Future<void> promptTerminate() {
+  static bool promptConfirm(
+    String text, {
+    String confirmInput = 'y',
+  }) {
     assert(_promptWriter != null);
 
-    return _promptWriter.promptTerminate();
+    return _promptWriter.promptConfirm(text, confirmInput);
   }
 }

@@ -1,0 +1,126 @@
+@startuml presentation_layer_class_diagram
+'https://plantuml.com/class-diagram
+
+left to right direction
+hide empty members
+
+package presentation {
+    package widgets as PW {
+        class ProjectBuildStatus {
+            + buildStatus: ProjectBuildStatusViewModel
+            + buildStatusStyleStrategy: ProjectBuildStatusStyleStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBarGraph {
+            + buildResultMetric: BuildResultMetricViewModel
+            + durationStrategy: BuildResultDurationStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBarComponent {
+            + buildResult: BuildResultViewModel
+            + strategy: BuildResultBarPaddingStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBar {
+            + buildResult: BuildResultViewModel
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultPopupCard {
+            + buildResultPopupViewModel: BuildResultPopupViewModel
+            + build(BuildContext): Widget
+        }
+
+        class StabilityCirclePercentage {
+            + stability: StabilityViewModel
+            + build(BuildContext): Widget
+        }
+
+        class CoverageCirclePercentage {
+            + coverage: CoverageViewModel
+            + build(BuildContext): Widget
+        }
+
+        BuildResultBarGraph -left-> BuildResultBarComponent: uses
+        BuildResultBarComponent -left-> BuildResultPopupCard: uses
+        BuildResultBarComponent -left-> BuildResultBar: uses
+    }
+
+    package strategies {
+        class BuildResultBarAppearanceStrategy<MetricsColoredBarStyle, BuildStatus> {
+            +  getWidgetAppearance(MetricsThemeData themeData, BuildStatus status): MetricsColoredBarStyle
+        }
+
+        class BuildResultBarPaddingStrategy {
+            + buildResults: List<BuildResultViewModel>
+            + getBarPadding(BuildResultViewModel): EdgeInsets
+        }
+
+        class BuildResultPopupImageStrategy<BuildStatus> {
+            + getImageAsset(BuildStatus): String
+        }
+
+        class MetricsValueStyleStrategy<CirclePercentageStyle, double> {
+            + {static} //static// highPercentBound: double;
+            + {static} //static// mediumPercentBound: double;
+            + {static} //static// lowPercentBound: double;
+            + getWidgetAppearance(MetricsThemeData metricsTheme, double value): CirclePercentageStyle
+        }
+
+        class ProjectBuildStatusImageStrategy<BuildStatus> {
+            + getImageAsset(BuildStatus): String
+        }
+
+        class ProjectBuildStatusStyleStrategy<ProjectBuildStatusStyle, BuildStatus> {
+            + getWidgetAppearance(MetricsThemeData metricsTheme, BuildStatus value): ProjectBuildStatusStyle
+        }
+
+        class BuildResultDurationStrategy {
+            + getBuildDuration(BuildResultViewModel): Duration
+        }
+    }
+
+    ProjectBuildStatus --> ProjectBuildStatusStyleStrategy: uses
+    ProjectBuildStatus --> ProjectBuildStatusImageStrategy: uses
+    BuildResultBarGraph --> BuildResultDurationStrategy: uses
+    BuildResultBarComponent --> BuildResultBarPaddingStrategy: uses
+    BuildResultBar --> BuildResultBarAppearanceStrategy: uses
+    BuildResultPopupCard --> BuildResultPopupImageStrategy: uses
+    StabilityCirclePercentage --> MetricsValueStyleStrategy: uses
+    CoverageCirclePercentage --> MetricsValueStyleStrategy: uses
+}
+
+package common.presentation as CP {
+    package value_image.strategy as valueimage {
+        interface ValueBasedImageAssetStrategy<T> {
+            + {abstract} getImageAsset(T value): String
+        }
+    }
+
+    package metrics_theme.widgets.strategy as theme {
+        interface ValueBasedAppearanceStrategy<ReturnType, ValueType> {
+            + {abstract} getWidgetAppearance(MetricsThemeData themeData, ValueType value): ReturnType
+        }
+    }
+
+    package colored_bar.strategy as coloredbar {
+        interface MetricsColoredBarAppearanceStrategy<MetricsColoredBarStyle, T> {
+            + {abstract} getWidgetAppearance(MetricsThemeData themeData, T value): MetricsColoredBarStyle
+        }
+    }
+
+    ValueBasedAppearanceStrategy <|-- MetricsColoredBarAppearanceStrategy
+    ValueBasedAppearanceStrategy -[hidden]down-> ValueBasedImageAssetStrategy
+    MetricsColoredBarAppearanceStrategy -[hidden]left--> ValueBasedImageAssetStrategy
+}
+
+BuildResultBarAppearanceStrategy .|> MetricsColoredBarAppearanceStrategy
+ProjectBuildStatusStyleStrategy ..|> ValueBasedAppearanceStrategy
+MetricsValueStyleStrategy ..|> ValueBasedAppearanceStrategy
+BuildResultPopupImageStrategy ..|> ValueBasedImageAssetStrategy
+ProjectBuildStatusImageStrategy ...|> ValueBasedImageAssetStrategy
+
+@enduml
