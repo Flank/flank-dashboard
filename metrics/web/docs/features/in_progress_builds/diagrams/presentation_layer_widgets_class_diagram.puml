@@ -1,0 +1,136 @@
+@startuml presentation_layer_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package presentation {
+    package widgets as PW {
+        class ProjectMetricsTile {
+            + projectMetricsViewModel: ProjectMetricsTileViewModel
+            + build(BuildContext): Widget
+        }
+
+        class ProjectBuildStatus {
+            + buildStatus: ProjectBuildStatusViewModel
+            + buildStatusStyleStrategy: ProjectBuildStatusStyleStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultsMetricGraph {
+            + buildResultMetric: BuildResultMetricViewModel
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBarGraph {
+            + buildResultMetric: BuildResultMetricViewModel
+            + durationStrategy: BuildResultDurationStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBarComponent {
+            + buildResult: BuildResultViewModel
+            + strategy: BuildResultBarPaddingStrategy
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultBar {
+            + buildResult: BuildResultViewModel
+            + build(BuildContext): Widget
+        }
+
+        class BuildResultPopupCard {
+            + buildResultPopupViewModel: BuildResultPopupViewModel
+            + build(BuildContext): Widget
+        }
+
+        class PerformanceSparklineGraph {
+            + performanceSparkline: PerformanceSparklineViewModel
+            + build(BuildContext): Widget
+        }
+
+        class BuildNumberScorecard {
+            + buildNumberMetric: BuildNumberScorecardViewModel
+            + build(BuildContext): Widget
+        }
+
+        class StabilityCirclePercentage {
+            + stability: StabilityViewModel
+            + build(BuildContext): Widget
+        }
+
+        class CoverageCirclePercentage {
+            + coverage: CoverageViewModel
+            + build(BuildContext): Widget
+        }
+
+        class StyledCirclePercentage {
+            + appearanceStrategy: ValueBasedAppearanceStrategy<CirclePercentageStyle, double>
+            + percent: PercentViewModel
+        }
+
+        ProjectMetricsTile -right-> ProjectBuildStatus: uses
+        ProjectMetricsTile -right-> PerformanceSparklineGraph: uses
+        ProjectMetricsTile -right-> BuildNumberScorecard: uses
+        ProjectMetricsTile --> BuildResultsMetricGraph: uses
+        ProjectMetricsTile --> StabilityCirclePercentage: uses
+        ProjectMetricsTile --> CoverageCirclePercentage: uses
+
+        ProjectBuildStatus -[hidden]down-> PerformanceSparklineGraph
+        PerformanceSparklineGraph -[hidden]down-> BuildNumberScorecard
+
+        StabilityCirclePercentage --> StyledCirclePercentage: uses
+        CoverageCirclePercentage --> StyledCirclePercentage: uses
+
+        BuildResultsMetricGraph --> BuildResultBarGraph: uses
+        BuildResultBarGraph --> BuildResultBarComponent: uses
+        BuildResultBarComponent --> BuildResultPopupCard: uses
+        BuildResultBarComponent --> BuildResultBar: uses
+    }
+}
+
+package common.presentation {
+    package colored_bar.widgets {
+        class MetricsColoredBar<T> {
+            + strategy: MetricsColoredBarAppearanceStrategy<T>
+            + value: T
+            + height: double
+            + isHovered: bool
+            + build(BuildContext): Widget
+        }
+    }
+
+    package graph_indicator.widgets {
+        abstract class GraphIndicator {
+            + build(BuildContext): Widget
+            + {abstract} selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class NegativeGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class NeutralGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+
+        class PositiveGraphIndicator extends GraphIndicator {
+            + build(BuildContext): Widget
+            + selectStyle(GraphIndicatorAttentionLevel): GraphIndicatorStyle
+        }
+    }
+
+    package widgets {
+        class MetricsAnimatedBar {
+            + lottieAsset: String
+            + build(BuildContext): Widget
+        }
+    }
+}
+
+BuildResultBar -down-> MetricsColoredBar: uses
+BuildResultBar -down-> MetricsAnimatedBar: uses
+BuildResultBarComponent -down-> GraphIndicator: uses
+
+@enduml

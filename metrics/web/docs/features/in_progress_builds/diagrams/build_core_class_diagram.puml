@@ -1,0 +1,53 @@
+@startuml build_core_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package data.model as DM {
+    interface DataModel {
+        + toJson(): Map<String, dynamic>
+    }
+
+    class BuildData implements DataModel {
+        + id: String
+        + projectId: String
+        + buildNumber: int
+        + startedAt: DateTime
+        + buildStatus: BuildStatus
+        + duration: Duration
+        + workflowName: String
+        + url: String
+        + apiUrl: String
+        + coverage: Percent
+        + copyWith(): BuildData
+        + toJson(): Map<String, dynamic>
+    }
+}
+
+package domain.entities as DE {
+    class Build {
+        + id: String
+        + projectId: String
+        + buildNumber: int
+        + startedAt: DateTime
+        + buildStatus: BuildStatus
+        + duration: Duration
+        + workflowName: String
+        + url: String
+        + apiUrl: String
+        + coverage: Percent
+    }
+}
+
+BuildData -left-|> Build
+Build -up-> BuildStatus: uses
+BuildData -up-> BuildStatus: uses
+
+enum BuildStatus {
+    **inProgress**
+    successful
+    failed
+    unknown
+}
+
+@enduml
