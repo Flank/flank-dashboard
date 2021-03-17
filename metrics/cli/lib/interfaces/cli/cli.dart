@@ -18,15 +18,13 @@ abstract class Cli {
   /// Starts a process running [executable] in the [workingDirectory]
   /// with the specified [arguments].
   ///
-  /// If the [arguments] is `null`, the empty [List] is used.
-  ///
+  /// The [arguments] is a specified [List] of arguments passed to
+  /// the [executable]. If the [arguments] is `null`, the empty [List] is used.
   /// The [attachOutput] specifies whether print the [executable]'s output
-  /// or not.
-  /// The [attachOutput] default value is `true`.
-  ///
-  /// If the [workingDirectory] is `null`, the [executable] will run from
-  /// the current terminal's working directory.
-  ///
+  /// or not. The [attachOutput] default value is `true`.
+  /// Use [workingDirectory] to set the working directory the [executable] will
+  /// run from. If the [workingDirectory] is `null`, the [executable] will run
+  /// from the current terminal's working directory.
   /// Provide the [stdin] to enable the interaction with the [executable].
   /// If the [stdin] is `null`, the [sharedStdIn] is used.
   Future<ProcessResult> run(
