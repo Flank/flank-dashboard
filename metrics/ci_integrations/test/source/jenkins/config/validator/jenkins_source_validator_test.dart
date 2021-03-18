@@ -12,6 +12,7 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../../test_utils/matchers.dart';
 import '../../../../test_utils/mock/validation_result_builder_mock.dart';
 
 void main() {
@@ -123,7 +124,7 @@ void main() {
 
         await validator.validate(config);
 
-        verify(validationDelegate.validateJenkinsUrl(url)).called(1);
+        verify(validationDelegate.validateJenkinsUrl(url)).called(once);
       },
     );
 
@@ -139,7 +140,7 @@ void main() {
             JenkinsSourceConfigField.url,
             failureResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -155,7 +156,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -210,7 +211,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -265,7 +266,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -323,7 +324,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -368,7 +369,7 @@ void main() {
 
         await validator.validate(config);
 
-        verify(validationDelegate.validateAuth(auth)).called(1);
+        verify(validationDelegate.validateAuth(auth)).called(once);
       },
     );
 
@@ -384,7 +385,7 @@ void main() {
             JenkinsSourceConfigField.username,
             failureResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -400,7 +401,7 @@ void main() {
             JenkinsSourceConfigField.apiKey,
             failureResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -416,7 +417,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -450,7 +451,7 @@ void main() {
 
         await validator.validate(config);
 
-        verify(validationDelegate.validateJobName(jobName)).called(1);
+        verify(validationDelegate.validateJobName(jobName)).called(once);
       },
     );
 
@@ -466,7 +467,7 @@ void main() {
             JenkinsSourceConfigField.jobName,
             failureResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
