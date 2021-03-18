@@ -309,7 +309,7 @@ void main() {
       () async {
         whenValidateOrganizationSlug(
           accessToken: organizationScopeToken,
-        ).thenAnswer((_) => Future.value(successFieldValidationResult));
+        ).thenAnswer((_) => Future.value(failureFieldValidationResult));
 
         await validator.validate(config);
 
@@ -435,7 +435,7 @@ void main() {
       ".validate() delegates the pipeline slug validation to the validation delegate",
       () async {
         whenValidatePipelineSlug().thenAnswer(
-          (_) => Future.value(successFieldValidationResult),
+          (_) => Future.value(failureFieldValidationResult),
         );
 
         await validator.validate(config);
