@@ -14,7 +14,7 @@ import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_t
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/debug_menu_notifier_mock.dart';
-import '../../../test_utils/matchers.dart' as matchers;
+import '../../../test_utils/matchers.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
@@ -35,10 +35,11 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given fps monitor view model is null",
       (WidgetTester tester) async {
-        expect(
-          () => DebugMenuFpsMonitorToggle(fpsMonitorViewModel: null),
-          throwsAssertionError,
+        await tester.pumpWidget(
+          const _DebugMenuFpsMonitorToggleTestbed(fpsMonitorViewModel: null),
         );
+
+        expect(tester.takeException(), isAssertionError);
       },
     );
 
@@ -133,7 +134,7 @@ void main() {
 
         await tester.tap(toggleFinder);
 
-        verify(debugMenuNotifier.toggleFpsMonitor()).called(matchers.once);
+        verify(debugMenuNotifier.toggleFpsMonitor()).called(once);
       },
     );
   });
