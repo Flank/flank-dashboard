@@ -13,17 +13,18 @@ class FirebaseCli extends Cli {
     return run(['login', '--interactive']);
   }
 
-  /// Adds Firebase capabilities to the project with the given [projectId].
+  /// Adds the Firebase capabilities to the project with the given [projectId].
   Future<void> addFirebase(String projectId) {
     return run(['projects:addfirebase', projectId]);
   }
 
-  /// Creates Firebase web app with the given [projectId].
+  /// Creates a Firebase web app with the given [projectId].
   Future<void> createWebApp(String projectId) {
     return run(['apps:create', '--project', projectId, "WEB", projectId]);
   }
 
-  /// Sets [projectId] as the default project in the given [workingDirectory].
+  /// Sets the [projectId] as the default project
+  /// in the given [workingDirectory].
   Future<void> setFirebaseProject(String projectId, String workingDirectory) {
     return run(['use', projectId], workingDirectory: workingDirectory);
   }
@@ -49,7 +50,7 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Deploys a project with the associated [target]
+  /// Deploys the project with the associated [target]
   /// to the firebase hosting from the given [workingDirectory].
   Future<void> deployHosting(String target, String workingDirectory) {
     return run(
