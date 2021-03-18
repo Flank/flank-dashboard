@@ -842,7 +842,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.unknown(message),
+            const FieldValidationResult.unknown(additionalContext: message),
           ),
         ).called(1);
       },
@@ -859,7 +859,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -876,7 +876,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -976,7 +976,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.unknown(message),
+            const FieldValidationResult.unknown(additionalContext: message),
           ),
         ).called(1);
       },
@@ -995,7 +995,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -1011,7 +1011,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
