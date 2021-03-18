@@ -41,7 +41,6 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
 
     final jenkinsUrlFieldValidationResult =
         await validationDelegate.validateJenkinsUrl(jenkinsUrl);
-
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.url,
       jenkinsUrlFieldValidationResult,
@@ -70,7 +69,6 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     final authFieldValidationResult = await validationDelegate.validateAuth(
       auth,
     );
-
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.username,
       authFieldValidationResult,
@@ -87,9 +85,9 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     }
 
     final jobName = config.jobName;
+
     final jobNameFieldValidationResult =
         await validationDelegate.validateJobName(jobName);
-
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.jobName,
       jobNameFieldValidationResult,
@@ -98,7 +96,7 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     return validationResultBuilder.build();
   }
 
-  /// Builds an interrupt reason [String] specifying which credentials are
+  /// Builds an interrupt reason [String] specifying which auth credentials are
   /// missing.
   String _buildMissingCredentialsInterruptReason(
     String username,
