@@ -117,7 +117,54 @@ class GithubActionsSourceValidator
       );
     }
 
-    return _finalizeValidationResult(GithubActionsStrings.notImplemented);
+    final jobName = config.jobName;
+    final jobNameInteraction = await validationDelegate.validateJobName(
+      workflowId: workflowId,
+      jobName: jobName,
+    );
+
+    _processInteractionWithResult(
+      interaction: jobNameInteraction,
+      field: GithubActionsSourceConfigField.jobName,
+    );
+
+    final coverageArtifact = config.coverageArtifactName;
+    final artifactInteraction =
+        await validationDelegate.validateCoverageArtifactName(
+      workflowId: workflowId,
+      coverageArtifactName: coverageArtifact,
+    );
+
+    _processInteractionWithResult(
+      interaction: artifactInteraction,
+      field: GithubActionsSourceConfigField.coverageArtifactName,
+    );
+
+    return validationResultBuilder.build();
+  }
+
+  /// Processes the given [interaction] taking into account
+  /// the [InteractionResult.result].
+  ///
+  /// Sets the [FieldValidationResult.unknown] if the [field]'s validation
+  /// succeeds with a `null` interaction result.
+  ///
+  /// Otherwise, delegates the [interaction] to the [_processInteraction].
+  void _processInteractionWithResult({
+    @required InteractionResult interaction,
+    @required GithubActionsSourceConfigField field,
+  }) {
+    if (interaction.isSuccess && interaction.result == null) {
+      _setUnknownFieldValidationResult(
+        field,
+        interaction.message,
+      );
+    } else {
+      _processInteraction(
+        interaction: interaction,
+        field: field,
+      );
+    }
   }
 
   /// Processes the given [interaction].
