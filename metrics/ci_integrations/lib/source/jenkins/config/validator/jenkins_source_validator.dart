@@ -38,9 +38,9 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
   @override
   Future<ValidationResult> validate(JenkinsSourceConfig config) async {
     final jenkinsUrl = config.url;
-
     final jenkinsUrlFieldValidationResult =
         await validationDelegate.validateJenkinsUrl(jenkinsUrl);
+
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.url,
       jenkinsUrlFieldValidationResult,
@@ -65,14 +65,15 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     }
 
     final auth = BasicAuthorization(username, apiKey);
-
     final authFieldValidationResult = await validationDelegate.validateAuth(
       auth,
     );
+
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.username,
       authFieldValidationResult,
     );
+
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.apiKey,
       authFieldValidationResult,
@@ -85,9 +86,9 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     }
 
     final jobName = config.jobName;
-
     final jobNameFieldValidationResult =
         await validationDelegate.validateJobName(jobName);
+
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.jobName,
       jobNameFieldValidationResult,

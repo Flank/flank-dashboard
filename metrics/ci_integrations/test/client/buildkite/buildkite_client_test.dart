@@ -8,6 +8,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -112,6 +113,22 @@ void main() {
       expect(client.organizationSlug, equals(organizationSlug));
       expect(client.authorization, equals(authorization));
     });
+
+    test(
+      ".headers contain HttpConstants.defaultHeaders as a default value",
+      () {
+        final client = BuildkiteClient(
+          buildkiteApiUrl: buildkiteMockServer.url,
+          organizationSlug: organizationSlug,
+          authorization: authorization,
+        );
+        final headers = client.headers;
+
+        HttpConstants.defaultHeaders.forEach((expectedKey, expectedValue) {
+          expect(headers, containsPair(expectedKey, expectedValue));
+        });
+      },
+    );
 
     test(
       ".headers contain a 'content-type' header with the content type json value",

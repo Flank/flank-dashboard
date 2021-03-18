@@ -12,6 +12,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -88,6 +89,20 @@ void main() {
       "throws an ArgumentError if the given URL is empty",
       () {
         expect(() => JenkinsClient(jenkinsUrl: ''), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".headers contain HttpConstants.defaultHeaders as a default value",
+      () {
+        final jenkinsClient = JenkinsClient(
+          jenkinsUrl: jenkinsMockServer.url,
+        );
+        final headers = jenkinsClient.headers;
+
+        HttpConstants.defaultHeaders.forEach((expectedKey, expectedValue) {
+          expect(headers, containsPair(expectedKey, expectedValue));
+        });
       },
     );
 
