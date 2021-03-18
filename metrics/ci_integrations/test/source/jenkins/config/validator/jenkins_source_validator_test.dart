@@ -215,51 +215,6 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the 'missing auth credentials' additional context, if the jenkins api key is missing in the config",
-      () async {
-        final missingCredentials = JenkinsSourceConfigField.apiKey.value;
-        final expectedInterruptReason =
-            JenkinsStrings.missingAuthCredentialsInterruptReason(
-          missingCredentials,
-        );
-        final expectedResult = FieldValidationResult.unknown(
-          additionalContext: expectedInterruptReason,
-        );
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
-
-        await validator.validate(noApiKeyConfig);
-
-        verify(
-          validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
-      },
-    );
-
-    test(
-      ".validate() sets empty results with the 'missing auth credentials' additional context, if the jenkins api key and username are missing in the config",
-      () async {
-        final missingCredentials = [
-          JenkinsSourceConfigField.username,
-          JenkinsSourceConfigField.apiKey
-        ].map((field) => field.value).join(', ');
-        final expectedInterruptReason =
-            JenkinsStrings.missingAuthCredentialsInterruptReason(
-          missingCredentials,
-        );
-        final expectedResult = FieldValidationResult.unknown(
-          additionalContext: expectedInterruptReason,
-        );
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
-
-        await validator.validate(noAuthConfig);
-
-        verify(
-          validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
-      },
-    );
-
-    test(
       ".validate() does not validate the auth, if the jenkins username is missing in the config",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
@@ -294,6 +249,27 @@ void main() {
     );
 
     test(
+      ".validate() sets empty results with the 'missing auth credentials' additional context, if the jenkins api key is missing in the config",
+      () async {
+        final missingCredentials = JenkinsSourceConfigField.apiKey.value;
+        final expectedInterruptReason =
+            JenkinsStrings.missingAuthCredentialsInterruptReason(
+          missingCredentials,
+        );
+        final expectedResult = FieldValidationResult.unknown(
+          additionalContext: expectedInterruptReason,
+        );
+        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+
+        await validator.validate(noApiKeyConfig);
+
+        verify(
+          validationResultBuilder.setEmptyResults(expectedResult),
+        ).called(1);
+      },
+    );
+
+    test(
       ".validate() does not validate the auth, if the jenkins api key is missing in the config",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
@@ -324,6 +300,30 @@ void main() {
         final result = await validator.validate(noApiKeyConfig);
 
         expect(result, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() sets empty results with the 'missing auth credentials' additional context, if the jenkins api key and username are missing in the config",
+      () async {
+        final missingCredentials = [
+          JenkinsSourceConfigField.username,
+          JenkinsSourceConfigField.apiKey
+        ].map((field) => field.value).join(', ');
+        final expectedInterruptReason =
+            JenkinsStrings.missingAuthCredentialsInterruptReason(
+          missingCredentials,
+        );
+        final expectedResult = FieldValidationResult.unknown(
+          additionalContext: expectedInterruptReason,
+        );
+        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+
+        await validator.validate(noAuthConfig);
+
+        verify(
+          validationResultBuilder.setEmptyResults(expectedResult),
+        ).called(1);
       },
     );
 
