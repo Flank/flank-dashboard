@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -6,7 +6,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/matchers.dart';
 
 void main() {
   group("BuildResultViewModel", () {
@@ -22,7 +22,7 @@ void main() {
           date: DateTime.now(),
           buildResultPopupViewModel: buildResultPopupViewModel,
         ),
-        MatcherUtil.throwsAssertionError,
+        throwsAssertionError,
       );
     });
 
@@ -33,7 +33,7 @@ void main() {
           duration: Duration.zero,
           buildResultPopupViewModel: buildResultPopupViewModel,
         ),
-        MatcherUtil.throwsAssertionError,
+        throwsAssertionError,
       );
     });
 
@@ -46,7 +46,7 @@ void main() {
             duration: Duration.zero,
             buildResultPopupViewModel: null,
           ),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );

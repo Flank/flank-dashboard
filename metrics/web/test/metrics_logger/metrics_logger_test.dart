@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/metrics_logger/metrics_logger.dart';
@@ -6,7 +6,7 @@ import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/matcher_util.dart';
+import '../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -27,7 +27,7 @@ void main() {
       () {
         expect(
           () => MetricsLogger.initialize(null),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -37,7 +37,7 @@ void main() {
       () {
         expect(
           () => MetricsLogger.logError(error),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -47,7 +47,7 @@ void main() {
       () {
         expect(
           () => MetricsLogger.setContext(contextKey, contextValue),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -60,7 +60,7 @@ void main() {
         final future = MetricsLogger.logError(error);
 
         expect(future, completes);
-        verify(writerMock.writeError(error)).called(1);
+        verify(writerMock.writeError(error)).called(once);
       },
     );
 
@@ -95,7 +95,7 @@ void main() {
       () async {
         await MetricsLogger.logError(error);
 
-        verify(writerMock.writeError(error)).called(1);
+        verify(writerMock.writeError(error)).called(once);
       },
     );
     test(
@@ -103,7 +103,7 @@ void main() {
       () async {
         await MetricsLogger.setContext(contextKey, contextValue);
 
-        verify(writerMock.setContext(contextKey, contextValue)).called(1);
+        verify(writerMock.setContext(contextKey, contextValue)).called(once);
       },
     );
   });

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -28,7 +28,7 @@ void main() {
       () {
         expect(
           () => MetricsRouteInformationParser(null),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -42,7 +42,7 @@ void main() {
 
         await routeInformationParser.parseRouteInformation(null);
 
-        verify(routeConfigurationFactory.create(null)).called(equals(1));
+        verify(routeConfigurationFactory.create(null)).called(once);
       },
     );
 
@@ -57,7 +57,7 @@ void main() {
           const RouteInformation(location: null),
         );
 
-        verify(routeConfigurationFactory.create(null)).called(equals(1));
+        verify(routeConfigurationFactory.create(null)).called(once);
       },
     );
 

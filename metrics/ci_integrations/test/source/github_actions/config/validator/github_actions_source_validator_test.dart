@@ -19,6 +19,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/extensions/interaction_result_answer.dart';
+import '../../../../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -183,7 +184,7 @@ void main() {
               additionalContext: GithubActionsStrings.tokenNotSpecified,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -201,7 +202,7 @@ void main() {
                   GithubActionsStrings.tokenNotSpecifiedInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -311,7 +312,7 @@ void main() {
 
         validator.validate(config);
 
-        verify(validationDelegate.validateAuth(expectedAuth)).called(1);
+        verify(validationDelegate.validateAuth(expectedAuth)).called(once);
       },
     );
 
@@ -328,7 +329,7 @@ void main() {
             GithubActionsSourceConfigField.accessToken,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -344,7 +345,7 @@ void main() {
             GithubActionsSourceConfigField.accessToken,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -362,7 +363,7 @@ void main() {
                   GithubActionsStrings.tokenInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -457,7 +458,7 @@ void main() {
 
         verify(
           validationDelegate.validateRepositoryOwner(repositoryOwner),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -474,7 +475,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryOwner,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -490,7 +491,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryOwner,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -508,7 +509,7 @@ void main() {
                   GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -593,7 +594,7 @@ void main() {
             repositoryName: repositoryName,
             repositoryOwner: repositoryOwner,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -610,7 +611,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryName,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -626,7 +627,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryName,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -644,7 +645,7 @@ void main() {
                   GithubActionsStrings.repositoryNameInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -713,7 +714,7 @@ void main() {
 
         verify(
           validationDelegate.validateWorkflowId(workflowId),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -731,7 +732,7 @@ void main() {
             GithubActionsSourceConfigField.workflowIdentifier,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -747,7 +748,7 @@ void main() {
             GithubActionsSourceConfigField.workflowIdentifier,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -765,7 +766,7 @@ void main() {
                   GithubActionsStrings.workflowIdInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -827,7 +828,7 @@ void main() {
             workflowId: workflowId,
             jobName: jobName,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -844,7 +845,7 @@ void main() {
             GithubActionsSourceConfigField.jobName,
             const FieldValidationResult.unknown(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -861,7 +862,7 @@ void main() {
             GithubActionsSourceConfigField.jobName,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -878,7 +879,7 @@ void main() {
             GithubActionsSourceConfigField.jobName,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -895,7 +896,7 @@ void main() {
             workflowId: workflowId,
             coverageArtifactName: coverageArtifactName,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -912,7 +913,7 @@ void main() {
             workflowId: workflowId,
             coverageArtifactName: coverageArtifactName,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -962,7 +963,7 @@ void main() {
             workflowId: workflowId,
             coverageArtifactName: coverageArtifactName,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -978,7 +979,7 @@ void main() {
             GithubActionsSourceConfigField.coverageArtifactName,
             const FieldValidationResult.unknown(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -997,7 +998,7 @@ void main() {
             GithubActionsSourceConfigField.coverageArtifactName,
             const FieldValidationResult.success(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -1013,7 +1014,7 @@ void main() {
             GithubActionsSourceConfigField.coverageArtifactName,
             const FieldValidationResult.failure(additionalContext: message),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
