@@ -169,6 +169,7 @@ void main() {
         final expectedHeaders = {
           HttpHeaders.contentTypeHeader: ContentType.json.value,
           HttpHeaders.acceptHeader: ContentType.json.value,
+          HttpHeaders.userAgentHeader: null
         };
 
         expect(headers, equals(expectedHeaders));
