@@ -3,6 +3,8 @@
 
 import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
@@ -33,6 +35,8 @@ void main() {
       scopes: [GithubTokenScope.repo],
     );
     const result = FieldValidationResult.success();
+    const job = WorkflowRunJob(id: 1);
+    const coverageArtifact = WorkflowRunArtifact(id: 1);
 
     final auth = BearerAuthorization(accessToken);
     final validationDelegate = _GithubActionsSourceValidationDelegateMock();
@@ -99,6 +103,31 @@ void main() {
       );
     }
 
+    PostExpectation<Future<InteractionResult<WorkflowRunJob>>>
+        whenValidateJobName() {
+      whenValidateWorkflowId().thenSuccessWith(null, message);
+
+      return when(
+        validationDelegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        ),
+      );
+    }
+
+    PostExpectation<Future<InteractionResult<WorkflowRunArtifact>>>
+        whenValidateCoverageArtifactName() {
+      whenValidateJobName().thenErrorWith();
+      whenValidateWorkflowId().thenSuccessWith(null, message);
+
+      return when(
+        validationDelegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        ),
+      );
+    }
+
     tearDown(() {
       reset(validationDelegate);
       reset(validationResultBuilder);
@@ -151,7 +180,7 @@ void main() {
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenNotSpecified,
+              additionalContext: GithubActionsStrings.tokenNotSpecified,
             ),
           ),
         ).called(1);
@@ -168,7 +197,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenNotSpecifiedInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.tokenNotSpecifiedInterruptReason,
             ),
           ),
         ).called(1);
@@ -228,6 +258,38 @@ void main() {
     );
 
     test(
+      ".validate() does not validate the job name if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() does not validate the coverage artifact name if the access token is null",
+      () async {
+        final config = createConfig(accessToken: null);
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        );
+      },
+    );
+
+    test(
       ".validate() returns a validation result built by the validation result builder if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
@@ -264,7 +326,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -280,7 +342,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -296,7 +358,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.tokenInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -342,6 +405,38 @@ void main() {
     );
 
     test(
+      ".validate() does not validate the job name if the access token validation fails",
+      () async {
+        whenValidateAuth().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() does not validate the coverage artifact name if the access token validation fails",
+      () async {
+        whenValidateAuth().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        );
+      },
+    );
+
+    test(
       ".validate() returns a validation result built by the validation result builder if the access token validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
@@ -377,7 +472,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryOwner,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -393,7 +488,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryOwner,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -409,7 +504,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -438,6 +534,38 @@ void main() {
         await validator.validate(config);
 
         verifyNever(validationDelegate.validateWorkflowId(workflowId));
+      },
+    );
+
+    test(
+      ".validate() does not validate the job name if the repository owner validation fails",
+      () async {
+        whenValidateRepositoryOwner().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() does not validate the coverage artifact name if the repository owner validation fails",
+      () async {
+        whenValidateRepositoryOwner().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        );
       },
     );
 
@@ -480,7 +608,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -496,7 +624,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -512,7 +640,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.repositoryNameInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.repositoryNameInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -527,6 +656,38 @@ void main() {
         await validator.validate(config);
 
         verifyNever(validationDelegate.validateWorkflowId(workflowId));
+      },
+    );
+
+    test(
+      ".validate() does not validate the job name if the repository name validation fails",
+      () async {
+        whenValidateRepositoryName().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() does not validate the coverage artifact name if the repository name validation fails",
+      () async {
+        whenValidateRepositoryName().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        );
       },
     );
 
@@ -559,6 +720,8 @@ void main() {
     test(
       ".validate() sets the successful workflow identifier field validation result if the workflow identifier is valid",
       () async {
+        whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenErrorWith();
         whenValidateWorkflowId().thenSuccessWith(null, message);
 
         await validator.validate(config);
@@ -566,7 +729,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.workflowIdentifier,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -582,7 +745,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.workflowIdentifier,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -598,7 +761,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.workflowIdInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.workflowIdInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -606,28 +770,294 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'not implemented' additional context if the workflow identifier validation is success",
+      ".validate() does not validate the job name if the workflow identifier validation fails",
       () async {
-        whenValidateWorkflowId().thenSuccessWith(null, message);
+        whenValidateWorkflowId().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() does not validate the coverage artifact name if the workflow identifier validation fails",
+      () async {
+        whenValidateWorkflowId().thenErrorWith();
+
+        await validator.validate(config);
+
+        verifyNever(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the workflow identifier validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        whenValidateWorkflowId().thenErrorWith(null, message);
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() delegates job name validation to the validation delegate",
+      () async {
+        whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenErrorWith();
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setEmptyResults(
-            const FieldValidationResult.unknown(
-              GithubActionsStrings.notImplemented,
-            ),
+          validationDelegate.validateJobName(
+            workflowId: workflowId,
+            jobName: jobName,
           ),
         ).called(1);
       },
     );
 
     test(
-      ".validate() returns a validation result built by the validation result builder if the workflow identifier validation is success",
+      ".validate() sets the unknown job name field validation result if the job name validation succeeds with a null interaction result",
+      () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
+        whenValidateJobName().thenSuccessWith(null, message);
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.jobName,
+            const FieldValidationResult.unknown(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets the successful job name field validation result if the job name validation succeeds with not null interaction result",
+      () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
+        whenValidateJobName().thenSuccessWith(job, message);
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.jobName,
+            const FieldValidationResult.success(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets the failure job name field validation result if the job name validation fails",
+      () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
+        whenValidateJobName().thenErrorWith(null, message);
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.jobName,
+            const FieldValidationResult.failure(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() validates the coverage artifact name if the job name validation fails",
+      () async {
+        whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenErrorWith();
+
+        await validator.validate(config);
+
+        verify(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() validates the coverage artifact name if the job name validation succeeds with a null interaction result",
+      () async {
+        whenValidateJobName().thenSuccessWith(null, message);
+        whenValidateCoverageArtifactName().thenErrorWith();
+
+        await validator.validate(config);
+
+        verify(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the job name validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
 
-        whenValidateWorkflowId().thenSuccessWith(null, message);
+        whenValidateJobName().thenErrorWith();
+        whenValidateCoverageArtifactName().thenSuccessWith(
+          coverageArtifact,
+          message,
+        );
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the job name validation succeeds with a null interaction result",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        whenValidateJobName().thenSuccessWith(null, message);
+        whenValidateCoverageArtifactName().thenSuccessWith(
+          coverageArtifact,
+          message,
+        );
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() delegates coverage artifact name validation to the validation delegate",
+      () async {
+        whenValidateCoverageArtifactName().thenErrorWith();
+
+        await validator.validate(config);
+
+        verify(
+          validationDelegate.validateCoverageArtifactName(
+            workflowId: workflowId,
+            coverageArtifactName: coverageArtifactName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets the unknown coverage artifact name field validation result if the coverage artifact name validation succeeds with a null interaction result",
+      () async {
+        whenValidateCoverageArtifactName().thenSuccessWith(null, message);
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.coverageArtifactName,
+            const FieldValidationResult.unknown(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets the successful coverage artifact name field validation result if the coverage artifact name validation succeeds with not null interaction result",
+      () async {
+        whenValidateCoverageArtifactName().thenSuccessWith(
+          coverageArtifact,
+          message,
+        );
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.coverageArtifactName,
+            const FieldValidationResult.success(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() sets the failure coverage artifact name field validation result if the coverage artifact name validation fails",
+      () async {
+        whenValidateCoverageArtifactName().thenErrorWith(null, message);
+
+        await validator.validate(config);
+
+        verify(
+          validationResultBuilder.setResult(
+            GithubActionsSourceConfigField.coverageArtifactName,
+            const FieldValidationResult.failure(additionalContext: message),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the coverage artifact name validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        whenValidateJobName().thenSuccessWith(job, message);
+        whenValidateCoverageArtifactName().thenErrorWith();
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the coverage artifact name validation succeeds with a null interaction result",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        whenValidateJobName().thenSuccessWith(job, message);
+        whenValidateCoverageArtifactName().thenSuccessWith(
+          null,
+          message,
+        );
+
+        final actualResult = await validator.validate(config);
+
+        expect(actualResult, equals(validationResult));
+      },
+    );
+
+    test(
+      ".validate() returns a validation result built by the validation result builder if the config is valid",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+
+        whenValidateJobName().thenSuccessWith(job, message);
+        whenValidateCoverageArtifactName().thenSuccessWith(
+          coverageArtifact,
+          message,
+        );
 
         final actualResult = await validator.validate(config);
 

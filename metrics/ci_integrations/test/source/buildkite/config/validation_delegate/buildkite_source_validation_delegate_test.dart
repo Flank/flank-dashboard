@@ -73,316 +73,297 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the interaction with the client is not successful",
+      ".validateAuth() returns a failure field validation result, if the interaction with the client is not successful",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenErrorWith();
+        when(client.fetchToken(auth)).thenErrorWith();
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the interaction with the client is not successful",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the interaction with the client is not successful",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenErrorWith();
+        when(client.fetchToken(auth)).thenErrorWith();
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(BuildkiteStrings.tokenInvalid));
+        expect(additionalContext, equals(BuildkiteStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns an error if the result of an interaction with the client is null",
+      ".validateAuth() returns a failure field validation result, if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(null);
+        when(client.fetchToken(auth)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the result of an interaction with the client is null",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(null);
+        when(client.fetchToken(auth)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(BuildkiteStrings.tokenInvalid));
+        expect(additionalContext, equals(BuildkiteStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns an error if the fetched token does not have the read builds token scope",
+      ".validateAuth() returns a failure field validation result, if the fetched token does not have the read builds token scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(const BuildkiteToken(scopes: []));
+        when(client.fetchToken(auth)).thenSuccessWith(
+          const BuildkiteToken(scopes: []),
+        );
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token does not have read builds scope message if the fetched token does not have the read builds token scope",
+      ".validateAuth() returns a field validation result with the 'token does not have read builds scope' additional context, if the fetched token does not have the read builds token scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(const BuildkiteToken(scopes: []));
+        when(client.fetchToken(auth)).thenSuccessWith(
+          const BuildkiteToken(scopes: []),
+        );
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
         expect(
-          message,
+          additionalContext,
           equals(BuildkiteStrings.tokenDoesNotHaveReadBuildsScope),
         );
       },
     );
 
     test(
-      ".validateAuth() returns a successful interaction if the fetched token is valid, but does not have the read artifacts scope",
+      ".validateAuth() returns a successful field validation result, if the fetched token is valid, but does not have the read artifacts scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(buildkiteToken);
+        when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction containing the fetched Buildkite token if the fetched token is valid, but does not have the read artifacts scope",
+      ".validateAuth() returns a field validation result with the fetched Buildkite token data, if the fetched token is valid, but does not have the read artifacts scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(buildkiteToken);
+        when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final token = interactionResult.result;
+        final result = await delegate.validateAuth(auth);
+        final token = result.data;
 
         expect(token, equals(buildkiteToken));
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token does not have read artifacts scope message if the fetched is valid, but token does not have the read artifacts token scope",
+      ".validateAuth() returns a field validation result with the 'token does not have read artifacts scope' additional context, if the fetched is valid, but token does not have the read artifacts token scope",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(buildkiteToken);
+        when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
         expect(
-          message,
+          additionalContext,
           equals(BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope),
         );
       },
     );
 
     test(
-      ".validateAuth() returns a successful interaction if the fetched Buildkite token has the read builds and read artifacts scopes",
+      ".validateAuth() returns a successful field validation result, if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(
+        when(client.fetchToken(auth)).thenSuccessWith(
           const BuildkiteToken(scopes: readBuildsAndArtifactsScopes),
         );
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction containing the fetched Buildkite token if the fetched Buildkite token has the read builds and read artifacts scopes",
+      ".validateAuth() returns a field validation result with the fetched Buildkite token data, if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
         const buildkiteToken = BuildkiteToken(
           scopes: readBuildsAndArtifactsScopes,
         );
-        when(
-          client.fetchToken(auth),
-        ).thenSuccessWith(buildkiteToken);
+        when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final token = interactionResult.result;
+        final result = await delegate.validateAuth(auth);
+        final token = result.data;
 
         expect(token, equals(buildkiteToken));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns an error if the interaction with the client is not successful",
+      ".validatePipelineSlug() returns a failure field validation result, if the result of an interaction with the client is not successful",
       () async {
-        when(
-          client.fetchPipeline(pipelineSlug),
-        ).thenErrorWith();
+        when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
-        final interactionResult = await delegate.validatePipelineSlug(
+        final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validatePipelineSlug() returns an interaction with the pipeline not found message if the interaction with the client is not successful",
+      ".validatePipelineSlug() returns a field validation result with the 'pipeline not found' additional context, if the interaction with the client is not successful",
       () async {
-        when(
-          client.fetchPipeline(pipelineSlug),
-        ).thenErrorWith();
+        when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
-        final interactionResult = await delegate.validatePipelineSlug(
+        final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(BuildkiteStrings.pipelineNotFound));
+        expect(additionalContext, equals(BuildkiteStrings.pipelineNotFound));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns an error if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns a failure field validation result, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validatePipelineSlug(
+        final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validatePipelineSlug() returns an interaction with the pipeline not found message if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns a field validation result with the 'pipeline not found' additional context, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validatePipelineSlug(
+        final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(BuildkiteStrings.pipelineNotFound));
+        expect(additionalContext, equals(BuildkiteStrings.pipelineNotFound));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns a successful interaction if the given pipeline slug is valid",
+      ".validatePipelineSlug() returns a successful field validation result, if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(buildkitePipeline);
 
-        final interactionResult = await delegate.validatePipelineSlug(
+        final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns an error if the interaction with the client is not successful",
+      ".validateOrganizationSlug() returns a failure field validation result, if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateOrganizationSlug(
+        final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns an interaction with the organization not found message if the interaction with the client is not successful",
+      ".validateOrganizationSlug() returns a field validation result with the 'organization not found' additional context, if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateOrganizationSlug(
+        final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final message = interactionResult.message;
-
-        expect(message, equals(BuildkiteStrings.organizationNotFound));
+        final additionalContext = result.additionalContext;
+        expect(
+            additionalContext, equals(BuildkiteStrings.organizationNotFound));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns an error if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns a failure field validation result, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateOrganizationSlug(
+        final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns an interaction with the organization not found message if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns a field validation result with the 'organization not found' additional context, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateOrganizationSlug(
+        final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(BuildkiteStrings.organizationNotFound));
+        expect(
+          additionalContext,
+          equals(BuildkiteStrings.organizationNotFound),
+        );
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a successful interaction if the given organization slug is valid",
+      ".validateOrganizationSlug() returns a successful field validation result, if the given organization slug is valid",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
         ).thenSuccessWith(buildkiteOrganization);
 
-        final interactionResult = await delegate.validateOrganizationSlug(
+        final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
   });
