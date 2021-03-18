@@ -141,12 +141,15 @@ void main() {
 
         final result = await delegate.validatePublicApiKey(apiKey);
 
-        expect(result.additionalContext, FirestoreStrings.apiKeyInvalid);
+        expect(
+          result.additionalContext,
+          equals(FirestoreStrings.apiKeyInvalid),
+        );
       },
     );
 
     test(
-      ".validatePublicApiKey() returns a successful field validation result if the auth throws a firebase auth exception with the exception code not code that does not indicate the invalid api key",
+      ".validatePublicApiKey() returns a successful field validation result, if the auth throws a firebase auth exception with the exception code that does not indicate the invalid api key",
       () async {
         final exceptionCodes = FirebaseAuthExceptionCode.values.where(
           (code) => code != FirebaseAuthExceptionCode.invalidApiKey,
