@@ -8,7 +8,7 @@ class NpmCli extends Cli {
   @override
   final String executable = 'npm';
 
-  /// Installs dependency packages to the given [workingDirectory].
+  /// Installs npm dependencies in the given [workingDirectory].
   Future<void> install(String workingDirectory) {
     return run(['install'], workingDirectory: workingDirectory);
   }
