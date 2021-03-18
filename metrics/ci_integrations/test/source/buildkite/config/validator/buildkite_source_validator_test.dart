@@ -15,6 +15,8 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../../test_utils/matchers.dart';
+
 void main() {
   group("BuildkiteSourceValidator", () {
     const accessToken = 'token';
@@ -143,7 +145,7 @@ void main() {
 
         await validator.validate(config);
 
-        verify(validationDelegate.validateAuth(expectedAuth)).called(1);
+        verify(validationDelegate.validateAuth(expectedAuth)).called(once);
       },
     );
 
@@ -161,7 +163,7 @@ void main() {
             BuildkiteSourceConfigField.accessToken,
             pipelineScopeTokenResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -180,7 +182,7 @@ void main() {
               additionalContext: BuildkiteStrings.tokenInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -241,7 +243,7 @@ void main() {
                   BuildkiteStrings.noScopesToValidateOrganization,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -261,7 +263,7 @@ void main() {
                   BuildkiteStrings.organizationCantBeValidatedInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -315,7 +317,7 @@ void main() {
 
         verify(
           validationDelegate.validateOrganizationSlug(organizationSlug),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -333,7 +335,7 @@ void main() {
             BuildkiteSourceConfigField.organizationSlug,
             successFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -353,7 +355,7 @@ void main() {
                   BuildkiteStrings.organizationInvalidInterruptReason,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -400,7 +402,7 @@ void main() {
               additionalContext: BuildkiteStrings.noScopesToValidatePipeline,
             ),
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -442,7 +444,7 @@ void main() {
 
         verify(
           validationDelegate.validatePipelineSlug(pipelineSlug),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -460,7 +462,7 @@ void main() {
             BuildkiteSourceConfigField.pipelineSlug,
             successFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
