@@ -27,19 +27,11 @@ void main() {
     );
 
     test(
-      ".create() returns a jenkins source validator",
-      () {
-        final validator = validatorFactory.create(config);
-
-        expect(validator, isA<JenkinsSourceValidator>());
-      },
-    );
-
-    test(
       ".create() returns a jenkins source validator with the jenkins source validation delegate",
       () {
         final validator = validatorFactory.create(config);
 
+        expect(validator, isA<JenkinsSourceValidator>());
         expect(
           validator.validationDelegate,
           isA<JenkinsSourceValidationDelegate>(),
@@ -52,6 +44,7 @@ void main() {
       () {
         final validator = validatorFactory.create(config);
 
+        expect(validator, isA<JenkinsSourceValidator>());
         expect(
           validator.validationResultBuilder,
           isA<ValidationResultBuilder>(),

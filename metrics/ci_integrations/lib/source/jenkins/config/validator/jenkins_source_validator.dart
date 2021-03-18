@@ -38,15 +38,15 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
   @override
   Future<ValidationResult> validate(JenkinsSourceConfig config) async {
     final jenkinsUrl = config.url;
-    final jenkinsUrlFieldValidationResult =
+    final jenkinsUrlValidationResult =
         await validationDelegate.validateJenkinsUrl(jenkinsUrl);
 
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.url,
-      jenkinsUrlFieldValidationResult,
+      jenkinsUrlValidationResult,
     );
 
-    if (jenkinsUrlFieldValidationResult.isFailure) {
+    if (jenkinsUrlValidationResult.isFailure) {
       return _finalizeValidationResult(
         JenkinsStrings.jenkinsUrlInvalidInterruptReason,
       );
@@ -65,33 +65,33 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     }
 
     final auth = BasicAuthorization(username, apiKey);
-    final authFieldValidationResult = await validationDelegate.validateAuth(
+    final authValidationResult = await validationDelegate.validateAuth(
       auth,
     );
 
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.username,
-      authFieldValidationResult,
+      authValidationResult,
     );
 
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.apiKey,
-      authFieldValidationResult,
+      authValidationResult,
     );
 
-    if (authFieldValidationResult.isFailure) {
+    if (authValidationResult.isFailure) {
       return _finalizeValidationResult(
         JenkinsStrings.authInvalidInterruptReason,
       );
     }
 
     final jobName = config.jobName;
-    final jobNameFieldValidationResult =
+    final jobNameValidationResult =
         await validationDelegate.validateJobName(jobName);
 
     validationResultBuilder.setResult(
       JenkinsSourceConfigField.jobName,
-      jobNameFieldValidationResult,
+      jobNameValidationResult,
     );
 
     return validationResultBuilder.build();
