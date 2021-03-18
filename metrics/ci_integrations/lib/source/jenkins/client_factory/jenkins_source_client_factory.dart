@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
-import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
 import 'package:ci_integration/source/jenkins/adapter/jenkins_source_client_adapter.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
@@ -30,7 +29,6 @@ class JenkinsSourceClientFactory
     final jenkinsClient = JenkinsClient(
       jenkinsUrl: config.url,
       authorization: authorization,
-      headers: HttpConstants.defaultHeaders,
     );
 
     return JenkinsSourceClientAdapter(jenkinsClient);
