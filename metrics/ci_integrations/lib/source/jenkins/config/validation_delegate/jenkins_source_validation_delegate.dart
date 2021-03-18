@@ -42,7 +42,8 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
 
   /// Validates the given [auth].
   Future<FieldValidationResult<void>> validateAuth(
-      AuthorizationBase auth) async {
+    AuthorizationBase auth,
+  ) async {
     final userInteraction = await _client.fetchJenkinsUser(auth);
 
     if (userInteraction.isError || userInteraction.result == null) {
