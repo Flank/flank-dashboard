@@ -18,13 +18,14 @@ class FirebaseCli extends Cli {
     return run(['projects:addfirebase', projectId]);
   }
 
-  /// Creates a Firebase web app with the given [projectId].
-  Future<void> createWebApp(String projectId) {
-    return run(['apps:create', '--project', projectId, "WEB", projectId]);
+  /// Creates a Firebase web app with the given [appName]
+  /// within the project with the given [projectId].
+  Future<void> createWebApp(String projectId, String appName) {
+    return run(['apps:create', '--project', projectId, "WEB", appName]);
   }
 
-  /// Sets the [projectId] as the default project
-  /// in the given [workingDirectory].
+  /// Sets the project with the [projectId] identifier as the default one
+  /// for the Firebase project in the [workingDirectory].
   Future<void> setFirebaseProject(String projectId, String workingDirectory) {
     return run(['use', projectId], workingDirectory: workingDirectory);
   }
@@ -37,21 +38,21 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Associates the firebase [target] with the given [projectId]
+  /// Associates the firebase [target] with the given [hostingName]
   /// in the given [workingDirectory].
   Future<void> applyTarget(
-    String projectId,
+    String hostingName,
     String target,
     String workingDirectory,
   ) {
     return run(
-      ['target:apply', 'hosting', target, projectId],
+      ['target:apply', 'hosting', target, hostingName],
       workingDirectory: workingDirectory,
     );
   }
 
-  /// Deploys the project with the associated [target]
-  /// to the firebase hosting from the given [workingDirectory].
+  /// Deploys a project's [target] from the given [workingDirectory]
+  /// to the Firebase hosting.
   Future<void> deployHosting(String target, String workingDirectory) {
     return run(
       ['deploy', '--only', 'hosting:$target'],
@@ -59,8 +60,7 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Deploys a firestore rules to the firebase
-  /// from the given [workingDirectory].
+  /// Deploys Firestore rules from the given [workingDirectory] to the Firebase.
   Future<void> deployRules(String target, String workingDirectory) {
     return run(
       ['deploy', '--only', 'firestore:rules'],
@@ -68,7 +68,7 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Deploys functions to the firebase from the given [workingDirectory].
+  /// Deploys functions from the given [workingDirectory] to the firebase.
   Future<void> deployFunctions(String workingDirectory) {
     return run(
       ['deploy', '--only', 'functions'],

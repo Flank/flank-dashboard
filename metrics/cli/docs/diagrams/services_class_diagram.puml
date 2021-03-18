@@ -21,7 +21,7 @@ package firebase {
         class FirebaseCli {
             + login(): Future<void>
             + addFirebase(String projectId): Future<void>
-            + createWebApp(String projectId): Future<void>
+            + createWebApp(String projectId, String appName): Future<void>
             + setFirebaseProject(String projectId, String workingDirectory): Future<void>
             + clearTarget(String target, String workingDirectory): Future<void>
             + applyTarget(String projectId, String target, String workingDirectory): Future<void>
