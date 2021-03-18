@@ -85,7 +85,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Deploy](https://github.com/platform-platform/monorepo/tree/master/metrics/deploy)
+## [Cli](https://github.com/platform-platform/monorepo/tree/master/metrics/cli)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -96,6 +96,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | Name | Source | License |
 | :---: | :---: | :---: |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
+| mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
 ## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)

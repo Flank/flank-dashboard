@@ -101,7 +101,7 @@ package git {
 
     package cli as git.cli {
         class GitCli {
-            + clone(String repoURL, String srcPath): Future<void>
+            + clone(String repoUrl, String directory): Future<void>
             + version(): Future<void>
         }
     }
