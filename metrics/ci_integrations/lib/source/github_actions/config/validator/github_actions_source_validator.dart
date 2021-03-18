@@ -194,10 +194,12 @@ class GithubActionsSourceValidator
     final additionalContext = interaction.message;
 
     if (interaction.isError) {
-      return FieldValidationResult.failure(additionalContext);
+      return FieldValidationResult.failure(
+        additionalContext: additionalContext,
+      );
     }
 
-    return FieldValidationResult.success(additionalContext);
+    return FieldValidationResult.success(additionalContext: additionalContext);
   }
 
   /// Sets the [FieldValidationResult.unknown] with the given
@@ -207,7 +209,9 @@ class GithubActionsSourceValidator
     GithubActionsSourceConfigField field,
     String additionalContext,
   ) {
-    final validationResult = FieldValidationResult.unknown(additionalContext);
+    final validationResult = FieldValidationResult.unknown(
+      additionalContext: additionalContext,
+    );
 
     validationResultBuilder.setResult(field, validationResult);
   }
@@ -225,7 +229,9 @@ class GithubActionsSourceValidator
   /// [FieldValidationResult.unknown] with the given [interruptReason] as
   /// a [FieldValidationResult.additionalContext].
   void _setEmptyFields(String interruptReason) {
-    final emptyFieldResult = FieldValidationResult.unknown(interruptReason);
+    final emptyFieldResult = FieldValidationResult.unknown(
+      additionalContext: interruptReason,
+    );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }

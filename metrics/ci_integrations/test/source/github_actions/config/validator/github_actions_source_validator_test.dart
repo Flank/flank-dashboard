@@ -180,7 +180,7 @@ void main() {
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenNotSpecified,
+              additionalContext: GithubActionsStrings.tokenNotSpecified,
             ),
           ),
         ).called(1);
@@ -197,7 +197,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenNotSpecifiedInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.tokenNotSpecifiedInterruptReason,
             ),
           ),
         ).called(1);
@@ -325,7 +326,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -341,7 +342,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.accessToken,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -357,7 +358,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.tokenInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.tokenInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -470,7 +472,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryOwner,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -486,7 +488,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryOwner,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -502,7 +504,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -605,7 +608,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -621,7 +624,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.repositoryName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -637,7 +640,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.repositoryNameInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.repositoryNameInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -725,7 +729,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.workflowIdentifier,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -741,7 +745,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.workflowIdentifier,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -757,7 +761,8 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const FieldValidationResult.unknown(
-              GithubActionsStrings.workflowIdInvalidInterruptReason,
+              additionalContext:
+                  GithubActionsStrings.workflowIdInvalidInterruptReason,
             ),
           ),
         ).called(1);
@@ -837,7 +842,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.unknown(message),
+            const FieldValidationResult.unknown(additionalContext: message),
           ),
         ).called(1);
       },
@@ -854,7 +859,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -871,7 +876,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.jobName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
@@ -971,7 +976,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.unknown(message),
+            const FieldValidationResult.unknown(additionalContext: message),
           ),
         ).called(1);
       },
@@ -990,7 +995,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.success(message),
+            const FieldValidationResult.success(additionalContext: message),
           ),
         ).called(1);
       },
@@ -1006,7 +1011,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             GithubActionsSourceConfigField.coverageArtifactName,
-            const FieldValidationResult.failure(message),
+            const FieldValidationResult.failure(additionalContext: message),
           ),
         ).called(1);
       },
