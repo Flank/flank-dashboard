@@ -16,10 +16,9 @@ participant FirebaseService
 participant GCloudService
 participant GitService
 participant NpmService
+participant SentryService
 
 end box
-
-
 
 Bob -> MetricsCliRunner ++ : run doctor command
 MetricsCliRunner -> DoctorCommand ++ : run()
@@ -29,22 +28,21 @@ DoctorCommand -> Doctor ++ : checkVersions()
 
 Doctor -> FlutterService ++ : version()
 FlutterService --> Bob -- : print Flutter version
-FlutterService --
 
 Doctor -> FirebaseService ++ : version()
 FirebaseService --> Bob -- : print Firebase version
-FirebaseService --
 
 Doctor -> GCloudService ++ : version()
 GCloudService --> Bob -- : print GCloud version
-GCloudService --
 
 Doctor -> GitService ++ : version()
 GitService --> Bob -- : print Git version
-GitService --
 
 Doctor -> NpmService ++ : version()
 NpmService --> Bob -- : print Npm version
+
+Doctor -> SentryService ++ : version()
+SentryService --> Bob -- : print Sentry version
 
 Doctor --> DoctorCommand -- : doctor finished
 DoctorCommand --> MetricsCliRunner -- : command finished

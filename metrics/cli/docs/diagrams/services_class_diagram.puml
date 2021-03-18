@@ -127,6 +127,31 @@ package npm {
     }
 }
 
+package sentry {
+    package service as sentry.service{
+        interface SentryService  {
+            + login() : Future<void>
+            + createRelease(String releaseName) : Future<void>
+        }
+    }
+
+    package adapter as sentry.adapter {
+        class SentryCliServiceAdapter {
+            - _sentryCli : SentryCli
+        }
+    }
+
+    package cli as sentry.cli {
+        class SentryCli {
+            + login(): Future<void>
+            + createRelease(String releaseName, String organizationSlug, String projectSlug): Future<void>
+            + uploadSourceMaps(String sourcePath, List<String> extensions, String organizationSlug, String projectSlug): Future<void>
+            + finalizeRelease(String releaseName, String organizationSlug, String projectSlug): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
 package interfaces {
     package service {
         interface InfoService {

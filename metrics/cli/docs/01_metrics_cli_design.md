@@ -52,8 +52,8 @@ Let's review a top-level flow of the `DeployCommand`:
 4. Enable Firebase Analytics service.
 5. Enable `Google` and `Email and Password` Firebase Auth providers.
 6. Create Firestore `feature_config` and `metadata` collections.
-7. Configure Sentry.
-8. Build the Metrics Web Application.
+7. Build the Metrics Web Application.
+8. Configure Sentry.
 9. Deploy the Metrics Web Application to the Firebase Hosting.
 10. Cleanup the created directories, etc.
 
@@ -76,7 +76,8 @@ To deploy the Metrics Web Application, we should have the following CLI classes:
 - `FlutterCli` is used to build the Flutter application;
 - `GCloudCli` is used to create a GCloud project;
 - `GitCli` is used to checkout the Metrics Web project from the remote repository;
-- `NpmCli` is used to install the Npm dependencies.
+- `NpmCli` is used to install the Npm dependencies;
+- `SentryCli` is used to associate the Metrics application with a Sentry project.
 
 #### Service
 
@@ -103,6 +104,9 @@ Let's review the main `service` interfaces we need to deploy the Metrics Web App
     - Checkout required repository;
 - `NpmService` is an interface used to define the following Npm behavior required for our commands:
     - Install Npm dependencies.
+- `SentryService` is an interface used to define the following Sentry behavior required for our commands:
+    - Sentry login;
+    - Create a new release.
 
 Since we have interfaces for each service and `CLI`s implemented, we should adapt our `CLI` classes to the corresponding `Service`s. 
 
@@ -175,7 +179,8 @@ Before you start, you should download the latest version of the Metrics CLI tool
 2. [npm](https://www.npmjs.com/get-npm);
 3. [git](https://cli.github.com/);
 4. [firebase](https://firebase.google.com/docs/cli);
-5. [gcloud](https://cloud.google.com/sdk/gcloud).
+5. [gcloud](https://cloud.google.com/sdk/gcloud);
+6. [sentry-cli](https://docs.sentry.io/product/cli/installation/).
 
 ### Doctor
 

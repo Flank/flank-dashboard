@@ -16,6 +16,7 @@ participant FirebaseService
 participant GitService
 participant NpmService
 participant FlutterService
+participant SentryService
 end box
 
 
@@ -74,6 +75,15 @@ FirebaseService --> Deployer -- : firestore has been deployed
 Deployer -> FlutterService ++ : build()
 FlutterService -> Deployer : build finished
 FlutterService --
+
+Deployer -> SentryService ++ : login()
+SentryService --> Bob : starts interactive login
+Bob -> SentryService : signs in
+SentryService --> Deployer -- : sign in finished
+
+Deployer -> SentryService ++ : createRelease(String releaseName)
+SentryService -> Deployer : release created
+SentryService --
 
 Deployer -> FirebaseService ++ : deployHosting(appPath)
 FirebaseService -> Deployer : deploy finished
