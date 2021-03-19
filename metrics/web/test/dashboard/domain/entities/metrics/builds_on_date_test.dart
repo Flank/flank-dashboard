@@ -1,10 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/dashboard/domain/entities/metrics/builds_on_date.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/matcher_util.dart';
+import '../../../../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -24,7 +24,7 @@ void main() {
       for (final invalidDate in invalidDates) {
         expect(
           () => BuildsOnDate(date: invalidDate),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       }
     },

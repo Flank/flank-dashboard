@@ -1,15 +1,16 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
+import '../../../../test_utils/matchers.dart';
 import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
@@ -899,8 +900,9 @@ void main() {
 
         notifier.replaceState(data: data, title: title, path: path);
 
-        verify(navigationState.replaceState(data, title, path))
-            .called(equals(1));
+        verify(
+          navigationState.replaceState(data, title, path),
+        ).called(once);
       },
     );
   });

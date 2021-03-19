@@ -6,7 +6,7 @@ import 'package:ci_integration/integration/validation/model/field_validation_con
 import 'package:equatable/equatable.dart';
 
 /// A class that represents a validation result for a single [Config]'s field.
-class FieldValidationResult extends Equatable {
+class FieldValidationResult<T> extends Equatable {
   /// A [FieldValidationConclusion] of this field validation result.
   final FieldValidationConclusion conclusion;
 
@@ -14,47 +14,69 @@ class FieldValidationResult extends Equatable {
   /// result.
   final String additionalContext;
 
+  /// A validated data of this field validation result.
+  final T data;
+
+  /// Indicates whether this is a successful validation result.
+  bool get isSuccess => conclusion == FieldValidationConclusion.valid;
+
+  /// Indicates whether this is a failure validation result.
+  bool get isFailure => conclusion == FieldValidationConclusion.invalid;
+
+  /// Indicates whether this is an unknown validation result.
+  bool get isUnknown => conclusion == FieldValidationConclusion.unknown;
+
   @override
-  List<Object> get props => [conclusion, additionalContext];
+  List<Object> get props => [conclusion, additionalContext, data];
 
   /// Creates an instance of the [FieldValidationConclusion]
   /// with the given parameters.
   const FieldValidationResult._(
     this.conclusion, [
     this.additionalContext,
+    this.data,
   ]);
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext] and [FieldValidationConclusion.valid] conclusion.
+  /// [additionalContext], [data], and [FieldValidationConclusion.valid]
+  /// conclusion.
   ///
   /// Represents a successful field validation result.
-  const FieldValidationResult.success([
+  const FieldValidationResult.success({
     String additionalContext,
-  ]) : this._(
+    T data,
+  }) : this._(
           FieldValidationConclusion.valid,
           additionalContext,
+          data,
         );
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext] and [FieldValidationConclusion.invalid] conclusion.
+  /// [additionalContext], [data], and [FieldValidationConclusion.invalid]
+  /// conclusion.
   ///
   /// Represents a failed field validation result.
-  const FieldValidationResult.failure([
+  const FieldValidationResult.failure({
     String additionalContext,
-  ]) : this._(
+    T data,
+  }) : this._(
           FieldValidationConclusion.invalid,
           additionalContext,
+          data,
         );
 
   /// Creates an instance of the [FieldValidationResult] with the given
-  /// [additionalContext] and [FieldValidationConclusion.unknown] conclusion.
+  /// [additionalContext], [data], and [FieldValidationConclusion.unknown]
+  /// conclusion.
   ///
   /// Represents an unknown field validation result or indicates that
   /// the field validation didn't run.
-  const FieldValidationResult.unknown([
+  const FieldValidationResult.unknown({
     String additionalContext,
-  ]) : this._(
+    T data,
+  }) : this._(
           FieldValidationConclusion.unknown,
           additionalContext,
+          data,
         );
 }

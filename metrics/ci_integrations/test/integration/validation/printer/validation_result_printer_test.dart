@@ -13,6 +13,7 @@ import 'package:ci_integration/source/buildkite/config/model/buildkite_source_co
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../test_utils/matchers.dart';
 import '../../../test_utils/mock/io_sink_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,7 +28,9 @@ void main() {
     final secondField = BuildkiteSourceConfigField.organizationSlug;
     final thirdField = BuildkiteSourceConfigField.pipelineSlug;
 
-    const successResult = FieldValidationResult.success(additionalContext);
+    const successResult = FieldValidationResult.success(
+      additionalContext: additionalContext,
+    );
     const failureResult = FieldValidationResult.failure();
     const unknownResult = FieldValidationResult.unknown();
 
@@ -122,7 +125,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           startsWithConclusionMarker(successResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -137,7 +140,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           startsWithConclusionMarker(failureResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -152,7 +155,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           startsWithConclusionMarker(unknownResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -167,7 +170,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(containsFieldName(firstField))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -182,7 +185,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           containsFieldValidationConclusion(successResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -197,7 +200,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           containsFieldValidationConclusion(failureResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -212,7 +215,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           containsFieldValidationConclusion(unknownResult.conclusion),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -227,7 +230,7 @@ void main() {
 
         verify(ioSink.writeln(argThat(
           endsWithAdditionalContext(successResult.additionalContext),
-        ))).called(1);
+        ))).called(once);
       },
     );
 
@@ -244,7 +247,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(isNot(containsAdditionalContext))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -265,7 +268,7 @@ void main() {
             ioSink.writeln(argThat(
               validationResultMessageMatcher(field, result),
             )),
-          ).called(1);
+          ).called(once);
         });
       },
     );

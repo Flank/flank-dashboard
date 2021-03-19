@@ -9,17 +9,17 @@ class FlutterCli extends Cli {
   final String executable = 'flutter';
 
   /// Builds a Flutter web application in the given [workingDirectory].
-  Future<void> buildWeb(String workingDirectory) async {
-    await run(['build', 'web'], workingDirectory: workingDirectory);
+  Future<void> buildWeb(String workingDirectory) {
+    return run(['build', 'web'], workingDirectory: workingDirectory);
   }
 
   /// Enables web support for the Flutter.
-  Future<void> enableWeb() async {
-    await run(['config', '--enable-web']);
+  Future<void> enableWeb() {
+    return run(['config', '--enable-web']);
   }
 
   @override
-  Future<void> version() async {
-    await run(['--version']);
+  Future<void> version() {
+    return run(['--version']);
   }
 }

@@ -12,8 +12,6 @@ import 'package:ci_integration/source/buildkite/config/model/buildkite_source_co
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:meta/meta.dart';
 
 /// A class responsible for validating the [BuildkiteSourceConfig].
 class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
@@ -46,21 +44,19 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     final accessToken = config.accessToken;
     final auth = BearerAuthorization(accessToken);
 
-    final tokenInteraction = await validationDelegate.validateAuth(auth);
-
-    _processInteraction(
-      interaction: tokenInteraction,
-      field: BuildkiteSourceConfigField.accessToken,
+    final authValidationResult = await validationDelegate.validateAuth(auth);
+    validationResultBuilder.setResult(
+      BuildkiteSourceConfigField.accessToken,
+      authValidationResult,
     );
 
-    if (tokenInteraction.isError) {
+    if (authValidationResult.isFailure) {
       return _finalizeValidationResult(
         BuildkiteStrings.tokenInvalidInterruptReason,
       );
     }
 
-    final token = tokenInteraction.result;
-
+    final token = authValidationResult.data;
     if (!_canValidateOrganization(token)) {
       _setUnknownFieldValidationResult(
         BuildkiteSourceConfigField.organizationSlug,
@@ -73,15 +69,15 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     }
 
     final organizationSlug = config.organizationSlug;
-    final organizationInteraction =
-        await validationDelegate.validateOrganizationSlug(organizationSlug);
 
-    _processInteraction(
-      interaction: organizationInteraction,
-      field: BuildkiteSourceConfigField.organizationSlug,
+    final organizationSlugValidationResult =
+        await validationDelegate.validateOrganizationSlug(organizationSlug);
+    validationResultBuilder.setResult(
+      BuildkiteSourceConfigField.organizationSlug,
+      organizationSlugValidationResult,
     );
 
-    if (organizationInteraction.isError) {
+    if (organizationSlugValidationResult.isFailure) {
       return _finalizeValidationResult(
         BuildkiteStrings.organizationInvalidInterruptReason,
       );
@@ -97,31 +93,17 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     }
 
     final pipelineSlug = config.pipelineSlug;
-    final pipelineInteraction = await validationDelegate.validatePipelineSlug(
+
+    final pipelineSlugValidationResult =
+        await validationDelegate.validatePipelineSlug(
       pipelineSlug,
     );
-
-    _processInteraction(
-      interaction: pipelineInteraction,
-      field: BuildkiteSourceConfigField.pipelineSlug,
+    validationResultBuilder.setResult(
+      BuildkiteSourceConfigField.pipelineSlug,
+      pipelineSlugValidationResult,
     );
 
     return validationResultBuilder.build();
-  }
-
-  /// Processes the given [interaction].
-  ///
-  /// Maps the given [interaction] to a [FieldValidationResult] and
-  /// sets the [field] validation result in [validationResultBuilder].
-  void _processInteraction({
-    @required InteractionResult interaction,
-    @required BuildkiteSourceConfigField field,
-  }) {
-    final fieldValidationResult = _mapInteractionToFieldValidationResult(
-      interaction,
-    );
-
-    validationResultBuilder.setResult(field, fieldValidationResult);
   }
 
   /// Sets the empty results of the [validationResultBuilder] using the given
@@ -137,7 +119,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   /// [FieldValidationResult.unknown] with the given [interruptReason] as
   /// a [FieldValidationResult.additionalContext].
   void _setEmptyFields(String interruptReason) {
-    final emptyFieldResult = FieldValidationResult.unknown(interruptReason);
+    final emptyFieldResult = FieldValidationResult.unknown(
+      additionalContext: interruptReason,
+    );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }
@@ -149,7 +133,9 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     BuildkiteSourceConfigField field,
     String additionalContext,
   ) {
-    final validationResult = FieldValidationResult.unknown(additionalContext);
+    final validationResult = FieldValidationResult.unknown(
+      additionalContext: additionalContext,
+    );
 
     validationResultBuilder.setResult(field, validationResult);
   }
@@ -178,23 +164,5 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     if (token == null || token.scopes == null) return false;
 
     return token.scopes.contains(scope);
-  }
-
-  /// Maps the given [interaction] to a [FieldValidationResult].
-  ///
-  /// Returns [FieldValidationResult.failure] if
-  /// the [interaction.isError] is `true`.
-  ///
-  /// Otherwise, returns [FieldValidationResult.success].
-  FieldValidationResult _mapInteractionToFieldValidationResult(
-    InteractionResult interaction,
-  ) {
-    final additionalContext = interaction.message;
-
-    if (interaction.isError) {
-      return FieldValidationResult.failure(additionalContext);
-    }
-
-    return FieldValidationResult.success(additionalContext);
   }
 }

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/analytics/domain/entities/page_name.dart';
@@ -11,7 +11,7 @@ import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/matchers.dart';
 
 void main() {
   group("AnalyticsNotifier", () {
@@ -40,7 +40,7 @@ void main() {
       () {
         expect(
           () => AnalyticsNotifier(null, logPageViewUseCase, resetUserUseCase),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -50,7 +50,7 @@ void main() {
       () {
         expect(
           () => AnalyticsNotifier(logLoginUseCase, null, resetUserUseCase),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -60,7 +60,7 @@ void main() {
       () {
         expect(
           () => AnalyticsNotifier(logLoginUseCase, logPageViewUseCase, null),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );
@@ -71,7 +71,7 @@ void main() {
         await analyticsNotifier.logLogin(userId);
         await analyticsNotifier.logLogin(userId);
 
-        verify(logLoginUseCase(userParam)).called(1);
+        verify(logLoginUseCase(userParam)).called(once);
       },
     );
 
@@ -80,7 +80,7 @@ void main() {
       () async {
         await analyticsNotifier.logLogin(userId);
 
-        verify(logLoginUseCase(userParam)).called(1);
+        verify(logLoginUseCase(userParam)).called(once);
       },
     );
 
@@ -103,14 +103,14 @@ void main() {
 
         await analyticsNotifier.logPageView(pageName.value);
 
-        verify(logPageViewUseCase(pageParam)).called(1);
+        verify(logPageViewUseCase(pageParam)).called(once);
       },
     );
 
     test(".resetUser() calls the reset user use case", () async {
       await analyticsNotifier.resetUser();
 
-      verify(resetUserUseCase(any)).called(1);
+      verify(resetUserUseCase(any)).called(once);
     });
 
     test(".resetUser() resets the stored user id", () async {

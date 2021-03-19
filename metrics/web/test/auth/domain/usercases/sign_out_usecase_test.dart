@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
@@ -6,7 +6,7 @@ import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/matchers.dart';
 import '../../../test_utils/user_repository_mock.dart';
 
 void main() {
@@ -20,7 +20,7 @@ void main() {
     test("throws an AssertionError if the given repository is null", () {
       expect(
         () => SignOutUseCase(null),
-        MatcherUtil.throwsAssertionError,
+        throwsAssertionError,
       );
     });
 
@@ -29,7 +29,7 @@ void main() {
 
       await signOutUseCase();
 
-      verify(repository.signOut()).called(equals(1));
+      verify(repository.signOut()).called(once);
     });
 
     test(
@@ -41,7 +41,7 @@ void main() {
 
         expect(
           () => signOutUseCase(),
-          MatcherUtil.throwsAuthenticationException,
+          throwsAuthenticationException,
         );
       },
     );
