@@ -4,7 +4,6 @@
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
-import 'package:ci_integration/source/jenkins/config/validator/jenkins_source_validator.dart';
 import 'package:ci_integration/source/jenkins/config/validator_factory/jenkins_source_validator_factory.dart';
 import 'package:test/test.dart';
 
@@ -31,7 +30,6 @@ void main() {
       () {
         final validator = validatorFactory.create(config);
 
-        expect(validator, isA<JenkinsSourceValidator>());
         expect(
           validator.validationDelegate,
           isA<JenkinsSourceValidationDelegate>(),
@@ -44,7 +42,6 @@ void main() {
       () {
         final validator = validatorFactory.create(config);
 
-        expect(validator, isA<JenkinsSourceValidator>());
         expect(
           validator.validationResultBuilder,
           isA<ValidationResultBuilder>(),
