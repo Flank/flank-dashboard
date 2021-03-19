@@ -65,7 +65,7 @@ package gcloud {
 package flutter {
     package service as flutter.service {
         interface FlutterService  {
-            + build(Directory appPath) : Future<void>
+            + build(String appPath) : Future<void>
         }
 
     }
