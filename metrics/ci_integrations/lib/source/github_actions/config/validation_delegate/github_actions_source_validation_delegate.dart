@@ -120,7 +120,7 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [jobName].
-  Future<InteractionResult<WorkflowRunJob>> validateJobName({
+  Future<FieldValidationResult<void>> validateJobName({
     String workflowId,
     String jobName,
   }) async {
@@ -132,40 +132,40 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdentifierInvalid,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.noCompletedWorkflowRuns,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.noCompletedWorkflowRuns,
       );
     }
 
     final jobsInteraction = await _fetchJob(workflowRuns.first, jobName);
 
     if (jobsInteraction.isError) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.jobsFetchingFailed,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.jobsFetchingFailed,
       );
     }
 
     final job = jobsInteraction.result;
 
     if (job == null) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.jobNameInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.jobNameInvalid,
       );
     }
 
-    return InteractionResult.success(result: job);
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [coverageArtifactName].
-  Future<InteractionResult<WorkflowRunArtifact>> validateCoverageArtifactName({
+  Future<FieldValidationResult<void>> validateCoverageArtifactName({
     String workflowId,
     String coverageArtifactName,
   }) async {
@@ -177,16 +177,16 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdentifierInvalid,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.noSuccessfulWorkflowRuns,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.noSuccessfulWorkflowRuns,
       );
     }
 
@@ -196,20 +196,20 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (artifactsInteraction.isError) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.artifactsFetchingFailed,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.artifactsFetchingFailed,
       );
     }
 
     final artifact = artifactsInteraction.result;
 
     if (artifact == null) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.coverageArtifactNameInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.coverageArtifactNameInvalid,
       );
     }
 
-    return InteractionResult.success(result: artifact);
+    return const FieldValidationResult.success();
   }
 
   /// Fetches a [WorkflowRunJob] for the given [workflowRun]
