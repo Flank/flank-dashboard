@@ -55,63 +55,64 @@ class GithubActionsSourceValidator
 
     final auth = BearerAuthorization(accessToken);
 
-    final authInteraction = await validationDelegate.validateAuth(auth);
-
-    _processInteraction(
-      interaction: authInteraction,
-      field: GithubActionsSourceConfigField.accessToken,
+    final authValidationResult = await validationDelegate.validateAuth(auth);
+    
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.accessToken,
+      authValidationResult,
     );
 
-    if (authInteraction.isError) {
+    if (authValidationResult.isFailure) {
       return _finalizeValidationResult(
         GithubActionsStrings.tokenInvalidInterruptReason,
       );
     }
 
     final repositoryOwner = config.repositoryOwner;
-    final repositoryOwnerInteraction =
+    final repositoryOwnerValidationResult =
         await validationDelegate.validateRepositoryOwner(repositoryOwner);
 
-    _processInteraction(
-      interaction: repositoryOwnerInteraction,
-      field: GithubActionsSourceConfigField.repositoryOwner,
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.repositoryOwner,
+      repositoryOwnerValidationResult,
     );
 
-    if (repositoryOwnerInteraction.isError) {
+    if (repositoryOwnerValidationResult.isFailure) {
       return _finalizeValidationResult(
         GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
       );
     }
 
     final repositoryName = config.repositoryName;
-    final repositoryNameInteraction =
+    final repositoryNameValidationResult =
         await validationDelegate.validateRepositoryName(
       repositoryName: repositoryName,
       repositoryOwner: repositoryOwner,
     );
 
-    _processInteraction(
-      interaction: repositoryNameInteraction,
-      field: GithubActionsSourceConfigField.repositoryName,
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.repositoryName,
+      repositoryNameValidationResult,
     );
 
-    if (repositoryNameInteraction.isError) {
+    if (repositoryNameValidationResult.isFailure) {
       return _finalizeValidationResult(
         GithubActionsStrings.repositoryNameInvalidInterruptReason,
       );
     }
 
     final workflowId = config.workflowIdentifier;
-    final workflowIdInteraction = await validationDelegate.validateWorkflowId(
+    final workflowIdValidationResult =
+        await validationDelegate.validateWorkflowId(
       workflowId,
     );
 
-    _processInteraction(
-      interaction: workflowIdInteraction,
-      field: GithubActionsSourceConfigField.workflowIdentifier,
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.workflowIdentifier,
+      workflowIdValidationResult,
     );
 
-    if (workflowIdInteraction.isError) {
+    if (workflowIdValidationResult.isFailure) {
       return _finalizeValidationResult(
         GithubActionsStrings.workflowIdInvalidInterruptReason,
       );
