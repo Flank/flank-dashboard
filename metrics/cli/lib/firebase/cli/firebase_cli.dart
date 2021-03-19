@@ -68,7 +68,7 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Deploys functions from the given [workingDirectory] to the firebase.
+  /// Deploys functions from the given [workingDirectory] to the Firebase.
   Future<void> deployFunctions(String workingDirectory) {
     return run(
       ['deploy', '--only', 'functions'],
