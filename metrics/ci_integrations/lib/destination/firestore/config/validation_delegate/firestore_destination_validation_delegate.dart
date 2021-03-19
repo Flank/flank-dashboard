@@ -82,7 +82,8 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
 
   /// Creates a new authenticated [FirebaseAuth] using the given [credentials].
   Future<FirebaseAuth> _authenticate(
-      FirebaseAuthCredentials credentials) async {
+    FirebaseAuthCredentials credentials,
+  ) async {
     final auth = authFactory.create(credentials.apiKey);
 
     await auth.signIn(credentials.email, credentials.password);
