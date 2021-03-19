@@ -115,7 +115,7 @@ void main() {
     });
 
     test(
-      ".headers contain HttpConstants.defaultHeaders as a default value",
+      ".headers contain HttpConstants.defaultHeaders if headers parameter is not specified",
       () {
         final client = BuildkiteClient(
           buildkiteApiUrl: buildkiteMockServer.url,

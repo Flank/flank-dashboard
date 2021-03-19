@@ -21,6 +21,8 @@ void main() {
     const username = 'username';
     const jobName = 'job_name';
     const apiKey = 'api_key';
+    const successResult = FieldValidationResult.success();
+    const failureResult = FieldValidationResult.failure();
 
     final config = JenkinsSourceConfig(
       url: url,
@@ -28,9 +30,6 @@ void main() {
       apiKey: apiKey,
       jobName: jobName,
     );
-
-    const successResult = FieldValidationResult.success();
-    const failureResult = FieldValidationResult.failure();
 
     final auth = BasicAuthorization(username, apiKey);
 
@@ -59,7 +58,7 @@ void main() {
     final noUsernameConfig = createConfig(username: null);
     final noApiKeyConfig = createConfig(apiKey: null);
     final noAuthConfig = createConfig(username: null, apiKey: null);
-
+    
     PostExpectation<Future<FieldValidationResult<void>>> whenValidateUrl() {
       return when(validationDelegate.validateJenkinsUrl(url));
     }
@@ -118,7 +117,7 @@ void main() {
     );
 
     test(
-      ".validate() delegates the jenkins url validation to the validation delegate",
+      ".validate() delegates the url validation to the validation delegate",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
 
@@ -129,7 +128,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the jenkins url field validation result returned by validation delegate",
+      ".validate() sets the url field validation result returned by validation delegate",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
 
@@ -145,7 +144,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'jenkins url invalid' additional context if the jenkins url validation fails",
+      ".validate() sets empty results with the unknown field validation result with the 'jenkins url invalid' additional context if the url validation fails",
       () async {
         const expectedResult = FieldValidationResult.unknown(
           additionalContext: JenkinsStrings.jenkinsUrlInvalidInterruptReason,
@@ -161,7 +160,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the auth if the jenkins url validation fails",
+      ".validate() does not validate the auth if the url validation fails",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
 
@@ -172,7 +171,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the job name if the jenkins url validation fails",
+      ".validate() does not validate the job name if the url validation fails",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
 
@@ -183,7 +182,7 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result built by the validation result builder if the jenkins url validation fails",
+      ".validate() returns a validation result built by the validation result builder if the url validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
@@ -250,7 +249,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the 'missing auth credentials' additional context if the jenkins api key is missing in the config",
+      ".validate() sets empty results with the 'missing auth credentials' additional context if the api key is missing in the config",
       () async {
         final missingCredentials = JenkinsSourceConfigField.apiKey.value;
         final expectedInterruptReason =
@@ -271,7 +270,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the auth if the jenkins api key is missing in the config",
+      ".validate() does not validate the auth if the api key is missing in the config",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
@@ -282,7 +281,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the job name if the jenkins api key is missing in the config",
+      ".validate() does not validate the job name if the api key is missing in the config",
       () async {
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
@@ -293,7 +292,7 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result built by the validation result builder if the jenkins api key is missing in the config",
+      ".validate() returns a validation result built by the validation result builder if the api key is missing in the config",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
@@ -305,7 +304,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the 'missing auth credentials' additional context if the jenkins api key and username are missing in the config",
+      ".validate() sets empty results with the 'missing auth credentials' additional context if the api key and username are missing in the config",
       () async {
         final missingCredentials = [
           JenkinsSourceConfigField.username,
