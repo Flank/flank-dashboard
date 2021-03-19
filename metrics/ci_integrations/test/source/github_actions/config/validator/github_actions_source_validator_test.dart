@@ -315,7 +315,7 @@ void main() {
 
         await validator.validate(config);
 
-        verify(validationDelegate.validateAuth(expectedAuth)).called(1);
+        verify(validationDelegate.validateAuth(expectedAuth)).called(once);
       },
     );
 
@@ -333,7 +333,7 @@ void main() {
             GithubActionsSourceConfigField.accessToken,
             failureFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -351,7 +351,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -456,7 +456,7 @@ void main() {
 
         verify(
           validationDelegate.validateRepositoryOwner(repositoryOwner),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -474,7 +474,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryOwner,
             failureFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -495,7 +495,7 @@ void main() {
           validationResultBuilder.setEmptyResults(
             expectedResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -588,7 +588,7 @@ void main() {
             repositoryName: repositoryName,
             repositoryOwner: repositoryOwner,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -606,7 +606,7 @@ void main() {
             GithubActionsSourceConfigField.repositoryName,
             failureFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -625,7 +625,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -699,7 +699,7 @@ void main() {
 
         verify(
           validationDelegate.validateWorkflowId(workflowId),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -717,7 +717,7 @@ void main() {
             GithubActionsSourceConfigField.workflowIdentifier,
             failureFieldValidationResult,
           ),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -736,7 +736,7 @@ void main() {
 
         verify(
           validationResultBuilder.setEmptyResults(expectedResult),
-        ).called(1);
+        ).called(once);
       },
     );
 
