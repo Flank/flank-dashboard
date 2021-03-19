@@ -171,16 +171,19 @@ GCloudCliServiceAdapter .right.|> GCloudService
 FlutterCliServiceAdapter .right.|> FlutterService
 GitCliServiceAdapter .right.|> GitService
 NpmCliServiceAdapter .right.|> NpmService
+SentryCliServiceAdapter .right.|> SentryService
 
 FirebaseCliServiceAdapter -right-> FirebaseCli : uses
 GCloudCliServiceAdapter -right-> GCloudCli : uses
 FlutterCliServiceAdapter -left-> FlutterCli : uses
 GitCliServiceAdapter -left-> GitCli : uses
 NpmCliServiceAdapter -left-> NpmCli : uses
+SentryCliServiceAdapter -left-> SentryCli : uses
 
 
 FirebaseCli .up.|> Cli
 GCloudCli .up.|> Cli
+SentryCli .up.|> Cli
 FlutterCli .down.|> Cli
 GitCli .down.|> Cli
 NpmCli .down.|> Cli
@@ -190,6 +193,7 @@ InfoService --[hidden]right--> Cli
 
 FirebaseService -up-|> InfoService
 GCloudService -up-|> InfoService
+SentryService -up-|> InfoService
 GitService -down-|> InfoService
 FlutterService -down-|> InfoService
 NpmService -down-|> InfoService

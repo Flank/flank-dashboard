@@ -77,7 +77,7 @@ To deploy the Metrics Web Application, we should have the following CLI classes:
 - `GCloudCli` is used to create a GCloud project;
 - `GitCli` is used to checkout the Metrics Web project from the remote repository;
 - `NpmCli` is used to install the Npm dependencies;
-- `SentryCli` is used to associate the Metrics application with a Sentry project.
+- `SentryCli` is used to associate the Metrics Web application with a Sentry project.
 
 #### Service
 
