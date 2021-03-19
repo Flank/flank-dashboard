@@ -193,66 +193,66 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the token fetching failed",
+      ".validateAuth() returns a failure field validation result, if the token fetching failed",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the token fetching failed",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the token fetching failed",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.tokenInvalid));
+        expect(additionalContext, equals(GithubActionsStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns an error if the token fetching result is null",
+      ".validateAuth() returns a failure field validation result, if the token fetching result is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token invalid message if the token fetching result is null",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the token fetching result is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.tokenInvalid));
+        expect(additionalContext, equals(GithubActionsStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns an error if the fetched token does not have the required scope",
+      ".validateAuth() returns a failure field validation result, if the fetched token does not have the required scope",
       () async {
         when(
           client.fetchToken(auth),
         ).thenSuccessWith(const GithubToken(scopes: []));
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token scope not found message if the fetched token does not have the required scope",
+      ".validateAuth() returns a field validation result with the 'token scope not found' additional context, if the fetched token does not have the required scope",
       () async {
         final requiredScope = GithubTokenScopeMapper.repo;
 
@@ -260,11 +260,11 @@ void main() {
           client.fetchToken(auth),
         ).thenSuccessWith(const GithubToken(scopes: []));
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
         expect(
-          message,
+          additionalContext,
           equals(
             GithubActionsStrings.tokenMissingScopes(requiredScope),
           ),
@@ -273,127 +273,121 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an error if the fetched token scopes are null",
+      ".validateAuth() returns a failure field validation result, if the fetched token scopes are null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction with the token scope not found message if the fetched token scopes are null",
+      ".validateAuth() returns a field validation result with the 'token scope not found' additional context, if the fetched token scopes are null",
       () async {
         final requiredScope = GithubTokenScopeMapper.repo;
 
         when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
 
-        final interactionResult = await delegate.validateAuth(auth);
-        final message = interactionResult.message;
+        final result = await delegate.validateAuth(auth);
+        final additionalContext = result.additionalContext;
 
         expect(
-          message,
+          additionalContext,
           equals(GithubActionsStrings.tokenMissingScopes(requiredScope)),
         );
       },
     );
 
     test(
-      ".validateAuth() returns a successful interaction if the fetched Github token has required scope",
+      ".validateAuth() returns a success field validation result, if the fetched Github token has required scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(githubToken);
 
-        final interactionResult = await delegate.validateAuth(auth);
+        final result = await delegate.validateAuth(auth);
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an interaction containing the fetched Github token if the fetched Github token has required scope",
-      () async {
-        when(client.fetchToken(auth)).thenSuccessWith(githubToken);
-
-        final interactionResult = await delegate.validateAuth(auth);
-        final token = interactionResult.result;
-
-        expect(token, equals(githubToken));
-      },
-    );
-
-    test(
-      ".validateRepositoryOwner() returns an error if the repository owner fetching failed",
+      ".validateRepositoryOwner() returns a failure field validation result, if the repository owner fetching failed",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
-        final interactionResult = await delegate.validateRepositoryOwner(
+        final result = await delegate.validateRepositoryOwner(
           repositoryOwner,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching failed",
+      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context, if the repository owner fetching failed",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
-        final interactionResult = await delegate.validateRepositoryOwner(
+        final result = await delegate.validateRepositoryOwner(
           repositoryOwner,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.repositoryOwnerNotFound));
+        expect(
+          additionalContext,
+          equals(GithubActionsStrings.repositoryOwnerNotFound),
+        );
       },
     );
 
     test(
-      ".validateRepositoryOwner() returns an error if the repository owner fetching result is null",
+      ".validateRepositoryOwner() returns a failure field validation result, if the repository owner fetching result is null",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateRepositoryOwner(
+        final result = await delegate.validateRepositoryOwner(
           repositoryOwner,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateRepositoryOwner() returns an interaction with the repository owner not found message if the repository owner fetching result is null",
+      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context, if the repository owner fetching result is null",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateRepositoryOwner(
+        final result = await delegate.validateRepositoryOwner(
           repositoryOwner,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.repositoryOwnerNotFound));
+        expect(
+          additionalContext,
+          equals(GithubActionsStrings.repositoryOwnerNotFound),
+        );
       },
     );
 
     test(
-      ".validateRepositoryOwner() returns a successful interaction if the given repository owner is valid",
+      ".validateRepositoryOwner() returns a success field validation result, if the given repository owner is valid",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
         ).thenSuccessWith(githubUser);
 
-        final interactionResult = await delegate.validateRepositoryOwner(
+        final result = await delegate.validateRepositoryOwner(
           repositoryOwner,
         );
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateRepositoryName() returns an error if the github repository fetching failed",
+      ".validateRepositoryName() returns a failure field validation result, if the github repository fetching failed",
       () async {
         when(
           client.fetchGithubRepository(
@@ -402,17 +396,17 @@ void main() {
           ),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateRepositoryName(
+        final result = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
           repositoryOwner: repositoryOwner,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching failed",
+      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context, if the github repository fetching failed",
       () async {
         when(
           client.fetchGithubRepository(
@@ -421,18 +415,21 @@ void main() {
           ),
         ).thenErrorWith();
 
-        final interactionResult = await delegate.validateRepositoryName(
+        final result = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
           repositoryOwner: repositoryOwner,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.repositoryNotFound));
+        expect(
+          additionalContext,
+          equals(GithubActionsStrings.repositoryNotFound),
+        );
       },
     );
 
     test(
-      ".validateRepositoryName() returns an error if the github repository fetching result is null",
+      ".validateRepositoryName() returns a failure field validation result, if the github repository fetching result is null",
       () async {
         when(
           client.fetchGithubRepository(
@@ -441,17 +438,17 @@ void main() {
           ),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateRepositoryName(
+        final result = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
           repositoryOwner: repositoryOwner,
         );
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateRepositoryName() returns an interaction with the repository not found message if the github repository fetching result is null",
+      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context, if the github repository fetching result is null",
       () async {
         when(
           client.fetchGithubRepository(
@@ -460,18 +457,19 @@ void main() {
           ),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateRepositoryName(
+        final result = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
           repositoryOwner: repositoryOwner,
         );
-        final message = interactionResult.message;
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.repositoryNotFound));
+        expect(
+            additionalContext, equals(GithubActionsStrings.repositoryNotFound));
       },
     );
 
     test(
-      ".validateRepositoryName() returns a successful interaction if the given repository name is valid",
+      ".validateRepositoryName() returns a success field validation result, if the given repository name is valid",
       () async {
         when(
           client.fetchGithubRepository(
@@ -480,73 +478,75 @@ void main() {
           ),
         ).thenSuccessWith(githubRepository);
 
-        final interactionResult = await delegate.validateRepositoryName(
+        final result = await delegate.validateRepositoryName(
           repositoryName: repositoryName,
           repositoryOwner: repositoryOwner,
         );
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validateWorkflowId() returns an error if the workflow fetching failed",
+      ".validateWorkflowId() returns a failure field validation result, if the workflow fetching failed",
       () async {
         when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
-        final interactionResult = await delegate.validateWorkflowId(workflowId);
+        final result = await delegate.validateWorkflowId(workflowId);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching failed",
+      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context, if the workflow fetching failed",
       () async {
         when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
-        final interactionResult = await delegate.validateWorkflowId(workflowId);
-        final message = interactionResult.message;
+        final result = await delegate.validateWorkflowId(workflowId);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.workflowNotFound));
+        expect(
+            additionalContext, equals(GithubActionsStrings.workflowNotFound));
       },
     );
 
     test(
-      ".validateWorkflowId() returns an error if the workflow fetching result is null",
+      ".validateWorkflowId() returns a failure field validation result, if the workflow fetching result is null",
       () async {
         when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateWorkflowId(workflowId);
+        final result = await delegate.validateWorkflowId(workflowId);
 
-        expect(interactionResult.isError, isTrue);
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
-      ".validateWorkflowId() returns an interaction with the workflow not found message if the workflow fetching result is null",
+      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context, if the workflow fetching result is null",
       () async {
         when(
           client.fetchWorkflow(workflowId),
         ).thenSuccessWith(null);
 
-        final interactionResult = await delegate.validateWorkflowId(workflowId);
-        final message = interactionResult.message;
+        final result = await delegate.validateWorkflowId(workflowId);
+        final additionalContext = result.additionalContext;
 
-        expect(message, equals(GithubActionsStrings.workflowNotFound));
+        expect(
+            additionalContext, equals(GithubActionsStrings.workflowNotFound));
       },
     );
 
     test(
-      ".validateWorkflowId() returns a successful interaction if the given workflow identifier is valid",
+      ".validateWorkflowId() returns a success field validation result, if the given workflow identifier is valid",
       () async {
         when(
           client.fetchWorkflow(workflowId),
         ).thenSuccessWith(githubActionsWorkflow);
 
-        final interactionResult = await delegate.validateWorkflowId(workflowId);
+        final result = await delegate.validateWorkflowId(workflowId);
 
-        expect(interactionResult.isSuccess, isTrue);
+        expect(result.isSuccess, isTrue);
       },
     );
 
