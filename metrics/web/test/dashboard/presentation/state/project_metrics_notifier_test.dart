@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -25,7 +25,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/matchers.dart';
 
 void main() {
   group("ProjectMetricsNotifier", () {
@@ -78,7 +78,7 @@ void main() {
       () {
         expect(
           () => ProjectMetricsNotifier(null),
-          MatcherUtil.throwsAssertionError,
+          throwsAssertionError,
         );
       },
     );

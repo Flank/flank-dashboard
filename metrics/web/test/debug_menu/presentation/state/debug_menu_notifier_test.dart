@@ -1,7 +1,6 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/usecases/close_local_config_storage_usecase.dart';
@@ -14,7 +13,9 @@ import 'package:metrics/debug_menu/presentation/strings/debug_menu_strings.dart'
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
+import '../../../test_utils/matchers.dart';
 import '../../../test_utils/renderer_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -176,7 +177,7 @@ void main() {
 
         notifier.initializeLocalConfig();
 
-        verify(openUseCase()).called(1);
+        verify(openUseCase()).called(once);
       },
     );
 
@@ -187,7 +188,7 @@ void main() {
 
         await notifier.initializeLocalConfig();
 
-        verify(readUseCase()).called(1);
+        verify(readUseCase()).called(once);
       },
     );
 
@@ -335,7 +336,7 @@ void main() {
 
         notifier.toggleFpsMonitor();
 
-        verify(updateUseCase(expectedParam)).called(1);
+        verify(updateUseCase(expectedParam)).called(once);
       },
     );
 
@@ -421,7 +422,7 @@ void main() {
 
         notifier.rendererDisplayViewModel;
 
-        verify(renderer.isSkia).called(1);
+        verify(renderer.isSkia).called(once);
       },
     );
 
@@ -458,7 +459,7 @@ void main() {
       () {
         notifier.dispose();
 
-        verify(closeUseCase()).called(1);
+        verify(closeUseCase()).called(once);
       },
     );
   });
