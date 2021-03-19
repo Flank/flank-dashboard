@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
-import 'package:ci_integration/destination/firestore/config/factory/firebase_auth_factory.dart';
+import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
@@ -10,6 +10,15 @@ import 'package:firedart/firedart.dart';
 
 /// A [ValidationDelegate] for the Firestore destination integration.
 class FirestoreDestinationValidationDelegate implements ValidationDelegate {
+  /// A [List] of [FirebaseAuthExceptionCode]s of [FirebaseAuthException]s
+  /// thrown when the given authentication credentials are not valid.
+  static const List<FirebaseAuthExceptionCode> _invalidAuthExceptionCodes = [
+    FirebaseAuthExceptionCode.emailNotFound,
+    FirebaseAuthExceptionCode.invalidPassword,
+    FirebaseAuthExceptionCode.passwordLoginDisabled,
+    FirebaseAuthExceptionCode.userDisabled,
+  ];
+
   /// A [FirebaseAuthFactory] this delegate uses to create [FirebaseAuth]
   /// instances.
   final FirebaseAuthFactory authFactory;
@@ -31,7 +40,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     try {
       final auth = authFactory.create(firebaseApiKey);
 
-      await auth.signIn('stub@email.com', 'stub_password');
+      await auth.signIn('', '');
     } on FirebaseAuthException catch (e) {
       final exceptionCode = e.code;
 
@@ -50,29 +59,20 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     FirebaseAuthCredentials credentials,
   ) async {
     try {
-      await _createAuth(credentials);
+      await _authenticate(credentials);
     } on FirebaseAuthException catch (e) {
       final exceptionCode = e.code;
 
-      const invalidAuthExceptionCodes = [
-        FirebaseAuthExceptionCode.emailNotFound,
-        FirebaseAuthExceptionCode.invalidPassword,
-        FirebaseAuthExceptionCode.passwordLoginDisabled,
-        FirebaseAuthExceptionCode.userDisabled,
-      ];
-
-      if (invalidAuthExceptionCodes.contains(exceptionCode)) {
+      if (_invalidAuthExceptionCodes.contains(exceptionCode)) {
         final message = e.message;
 
         return FieldValidationResult.failure(additionalContext: message);
       }
 
-      final code = '${e.code}';
-      final message = e.message;
       return FieldValidationResult.unknown(
         additionalContext: FirestoreStrings.authValidationFailedMessage(
-          code,
-          message,
+          '${e.code}',
+          e.message,
         ),
       );
     }
@@ -81,7 +81,8 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
   }
 
   /// Creates a new authenticated [FirebaseAuth] using the given [credentials].
-  Future<FirebaseAuth> _createAuth(FirebaseAuthCredentials credentials) async {
+  Future<FirebaseAuth> _authenticate(
+      FirebaseAuthCredentials credentials) async {
     final auth = authFactory.create(credentials.apiKey);
 
     await auth.signIn(credentials.email, credentials.password);

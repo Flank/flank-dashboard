@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/destination/firestore/config/factory/firebase_auth_factory.dart';
+import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:test/test.dart';
 
 void main() {

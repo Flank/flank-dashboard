@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
-import 'package:ci_integration/destination/firestore/config/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
+import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
 import 'package:firedart/firedart.dart';
 import 'package:mockito/mockito.dart';
@@ -48,13 +48,6 @@ void main() {
       message,
     );
 
-    const invalidAuthExceptionCodes = [
-      FirebaseAuthExceptionCode.emailNotFound,
-      FirebaseAuthExceptionCode.invalidPassword,
-      FirebaseAuthExceptionCode.passwordLoginDisabled,
-      FirebaseAuthExceptionCode.userDisabled,
-    ];
-
     final user = User.fromMap(const {});
 
     final authFactory = _FirebaseAuthFactoryMock();
@@ -66,9 +59,13 @@ void main() {
       return when(authFactory.create(apiKey));
     }
 
-    PostExpectation<Future<User>> whenSignIn() {
+    PostExpectation<Future<User>> whenSignIn({
+      String withEmail = email,
+      String withPassword = password,
+    }) {
       whenCreateFirebaseAuth().thenReturn(firebaseAuth);
-      return when(firebaseAuth.signIn(email, password));
+
+      return when(firebaseAuth.signIn(withEmail, withPassword));
     }
 
     tearDown(() {
@@ -98,7 +95,7 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() creates a firebase auth with the firebase auth factory",
+      ".validatePublicApiKey() creates a firebase auth using the firebase auth factory",
       () {
         whenCreateFirebaseAuth().thenReturn(firebaseAuth);
 
@@ -109,7 +106,7 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() signs in with the created firebase auth",
+      ".validatePublicApiKey() signs in using the created firebase auth",
       () {
         whenCreateFirebaseAuth().thenReturn(firebaseAuth);
 
@@ -120,9 +117,12 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() returns a failure field validation result, if the auth throws a firebase auth exception with the 'invalid api key' code",
+      ".validatePublicApiKey() returns a failure field validation result if the auth throws a firebase auth exception with the 'invalid api key' code",
       () async {
-        whenSignIn().thenAnswer(
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer(
           (_) => Future.error(invalidApiKeyAuthException),
         );
 
@@ -133,9 +133,12 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() returns a result with the 'api key invalid' additional context, if the auth throws a firebase auth exception with the 'invalid api key' code",
+      ".validatePublicApiKey() returns a result with the 'api key invalid' additional context if the auth throws a firebase auth exception with the 'invalid api key' code",
       () async {
-        whenSignIn().thenAnswer(
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer(
           (_) => Future.error(invalidApiKeyAuthException),
         );
 
@@ -149,27 +152,26 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() returns a successful field validation result, if the auth throws a firebase auth exception with the exception code that does not indicate the invalid api key",
+      ".validatePublicApiKey() returns a successful field validation result if the auth throws a firebase auth exception with the code does not indicate that the api key is invalid",
       () async {
-        final exceptionCodes = FirebaseAuthExceptionCode.values.where(
-          (code) => code != FirebaseAuthExceptionCode.invalidApiKey,
-        );
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer((_) => Future.error(emailNotFoundAuthException));
 
-        for (final exceptionCode in exceptionCodes) {
-          final exception = FirebaseAuthException(exceptionCode, message);
-          whenSignIn().thenAnswer((_) => Future.error(exception));
+        final result = await delegate.validatePublicApiKey(apiKey);
 
-          final result = await delegate.validatePublicApiKey(apiKey);
-
-          expect(result.isSuccess, isTrue);
-        }
+        expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".validatePublicApiKey() returns a successful field validation result if the public api key is valid",
+      ".validatePublicApiKey() returns a successful field validation result if the sign-in process finishes successfully",
       () async {
-        whenSignIn().thenAnswer((_) => Future.value(user));
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer((_) => Future.value(user));
 
         final result = await delegate.validatePublicApiKey(apiKey);
 
@@ -189,7 +191,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() signs in with the created firebase auth and the given credentials",
+      ".validateAuth() signs in using the created firebase auth and the given credentials",
       () {
         final expectedEmail = credentials.email;
         final expectedPassword = credentials.password;
@@ -204,7 +206,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the auth throws a firebase auth exception with the 'email not found' code",
+      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'email not found' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -217,7 +219,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the exception message if the auth throws a firebase auth exception with the 'email not found' code",
+      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'email not found' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -230,7 +232,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the auth throws a firebase auth exception with the 'invalid password' code",
+      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'invalid password' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(invalidPasswordAuthException),
@@ -243,7 +245,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the exception message if the auth throws a firebase auth exception with the 'invalid password' code",
+      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'invalid password' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(invalidPasswordAuthException),
@@ -256,7 +258,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the auth throws a firebase auth exception with the 'password login disabled' code",
+      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'password login disabled' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(passwordLoginDisabledAuthException),
@@ -269,7 +271,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the exception message if the auth throws a firebase auth exception with the 'password login disabled' code",
+      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'password login disabled' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(passwordLoginDisabledAuthException),
@@ -282,7 +284,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the auth throws a firebase auth exception with the 'user disabled' code",
+      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'user disabled' code",
       () async {
         whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
 
@@ -293,7 +295,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the exception message if the auth throws a firebase auth exception with the 'user disabled' code",
+      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'user disabled' code",
       () async {
         whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
 
@@ -304,48 +306,38 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns an unknown field validation result, if the auth throws a firebase auth exception with the code that does not indicate the invalid auth",
+      ".validateAuth() returns an unknown field validation result if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
       () async {
-        final exceptionCodes = FirebaseAuthExceptionCode.values.where(
-          (code) => !invalidAuthExceptionCodes.contains(code),
+        whenSignIn().thenAnswer(
+          (_) => Future.error(invalidApiKeyAuthException),
         );
 
-        for (final exceptionCode in exceptionCodes) {
-          final exception = FirebaseAuthException(exceptionCode, message);
-          whenSignIn().thenAnswer((_) => Future.error(exception));
+        final result = await delegate.validateAuth(credentials);
 
-          final result = await delegate.validateAuth(credentials);
-
-          expect(result.isUnknown, isTrue);
-        }
+        expect(result.isUnknown, isTrue);
       },
     );
 
     test(
-      ".validateAuth() returns an field validation result with the 'auth validation failed' additional context with the exception code and message, if the auth throws a firebase auth exception with the code that does not indicate the invalid auth",
+      ".validateAuth() returns a field validation result with the 'auth validation failed' additional context containing the exception code and message if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
       () async {
-        final exceptionCodes = FirebaseAuthExceptionCode.values.where(
-          (code) => !invalidAuthExceptionCodes.contains(code),
+        whenSignIn().thenAnswer(
+          (_) => Future.error(invalidApiKeyAuthException),
+        );
+        final expectedAdditionalContext =
+            FirestoreStrings.authValidationFailedMessage(
+          '${invalidApiKeyAuthException.code}',
+          invalidApiKeyAuthException.message,
         );
 
-        for (final exceptionCode in exceptionCodes) {
-          final exception = FirebaseAuthException(exceptionCode, message);
-          final expectedAdditionalContext =
-              FirestoreStrings.authValidationFailedMessage(
-            '$exceptionCode',
-            message,
-          );
-          whenSignIn().thenAnswer((_) => Future.error(exception));
+        final result = await delegate.validateAuth(credentials);
 
-          final result = await delegate.validateAuth(credentials);
-
-          expect(result.additionalContext, equals(expectedAdditionalContext));
-        }
+        expect(result.additionalContext, equals(expectedAdditionalContext));
       },
     );
 
     test(
-      ".validateAuth() returns a successful field validation result if the auth is valid",
+      ".validateAuth() returns a successful field validation result if the sign-in process finishes successfully",
       () async {
         whenSignIn().thenAnswer((_) => Future.value(user));
 

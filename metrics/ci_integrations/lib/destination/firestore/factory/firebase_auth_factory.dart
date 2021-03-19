@@ -3,7 +3,7 @@
 
 import 'package:firedart/firedart.dart';
 
-/// A factory class that creates new instance of [FirebaseAuth].
+/// A factory class that provides a method for creating a [FirebaseAuth].
 class FirebaseAuthFactory {
   /// Creates an instance of the [FirebaseAuthFactory].
   const FirebaseAuthFactory();
