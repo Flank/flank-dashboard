@@ -792,9 +792,6 @@ void main() {
         whenValidateJobName().thenAnswer(
           (_) => Future.value(failureFieldValidationResult),
         );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
 
         await validator.validate(config);
 
@@ -810,9 +807,6 @@ void main() {
     test(
       ".validate() sets the job name field validation result returned by the validation delegate",
       () async {
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
         whenValidateJobName().thenAnswer(
           (_) => Future.value(failureFieldValidationResult),
         );
@@ -834,9 +828,6 @@ void main() {
         whenValidateJobName().thenAnswer(
           (_) => Future.value(failureFieldValidationResult),
         );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
 
         await validator.validate(config);
 
@@ -854,30 +845,6 @@ void main() {
       () async {
         whenValidateJobName().thenAnswer(
           (_) => Future.value(unknownFieldValidationResult),
-        );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
-
-        await validator.validate(config);
-
-        verify(
-          validationDelegate.validateCoverageArtifactName(
-            workflowId: workflowId,
-            coverageArtifactName: coverageArtifactName,
-          ),
-        ).called(once);
-      },
-    );
-
-    test(
-      ".validate() validates the coverage artifact name if the job name validation succeeds",
-      () async {
-        whenValidateJobName().thenAnswer(
-          (_) => Future.value(successFieldValidationResult),
-        );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
         );
 
         await validator.validate(config);
@@ -898,9 +865,6 @@ void main() {
         whenValidateJobName().thenAnswer(
           (_) => Future.value(failureFieldValidationResult),
         );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
-        );
 
         final result = await validator.validate(config);
 
@@ -914,9 +878,6 @@ void main() {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateJobName().thenAnswer(
           (_) => Future.value(unknownFieldValidationResult),
-        );
-        whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
         );
 
         final result = await validator.validate(config);
