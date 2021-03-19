@@ -265,9 +265,7 @@ void main() {
 
         expect(
           additionalContext,
-          equals(
-            GithubActionsStrings.tokenMissingScopes(requiredScope),
-          ),
+          equals(GithubActionsStrings.tokenMissingScopes(requiredScope)),
         );
       },
     );
@@ -464,7 +462,9 @@ void main() {
         final additionalContext = result.additionalContext;
 
         expect(
-            additionalContext, equals(GithubActionsStrings.repositoryNotFound));
+          additionalContext,
+          equals(GithubActionsStrings.repositoryNotFound),
+        );
       },
     );
 
@@ -507,7 +507,9 @@ void main() {
         final additionalContext = result.additionalContext;
 
         expect(
-            additionalContext, equals(GithubActionsStrings.workflowNotFound));
+          additionalContext,
+          equals(GithubActionsStrings.workflowNotFound),
+        );
       },
     );
 
@@ -533,7 +535,9 @@ void main() {
         final additionalContext = result.additionalContext;
 
         expect(
-            additionalContext, equals(GithubActionsStrings.workflowNotFound));
+          additionalContext,
+          equals(GithubActionsStrings.workflowNotFound),
+        );
       },
     );
 

@@ -781,6 +781,20 @@ void main() {
     );
 
     test(
+      ".validate() returns a validation result built by the validation result builder, if the workflow identifier validation fails",
+      () async {
+        when(validationResultBuilder.build()).thenReturn(validationResult);
+        whenValidateWorkflowId().thenAnswer(
+          (_) => Future.value(failureFieldValidationResult),
+        );
+
+        final result = await validator.validate(config);
+
+        expect(result, equals(validationResult));
+      },
+    );
+
+    test(
       ".validate() delegates job name validation to the validation delegate",
       () async {
         whenValidateJobName().thenErrorWith();
