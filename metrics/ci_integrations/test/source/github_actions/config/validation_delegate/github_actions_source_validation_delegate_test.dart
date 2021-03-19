@@ -192,7 +192,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the token fetching failed",
+      ".validateAuth() returns a failure field validation result if the token fetching failed",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
@@ -203,7 +203,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the token fetching failed",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context if the token fetching failed",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
@@ -215,7 +215,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the token fetching result is null",
+      ".validateAuth() returns a failure field validation result if the token fetching result is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
@@ -226,7 +226,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the token fetching result is null",
+      ".validateAuth() returns a field validation result with the 'token invalid' additional context if the token fetching result is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
@@ -238,7 +238,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the fetched token does not have the required scope",
+      ".validateAuth() returns a failure field validation result if the fetched token does not have the required scope",
       () async {
         when(
           client.fetchToken(auth),
@@ -251,7 +251,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token scope not found' additional context, if the fetched token does not have the required scope",
+      ".validateAuth() returns a field validation result with the 'token scope not found' additional context if the fetched token does not have the required scope",
       () async {
         final requiredScope = GithubTokenScopeMapper.repo;
 
@@ -270,7 +270,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the fetched token scopes are null",
+      ".validateAuth() returns a failure field validation result if the fetched token scopes are null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
 
@@ -281,7 +281,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token scope not found' additional context, if the fetched token scopes are null",
+      ".validateAuth() returns a field validation result with the 'token scope not found' additional context if the fetched token scopes are null",
       () async {
         final requiredScope = GithubTokenScopeMapper.repo;
 
@@ -298,7 +298,7 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a success field validation result, if the fetched Github token has required scope",
+      ".validateAuth() returns a success field validation result if the fetched Github token has required scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(githubToken);
 
@@ -309,7 +309,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns a failure field validation result, if the repository owner fetching failed",
+      ".validateRepositoryOwner() returns a failure field validation result if the repository owner fetching failed",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
@@ -322,7 +322,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context, if the repository owner fetching failed",
+      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context if the repository owner fetching failed",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
@@ -339,7 +339,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns a failure field validation result, if the repository owner fetching result is null",
+      ".validateRepositoryOwner() returns a failure field validation result if the repository owner fetching result is null",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
@@ -352,7 +352,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context, if the repository owner fetching result is null",
+      ".validateRepositoryOwner() returns a field validation result with the 'repository owner not found' additional context if the repository owner fetching result is null",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
@@ -369,7 +369,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryOwner() returns a success field validation result, if the given repository owner is valid",
+      ".validateRepositoryOwner() returns a success field validation result if the given repository owner is valid",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
@@ -384,7 +384,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns a failure field validation result, if the github repository fetching failed",
+      ".validateRepositoryName() returns a failure field validation result if the github repository fetching failed",
       () async {
         when(
           client.fetchGithubRepository(
@@ -403,7 +403,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context, if the github repository fetching failed",
+      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context if the github repository fetching failed",
       () async {
         when(
           client.fetchGithubRepository(
@@ -426,7 +426,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns a failure field validation result, if the github repository fetching result is null",
+      ".validateRepositoryName() returns a failure field validation result if the github repository fetching result is null",
       () async {
         when(
           client.fetchGithubRepository(
@@ -445,7 +445,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context, if the github repository fetching result is null",
+      ".validateRepositoryName() returns a field validation result with the 'repository not found' additional context if the github repository fetching result is null",
       () async {
         when(
           client.fetchGithubRepository(
@@ -468,7 +468,7 @@ void main() {
     );
 
     test(
-      ".validateRepositoryName() returns a success field validation result, if the given repository name is valid",
+      ".validateRepositoryName() returns a success field validation result if the given repository name is valid",
       () async {
         when(
           client.fetchGithubRepository(
@@ -487,7 +487,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns a failure field validation result, if the workflow fetching failed",
+      ".validateWorkflowId() returns a failure field validation result if the workflow fetching failed",
       () async {
         when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
@@ -498,7 +498,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context, if the workflow fetching failed",
+      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context if the workflow fetching failed",
       () async {
         when(client.fetchWorkflow(workflowId)).thenErrorWith();
 
@@ -513,7 +513,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns a failure field validation result, if the workflow fetching result is null",
+      ".validateWorkflowId() returns a failure field validation result if the workflow fetching result is null",
       () async {
         when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
 
@@ -524,7 +524,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context, if the workflow fetching result is null",
+      ".validateWorkflowId() returns a field validation result with the 'workflow not found' additional context if the workflow fetching result is null",
       () async {
         when(
           client.fetchWorkflow(workflowId),
@@ -541,7 +541,7 @@ void main() {
     );
 
     test(
-      ".validateWorkflowId() returns a success field validation result, if the given workflow identifier is valid",
+      ".validateWorkflowId() returns a success field validation result if the given workflow identifier is valid",
       () async {
         when(
           client.fetchWorkflow(workflowId),
@@ -554,7 +554,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an unknown field validation result, if the workflow runs fetching failed",
+      ".validateJobName() returns an unknown field validation result if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
@@ -568,7 +568,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'workflow identifier invalid' additional context, if the workflow runs fetching failed",
+      ".validateJobName() returns a field validation result with the 'workflow identifier invalid' additional context if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRuns(workflowId).thenErrorWith();
 
@@ -587,7 +587,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an unknown field validation result, if the workflow runs fetching result is null",
+      ".validateJobName() returns an unknown field validation result if the workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
@@ -601,7 +601,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'workflow identifier invalid' additional context, if the workflow runs fetching result is null",
+      ".validateJobName() returns a field validation result with the 'workflow identifier invalid' additional context if the workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
 
@@ -634,7 +634,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'no completed workflow runs' additional context, if there are no completed workflow runs",
+      ".validateJobName() returns a field validation result with the 'no completed workflow runs' additional context if there are no completed workflow runs",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
 
@@ -653,7 +653,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an unknown field validation result, if the workflow run jobs page fetching failed",
+      ".validateJobName() returns an unknown field validation result if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
 
@@ -667,7 +667,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context, if the workflow run jobs page fetching failed",
+      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
 
@@ -700,7 +700,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context, if the workflow run jobs page fetching result is null",
+      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context if the workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(null);
 
@@ -733,7 +733,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an unknown field validation result, if the next workflow run jobs page fetching failed",
+      ".validateJobName() returns an unknown field validation result if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -750,7 +750,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context, if the next workflow run jobs page fetching failed",
+      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -772,7 +772,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an unknown field validation result, if the next workflow run jobs page fetching result is null",
+      ".validateJobName() returns an unknown field validation result if the next workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -789,7 +789,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context, if the next workflow run jobs page fetching result is null",
+      ".validateJobName() returns a field validation result with the 'jobs fetching failed' additional context if the next workflow run jobs page fetching result is null",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
         when(
@@ -811,7 +811,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns an error if there is no job with the given job name",
+      ".validateJobName() returns a failure field validation result if there is no job with the given job name",
       () async {
         whenFetchRunJobs().thenSuccessWith(emptyJobsPage);
 
@@ -825,7 +825,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'job name invalid' additional context, if there is no job with the given job name",
+      ".validateJobName() returns a field validation result with the 'job name invalid' additional context if there is no job with the given job name",
       () async {
         whenFetchRunJobs().thenSuccessWith(emptyJobsPage);
 
@@ -840,7 +840,7 @@ void main() {
     );
 
     test(
-      ".validateJobName() returns a success field validation result, if the given job name is valid",
+      ".validateJobName() returns a success field validation result if the given job name is valid",
       () async {
         whenFetchRunJobs().thenSuccessWith(jobsPage);
 
@@ -854,7 +854,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -868,7 +868,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'workflow identifier invalid' additional context, if the workflow runs fetching failed",
+      ".validateCoverageArtifactName() returns a field validation result with the 'workflow identifier invalid' additional context if the workflow runs fetching failed",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
 
@@ -887,7 +887,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the successful workflow runs fetching result is null",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
 
@@ -901,7 +901,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'workflow identifier invalid' additional context, if the successful workflow runs fetching result is null",
+      ".validateCoverageArtifactName() returns a field validation result with the 'workflow identifier invalid' additional context if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
 
@@ -920,7 +920,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if there are no successful workflow runs",
+      ".validateCoverageArtifactName() returns an unknown field validation result if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRunsWithConclusion(
           workflowId,
@@ -936,7 +936,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'no successful workflow runs' additional context, if there are no successful workflow runs",
+      ".validateCoverageArtifactName() returns a field validation result with the 'no successful workflow runs' additional context if there are no successful workflow runs",
       () async {
         whenFetchWorkflowRunsWithConclusion(
           workflowId,
@@ -957,7 +957,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
 
@@ -971,7 +971,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a success field validation result with the 'artifacts fetching failed' additional context, if the workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns a success field validation result with the 'artifacts fetching failed' additional context if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
 
@@ -990,7 +990,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the successful workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the successful workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(null);
 
@@ -1004,7 +1004,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context, if the successful workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context if the successful workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(null);
 
@@ -1023,7 +1023,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page, if the first one contains an artifact with the given name",
+      ".validateCoverageArtifactName() does not fetch the next workflow runs artifact page if the first one contains an artifact with the given name",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
 
@@ -1037,7 +1037,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1054,7 +1054,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context, if the next workflow run artifacts page fetching failed",
+      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1076,7 +1076,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an unknown field validation result, if the successful next workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns an unknown field validation result if the successful next workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1093,7 +1093,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context, if the successful next workflow run artifacts page fetching result is null",
+      ".validateCoverageArtifactName() returns a field validation result with the 'artifacts fetching failed' additional context if the successful next workflow run artifacts page fetching result is null",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
         when(
@@ -1115,7 +1115,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns an error, if there is no artifact with the given coverage artifact name",
+      ".validateCoverageArtifactName() returns a failure field validation result if there is no artifact with the given coverage artifact name",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(emptyArtifactsPage);
 
@@ -1129,7 +1129,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a field validation result with the 'coverage artifact name invalid' additional context, if there is no artifact with the given coverage artifact name",
+      ".validateCoverageArtifactName() returns a field validation result with the 'coverage artifact name invalid' additional context if there is no artifact with the given coverage artifact name",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(emptyArtifactsPage);
 
@@ -1147,7 +1147,7 @@ void main() {
     );
 
     test(
-      ".validateCoverageArtifactName() returns a successful field validation result, if the given coverage artifact name is valid",
+      ".validateCoverageArtifactName() returns a successful field validation result if the given coverage artifact name is valid",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
 
