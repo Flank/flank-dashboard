@@ -10,8 +10,6 @@ import 'package:ci_integration/source/github_actions/config/model/github_actions
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:meta/meta.dart';
 
 /// A class responsible for validating the [GithubActionsSourceConfig].
 class GithubActionsSourceValidator
@@ -119,88 +117,29 @@ class GithubActionsSourceValidator
     }
 
     final jobName = config.jobName;
-    final jobNameInteraction = await validationDelegate.validateJobName(
+    final jobNameValidationResult = await validationDelegate.validateJobName(
       workflowId: workflowId,
       jobName: jobName,
     );
 
-    _processInteractionWithResult(
-      interaction: jobNameInteraction,
-      field: GithubActionsSourceConfigField.jobName,
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.jobName,
+      jobNameValidationResult,
     );
 
     final coverageArtifact = config.coverageArtifactName;
-    final artifactInteraction =
+    final coverageArtifactValidationResult =
         await validationDelegate.validateCoverageArtifactName(
       workflowId: workflowId,
       coverageArtifactName: coverageArtifact,
     );
 
-    _processInteractionWithResult(
-      interaction: artifactInteraction,
-      field: GithubActionsSourceConfigField.coverageArtifactName,
+    validationResultBuilder.setResult(
+      GithubActionsSourceConfigField.coverageArtifactName,
+      coverageArtifactValidationResult,
     );
 
     return validationResultBuilder.build();
-  }
-
-  /// Processes the given [interaction] taking into account
-  /// the [InteractionResult.result].
-  ///
-  /// Sets the [FieldValidationResult.unknown] if the [field]'s validation
-  /// succeeds with a `null` interaction result.
-  ///
-  /// Otherwise, delegates the [interaction] to the [_processInteraction].
-  void _processInteractionWithResult({
-    @required InteractionResult interaction,
-    @required GithubActionsSourceConfigField field,
-  }) {
-    if (interaction.isSuccess && interaction.result == null) {
-      _setUnknownFieldValidationResult(
-        field,
-        interaction.message,
-      );
-    } else {
-      _processInteraction(
-        interaction: interaction,
-        field: field,
-      );
-    }
-  }
-
-  /// Processes the given [interaction].
-  ///
-  /// Maps the given [interaction] to a [FieldValidationResult] and
-  /// sets the [field] validation result in [validationResultBuilder].
-  void _processInteraction({
-    @required InteractionResult interaction,
-    @required GithubActionsSourceConfigField field,
-  }) {
-    final fieldValidationResult = _mapInteractionToFieldValidationResult(
-      interaction,
-    );
-
-    validationResultBuilder.setResult(field, fieldValidationResult);
-  }
-
-  /// Maps the given [interaction] to a [FieldValidationResult].
-  ///
-  /// Returns [FieldValidationResult.failure] if
-  /// the [interaction.isError] is `true`.
-  ///
-  /// Otherwise, returns [FieldValidationResult.success].
-  FieldValidationResult _mapInteractionToFieldValidationResult(
-    InteractionResult interaction,
-  ) {
-    final additionalContext = interaction.message;
-
-    if (interaction.isError) {
-      return FieldValidationResult.failure(
-        additionalContext: additionalContext,
-      );
-    }
-
-    return FieldValidationResult.success(additionalContext: additionalContext);
   }
 
   /// Sets the [FieldValidationResult.unknown] with the given
