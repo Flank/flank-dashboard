@@ -145,7 +145,7 @@ The CI Integrations tool provides functionality to validate the configuration fi
 ci_integrations validate --config-file="path/to/config_file.yaml"
 ```
 
-_**Note**: The configuration file validation is an optional step. You can use the `sync` command without the configuration file validation, however, the `sync` command does not provide the detailed failure reasons, so it would be hard to figure out what went wrong._
+_**Note**: This step is optional. You can use the `sync` command without the configuration file validation, however, the `sync` command does not provide the detailed failure reasons, so it would be hard to figure out what went wrong._
 
 #### Validate command output
 
@@ -170,12 +170,12 @@ Now, let's take a look at the `validate` command output example. Let's imagine t
 ```yaml
 source:
   cool_source_integration:
-  source_api_key: "invalid_api_key" 
-  source_project_id: "valid_project_id"
+    source_api_key: "invalid_api_key" 
+    source_project_id: "valid_project_id"
 destination:
   cool_destination_integration:
-  destination_api_key: "valid_api_key" 
-  destination_project_id: "valid_project_id"
+    destination_api_key: "valid_api_key" 
+    destination_project_id: "valid_project_id"
 ```
 
 The `validate` command gives us the following output:
@@ -199,7 +199,7 @@ Consider the following table that describes this output's meaning:
 | `CoolDestinationIntegrationConfig` | `destination_api_key` | This field is valid. |
 | `CoolDestinationIntegrationConfig` | `destination_project_id` | This field is valid. |
 
-After the configuration file validation, you can fix issues in the configuration file, if any, and re-run the `validate` command.
+After the configuration file validation, you can fix the configuration file issues, if any, and re-run the `validate` command.
 
 Well done! Now, after we've validated our configuration file and fixed any issues, it's time to use the `sync` command.
 
