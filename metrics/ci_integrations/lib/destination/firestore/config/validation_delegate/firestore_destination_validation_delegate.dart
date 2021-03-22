@@ -173,8 +173,8 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     return auth;
   }
 
-  /// Creates a new instance of the [Firestore] using the given [credentials]
-  /// and the [firebaseProjectId].
+  /// Creates a new authenticated [Firestore] instance using the given 
+  /// [credentials] and the [firebaseProjectId].
   Future<fs.Firestore> _createFirestore(
     FirebaseAuthCredentials credentials,
     String firebaseProjectId,
