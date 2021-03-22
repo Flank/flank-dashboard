@@ -21,12 +21,6 @@ void main() {
     const password = 'stub_password';
     const message = 'message';
 
-    final credentials = FirebaseAuthCredentials(
-      apiKey: apiKey,
-      email: email,
-      password: password,
-    );
-
     const invalidApiKeyAuthException = FirebaseAuthException(
       FirebaseAuthExceptionCode.invalidApiKey,
       message,
@@ -46,6 +40,12 @@ void main() {
     const userDisabledAuthException = FirebaseAuthException(
       FirebaseAuthExceptionCode.userDisabled,
       message,
+    );
+
+    final credentials = FirebaseAuthCredentials(
+      apiKey: apiKey,
+      email: email,
+      password: password,
     );
 
     final user = User.fromMap(const {});
