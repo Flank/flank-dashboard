@@ -3,7 +3,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-/// Holds the strings used across the Buildkite source integration.
+/// A class that holds the strings used across the Buildkite source integration.
 class BuildkiteStrings {
   static const String tokenInvalid = 'The access token is invalid.';
   static const String tokenDoesNotHaveReadBuildsScope =
