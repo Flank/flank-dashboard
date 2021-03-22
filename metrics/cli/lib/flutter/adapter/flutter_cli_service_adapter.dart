@@ -8,7 +8,7 @@ class FlutterCliServiceAdapter implements FlutterService {
   /// with the Flutter CLI.
   final FlutterCli _flutterCli;
 
-  /// Creates a new instance of the [UserMenuThemeData]
+  /// Creates a new instance of the [FlutterCliServiceAdapter]
   /// with the given [FlutterCli].
   ///
   /// Throws an [AssertionError] if the given [FlutterCli] is `null`.

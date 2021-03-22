@@ -20,17 +20,18 @@ void main() {
     });
 
     test(
-        ".build() enables web support and builds the web application in the given path",
-        () async {
-      const path = './test';
+      ".build() enables web support and builds the web application in the given path",
+      () async {
+        const path = './test';
 
-      await flutterCliServiceAdapter.build(path);
+        await flutterCliServiceAdapter.build(path);
 
-      verifyInOrder([
-        flutterCliMock.enableWeb(),
-        flutterCliMock.buildWeb(path),
-      ]);
-    });
+        verifyInOrder([
+          flutterCliMock.enableWeb(),
+          flutterCliMock.buildWeb(path),
+        ]);
+      },
+    );
   });
 }
 
