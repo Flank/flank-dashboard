@@ -5,7 +5,6 @@ import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
@@ -16,6 +15,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
+import '../../../../test_utils/mock/validation_result_builder_mock.dart';
 
 void main() {
   group("BuildkiteSourceValidator", () {
@@ -53,7 +53,7 @@ void main() {
     final auth = BearerAuthorization(accessToken);
 
     final validationDelegate = _BuildkiteSourceValidationDelegateMock();
-    final validationResultBuilder = _ValidationResultBuilderMock();
+    final validationResultBuilder = ValidationResultBuilderMock();
     final validator = BuildkiteSourceValidator(
       validationDelegate,
       validationResultBuilder,
@@ -498,6 +498,3 @@ void main() {
 
 class _BuildkiteSourceValidationDelegateMock extends Mock
     implements BuildkiteSourceValidationDelegate {}
-
-class _ValidationResultBuilderMock extends Mock
-    implements ValidationResultBuilder {}

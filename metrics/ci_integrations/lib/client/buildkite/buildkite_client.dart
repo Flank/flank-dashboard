@@ -17,6 +17,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dar
 import 'package:ci_integration/client/buildkite/models/buildkite_organization.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -66,6 +67,7 @@ class BuildkiteClient with LoggerMixin {
   /// Creates a new instance of the [BuildkiteClient].
   ///
   /// The [buildkiteApiUrl] defaults to the [BuildkiteConstants.buildkiteApiUrl].
+  /// The [headers] defaults to the [HttpConstants.defaultHeaders].
   ///
   /// Throws an [ArgumentError] if [authorization] is `null`.
   /// Throws an [ArgumentError] if either [organizationSlug] or
@@ -74,7 +76,7 @@ class BuildkiteClient with LoggerMixin {
     @required this.organizationSlug,
     @required this.authorization,
     this.buildkiteApiUrl = BuildkiteConstants.buildkiteApiUrl,
-    Map<String, String> headers,
+    Map<String, String> headers = HttpConstants.defaultHeaders,
   }) : _headers = headers {
     ArgumentError.checkNotNull(authorization, 'authorization');
     StringValidator.checkNotNullOrEmpty(

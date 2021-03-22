@@ -12,6 +12,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -92,6 +93,20 @@ void main() {
     );
 
     test(
+      ".headers contain HttpConstants.defaultHeaders if headers parameter is not specified",
+      () {
+        final jenkinsClient = JenkinsClient(
+          jenkinsUrl: jenkinsMockServer.url,
+        );
+        final headers = jenkinsClient.headers;
+
+        HttpConstants.defaultHeaders.forEach((expectedKey, expectedValue) {
+          expect(headers, containsPair(expectedKey, expectedValue));
+        });
+      },
+    );
+
+    test(
       ".headers contain the 'content-type' header with an application-json value",
       () {
         final headers = jenkinsClient.headers;
@@ -154,6 +169,7 @@ void main() {
         final expectedHeaders = {
           HttpHeaders.contentTypeHeader: ContentType.json.value,
           HttpHeaders.acceptHeader: ContentType.json.value,
+          HttpHeaders.userAgentHeader: null
         };
 
         expect(headers, equals(expectedHeaders));
