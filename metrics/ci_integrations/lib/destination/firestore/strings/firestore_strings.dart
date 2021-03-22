@@ -3,13 +3,15 @@
 
 // ignore_for_file: public_member_api_docs
 
-/// A class that holds the strings used across the Firestore destination integration.
+/// A class that holds the strings used across the Firestore destination
+/// integration.
 class FirestoreStrings {
   static const String apiKeyInvalid = 'The Firebase API key is invalid.';
   static const String projectIdInvalid =
       'The given Firebase project id is invalid';
   static const String metricsProjectIdDoesNotExist =
-      'The given metrics project is does not exist.';
+      'The metrics project with the given identifier does not exist.';
+
   static String authValidationFailedMessage(
     String code,
     String message,
