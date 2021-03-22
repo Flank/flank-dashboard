@@ -22,7 +22,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     FirebaseAuthExceptionCode.userDisabled,
   ];
 
-  /// A [FirestoreExceptionReasonMapper] needed for mapping
+  /// A [FirestoreExceptionReasonMapper] this delegate uses for mapping the 
   /// [FirestoreExceptionReason]s.
   static const FirestoreExceptionReasonMapper reasonMapper =
       FirestoreExceptionReasonMapper();
@@ -151,7 +151,8 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       final exceptionMessage = e.message;
 
       return FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.metricsProjectIdValidationFailedMessage(
+        additionalContext:
+            FirestoreStrings.metricsProjectIdValidationFailedMessage(
           exceptionCode,
           exceptionMessage,
         ),

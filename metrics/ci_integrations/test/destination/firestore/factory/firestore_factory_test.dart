@@ -3,14 +3,13 @@
 
 import 'package:ci_integration/destination/firestore/factory/firestore_factory.dart';
 import 'package:test/test.dart';
-
-import '../test_utils/mock/firebase_auth_mock.dart';
+import 'package:firedart/firedart.dart';
 
 void main() {
   group("FirestoreFactory", () {
     const firebaseProjectId = 'firebaseProjectId';
     const firestoreFactory = FirestoreFactory();
-    final firebaseAuth = FirebaseAuthMock();
+    final firebaseAuth = FirebaseAuth('key', VolatileStore());
 
     test(
       ".create() throws an ArgumentError if the given firebase project id is null",
