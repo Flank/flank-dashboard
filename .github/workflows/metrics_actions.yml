@@ -61,7 +61,7 @@ jobs:
           else
             echo "::set-output name=cli::false"
           fi
-          
+
   core-actions:
     name: Core Actions
     runs-on: ubuntu-latest
