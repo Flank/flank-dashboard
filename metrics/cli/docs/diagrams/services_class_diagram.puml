@@ -138,16 +138,23 @@ package sentry {
     package adapter as sentry.adapter {
         class SentryCliServiceAdapter {
             - _sentryCli : SentryCli
+            - _fileHelper : FileHelper
         }
     }
 
     package cli as sentry.cli {
         class SentryCli {
             + login(): Future<void>
-            + createRelease(String releaseName, String organizationSlug, String projectSlug): Future<void>
-            + uploadSourceMaps(String sourcePath, List<String> extensions, String organizationSlug, String projectSlug): Future<void>
-            + finalizeRelease(String releaseName, String organizationSlug, String projectSlug): Future<void>
+            + createRelease(String releaseName, SentryConfig config): Future<void>
+            + uploadSourceMaps(String sourcePath, List<String> extensions, SentryConfig config): Future<void>
+            + finalizeRelease(String releaseName, SentryConfig config): Future<void>
             + version(): Future<void>
+        }
+    }
+    package model as sentry.model{
+        class SentryConfig{
+            + organizationSlug : String
+            + projectSlug : String
         }
     }
 }
@@ -166,6 +173,10 @@ package interfaces {
     }
 }
 
+package helper {
+    class FileHelper {}
+}
+
 FirebaseCliServiceAdapter .right.|> FirebaseService
 GCloudCliServiceAdapter .right.|> GCloudService
 FlutterCliServiceAdapter .right.|> FlutterService
@@ -179,6 +190,7 @@ FlutterCliServiceAdapter -left-> FlutterCli : uses
 GitCliServiceAdapter -left-> GitCli : uses
 NpmCliServiceAdapter -left-> NpmCli : uses
 SentryCliServiceAdapter -left-> SentryCli : uses
+SentryCliServiceAdapter --> FileHelper : uses
 
 
 FirebaseCli .up.|> Cli

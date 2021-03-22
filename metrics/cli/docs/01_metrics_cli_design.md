@@ -104,8 +104,8 @@ Let's review the main `service` interfaces we need to deploy the Metrics Web App
     - Checkout required repository;
 - `NpmService` is an interface used to define the following Npm behavior required for our commands:
     - Install Npm dependencies.
-- `SentryService` is an interface used to define the following Sentry behavior required for our commands:
-    - Sentry login;
+- `SentryService` is an interface providing the following Sentry interaction abilities:
+    - Login to the Sentry;
     - Create a new release.
 
 Since we have interfaces for each service and `CLI`s implemented, we should adapt our `CLI` classes to the corresponding `Service`s. 
