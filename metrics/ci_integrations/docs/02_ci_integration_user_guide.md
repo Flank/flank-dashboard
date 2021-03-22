@@ -145,7 +145,7 @@ The CI Integrations tool provides functionality to validate the configuration fi
 ci_integrations validate --config-file="path/to/config_file.yaml"
 ```
 
-_**Note**: This step is optional. You can use the `sync` command without the configuration file validation, however, the `sync` command does not provide the detailed failure reasons, so it would be hard to figure out what went wrong._
+_**Note**: This step is optional. You can use the `sync` command without the configuration file validation. However, the `sync` command does not provide detailed failure reasons, so it may be hard to figure out what went wrong._
 
 #### Validate command output
 
@@ -161,9 +161,9 @@ Consider the following table that describes all existing conclusions and their m
 | --- | --- | --- | 
 | `valid` | `[+]` | The field is valid. | 
 | `invalid` | `[-]` | The field is invalid. |
-| `unknown` | `[?]` | The field can't be validated due to some reasons or the clear validation conclusion can't be provided. |
+| `unknown` | `[?]` | The field can't be validated, or the clear validation conclusion can't be provided due to some reasons. |
 
-- An additional context that contains any related information on this configuration field's validation, e.g. an access token does not have the required permission to validate a specific field. This part of a `field validation result` is optional, so it can be absent.
+- An additional context that contains any related information on this configuration field's validation, e.g. an access token does not have the required permission to validate a specific field. This part of a `field validation result` is optional so, it can be absent.
 
 Now, let's take a look at the `validate` command output example. Let's imagine the following configuration file:
 
