@@ -3,7 +3,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-/// Holds the strings used across the Jenkins source integration.
+/// A class that holds the strings used across the Jenkins source integration.
 class JenkinsStrings {
   static const String notAJenkinsUrl =
       'The given URL is not a Jenkins URL or a custom authentication flow is used.';
