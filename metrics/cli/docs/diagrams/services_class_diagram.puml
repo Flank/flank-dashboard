@@ -131,7 +131,7 @@ package sentry {
     package service as sentry.service{
         interface SentryService  {
             + login() : Future<void>
-            + createRelease(String releaseName) : Future<void>
+            + createRelease(String appPath) : Future<void>
         }
     }
 

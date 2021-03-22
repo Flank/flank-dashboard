@@ -68,7 +68,7 @@ Bob -> FirebaseService : enters any key
 FirebaseService --> Deployer -- : firestore has been deployed
 
 
-Deployer -> FlutterService ++ : build()
+Deployer -> FlutterService ++ : build(appPath)
 FlutterService -> Deployer -- : build finished
 
 Deployer -> SentryService ++ : login()
@@ -76,7 +76,7 @@ SentryService --> Bob : starts interactive login
 Bob -> SentryService : signs in
 SentryService --> Deployer -- : sign in finished
 
-Deployer -> SentryService ++ : createRelease(String appPath)
+Deployer -> SentryService ++ : createRelease(appPath)
 SentryService -> FileHelper ++ : updateFile(config, options)
 FileHelper -> SentryService -- : file has been updated
 SentryService -> Deployer -- : release created
