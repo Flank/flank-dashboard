@@ -14,13 +14,15 @@ void main() {
       expect(() => FlutterCliServiceAdapter(null), throwsAssertionError);
     });
 
-    test(".version() shows the version information", () {
-      flutterCliServiceAdapter.version();
+    test(".version() shows the version information", () async {
+      await flutterCliServiceAdapter.version();
       verify(flutterCliMock.version()).called(once);
     });
 
-    test(".build() enables web support and builds the web application in the given path", () async {
-      const path = 'test';
+    test(
+        ".build() enables web support and builds the web application in the given path",
+        () async {
+      const path = './test';
 
       await flutterCliServiceAdapter.build(path);
 

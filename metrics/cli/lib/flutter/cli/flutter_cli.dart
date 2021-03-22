@@ -10,7 +10,15 @@ class FlutterCli extends Cli {
 
   /// Builds a Flutter web application in the given [workingDirectory].
   Future<void> buildWeb(String workingDirectory) {
-    return run(['build', 'web'], workingDirectory: workingDirectory);
+    return run(
+      [
+        'build',
+        'web',
+        '--release',
+        '--source-maps',
+      ],
+      workingDirectory: workingDirectory,
+    );
   }
 
   /// Enables web support for the Flutter.

@@ -6,6 +6,8 @@ import 'package:cli/prompt/writer/prompt_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/matchers.dart';
+
 void main() {
   group("Prompter", () {
     const promptText = 'promptText';
@@ -19,8 +21,6 @@ void main() {
     test(
       ".initialize() throws an AssertionError if the given prompt writer is null",
       () {
-        final throwsAssertionError = throwsA(isA<AssertionError>());
-
         expect(() => Prompter.initialize(null), throwsAssertionError);
       },
     );
@@ -32,7 +32,7 @@ void main() {
 
         Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(equals(1));
+        verify(writerMock.prompt(promptText)).called(once);
       },
     );
 
@@ -41,7 +41,7 @@ void main() {
       () async {
         Prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(equals(1));
+        verify(writerMock.prompt(promptText)).called(once);
       },
     );
 
@@ -51,7 +51,7 @@ void main() {
         Prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
         verify(writerMock.promptConfirm(promptText, confirmInput))
-            .called(equals(1));
+            .called(once);
       },
     );
 
@@ -61,7 +61,7 @@ void main() {
         Prompter.promptConfirm(promptText);
 
         verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
-            .called(equals(1));
+            .called(once);
       },
     );
   });
