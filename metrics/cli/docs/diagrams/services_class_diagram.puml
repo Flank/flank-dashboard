@@ -21,11 +21,11 @@ package firebase {
         class FirebaseCli {
             + login(): Future<void>
             + addFirebase(String projectId): Future<void>
-            + createWebApp(String projectId): Future<void>
+            + createWebApp(String projectId, String appName): Future<void>
             + setFirebaseProject(String projectId, String workingDirectory): Future<void>
-            + clearTarget(String workingDirectory): Future<void>
-            + applyTarget(String projectId, String workingDirectory): Future<void>
-            + deployHosting(String workingDirectory): Future<void>
+            + clearTarget(String target, String workingDirectory): Future<void>
+            + applyTarget(String projectId, String target, String workingDirectory): Future<void>
+            + deployHosting(String target, String workingDirectory): Future<void>
             + deployRules(String workingDirectory): Future<void>
             + deployFunctions(String workingDirectory): Future<void>
             + version(): Future<void>
@@ -52,10 +52,9 @@ package gcloud {
     package cli as gcloud.cli {
         class GCloudCli {
             + login(): Future<void>
-            + addProject(): Future<String>
-            + setProject(): Future<void>
-            + selectRegion(): Future<String>
-            + addProjectApp(String region, String projectId): Future<void>
+            + createProject(String projectId): Future<void>
+            + listRegions(): Future<void>
+            + createProjectApp(String region, String projectId): Future<void>
             + enableFirestoreApi() : Future<void>
             + createDatabase(String region, String projectId): Future<void>
             + version() : Future<void>

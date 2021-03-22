@@ -7,7 +7,6 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config_field.dart';
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
@@ -20,6 +19,7 @@ import 'package:test/test.dart';
 
 import '../../../../test_utils/extensions/interaction_result_answer.dart';
 import '../../../../test_utils/matchers.dart';
+import '../../../../test_utils/mock/validation_result_builder_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -41,7 +41,7 @@ void main() {
 
     final auth = BearerAuthorization(accessToken);
     final validationDelegate = _GithubActionsSourceValidationDelegateMock();
-    final validationResultBuilder = _ValidationResultBuilderMock();
+    final validationResultBuilder = ValidationResultBuilderMock();
     final validator = GithubActionsSourceValidator(
       validationDelegate,
       validationResultBuilder,
@@ -1070,6 +1070,3 @@ void main() {
 
 class _GithubActionsSourceValidationDelegateMock extends Mock
     implements GithubActionsSourceValidationDelegate {}
-
-class _ValidationResultBuilderMock extends Mock
-    implements ValidationResultBuilder {}

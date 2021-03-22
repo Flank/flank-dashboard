@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
-import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/integration/interface/source/client_factory/source_client_factory.dart';
 import 'package:ci_integration/source/buildkite/adapter/buildkite_source_client_adapter.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
@@ -28,7 +27,6 @@ class BuildkiteSourceClientFactory
     final buildkiteClient = BuildkiteClient(
       organizationSlug: config.organizationSlug,
       authorization: authorization,
-      headers: HttpConstants.defaultHeaders,
     );
     final buildkiteSourceClientAdapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClient,

@@ -16,6 +16,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_instance_info.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_user.dart';
+import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/util/url/url_utils.dart';
@@ -47,12 +48,13 @@ class JenkinsClient with LoggerMixin {
   /// Creates an instance of [JenkinsClient] using [jenkinsUrl] and
   /// [authorization] method (see [AuthorizationBase] and implementers)
   /// provided.
+  /// The [headers] defaults to the [HttpConstants.defaultHeaders].
   ///
   /// [jenkinsUrl] is required. Throws [ArgumentError] if it is `null` or empty.
   JenkinsClient({
     @required this.jenkinsUrl,
     this.authorization,
-    Map<String, String> headers,
+    Map<String, String> headers = HttpConstants.defaultHeaders,
   }) : _headers = headers {
     if (jenkinsUrl == null || jenkinsUrl.isEmpty) {
       throw ArgumentError.value(
