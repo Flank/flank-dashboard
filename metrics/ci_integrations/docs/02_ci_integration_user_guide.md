@@ -139,13 +139,13 @@ Well done! Your configuration file is ready to use within the `ci_integrations s
 
 ### Validating configuration file
 
-The CI Integrations tool provides functionality to validate the configuration files to ensure that all fields of the configuration file are correct . In order to do that, use the `validate` command of the CI Integrations tool. Consider the following example that demonstrates how to use the `validate` command:
+The CI Integrations tool provides functionality to validate the configuration files to ensure that all fields of the configuration file are correct. In order to do that, use the `validate` command of the CI Integrations tool. Consider the following example that demonstrates how to use the `validate` command:
 
 ``` bash
 ci_integrations validate --config-file="path/to/config_file.yaml"
 ```
 
-_**Note**: The configuration file validation is an optional step. You can use the `sync` command without the configuration file validation._
+_**Note**: The configuration file validation is an optional step. You can use the `sync` command without the configuration file validation, however, the `sync` command does not provide the detailed failure reasons, so it would be hard to figure out what went wrong._
 
 #### Validate command output
 
@@ -180,7 +180,7 @@ destination:
 
 The `validate` command gives us the following output:
 
-```bash
+``` 
 Validating CoolSourceIntegrationConfig...
 [-] source_api_key: invalid. Additional context: the given api key is invalid.
 [?] source_project_id: unknown. Additional context: cannot be validated as the provided api key is invalid.
@@ -198,6 +198,10 @@ Consider the following table that describes this output's meaning:
 | `CoolSourceIntegrationConfig` | `source_project_id` | This field can't be validated, as the provided api key is invalid. The result is unknown. |
 | `CoolDestinationIntegrationConfig` | `destination_api_key` | This field is valid. |
 | `CoolDestinationIntegrationConfig` | `destination_project_id` | This field is valid. |
+
+After the configuration file validation you can fix issues in file, if any, and re-run the `validate` command.
+
+Well done! Now, after we've validated our configuration file and fixed any issues, it's time to use the `sync` command.
 
 ### Making Things Work
 
