@@ -16,7 +16,8 @@ The following subsections cover the points we should clarify in using the CI Int
 1. [Glossary](#glossary)
 2. [Downloading the CI Integration tool](#downloading-the-ci-integrations-tool)
 3. [Creating a configuration file](#creating-configuration-file)
-4. [Making things work](#making-things-work)
+4. [Validating a configuration file](#validating-configuration-file)
+5. [Making things work](#making-things-work)
 
 ### Glossary
 
@@ -134,9 +135,69 @@ destination:
 
 _**Note**: The order of source and destination parts doesn't matter - the first part can be `destination` and the second can be `source`. But both parts are required and must be presented in the configuration part._
 
-Well done! Your configuration file is ready to use within the `ci_integrations sync` command. The [next section](#making-things-work) describes
- how
- to make all things work together!
+Well done! Your configuration file is ready to use within the `ci_integrations sync` command. The [next section](#validating-configuration-file) describes how to validate the created configuration file.
+
+### Validating configuration file
+
+The CI Integrations tool provides functionality to validate the configuration files to ensure that all fields of the configuration file are correct . In order to do that, use the `validate` command of the CI Integrations tool. Consider the following example that demonstrates how to use the `validate` command:
+
+``` bash
+ci_integrations validate --config-file="path/to/config_file.yaml"
+```
+
+_**Note**: The configuration file validation is an optional step. You can use the `sync` command without the configuration file validation._
+
+#### Validate command output
+
+The `validate` command provides a detailed output on each configuration file's field. An output for the whole configuration file is called a `validation result`. The `validation result`, in its turn, consists of `field validation results` that represent a validation result for a specific configuration file's field.
+
+Each `field validation result` holds the following information:
+- A configuration file field's name.
+- A validation conclusion for the field. Each conslusion has its own specific visual marker that represents this conclusion. 
+
+Consider the following table that describes all existing conclusions and their meanings:
+    
+| Conclusion | Marker | Meaning |
+| --- | --- | --- | 
+| `valid` | `[+]` | The field is valid. | 
+| `invalid` | `[-]` | The field is invalid. |
+| `unknown` | `[?]` | The field can't be validated due to some reasons or the clear validation conclusion can't be provided. |
+
+- An additional context that contains any related information on this configuration field's validation, e.g. an access token does not have the required permission to validate a specific field. This part of a `field validation result` is optional, so it can be absent.
+
+Now, let's take a look at the `validate` command output example. Let's imagine the following configuration file:
+ 
+```yaml
+source:
+  cool_source_integration:
+    source_api_key: "invalid_api_key"    
+    source_project_id: "valid_project_id"
+destination:
+  cool_destination_integration:
+    destination_api_key: "valid_api_key"    
+    destination_project_id: "valid_project_id"
+```
+
+The `validate` command gives us the following output:
+
+```bash
+Validating CoolSourceIntegrationConfig...
+[-] source_api_key: invalid. Additional context: the given api key is invalid.
+[?] source_project_id: unknown. Additional context: cannot be validated as the provided api key is invalid.
+
+Validating CoolDestinationIntegrationConfig...
+[+] destination_api_key: valid.
+[+] destination_project_id: valid.
+```
+
+Consider the following table that describes this output's meaning:
+
+| Config | Config field | Meaning |
+| --- | --- | --- |
+| `CoolSourceIntegrationConfig` | `source_api_key` | This field is invalid. |
+| `CoolSourceIntegrationConfig` | `source_project_id` | This field can't be validated, as the provided api key is invalid. The result is unknown. |
+| `CoolDestinationIntegrationConfig` | `destination_api_key` | This field is valid. |
+| `CoolDestinationIntegrationConfig` | `destination_project_id` | This field is valid. |
 
 ### Making Things Work
 
