@@ -1,8 +1,11 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/client/firestore/firestore.dart' as fs;
+import 'package:ci_integration/client/firestore/mappers/firestore_exception_reason_mapper.dart';
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
 import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
+import 'package:ci_integration/destination/firestore/factory/firestore_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
@@ -19,18 +22,30 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     FirebaseAuthExceptionCode.userDisabled,
   ];
 
+  /// A [FirestoreExceptionReasonMapper] needed for mapping
+  /// [FirestoreExceptionReason]s.
+  static const FirestoreExceptionReasonMapper reasonMapper =
+      FirestoreExceptionReasonMapper();
+
   /// A [FirebaseAuthFactory] this delegate uses to create [FirebaseAuth]
   /// instances.
   final FirebaseAuthFactory authFactory;
 
+  /// A [FirebaseAuthFactory] this delegate uses to create [Firestore]
+  /// instances.
+  final FirestoreFactory firestoreFactory;
+
   /// Creates a new instance of the [FirestoreDestinationValidationDelegate]
-  /// with the given [authFactory].
+  /// with the given [authFactory] and [firestoreFactory].
   ///
-  /// Throws an [ArgumentError] if the given [authFactory] is `null`.
+  /// Throws an [ArgumentError] if the given [authFactory] or [firestoreFactory]
+  /// is `null`.
   FirestoreDestinationValidationDelegate(
     this.authFactory,
+    this.firestoreFactory,
   ) {
     ArgumentError.checkNotNull(authFactory, 'authFactory');
+    ArgumentError.checkNotNull(firestoreFactory, 'firestoreFactory');
   }
 
   /// Validates the given [firebaseApiKey].
@@ -80,6 +95,72 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     return const FieldValidationResult.success();
   }
 
+  /// Validates the given [firebaseProjectId].
+  Future<FieldValidationResult> validateFirebaseProjectId(
+    FirebaseAuthCredentials credentials,
+    String firebaseProjectId,
+  ) async {
+    try {
+      final firestore = await _createFirestore(
+        credentials,
+        firebaseProjectId,
+      );
+
+      await firestore.collection('projects').getDocuments();
+    } on FirestoreException catch (e) {
+      final reasons = e.reasons;
+
+      final exceptionReasons = reasons
+          ?.map((reason) => reasonMapper.map(reason))
+          ?.where((reason) => reason != null);
+
+      if (exceptionReasons != null && exceptionReasons.isNotEmpty) {
+        return const FieldValidationResult.failure(
+          additionalContext: FirestoreStrings.projectIdInvalid,
+        );
+      }
+    }
+
+    return const FieldValidationResult.success();
+  }
+
+  /// Validates the given [metricsProjectId].
+  Future<FieldValidationResult> validateMetricsProjectId(
+    FirebaseAuthCredentials credentials,
+    String firebaseProjectId,
+    String metricsProjectId,
+  ) async {
+    try {
+      final firestore = await _createFirestore(
+        credentials,
+        firebaseProjectId,
+      );
+
+      final metricsProject = await firestore
+          .collection('projects')
+          .document(metricsProjectId)
+          .get();
+
+      if (!metricsProject.exists) {
+        return const FieldValidationResult.failure(
+          additionalContext: FirestoreStrings.metricsProjectIdDoesNotExist,
+        );
+      }
+    } on FirestoreException catch (e) {
+      final exceptionCode = '${e.code}';
+      final exceptionMessage = e.message;
+
+      return FieldValidationResult.unknown(
+        additionalContext: FirestoreStrings.metricsProjectIdValidationFailedMessage(
+          exceptionCode,
+          exceptionMessage,
+        ),
+      );
+    }
+
+    return const FieldValidationResult.success();
+  }
+
   /// Creates a new authenticated [FirebaseAuth] using the given [credentials].
   Future<FirebaseAuth> _authenticate(
     FirebaseAuthCredentials credentials,
@@ -89,5 +170,16 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     await auth.signIn(credentials.email, credentials.password);
 
     return auth;
+  }
+
+  /// Creates a new instance of the [Firestore] using the given [credentials]
+  /// and the [firebaseProjectId].
+  Future<fs.Firestore> _createFirestore(
+    FirebaseAuthCredentials credentials,
+    String firebaseProjectId,
+  ) async {
+    final auth = await _authenticate(credentials);
+
+    return firestoreFactory.create(firebaseProjectId, auth);
   }
 }
