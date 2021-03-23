@@ -80,7 +80,7 @@ Deployer -> SentryService ++ : createRelease(appPath)
 SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, DSN, and releaseName
 Bob -> SentryService : enters Sentry params
 SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
-FileHelper -> SentryService -- : file has been updated
+FileHelper -> SentryService -- : config has been updated
 SentryService -> Deployer -- : release created
 
 Deployer -> FirebaseService ++ : deployHosting(appPath)
