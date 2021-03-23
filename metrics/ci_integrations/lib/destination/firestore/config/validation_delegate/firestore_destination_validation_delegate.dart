@@ -125,11 +125,11 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
           ?.map((reason) => reasonMapper.map(reason))
           ?.where((reason) => reason != null);
 
-      final isFirebaseProjectIdReason = exceptionReasons.any(
+      final isFirebaseProjectIdInvalidReason = exceptionReasons.any(
         (reason) => _invalidFirebaseProjectIdExceptionReasons.contains(reason),
       );
 
-      if (isFirebaseProjectIdReason) {
+      if (isFirebaseProjectIdInvalidReason) {
         return const FieldValidationResult.failure(
           additionalContext: FirestoreStrings.projectIdInvalid,
         );
