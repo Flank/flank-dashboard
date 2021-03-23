@@ -29,6 +29,7 @@ void main() {
     const projectId = 'id';
     const metricsProjectId = 'id';
     const projectsCollectionName = 'projects';
+    const stubDocumentName = 'id';
 
     const invalidApiKeyAuthException = FirebaseAuthException(
       FirebaseAuthExceptionCode.invalidApiKey,
@@ -447,7 +448,9 @@ void main() {
     test(
       ".validateFirebaseProjectId() creates a firebase auth using the firebase auth factory",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer((_) => Future.value());
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
 
         await delegate.validateFirebaseProjectId(credentials, projectId);
 
@@ -460,7 +463,9 @@ void main() {
       () async {
         final expectedEmail = credentials.email;
         final expectedPassword = credentials.password;
-        whenGetMetricsProject(withName: '').thenAnswer((_) => Future.value());
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
 
         await delegate.validateFirebaseProjectId(credentials, projectId);
 
@@ -473,7 +478,9 @@ void main() {
     test(
       ".validateFirebaseProjectId() creates a Firestore instance using the Firestore factory",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer((_) => Future.value());
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
 
         await delegate.validateFirebaseProjectId(credentials, projectId);
 
@@ -484,12 +491,14 @@ void main() {
     test(
       ".validateFirebaseProjectId() reads a document from the 'projects' collection",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer((_) => Future.value());
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
 
         await delegate.validateFirebaseProjectId(credentials, projectId);
 
         verify(firestore.collection(projectsCollectionName)).called(once);
-        verify(collection.document('')).called(once);
+        verify(collection.document(stubDocumentName)).called(once);
         verify(documentReference.get()).called(once);
       },
     );
@@ -497,7 +506,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(consumerInvalidFirestoreException),
         );
 
@@ -513,7 +522,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(consumerInvalidFirestoreException),
         );
 
@@ -532,7 +541,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'not found' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(notFoundFirestoreException),
         );
 
@@ -548,7 +557,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'not found' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(notFoundFirestoreException),
         );
 
@@ -567,7 +576,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectDeletedFirestoreException),
         );
 
@@ -583,7 +592,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectDeletedFirestoreException),
         );
 
@@ -602,7 +611,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectInvalidFirestoreException),
         );
 
@@ -618,7 +627,7 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectInvalidFirestoreException),
         );
 
@@ -635,7 +644,7 @@ void main() {
     );
 
     test(
-      ".validateFirebaseProjectId() returns an unknown field validation result if the auth throws a firebase auth exception when signing in",
+      ".validateFirebaseProjectId() returns an unknown field validation result if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -651,7 +660,7 @@ void main() {
     );
 
     test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the the auth throws a firebase auth exception when signing in",
+      ".validateFirebaseProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -673,7 +682,7 @@ void main() {
       ".validateFirebaseProjectId() returns a success field validation result if the Firestore throws a Firestore exception with empty exception reasons",
       () async {
         final exception = createFirestoreException(reasons: []);
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(exception),
         );
 
@@ -690,7 +699,7 @@ void main() {
       ".validateFirebaseProjectId() returns a success field validation result if the Firestore throws a Firestore exception with null exception reasons",
       () async {
         final exception = createFirestoreException(reasons: null);
-        whenGetMetricsProject(withName: '').thenAnswer(
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(exception),
         );
 
@@ -706,7 +715,9 @@ void main() {
     test(
       ".validateFirebaseProjectId() returns a success field validation result if reading documents process succeeds",
       () async {
-        whenGetMetricsProject(withName: '').thenAnswer((_) => Future.value());
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
 
         final result = await delegate.validateFirebaseProjectId(
           credentials,
@@ -874,7 +885,7 @@ void main() {
     );
 
     test(
-      ".validateMetricsProjectId() returns an unknown field validation result if the auth throws a firebase auth exception when signing in",
+      ".validateMetricsProjectId() returns an unknown field validation result if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -891,7 +902,7 @@ void main() {
     );
 
     test(
-      ".validateMetricsProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the the auth throws a firebase auth exception when signing in",
+      ".validateMetricsProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),

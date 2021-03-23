@@ -117,7 +117,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
         firebaseProjectId,
       );
 
-      await firestore.collection('projects').document('').get();
+      await firestore.collection('projects').document('id').get();
     } on FirestoreException catch (e) {
       final reasons = e.reasons ?? [];
 
@@ -125,11 +125,11 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
           ?.map((reason) => reasonMapper.map(reason))
           ?.where((reason) => reason != null);
 
-      final isFirebaseProjectIdInvalidReason = exceptionReasons.any(
+      final isProjectIdInvalid = exceptionReasons.any(
         (reason) => _invalidFirebaseProjectIdExceptionReasons.contains(reason),
       );
 
-      if (isFirebaseProjectIdInvalidReason) {
+      if (isProjectIdInvalid) {
         return const FieldValidationResult.failure(
           additionalContext: FirestoreStrings.projectIdInvalid,
         );
@@ -166,13 +166,10 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
         );
       }
     } on FirestoreException catch (e) {
-      final exceptionCode = '${e.code}';
-      final exceptionMessage = e.message;
-
       return FieldValidationResult.unknown(
         additionalContext: FirestoreStrings.metricsProjectIdValidationFailed(
-          exceptionCode,
-          exceptionMessage,
+          '${e.code}',
+          e.message,
         ),
       );
     } on FirebaseAuthException {
