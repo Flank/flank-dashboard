@@ -10,28 +10,43 @@ import '../../test_utils/matchers.dart';
 
 void main() {
   group("FlutterCliServiceAdapter", () {
-    final flutterCliMock = _FlutterCliMock();
-    final flutterCliServiceAdapter = FlutterCliServiceAdapter(flutterCliMock);
+    const path = './test';
+    final flutterCli = _FlutterCliMock();
+    final flutterCliServiceAdapter = FlutterCliServiceAdapter(flutterCli);
 
-    test("throws an AssertionError if the given flutter CLI is null", () {
-      expect(() => FlutterCliServiceAdapter(null), throwsAssertionError);
-    });
-
-    test(".version() shows the version information", () async {
-      await flutterCliServiceAdapter.version();
-      verify(flutterCliMock.version()).called(once);
+    tearDown(() {
+      reset(flutterCli);
     });
 
     test(
-      ".build() enables web support and builds the web application in the given path",
-      () async {
-        const path = './test';
+      "throws an AssertionError if the given flutter CLI is null",
+      () {
+        expect(() => FlutterCliServiceAdapter(null), throwsAssertionError);
+      },
+    );
 
+    test(".version() shows the version information", () async {
+      await flutterCliServiceAdapter.version();
+      verify(flutterCli.version()).called(once);
+    });
+
+    test(
+      ".build() builds the web application in the given path",
+      () async {
+        await flutterCliServiceAdapter.build(path);
+
+        verify(flutterCli.buildWeb(path)).called(once);
+      },
+    );
+
+    test(
+      ".build() enables web support before building the web application",
+      () async {
         await flutterCliServiceAdapter.build(path);
 
         verifyInOrder([
-          flutterCliMock.enableWeb(),
-          flutterCliMock.buildWeb(path),
+          flutterCli.enableWeb(),
+          flutterCli.buildWeb(path),
         ]);
       },
     );
