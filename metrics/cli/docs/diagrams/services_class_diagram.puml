@@ -13,7 +13,6 @@ package firebase {
     package adapter as firebase.adapter {
         class FirebaseCliServiceAdapter {
             - _firebaseCli: FirebaseCli
-            - _prompter : Prompter
         }
     }
 
@@ -45,7 +44,6 @@ package gcloud {
     package adapter as gcloud.adapter {
         class GCloudCliServiceAdapter {
             - _gcloudCli : GCloudCli
-            - _prompter : Prompter
         }
     }
 
