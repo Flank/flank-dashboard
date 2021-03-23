@@ -77,6 +77,8 @@ Bob -> SentryService : signs in
 SentryService --> Deployer -- : sign in finished
 
 Deployer -> SentryService ++ : createRelease(appPath)
+SentryService -> Bob : asks to enter the Sentry params
+Bob -> SentryService : enters Sentry params
 SentryService -> FileHelper ++ : updateFile(config, options)
 FileHelper -> SentryService -- : file has been updated
 SentryService -> Deployer -- : release created
