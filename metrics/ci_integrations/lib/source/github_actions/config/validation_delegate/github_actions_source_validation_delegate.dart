@@ -5,7 +5,6 @@ import 'package:ci_integration/client/github_actions/github_actions_client.dart'
 import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
-import 'package:ci_integration/client/github_actions/models/github_token.dart';
 import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
@@ -13,6 +12,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
+import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -35,14 +35,14 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [auth].
-  Future<InteractionResult<GithubToken>> validateAuth(
+  Future<FieldValidationResult<void>> validateAuth(
     AuthorizationBase auth,
   ) async {
     final interaction = await _client.fetchToken(auth);
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.tokenInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.tokenInvalid,
       );
     }
 
@@ -58,18 +58,18 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
       final missingRequiredScopesList =
           missingRequiredScopes.map((scope) => mapper.unmap(scope)).toList();
 
-      return InteractionResult.error(
-        message: GithubActionsStrings.tokenMissingScopes(
+      return FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.tokenMissingScopes(
           missingRequiredScopesList.join(', '),
         ),
       );
     }
 
-    return interaction;
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [repositoryOwner].
-  Future<InteractionResult<void>> validateRepositoryOwner(
+  Future<FieldValidationResult<void>> validateRepositoryOwner(
     String repositoryOwner,
   ) async {
     final repositoryOwnerInteraction = await _client.fetchGithubUser(
@@ -77,16 +77,16 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(repositoryOwnerInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.repositoryOwnerNotFound,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.repositoryOwnerNotFound,
       );
     }
 
-    return const InteractionResult.success();
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [repositoryName].
-  Future<InteractionResult<void>> validateRepositoryName({
+  Future<FieldValidationResult<void>> validateRepositoryName({
     String repositoryName,
     String repositoryOwner,
   }) async {
@@ -96,31 +96,31 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(repositoryInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.repositoryNotFound,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.repositoryNotFound,
       );
     }
 
-    return const InteractionResult.success();
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [workflowId].
-  Future<InteractionResult<void>> validateWorkflowId(
+  Future<FieldValidationResult<void>> validateWorkflowId(
     String workflowId,
   ) async {
     final workflowInteraction = await _client.fetchWorkflow(workflowId);
 
     if (_isInteractionFailed(workflowInteraction)) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.workflowNotFound,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.workflowNotFound,
       );
     }
 
-    return const InteractionResult.success();
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [jobName].
-  Future<InteractionResult<WorkflowRunJob>> validateJobName({
+  Future<FieldValidationResult<void>> validateJobName({
     String workflowId,
     String jobName,
   }) async {
@@ -132,40 +132,40 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdentifierInvalid,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.noCompletedWorkflowRuns,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.noCompletedWorkflowRuns,
       );
     }
 
     final jobsInteraction = await _fetchJob(workflowRuns.first, jobName);
 
     if (jobsInteraction.isError) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.jobsFetchingFailed,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.jobsFetchingFailed,
       );
     }
 
     final job = jobsInteraction.result;
 
     if (job == null) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.jobNameInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.jobNameInvalid,
       );
     }
 
-    return InteractionResult.success(result: job);
+    return const FieldValidationResult.success();
   }
 
   /// Validates the given [coverageArtifactName].
-  Future<InteractionResult<WorkflowRunArtifact>> validateCoverageArtifactName({
+  Future<FieldValidationResult<void>> validateCoverageArtifactName({
     String workflowId,
     String coverageArtifactName,
   }) async {
@@ -177,16 +177,16 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (_isInteractionFailed(interaction)) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.workflowIdentifierInvalid,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.workflowIdentifierInvalid,
       );
     }
 
     final workflowRuns = interaction.result.values ?? [];
 
     if (workflowRuns.isEmpty) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.noSuccessfulWorkflowRuns,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.noSuccessfulWorkflowRuns,
       );
     }
 
@@ -196,20 +196,20 @@ class GithubActionsSourceValidationDelegate implements ValidationDelegate {
     );
 
     if (artifactsInteraction.isError) {
-      return const InteractionResult.success(
-        message: GithubActionsStrings.artifactsFetchingFailed,
+      return const FieldValidationResult.unknown(
+        additionalContext: GithubActionsStrings.artifactsFetchingFailed,
       );
     }
 
     final artifact = artifactsInteraction.result;
 
     if (artifact == null) {
-      return const InteractionResult.error(
-        message: GithubActionsStrings.coverageArtifactNameInvalid,
+      return const FieldValidationResult.failure(
+        additionalContext: GithubActionsStrings.coverageArtifactNameInvalid,
       );
     }
 
-    return InteractionResult.success(result: artifact);
+    return const FieldValidationResult.success();
   }
 
   /// Fetches a [WorkflowRunJob] for the given [workflowRun]

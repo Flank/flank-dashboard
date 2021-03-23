@@ -8,6 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
+import '../test_utils/mock/firebase_auth_mock.dart';
 import '../test_utils/test_data/firestore_config_test_data.dart';
 
 void main() {
@@ -16,7 +17,7 @@ void main() {
     final email = firestoreConfig.firebaseUserEmail;
     final password = firestoreConfig.firebaseUserPassword;
 
-    final _firebaseAuthMock = _FirebaseAuthMock();
+    final _firebaseAuthMock = FirebaseAuthMock();
     final firestoreClientFactory =
         FirestoreDestinationClientFactory(_firebaseAuthMock);
 
@@ -71,5 +72,3 @@ void main() {
     );
   });
 }
-
-class _FirebaseAuthMock extends Mock implements FirebaseAuth {}
