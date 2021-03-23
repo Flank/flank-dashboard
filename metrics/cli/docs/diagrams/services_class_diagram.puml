@@ -145,14 +145,14 @@ package sentry {
     package cli as sentry.cli {
         class SentryCli {
             + login(): Future<void>
-            + createRelease(String releaseName, SentryProjectConfig config): Future<void>
-            + uploadSourceMaps(String sourcePath, List<String> extensions, SentryProjectConfig config): Future<void>
-            + finalizeRelease(String releaseName, SentryProjectConfig config): Future<void>
+            + createRelease(String releaseName, SentryProject project): Future<void>
+            + uploadSourceMaps(String sourcePath, List<String> extensions, SentryProject project): Future<void>
+            + finalizeRelease(String releaseName, SentryProject project): Future<void>
             + version(): Future<void>
         }
     }
     package model as sentry.model{
-        class SentryProjectConfig {
+        class SentryProject {
             + organizationSlug : String
             + projectSlug : String
         }
@@ -194,7 +194,7 @@ GitCliServiceAdapter -left-> GitCli : uses
 NpmCliServiceAdapter -left-> NpmCli : uses
 SentryCliServiceAdapter -left-> SentryCli : uses
 SentryCliServiceAdapter --> FileHelper : uses
-SentryCliServiceAdapter --> SentryProjectConfig : uses
+SentryCliServiceAdapter --> SentryProject : uses
 
 FirebaseCli .up.|> Cli
 GCloudCli .up.|> Cli
@@ -203,7 +203,7 @@ FlutterCli .down.|> Cli
 GitCli .down.|> Cli
 NpmCli .down.|> Cli
 
-SentryCli --> SentryProjectConfig : uses
+SentryCli --> SentryProject : uses
 
 firebase --[hidden]right--> gcloud
 InfoService --[hidden]right--> Cli
