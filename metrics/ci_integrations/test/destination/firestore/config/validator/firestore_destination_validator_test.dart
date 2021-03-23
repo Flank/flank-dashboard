@@ -22,6 +22,9 @@ void main() {
     const firebaseUserPassword = 'password';
     const firebaseProjectId = 'id';
     const metricsProjectId = 'metrics_id';
+    const successResult = FieldValidationResult.success();
+    const failureResult = FieldValidationResult.failure();
+    const unknownResult = FieldValidationResult.unknown();
 
     final config = FirestoreDestinationConfig(
       firebaseProjectId: firebaseProjectId,
@@ -36,10 +39,6 @@ void main() {
       email: firebaseUserEmail,
       password: firebaseUserPassword,
     );
-
-    const successResult = FieldValidationResult.success();
-    const failureResult = FieldValidationResult.failure();
-    const unknownResult = FieldValidationResult.unknown();
 
     final validationResult = ValidationResult(const {});
 
