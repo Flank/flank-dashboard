@@ -141,7 +141,7 @@ void main() {
     );
 
     testWidgets(
-      "does not displays the graph indicator if the popup is closed",
+      "does not display the graph indicator if the popup is closed",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,
@@ -208,6 +208,32 @@ void main() {
           date: DateTime.now(),
           duration: Duration.zero,
           buildStatus: BuildStatus.unknown,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+        ));
+
+        await _hoverBar(tester);
+
+        final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
+
+        expect(graphIndicatorFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the neutral graph indicator if the build status is in progress and the popup is opened",
+      (tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: BuildResultPopupViewModel(
+            date: DateTime.now(),
+            duration: Duration.zero,
+            buildStatus: BuildStatus.unknown,
+          ),
+          date: DateTime.now(),
+          duration: Duration.zero,
+          buildStatus: BuildStatus.inProgress,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
