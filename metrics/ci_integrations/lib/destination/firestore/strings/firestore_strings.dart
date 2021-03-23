@@ -11,8 +11,10 @@ class FirestoreStrings {
       'The given Firebase project id is invalid';
   static const String metricsProjectIdDoesNotExist =
       'The metrics project with the given identifier does not exist.';
+  static const String unknownErrorWhenSigningIn =
+      'An unknown error occurred when signing in to the Firebase. Please try again later.';
 
-  static String authValidationFailedMessage(
+  static String authValidationFailed(
     String code,
     String message,
   ) {
@@ -21,7 +23,7 @@ class FirestoreStrings {
         " Please try again later.";
   }
 
-  static String metricsProjectIdValidationFailedMessage(
+  static String metricsProjectIdValidationFailed(
     String code,
     String message,
   ) {
