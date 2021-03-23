@@ -155,7 +155,7 @@ To simplify the `validate` command usage, consider the following table that desc
 
 | Name | Description | Default value | Required |
 | --- | --- | --- | --- |
-| `--config-file` | A path to the YAML configuration file to validate. Must be specified. | `None` | Yes |
+| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file) to validate. Must be specified. | `None` | Yes |
 
 #### Validate Command Output
 
