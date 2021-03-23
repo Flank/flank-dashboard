@@ -137,7 +137,7 @@ _**Note**: The order of source and destination parts doesn't matter - the first 
 
 Well done! Your configuration file is ready to use within the `ci_integrations sync` command. The [next section](#validating-configuration-file) describes how to validate the created configuration file.
 
-### Validating configuration file
+### Validating Configuration File
 
 The CI Integrations tool provides functionality to validate the configuration files to ensure that all fields of the configuration file are correct. To do that, use the `validate` command of the CI Integrations tool. Consider the following example that demonstrates how to use the `validate` command:
 
@@ -145,9 +145,19 @@ The CI Integrations tool provides functionality to validate the configuration fi
 ci_integrations validate --config-file="path/to/config_file.yaml"
 ```
 
+Consider the [next section](#validate-command-options-and-flags) that describes the `validate` command's options and flags.
+
 _**Note**: This step is optional. You can use the `sync` command without the configuration file validation. However, the `sync` command does not provide detailed failure reasons, so it may be hard to figure out what went wrong._
 
-#### Validate command output
+#### Validate Command Options And Flags
+
+To simplify the `validate` command usage, consider the following table that describes its available options and flags:
+
+| Name | Description | Default value | Required |
+| --- | --- | --- | --- |
+| `--config-file` | A path to the [YAML configuration file](#creating-configuration-file). Must be specified. | `None` | Yes |
+
+#### Validate Command Output
 
 The `validate` command provides a detailed output on each configuration file's field. The output for the whole configuration file is called a `validation result`. The `validation result`, in its turn, consists of `field validation results` that represent a validation result for a specific configuration file's field.
 
@@ -238,7 +248,7 @@ _**Note**: The `--initial-sync-limit` must be an integer greater than 0. If the 
 
 #### Sync Command Options And Flags
 
-To simplify the sync command usage, consider the following table that describes its available options and flags:
+To simplify the `sync` command usage, consider the following table that describes its available options and flags:
 
 | Name | Description | Default value | Required |
 | --- | --- | --- | --- |
