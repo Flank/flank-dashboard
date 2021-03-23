@@ -77,9 +77,9 @@ Bob -> SentryService : signs in
 SentryService --> Deployer -- : sign in finished
 
 Deployer -> SentryService ++ : createRelease(appPath)
-SentryService -> Bob : asks to enter the Sentry params
+SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, DSN, and releaseName
 Bob -> SentryService : enters Sentry params
-SentryService -> FileHelper ++ : updateFile(config, options)
+SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> SentryService -- : file has been updated
 SentryService -> Deployer -- : release created
 

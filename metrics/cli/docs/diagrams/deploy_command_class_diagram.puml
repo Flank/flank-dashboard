@@ -94,7 +94,7 @@ package deploy {
 
 package helper {
     class FileHelper {
-        + updateFile(File file, Map<String, dynamic> options) : Future<File>
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> options) : Future<File>
         + deleteDirectory(Directory directory) : Future<void>
     }
 }
