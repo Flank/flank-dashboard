@@ -25,10 +25,14 @@ void main() {
       },
     );
 
-    test(".version() shows the version information", () async {
-      await flutterCliServiceAdapter.version();
-      verify(flutterCli.version()).called(once);
-    });
+    test(
+      ".version() shows the version information",
+      () async {
+        await flutterCliServiceAdapter.version();
+
+        verify(flutterCli.version()).called(once);
+      },
+    );
 
     test(
       ".build() builds the web application in the given path",
@@ -36,6 +40,15 @@ void main() {
         await flutterCliServiceAdapter.build(path);
 
         verify(flutterCli.buildWeb(path)).called(once);
+      },
+    );
+
+    test(
+      ".build() enables web support",
+      () async {
+        await flutterCliServiceAdapter.build(path);
+
+        verify(flutterCli.enableWeb()).called(once);
       },
     );
 
