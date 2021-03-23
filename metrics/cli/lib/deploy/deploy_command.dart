@@ -24,8 +24,6 @@ class DeployCommand extends Command {
   static const _repoURL = 'git@github.com:platform-platform/monorepo.git';
   static const _srcPath = 'src';
 
-  DeployCommand();
-
   @override
   Future<void> run() async {
     final _firebaseToken = await _login();
