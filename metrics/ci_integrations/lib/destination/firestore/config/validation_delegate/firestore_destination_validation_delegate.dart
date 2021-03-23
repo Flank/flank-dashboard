@@ -4,6 +4,7 @@
 import 'package:ci_integration/client/firestore/firestore.dart' as fs;
 import 'package:ci_integration/client/firestore/mappers/firestore_exception_reason_mapper.dart';
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
+import 'package:ci_integration/client/firestore/models/firestore_exception_reason.dart';
 import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/factory/firestore_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
@@ -22,7 +23,17 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     FirebaseAuthExceptionCode.userDisabled,
   ];
 
-  /// A [FirestoreExceptionReasonMapper] this delegate uses for mapping the 
+  /// A [List] of [FirestoreExceptionReason]s of [FirestoreException]s thrown
+  /// when the given Firebase project identifier is not valid.
+  static const List<FirestoreExceptionReason>
+      _invalidFirebaseProjectIdExceptionReasons = [
+    FirestoreExceptionReason.consumerInvalid,
+    FirestoreExceptionReason.notFound,
+    FirestoreExceptionReason.projectDeleted,
+    FirestoreExceptionReason.projectInvalid,
+  ];
+
+  /// A [FirestoreExceptionReasonMapper] this delegate uses for mapping the
   /// [FirestoreExceptionReason]s.
   static const FirestoreExceptionReasonMapper reasonMapper =
       FirestoreExceptionReasonMapper();
@@ -85,7 +96,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       }
 
       return FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.authValidationFailedMessage(
+        additionalContext: FirestoreStrings.authValidationFailed(
           '${e.code}',
           e.message,
         ),
@@ -106,19 +117,27 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
         firebaseProjectId,
       );
 
-      await firestore.collection('projects').getDocuments();
+      await firestore.collection('projects').document('').get();
     } on FirestoreException catch (e) {
-      final reasons = e.reasons;
+      final reasons = e.reasons ?? [];
 
       final exceptionReasons = reasons
           ?.map((reason) => reasonMapper.map(reason))
           ?.where((reason) => reason != null);
 
-      if (exceptionReasons != null && exceptionReasons.isNotEmpty) {
+      final isFirebaseProjectIdReason = exceptionReasons.any(
+        (reason) => _invalidFirebaseProjectIdExceptionReasons.contains(reason),
+      );
+
+      if (isFirebaseProjectIdReason) {
         return const FieldValidationResult.failure(
           additionalContext: FirestoreStrings.projectIdInvalid,
         );
       }
+    } on FirebaseAuthException {
+      return const FieldValidationResult.unknown(
+        additionalContext: FirestoreStrings.unknownErrorWhenSigningIn,
+      );
     }
 
     return const FieldValidationResult.success();
@@ -151,11 +170,14 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       final exceptionMessage = e.message;
 
       return FieldValidationResult.unknown(
-        additionalContext:
-            FirestoreStrings.metricsProjectIdValidationFailedMessage(
+        additionalContext: FirestoreStrings.metricsProjectIdValidationFailed(
           exceptionCode,
           exceptionMessage,
         ),
+      );
+    } on FirebaseAuthException {
+      return const FieldValidationResult.unknown(
+        additionalContext: FirestoreStrings.unknownErrorWhenSigningIn,
       );
     }
 
@@ -173,7 +195,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
     return auth;
   }
 
-  /// Creates a new authenticated [Firestore] instance using the given 
+  /// Creates a new authenticated [Firestore] instance using the given
   /// [credentials] and the [firebaseProjectId].
   Future<fs.Firestore> _createFirestore(
     FirebaseAuthCredentials credentials,

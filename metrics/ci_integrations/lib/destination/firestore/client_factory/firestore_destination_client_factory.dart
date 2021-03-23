@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
@@ -23,7 +23,7 @@ class FirestoreDestinationClientFactory
 
   /// Creates an instance of this client factory.
   ///
-  /// If the [_firebaseAuth] is `null`, then the [FirebaseAuth.initialize]
+  /// If the [FirebaseAuth] is `null`, then the [FirebaseAuth.initialize]
   /// is used to create authentication.
   const FirestoreDestinationClientFactory([this._firebaseAuth]);
 
