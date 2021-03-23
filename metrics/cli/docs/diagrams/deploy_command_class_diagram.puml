@@ -34,6 +34,13 @@ package  npm.service {
     }
 }
 
+package sentry.service{
+    interface SentryService  {
+        + login() : Future<void>
+        + createRelease(String appPath) : Future<void>
+    }
+}
+
 package common {
     package model {
         class Services {
@@ -42,6 +49,7 @@ package common {
             + flutterService : FlutterService
             + gcloudService : GCloudService
             + firebaseService : FirebaseService
+            + sentryService : SentryService
         }
     }
 
@@ -79,12 +87,14 @@ package deploy {
         - _flutterService : FlutterService
         - _gcloudService : GCloudService
         - _firebaseService : FirebaseService
+        - _sentryService : SentryService
         + deploy() : Future<void>
     }
 }
 
 package helper {
     class FileHelper {
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : Future<File>
         + deleteDirectory(Directory directory) : Future<void>
     }
 }
@@ -94,13 +104,14 @@ Deployer -down-> GitService : uses
 Deployer -down-> FlutterService : uses
 Deployer -down-> GCloudService : uses
 Deployer -down-> FirebaseService : uses
+Deployer -down-> SentryService : uses
 Deployer -left-> FileHelper : uses
 Deployer -> DeployConstants : uses
 Deployer -> Services : uses
 
 DeployCommand -down-> Deployer : uses
 DeployCommand -down-> DeployerFactory : uses
-DeployerFactory --> ServicesFactory : uses
+DeployerFactory -left-> ServicesFactory : uses
 
 ServicesFactory --> Services : creates
 

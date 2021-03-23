@@ -84,7 +84,7 @@ package flutter {
 }
 
 package git {
-    package service as git.service{
+    package service as git.service {
         interface GitService  {
             + checkout() : Future<void>
         }
@@ -112,7 +112,7 @@ package npm {
     }
 
     package adapter as npm.adapter {
-        class NpmCliServiceAdapter  {
+        class NpmCliServiceAdapter {
             - _npmCli : NpmCli
         }
     }
@@ -121,6 +121,38 @@ package npm {
         class NpmCli {
             + install(String workingDirectory): Future<void>
             + version(): Future<void>
+        }
+    }
+}
+
+package sentry {
+    package service as sentry.service {
+        interface SentryService {
+            + login() : Future<void>
+            + createRelease(String appPath) : Future<void>
+        }
+    }
+
+    package adapter as sentry.adapter {
+        class SentryCliServiceAdapter {
+            - _sentryCli : SentryCli
+            - _fileHelper : FileHelper
+        }
+    }
+
+    package cli as sentry.cli {
+        class SentryCli {
+            + login(): Future<void>
+            + createRelease(String releaseName, SentryProject project): Future<void>
+            + uploadSourceMaps(String sourcePath, List<String> extensions, SentryProject project): Future<void>
+            + finalizeRelease(String releaseName, SentryProject project): Future<void>
+            + version(): Future<void>
+        }
+    }
+    package model as sentry.model{
+        class SentryProject {
+            + organizationSlug : String
+            + projectSlug : String
         }
     }
 }
@@ -139,30 +171,44 @@ package interfaces {
     }
 }
 
+package helper {
+    class FileHelper {
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : Future<File>
+        + deleteDirectory(Directory directory) : Future<void>
+    }
+}
+
 FirebaseCliServiceAdapter .right.|> FirebaseService
 GCloudCliServiceAdapter .right.|> GCloudService
 FlutterCliServiceAdapter .right.|> FlutterService
 GitCliServiceAdapter .right.|> GitService
 NpmCliServiceAdapter .right.|> NpmService
+SentryCliServiceAdapter .right.|> SentryService
 
 FirebaseCliServiceAdapter -right-> FirebaseCli : uses
 GCloudCliServiceAdapter -right-> GCloudCli : uses
 FlutterCliServiceAdapter -left-> FlutterCli : uses
 GitCliServiceAdapter -left-> GitCli : uses
 NpmCliServiceAdapter -left-> NpmCli : uses
-
+SentryCliServiceAdapter -left-> SentryCli : uses
+SentryCliServiceAdapter --> FileHelper : uses
+SentryCliServiceAdapter --> SentryProject : uses
 
 FirebaseCli .up.|> Cli
 GCloudCli .up.|> Cli
+SentryCli .up.|> Cli
 FlutterCli .down.|> Cli
 GitCli .down.|> Cli
 NpmCli .down.|> Cli
+
+SentryCli --> SentryProject : uses
 
 firebase --[hidden]right--> gcloud
 InfoService --[hidden]right--> Cli
 
 FirebaseService -up-|> InfoService
 GCloudService -up-|> InfoService
+SentryService -up-|> InfoService
 GitService -down-|> InfoService
 FlutterService -down-|> InfoService
 NpmService -down-|> InfoService
