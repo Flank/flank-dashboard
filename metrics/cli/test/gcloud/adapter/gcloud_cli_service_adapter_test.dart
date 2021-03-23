@@ -156,15 +156,17 @@ void main() {
       ]);
     });
 
-    test(".createProject() creates the project before creating the database",
-        () async {
-      final projectId = await gcloudCliServiceAdapter.createProject();
+    test(
+      ".createProject() creates the project before creating the database",
+      () async {
+        final projectId = await gcloudCliServiceAdapter.createProject();
 
-      verifyInOrder([
-        gcloudCli.createProject(projectId),
-        gcloudCli.createDatabase(region, projectId),
-      ]);
-    });
+        verifyInOrder([
+          gcloudCli.createProject(projectId),
+          gcloudCli.createDatabase(region, projectId),
+        ]);
+      },
+    );
 
     test(
       ".createProject() enables firestore API before creating the database",
