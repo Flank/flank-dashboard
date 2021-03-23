@@ -60,7 +60,7 @@ Deployer -> NpmService ++ : installDependencies(firebaseFunctionsPath)
 NpmService --> Deployer : dependencies have been installed
 NpmService --
 
-Deployer -> FirebaseService ++ : deployFirestore(String firestorePath)
+Deployer -> FirebaseService ++ : deployFirestore(firestorePath)
 
 FirebaseService --> Bob : Blaze billing account warning
 Bob -> FirebaseService : enters any key
@@ -75,7 +75,7 @@ Deployer -> FlutterService ++ : build()
 FlutterService -> Deployer : build finished
 FlutterService --
 
-Deployer -> FirebaseService ++ : deployHosting(String appPath)
+Deployer -> FirebaseService ++ : deployHosting(appPath)
 FirebaseService -> Deployer : deploy finished
 FirebaseService --
 
