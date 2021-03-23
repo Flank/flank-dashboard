@@ -9,11 +9,11 @@ import 'package:ci_integration/destination/firestore/config/validator/firestore_
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
+import '../../../../test_utils/mock/validation_result_builder_mock.dart';
 
 void main() {
   group("FirestoreDestinationValidator", () {
@@ -44,7 +44,7 @@ void main() {
     final validationResult = ValidationResult(const {});
 
     final validationDelegate = _FirestoreDestinationValidationDelegateMock();
-    final validationResultBuilder = _ValidationResultBuilderMock();
+    final validationResultBuilder = ValidationResultBuilderMock();
 
     final validator = FirestoreDestinationValidator(
       validationDelegate,
@@ -585,6 +585,3 @@ void main() {
 
 class _FirestoreDestinationValidationDelegateMock extends Mock
     implements FirestoreDestinationValidationDelegate {}
-
-class _ValidationResultBuilderMock extends Mock
-    implements ValidationResultBuilder {}
