@@ -26,7 +26,8 @@ void main() {
       expect(configParser, isA<FirestoreDestinationConfigParser>());
     });
 
-    test("uses FirestoreDestinationValidatorFactory as a validator factory", () {
+    test("uses FirestoreDestinationValidatorFactory as a validator factory",
+        () {
       final validatorFactory = firestoreDestinationParty.configValidatorFactory;
 
       expect(validatorFactory, isA<FirestoreDestinationValidatorFactory>());
