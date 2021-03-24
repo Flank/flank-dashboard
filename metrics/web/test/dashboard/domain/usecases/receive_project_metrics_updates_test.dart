@@ -162,7 +162,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of builds to load for chart metrics",
+      "loads the stability metric for number of finished builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
@@ -180,21 +180,28 @@ void main() {
 
         final repository = _MetricsRepositoryStub(builds: builds);
 
-        final lastBuilds = builds.sublist(builds.length - expectedBuildsToLoad);
-        final successfulBuilds = lastBuilds.where(
+        final lastFinishedBuilds = builds
+            .sublist(builds.length - expectedBuildsToLoad)
+            .where((build) => build.buildStatus != BuildStatus.inProgress);
+
+        final successfulBuilds = lastFinishedBuilds.where(
           (build) => build.buildStatus == BuildStatus.successful,
         );
-        final expectedStabilityMetric =
-            Percent(successfulBuilds.length / lastBuilds.length);
+        final expectedStabilityMetric = Percent(
+          successfulBuilds.length / lastFinishedBuilds.length,
+        );
 
-        final receiveProjectMetricsUpdates =
-            ReceiveProjectMetricsUpdates(repository);
+        final receiveProjectMetricsUpdates = ReceiveProjectMetricsUpdates(
+          repository,
+        );
 
-        final metricsStream =
-            receiveProjectMetricsUpdates(const ProjectIdParam(projectId));
+        final metricsStream = receiveProjectMetricsUpdates(
+          const ProjectIdParam(projectId),
+        );
 
-        final metrics =
-            await metricsStream.firstWhere((metrics) => metrics != null);
+        final metrics = await metricsStream.firstWhere(
+          (metrics) => metrics != null,
+        );
         final actualStabilityMetric = metrics.stability;
 
         expect(actualStabilityMetric, equals(expectedStabilityMetric));
@@ -217,23 +224,28 @@ void main() {
       expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetric));
     });
 
-    test("loads the performance metric for common builds loading period", () {
+    test(
+        "loads the performance metric for the number of finished builds in the common builds loading period",
+        () {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
       final periodStartDate = DateTime.now().subtract(expectedLoadingPeriod);
 
-      final buildsInPeriod = builds
+      final finishedBuildsInPeriod = builds
+          .where((build) => build.buildStatus != BuildStatus.inProgress)
           .where((build) => build.startedAt.isAfter(periodStartDate))
           .toList();
 
-      final buildsPerformance = buildsInPeriod.map((build) => BuildPerformance(
-            date: build.startedAt,
-            duration: build.duration,
-          ));
+      final buildsPerformance = finishedBuildsInPeriod.map(
+        (build) => BuildPerformance(
+          date: build.startedAt,
+          duration: build.duration,
+        ),
+      );
 
-      final averageDuration = buildsInPeriod.fold<Duration>(
+      final averageDuration = finishedBuildsInPeriod.fold<Duration>(
               const Duration(), (value, element) => value + element.duration) ~/
-          buildsInPeriod.length;
+          finishedBuildsInPeriod.length;
 
       final expectedBuildNumberMetric = PerformanceMetric(
         buildsPerformance: DateTimeSet.from(buildsPerformance),
@@ -309,20 +321,31 @@ void main() {
     });
 
     test("loads the project build status metric", () {
+      final latestBuild = List<Build>.from(_MetricsRepositoryStub.testBuilds)
+        ..sort((current, previous) {
+          return current.startedAt.compareTo(previous.startedAt);
+        });
       final expectedProjectBuildStatus = ProjectBuildStatusMetric(
-        status: _MetricsRepositoryStub.testBuilds.last.buildStatus,
+        status: latestBuild.last.buildStatus,
       );
+
       final actualProjectBuildStatus = projectMetrics.projectBuildStatusMetric;
 
       expect(actualProjectBuildStatus, expectedProjectBuildStatus);
     });
 
     test("calculates stability metric", () {
+      final finishedBuilds = builds.where(
+        (build) => build.buildStatus != BuildStatus.inProgress,
+      );
+
       final actualStability = projectMetrics.stability;
 
-      final successfulBuilds =
-          builds.where((build) => build.buildStatus == BuildStatus.successful);
-      final expectedStabilityValue = successfulBuilds.length / builds.length;
+      final successfulBuilds = finishedBuilds.where(
+        (build) => build.buildStatus == BuildStatus.successful,
+      );
+      final expectedStabilityValue =
+          successfulBuilds.length / finishedBuilds.length;
 
       expect(actualStability.value, expectedStabilityValue);
     });
@@ -426,6 +449,13 @@ class _MetricsRepositoryStub implements MetricsRepository {
       duration: const Duration(minutes: 12),
       coverage: Percent(0.1),
       buildStatus: BuildStatus.failed,
+    ),
+    Build(
+      id: '7',
+      startedAt: DateTime.now().subtract(const Duration(days: 9)),
+      duration: const Duration(minutes: 12),
+      coverage: Percent(0.1),
+      buildStatus: BuildStatus.inProgress,
     ),
   ];
 
