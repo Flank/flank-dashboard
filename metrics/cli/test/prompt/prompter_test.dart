@@ -2,44 +2,34 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/prompt/prompter.dart';
-import 'package:cli/prompt/writer/prompt_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/matchers.dart';
+import '../test_utils/prompt_writer_mock.dart';
 
 void main() {
   group("Prompter", () {
     const promptText = 'promptText';
     const confirmInput = 'yes';
-    final writerMock = _PromptWriterMock();
+    final writerMock = PromptWriterMock();
+    final prompter = Prompter(writerMock);
 
     tearDown(() {
       reset(writerMock);
     });
 
     test(
-      ".initialize() throws an AssertionError if the given prompt writer is null",
+      "throws an AssertionError if the given prompt writer is null",
       () {
-        expect(() => Prompter.initialize(null), throwsAssertionError);
-      },
-    );
-
-    test(
-      ".initialize() initializes the logger with the given prompt writer",
-      () async {
-        Prompter.initialize(writerMock);
-
-        Prompter.prompt(promptText);
-
-        verify(writerMock.prompt(promptText)).called(once);
+        expect(() => Prompter(null), throwsAssertionError);
       },
     );
 
     test(
       ".prompt() requests an input from the user with the given description text",
       () async {
-        Prompter.prompt(promptText);
+        prompter.prompt(promptText);
 
         verify(writerMock.prompt(promptText)).called(once);
       },
@@ -48,17 +38,16 @@ void main() {
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
       () async {
-        Prompter.promptConfirm(promptText, confirmInput: confirmInput);
+        prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
-        verify(writerMock.promptConfirm(promptText, confirmInput))
-            .called(once);
+        verify(writerMock.promptConfirm(promptText, confirmInput)).called(once);
       },
     );
 
     test(
       ".promptConfirm() applies a default confirm input if it's not specified",
       () {
-        Prompter.promptConfirm(promptText);
+        prompter.promptConfirm(promptText);
 
         verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
             .called(once);
@@ -66,5 +55,3 @@ void main() {
     );
   });
 }
-
-class _PromptWriterMock extends Mock implements PromptWriter {}
