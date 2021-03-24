@@ -28,8 +28,9 @@ void main() {
     const projectId = 'projectId';
     final emptyBuildsStream = Stream<List<Build>>.value([]);
     final repository = _MetricsRepositoryStub();
-    final receiveProjectMetricsUpdates =
-        ReceiveProjectMetricsUpdates(repository);
+    final receiveProjectMetricsUpdates = ReceiveProjectMetricsUpdates(
+      repository,
+    );
     const extraBuildsToGenerate = 5;
     const numberOfBuildsToGenerate =
         expectedBuildsToLoad + extraBuildsToGenerate;
@@ -41,9 +42,9 @@ void main() {
     setUpAll(() async {
       builds = _MetricsRepositoryStub.testBuilds;
 
-      projectMetrics =
-          await receiveProjectMetricsUpdates(const ProjectIdParam(projectId))
-              .first;
+      projectMetrics = await receiveProjectMetricsUpdates(
+        const ProjectIdParam(projectId),
+      ).first;
 
       lastBuild = builds.first;
     });
@@ -58,12 +59,15 @@ void main() {
     test("subscribes to builds for common builds loading periods", () {
       final repository = _MetricsRepositoryMock();
 
-      when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.latestProjectBuildsStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.lastSuccessfulBuildStream(any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.projectBuildsFromDateStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
           ReceiveProjectMetricsUpdates(repository);
@@ -81,12 +85,15 @@ void main() {
     test("subscribes to number of builds to load for chart metrics", () {
       final repository = _MetricsRepositoryMock();
 
-      when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.latestProjectBuildsStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.lastSuccessfulBuildStream(any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.projectBuildsFromDateStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
           ReceiveProjectMetricsUpdates(repository);
@@ -101,15 +108,19 @@ void main() {
     test("subscribes to last successful build", () {
       final repository = _MetricsRepositoryMock();
 
-      when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => emptyBuildsStream);
-      when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.latestProjectBuildsStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.lastSuccessfulBuildStream(any),
+      ).thenAnswer((_) => emptyBuildsStream);
+      when(
+        repository.projectBuildsFromDateStream(any, any),
+      ).thenAnswer((_) => emptyBuildsStream);
 
-      final receiveProjectMetricsUpdates =
-          ReceiveProjectMetricsUpdates(repository);
+      final receiveProjectMetricsUpdates = ReceiveProjectMetricsUpdates(
+        repository,
+      );
 
       receiveProjectMetricsUpdates(const ProjectIdParam('projectId'));
 
@@ -125,8 +136,9 @@ void main() {
           numberOfBuildsToGenerate,
           (index) => Build(
             id: '$index',
-            startedAt: DateTime.now()
-                .subtract(Duration(days: numberOfBuildsToGenerate - index)),
+            startedAt: DateTime.now().subtract(
+              Duration(days: numberOfBuildsToGenerate - index),
+            ),
             duration: const Duration(minutes: 10),
             coverage: Percent(0.5),
             buildStatus: BuildStatus.successful,
@@ -244,26 +256,30 @@ void main() {
       );
 
       final averageDuration = finishedBuildsInPeriod.fold<Duration>(
-              const Duration(), (value, element) => value + element.duration) ~/
+            const Duration(),
+            (value, element) => value + element.duration,
+          ) ~/
           finishedBuildsInPeriod.length;
 
-      final expectedBuildNumberMetric = PerformanceMetric(
+      final expectedPerformanceMetric = PerformanceMetric(
         buildsPerformance: DateTimeSet.from(buildsPerformance),
         averageBuildDuration: averageDuration,
       );
 
       expect(
         actualPerformanceMetric.buildsPerformance.length,
-        equals(expectedBuildNumberMetric.buildsPerformance.length),
+        equals(expectedPerformanceMetric.buildsPerformance.length),
       );
 
       expect(
         actualPerformanceMetric.averageBuildDuration,
-        equals(expectedBuildNumberMetric.averageBuildDuration),
+        equals(expectedPerformanceMetric.averageBuildDuration),
       );
     });
 
-    test("loads all fields in the performance metrics from the last finished builds", () {
+    test(
+        "loads all fields in the performance metrics from the last finished builds",
+        () {
       final performanceMetrics = projectMetrics.performanceMetrics;
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
@@ -294,8 +310,9 @@ void main() {
       final timestamp = DateTime.now();
       final buildsLoadingStartDate =
           timestamp.subtract(expectedLoadingPeriod).date;
-      final thisWeekBuilds = builds
-          .where((build) => build.startedAt.isAfter(buildsLoadingStartDate));
+      final thisWeekBuilds = builds.where(
+        (build) => build.startedAt.isAfter(buildsLoadingStartDate),
+      );
 
       final totalNumberOfBuilds = thisWeekBuilds.length;
       final buildNumberMetrics = projectMetrics.buildNumberMetrics;
