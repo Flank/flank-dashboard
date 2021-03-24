@@ -58,7 +58,7 @@ void main() {
     );
 
     test(
-      ".promptConfirm() returns an input from the user",
+      ".promptConfirm() returns a confirmation result",
       () async {
         const confirmInput = 'yes';
 
