@@ -162,7 +162,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of finished builds to load for chart metrics",
+      "loads the stability metric for number builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
@@ -225,7 +225,7 @@ void main() {
     });
 
     test(
-        "loads the performance metric for the number of finished builds in the common builds loading period",
+        "loads the performance metric for the number of builds in the common builds loading period",
         () {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
@@ -269,22 +269,24 @@ void main() {
 
       final periodStartDate = DateTime.now().subtract(expectedLoadingPeriod);
 
-      final buildsInPeriod = builds
-          .where((element) => element.startedAt.isAfter(periodStartDate))
+      final finishedBuildsInPeriod = builds
+          .where((build) => build.buildStatus != BuildStatus.inProgress)
+          .where((build) => build.startedAt.isAfter(periodStartDate))
           .toList();
 
       expect(
         performanceMetrics.buildsPerformance.length,
-        buildsInPeriod.length,
+        finishedBuildsInPeriod.length,
       );
 
       expect(
         firstPerformanceMetric.date,
-        lastBuild.startedAt,
+        finishedBuildsInPeriod.first.startedAt,
       );
+      
       expect(
         firstPerformanceMetric.duration,
-        lastBuild.duration,
+        finishedBuildsInPeriod.first.duration,
       );
     });
 
@@ -415,8 +417,15 @@ class _MetricsRepositoryStub implements MetricsRepository {
   /// A test [Build]s used in tests.
   static final List<Build> testBuilds = [
     Build(
-      id: '1',
+      id: '0',
       startedAt: DateTime.now(),
+      duration: const Duration(minutes: 12),
+      coverage: Percent(0.1),
+      buildStatus: BuildStatus.inProgress,
+    ),
+    Build(
+      id: '1',
+      startedAt: DateTime.now().subtract(const Duration(minutes: 50)),
       duration: const Duration(minutes: 10),
       coverage: Percent(0.1),
       buildStatus: BuildStatus.failed,
@@ -449,13 +458,6 @@ class _MetricsRepositoryStub implements MetricsRepository {
       duration: const Duration(minutes: 12),
       coverage: Percent(0.1),
       buildStatus: BuildStatus.failed,
-    ),
-    Build(
-      id: '7',
-      startedAt: DateTime.now().subtract(const Duration(days: 9)),
-      duration: const Duration(minutes: 12),
-      coverage: Percent(0.1),
-      buildStatus: BuildStatus.inProgress,
     ),
   ];
 
