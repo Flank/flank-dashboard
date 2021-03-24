@@ -12,55 +12,74 @@ void main() {
   group("Prompter", () {
     const promptText = 'promptText';
     const confirmInput = 'yes';
-    final writerMock = _PromptWriterMock();
+    final promptWriter = _PromptWriterMock();
+    final prompter = Prompter(promptWriter);
 
     tearDown(() {
-      reset(writerMock);
+      reset(promptWriter);
     });
 
     test(
-      ".initialize() throws an AssertionError if the given prompt writer is null",
+      "throws an ArgumentError if the given prompt writer is null",
       () {
-        expect(() => Prompter.initialize(null), throwsAssertionError);
-      },
-    );
-
-    test(
-      ".initialize() initializes the logger with the given prompt writer",
-      () async {
-        Prompter.initialize(writerMock);
-
-        Prompter.prompt(promptText);
-
-        verify(writerMock.prompt(promptText)).called(once);
+        expect(() => Prompter(null), throwsArgumentError);
       },
     );
 
     test(
       ".prompt() requests an input from the user with the given description text",
       () async {
-        Prompter.prompt(promptText);
+        prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(once);
+        verify(promptWriter.prompt(promptText)).called(once);
+      },
+    );
+
+    test(
+      ".prompt() returns an input from the user",
+      () async {
+        const answer = 'userAnswer';
+
+        when(promptWriter.prompt(promptText)).thenReturn(answer);
+        final result = prompter.prompt(promptText);
+
+        expect(result, equals(answer));
       },
     );
 
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
       () async {
-        Prompter.promptConfirm(promptText, confirmInput: confirmInput);
+        prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
-        verify(writerMock.promptConfirm(promptText, confirmInput))
+        verify(promptWriter.promptConfirm(promptText, confirmInput))
             .called(once);
+      },
+    );
+
+    test(
+      ".promptConfirm() returns a confirmation result",
+      () async {
+        const confirmInput = 'yes';
+
+        when(promptWriter.promptConfirm(promptText, confirmInput))
+            .thenReturn(true);
+
+        final result = prompter.promptConfirm(
+          promptText,
+          confirmInput: confirmInput,
+        );
+
+        expect(result, isTrue);
       },
     );
 
     test(
       ".promptConfirm() applies a default confirm input if it's not specified",
       () {
-        Prompter.promptConfirm(promptText);
+        prompter.promptConfirm(promptText);
 
-        verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
+        verify(promptWriter.promptConfirm(promptText, argThat(isNotNull)))
             .called(once);
       },
     );
