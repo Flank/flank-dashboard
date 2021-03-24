@@ -12,15 +12,16 @@ class Prompter {
   /// Creates a new instance of the [Prompter] with the given [PromptWriter].
   ///
   /// Throws an [AssertionError] if the given [PromptWriter] is `null`.
-  Prompter(this._promptWriter) : assert(_promptWriter != null);
+  Prompter(this._promptWriter) {
+    ArgumentError.checkNotNull(_promptWriter, 'promptWriter');
+  }
 
   /// Requests an input from the user with a given description [text].
   String prompt(String text) {
     return _promptWriter.prompt(text);
   }
 
-  /// Requests a [confirmInput] from the user
-  /// with a given description [text].
+  /// Requests a [confirmInput] from the user with a given description [text].
   ///
   /// The [confirmInput] default value is `y`.
   bool promptConfirm(

@@ -2,27 +2,27 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/prompt/prompter.dart';
+import 'package:cli/prompt/writer/prompt_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/matchers.dart';
-import '../test_utils/prompt_writer_mock.dart';
 
 void main() {
   group("Prompter", () {
     const promptText = 'promptText';
     const confirmInput = 'yes';
-    final writerMock = PromptWriterMock();
-    final prompter = Prompter(writerMock);
+    final promptWriter = PromptWriterMock();
+    final prompter = Prompter(promptWriter);
 
     tearDown(() {
-      reset(writerMock);
+      reset(promptWriter);
     });
 
     test(
-      "throws an AssertionError if the given prompt writer is null",
+      "throws an ArgumentError if the given prompt writer is null",
       () {
-        expect(() => Prompter(null), throwsAssertionError);
+        expect(() => Prompter(null), throwsArgumentError);
       },
     );
 
@@ -31,7 +31,19 @@ void main() {
       () async {
         prompter.prompt(promptText);
 
-        verify(writerMock.prompt(promptText)).called(once);
+        verify(promptWriter.prompt(promptText)).called(once);
+      },
+    );
+
+    test(
+      ".prompt() returns an input from the user",
+      () async {
+        const answer = 'userAnswer';
+
+        when(promptWriter.prompt(promptText)).thenReturn(answer);
+        final result = prompter.prompt(promptText);
+
+        expect(result, equals(answer));
       },
     );
 
@@ -40,7 +52,25 @@ void main() {
       () async {
         prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
-        verify(writerMock.promptConfirm(promptText, confirmInput)).called(once);
+        verify(promptWriter.promptConfirm(promptText, confirmInput))
+            .called(once);
+      },
+    );
+
+    test(
+      ".promptConfirm() returns an input from the user",
+      () async {
+        const confirmInput = 'yes';
+
+        when(promptWriter.promptConfirm(promptText, confirmInput))
+            .thenReturn(true);
+
+        final result = prompter.promptConfirm(
+          promptText,
+          confirmInput: confirmInput,
+        );
+
+        expect(result, isTrue);
       },
     );
 
@@ -49,9 +79,11 @@ void main() {
       () {
         prompter.promptConfirm(promptText);
 
-        verify(writerMock.promptConfirm(promptText, argThat(isNotNull)))
+        verify(promptWriter.promptConfirm(promptText, argThat(isNotNull)))
             .called(once);
       },
     );
   });
 }
+
+class PromptWriterMock extends Mock implements PromptWriter {}
