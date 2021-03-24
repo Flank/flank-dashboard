@@ -164,9 +164,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(PositiveGraphIndicator);
+        final positiveIndicatorFinder = find.byType(PositiveGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(positiveIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -190,9 +190,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(NegativeGraphIndicator);
+        final negativeIndicatorFinder = find.byType(NegativeGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(negativeIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -216,9 +216,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
+        final neutralIndicatorFinder = find.byType(NeutralGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(neutralIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -242,9 +242,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
+        final neutralIndicatorFinder = find.byType(NeutralGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(neutralIndicatorFinder, findsOneWidget);
       },
     );
 
