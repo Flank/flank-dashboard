@@ -216,7 +216,7 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result build by the validation result builder if the public api key validation result is failure",
+      ".validate() returns a validation result built by the validation result builder if the public api key validation result is failure",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidatePublicApiKey().thenAnswer(
