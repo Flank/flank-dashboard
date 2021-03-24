@@ -34,6 +34,13 @@ package npm.service {
     }
 }
 
+package sentry.service{
+    interface SentryService  {
+        + login() : Future<void>
+        + createRelease(String appPath) : Future<void>
+    }
+}
+
 package common {
     package model {
         class Services {
@@ -42,6 +49,7 @@ package common {
             + flutterService : FlutterService
             + gcloudService : GCloudService
             + firebaseService : FirebaseService
+            + sentryService : SentryService
         }
     }
 
@@ -73,6 +81,7 @@ package doctor {
         - _flutterService : FlutterService
         - _gcloudService : GCloudService
         - _firebaseService : FirebaseService
+        - _sentryService : SentryService
         + checkVersions() : Future<void>
     }
 }
@@ -81,7 +90,7 @@ DoctorCommand -down-> Doctor : uses
 DoctorCommand --> DoctorFactory : uses
 
 DoctorFactory --> Doctor : creates
-DoctorFactory --> ServicesFactory : uses
+DoctorFactory -left-> ServicesFactory : uses
 
 ServicesFactory --> Services : creates
 
@@ -90,7 +99,7 @@ Doctor -down-> GitService : uses
 Doctor -down-> FlutterService : uses
 Doctor -down-> GCloudService : uses
 Doctor -down-> FirebaseService : uses
-Doctor -> Services : uses
-
+Doctor -down-> SentryService : uses
+Doctor -left-> Services : uses
 
 @enduml
