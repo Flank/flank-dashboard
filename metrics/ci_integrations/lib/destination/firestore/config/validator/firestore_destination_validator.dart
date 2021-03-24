@@ -39,15 +39,15 @@ class FirestoreDestinationValidator
   @override
   Future<ValidationResult> validate(FirestoreDestinationConfig config) async {
     final apiKey = config.firebasePublicApiKey;
-    final apiKeyFieldValidationResult =
+    final apiKeyValidationResult =
         await validationDelegate.validatePublicApiKey(apiKey);
 
     validationResultBuilder.setResult(
       FirestoreDestinationConfigField.firebasePublicApiKey,
-      apiKeyFieldValidationResult,
+      apiKeyValidationResult,
     );
 
-    if (apiKeyFieldValidationResult.isFailure) {
+    if (apiKeyValidationResult.isFailure) {
       return _finalizeValidationResult(
         FirestoreStrings.publicApiKeyInvalidInterruptReason,
       );
@@ -59,43 +59,43 @@ class FirestoreDestinationValidator
       password: config.firebaseUserPassword,
     );
 
-    final authFieldValidationResult = await validationDelegate.validateAuth(
+    final authValidationResult = await validationDelegate.validateAuth(
       firebaseAuthCredentials,
     );
 
     validationResultBuilder.setResult(
       FirestoreDestinationConfigField.firebaseUserEmail,
-      authFieldValidationResult,
+      authValidationResult,
     );
 
     validationResultBuilder.setResult(
       FirestoreDestinationConfigField.firebaseUserPassword,
-      authFieldValidationResult,
+      authValidationResult,
     );
 
-    if (!authFieldValidationResult.isSuccess) {
+    if (!authValidationResult.isSuccess) {
       return _finalizeValidationResult(
         FirestoreStrings.authValidationFailedInterruptReason,
       );
     }
 
     final firebaseProjectId = config.firebaseProjectId;
-    final firebaseProjectIdFieldValidationResult = await validationDelegate
+    final firebaseProjectIdValidationResult = await validationDelegate
         .validateFirebaseProjectId(firebaseAuthCredentials, firebaseProjectId);
 
     validationResultBuilder.setResult(
       FirestoreDestinationConfigField.firebaseProjectId,
-      firebaseProjectIdFieldValidationResult,
+      firebaseProjectIdValidationResult,
     );
 
-    if (!firebaseProjectIdFieldValidationResult.isSuccess) {
+    if (!firebaseProjectIdValidationResult.isSuccess) {
       return _finalizeValidationResult(
         FirestoreStrings.firebaseProjectIdInterruptReason,
       );
     }
 
     final metricsProjectId = config.metricsProjectId;
-    final metricsProjectIdFieldValidationResult =
+    final metricsProjectIdValidationResult =
         await validationDelegate.validateMetricsProjectId(
       firebaseAuthCredentials,
       firebaseProjectId,
@@ -104,7 +104,7 @@ class FirestoreDestinationValidator
 
     validationResultBuilder.setResult(
       FirestoreDestinationConfigField.metricsProjectId,
-      metricsProjectIdFieldValidationResult,
+      metricsProjectIdValidationResult,
     );
 
     return validationResultBuilder.build();

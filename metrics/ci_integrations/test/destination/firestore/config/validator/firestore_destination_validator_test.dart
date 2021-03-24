@@ -50,13 +50,12 @@ void main() {
       validationResultBuilder,
     );
 
-    PostExpectation<Future<FieldValidationResult>>
-        whenValidateFirebasePublicApiKey() {
+    PostExpectation<Future<FieldValidationResult>> whenValidatePublicApiKey() {
       return when(validationDelegate.validatePublicApiKey(firebaseApiKey));
     }
 
     PostExpectation<Future<FieldValidationResult>> whenValidateAuth() {
-      whenValidateFirebasePublicApiKey().thenAnswer(
+      whenValidatePublicApiKey().thenAnswer(
         (_) => Future.value(successResult),
       );
 
@@ -130,7 +129,7 @@ void main() {
     test(
       ".validate() delegates the public api key validation to the validation delegate",
       () async {
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -145,7 +144,7 @@ void main() {
     test(
       ".validate() sets the public api key validation result returned by the validation delegate",
       () async {
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -159,13 +158,13 @@ void main() {
     );
 
     test(
-      ".validate() sets empty result with the unknown field validation result with the 'firebase public api key invalid' additional context if the public api key validation fails",
+      ".validate() sets empty result with the unknown field validation result with the 'firebase public api key invalid' additional context if the public api key validation result is failed",
       () async {
         const expectedResult = FieldValidationResult.unknown(
           additionalContext:
               FirestoreStrings.publicApiKeyInvalidInterruptReason,
         );
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -178,9 +177,9 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the auth if the public api key validation fails",
+      ".validate() does not validate the auth if the public api key validation result is failed",
       () async {
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -191,9 +190,9 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the firebase project id if the public api key validation fails",
+      ".validate() does not validate the firebase project id if the public api key validation result is failed",
       () async {
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -204,9 +203,9 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the metrics project id if the public api key validation fails",
+      ".validate() does not validate the metrics project id if the public api key validation result is failed",
       () async {
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -217,10 +216,10 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result build by the validation result builder if the public api key validation fails",
+      ".validate() returns a validation result build by the validation result builder if the public api key validation result is failed",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateFirebasePublicApiKey().thenAnswer(
+        whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
         );
 
@@ -278,7 +277,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'auth validation failed' additional context if the auth validation fails",
+      ".validate() sets empty results with the unknown field validation result with the 'auth validation failed' additional context if the auth validation result is failed",
       () async {
         const expectedResult = FieldValidationResult.unknown(
           additionalContext:
@@ -312,7 +311,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the firebase project id if the auth validation fails",
+      ".validate() does not validate the firebase project id if the auth validation result is failed",
       () async {
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
 
@@ -323,7 +322,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the metrics project id if the auth validation fails",
+      ".validate() does not validate the metrics project id if the auth validation result is failed",
       () async {
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
 
@@ -356,7 +355,7 @@ void main() {
     );
 
     test(
-      ".validate() returns a validation result built by the validation result builder if the auth validation fails",
+      ".validate() returns a validation result built by the validation result builder if the auth validation result is failed",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
@@ -416,7 +415,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation fails",
+      ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation result is failed",
       () async {
         const expectedResult = FieldValidationResult.unknown(
           additionalContext: FirestoreStrings.firebaseProjectIdInterruptReason,
@@ -452,7 +451,7 @@ void main() {
     );
 
     test(
-      ".validate() does not validate the metrics project id if the firebase project id validation fails",
+      ".validate() does not validate the metrics project id if the firebase project id validation result is failed",
       () async {
         whenValidateFirebaseProjectId().thenAnswer(
           (_) => Future.value(failureResult),
@@ -478,7 +477,7 @@ void main() {
     );
 
     test(
-      ".validate() returns the validation result built by the validation result builder if the firebase project id validation fails",
+      ".validate() returns the validation result built by the validation result builder if the firebase project id validation result is failed",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateFirebaseProjectId().thenAnswer(
@@ -539,7 +538,7 @@ void main() {
     );
 
     test(
-      ".validate() returns the validation result built by the validation result builder if the metrics project id validation fails",
+      ".validate() returns the validation result built by the validation result builder if the metrics project id validation result is failed",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateMetricsProjectId().thenAnswer(

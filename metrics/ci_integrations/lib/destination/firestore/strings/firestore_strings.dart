@@ -18,7 +18,7 @@ class FirestoreStrings {
   static const String authValidationFailedInterruptReason =
       "Can't be validated as the Firebase user email and password validation failed.";
   static const String firebaseProjectIdInterruptReason =
-      "Can't be validated as the Firebase project ID failed.";
+      "Can't be validated as the Firebase project ID validation failed.";
 
   static String authValidationFailed(
     String code,
