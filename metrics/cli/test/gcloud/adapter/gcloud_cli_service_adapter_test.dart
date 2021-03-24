@@ -18,10 +18,7 @@ void main() {
     final gcloudCli = _GCloudCliMock();
     final promptWriter = PromptWriterMock();
     final prompter = Prompter(promptWriter);
-    final gcloudCliServiceAdapter = GCloudCliServiceAdapter(
-      gcloudCli,
-      prompter,
-    );
+    final gcloudAdapter = GCloudCliServiceAdapter(gcloudCli, prompter);
 
     tearDown(() {
       reset(gcloudCli);
@@ -51,7 +48,7 @@ void main() {
     test(
       ".login() logins to the GCloud CLI",
       () async {
-        await gcloudCliServiceAdapter.login();
+        await gcloudAdapter.login();
 
         verify(gcloudCli.login()).called(once);
       },
@@ -60,7 +57,7 @@ void main() {
     test(
       ".createProject() shows available regions before requesting the region from the user",
       () async {
-        await gcloudCliServiceAdapter.createProject();
+        await gcloudAdapter.createProject();
 
         verifyInOrder([
           gcloudCli.listRegions(),
@@ -72,7 +69,7 @@ void main() {
     test(
       ".createProject() requests the region from the user before creating the project",
       () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
           promptWriter.prompt(GcloudStrings.enterRegionName),
@@ -87,7 +84,7 @@ void main() {
       when(promptWriter.prompt(GcloudStrings.enterRegionName))
           .thenReturn(region);
 
-      final projectId = await gcloudCliServiceAdapter.createProject();
+      final projectId = await gcloudAdapter.createProject();
 
       verifyInOrder([
         gcloudCli.createProject(projectId),
@@ -101,7 +98,7 @@ void main() {
         when(promptWriter.prompt(GcloudStrings.enterRegionName))
             .thenReturn(region);
 
-        final projectId = await gcloudCliServiceAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
           gcloudCli.createProjectApp(region, projectId),
@@ -116,7 +113,7 @@ void main() {
         when(promptWriter.prompt(GcloudStrings.enterRegionName))
             .thenReturn(region);
 
-        final projectId = await gcloudCliServiceAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
           gcloudCli.enableFirestoreApi(projectId),
@@ -131,7 +128,7 @@ void main() {
         when(promptWriter.prompt(GcloudStrings.enterRegionName))
             .thenReturn(region);
 
-        final projectId = await gcloudCliServiceAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         verify(gcloudCli.createDatabase(region, projectId)).called(once);
       },
@@ -140,7 +137,7 @@ void main() {
     test(
       ".createProject() returns the project id",
       () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         expect(projectId, isNotNull);
       },
@@ -149,7 +146,7 @@ void main() {
     test(
       ".version() shows the version information",
       () async {
-        await gcloudCliServiceAdapter.version();
+        await gcloudAdapter.version();
 
         verify(gcloudCli.version()).called(once);
       },
