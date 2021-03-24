@@ -3,8 +3,8 @@
 
 // ignore_for_file: public_member_api_docs
 
-/// A class that holds the strings for the prompts.
-class PromptStrings {
+/// A class that holds the strings for the GCloud prompts.
+class GcloudStrings {
   static const String enterRegionName =
       'Please enter the region name that suits you best:';
 }

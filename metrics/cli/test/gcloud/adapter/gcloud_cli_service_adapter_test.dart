@@ -4,7 +4,7 @@
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/prompt/prompter.dart';
-import 'package:cli/prompt/strings/prompt_strings.dart';
+import 'package:cli/prompt/strings/gcloud_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -17,14 +17,11 @@ void main() {
 
     final gcloudCli = _GCloudCliMock();
     final promptWriter = PromptWriterMock();
-
-    final gcloudCliServiceAdapter = GCloudCliServiceAdapter(gcloudCli);
-    Prompter.initialize(promptWriter);
-
-    setUp(() {
-      when(promptWriter.prompt(PromptStrings.enterRegionName))
-          .thenReturn(region);
-    });
+    final prompter = Prompter(promptWriter);
+    final gcloudCliServiceAdapter = GCloudCliServiceAdapter(
+      gcloudCli,
+      prompter,
+    );
 
     tearDown(() {
       reset(gcloudCli);
@@ -32,9 +29,22 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if the given flutter CLI is null",
+      "throws an ArgumentError if the given gcloud CLI is null",
       () {
-        expect(() => GCloudCliServiceAdapter(null), throwsAssertionError);
+        expect(
+          () => GCloudCliServiceAdapter(null, prompter),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given prompter is null",
+      () {
+        expect(
+          () => GCloudCliServiceAdapter(null, prompter),
+          throwsArgumentError,
+        );
       },
     );
 
@@ -48,106 +58,35 @@ void main() {
     );
 
     test(
-      ".createProject() generates project id",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        expect(projectId, isNotNull);
-      },
-    );
-
-    test(
-      ".createProject() shows available regions",
-      () async {
-        await gcloudCliServiceAdapter.createProject();
-
-        verify(gcloudCli.listRegions()).called(once);
-      },
-    );
-
-    test(
-      ".createProject() requests the region from the user",
-      () async {
-        await gcloudCliServiceAdapter.createProject();
-
-        verify(promptWriter.prompt(PromptStrings.enterRegionName)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() creates the project with the generated project id",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        verify(gcloudCli.createProject(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() creates the project app with the given region and project id",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        verify(gcloudCli.createProjectApp(region, projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() enables Firestore API for the project with given project id",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() create database with the given region and project id",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        verify(gcloudCli.createDatabase(region, projectId)).called(once);
-      },
-    );
-
-    test(
       ".createProject() shows available regions before requesting the region from the user",
       () async {
         await gcloudCliServiceAdapter.createProject();
 
         verifyInOrder([
           gcloudCli.listRegions(),
-          promptWriter.prompt(PromptStrings.enterRegionName),
+          promptWriter.prompt(GcloudStrings.enterRegionName),
         ]);
       },
     );
 
     test(
-      ".createProject() requests the region from the user before creating the project app",
+      ".createProject() requests the region from the user before creating the project",
       () async {
         final projectId = await gcloudCliServiceAdapter.createProject();
 
         verifyInOrder([
-          promptWriter.prompt(PromptStrings.enterRegionName),
-          gcloudCli.createProjectApp(region, projectId),
+          promptWriter.prompt(GcloudStrings.enterRegionName),
+          gcloudCli.createProject(projectId),
         ]);
       },
     );
 
     test(
-      ".createProject() requests the region from the user before creating the database",
-      () async {
-        final projectId = await gcloudCliServiceAdapter.createProject();
-
-        verifyInOrder([
-          promptWriter.prompt(PromptStrings.enterRegionName),
-          gcloudCli.createDatabase(region, projectId),
-        ]);
-      },
-    );
-
-    test(".createProject() creates the project before creating the project app",
+        ".createProject() creates the project with the generated id before creating the project app",
         () async {
+      when(promptWriter.prompt(GcloudStrings.enterRegionName))
+          .thenReturn(region);
+
       final projectId = await gcloudCliServiceAdapter.createProject();
 
       verifyInOrder([
@@ -157,25 +96,41 @@ void main() {
     });
 
     test(
-      ".createProject() creates the project before creating the database",
+      ".createProject() creates the project app with the generated id and the given region before enabling firestore API.",
       () async {
+        when(promptWriter.prompt(GcloudStrings.enterRegionName))
+            .thenReturn(region);
+
         final projectId = await gcloudCliServiceAdapter.createProject();
 
         verifyInOrder([
-          gcloudCli.createProject(projectId),
+          gcloudCli.createProjectApp(region, projectId),
+          gcloudCli.enableFirestoreApi(projectId),
+        ]);
+      },
+    );
+
+    test(
+      ".createProject() enables firestore API for the project with generated id before creating the database",
+      () async {
+        when(promptWriter.prompt(GcloudStrings.enterRegionName))
+            .thenReturn(region);
+
+        final projectId = await gcloudCliServiceAdapter.createProject();
+
+        verifyInOrder([
+          gcloudCli.enableFirestoreApi(projectId),
           gcloudCli.createDatabase(region, projectId),
         ]);
       },
     );
 
     test(
-      ".createProject() enables firestore API before creating the database",
+      ".createProject() returns a project id",
       () async {
         final projectId = await gcloudCliServiceAdapter.createProject();
-        verifyInOrder([
-          gcloudCli.enableFirestoreApi(projectId),
-          gcloudCli.createDatabase(region, projectId),
-        ]);
+
+        expect(projectId, isNotNull);
       },
     );
 

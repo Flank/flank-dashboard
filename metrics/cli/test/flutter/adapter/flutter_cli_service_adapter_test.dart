@@ -19,9 +19,9 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if the given flutter CLI is null",
+      "throws an ArgumentError if the given flutter CLI is null",
       () {
-        expect(() => FlutterCliServiceAdapter(null), throwsAssertionError);
+        expect(() => FlutterCliServiceAdapter(null), throwsArgumentError);
       },
     );
 
