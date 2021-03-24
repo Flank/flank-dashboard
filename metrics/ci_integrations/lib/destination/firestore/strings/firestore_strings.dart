@@ -13,6 +13,16 @@ class FirestoreStrings {
       'The metrics project with the given identifier does not exist.';
   static const String unknownErrorWhenSigningIn =
       'An unknown error occurred when signing in to the Firebase. Please try again later.';
+  static const String publicApiKeyInvalidInterruptReason =
+      "Can't be validated as the provided Firebase public API key is invalid.";
+  static const String authInvalidInterruptReason =
+      "Can't be validated as the auth credentials are invalid.";
+  static const String authValidationFailedInterruptReason =
+      "Can't be validated as the Firebase user email and password validation failed.";
+  static const String firebaseProjectIdInvalidInterruptReason =
+      "Can't be validated as the Firebase project ID is invalid.";
+  static const String firebaseProjectIdValidationFailedInterruptReason =
+      "Can't be validated as the Firebase project ID validation failed.";
 
   static String authValidationFailed(
     String code,
