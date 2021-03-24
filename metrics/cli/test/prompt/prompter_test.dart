@@ -12,7 +12,7 @@ void main() {
   group("Prompter", () {
     const promptText = 'promptText';
     const confirmInput = 'yes';
-    final promptWriter = PromptWriterMock();
+    final promptWriter = _PromptWriterMock();
     final prompter = Prompter(promptWriter);
 
     tearDown(() {
@@ -86,4 +86,4 @@ void main() {
   });
 }
 
-class PromptWriterMock extends Mock implements PromptWriter {}
+class _PromptWriterMock extends Mock implements PromptWriter {}
