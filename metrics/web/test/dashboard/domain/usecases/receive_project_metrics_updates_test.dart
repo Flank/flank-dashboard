@@ -162,7 +162,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number of builds to load for chart metrics",
+      "loads the stability metric for finished builds loaded from the chart metrics builds",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
@@ -225,7 +225,7 @@ void main() {
     });
 
     test(
-        "loads the performance metric for the number of builds in the common builds loading period",
+        "loads the performance metric for the finished builds from builds loaded in the common builds loading period",
         () {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
@@ -276,17 +276,17 @@ void main() {
 
       expect(
         performanceMetrics.buildsPerformance.length,
-        finishedBuildsInPeriod.length,
+        equals(finishedBuildsInPeriod.length),
       );
 
       expect(
         firstPerformanceMetric.date,
-        finishedBuildsInPeriod.first.startedAt,
+        equals(finishedBuildsInPeriod.first.startedAt),
       );
       
       expect(
         firstPerformanceMetric.duration,
-        finishedBuildsInPeriod.first.duration,
+        equals(finishedBuildsInPeriod.first.duration),
       );
     });
 
