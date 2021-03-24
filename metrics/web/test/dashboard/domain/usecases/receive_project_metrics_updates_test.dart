@@ -162,7 +162,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for number builds to load for chart metrics",
+      "loads the stability metric for number of builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
