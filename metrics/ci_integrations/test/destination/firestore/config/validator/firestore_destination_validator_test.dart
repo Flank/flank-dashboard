@@ -277,11 +277,10 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'auth validation failed' additional context if the auth validation result is failed",
+      ".validate() sets empty results with the unknown field validation result with the 'auth invalid' additional context if the auth validation result is failed",
       () async {
         const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
-              FirestoreStrings.authValidationFailedInterruptReason,
+          additionalContext: FirestoreStrings.authInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
 
@@ -300,7 +299,7 @@ void main() {
           additionalContext:
               FirestoreStrings.authValidationFailedInterruptReason,
         );
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer((_) => Future.value(unknownResult));
 
         await validator.validate(config);
 
@@ -418,7 +417,8 @@ void main() {
       ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation result is failed",
       () async {
         const expectedResult = FieldValidationResult.unknown(
-          additionalContext: FirestoreStrings.firebaseProjectIdInterruptReason,
+          additionalContext:
+              FirestoreStrings.firebaseProjectIdInvalidInterruptReason,
         );
         whenValidateFirebaseProjectId().thenAnswer(
           (_) => Future.value(failureResult),
@@ -436,7 +436,8 @@ void main() {
       ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation result is unknown",
       () async {
         const expectedResult = FieldValidationResult.unknown(
-          additionalContext: FirestoreStrings.firebaseProjectIdInterruptReason,
+          additionalContext:
+              FirestoreStrings.firebaseProjectIdValidationFailedInterruptReason,
         );
         whenValidateFirebaseProjectId().thenAnswer(
           (_) => Future.value(unknownResult),

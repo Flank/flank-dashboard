@@ -73,7 +73,12 @@ class FirestoreDestinationValidator
       authValidationResult,
     );
 
-    if (!authValidationResult.isSuccess) {
+    if (authValidationResult.isFailure) {
+      return _finalizeValidationResult(
+        FirestoreStrings.authInvalidInterruptReason,
+      );
+    }
+    if (authValidationResult.isUnknown) {
       return _finalizeValidationResult(
         FirestoreStrings.authValidationFailedInterruptReason,
       );
@@ -88,9 +93,14 @@ class FirestoreDestinationValidator
       firebaseProjectIdValidationResult,
     );
 
-    if (!firebaseProjectIdValidationResult.isSuccess) {
+    if (firebaseProjectIdValidationResult.isFailure) {
       return _finalizeValidationResult(
-        FirestoreStrings.firebaseProjectIdInterruptReason,
+        FirestoreStrings.firebaseProjectIdInvalidInterruptReason,
+      );
+    }
+    if (firebaseProjectIdValidationResult.isUnknown) {
+      return _finalizeValidationResult(
+        FirestoreStrings.firebaseProjectIdValidationFailedInterruptReason,
       );
     }
 
