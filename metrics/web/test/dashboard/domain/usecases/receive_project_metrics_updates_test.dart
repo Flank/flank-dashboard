@@ -225,7 +225,7 @@ void main() {
     });
 
     test(
-        "loads the performance metric for the finished builds from builds loaded in the common builds loading period",
+        "loads the performance metric for the finished builds from builds loaded in the builds loading period",
         () {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
@@ -308,10 +308,10 @@ void main() {
 
       final firstBuildResult = buildResultMetrics.buildResults.last;
 
-      expect(firstBuildResult.buildStatus, lastBuild.buildStatus);
-      expect(firstBuildResult.duration, lastBuild.duration);
-      expect(firstBuildResult.date, lastBuild.startedAt);
-      expect(firstBuildResult.url, lastBuild.url);
+      expect(firstBuildResult.buildStatus, equals(lastBuild.buildStatus));
+      expect(firstBuildResult.duration, equals(lastBuild.duration));
+      expect(firstBuildResult.date, equals(lastBuild.startedAt));
+      expect(firstBuildResult.url, equals(lastBuild.url));
     });
 
     test("loads coverage from last successful build", () {
@@ -319,7 +319,7 @@ void main() {
       final expectedCoverage =
           _MetricsRepositoryStub.lastSuccessfulBuild.coverage;
 
-      expect(actualCoverage, expectedCoverage);
+      expect(actualCoverage, equals(expectedCoverage));
     });
 
     test("loads the project build status metric", () {
@@ -333,7 +333,7 @@ void main() {
 
       final actualProjectBuildStatus = projectMetrics.projectBuildStatusMetric;
 
-      expect(actualProjectBuildStatus, expectedProjectBuildStatus);
+      expect(actualProjectBuildStatus, equals(expectedProjectBuildStatus));
     });
 
     test("calculates stability metric", () {
@@ -349,7 +349,7 @@ void main() {
       final expectedStabilityValue =
           successfulBuilds.length / finishedBuilds.length;
 
-      expect(actualStability.value, expectedStabilityValue);
+      expect(actualStability.value, equals(expectedStabilityValue));
     });
 
     test(
