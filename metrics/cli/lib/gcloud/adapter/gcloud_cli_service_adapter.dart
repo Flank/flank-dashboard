@@ -7,15 +7,13 @@ import 'package:cli/prompt/prompter.dart';
 import 'package:cli/prompt/strings/gcloud_strings.dart';
 import 'package:random_string/random_string.dart';
 
-/// An adapter for the [GCloudCli] to implement the [GCloudService]
-/// interface.
+/// An adapter for the [GCloudCli] to implement the [GCloudService] interface.
 class GCloudCliServiceAdapter implements GCloudService {
   /// A [GCloudCli] class that provides an ability to interact
   /// with the GCloud CLI.
   final GCloudCli _gcloudCli;
 
-  /// A [Prompter] class that provides an ability to interact
-  /// with the prompts.
+  /// A [Prompter] class that provides an ability to interact with the prompts.
   final Prompter _prompter;
 
   /// Creates a new instance of the [GCloudCliServiceAdapter]

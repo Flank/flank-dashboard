@@ -111,7 +111,7 @@ void main() {
     );
 
     test(
-      ".createProject() enables firestore API for the project with generated id before creating the database",
+      ".createProject() enables firestore API for the project with the generated id before creating the database",
       () async {
         when(promptWriter.prompt(GcloudStrings.enterRegionName))
             .thenReturn(region);
@@ -126,7 +126,19 @@ void main() {
     );
 
     test(
-      ".createProject() returns a project id",
+      ".createProject() create database with the generated id and the given region",
+      () async {
+        when(promptWriter.prompt(GcloudStrings.enterRegionName))
+            .thenReturn(region);
+
+        final projectId = await gcloudCliServiceAdapter.createProject();
+
+        verify(gcloudCli.createDatabase(region, projectId)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() returns the project id",
       () async {
         final projectId = await gcloudCliServiceAdapter.createProject();
 
