@@ -263,7 +263,7 @@ void main() {
       );
     });
 
-    test("loads all fields in the performance metrics", () {
+    test("loads all fields in the performance metrics from the last finished builds", () {
       final performanceMetrics = projectMetrics.performanceMetrics;
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
@@ -283,7 +283,7 @@ void main() {
         firstPerformanceMetric.date,
         equals(finishedBuildsInPeriod.first.startedAt),
       );
-      
+
       expect(
         firstPerformanceMetric.duration,
         equals(finishedBuildsInPeriod.first.duration),
@@ -300,7 +300,7 @@ void main() {
       final totalNumberOfBuilds = thisWeekBuilds.length;
       final buildNumberMetrics = projectMetrics.buildNumberMetrics;
 
-      expect(buildNumberMetrics.numberOfBuilds, totalNumberOfBuilds);
+      expect(buildNumberMetrics.numberOfBuilds, equals(totalNumberOfBuilds));
     });
 
     test("loads all fields in the build result metrics", () {
@@ -322,13 +322,13 @@ void main() {
       expect(actualCoverage, equals(expectedCoverage));
     });
 
-    test("loads the project build status metric", () {
-      final latestBuild = List<Build>.from(_MetricsRepositoryStub.testBuilds)
-        ..sort((current, previous) {
-          return current.startedAt.compareTo(previous.startedAt);
-        });
+    test("loads the project build status metric from the last build", () {
+      final latestBuilds = List<Build>.from(_MetricsRepositoryStub.testBuilds);
+      latestBuilds.sort((current, previous) {
+        return current.startedAt.compareTo(previous.startedAt);
+      });
       final expectedProjectBuildStatus = ProjectBuildStatusMetric(
-        status: latestBuild.last.buildStatus,
+        status: latestBuilds.last.buildStatus,
       );
 
       final actualProjectBuildStatus = projectMetrics.projectBuildStatusMetric;
@@ -336,7 +336,7 @@ void main() {
       expect(actualProjectBuildStatus, equals(expectedProjectBuildStatus));
     });
 
-    test("calculates stability metric", () {
+    test("calculates the stability metric using last finished builds", () {
       final finishedBuilds = builds.where(
         (build) => build.buildStatus != BuildStatus.inProgress,
       );
