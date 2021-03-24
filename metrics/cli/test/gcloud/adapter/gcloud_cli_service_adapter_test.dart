@@ -39,7 +39,7 @@ void main() {
       "throws an ArgumentError if the given prompter is null",
       () {
         expect(
-          () => GCloudCliServiceAdapter(null, prompter),
+          () => GCloudCliServiceAdapter(gcloudCli, null),
           throwsArgumentError,
         );
       },
