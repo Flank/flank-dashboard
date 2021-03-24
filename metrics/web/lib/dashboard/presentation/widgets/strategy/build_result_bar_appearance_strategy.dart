@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/colored_bar/strategy/metrics_colored_bar_appearance_strategy.dart';
@@ -28,6 +28,8 @@ class BuildResultBarAppearanceStrategy
       case BuildStatus.failed:
         return attentionLevel.negative;
       case BuildStatus.unknown:
+        return attentionLevel.neutral;
+      case BuildStatus.inProgress:
         return attentionLevel.neutral;
     }
 

@@ -141,7 +141,7 @@ void main() {
     );
 
     testWidgets(
-      "does not displays the graph indicator if the popup is closed",
+      "does not display the graph indicator if the popup is closed",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,
@@ -164,9 +164,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(PositiveGraphIndicator);
+        final positiveIndicatorFinder = find.byType(PositiveGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(positiveIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -190,9 +190,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(NegativeGraphIndicator);
+        final negativeIndicatorFinder = find.byType(NegativeGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(negativeIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -216,9 +216,35 @@ void main() {
 
         await _hoverBar(tester);
 
-        final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
+        final neutralIndicatorFinder = find.byType(NeutralGraphIndicator);
 
-        expect(graphIndicatorFinder, findsOneWidget);
+        expect(neutralIndicatorFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the neutral graph indicator if the build status is in progress and the popup is opened",
+      (tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: BuildResultPopupViewModel(
+            date: DateTime.now(),
+            duration: Duration.zero,
+            buildStatus: BuildStatus.unknown,
+          ),
+          date: DateTime.now(),
+          duration: Duration.zero,
+          buildStatus: BuildStatus.inProgress,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+        ));
+
+        await _hoverBar(tester);
+
+        final neutralIndicatorFinder = find.byType(NeutralGraphIndicator);
+
+        expect(neutralIndicatorFinder, findsOneWidget);
       },
     );
 
