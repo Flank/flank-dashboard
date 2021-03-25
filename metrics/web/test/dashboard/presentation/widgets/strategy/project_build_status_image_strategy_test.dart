@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
@@ -10,6 +10,7 @@ void main() {
     const successfulImage = "icons/successful_status.svg";
     const failedImage = "icons/failed_status.svg";
     const unknownImage = "icons/unknown_status.svg";
+    const inProgressImage = "icons/in_progress_status.svg";
     const strategy = ProjectBuildStatusImageStrategy();
 
     test(
@@ -36,6 +37,15 @@ void main() {
         final actualImage = strategy.getImageAsset(BuildStatus.unknown);
 
         expect(actualImage, equals(unknownImage));
+      },
+    );
+
+    test(
+      ".getImageAsset() returns the in progress image if the given build status is in progress",
+      () {
+        final actualImage = strategy.getImageAsset(BuildStatus.inProgress);
+
+        expect(actualImage, equals(inProgressImage));
       },
     );
 

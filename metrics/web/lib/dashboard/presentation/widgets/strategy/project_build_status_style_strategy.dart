@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -28,6 +28,8 @@ class ProjectBuildStatusStyleStrategy
       case BuildStatus.failed:
         return attentionLevelTheme.negative;
       case BuildStatus.unknown:
+        return attentionLevelTheme.unknown;
+      case BuildStatus.inProgress:
         return attentionLevelTheme.unknown;
     }
 

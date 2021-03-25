@@ -61,6 +61,8 @@ class _BuildResultBarState extends State<BuildResultBar> {
         return const NegativeGraphIndicator();
       case BuildStatus.unknown:
         return const NeutralGraphIndicator();
+      case BuildStatus.inProgress:
+        return const NeutralGraphIndicator();
     }
 
     return null;

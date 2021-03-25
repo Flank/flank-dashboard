@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -65,6 +65,19 @@ void main() {
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.unknown,
+        );
+
+        expect(actualStyle, equals(style));
+      },
+    );
+
+    test(
+      ".getWidgetAppearance() returns the neutral style if the given build status is in progress",
+      () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
+        final actualStyle = themeStrategy.getWidgetAppearance(
+          theme,
+          BuildStatus.inProgress,
         );
 
         expect(actualStyle, equals(style));
