@@ -3,8 +3,8 @@
 
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
+import 'package:cli/gcloud/strings/gcloud_strings.dart';
 import 'package:cli/prompt/prompter.dart';
-import 'package:cli/prompt/strings/gcloud_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -24,6 +24,10 @@ void main() {
       reset(gcloudCli);
       reset(promptWriter);
     });
+
+    PostExpectation<String> whenEnterRegionPrompt() {
+      return when(promptWriter.prompt(GcloudStrings.enterRegionName));
+    }
 
     test(
       "throws an ArgumentError if the given gcloud CLI is null",
@@ -46,11 +50,20 @@ void main() {
     );
 
     test(
-      ".login() logins to the GCloud CLI",
+      ".login() logs in to the GCloud CLI",
       () async {
         await gcloudAdapter.login();
 
         verify(gcloudCli.login()).called(once);
+      },
+    );
+
+    test(
+      ".createProject() shows available regions",
+      () async {
+        await gcloudAdapter.createProject();
+
+        verify(gcloudCli.listRegions()).called(once);
       },
     );
 
@@ -67,6 +80,15 @@ void main() {
     );
 
     test(
+      ".createProject() requests the region from the user",
+      () async {
+        await gcloudAdapter.createProject();
+
+        verify(promptWriter.prompt(GcloudStrings.enterRegionName)).called(once);
+      },
+    );
+
+    test(
       ".createProject() requests the region from the user before creating the project",
       () async {
         final projectId = await gcloudAdapter.createProject();
@@ -79,24 +101,43 @@ void main() {
     );
 
     test(
-        ".createProject() creates the project with the generated id before creating the project app",
-        () async {
-      when(promptWriter.prompt(GcloudStrings.enterRegionName))
-          .thenReturn(region);
+      ".createProject() creates the project with the generated project id",
+      () async {
+        final projectId = await gcloudAdapter.createProject();
 
-      final projectId = await gcloudAdapter.createProject();
-
-      verifyInOrder([
-        gcloudCli.createProject(projectId),
-        gcloudCli.createProjectApp(region, projectId),
-      ]);
-    });
+        verify(gcloudCli.createProject(projectId)).called(once);
+      },
+    );
 
     test(
-      ".createProject() creates the project app with the generated id and the given region before enabling firestore API.",
+      ".createProject() creates the project before creating the project app",
       () async {
-        when(promptWriter.prompt(GcloudStrings.enterRegionName))
-            .thenReturn(region);
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudAdapter.createProject();
+
+        verifyInOrder([
+          gcloudCli.createProject(projectId),
+          gcloudCli.createProjectApp(region, projectId),
+        ]);
+      },
+    );
+
+    test(
+      ".createProject() creates the project app with the given region and the generated project id",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudAdapter.createProject();
+
+        verify(gcloudCli.createProjectApp(region, projectId)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() creates the project app before enabling firestore API.",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
 
         final projectId = await gcloudAdapter.createProject();
 
@@ -108,10 +149,18 @@ void main() {
     );
 
     test(
-      ".createProject() enables firestore API for the project with the generated id before creating the database",
+      ".createProject() enables Firestore API for the project with the generated project id",
       () async {
-        when(promptWriter.prompt(GcloudStrings.enterRegionName))
-            .thenReturn(region);
+        final projectId = await gcloudAdapter.createProject();
+
+        verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() enables firestore API before creating the database",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
 
         final projectId = await gcloudAdapter.createProject();
 
@@ -123,10 +172,9 @@ void main() {
     );
 
     test(
-      ".createProject() create database with the generated id and the given region",
+      ".createProject() creates database with the generated id and the given region",
       () async {
-        when(promptWriter.prompt(GcloudStrings.enterRegionName))
-            .thenReturn(region);
+        whenEnterRegionPrompt().thenReturn(region);
 
         final projectId = await gcloudAdapter.createProject();
 
