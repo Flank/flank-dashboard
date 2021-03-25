@@ -9,11 +9,16 @@ import '../../../test_utils/matchers.dart';
 
 void main() {
   group("TimerNotifier", () {
-    TimerNotifier notifier;
     const duration = Duration(milliseconds: 10);
+
+    TimerNotifier notifier;
 
     setUp(() {
       notifier = TimerNotifier();
+    });
+
+    tearDown(() {
+      notifier.dispose();
     });
 
     test(
@@ -33,7 +38,39 @@ void main() {
     );
 
     test(
-      ".start() starts a timer with the given duration",
+      ".start() creates a periodic timer with the given duration",
+      () {
+        fakeAsync((async) {
+          notifier.start(duration);
+
+          final timers = async.pendingTimers;
+
+          final timer = timers.singleWhere(
+            (timer) {
+              return timer.isPeriodic && timer.duration == duration;
+            },
+            orElse: () => null,
+          );
+
+          expect(timer, isNotNull);
+        });
+      },
+    );
+
+    test(
+      ".start() stops the previously created timer",
+      () {
+        fakeAsync((async) {
+          notifier.start(duration);
+          notifier.start(duration);
+
+          expect(async.periodicTimerCount, equals(1));
+        });
+      },
+    );
+
+    test(
+      ".start() starts ticking with the given duration",
       () {
         fakeAsync((async) {
           const expectedTickCount = 3;
@@ -54,15 +91,11 @@ void main() {
       ".stop() stops the started timer",
       () {
         fakeAsync((async) {
-          int tickCount = 0;
-          notifier.addListener(() => ++tickCount);
-
           notifier.start(duration);
+
           notifier.stop();
 
-          async.elapse(duration);
-
-          expect(tickCount, isZero);
+          expect(async.periodicTimerCount, isZero);
         });
       },
     );
@@ -71,15 +104,13 @@ void main() {
       ".dispose() stops the started timers",
       () {
         fakeAsync((async) {
-          int tickCount = 0;
-          notifier.addListener(() => ++tickCount);
+          final notifier = TimerNotifier();
 
           notifier.start(duration);
+
           notifier.dispose();
 
-          async.elapse(duration);
-
-          expect(tickCount, isZero);
+          expect(async.periodicTimerCount, isZero);
         });
       },
     );
@@ -87,9 +118,11 @@ void main() {
     test(
       ".dispose() disposes the notifier",
       () {
+        final notifier = TimerNotifier();
+
         notifier.dispose();
 
-        expect(() => notifier.addListener(() {}), throwsAssertionError);
+        expect(() => notifier.notifyListeners(), throwsAssertionError);
       },
     );
   });

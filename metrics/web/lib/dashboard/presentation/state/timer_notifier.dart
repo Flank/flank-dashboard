@@ -5,13 +5,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-/// The [ChangeNotifier] that holds the
+/// A [ChangeNotifier] that provides an ability to subscibe to fixed [Duration] 
+/// periodic ticks.
 class TimerNotifier extends ChangeNotifier {
   /// A [Timer] this notifier uses to perform periodic ticks.
   Timer _timer;
-
-  /// Creates a new instance of the [TimerNotifier].
-  TimerNotifier();
 
   /// Starts a [Timer.periodic] with the given [duration].
   ///
@@ -20,7 +18,7 @@ class TimerNotifier extends ChangeNotifier {
   /// The [duration] must be a non-negative [Duration].
   ///
   /// Throws an [ArgumentError] if the given [duration] is `null`
-  /// or [duration.isNegative].
+  /// or the [duration.isNegative].
   void start(Duration duration) {
     ArgumentError.checkNotNull(duration, 'duration');
     if (duration.isNegative) {
