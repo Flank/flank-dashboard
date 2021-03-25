@@ -174,7 +174,7 @@ void main() {
     );
 
     test(
-      "loads the stability metric for finished builds loaded from the chart metrics builds",
+      "loads the stability metric for finished builds in the number of builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
         final builds = List<Build>.generate(
@@ -277,9 +277,7 @@ void main() {
       );
     });
 
-    test(
-        "loads all fields in the performance metrics from the last finished builds",
-        () {
+    test("loads all fields in the performance metrics", () {
       final performanceMetrics = projectMetrics.performanceMetrics;
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
@@ -339,13 +337,9 @@ void main() {
       expect(actualCoverage, equals(expectedCoverage));
     });
 
-    test("loads the project build status metric from the last build", () {
-      final latestBuilds = List<Build>.from(_MetricsRepositoryStub.testBuilds);
-      latestBuilds.sort((current, previous) {
-        return current.startedAt.compareTo(previous.startedAt);
-      });
+    test("loads the project build status metric for the latest build", () {
       final expectedProjectBuildStatus = ProjectBuildStatusMetric(
-        status: latestBuilds.last.buildStatus,
+        status: _MetricsRepositoryStub.testBuilds.first.buildStatus,
       );
 
       final actualProjectBuildStatus = projectMetrics.projectBuildStatusMetric;
@@ -353,7 +347,8 @@ void main() {
       expect(actualProjectBuildStatus, equals(expectedProjectBuildStatus));
     });
 
-    test("calculates the stability metric using last finished builds", () {
+    test("calculates the stability metric based on the last finished builds",
+        () {
       final finishedBuilds = builds.where(
         (build) => build.buildStatus != BuildStatus.inProgress,
       );
