@@ -12,6 +12,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -329,19 +330,19 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
   static final buildResultBarTestData = [
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now(),
       buildStatus: BuildStatus.successful,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now().add(const Duration(days: 1)),
       buildStatus: BuildStatus.failed,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now().add(const Duration(days: 2)),
       buildStatus: BuildStatus.unknown,
