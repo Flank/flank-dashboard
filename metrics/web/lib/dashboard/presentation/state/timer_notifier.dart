@@ -45,6 +45,7 @@ class TimerNotifier extends ChangeNotifier {
   @override
   void dispose() {
     stop();
+
     super.dispose();
   }
 }
