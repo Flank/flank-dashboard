@@ -4,29 +4,27 @@
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/gcloud/strings/gcloud_strings.dart';
-import 'package:cli/prompt/prompter.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
-import '../../test_utils/prompt_writer_mock.dart';
+import '../../test_utils/prompter_mock.dart';
 
 void main() {
   group('GCloudCliServiceAdapter', () {
     const region = 'testRegion';
 
     final gcloudCli = _GCloudCliMock();
-    final promptWriter = PromptWriterMock();
-    final prompter = Prompter(promptWriter);
+    final prompter = PrompterMock();
     final gcloudAdapter = GCloudCliServiceAdapter(gcloudCli, prompter);
 
     tearDown(() {
       reset(gcloudCli);
-      reset(promptWriter);
+      reset(prompter);
     });
 
     PostExpectation<String> whenEnterRegionPrompt() {
-      return when(promptWriter.prompt(GcloudStrings.enterRegionName));
+      return when(prompter.prompt(GcloudStrings.enterRegionName));
     }
 
     test(
@@ -74,7 +72,7 @@ void main() {
 
         verifyInOrder([
           gcloudCli.listRegions(),
-          promptWriter.prompt(GcloudStrings.enterRegionName),
+          prompter.prompt(GcloudStrings.enterRegionName),
         ]);
       },
     );
@@ -84,7 +82,7 @@ void main() {
       () async {
         await gcloudAdapter.createProject();
 
-        verify(promptWriter.prompt(GcloudStrings.enterRegionName)).called(once);
+        verify(prompter.prompt(GcloudStrings.enterRegionName)).called(once);
       },
     );
 
@@ -94,7 +92,7 @@ void main() {
         final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
-          promptWriter.prompt(GcloudStrings.enterRegionName),
+          prompter.prompt(GcloudStrings.enterRegionName),
           gcloudCli.createProject(projectId),
         ]);
       },
@@ -135,7 +133,7 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project app before enabling firestore API",
+      ".createProject() creates the project app before enabling Firestore API",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
@@ -158,7 +156,7 @@ void main() {
     );
 
     test(
-      ".createProject() enables firestore API before creating the database",
+      ".createProject() enables Firestore API before creating the database",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
