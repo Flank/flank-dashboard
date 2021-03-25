@@ -9,7 +9,7 @@ class SentryCli extends Cli {
   @override
   final String executable = 'sentry-cli';
 
-  /// Logins into the Sentry CLI.
+  /// Logs in to the Sentry CLI.
   Future<void> login() {
     return run(['login']);
   }
@@ -30,21 +30,15 @@ class SentryCli extends Cli {
   /// in the [sourcePath] to the release with the given [releaseName] within
   /// the given [project].
   ///
-  /// If the [extensions] is not specified, all files are uploaded.
+  /// If the [extensions] are not specified, source maps of all files
+  /// are uploaded.
   Future<void> uploadSourceMaps(
     String sourcePath,
     List<String> extensions,
     SentryProject project,
     String releaseName,
   ) {
-    final extensionList = <String>[];
-    if (extensions != null) {
-      for (final extension in extensions) {
-        extensionList.add('--ext=$extension');
-      }
-    }
-
-    return run([
+    final parameters = [
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
@@ -52,9 +46,16 @@ class SentryCli extends Cli {
       releaseName,
       'upload-sourcemaps',
       sourcePath,
-      ...extensionList,
       '--rewrite',
-    ]);
+    ];
+
+    if (extensions != null) {
+      for (final extension in extensions) {
+        parameters.add('--ext=$extension');
+      }
+    }
+
+    return run(parameters);
   }
 
   /// Finalizes the release with the given [releaseName]

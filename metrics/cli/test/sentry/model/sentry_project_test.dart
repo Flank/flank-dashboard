@@ -8,13 +8,13 @@ import 'package:test/test.dart';
 
 void main() {
   group("SentryProject", () {
-    const slug = 'testSlug';
-
+    const orgSlug = 'testOrgSlug';
+    const projectSlug = 'testProjectSlug';
     test(
       "throws an ArgumentError if the given organization slug is null",
       () {
         expect(
-          () => SentryProject(organizationSlug: null, projectSlug: slug),
+          () => SentryProject(organizationSlug: null, projectSlug: projectSlug),
           throwsArgumentError,
         );
       },
@@ -24,19 +24,22 @@ void main() {
       "throws an ArgumentError if the given project slug is null",
       () {
         expect(
-          () => SentryProject(organizationSlug: slug, projectSlug: null),
+          () => SentryProject(organizationSlug: orgSlug, projectSlug: null),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      "successfully creates with the given required parameters",
+      "creates an instance with the given parameters",
       () {
-        expect(
-          () => SentryProject(organizationSlug: slug, projectSlug: slug),
-          returnsNormally,
+        final project = SentryProject(
+          organizationSlug: orgSlug,
+          projectSlug: projectSlug,
         );
+
+        expect(project.organizationSlug, equals(orgSlug));
+        expect(project.projectSlug, equals(projectSlug));
       },
     );
   });
