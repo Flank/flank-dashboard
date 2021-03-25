@@ -11,6 +11,9 @@ class SentryProject {
 
   /// Creates a new instance of the [SentryProject]
   /// with the given [organizationSlug] and [projectSlug].
+  ///
+  /// Throws an [ArgumentError] if the given [organizationSlug] is `null`.
+  /// Throws an [ArgumentError] if the given [projectSlug] is `null`.
   SentryProject({
     this.organizationSlug,
     this.projectSlug,
