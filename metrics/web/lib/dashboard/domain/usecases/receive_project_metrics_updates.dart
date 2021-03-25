@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:collection';
@@ -110,8 +110,15 @@ class ReceiveProjectMetricsUpdates
     );
     final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
     final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
-    final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
-    final stability = _getStability(lastBuilds);
+
+    final lastFinishedBuildsInPeriod = _getFinishedBuilds(lastBuildsInPeriod);
+    final performanceMetrics = _getPerformanceMetrics(
+      lastFinishedBuildsInPeriod,
+    );
+
+    final lastFinishedBuilds = _getFinishedBuilds(lastBuilds);
+    final stability = _getStability(lastFinishedBuilds);
+
     final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
@@ -227,5 +234,15 @@ class ReceiveProjectMetricsUpdates
     );
 
     return Percent(successfulBuilds.length / builds.length);
+  }
+
+  /// Creates a [List] of finished [Build]s from the given [builds].
+  ///
+  /// A finished [Build] is a build with the [Build.buildStatus] not equal to
+  /// the [BuildStatus.inProgress].
+  List<Build> _getFinishedBuilds(List<Build> builds) {
+    return builds
+        .where((build) => build.buildStatus != BuildStatus.inProgress)
+        .toList();
   }
 }
