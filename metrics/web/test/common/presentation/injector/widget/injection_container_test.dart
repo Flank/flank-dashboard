@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -228,6 +229,20 @@ void main() {
     );
 
     testWidgets(
+      "injects a TimerNotifier",
+      (tester) async {
+        await tester.pumpWidget(const InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<TimerNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
       "disposes an AuthNotifier on dispose",
       (tester) async {
         await tester.pumpWidget(const InjectionContainerTestbed());
@@ -411,6 +426,27 @@ void main() {
 
         expect(
           () => navigationNotifier.notifyListeners(),
+          throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a TimerNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(const InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final timerNotifier = Provider.of<TimerNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => timerNotifier.notifyListeners(),
           throwsFlutterError,
         );
       },
