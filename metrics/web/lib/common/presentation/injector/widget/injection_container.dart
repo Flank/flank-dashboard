@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
 import 'package:metrics/debug_menu/data/repositories/hive_local_config_repository.dart';
 import 'package:metrics/debug_menu/domain/usecases/close_local_config_storage_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/open_local_config_storage_usecase.dart';
@@ -315,6 +316,20 @@ class _InjectionContainerState extends State<InjectionContainer> {
             );
 
             return projectMetricsNotifier;
+          },
+        ),
+        ChangeNotifierProxyProvider<ProjectMetricsNotifier, TimerNotifier>(
+          create: (_) => TimerNotifier(),
+          lazy: false,
+          update: (_, projectMetricsNotifier, timerNotifier) {
+            final isMetricsLoaded = !projectMetricsNotifier.isMetricsLoading;
+
+            if (isMetricsLoaded) {
+              const duration = Duration(seconds: 1);
+              timerNotifier.start(duration);
+            }
+
+            return timerNotifier;
           },
         ),
       ],
