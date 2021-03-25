@@ -175,7 +175,7 @@ package interfaces {
 
 package helper {
     class FileHelper {
-        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : Future<File>
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : Future<void>
         + deleteDirectory(Directory directory) : Future<void>
     }
 }
