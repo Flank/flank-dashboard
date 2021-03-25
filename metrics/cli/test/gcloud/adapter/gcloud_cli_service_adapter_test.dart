@@ -135,7 +135,7 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project app before enabling firestore API.",
+      ".createProject() creates the project app before enabling firestore API",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
@@ -183,11 +183,12 @@ void main() {
     );
 
     test(
-      ".createProject() returns the project id",
+      ".createProject() returns the identifier of the created project",
       () async {
         final projectId = await gcloudAdapter.createProject();
 
         expect(projectId, isNotNull);
+        verify(gcloudCli.createProject(projectId)).called(once);
       },
     );
 
