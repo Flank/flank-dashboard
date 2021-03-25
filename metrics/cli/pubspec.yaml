@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   process_run: ^0.10.12+3
+  random_string: ^2.1.0
   safe_config: ^2.0.2
 
 dev_dependencies:
