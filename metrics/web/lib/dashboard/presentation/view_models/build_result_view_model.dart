@@ -14,10 +14,10 @@ abstract class BuildResultViewModel extends Equatable {
   /// A [DateTime] when the build is started.
   final DateTime date;
 
-  /// The resulting status of the build.
+  /// A resulting status of the build.
   final BuildStatus buildStatus;
 
-  /// The url of the CI build.
+  /// A url of the CI build.
   final String url;
 
   @override
@@ -31,7 +31,7 @@ abstract class BuildResultViewModel extends Equatable {
   /// Creates a new instance of the [BuildResultViewModel].
   ///
   /// All the required parameters must not be null.
-  /// 
+  ///
   /// Throws an [AssertionError] if any of the required parameters is `null`.
   const BuildResultViewModel({
     @required this.buildResultPopupViewModel,
