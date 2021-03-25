@@ -32,6 +32,8 @@ class FileHelper {
   }
 
   /// Deletes the given [directory].
+  ///
+  /// Does nothing if the given [directory] is `null` or does not exist.
   Future<void> deleteDirectory(Directory directory) async {
     final isDirectoryExist = directory != null && await directory.exists();
 
