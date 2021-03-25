@@ -2,17 +2,17 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/prompt/prompter.dart';
-import 'package:cli/prompt/writer/prompt_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/matchers.dart';
+import '../test_utils/prompt_writer_mock.dart';
 
 void main() {
   group("Prompter", () {
     const promptText = 'promptText';
     const confirmInput = 'yes';
-    final promptWriter = _PromptWriterMock();
+    final promptWriter = PromptWriterMock();
     final prompter = Prompter(promptWriter);
 
     tearDown(() {
@@ -85,5 +85,3 @@ void main() {
     );
   });
 }
-
-class _PromptWriterMock extends Mock implements PromptWriter {}

@@ -14,8 +14,10 @@ class FlutterCliServiceAdapter implements FlutterService {
   /// Creates a new instance of the [FlutterCliServiceAdapter]
   /// with the given [FlutterCli].
   ///
-  /// Throws an [AssertionError] if the given [FlutterCli] is `null`.
-  FlutterCliServiceAdapter(this._flutterCli) : assert(_flutterCli != null);
+  /// Throws an [ArgumentError] if the given [FlutterCli] is `null`.
+  FlutterCliServiceAdapter(this._flutterCli) {
+    ArgumentError.checkNotNull(_flutterCli, 'flutterCli');
+  }
 
   @override
   Future<void> build(String appPath) async {
