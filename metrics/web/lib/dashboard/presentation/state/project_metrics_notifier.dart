@@ -408,7 +408,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// the [result.buildStatus].
   ///
   /// Returns an [InProgressBuildResultViewModel] if the given
-  /// [result.buildStatus]  is the [BuildStatus.inProgress].
+  /// [result.buildStatus] is the [BuildStatus.inProgress].
   ///
   /// Otherwise, returns a [FinishedBuildResultViewModel].
   BuildResultViewModel _mapResultToBuildResultViewModel(BuildResult result) {
