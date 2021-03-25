@@ -3,41 +3,24 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 void main() {
-  group("FinishedBuildResultViewModel", () {
-    const buildStatus = BuildStatus.unknown;
+  group("InProgressBuildResultViewModel", () {
     const url = 'url';
-    const duration = Duration.zero;
 
     final date = DateTime.now();
     final buildResultPopupViewModel = BuildResultPopupViewModel(
-      duration: duration,
+      duration: Duration.zero,
       date: date,
-    );
-
-    test(
-      "throws an AssertionErrror if the given duration is null",
-      () {
-        expect(
-          () => FinishedBuildResultViewModel(
-            duration: null,
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            date: date,
-          ),
-          throwsAssertionError,
-        );
-      },
     );
 
     test(
       "throws an AssertionErrror if the given build result popup view model is null",
       () {
         expect(
-          () => FinishedBuildResultViewModel(
-            duration: duration,
+          () => InProgressBuildResultViewModel(
             buildResultPopupViewModel: null,
             date: date,
           ),
@@ -50,8 +33,7 @@ void main() {
       "throws an AssertionErrror if the given date is null",
       () {
         expect(
-          () => FinishedBuildResultViewModel(
-            duration: duration,
+          () => InProgressBuildResultViewModel(
             buildResultPopupViewModel: buildResultPopupViewModel,
             date: null,
           ),
@@ -61,38 +43,31 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given build status is in-progress",
+      "creates an instance with the default in-progress build status",
       () {
-        expect(
-          () => FinishedBuildResultViewModel(
-            duration: duration,
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            date: date,
-            buildStatus: BuildStatus.inProgress,
-          ),
-          throwsAssertionError,
+        final viewModel = InProgressBuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          date: date,
         );
+
+        expect(viewModel.buildStatus, equals(BuildStatus.inProgress));
       },
     );
 
     test(
       "creates an instance with the given parameters",
       () {
-        final viewModel = FinishedBuildResultViewModel(
-          duration: duration,
+        final viewModel = InProgressBuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
           date: date,
-          buildStatus: buildStatus,
           url: url,
         );
 
-        expect(viewModel.duration, equals(duration));
         expect(
           viewModel.buildResultPopupViewModel,
           equals(buildResultPopupViewModel),
         );
         expect(viewModel.date, equals(date));
-        expect(viewModel.buildStatus, equals(buildStatus));
         expect(viewModel.url, equals(url));
       },
     );
