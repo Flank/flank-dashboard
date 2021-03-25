@@ -46,9 +46,7 @@ void main() {
           final timers = async.pendingTimers;
 
           final timer = timers.singleWhere(
-            (timer) {
-              return timer.isPeriodic && timer.duration == duration;
-            },
+            (timer) => timer.isPeriodic && timer.duration == duration,
             orElse: () => null,
           );
 
