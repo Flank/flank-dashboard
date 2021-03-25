@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group('SentryProject', () {
+  group("SentryProject", () {
     const slug = 'testSlug';
 
     test(
