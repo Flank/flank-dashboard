@@ -7,19 +7,20 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_popup_vi
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [BuildResultViewModel] that holds the data about a [Build] that is 
+/// A [BuildResultViewModel] that holds the data about a [Build] that is
 /// finished to display as a bar on a [BarGraph].
-class FinishedBuildResultViewModel extends BuildResultViewModel with EquatableMixin {
+class FinishedBuildResultViewModel extends BuildResultViewModel
+    with EquatableMixin {
   /// A [Duration] of the build.
   final Duration duration;
 
   @override
-  List<Object> get props => [...super.props, duration];
+  List<Object> get props => super.props..add(duration);
 
   /// Creates a new instance of the [FinishedBuildResultViewModel].
-  /// 
+  ///
   /// All the required parameters must not be null.
-  /// 
+  ///
   /// Throws an [AssertionError] if any of the required parameters is `null`.
   const FinishedBuildResultViewModel({
     @required this.duration,

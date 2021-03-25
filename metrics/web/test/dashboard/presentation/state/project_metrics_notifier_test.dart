@@ -18,6 +18,8 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
@@ -227,6 +229,38 @@ void main() {
       expect(performancePoints.map((p) => p.y), equals(expectedY));
     });
 
+    test(
+      "maps the finished build results to finished build result view models",
+      () async {
+        final buildResult =
+            expectedProjectMetrics.buildResultMetrics.buildResults.first;
+
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+        final viewModel = buildResultMetrics.buildResults.first;
+
+        expect(buildResult.buildStatus, isNot(BuildStatus.inProgress));
+        expect(viewModel, isA<FinishedBuildResultViewModel>());
+      },
+    );   
+    
+     test(
+      "maps the in-progress build results to in progress build result view models",
+      () async {
+        final buildResult =
+            expectedProjectMetrics.buildResultMetrics.buildResults[1];
+
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels[1];
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+        final viewModel = buildResultMetrics.buildResults[1];
+
+        expect(buildResult.buildStatus, equals(BuildStatus.inProgress));
+        expect(viewModel, isA<InProgressBuildResultViewModel>());
+      },
+    );
+
     test("loads the build result metrics", () async {
       final expectedBuildResults =
           expectedProjectMetrics.buildResultMetrics.buildResults;
@@ -241,7 +275,8 @@ void main() {
       );
 
       final expectedBuildResult = expectedBuildResults.first;
-      final firstBuildResultMetric = buildResultMetrics.buildResults.first;
+      final firstBuildResultMetric =
+          buildResultMetrics.buildResults.first as FinishedBuildResultViewModel;
 
       expect(
         firstBuildResultMetric.duration,
@@ -715,13 +750,19 @@ class _ReceiveProjectMetricsUpdatesStub
       averageBuildDuration: const Duration(minutes: 3),
     ),
     buildNumberMetrics: const BuildNumberMetric(
-      numberOfBuilds: 1,
+      numberOfBuilds: 2,
     ),
     buildResultMetrics: BuildResultMetric(
       buildResults: [
         BuildResult(
           date: DateTime.now(),
           duration: const Duration(minutes: 14),
+          url: 'some url',
+        ),
+        BuildResult(
+          date: DateTime.now(),
+          duration: const Duration(minutes: 14),
+          buildStatus: BuildStatus.inProgress,
           url: 'some url',
         ),
       ],
