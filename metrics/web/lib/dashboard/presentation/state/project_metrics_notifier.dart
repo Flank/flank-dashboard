@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -21,6 +22,8 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -28,6 +31,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics/util/date.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
@@ -392,22 +396,42 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
-    final buildResultViewModels = buildResults.map((result) {
-      return BuildResultViewModel(
-        buildResultPopupViewModel: BuildResultPopupViewModel(
-          date: result.date,
-          duration: result.duration,
-          buildStatus: result.buildStatus,
-        ),
-        date: result.date,
-        duration: result.duration,
-        buildStatus: result.buildStatus,
-        url: result.url,
-      );
-    }).toList();
+    final buildResultViewModels =
+        buildResults.map(_mapResultToBuildResultViewModel).toList();
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
+    );
+  }
+
+  /// Maps the given [result] to a specific [BuildResultViewModel] depening on
+  /// the [result.buildStatus].
+  ///
+  /// Returns an [InProgressBuildResultViewModel] if the given
+  /// [result.buildStatus]  is the [BuildStatus.inProgress].
+  ///
+  /// Otherwise, returns a [FinishedBuildResultViewModel].
+  BuildResultViewModel _mapResultToBuildResultViewModel(BuildResult result) {
+    final popupViewModel = BuildResultPopupViewModel(
+      date: result.date,
+      duration: result.duration,
+      buildStatus: result.buildStatus,
+    );
+
+    if (result.buildStatus == BuildStatus.inProgress) {
+      return InProgressBuildResultViewModel(
+        buildResultPopupViewModel: popupViewModel,
+        date: result.date,
+        url: result.url,
+      );
+    }
+
+    return FinishedBuildResultViewModel(
+      duration: result.duration,
+      buildResultPopupViewModel: popupViewModel,
+      date: result.date,
+      url: result.url,
+      buildStatus: result.buildStatus,
     );
   }
 

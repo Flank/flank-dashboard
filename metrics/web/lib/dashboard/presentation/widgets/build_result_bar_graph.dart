@@ -9,6 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/util/date.dart';
@@ -104,7 +105,11 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
               BarGraph(
                 graphPadding: graphPadding,
                 data: _barsData.map((data) {
-                  return data.duration.inMilliseconds;
+                  if (data is FinishedBuildResultViewModel) {
+                    return data.duration.inMilliseconds;
+                  }
+
+                  return 0;
                 }).toList(),
                 barBuilder: (index, height) {
                   final data = _barsData[index];
