@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
@@ -20,6 +20,8 @@ class BuildResultPopupImageStrategy
         return "icons/failed.svg";
       case BuildStatus.unknown:
         return "icons/unknown.svg";
+      case BuildStatus.inProgress:
+        return "icons/in_progress.svg";
     }
 
     return null;
