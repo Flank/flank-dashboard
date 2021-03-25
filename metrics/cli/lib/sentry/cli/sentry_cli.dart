@@ -26,8 +26,9 @@ class SentryCli extends Cli {
     ]);
   }
 
-  /// Uploads files with the given [extensions] located in the [sourcePath]
-  /// to the release with the given [releaseName] within the given [project].
+  /// Uploads source maps of the files with the given [extensions] located
+  /// in the [sourcePath] to the release with the given [releaseName] within
+  /// the given [project].
   ///
   /// If the [extensions] is not specified, all files are uploaded.
   Future<void> uploadSourceMaps(
@@ -39,7 +40,7 @@ class SentryCli extends Cli {
     final extensionList = <String>[];
     if (extensions != null) {
       for (final extension in extensions) {
-        extensionList..add('--ext')..add(extension);
+        extensionList.add('--ext=$extension');
       }
     }
 

@@ -1,15 +1,21 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// A class that represents slugs for the Sentry project.
+/// A class that represents a Sentry project.
 class SentryProject {
-  /// The identifier of the Sentry organization.
+  /// An identifier of the Sentry organization this project belongs to.
   final String organizationSlug;
 
-  /// The identifier of the Sentry project.
+  /// An identifier of this Sentry project.
   final String projectSlug;
 
   /// Creates a new instance of the [SentryProject]
   /// with the given [organizationSlug] and [projectSlug].
-  SentryProject(this.organizationSlug, this.projectSlug);
+  SentryProject({
+    this.organizationSlug,
+    this.projectSlug,
+  }) {
+    ArgumentError.checkNotNull(organizationSlug, 'organizationSlug');
+    ArgumentError.checkNotNull(projectSlug, 'projectSlug');
+  }
 }
