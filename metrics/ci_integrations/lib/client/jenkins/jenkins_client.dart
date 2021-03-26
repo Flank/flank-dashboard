@@ -399,13 +399,17 @@ class JenkinsClient with LoggerMixin {
     try {
       final response = await _client.get(url, headers: headers);
 
-      final responseHeaders = response.headers;
-      final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(responseHeaders);
+      if (response.statusCode == HttpStatus.ok) {
+        final responseHeaders = response.headers;
+        final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(
+          responseHeaders,
+        );
 
-      return InteractionResult.success(result: jenkinsInstanceInfo);
-    } catch (e) {
-      return const InteractionResult.error();
-    }
+        return InteractionResult.success(result: jenkinsInstanceInfo);
+      }
+    } catch (_) {}
+
+    return const InteractionResult.error();
   }
 
   /// Fetches the [JenkinsUser] using the given [auth].
