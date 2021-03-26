@@ -13,6 +13,7 @@ void main() {
   group("Services", () {
     final flutterService = _FlutterServiceMock();
     final gcloudService = _GCloudServiceMock();
+
     test(
       "throws an ArgumentError if the given flutter service is null",
       () {
