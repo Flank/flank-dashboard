@@ -16,7 +16,7 @@ class FirebaseAuthFactory {
   FirebaseAuth create(String firebaseApiKey) {
     ArgumentError.checkNotNull(firebaseApiKey, 'firebaseApiKey');
 
-    return FirebaseAuth.initialize(
+    return FirebaseAuth(
       firebaseApiKey,
       VolatileStore(),
     );
