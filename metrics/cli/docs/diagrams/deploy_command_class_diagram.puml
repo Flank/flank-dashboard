@@ -94,8 +94,9 @@ package deploy {
 
 package helper {
     class FileHelper {
+        + getFile(String path) : Future<File>
+        + getDirectory(String path) : Future<Directory>
         + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : Future<void>
-        + deleteDirectory(Directory directory) : Future<void>
     }
 }
 

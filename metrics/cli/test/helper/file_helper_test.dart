@@ -11,8 +11,8 @@ import '../test_utils/matchers.dart';
 
 void main() {
   group("FileHelper", () {
-    const key1 = '\$key1';
-    const key2 = '\$key2';
+    const key1 = 'key1';
+    const key2 = 'key2';
     const value1 = 'value1';
     const value2 = 'value2';
     const environment = <String, dynamic>{
@@ -29,95 +29,86 @@ void main() {
       reset(directory);
     });
 
-    PostExpectation<Future<bool>> whenFileExists() {
-      return when(file.exists());
+    PostExpectation<bool> whenFileExists() {
+      return when(file.existsSync());
     }
 
     test(
-      ".replaceEnvironmentVariables() does not read the content if the given environment is null",
-      () async {
-        whenFileExists().thenAnswer((_) => Future.value(true));
+      ".getFile() returns the file with the given path",
+      () {
+        const path = 'testPath';
 
-        await helper.replaceEnvironmentVariables(file, null);
+        final file = helper.getFile(path);
 
-        verifyNever(file.writeAsString(any));
+        expect(file.path, path);
+      },
+    );
+
+    test(
+      ".getDirectory() returns the directory with the given path",
+      () {
+        const path = 'testPath';
+
+        final directory = helper.getDirectory(path);
+
+        expect(directory.path, path);
+      },
+    );
+
+    test(
+      ".replaceEnvironmentVariables() throws an ArgumentError if the given file is null",
+          () {
+        expect(
+              () => helper.replaceEnvironmentVariables(null, environment),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".replaceEnvironmentVariables() throws an ArgumentError if the given environment is null",
+      () {
+        expect(
+          () => helper.replaceEnvironmentVariables(file, null),
+          throwsArgumentError,
+        );
       },
     );
 
     test(
       ".replaceEnvironmentVariables() does not read the content if the given environment is empty",
-      () async {
-        whenFileExists().thenAnswer((_) => Future.value(true));
+      () {
+        whenFileExists().thenReturn(true);
 
-        await helper.replaceEnvironmentVariables(file, {});
+        helper.replaceEnvironmentVariables(file, {});
 
-        verifyNever(file.writeAsString(any));
+        verifyNever(file.writeAsStringSync(any));
       },
     );
 
     test(
-      ".replaceEnvironmentVariables() does not read the content if the given file is null",
+      ".replaceEnvironmentVariables() does not read the content if the given file is empty",
       () async {
-        await helper.replaceEnvironmentVariables(null, environment);
+        whenFileExists().thenReturn(false);
 
-        verifyNever(file.writeAsString(any));
-      },
-    );
+        helper.replaceEnvironmentVariables(file, environment);
 
-    test(
-      ".replaceEnvironmentVariables() does not read the content if the given file does not exist",
-      () async {
-        whenFileExists().thenAnswer((_) => Future.value(false));
-
-        await helper.replaceEnvironmentVariables(file, environment);
-
-        verifyNever(file.writeAsString(any));
+        verifyNever(file.writeAsStringSync(any));
       },
     );
 
     test(
       ".replaceEnvironmentVariables() updates the content according to the given environment",
       () async {
-        const content = 'test=$key1; someField=$key2;';
+        const content = 'test=\$$key1; someField=\$$key2;';
         const expected = 'test=$value1; someField=$value2;';
 
-        whenFileExists().thenAnswer((_) => Future.value(true));
-        when(file.readAsString()).thenAnswer((_) => Future.value(content));
+        whenFileExists().thenReturn(true);
+        when(file.readAsStringSync()).thenReturn(content);
 
-        await helper.replaceEnvironmentVariables(file, environment);
+        helper.replaceEnvironmentVariables(file, environment);
 
-        verify(file.writeAsString(expected)).called(once);
-      },
-    );
-
-    test(
-      ".deleteDirectory() does not delete the given directory if it is null",
-      () async {
-        await helper.deleteDirectory(null);
-
-        verifyNever(directory.delete());
-      },
-    );
-
-    test(
-      ".deleteDirectory() does not delete the given directory if it is not exists",
-      () async {
-        when(directory.exists()).thenAnswer((_) => Future.value(false));
-
-        await helper.deleteDirectory(directory);
-
-        verifyNever(directory.delete());
-      },
-    );
-
-    test(
-      ".deleteDirectory() deletes the given directory",
-      () async {
-        when(directory.exists()).thenAnswer((_) => Future.value(true));
-
-        await helper.deleteDirectory(directory);
-
-        verify(directory.delete()).called(once);
+        verify(file.writeAsStringSync(expected)).called(once);
       },
     );
   });
