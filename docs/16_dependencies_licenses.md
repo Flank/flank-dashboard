@@ -90,6 +90,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | Name | Source | License |
 | :---: | :---: | :---: |
 | process_run | [pub.dev](https://pub.dev/packages/process_run) | [BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE) |
+| random_string | [pub.dev](https://pub.dev/packages/random_string) | [BSD](https://github.com/damondouglas/random_string.dart/blob/master/LICENSE) |
 | safe_config | [pub.dev](https://pub.dev/packages/safe_config) | [BSD](https://github.com/stablekernel/safe_config/blob/master/LICENSE) |
 
 ### Dev dependencies
