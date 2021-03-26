@@ -19,10 +19,8 @@ class FinishedBuildResultViewModel extends BuildResultViewModel {
   ///
   /// All the required parameters must not be null.
   ///
-  /// Throws an [AssertionError] if the [buildResultPopupViewModel], [date], 
-  /// or [duration] is `null`.
-  /// Throws an [AssertionError] if the [buildStatus] is 
-  /// [BuildStatus.inProgress].
+  /// Throws an [AssertionError] if the [buildResultPopupViewModel], [date],
+  /// or [duration] is `null`, or the [buildStatus] is [BuildStatus.inProgress].
   const FinishedBuildResultViewModel({
     @required this.duration,
     @required BuildResultPopupViewModel buildResultPopupViewModel,
