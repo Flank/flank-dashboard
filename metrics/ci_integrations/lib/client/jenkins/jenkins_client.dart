@@ -90,21 +90,17 @@ class JenkinsClient with LoggerMixin {
   /// [successStatusCode] (defaults to [HttpStatus.ok]) this method will
   /// result with [InteractionResult.error]. Otherwise, delegates processing
   /// the [Response] to the [responseProcessor] callback.
-  ///
-  /// The [decodeJson] controls whether to decode the [HttpResponse.body]
-  /// to a JSON [Map]. Equals to `true` by default.
   Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
-    ResponseProcessingCallback<T> responseProcessor, {
-    bool decodeJson = true,
-  }) async {
+    ResponseProcessingCallback<T> responseProcessor,
+  ) async {
     try {
       final response = await responseFuture;
 
       if (response.statusCode == HttpStatus.ok) {
         final responseBody = response.body;
 
-        final json = responseBody.isNotEmpty && decodeJson
+        final json = responseBody.isNotEmpty
             ? jsonDecode(response.body) as Map<String, dynamic>
             : null;
 
@@ -400,15 +396,16 @@ class JenkinsClient with LoggerMixin {
 
     final url = '$jenkinsUrl/login';
 
-    return _handleResponse(
-      _client.get(url, headers: headers),
-      (_, headers) {
-        final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(headers);
+    try {
+      final response = await _client.get(url, headers: headers);
 
-        return InteractionResult.success(result: jenkinsInstanceInfo);
-      },
-      decodeJson: false,
-    );
+      final responseHeaders = response.headers;
+      final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(responseHeaders);
+
+      return InteractionResult.success(result: jenkinsInstanceInfo);
+    } catch (e) {
+      return const InteractionResult.error();
+    }
   }
 
   /// Fetches the [JenkinsUser] using the given [auth].
