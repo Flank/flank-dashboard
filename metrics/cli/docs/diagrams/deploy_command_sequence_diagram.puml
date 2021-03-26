@@ -79,6 +79,8 @@ SentryService --> Deployer -- : sign in finished
 Deployer -> SentryService ++ : createRelease(appPath)
 SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, DSN, and releaseName
 Bob -> SentryService : enters Sentry params
+SentryService -> FileHelper ++ : getFile(metricsConfigPath)
+FileHelper -> SentryService -- : config file
 SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> SentryService -- : config has been updated
 SentryService -> Deployer -- : release created
@@ -86,8 +88,9 @@ SentryService -> Deployer -- : release created
 Deployer -> FirebaseService ++ : deployHosting(appPath)
 FirebaseService -> Deployer -- : deploy finished
 
-Deployer -> FileHelper ++: deleteDirectory(directory)
-FileHelper --> Deployer --: directory has been cleaned up
+Deployer -> FileHelper ++: getDirectory(path)
+FileHelper --> Deployer --: directory
+Deployer -> Deployer : delete directory
 Deployer --> DeployCommand --: deploy finished
 DeployCommand --> MetricsCliRunner --: command finished
 MetricsCliRunner --> Bob -- : terminate
