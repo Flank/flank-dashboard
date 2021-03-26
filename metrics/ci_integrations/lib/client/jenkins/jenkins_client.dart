@@ -90,17 +90,21 @@ class JenkinsClient with LoggerMixin {
   /// [successStatusCode] (defaults to [HttpStatus.ok]) this method will
   /// result with [InteractionResult.error]. Otherwise, delegates processing
   /// the [Response] to the [responseProcessor] callback.
+  ///
+  /// The [decodeJson] controls whether to decode the [HttpResponse.body]
+  /// to a JSON [Map]. Equals to `true` by default.
   Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
-    ResponseProcessingCallback<T> responseProcessor,
-  ) async {
+    ResponseProcessingCallback<T> responseProcessor, {
+    bool decodeJson = true,
+  }) async {
     try {
       final response = await responseFuture;
 
       if (response.statusCode == HttpStatus.ok) {
         final responseBody = response.body;
 
-        final json = responseBody.isNotEmpty
+        final json = responseBody.isNotEmpty && decodeJson
             ? jsonDecode(response.body) as Map<String, dynamic>
             : null;
 
@@ -403,6 +407,7 @@ class JenkinsClient with LoggerMixin {
 
         return InteractionResult.success(result: jenkinsInstanceInfo);
       },
+      decodeJson: false,
     );
   }
 
