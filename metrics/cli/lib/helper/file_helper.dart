@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-/// A class that provides methods for working with the [Directory] and [File]s.
+/// A class that provides methods for working with the file system.
 class FileHelper {
   /// Returns a [File] by the given [path].
   File getFile(String path) {
@@ -15,8 +15,8 @@ class FileHelper {
     return Directory(path);
   }
 
-  /// Replaces variables defined by the [environment.keys]
-  /// with the [environment.values] in the given [file].
+  /// Replaces variables defined in the [environment] it's values
+  /// in the given [file].
   ///
   /// Throws an [ArgumentError] if the given [file] is `null`.
   /// Throws an [ArgumentError] if the given [environment] is `null`.

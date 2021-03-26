@@ -79,7 +79,7 @@ SentryService --> Deployer -- : sign in finished
 Deployer -> SentryService ++ : createRelease(appPath)
 SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, DSN, and releaseName
 Bob -> SentryService : enters Sentry params
-SentryService -> FileHelper ++ : getFile(configPath)
+SentryService -> FileHelper ++ : getFile(metricsConfigPath)
 FileHelper -> SentryService -- : config file
 SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> SentryService -- : config has been updated

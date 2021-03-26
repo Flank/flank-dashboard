@@ -57,9 +57,9 @@ void main() {
 
     test(
       ".replaceEnvironmentVariables() throws an ArgumentError if the given file is null",
-          () {
+      () {
         expect(
-              () => helper.replaceEnvironmentVariables(null, environment),
+          () => helper.replaceEnvironmentVariables(null, environment),
           throwsArgumentError,
         );
       },
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      ".replaceEnvironmentVariables() does not read the content if the given file is empty",
+      ".replaceEnvironmentVariables() does not read the content if the given file does not exist",
       () async {
         whenFileExists().thenReturn(false);
 
@@ -98,7 +98,7 @@ void main() {
     );
 
     test(
-      ".replaceEnvironmentVariables() updates the content according to the given environment",
+      ".replaceEnvironmentVariables() replaces the environment variables in the given file by the values from the given environment",
       () async {
         const content = 'test=\$$key1; someField=\$$key2;';
         const expected = 'test=$value1; someField=$value2;';
