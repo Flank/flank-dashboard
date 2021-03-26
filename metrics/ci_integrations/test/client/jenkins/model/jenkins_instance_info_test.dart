@@ -8,7 +8,7 @@ void main() {
   group("JenkinsInstanceInfo", () {
     const version = "version";
     const instanceInfoMap = {
-      'X-Jenkins': version,
+      'x-jenkins': version,
     };
     const instanceInfo = JenkinsInstanceInfo(version: version);
 

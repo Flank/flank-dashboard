@@ -24,14 +24,14 @@ class JenkinsInstanceInfo extends Equatable {
     if (map == null) return null;
 
     return JenkinsInstanceInfo(
-      version: map['X-Jenkins'],
+      version: map['x-jenkins'],
     );
   }
 
   /// Converts this Jenkins instance information into the [Map].
   Map<String, String> toMap() {
     return {
-      'X-Jenkins': version,
+      'x-jenkins': version,
     };
   }
 
