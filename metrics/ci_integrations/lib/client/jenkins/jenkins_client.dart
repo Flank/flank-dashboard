@@ -407,7 +407,11 @@ class JenkinsClient with LoggerMixin {
 
         return InteractionResult.success(result: jenkinsInstanceInfo);
       }
-    } catch (_) {}
+    } catch (e) {
+      return InteractionResult.error(
+        message: 'Failed to fetch the JenkinsInstanceInfo. Error details: $e',
+      );
+    }
 
     return const InteractionResult.error();
   }
