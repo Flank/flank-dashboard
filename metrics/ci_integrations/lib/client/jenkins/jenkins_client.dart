@@ -406,14 +406,22 @@ class JenkinsClient with LoggerMixin {
         );
 
         return InteractionResult.success(result: jenkinsInstanceInfo);
+      } else {
+        final code = response.statusCode;
+        final reason = response.body == null || response.body.isEmpty
+            ? response.reasonPhrase
+            : response.body;
+
+        return InteractionResult.error(
+          message:
+              'Failed to fetch the JenkinsInstanceInfo with the following code: $code. Reason: $reason',
+        );
       }
     } catch (e) {
       return InteractionResult.error(
         message: 'Failed to fetch the JenkinsInstanceInfo. Error details: $e',
       );
     }
-
-    return const InteractionResult.error();
   }
 
   /// Fetches the [JenkinsUser] using the given [auth].
