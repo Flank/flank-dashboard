@@ -24,6 +24,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_group_dropdow
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
@@ -40,9 +41,22 @@ void main() {
     const String errorMessage = null;
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+    final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
 
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
+
+    BuildResult createBuildResult(
+      BuildStatus status, {
+      Duration duration = const Duration(minutes: 14),
+    }) {
+      return BuildResult(
+        date: DateTime.now(),
+        duration: duration,
+        buildStatus: status,
+        url: 'some url',
+      );
+    }
 
     Future<void> setUpNotifier({
       ProjectMetricsNotifier notifier,
@@ -81,11 +95,11 @@ void main() {
       await setUpNotifier(
         notifier: projectMetricsNotifier,
         projects: projects,
-        errorMessage: errorMessage,
       );
     });
 
     tearDown(() async {
+      reset(receiveProjectMetricsMock);
       await projectMetricsNotifier.dispose();
     });
 
@@ -246,32 +260,90 @@ void main() {
     test(
       "maps the finished build results to finished build result view models",
       () async {
-        final buildResult =
-            expectedProjectMetrics.buildResultMetrics.buildResults.first;
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [
+              createBuildResult(BuildStatus.successful),
+              createBuildResult(BuildStatus.unknown),
+              createBuildResult(BuildStatus.failed),
+            ],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
 
-        final projectMetrics =
-            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
-        final viewModel = buildResultMetrics.buildResults.first;
 
-        expect(buildResult.buildStatus, isNot(BuildStatus.inProgress));
-        expect(viewModel, isA<FinishedBuildResultViewModel>());
+        final viewModels = buildResultMetrics.buildResults;
+
+        expect(viewModels, everyElement(isA<FinishedBuildResultViewModel>()));
       },
     );
 
     test(
       "maps the in-progress build results to in progress build result view models",
       () async {
-        final buildResult =
-            expectedProjectMetrics.buildResultMetrics.buildResults[1];
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [createBuildResult(BuildStatus.inProgress)],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
 
-        final projectMetrics =
-            projectMetricsNotifier.projectsMetricsTileViewModels[1];
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
-        final viewModel = buildResultMetrics.buildResults[1];
 
-        expect(buildResult.buildStatus, equals(BuildStatus.inProgress));
-        expect(viewModel, isA<InProgressBuildResultViewModel>());
+        final viewModels = buildResultMetrics.buildResults;
+
+        expect(viewModels, isNotEmpty);
+        expect(viewModels, everyElement(isA<InProgressBuildResultViewModel>()));
+      },
+    );
+
+    test(
+      "loads a build result metric with the maximum build duration from the build results",
+      () async {
+        const expectedMaximumDuration = Duration(days: 3);
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [
+              createBuildResult(
+                BuildStatus.successful,
+                duration: expectedMaximumDuration,
+              ),
+              createBuildResult(BuildStatus.failed, duration: Duration.zero),
+            ],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final maximumDuration = buildResultMetrics.maxBuildDuration;
+
+        expect(maximumDuration, equals(expectedMaximumDuration));
       },
     );
 
@@ -815,3 +887,6 @@ class _ReceiveProjectMetricsUpdatesStub
   ///  Detects if the stream, returned from [call] method has any listeners.
   bool get hasListener => _metricsUpdatesSubject.hasListener;
 }
+
+class _ReceiveProjectMetricsUpdatesMock extends Mock
+    implements ReceiveProjectMetricsUpdates {}
