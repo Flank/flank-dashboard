@@ -23,7 +23,7 @@ The Firestore emulator allows us to run integration tests using the test environ
 With that, we may not care about creating a large number of entities, deleting them, or changing them through tests.
 
 _**Note:**
-We are not using the [Firebase Auth emulator](https://firebase.google.com/docs/emulator-suite/connect_auth) because it is not available in the version of the [firebase_auth](https://pub.dev/packages/firebase_auth) package we are using. So, during tests, we authenticate via the production Firebase Auth service._
+We are not configuring the [Firebase Auth emulator](https://firebase.google.com/docs/emulator-suite/connect_auth) because it is not available in the version of the [firebase_auth](https://pub.dev/packages/firebase_auth) package we are using. So, during tests, we authenticate via the production Firebase Auth service._
 
 ### Requirements
 
@@ -74,9 +74,9 @@ To prepare the test data, we can manually create necessary collections and docum
 firebase emulators:export export_directory
 ```
 
-The specified `export_directory` will be created if it does not already exist. If the specified directory exists, you will be prompted to confirm that the previous export data should be overwritten. For more information of using the command consider the following [link](https://firebase.google.com/docs/emulator-suite/install_and_configure#export_and_import_emulator_data).
+The specified `export_directory` will be created if it does not already exist. If the specified directory exists, you will be prompted to confirm that the previous export data should be overwritten. For more information on using the command consider [the following link](https://firebase.google.com/docs/emulator-suite/install_and_configure#export_and_import_emulator_data).
 
-Now we can run the emulator with the initial data by adding the following flag `--import=import_directory`, where the `import_directory` is the directory which holds the exported data.
+Now we can run the emulator with the initial data by adding the following flag `--import=import_directory`, where the `import_directory` is the directory that holds the exported data.
 
 So with that in place, we can run the emulator by using the following command:
 
