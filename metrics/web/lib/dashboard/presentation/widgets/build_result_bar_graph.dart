@@ -104,7 +104,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
               ),
               BarGraph(
                 graphPadding: graphPadding,
-                data: _barsData.map(_createBarData).toList(),
+                data: _barsData.map(_mapToGraphData).toList(),
                 barBuilder: (index, height) {
                   final data = _barsData[index];
 
@@ -126,13 +126,13 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     );
   }
 
-  /// Maps the given [buildResultViewModel] to a bar data.
+  /// Maps the given [buildResultViewModel] to a bar graph data.
   ///
   /// If the given [buildResultViewModel] is [FinishedBuildResultViewModel],
   /// returns its duration in milliseconds.
   ///
   /// Otherwise, returns `1`.
-  int _createBarData(BuildResultViewModel buildResultViewModel) {
+  int _mapToGraphData(BuildResultViewModel buildResultViewModel) {
     if (buildResultViewModel is FinishedBuildResultViewModel) {
       return buildResultViewModel.duration.inMilliseconds;
     }

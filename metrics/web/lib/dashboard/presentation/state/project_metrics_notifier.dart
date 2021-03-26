@@ -414,8 +414,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   Duration _getMaxBuildDuration(List<BuildResult> buildResults) {
     final buildDurations = buildResults
         .where((result) => result.duration != null)
-        .map((result) => result.duration)
-        .toList();
+        .map((result) => result.duration);
 
     Duration maxDuration;
     for (final duration in buildDurations) {
@@ -427,11 +426,11 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     return maxDuration;
   }
 
-  /// Creates a specific [BuildResultViewModel] from the given [result] depening
-  /// on the [result.buildStatus].
+  /// Creates a specific [BuildResultViewModel] from the given [result]
+  /// depending on the [BuildResult.buildStatus].
   ///
   /// Returns an [InProgressBuildResultViewModel] if the given
-  /// [result.buildStatus] is the [BuildStatus.inProgress].
+  /// [BuildResult.buildStatus] is the [BuildStatus.inProgress].
   ///
   /// Otherwise, returns a [FinishedBuildResultViewModel].
   BuildResultViewModel _createBuildResultViewModel(BuildResult result) {
