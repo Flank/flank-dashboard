@@ -396,15 +396,38 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
+    final maxBuildDuration = _getMaxBuildDuration(buildResults);
+
     final buildResultViewModels =
         buildResults.map(_createBuildResultViewModel).toList();
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
+      maxBuildDuration: maxBuildDuration,
     );
   }
 
-  /// Creates a specific [BuildResultViewModel] from the given [result] depening 
+  /// Returns a maximum [BuildResult.duration] from the given [buildResults].
+  ///
+  /// Returns `null` if the given [buildResults] doesn't contain a [BuildResult]
+  /// with the non-null duration.
+  Duration _getMaxBuildDuration(List<BuildResult> buildResults) {
+    final buildDurations = buildResults
+        .where((result) => result.duration != null)
+        .map((result) => result.duration)
+        .toList();
+
+    Duration maxDuration;
+    for (final duration in buildDurations) {
+      if (maxDuration == null || maxDuration < duration) {
+        maxDuration = duration;
+      }
+    }
+
+    return maxDuration;
+  }
+
+  /// Creates a specific [BuildResultViewModel] from the given [result] depening
   /// on the [result.buildStatus].
   ///
   /// Returns an [InProgressBuildResultViewModel] if the given

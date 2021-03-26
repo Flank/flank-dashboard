@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
@@ -15,10 +15,17 @@ class BuildResultMetricViewModel extends Equatable {
   /// A number of [buildResults] elements to display.
   final int numberOfBuildsToDisplay;
 
-  @override
-  List<Object> get props => [buildResults];
+  /// A maximum [Duration] of a build within the [buildResults].
+  final Duration maxBuildDuration;
 
-  /// Creates the [BuildResultMetricViewModel] with the given [buildResults].
+  @override
+  List<Object> get props => [
+        buildResults,
+        numberOfBuildsToDisplay,
+        maxBuildDuration,
+      ];
+
+  /// Creates the [BuildResultMetricViewModel] with the given parameters.
   ///
   /// The [numberOfBuildsToDisplay] default value is
   /// [ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics].
@@ -27,6 +34,7 @@ class BuildResultMetricViewModel extends Equatable {
   /// The [numberOfBuildsToDisplay] must not be `null`.
   const BuildResultMetricViewModel({
     @required this.buildResults,
+    this.maxBuildDuration,
     this.numberOfBuildsToDisplay =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,
   })  : assert(buildResults != null),

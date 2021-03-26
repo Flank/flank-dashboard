@@ -44,31 +44,45 @@ void main() {
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
 
+    Future<void> setUpNotifier({
+      ProjectMetricsNotifier notifier,
+      List<ProjectModel> projects,
+      String errorMessage,
+    }) async {
+      final completer = Completer();
+
+      void initializationListener() {
+        if (!notifier.isMetricsLoading && !completer.isCompleted) {
+          completer.complete();
+        }
+      }
+
+      notifier.addListener(initializationListener);
+
+      await notifier.setProjects(
+        projects,
+        errorMessage,
+      );
+
+      await completer.future;
+
+      notifier.removeListener(initializationListener);
+    }
+
     setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
         receiveProjectMetricsUpdates,
       );
 
-      expectedProjectMetrics =
-          await receiveProjectMetricsUpdates(projectIdParam).first;
+      expectedProjectMetrics = await receiveProjectMetricsUpdates(
+        projectIdParam,
+      ).first;
 
-      final _completer = Completer();
-
-      void initializationListener() {
-        if (projectMetricsNotifier.projectsMetricsTileViewModels.every(
-                (projectMetric) => projectMetric.buildNumberMetric != null) &&
-            !_completer.isCompleted) {
-          _completer.complete();
-        }
-      }
-
-      projectMetricsNotifier.addListener(initializationListener);
-      await projectMetricsNotifier.setProjects(
-        projects,
-        errorMessage,
+      await setUpNotifier(
+        notifier: projectMetricsNotifier,
+        projects: projects,
+        errorMessage: errorMessage,
       );
-      await _completer.future;
-      projectMetricsNotifier.removeListener(initializationListener);
     });
 
     tearDown(() async {
@@ -243,9 +257,9 @@ void main() {
         expect(buildResult.buildStatus, isNot(BuildStatus.inProgress));
         expect(viewModel, isA<FinishedBuildResultViewModel>());
       },
-    );   
-    
-     test(
+    );
+
+    test(
       "maps the in-progress build results to in progress build result view models",
       () async {
         final buildResult =
