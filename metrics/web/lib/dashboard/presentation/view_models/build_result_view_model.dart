@@ -32,7 +32,8 @@ abstract class BuildResultViewModel extends Equatable {
   ///
   /// All the required parameters must not be null.
   ///
-  /// Throws an [AssertionError] if any of the required parameters is `null`.
+  /// Throws an [AssertionError] if the [buildResultPopupViewModel] or [date]
+  /// is `null`.
   const BuildResultViewModel({
     @required this.buildResultPopupViewModel,
     @required this.date,

@@ -6,14 +6,15 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_popup_vi
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [BuildResultViewModel] that holds the data about a [Build] that is 
-/// in-progress to display as a bar on a [BarGraph].
+/// A [BuildResultViewModel] that holds the data about an in-progress [Build]
+/// to display as a bar on a [BarGraph].
 class InProgressBuildResultViewModel extends BuildResultViewModel {
   /// Creates a new instance of the [InProgressBuildResultViewModel].
   /// 
   /// All the required parameters must not be null.
   /// 
-  /// Throws an [AssertionError] if any of the required parameters is `null`.
+  /// Throws an [AssertionError] if the [buildResultPopupViewModel] or [date] 
+  /// is `null`.
   const InProgressBuildResultViewModel({
     @required BuildResultPopupViewModel buildResultPopupViewModel,
     @required DateTime date,

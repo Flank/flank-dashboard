@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given build result popup view model is null",
+      "throws an AssertionError if the given build result popup view model is null",
       () {
         expect(
           () => InProgressBuildResultViewModel(
@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given date is null",
+      "throws an AssertionError if the given date is null",
       () {
         expect(
           () => InProgressBuildResultViewModel(
@@ -43,7 +43,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default in-progress build status",
+      "creates an instance with the in-progress build status",
       () {
         final viewModel = InProgressBuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -69,6 +69,25 @@ void main() {
         );
         expect(viewModel.date, equals(date));
         expect(viewModel.url, equals(url));
+      },
+    );
+
+    test(
+      "equals to another BuildResultViewModel with the same parameters",
+      () {
+        final expectedViewModel = InProgressBuildResultViewModel(
+          date: date,
+          url: url,
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        );
+
+        final actualViewModel = InProgressBuildResultViewModel(
+          date: date,
+          url: url,
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        );
+
+        expect(actualViewModel, equals(expectedViewModel));
       },
     );
   });

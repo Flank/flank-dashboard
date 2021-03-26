@@ -66,27 +66,27 @@ void main() {
     test(
       "equals to another BuildResultViewModel with the same parameters",
       () {
-        final expected = _BuildResultViewModelFake(
+        final expectedViewModel = _BuildResultViewModelFake(
           date: date,
           buildStatus: buildStatus,
           url: url,
           buildResultPopupViewModel: buildResultPopupViewModel,
         );
 
-        final buildResult = _BuildResultViewModelFake(
+        final actualViewModel = _BuildResultViewModelFake(
           date: date,
           buildStatus: buildStatus,
           url: url,
           buildResultPopupViewModel: buildResultPopupViewModel,
         );
 
-        expect(buildResult, equals(expected));
+        expect(actualViewModel, equals(expectedViewModel));
       },
     );
   });
 }
 
-/// A fake class needed to test the [BuildResultViewModel] abstract class.
+/// A fake [BuildResultViewModel] class needed to test non-abstract methods.
 class _BuildResultViewModelFake extends BuildResultViewModel {
   /// Creates a new instance of this fake with the given parameters.
   const _BuildResultViewModelFake({

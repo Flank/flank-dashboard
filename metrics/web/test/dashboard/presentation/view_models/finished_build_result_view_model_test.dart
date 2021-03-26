@@ -19,7 +19,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given duration is null",
+      "throws an AssertionError if the given duration is null",
       () {
         expect(
           () => FinishedBuildResultViewModel(
@@ -33,7 +33,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given build result popup view model is null",
+      "throws an AssertionError if the given build result popup view model is null",
       () {
         expect(
           () => FinishedBuildResultViewModel(
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given date is null",
+      "throws an AssertionError if the given date is null",
       () {
         expect(
           () => FinishedBuildResultViewModel(
@@ -61,7 +61,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionErrror if the given build status is in-progress",
+      "throws an AssertionError if the given build status is in-progress",
       () {
         expect(
           () => FinishedBuildResultViewModel(
@@ -94,6 +94,29 @@ void main() {
         expect(viewModel.date, equals(date));
         expect(viewModel.buildStatus, equals(buildStatus));
         expect(viewModel.url, equals(url));
+      },
+    );
+
+    test(
+      "equals to another BuildResultViewModel with the same parameters",
+      () {
+        final expectedViewModel = FinishedBuildResultViewModel(
+          duration: duration,
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          date: date,
+          buildStatus: buildStatus,
+          url: url,
+        );
+
+        final actualViewModel = FinishedBuildResultViewModel(
+          duration: duration,
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          date: date,
+          buildStatus: buildStatus,
+          url: url,
+        );
+
+        expect(actualViewModel, equals(expectedViewModel));
       },
     );
   });

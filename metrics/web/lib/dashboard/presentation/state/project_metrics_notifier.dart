@@ -397,21 +397,21 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     final buildResultViewModels =
-        buildResults.map(_mapResultToBuildResultViewModel).toList();
+        buildResults.map(_createBuildResultViewModel).toList();
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
     );
   }
 
-  /// Maps the given [result] to a specific [BuildResultViewModel] depening on
-  /// the [result.buildStatus].
+  /// Creates a specific [BuildResultViewModel] from the given [result] depening 
+  /// on the [result.buildStatus].
   ///
   /// Returns an [InProgressBuildResultViewModel] if the given
   /// [result.buildStatus] is the [BuildStatus.inProgress].
   ///
   /// Otherwise, returns a [FinishedBuildResultViewModel].
-  BuildResultViewModel _mapResultToBuildResultViewModel(BuildResult result) {
+  BuildResultViewModel _createBuildResultViewModel(BuildResult result) {
     final popupViewModel = BuildResultPopupViewModel(
       date: result.date,
       duration: result.duration,
