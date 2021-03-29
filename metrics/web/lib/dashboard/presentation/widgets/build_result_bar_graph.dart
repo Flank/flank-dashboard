@@ -2,17 +2,16 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
-import 'package:metrics/util/date.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -44,28 +43,28 @@ class BuildResultBarGraph extends StatefulWidget {
 
 class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
   List<BuildResultViewModel> _barsData;
-  int _missingBarsCount = 0;
 
   @override
   void initState() {
-    _calculateBarData();
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(BuildResultBarGraph oldWidget) {
-    if (oldWidget.buildResultMetric.numberOfBuildsToDisplay !=
-            widget.buildResultMetric.numberOfBuildsToDisplay ||
-        oldWidget.buildResultMetric != widget.buildResultMetric) {
-      _calculateBarData();
-    }
+  // @override
+  // void didUpdateWidget(BuildResultBarGraph oldWidget) {
+  //   if (oldWidget.buildResultMetric.numberOfBuildsToDisplay !=
+  //           widget.buildResultMetric.numberOfBuildsToDisplay ||
+  //       oldWidget.buildResultMetric != widget.buildResultMetric) {
+  //     _calculateBarData();
+  //   }
 
-    super.didUpdateWidget(oldWidget);
-  }
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final graphPadding = _missingBarsCount != 0 && _barsData.isNotEmpty
+    const durationStrategy = BuildResultDurationStrategy();
+
+    final graphPadding = _barsData.isNotEmpty
         ? const EdgeInsets.only(left: 4.0)
         : EdgeInsets.zero;
 
@@ -73,21 +72,15 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
       buildResults: _barsData,
     );
 
-    final buildResultBarGraphTheme =
-        MetricsTheme.of(context).buildResultBarGraphTheme;
+    final barGraphDuration =
+        _barsData.map(durationStrategy.getDuration).toList();
+    final barGraphData =
+        barGraphDuration.map((duration) => duration.inMilliseconds).toList();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (_barsData.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              _buildResultDateRange(),
-              style: buildResultBarGraphTheme.textStyle,
-            ),
-          ),
         SizedBox(
           height: 56.0,
           child: Row(
@@ -104,7 +97,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
               ),
               BarGraph(
                 graphPadding: graphPadding,
-                data: _barsData.map(_mapToGraphData).toList(),
+                data: barGraphData,
                 barBuilder: (index, height) {
                   final data = _barsData[index];
 
@@ -124,52 +117,5 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
         ),
       ],
     );
-  }
-
-  /// Maps the given [buildResultViewModel] to a bar graph data.
-  ///
-  /// If the given [buildResultViewModel] is [FinishedBuildResultViewModel],
-  /// returns its duration in milliseconds.
-  ///
-  /// Otherwise, returns `1`.
-  int _mapToGraphData(BuildResultViewModel buildResultViewModel) {
-    if (buildResultViewModel is FinishedBuildResultViewModel) {
-      return buildResultViewModel.duration.inMilliseconds;
-    }
-
-    return 1;
-  }
-
-  /// Calculates [_missingBarsCount] and trims the data to match
-  /// the given [BuildResultMetricViewModel.numberOfBuildsToDisplay].
-  void _calculateBarData() {
-    final numberOfBars = widget.buildResultMetric.numberOfBuildsToDisplay;
-    _barsData = widget.buildResultMetric.buildResults;
-
-    if (numberOfBars == null) return;
-
-    if (_barsData.length > numberOfBars) {
-      _barsData = _barsData.sublist(_barsData.length - numberOfBars);
-    } else {
-      _missingBarsCount = numberOfBars - _barsData.length;
-    }
-  }
-
-  /// Returns a text to display as a date range between the first and last build results
-  /// in the [_barsData].
-  String _buildResultDateRange() {
-    final dateFormat = DateFormat('d MMM');
-
-    final firstDate = _barsData.first.date;
-    final lastDate = _barsData.last.date;
-
-    final firstDateFormatted = dateFormat.format(firstDate);
-    final lastDateFormatted = dateFormat.format(lastDate);
-
-    if (firstDate.date == lastDate.date) {
-      return firstDateFormatted;
-    }
-
-    return '$firstDateFormatted - $lastDateFormatted';
   }
 }

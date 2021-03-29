@@ -1,15 +1,17 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/util/date.dart';
 
 /// A widget that displays the date range of builds, missing bars,
-/// and [BuildResultBarGraph].
+/// and [BuildResultBarGraph]s.
 class BuildResultsMetricGraph extends StatelessWidget {
   /// A [BuildResultMetricViewModel] with the build results data to display.
   final BuildResultMetricViewModel buildResultMetric;
@@ -40,7 +42,34 @@ class BuildResultsMetricGraph extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [],
+      children: [
+        if (barData.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              dateRange,
+              style: buildResultBarGraphTheme.textStyle,
+            ),
+          ),
+        SizedBox(
+          height: 56.0,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    numberOfMissingBars,
+                    (index) => const BuildResultBar(),
+                  ),
+                ),
+              ),
+              BuildResultBarGraph(buildResultMetric: buildResultMetric),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
