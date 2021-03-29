@@ -24,7 +24,7 @@ class BuildResultPopupViewModel extends Equatable {
   /// Creates a new instance of the [BuildResultPopupViewModel] with the given
   /// parameters.
   ///
-  /// The [date] must not be `null`.
+  /// Throws an [AssertionError] if the given [date] is `null`.
   const BuildResultPopupViewModel({
     @required this.date,
     this.duration,
