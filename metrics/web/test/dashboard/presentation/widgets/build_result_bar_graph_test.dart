@@ -12,6 +12,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -26,6 +28,10 @@ void main() {
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
     final barGraphFinder = find.byWidgetPredicate(
       (widget) => widget is BarGraph<int>,
+    );
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
+      duration: Duration.zero,
+      date: DateTime.now(),
     );
 
     testWidgets(
@@ -316,6 +322,76 @@ void main() {
         expect(barGraphData, equals(trimmedData));
       },
     );
+
+    testWidgets(
+      "correctly parses finished build result view models to the bar graph data",
+      (WidgetTester tester) async {
+        const numberOfBars = 5;
+        final buildResults = List<FinishedBuildResultViewModel>.generate(
+          numberOfBars,
+          (index) {
+            return FinishedBuildResultViewModel(
+              duration: const Duration(seconds: 5),
+              date: DateTime.now(),
+              buildStatus: BuildStatus.successful,
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            );
+          },
+        );
+
+        final expectedData = buildResults
+            .map((result) => result.duration.inMilliseconds)
+            .toList();
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: numberOfBars,
+          ),
+        ));
+
+        final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
+          (widget) => widget is BarGraph,
+        ));
+
+        final barGraphData = barGraphWidget.data;
+
+        expect(barGraphData, equals(expectedData));
+      },
+    );
+
+    testWidgets(
+      "correctly parses in-progress build result view models to the bar graph data",
+      (WidgetTester tester) async {
+        const numberOfBars = 5;
+        final buildResults = List<InProgressBuildResultViewModel>.generate(
+          numberOfBars,
+          (index) {
+            return InProgressBuildResultViewModel(
+              date: DateTime.now(),
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            );
+          },
+        );
+
+        final expectedData = buildResults.map((result) => 1).toList();
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: numberOfBars,
+          ),
+        ));
+
+        final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
+          (widget) => widget is BarGraph,
+        ));
+
+        final barGraphData = barGraphWidget.data;
+
+        expect(barGraphData, equals(expectedData));
+      },
+    );
   });
 }
 
@@ -329,19 +405,19 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
   static final buildResultBarTestData = [
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now(),
       buildStatus: BuildStatus.successful,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now().add(const Duration(days: 1)),
       buildStatus: BuildStatus.failed,
       buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
-    BuildResultViewModel(
+    FinishedBuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now().add(const Duration(days: 2)),
       buildStatus: BuildStatus.unknown,

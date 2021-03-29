@@ -15,6 +15,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
@@ -37,7 +39,7 @@ void main() {
         primaryColor: Colors.red,
       ),
     );
-    final successfulBuildResult = BuildResultViewModel(
+    final successfulBuildResult = FinishedBuildResultViewModel(
       buildResultPopupViewModel: BuildResultPopupViewModel(
         date: DateTime.now(),
         duration: Duration.zero,
@@ -173,7 +175,7 @@ void main() {
     testWidgets(
       "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
+        final buildResult = FinishedBuildResultViewModel(
           buildResultPopupViewModel: BuildResultPopupViewModel(
             date: DateTime.now(),
             duration: Duration.zero,
@@ -199,7 +201,7 @@ void main() {
     testWidgets(
       "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
+        final buildResult = FinishedBuildResultViewModel(
           buildResultPopupViewModel: BuildResultPopupViewModel(
             date: DateTime.now(),
             duration: Duration.zero,
@@ -225,15 +227,13 @@ void main() {
     testWidgets(
       "displays the neutral graph indicator if the build status is in progress and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
+        final buildResult = InProgressBuildResultViewModel(
           buildResultPopupViewModel: BuildResultPopupViewModel(
             date: DateTime.now(),
             duration: Duration.zero,
             buildStatus: BuildStatus.unknown,
           ),
           date: DateTime.now(),
-          duration: Duration.zero,
-          buildStatus: BuildStatus.inProgress,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
