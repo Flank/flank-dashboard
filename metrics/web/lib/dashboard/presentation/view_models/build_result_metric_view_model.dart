@@ -15,7 +15,7 @@ class BuildResultMetricViewModel extends Equatable {
   /// A number of [buildResults] elements to display.
   final int numberOfBuildsToDisplay;
 
-  /// A maximum [Duration] of a build within the [buildResults].
+  /// A maximum [Duration] of a finished build within the [buildResults].
   final Duration maxBuildDuration;
 
   @override
@@ -25,7 +25,8 @@ class BuildResultMetricViewModel extends Equatable {
         maxBuildDuration,
       ];
 
-  /// Creates the [BuildResultMetricViewModel] with the given parameters.
+  /// Creates an instance of the [BuildResultMetricViewModel] with the given 
+  /// parameters.
   ///
   /// The [numberOfBuildsToDisplay] default value is
   /// [ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics].

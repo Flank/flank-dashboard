@@ -326,6 +326,14 @@ void main() {
                 BuildStatus.successful,
                 duration: expectedMaximumDuration,
               ),
+              createBuildResult(
+                BuildStatus.successful,
+                duration: const Duration(days: 1),
+              ),
+              createBuildResult(
+                BuildStatus.successful,
+                duration: const Duration(hours: 2),
+              ),
               createBuildResult(BuildStatus.failed, duration: Duration.zero),
             ],
           ),
