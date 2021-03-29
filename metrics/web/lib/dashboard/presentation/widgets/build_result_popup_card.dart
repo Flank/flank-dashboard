@@ -1,12 +1,12 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -33,7 +33,7 @@ class BuildResultPopupCard extends StatelessWidget {
     final title = DateFormat('EEEE, MMM d').format(
       buildResultPopupViewModel.date,
     );
-    final subtitle = CommonStrings.duration(buildResultPopupViewModel.duration);
+    final buildDuration = buildResultPopupViewModel.duration;
 
     return Container(
       decoration: BoxDecoration(
@@ -75,17 +75,18 @@ class BuildResultPopupCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2.0),
-                        child: Text(
-                          title,
-                          style: theme.titleTextStyle,
-                        ),
-                      ),
                       Text(
-                        subtitle,
-                        style: theme.subtitleTextStyle,
+                        title,
+                        style: theme.titleTextStyle,
                       ),
+                      if (buildDuration != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            _durationSubtitle,
+                            style: theme.subtitleTextStyle,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -95,5 +96,11 @@ class BuildResultPopupCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Returns a [String] with the build's duration to display as this build
+  /// result card's subtitle.
+  String get _durationSubtitle {
+    return CommonStrings.duration(buildResultPopupViewModel.duration);
   }
 }

@@ -18,10 +18,13 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
@@ -38,38 +41,65 @@ void main() {
     const String errorMessage = null;
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+    final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
 
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
+
+    BuildResult createBuildResult(
+      BuildStatus status, {
+      Duration duration = const Duration(minutes: 14),
+    }) {
+      return BuildResult(
+        date: DateTime.now(),
+        duration: duration,
+        buildStatus: status,
+        url: 'some url',
+      );
+    }
+
+    Future<void> setUpNotifier({
+      ProjectMetricsNotifier notifier,
+      List<ProjectModel> projects,
+      String errorMessage,
+    }) async {
+      final completer = Completer();
+
+      void initializationListener() {
+        if (!notifier.isMetricsLoading && !completer.isCompleted) {
+          completer.complete();
+        }
+      }
+
+      notifier.addListener(initializationListener);
+
+      await notifier.setProjects(
+        projects,
+        errorMessage,
+      );
+
+      await completer.future;
+
+      notifier.removeListener(initializationListener);
+    }
 
     setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
         receiveProjectMetricsUpdates,
       );
 
-      expectedProjectMetrics =
-          await receiveProjectMetricsUpdates(projectIdParam).first;
+      expectedProjectMetrics = await receiveProjectMetricsUpdates(
+        projectIdParam,
+      ).first;
 
-      final _completer = Completer();
-
-      void initializationListener() {
-        if (projectMetricsNotifier.projectsMetricsTileViewModels.every(
-                (projectMetric) => projectMetric.buildNumberMetric != null) &&
-            !_completer.isCompleted) {
-          _completer.complete();
-        }
-      }
-
-      projectMetricsNotifier.addListener(initializationListener);
-      await projectMetricsNotifier.setProjects(
-        projects,
-        errorMessage,
+      await setUpNotifier(
+        notifier: projectMetricsNotifier,
+        projects: projects,
       );
-      await _completer.future;
-      projectMetricsNotifier.removeListener(initializationListener);
     });
 
     tearDown(() async {
+      reset(receiveProjectMetricsMock);
       await projectMetricsNotifier.dispose();
     });
 
@@ -227,6 +257,104 @@ void main() {
       expect(performancePoints.map((p) => p.y), equals(expectedY));
     });
 
+    test(
+      "maps the finished build results to finished build result view models",
+      () async {
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [
+              createBuildResult(BuildStatus.successful),
+              createBuildResult(BuildStatus.unknown),
+              createBuildResult(BuildStatus.failed),
+            ],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final viewModels = buildResultMetrics.buildResults;
+
+        expect(viewModels, everyElement(isA<FinishedBuildResultViewModel>()));
+      },
+    );
+
+    test(
+      "maps the in-progress build results to in progress build result view models",
+      () async {
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [createBuildResult(BuildStatus.inProgress)],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final viewModels = buildResultMetrics.buildResults;
+
+        expect(viewModels, isNotEmpty);
+        expect(viewModels, everyElement(isA<InProgressBuildResultViewModel>()));
+      },
+    );
+
+    test(
+      "loads a build result metric with the maximum build duration from the build results",
+      () async {
+        const expectedMaximumDuration = Duration(days: 3);
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: [
+              createBuildResult(
+                BuildStatus.successful,
+                duration: expectedMaximumDuration,
+              ),
+              createBuildResult(
+                BuildStatus.successful,
+                duration: const Duration(days: 1),
+              ),
+              createBuildResult(
+                BuildStatus.successful,
+                duration: const Duration(hours: 2),
+              ),
+              createBuildResult(BuildStatus.failed, duration: Duration.zero),
+            ],
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final maximumDuration = buildResultMetrics.maxBuildDuration;
+
+        expect(maximumDuration, equals(expectedMaximumDuration));
+      },
+    );
+
     test("loads the build result metrics", () async {
       final expectedBuildResults =
           expectedProjectMetrics.buildResultMetrics.buildResults;
@@ -241,7 +369,8 @@ void main() {
       );
 
       final expectedBuildResult = expectedBuildResults.first;
-      final firstBuildResultMetric = buildResultMetrics.buildResults.first;
+      final firstBuildResultMetric =
+          buildResultMetrics.buildResults.first as FinishedBuildResultViewModel;
 
       expect(
         firstBuildResultMetric.duration,
@@ -715,13 +844,19 @@ class _ReceiveProjectMetricsUpdatesStub
       averageBuildDuration: const Duration(minutes: 3),
     ),
     buildNumberMetrics: const BuildNumberMetric(
-      numberOfBuilds: 1,
+      numberOfBuilds: 2,
     ),
     buildResultMetrics: BuildResultMetric(
       buildResults: [
         BuildResult(
           date: DateTime.now(),
           duration: const Duration(minutes: 14),
+          url: 'some url',
+        ),
+        BuildResult(
+          date: DateTime.now(),
+          duration: const Duration(minutes: 14),
+          buildStatus: BuildStatus.inProgress,
           url: 'some url',
         ),
       ],
@@ -760,3 +895,6 @@ class _ReceiveProjectMetricsUpdatesStub
   ///  Detects if the stream, returned from [call] method has any listeners.
   bool get hasListener => _metricsUpdatesSubject.hasListener;
 }
+
+class _ReceiveProjectMetricsUpdatesMock extends Mock
+    implements ReceiveProjectMetricsUpdates {}

@@ -10,6 +10,11 @@ import '../../../test_utils/matchers.dart';
 
 void main() {
   group("BuildResultMetricViewModel", () {
+    const numberOfBuildsToDisplay = 10;
+    const maxBuildDuration = Duration.zero;
+
+    final buildResults = UnmodifiableListView<BuildResultViewModel>([]);
+
     test("throws an AssertionError if the given build results is null", () {
       expect(
         () => BuildResultMetricViewModel(
@@ -40,19 +45,31 @@ void main() {
       expect(buildResultMetric.buildResults, isA<UnmodifiableListView>());
     });
 
+    test("creates an instance with the given parameters", () {
+      final metric = BuildResultMetricViewModel(
+        buildResults: buildResults,
+        numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+        maxBuildDuration: maxBuildDuration,
+      );
+
+      expect(metric.buildResults, equals(buildResults));
+      expect(metric.numberOfBuildsToDisplay, equals(numberOfBuildsToDisplay));
+      expect(metric.maxBuildDuration, equals(maxBuildDuration));
+    });
+
     test(
       "equals to another BuildResultMetricViewModel with the same parameters",
       () {
-        const buildResults = <BuildResultViewModel>[];
-        const numberOfBuildsToDisplay = 10;
         final expected = BuildResultMetricViewModel(
-          buildResults: UnmodifiableListView(buildResults),
+          buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+          maxBuildDuration: maxBuildDuration,
         );
 
         final buildResultMetric = BuildResultMetricViewModel(
-          buildResults: UnmodifiableListView(buildResults),
+          buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+          maxBuildDuration: maxBuildDuration,
         );
 
         expect(buildResultMetric, equals(expected));
