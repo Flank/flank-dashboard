@@ -2,7 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/factory/services_factory.dart';
-import 'package:cli/common/model/services.dart';
+import 'package:cli/flutter/service/flutter_service.dart';
+import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -10,11 +11,12 @@ void main() {
     final servicesFactory = ServicesFactory();
 
     test(
-      ".create() creates a Services instance",
+      ".create() creates a Services instance with the correct values",
       () {
         final services = servicesFactory.create();
 
-        expect(services, isA<Services>());
+        expect(services.gcloudService, isA<GCloudService>());
+        expect(services.flutterService, isA<FlutterService>());
       },
     );
   });

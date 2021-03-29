@@ -4,7 +4,7 @@
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 
-/// A class that represents services.
+/// A class that holds services needed to deploy the Metrics application.
 class Services {
   /// A service that provides methods for working with Flutter.
   final FlutterService flutterService;

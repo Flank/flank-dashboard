@@ -21,11 +21,9 @@ class ServicesFactory {
     final flutterService = FlutterCliServiceAdapter(flutterCli);
     final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
 
-    final services = Services(
+    return Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
     );
-
-    return services;
   }
 }
