@@ -43,12 +43,12 @@ void main() {
     test(
       ".getDuration() returns the difference between the current time and the build date if given build result view model is in progress",
       () {
-        final currentTime = DateTime(2022);
-        final expectedResult = currentTime.difference(
+        final currentDateTime = DateTime(2022);
+        final expectedResult = currentDateTime.difference(
           inProgressBuildResultViewModel.date,
         );
 
-        withClock(Clock.fixed(currentTime), () {
+        withClock(Clock.fixed(currentDateTime), () {
           final result = strategy.getDuration(inProgressBuildResultViewModel);
 
           expect(result, equals(expectedResult));
