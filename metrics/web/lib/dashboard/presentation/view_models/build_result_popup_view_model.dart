@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
@@ -21,13 +21,13 @@ class BuildResultPopupViewModel extends Equatable {
   @override
   List<Object> get props => [date, duration, buildStatus];
 
-  /// Creates a new instance of the [BuildResultPopupViewModel].
+  /// Creates a new instance of the [BuildResultPopupViewModel] with the given
+  /// parameters.
   ///
-  /// Both the [date] and [duration] must not be `null`.
+  /// Throws an [AssertionError] if the given [date] is `null`.
   const BuildResultPopupViewModel({
     @required this.date,
-    @required this.duration,
+    this.duration,
     this.buildStatus,
-  })  : assert(date != null),
-        assert(duration != null);
+  }) : assert(date != null);
 }

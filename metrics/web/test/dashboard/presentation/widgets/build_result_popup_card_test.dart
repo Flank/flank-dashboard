@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -33,16 +33,23 @@ void main() {
       ),
     );
 
+    const duration = Duration(seconds: 30000);
+    const buildStatus = BuildStatus.unknown;
+
+    final date = DateTime.now();
+
     final buildResultPopupViewModel = BuildResultPopupViewModel(
-      duration: const Duration(seconds: 30000),
-      date: DateTime.now(),
-      buildStatus: BuildStatus.unknown,
+      duration: duration,
+      date: date,
+      buildStatus: buildStatus,
     );
+
     final titleFinder = find.text(DateFormat('EEEE, MMM d').format(
-      buildResultPopupViewModel.date,
+      date,
     ));
+
     final subtitleFinder = find.text(CommonStrings.duration(
-      buildResultPopupViewModel.duration,
+      duration,
     ));
 
     testWidgets(
@@ -80,6 +87,26 @@ void main() {
           ));
         });
         expect(subtitleFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "does not display the duration subtitle if the duration is null",
+      (tester) async {
+        final buildResultPopupViewModel = BuildResultPopupViewModel(
+          date: DateTime.now(),
+          buildStatus: BuildStatus.unknown,
+          duration: null,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+          ));
+        });
+
+        expect(find.byType(Text), findsOneWidget);
+        expect(titleFinder, findsOneWidget);
       },
     );
 
