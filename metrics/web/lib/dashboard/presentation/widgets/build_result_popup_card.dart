@@ -25,12 +25,6 @@ class BuildResultPopupCard extends StatelessWidget {
   })  : assert(buildResultPopupViewModel != null),
         super(key: key);
 
-  /// Returns a [String] with the build's duration to display as this build
-  /// result card's subtitle.
-  String get _durationSubtitle {
-    return CommonStrings.duration(buildResultPopupViewModel.duration);
-  }
-
   @override
   Widget build(BuildContext context) {
     const arrowWidth = 10.0;
@@ -102,5 +96,11 @@ class BuildResultPopupCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Returns a [String] with the build's duration to display as this build
+  /// result card's subtitle.
+  String get _durationSubtitle {
+    return CommonStrings.duration(buildResultPopupViewModel.duration);
   }
 }

@@ -19,7 +19,7 @@ void main() {
       expect(
         () => BuildResultPopupViewModel(
           date: null,
-          duration: Duration.zero,
+          duration: duration,
         ),
         throwsAssertionError,
       );
