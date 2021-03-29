@@ -7,17 +7,13 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("BuildResultPopupViewModel", () {
-    test("throws an AssertionError if the given duration is null", () {
-      expect(
-        () => BuildResultPopupViewModel(
-          duration: null,
-          date: DateTime.now(),
-        ),
-        throwsAssertionError,
-      );
-    });
+    const duration = Duration.zero;
+    const buildStatus = BuildStatus.unknown;
+    final date = DateTime.now();
 
     test("throws an AssertionError if the given date is null", () {
       expect(
@@ -29,13 +25,21 @@ void main() {
       );
     });
 
+    test("creates an instance with the given parameters", () {
+      final viewModel = BuildResultPopupViewModel(
+        date: date,
+        duration: duration,
+        buildStatus: buildStatus,
+      );
+
+      expect(viewModel.date, equals(date));
+      expect(viewModel.duration, equals(duration));
+      expect(viewModel.buildStatus, equals(buildStatus));
+    });
+
     test(
       "equals to another BuildResultPopupViewModel with the same parameters",
       () {
-        const duration = Duration.zero;
-        const buildStatus = BuildStatus.unknown;
-        final date = DateTime.now();
-
         final expected = BuildResultPopupViewModel(
           duration: duration,
           date: date,
