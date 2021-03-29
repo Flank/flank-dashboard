@@ -396,14 +396,32 @@ class JenkinsClient with LoggerMixin {
 
     final url = '$jenkinsUrl/login';
 
-    return _handleResponse(
-      _client.get(url, headers: headers),
-      (_, headers) {
-        final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(headers);
+    try {
+      final response = await _client.get(url, headers: headers);
+
+      if (response.statusCode == HttpStatus.ok) {
+        final responseHeaders = response.headers;
+        final jenkinsInstanceInfo = JenkinsInstanceInfo.fromMap(
+          responseHeaders,
+        );
 
         return InteractionResult.success(result: jenkinsInstanceInfo);
-      },
-    );
+      } else {
+        final code = response.statusCode;
+        final reason = response.body == null || response.body.isEmpty
+            ? response.reasonPhrase
+            : response.body;
+
+        return InteractionResult.error(
+          message:
+              'Failed to fetch the JenkinsInstanceInfo with the following code: $code. Reason: $reason',
+        );
+      }
+    } catch (e) {
+      return InteractionResult.error(
+        message: 'Failed to fetch the JenkinsInstanceInfo. Error details: $e',
+      );
+    }
   }
 
   /// Fetches the [JenkinsUser] using the given [auth].
