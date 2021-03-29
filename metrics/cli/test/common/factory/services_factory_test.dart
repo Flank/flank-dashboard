@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/factory/services_factory.dart';
-import 'package:cli/flutter/service/flutter_service.dart';
-import 'package:cli/gcloud/service/gcloud_service.dart';
+import 'package:cli/flutter/adapter/flutter_cli_service_adapter.dart';
+import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -11,12 +11,20 @@ void main() {
     final servicesFactory = ServicesFactory();
 
     test(
-      ".create() creates a Services instance with the correct values",
+      ".create() creates a Services instance with the GCloud service adapter",
       () {
         final services = servicesFactory.create();
 
-        expect(services.gcloudService, isA<GCloudService>());
-        expect(services.flutterService, isA<FlutterService>());
+        expect(services.gcloudService, isA<GCloudCliServiceAdapter>());
+      },
+    );
+
+    test(
+      ".create() creates a Services instance with the Flutter service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.flutterService, isA<FlutterCliServiceAdapter>());
       },
     );
   });
