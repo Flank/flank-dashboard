@@ -418,8 +418,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
       maxBuildDuration: maxBuildDuration,
-      firstBuildDate: firstBuildDate,
-      lastBuildDate: lastBuildDate,
+      metricPeriodStart: firstBuildDate,
+      metricPeriodEnd: lastBuildDate,
     );
   }
 

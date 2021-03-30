@@ -51,15 +51,15 @@ void main() {
       final metric = BuildResultMetricViewModel(
         buildResults: buildResults,
         numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-        firstBuildDate: firstBuildDate,
-        lastBuildDate: lastBuildDate,
+        metricPeriodStart: firstBuildDate,
+        metricPeriodEnd: lastBuildDate,
         maxBuildDuration: maxBuildDuration,
       );
 
       expect(metric.buildResults, equals(buildResults));
       expect(metric.numberOfBuildsToDisplay, equals(numberOfBuildsToDisplay));
-      expect(metric.firstBuildDate, equals(firstBuildDate));
-      expect(metric.lastBuildDate, equals(lastBuildDate));
+      expect(metric.metricPeriodStart, equals(firstBuildDate));
+      expect(metric.metricPeriodEnd, equals(lastBuildDate));
       expect(metric.maxBuildDuration, equals(maxBuildDuration));
     });
 
@@ -69,16 +69,16 @@ void main() {
         final expected = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-          firstBuildDate: firstBuildDate,
-          lastBuildDate: lastBuildDate,
+          metricPeriodStart: firstBuildDate,
+          metricPeriodEnd: lastBuildDate,
           maxBuildDuration: maxBuildDuration,
         );
 
         final buildResultMetric = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-          firstBuildDate: firstBuildDate,
-          lastBuildDate: lastBuildDate,
+          metricPeriodStart: firstBuildDate,
+          metricPeriodEnd: lastBuildDate,
           maxBuildDuration: maxBuildDuration,
         );
 

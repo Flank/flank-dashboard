@@ -318,7 +318,7 @@ void main() {
     );
 
     test(
-      "loads a build result metrics with no more than the ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics build result view models",
+      "loads a build result metrics with no more than number of builds to load for chart metrics build result view models",
       () async {
         final dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
@@ -348,22 +348,20 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the maximum build duration from the latest ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics build results",
+      "loads a build result metric with the maximum build duration from the latest number of builds to load for chart metrics build results",
       () async {
         const expectedMaximumDuration = Duration(days: 3);
 
-        const numberOfBuildsToGenerate = maxNumberOfBuilds * 2;
-        const lastBuildIndex = numberOfBuildsToGenerate - 1;
-        final buildResults = List.generate(numberOfBuildsToGenerate, (index) {
-          final duration = index == lastBuildIndex
-              ? expectedMaximumDuration
-              : const Duration(hours: 2);
-
-          return createBuildResult(
+        final buildResults = [
+          createBuildResult(
             BuildStatus.successful,
-            duration: duration,
-          );
-        });
+            duration: const Duration(days: 2),
+          ),
+          createBuildResult(
+            BuildStatus.successful,
+            duration: expectedMaximumDuration,
+          ),
+        ];
 
         final dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
@@ -404,8 +402,8 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-        final firstBuildDate = buildResultMetrics.firstBuildDate;
-        final lastBuildDate = buildResultMetrics.lastBuildDate;
+        final firstBuildDate = buildResultMetrics.metricPeriodStart;
+        final lastBuildDate = buildResultMetrics.metricPeriodEnd;
 
         expect(firstBuildDate, isNull);
         expect(lastBuildDate, isNull);
@@ -413,25 +411,27 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the builds date ranges from the latest ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics build results",
+      "loads a build result metric with the builds date ranges from the latest number of builds to load for chart metrics build results",
       () async {
         final expectedFirstBuildDate = DateTime(2020);
         final expectedLastBuildDate = DateTime(2021);
 
-        const numberOfBuildsToGenerate = maxNumberOfBuilds * 2;
-        const firstBuildIndex = numberOfBuildsToGenerate - maxNumberOfBuilds;
-        const lastBuildIndex = numberOfBuildsToGenerate - 1;
-
-        final buildResults = List.generate(numberOfBuildsToGenerate, (index) {
-          DateTime date;
-          if (index == firstBuildIndex) date = expectedFirstBuildDate;
-          if (index == lastBuildIndex) date = expectedLastBuildDate;
-
-          return createBuildResult(
+        final buildResults = [
+          createBuildResult(
             BuildStatus.successful,
-            date: date,
-          );
-        });
+            duration: const Duration(days: 2),
+            date: expectedFirstBuildDate,
+          ),
+          createBuildResult(
+            BuildStatus.successful,
+            duration: const Duration(days: 2),
+          ),
+          createBuildResult(
+            BuildStatus.successful,
+            duration: const Duration(days: 2),
+            date: expectedLastBuildDate,
+          ),
+        ];
 
         final dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
@@ -449,8 +449,8 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-        final firstBuildDate = buildResultMetrics.firstBuildDate;
-        final lastBuildDate = buildResultMetrics.lastBuildDate;
+        final firstBuildDate = buildResultMetrics.metricPeriodStart;
+        final lastBuildDate = buildResultMetrics.metricPeriodEnd;
 
         expect(firstBuildDate, equals(expectedFirstBuildDate));
         expect(lastBuildDate, equals(expectedLastBuildDate));
