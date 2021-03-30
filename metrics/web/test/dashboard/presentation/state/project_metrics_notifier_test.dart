@@ -392,9 +392,7 @@ void main() {
       () async {
         const dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
-          buildResultMetrics: BuildResultMetric(
-            buildResults: [],
-          ),
+          buildResultMetrics: BuildResultMetric(),
         );
         when(receiveProjectMetricsMock.call(any)).thenAnswer(
           (_) => Stream.value(dashboardMetrics),
