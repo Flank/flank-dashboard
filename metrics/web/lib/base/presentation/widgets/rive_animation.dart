@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:metrics/base/presentation/factory/rive_artboard_factory.dart';
 import 'package:rive/rive.dart';
 
 /// A widget that displays the Rive animation.
@@ -11,14 +11,15 @@ class RiveAnimation extends StatefulWidget {
   /// within its bounds.
   final Alignment alignment;
 
+  /// A [RiveArtboardFactory] this widget uses to create [Artboard]s that display
+  /// animation.
+  final RiveArtboardFactory artboardFactory;
+
   /// A name of the [Artboard] to display the animation.
   final String artboardName;
 
   /// A name of the animation asset to load.
   final String assetName;
-
-  /// A collection of the assets to load the animation from.
-  final AssetBundle bundle;
 
   /// A [RiveAnimationController] to control the animation's playback.
   final RiveAnimationController controller;
@@ -28,13 +29,15 @@ class RiveAnimation extends StatefulWidget {
   final BoxFit fit;
 
   /// A flag that determines whether to use the absolute size defined by the
-  /// [Artboard], or size the widget based on the available constraints only.
+  /// [Artboard], or resize the widget based on the constraints provided by
+  /// the parent widget.
   final bool useArtboardSize;
 
   /// Creates a new instance of the [RiveAnimation] with the given parameters.
   ///
-  /// If the given [alignment] is `null` the [Alignment.center] is used.
-  /// If the given [fit] is `null` the [BoxFit.contain] is used.
+  /// The [fit] defaults to [BoxFit.contain].
+  ///
+  /// If the given [alignment] is `null`, the [Alignment.center] is used.
   /// The [useArtboardSize] defaults to `false`.
   ///
   /// Throws an [AssertionError] if the given [assetName] is `null`.
@@ -42,14 +45,13 @@ class RiveAnimation extends StatefulWidget {
     this.assetName, {
     Key key,
     this.artboardName,
-    this.bundle,
+    this.artboardFactory,
     this.controller,
+    this.fit = BoxFit.contain,
     Alignment alignment,
     bool useArtboardSize,
-    BoxFit fit,
   })  : assert(assetName != null),
         alignment = alignment ?? Alignment.center,
-        fit = fit ?? BoxFit.contain,
         useArtboardSize = useArtboardSize ?? false,
         super(key: key);
 
@@ -85,24 +87,23 @@ class _RiveAnimationState extends State<RiveAnimation> {
     );
   }
 
-  /// Loads the animation [Artboard] from the [widget.bundle] with the
-  /// [widget.artboardName].
+  /// Loads the animation [Artboard] using the [RiveAnimation.artboardFactory].
   ///
-  /// If the [widget.bundle] is `null` the [DefaultAssetBundle] is used.
-  /// If the [widget.artboardName] is `null` the main [Artboard] is loaded.
+  /// If the [RiveAnimation.artboardFactory] is `null`, a new instance of the
+  /// [RiveArtboardFactory] with the [DefaultAssetBundle] is used.
+  /// If the [RiveAnimation.artboardName] is `null`, the main [Artboard]
+  /// is loaded.
   ///
-  /// If the [widget.controller] is not `null` adds it to the obtained artboard.
+  /// If the [RiveAnimation.controller] is not `null` adds it to the obtained
+  /// artboard.
   Future<void> _loadAnimation() async {
-    final bundle = widget.bundle ?? DefaultAssetBundle.of(context);
-    final assetBytes = await bundle.load(widget.assetName);
+    final artboardFactory = widget.artboardFactory ??
+        RiveArtboardFactory(DefaultAssetBundle.of(context));
 
-    final riveFile = RiveFile();
-    riveFile.import(assetBytes);
-
-    final artboardName = widget.artboardName;
-    final artboard = artboardName == null
-        ? riveFile.mainArtboard
-        : riveFile.artboardByName(artboardName);
+    final artboard = await artboardFactory.create(
+      widget.assetName,
+      artboardName: widget.artboardName,
+    );
 
     final controller = widget.controller;
     if (controller != null) {
