@@ -1,0 +1,64 @@
+@startuml class_diagram
+
+package arg_parser {
+    class ArgParser {}
+}
+
+package test_driver {
+    class FlutterWebDriver {
+        - _args : DriverTestArguments
+        + startDriverTests : Future<void>  
+    }
+
+    package arguments {
+        package model {
+            class DriverTestArguments {
+                + firestoreEmulator : FirestoreEmulator
+            }
+
+            class FirestoreEmulator {
+                + {static} //static// useEmulatorEnvVariableName : String
+                + {static} //static// portEnvVariableName : String
+
+                + useEmulator : bool
+                + port : String
+
+                + factory fromEnvironment()
+                + toMap() : Map<String, String>
+            }
+        }
+
+        package parser {
+            class DriverTestArgumentsParser {
+                - {static} //static// _useFirestoreEmulator : String
+                - {static} //static// _emulatorPort : String
+                - _parser : ArgParser
+                - _configureParser : void
+
+                + parseArguments(List<String> args) : DriverTestArguments
+            }
+        }
+    }
+
+    package cli.flutter {
+        package model as cli_flutter_model {
+                class FlutterDriveEnvironment {
+                + firestoreEmulator : FirestoreEmulator;
+            }
+        }
+
+        package runner {
+            class FlutterDriveProcessRunner {}
+        }
+    }
+}
+
+DriverTestArgumentsParser --> ArgParser : uses
+DriverTestArgumentsParser --> DriverTestArguments : provides
+DriverTestArguments --> FirestoreEmulator : uses
+FlutterDriveEnvironment --> FirestoreEmulator : uses
+FlutterWebDriver --> FlutterDriveProcessRunner : creates and run
+FlutterWebDriver --> DriverTestArguments : uses
+FlutterDriveProcessRunner --> FlutterDriveEnvironment : uses
+
+@enduml
