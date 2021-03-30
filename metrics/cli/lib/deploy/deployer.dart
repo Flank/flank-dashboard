@@ -27,6 +27,11 @@ class Deployer {
   final GitCommand _gitCommand;
 
   /// Creates a new instance of the [Deployer] with the given services.
+  ///
+  /// Throws an [ArgumentError] if the given [services] is `null`.
+  /// Throws an [ArgumentError] if the given [FirebaseCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [GitCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [FileHelper] is `null`.
   Deployer(
     Services services,
     this._firebaseCommand,

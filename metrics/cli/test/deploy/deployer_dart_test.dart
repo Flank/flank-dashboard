@@ -8,22 +8,23 @@ import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
-import 'package:cli/flutter/service/flutter_service.dart';
-import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/directory_mock.dart';
+import '../test_utils/flutter_service_mock.dart';
+import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/matchers.dart';
 
 void main() {
   group("Deployer", () {
-    final gcloudService = _GCloudServiceMock();
-    final flutterService = _FlutterServiceMock();
+    final gcloudService = GCloudServiceMock();
+    final flutterService = FlutterServiceMock();
     final firebaseCommand = _FirebaseCommandMock();
     final gitCommand = _GitCommandMock();
     final fileHelper = _FileHelperMock();
-    final directory = _DirectoryMock();
+    final directory = DirectoryMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
@@ -414,14 +415,8 @@ void main() {
   });
 }
 
-class _GCloudServiceMock extends Mock implements GCloudService {}
-
-class _FlutterServiceMock extends Mock implements FlutterService {}
-
 class _FileHelperMock extends Mock implements FileHelper {}
 
 class _GitCommandMock extends Mock implements GitCommand {}
 
 class _FirebaseCommandMock extends Mock implements FirebaseCommand {}
-
-class _DirectoryMock extends Mock implements Directory {}
