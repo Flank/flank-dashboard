@@ -117,7 +117,7 @@ The next table contains the definitions of the parameters with their default val
 The following code snippet shows an example of using the new parameters:
 
 ```bash
-dart test_driver/main.dart --use-emulator=true --port=8081
+dart test_driver/main.dart --use-emulator --emulator-port=8081
 ```
 
 Or, if you accept the defaults, you can omit them.
