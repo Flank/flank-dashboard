@@ -109,7 +109,7 @@ The feature is introduced by adding additional parameters to the integration tes
 
 The next table contains the definitions of the parameters with their default values.
 
-| Parameter         | Defaults | Description                                                           |
+| Parameter         | Default | Description                                                           |
 | ----------------- | -------- | --------------------------------------------------------------------- |
 | **use-emulator**  | true     | Determines if the integration tests are using the `Firebase Emulator`. |
 | **emulator-port** | 8080     | Specifies the emulator's running port.                                  |
@@ -130,11 +130,11 @@ As described in the [Prototyping](#prototyping) section, we should run integrati
 
 Integration tests interacts with the application that uses data from the database. 
 
-As we don't want to use the production environment, we use the `Firebase local emulator`.
+As we don't want to use the production environment, we should use the `Firebase local emulator`.
 
 The emulator has no data as a default, so we need to create necessary collections.
 
-It is not convenient to create it every time we start the emulator. So, for this purposes, we need to create all collection once and export it using the following command:
+It is not convenient to create it every time the emulator starts. So, for this purposes, we need to create all collection once and export it using the following command:
 
 ```bash
 firebase emulators:export export_directory
@@ -152,7 +152,7 @@ firebase emulators:start --import=export_directory
 
 > Detailed solution description to class/method level.
 
-The `ArgParser` adds the described above parameters to determine if we are using the local emulator and the emulator's web port:
+The `ArgParser` needs to accept the described above parameters:
 
 ```dart
 _parser.addFlag(_useEmulator, defaultsTo: true);
@@ -160,9 +160,9 @@ _parser.addFlag(_useEmulator, defaultsTo: true);
 _parser.addOption(_emulatorPort, defaultsTo: '8080');
 ```
 
-The `DriverTestArguments` should accept one more argument - the `FirebaseEmulator` class, that group together these parameters.
+We should create the `FirebaseEmulator` class, that group together these parameters and pass it to the `DriverTestArguments`.
 
-As we want to access values of the parameters in the integration tests, we need to pass these to the process environment of the `flutter drive` command.
+As we want to access values of the parameters in the integration tests, we need to pass the created `FirebaseEmulator` to the process environment of the `flutter drive` command.
 
 Consider the following example:
 
@@ -207,6 +207,6 @@ final emulator = FirebaseEmulator.fromEnvironment();
 if (emulator.useEmulator) {
     final host = 'localhost:${emulator.port}';
 
-    Firestore.instance.settings(host: host, sslEnabled: false, persistenceEnabled: false)
+    Firestore.instance.settings(host: host, sslEnabled: false, persistenceEnabled: false);
 }
 ```
