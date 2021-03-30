@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      ".create() throws an ArgumentError if the give asset name is null",
+      ".create() throws an ArgumentError if the given asset name is null",
       () {
         expect(() => artboardFactory.create(null), throwsArgumentError);
       },
