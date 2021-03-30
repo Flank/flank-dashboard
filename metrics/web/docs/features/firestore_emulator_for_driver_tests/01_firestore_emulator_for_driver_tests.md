@@ -105,7 +105,7 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 > Fundamental structures of the feature and context (diagram).
 
-![class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/blob/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/class_diagram.puml)
+![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/class_diagram.puml)
 
 ### User Interface
 
