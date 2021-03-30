@@ -412,14 +412,14 @@ class ProjectMetricsNotifier extends ChangeNotifier {
         .map(_createBuildResultViewModel)
         .toList();
 
-    final firstBuildDate = buildResultViewModels.first.date;
-    final lastBuildDate = buildResultViewModels.last.date;
+    final metricPeriodStart = buildResultViewModels.first.date;
+    final metricPeriodEnd = buildResultViewModels.last.date;
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
       maxBuildDuration: maxBuildDuration,
-      metricPeriodStart: firstBuildDate,
-      metricPeriodEnd: lastBuildDate,
+      metricPeriodStart: metricPeriodStart,
+      metricPeriodEnd: metricPeriodEnd,
     );
   }
 
