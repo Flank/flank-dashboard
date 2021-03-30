@@ -31,7 +31,6 @@ We are not configuring the [Firebase Auth emulator](https://firebase.google.com/
 
 1. A Firestore emulator, run using the imported test data.
 2. The web application uses the Firestore instance configured to use the emulator while running integration tests.
-
 ### Prototyping
 
 > Create a simple prototype to confirm that implementing this feature is possible.
@@ -106,16 +105,14 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
-
 The feature is introduced by adding additional parameters to the integration tests running command.
 
 The next table contains the definitions of the parameters with their default values.
 
 | Parameter         | Defaults | Description                                                           |
 | ----------------- | -------- | --------------------------------------------------------------------- |
-| **use-emulator**  | true     | Determine if the integration tests are using the `Firebase Emulator`. |
-| **emulator-port** | 8080     | Specified the emulator's running port.                                |
+| **use-emulator**  | true     | Determines if the integration tests are using the `Firebase Emulator`. |
+| **emulator-port** | 8080     | Specifies the emulator's running port.                                  |
 
 The following code snippet shows an example of using the new parameters:
 
@@ -124,6 +121,32 @@ dart test_driver/main.dart --use-emulator=true --port=8081
 ```
 
 Or, if you accept the defaults, you can omit them.
+
+As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
+
+### Database
+
+> How relevant data will be persisted.
+
+Integration tests interacts with the application that uses data from the database. 
+
+As we don't want to use the production environment, we use the `Firebase local emulator`.
+
+The emulator has no data as a default, so we need to create necessary collections.
+
+It is not convenient to create it every time we start the emulator. So, for this purposes, we need to create all collection once and export it using the following command:
+
+```bash
+firebase emulators:export export_directory
+```
+
+_**Note:** You can place just `.` instead of the `export_directory` name and the firebase creates the directory, named `firestore_export` as a default._
+
+From now, we can run emulator with the exported data using the following command:
+
+```bash
+firebase emulators:start --import=export_directory
+```
 
 ### Program
 
@@ -155,7 +178,7 @@ FlutterDriveProcessRunner(
 );
 ```
 
-As you can see, the `FlutterDriveEnvironment` now accepts one more argument - the `FirebaseEmulator`.
+As you can see, the `FlutterDriveEnvironment` now accepts one more argument - the `emulator`.
 
 So now, in the process of constructing the `FlutterDriveProcessRunner` we can pass the parameters to the environment via the `dartDefine` method:
 
@@ -164,11 +187,11 @@ So now, in the process of constructing the `FlutterDriveProcessRunner` we can pa
       ...
       ..dartDefine(
         key: FirebaseEmulator.emulatorEnvVariableName,
-        value: firebaseEmulator.useEmulator,
+        value: environment.emulator.useEmulator,
       )
       ..dartDefine(
         key: FirebaseEmulator.portEnvVariableName,
-        value: firebaseEmulator.port,
+        value: environment.emulator.port,
       );
 ```
 
@@ -179,13 +202,11 @@ Example:
 ```dart
 // app_test.dart
 
-setUpAll(() {
-    final emulator = FirebaseEmulator.fromEnvironment();
+final emulator = FirebaseEmulator.fromEnvironment();
 
-    if (emulator.useEmulator) {
-        final host = 'localhost:${emulator.port}';
+if (emulator.useEmulator) {
+    final host = 'localhost:${emulator.port}';
 
-        Firestore.instance.settings(host: host, sslEnabled: false)
-    }
-})
+    Firestore.instance.settings(host: host, sslEnabled: false, persistenceEnabled: false)
+}
 ```
