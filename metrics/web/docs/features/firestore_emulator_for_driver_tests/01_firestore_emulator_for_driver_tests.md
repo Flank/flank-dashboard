@@ -156,7 +156,7 @@ firebase emulators:start --import=export_directory
 
 > Detailed solution description to class/method level.
 
-As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with a test data. 
+As we want to use the Firestore emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with a test data. 
 
 Since the local emulator runs on a specific port we want to connect the application to that specific port via the `emulator-port` parameter.
 
@@ -172,12 +172,13 @@ To group these parameters, we should create the `FirestoreEmulator` model. Also,
 
 The `DriverTestArguments` now accepts one more parameter - the `FirestoreEmulator`.
 
-The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the firestore emulator's values from the arguments list and pass them to the flutter drive environment, so we can access these values in the integration tests.
+The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the Firestore emulator's values from the arguments list and pass them to the Flutter drive environment, so we can access these values in the integration tests.
 
 Consider the following example:
 
 ```dart
 // flutter_web_driver.dart
+
   Future<void> _runDriverTests(
     bool verbose,
     String logsFileName, {
