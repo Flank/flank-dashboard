@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
-import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -16,106 +15,50 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_dur
 /// A [BarGraph] that displays the build result metric.
 ///
 /// Applies the color theme from the [MetricsThemeData.buildResultTheme].
-class BuildResultBarGraph extends StatefulWidget {
+class BuildResultBarGraph extends StatelessWidget {
   /// A [BuildResultMetricViewModel] with data to display.
-  final BuildResultMetricViewModel buildResultMetric;
+  final List<BuildResultViewModel> buildResults;
 
-  /// Creates the [BuildResultBarGraph] based on the given [buildResultMetric].
+  /// A [BuildResultDurationStrategy] this graph uses to define build [Duration]s.
+  final BuildResultDurationStrategy durationStrategy;
+
+  /// Creates the [BuildResultBarGraph] from the given [buildResults] and
+  /// [durationStrategy].
   ///
-  /// The [buildResultMetric] must not be null.
-  /// If the [BuildResultMetricViewModel.buildResults] length is greater
-  /// than [BuildResultMetricViewModel.numberOfBuildsToDisplay],
-  /// the last [BuildResultMetricViewModel.numberOfBuildsToDisplay] of the
-  /// [BuildResultMetricViewModel.buildResults] is displayed.
-  /// If there are not enough [BuildResultMetricViewModel.buildResults]
-  /// to display [BuildResultMetricViewModel.numberOfBuildsToDisplay] bars,
-  /// the [PlaceholderBar]s are added to match the requested
-  /// [BuildResultMetricViewModel.numberOfBuildsToDisplay].
+  /// The [buildResults] must not be null.
+  ///
+  /// Throws an [AssertionError] if the given [buildResults] is `null`.
   const BuildResultBarGraph({
     Key key,
-    @required this.buildResultMetric,
-  })  : assert(buildResultMetric != null),
+    @required this.buildResults,
+    this.durationStrategy,
+  })  : assert(buildResults != null),
         super(key: key);
 
   @override
-  _BuildResultBarGraphState createState() => _BuildResultBarGraphState();
-}
-
-class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
-  List<BuildResultViewModel> _barsData;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // @override
-  // void didUpdateWidget(BuildResultBarGraph oldWidget) {
-  //   if (oldWidget.buildResultMetric.numberOfBuildsToDisplay !=
-  //           widget.buildResultMetric.numberOfBuildsToDisplay ||
-  //       oldWidget.buildResultMetric != widget.buildResultMetric) {
-  //     _calculateBarData();
-  //   }
-
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
-  @override
   Widget build(BuildContext context) {
-    const durationStrategy = BuildResultDurationStrategy();
-
-    final graphPadding = _barsData.isNotEmpty
-        ? const EdgeInsets.only(left: 4.0)
-        : EdgeInsets.zero;
-
-    final paddingStrategy = BuildResultBarPaddingStrategy(
-      buildResults: _barsData,
+    final barStrategy = BuildResultBarPaddingStrategy(
+      buildResults: buildResults,
     );
 
     final barGraphDuration =
-        _barsData.map(durationStrategy.getDuration).toList();
+        buildResults.map(durationStrategy.getDuration).toList();
     final barGraphData =
         barGraphDuration.map((duration) => duration.inMilliseconds).toList();
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 56.0,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    _missingBarsCount,
-                    (index) => const BuildResultBarComponent(),
-                  ),
-                ),
-              ),
-              BarGraph(
-                graphPadding: graphPadding,
-                data: barGraphData,
-                barBuilder: (index, height) {
-                  final data = _barsData[index];
-
-                  return Container(
-                    constraints: BoxConstraints(
-                      minHeight: height,
-                    ),
-                    child: BuildResultBarComponent(
-                      buildResult: data,
-                      paddingStrategy: paddingStrategy,
-                    ),
-                  );
-                },
-              ),
-            ],
+    return BarGraph(
+      data: barGraphData,
+      barBuilder: (index, height) {
+        return Container(
+          constraints: BoxConstraints(
+            minHeight: height,
           ),
-        ),
-      ],
+          child: BuildResultBar(
+            strategy: barStrategy,
+            buildResult: buildResults[index],
+          ),
+        );
+      },
     );
   }
 }

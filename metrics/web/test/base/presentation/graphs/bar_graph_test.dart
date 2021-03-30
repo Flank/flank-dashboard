@@ -159,7 +159,6 @@ class _BarGraphTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       body: BarGraph(
         data: data,
-        graphPadding: graphPadding,
         barBuilder: barBuilder == null
             ? null
             : (index, height) => barBuilder(data, index, height),

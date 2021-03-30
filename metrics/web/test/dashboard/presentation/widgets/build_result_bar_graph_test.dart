@@ -453,7 +453,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
       body: BuildResultBarGraph(
-        buildResultMetric: buildResultMetric,
+        buildResults: buildResultMetric.buildResults,
       ),
     );
   }

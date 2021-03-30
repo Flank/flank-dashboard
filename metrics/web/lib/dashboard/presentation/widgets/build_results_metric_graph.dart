@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics/util/date.dart';
 
 /// A widget that displays the date range of builds, missing bars,
@@ -33,21 +33,19 @@ class BuildResultsMetricGraph extends StatelessWidget {
     final buildResultBarGraphTheme =
         MetricsTheme.of(context).buildResultBarGraphTheme;
 
-    final numberOfBars = buildResultMetric.numberOfBuildsToDisplay;
-
-    final barData = _calculateBarData(numberOfBars);
-    final numberOfMissingBars = numberOfBars - barData.length;
-    final dateRange = _buildResultDateRange(barData);
+    final graphPadding = _numberOfMissingBars > 0
+        ? const EdgeInsets.only(left: 2)
+        : EdgeInsets.zero;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (barData.isNotEmpty)
+        if (_hasDateRange)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              dateRange,
+              _buildsDateRange,
               style: buildResultBarGraphTheme.textStyle,
             ),
           ),
@@ -60,12 +58,18 @@ class BuildResultsMetricGraph extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                    numberOfMissingBars,
+                    _numberOfMissingBars,
                     (index) => const BuildResultBar(),
                   ),
                 ),
               ),
-              BuildResultBarGraph(buildResultMetric: buildResultMetric),
+              Padding(
+                padding: graphPadding,
+                child: BuildResultBarGraph(
+                  buildResults: buildResultMetric.buildResults,
+                  durationStrategy: const BuildResultDurationStrategy(),
+                ),
+              ),
             ],
           ),
         ),
@@ -73,40 +77,42 @@ class BuildResultsMetricGraph extends StatelessWidget {
     );
   }
 
+  /// Returns `true` if both [buildResultMetric.firstBuildDate] and
+  /// [buildResultMetric.lastBuildDate] are not `null`.
+  ///
+  /// Otherwise, returns `false`.
+  bool get _hasDateRange {
+    return buildResultMetric.firstBuildDate != null &&
+        buildResultMetric.lastBuildDate != null;
+  }
+
   /// Returns a [String] containing the formatted date range between the first
-  /// and the last build from the given [builds].
+  /// and the last build from the [buildResultMetric].
   ///
   /// Returns the formatted first build's date, if it equals to the last build's
   /// date.
-  String _buildResultDateRange(List<BuildResultViewModel> builds) {
+  String get _buildsDateRange {
     final dateFormat = DateFormat('d MMM');
 
-    final firstDate = builds.first.date;
-    final lastDate = builds.last.date;
+    final firstDate = buildResultMetric.firstBuildDate;
+    final lastDate = buildResultMetric.lastBuildDate;
 
     final firstDateFormatted = dateFormat.format(firstDate);
-    final lastDateFormatted = dateFormat.format(lastDate);
 
     if (firstDate.date == lastDate.date) {
       return firstDateFormatted;
     }
 
+    final lastDateFormatted = dateFormat.format(lastDate);
+
     return '$firstDateFormatted - $lastDateFormatted';
   }
 
-  /// Returns a [List] of [BuildResultViewModel]s to display
-  /// on a [BuildResultBarGraph].
-  ///
-  /// Trims the [buildResultMetric.buildResults] to match
-  /// the given [numberOfBars].
-  List<BuildResultViewModel> _calculateBarData(int numberOfBars) {
-    final buildResults = buildResultMetric.buildResults;
-    final buildResultsCount = buildResults.length;
+  /// Returns a number of missing bars.
+  int get _numberOfMissingBars {
+    final numberOfBarsToDisplay = buildResultMetric.numberOfBuildsToDisplay;
+    final numberOfBars = buildResultMetric.buildResults.length;
 
-    final firstBuildIndex = buildResultsCount < numberOfBars
-        ? 0
-        : (buildResultsCount - numberOfBars);
-
-    return buildResults.sublist(firstBuildIndex);
+    return numberOfBarsToDisplay - numberOfBars;
   }
 }
