@@ -396,14 +396,30 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
-    final maxBuildDuration = _getMaxBuildDuration(buildResults);
+    const numberOfBuildsToDisplay =
+        ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
+    final buildsCount = buildResults.length;
 
-    final buildResultViewModels =
-        buildResults.map(_createBuildResultViewModel).toList();
+    final lastBuildIndex = buildsCount <= numberOfBuildsToDisplay
+        ? 0
+        : (buildsCount - numberOfBuildsToDisplay);
+
+    final latestBuildResults = buildResults.sublist(lastBuildIndex);
+
+    final maxBuildDuration = _getMaxBuildDuration(latestBuildResults);
+
+    final buildResultViewModels = latestBuildResults
+        .map(_createBuildResultViewModel)
+        .toList();
+
+    final firstBuildDate = buildResultViewModels.first.date;
+    final lastBuildDate = buildResultViewModels.last.date;
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
       maxBuildDuration: maxBuildDuration,
+      firstBuildDate: firstBuildDate,
+      lastBuildDate: lastBuildDate,
     );
   }
 
