@@ -11,6 +11,9 @@ class RiveAnimationTestData {
   /// A [RiveFile] created from the [assetByteData].
   static final RiveFile _riveFile = RiveFile()..import(assetByteData);
 
+  /// A main [Artboard] of the animation asset.
+  static final Artboard mainArtboard = _riveFile.mainArtboard;
+
   /// A name of the main asset's [Artboard] to use in tests.
   static final String mainArtboardName = _riveFile.mainArtboard.name;
 
@@ -20,7 +23,7 @@ class RiveAnimationTestData {
   );
 
   /// A [ByteData] of the asset to use in tests.
-  static final ByteData assetByteData = ByteData.sublistView(assetBytes);
+  static final ByteData assetByteData = assetBytes.buffer.asByteData();
 
   /// A [Uint8List] containing the asset bytes to use in tests.
   static final Uint8List assetBytes = Uint8List.fromList([
