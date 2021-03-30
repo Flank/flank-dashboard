@@ -35,10 +35,11 @@ class GCloudCliServiceAdapter implements GCloudService {
   Future<String> createProject() async {
     final projectId = _generateProjectId();
 
-    await _gcloudCli.listRegions();
+    await _gcloudCli.createProject(projectId);
+
+    await _gcloudCli.listRegions(projectId);
     final region = _prompter.prompt(GcloudStrings.enterRegionName);
 
-    await _gcloudCli.createProject(projectId);
     await _gcloudCli.createProjectApp(region, projectId);
     await _gcloudCli.enableFirestoreApi(projectId);
     await _gcloudCli.createDatabase(region, projectId);
@@ -53,7 +54,7 @@ class GCloudCliServiceAdapter implements GCloudService {
 
   /// Generates the project identifier.
   String _generateProjectId() {
-    final randomString = randomAlphaNumeric(5);
+    final randomString = randomAlphaNumeric(5).toLowerCase();
     return 'metrics-$randomString';
   }
 }
