@@ -36,15 +36,15 @@ We are not configuring the [Firebase Auth emulator](https://firebase.google.com/
 
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-To run the driver tests under the Firebase emulator we should follow the next steps: 
+To run the driver tests under the Firebase emulator we should follow the next steps:
 
- 1. Run the Firebase emulator before running the app under tests.
- 2. Configure the application under tests to use the Firebase emulator instance before running tests.
- 3. Run the driver tests as usual.
+1.  Run the Firebase emulator before running the app under tests.
+2.  Configure the application under tests to use the Firebase emulator instance before running tests.
+3.  Run the driver tests as usual.
 
 Before we run the emulator, we need to check the configurations in the `firebase.json` file.
 
-The emulator will take Security Rules configuration from the `firestore` configuration key, 
+The emulator will take Security Rules configuration from the `firestore` configuration key,
 so make sure it links to the right file location.
 
 ```json
@@ -54,7 +54,7 @@ so make sure it links to the right file location.
     }
 ```
 
-The default emulator's port is 8080. 
+The default emulator's port is 8080.
 To customize that you can specify an additional key in the `firebase.json` file.
 
 ```json
@@ -91,8 +91,8 @@ In the `setUpAll` method of the tests we need to configure the Firestore instanc
 ```dart
 setupAll(() {
     Firestore.instance.settings(
-        host: 'localhost:8080', 
-        sslEnabled: false, 
+        host: 'localhost:8080',
+        sslEnabled: false,
         persistenceEnabled: false,
     );
 });
@@ -112,10 +112,10 @@ The feature is introduced by adding additional parameters to the integration tes
 
 The next table contains the definitions of the parameters with their default values.
 
-| Parameter | Defaults | Description |
-| ---- | --- | --- |
-| **use-emulator** | true | Determine if the integration tests are using the `Firebase Emulator`. |
-| **emulator-port** | 8080 | Specified the emulator's running port. |
+| Parameter         | Defaults | Description                                                           |
+| ----------------- | -------- | --------------------------------------------------------------------- |
+| **use-emulator**  | true     | Determine if the integration tests are using the `Firebase Emulator`. |
+| **emulator-port** | 8080     | Specified the emulator's running port.                                |
 
 The following code snippet shows an example of using the new parameters:
 
@@ -129,7 +129,63 @@ Or, if you accept the defaults, you can omit them.
 
 > Detailed solution description to class/method level.
 
+The `ArgParser` adds the described above parameters to determine if we are using the local emulator and the emulator's web port:
 
-<!-- FirebaseEmulator -->
-<!-- fields -->
-<!-- app.test (use settings with the given parameters) --> 
+```dart
+_parser.addFlag(_useEmulator, defaultsTo: true);
+
+_parser.addOption(_emulatorPort, defaultsTo: '8080');
+```
+
+The `DriverTestArguments` should accept one more argument - the `FirebaseEmulator` class, that group together these parameters.
+
+As we want to access values of the parameters in the integration tests, we need to pass these to the process environment of the `flutter drive` command.
+
+Consider the following example:
+
+```dart
+FlutterDriveProcessRunner(
+    browserName: _args.browserName,
+    verbose: verbose,
+    environment: FlutterDriveEnvironment(
+        userCredentials: _args.credentials,
+        emulator: _args.emulator,
+    ),
+    useSkia: useSkia,
+);
+```
+
+As you can see, the `FlutterDriveEnvironment` now accepts one more argument - the `FirebaseEmulator`.
+
+So now, in the process of constructing the `FlutterDriveProcessRunner` we can pass the parameters to the environment via the `dartDefine` method:
+
+```dart
+    _driveCommand
+      ...
+      ..dartDefine(
+        key: FirebaseEmulator.emulatorEnvVariableName,
+        value: firebaseEmulator.useEmulator,
+      )
+      ..dartDefine(
+        key: FirebaseEmulator.portEnvVariableName,
+        value: firebaseEmulator.port,
+      );
+```
+
+With this, we can use the `FirebaseEmulator.fromEnvironment()` method to retrieve the instance with the passed parameters and use them in the integration tests.
+
+Example:
+
+```dart
+// app_test.dart
+
+setUpAll(() {
+    final emulator = FirebaseEmulator.fromEnvironment();
+
+    if (emulator.useEmulator) {
+        final host = 'localhost:${emulator.port}';
+
+        Firestore.instance.settings(host: host, sslEnabled: false)
+    }
+})
+```
