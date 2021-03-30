@@ -1,4 +1,4 @@
-@startuml class_diagram
+@startuml firestore_emulator_class_diagram
 
 package arg_parser {
     class ArgParser {}
