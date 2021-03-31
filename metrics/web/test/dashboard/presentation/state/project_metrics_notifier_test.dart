@@ -386,7 +386,7 @@ void main() {
     );
 
     test(
-      "loads a build result metric with null builds date ranges if the build results are empty",
+      "loads a build result metric with null metric periods if the build results are empty",
       () async {
         const dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
@@ -402,25 +402,25 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-        final firstBuildDate = buildResultMetrics.metricPeriodStart;
-        final lastBuildDate = buildResultMetrics.metricPeriodEnd;
+        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
+        final metricPeriodEnd = buildResultMetrics.metricPeriodEnd;
 
-        expect(firstBuildDate, isNull);
-        expect(lastBuildDate, isNull);
+        expect(metricPeriodStart, isNull);
+        expect(metricPeriodEnd, isNull);
       },
     );
 
     test(
-      "loads a build result metric with the builds date ranges from the latest number of builds to load for chart metrics build results",
+      "loads a build result metric with the metric period ranges from the latest number of builds to load for chart metrics build results",
       () async {
-        final expectedFirstBuildDate = DateTime(2020);
-        final expectedLastBuildDate = DateTime(2021);
+        final expectedMetricPeriodStart = DateTime(2020);
+        final expectedMetricPeriodEnd = DateTime(2021);
 
         final buildResults = [
           createBuildResult(
             BuildStatus.successful,
             duration: const Duration(days: 2),
-            date: expectedFirstBuildDate,
+            date: expectedMetricPeriodStart,
           ),
           createBuildResult(
             BuildStatus.successful,
@@ -429,7 +429,7 @@ void main() {
           createBuildResult(
             BuildStatus.successful,
             duration: const Duration(days: 2),
-            date: expectedLastBuildDate,
+            date: expectedMetricPeriodEnd,
           ),
         ];
 
@@ -449,11 +449,11 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-        final firstBuildDate = buildResultMetrics.metricPeriodStart;
-        final lastBuildDate = buildResultMetrics.metricPeriodEnd;
+        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
+        final metricPeriodEnd = buildResultMetrics.metricPeriodEnd;
 
-        expect(firstBuildDate, equals(expectedFirstBuildDate));
-        expect(lastBuildDate, equals(expectedLastBuildDate));
+        expect(metricPeriodStart, equals(expectedMetricPeriodStart));
+        expect(metricPeriodEnd, equals(expectedMetricPeriodEnd));
       },
     );
 

@@ -400,17 +400,17 @@ class ProjectMetricsNotifier extends ChangeNotifier {
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
     final buildsCount = buildResults.length;
 
-    final lastBuildIndex = buildsCount <= numberOfBuildsToDisplay
-        ? 0
-        : (buildsCount - numberOfBuildsToDisplay);
-
-    final latestBuildResults = buildResults.sublist(lastBuildIndex);
+    List<BuildResult> latestBuildResults = buildResults;
+    if (buildsCount <= numberOfBuildsToDisplay) {
+      latestBuildResults = latestBuildResults.sublist(
+        buildsCount - numberOfBuildsToDisplay,
+      );
+    }
 
     final maxBuildDuration = _getMaxBuildDuration(latestBuildResults);
 
-    final buildResultViewModels = latestBuildResults
-        .map(_createBuildResultViewModel)
-        .toList();
+    final buildResultViewModels =
+        latestBuildResults.map(_createBuildResultViewModel).toList();
 
     final metricPeriodStart = buildResultViewModels.first.date;
     final metricPeriodEnd = buildResultViewModels.last.date;

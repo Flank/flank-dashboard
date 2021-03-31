@@ -15,10 +15,10 @@ class BuildResultMetricViewModel extends Equatable {
   /// A maximum [Duration] of a finished build within the [buildResults].
   final Duration maxBuildDuration;
 
-  /// A [DateTime] of this view model's first build.
+  /// A [DateTime] of the metric period start this view model represents.
   final DateTime metricPeriodStart;
 
-  /// A [DateTime] of this view model's last build.
+  /// A [DateTime] of the metric period end this view model represents.
   final DateTime metricPeriodEnd;
 
   /// A number of [buildResults] elements to display.
