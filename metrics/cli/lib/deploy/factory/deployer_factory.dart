@@ -8,7 +8,7 @@ import 'package:cli/helper/file_helper.dart';
 
 import '../deployer.dart';
 
-/// A class providing method for creating [Deployer] instance.
+/// A class providing method for creating a [Deployer] instance.
 class DeployerFactory {
   /// A [ServicesFactory] class this factory uses to create the services.
   final ServicesFactory _servicesFactory;
@@ -16,8 +16,10 @@ class DeployerFactory {
   /// Creates a new instance of the [DeployerFactory]
   /// with the given services factory.
   ///
-  /// Throws an [ArgumentError] if the given [ServicesFactory] is `null`.
-  DeployerFactory(this._servicesFactory) {
+  /// The [_servicesFactory] default value is [ServicesFactory] instance.
+  ///
+  /// Throws an [ArgumentError] if the given [_servicesFactory] is `null`.
+  DeployerFactory([this._servicesFactory = const ServicesFactory()]) {
     ArgumentError.checkNotNull(_servicesFactory, 'servicesFactory');
   }
 
@@ -28,6 +30,11 @@ class DeployerFactory {
     final firebaseCommand = FirebaseCommand();
     final gitCommand = GitCommand();
 
-    return Deployer(services, firebaseCommand, gitCommand, fileHelper);
+    return Deployer(
+      services: services,
+      firebaseCommand: firebaseCommand,
+      gitCommand: gitCommand,
+      fileHelper: fileHelper,
+    );
   }
 }

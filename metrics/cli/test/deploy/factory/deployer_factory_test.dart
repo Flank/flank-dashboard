@@ -23,7 +23,7 @@ void main() {
     }
 
     test(
-      "throws an ArgumentError if the given services is null",
+      "throws an ArgumentError if the given services factory is null",
       () {
         expect(
           () => DeployerFactory(null),
@@ -33,7 +33,7 @@ void main() {
     );
 
     test(
-      ".create() creates a Services instance",
+      ".create() creates a Services instance using the given services factory",
       () {
         whenCreateServices().thenReturn(services);
 
@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      ".create() returns a Deployer instance",
+      ".create() successfully creates a Deployer instance",
       () {
         whenCreateServices().thenReturn(services);
 

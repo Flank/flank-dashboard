@@ -12,10 +12,10 @@ import 'package:cli/helper/file_helper.dart';
 /// A class providing method for deploying the Metrics Web Application.
 class Deployer {
   /// A service that provides methods for working with Flutter.
-  FlutterService _flutterService;
+  final FlutterService _flutterService;
 
   /// A service that provides methods for working with GCloud.
-  GCloudService _gcloudService;
+  final GCloudService _gcloudService;
 
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
@@ -32,22 +32,23 @@ class Deployer {
   /// Throws an [ArgumentError] if the given [FirebaseCommand] is `null`.
   /// Throws an [ArgumentError] if the given [GitCommand] is `null`.
   /// Throws an [ArgumentError] if the given [FileHelper] is `null`.
-  Deployer(
+  Deployer({
     Services services,
-    this._firebaseCommand,
-    this._gitCommand,
-    this._fileHelper,
-  ) {
+    FirebaseCommand firebaseCommand,
+    GitCommand gitCommand,
+    FileHelper fileHelper,
+  })  : _gcloudService = services?.gcloudService,
+        _flutterService = services?.flutterService,
+        _firebaseCommand = firebaseCommand,
+        _gitCommand = gitCommand,
+        _fileHelper = fileHelper {
     ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_firebaseCommand, 'firebaseCommand');
     ArgumentError.checkNotNull(_gitCommand, 'gitCommand');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
-
-    _flutterService = services.flutterService;
-    _gcloudService = services.gcloudService;
   }
 
-  ///Deploys the Metrics Web Application.
+  /// Deploys the Metrics Web Application.
   Future<void> deploy() async {
     await _gcloudService.login();
 

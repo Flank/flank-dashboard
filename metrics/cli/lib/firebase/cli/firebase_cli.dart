@@ -30,7 +30,7 @@ class FirebaseCli extends Cli {
     return run(['use', projectId], workingDirectory: workingDirectory);
   }
 
-  /// Clears the firebase [target] in the given [workingDirectory].
+  /// Clears the Firebase [target] in the given [workingDirectory].
   Future<void> clearTarget(String target, String workingDirectory) {
     return run(
       ['target:clear', 'hosting', target],
@@ -38,7 +38,7 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Associates the firebase [target] with the given [hostingName]
+  /// Associates the Firebase [target] with the given [hostingName]
   /// in the given [workingDirectory].
   Future<void> applyTarget(
     String hostingName,

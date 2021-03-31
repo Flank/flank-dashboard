@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// Holds the strings for the Deployer.
+/// A class that holds the constants for the deployment process.
 class DeployConstants {
   /// A URL to the Metrics repository.
   static const String repoURL = 'git@github.com:platform-platform/monorepo.git';
@@ -12,6 +12,6 @@ class DeployConstants {
   /// A path to the Web project sources.
   static const String webPath = '$tempDir/metrics/web';
 
-  /// A Firebase target.
+  /// A Firebase target name.
   static const String firebaseTarget = 'metrics';
 }
