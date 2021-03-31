@@ -206,7 +206,7 @@ void main() {
     );
 
     testWidgets(
-      "does not apply the use artboard size to the Rive widget if the given use artboard size is null",
+      "applies the false to the Rive widget use artboard size parameter if the given use artboard size is null",
       (WidgetTester tester) async {
         when(artboardFactory.create(assetName)).thenAnswer(
           (_) => Future.value(mainArtboard),
