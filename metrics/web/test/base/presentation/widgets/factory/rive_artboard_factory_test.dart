@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/factory/rive_artboard_factory.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../test_utils/asset_bundle_mock.dart';
-import '../../../test_utils/matchers.dart';
-import '../test_data/rive_animation_test_data.dart';
+import '../../../../test_utils/asset_bundle_mock.dart';
+import '../../../../test_utils/matchers.dart';
+import '../../test_data/rive_animation_test_data.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

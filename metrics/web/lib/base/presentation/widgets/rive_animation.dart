@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/factory/rive_artboard_factory.dart';
+import 'package:metrics/base/presentation/widgets/factory/rive_artboard_factory.dart';
 import 'package:rive/rive.dart';
 
 /// A widget that displays the Rive animation.
@@ -11,8 +11,8 @@ class RiveAnimation extends StatefulWidget {
   /// within its bounds.
   final Alignment alignment;
 
-  /// A [RiveArtboardFactory] this widget uses to create [Artboard]s that display
-  /// animation.
+  /// A [RiveArtboardFactory] this widget uses to get the [Artboard] from the 
+  /// asset with the given [assetName].
   final RiveArtboardFactory artboardFactory;
 
   /// A name of the [Artboard] to display the animation.

@@ -8,24 +8,24 @@ import 'package:rive/rive.dart';
 
 /// A class that holds the [RiveAnimation] test data.
 class RiveAnimationTestData {
-  /// A [RiveFile] created from the [assetByteData].
+  /// A [RiveFile] created from the rive animation [ByteData].
   static final RiveFile _riveFile = RiveFile()..import(assetByteData);
 
-  /// A main [Artboard] of the animation asset.
+  /// A main [Artboard] of the rive animation.
   static final Artboard mainArtboard = _riveFile.mainArtboard;
 
-  /// A name of the main asset's [Artboard] to use in tests.
+  /// A name of the main rive animation's [Artboard] to use in tests.
   static final String mainArtboardName = _riveFile.mainArtboard.name;
 
-  /// A [List] with all [Artboard] names of the asset to use in tests.
+  /// A [List] with all [Artboard] names of the rive animation to use in tests.
   static final List<String> allArtboardNames = UnmodifiableListView(
     _riveFile.artboards.map((artboard) => artboard.name).toList(),
   );
 
-  /// A [ByteData] of the asset to use in tests.
+  /// A [ByteData] of the rive animation to use in tests.
   static final ByteData assetByteData = assetBytes.buffer.asByteData();
 
-  /// A [Uint8List] containing the asset bytes to use in tests.
+  /// A [Uint8List] containing the rive animation bytes to use in tests.
   static final Uint8List assetBytes = Uint8List.fromList([
     82,
     73,

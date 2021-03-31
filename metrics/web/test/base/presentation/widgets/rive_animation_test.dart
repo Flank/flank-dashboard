@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/factory/rive_artboard_factory.dart';
+import 'package:metrics/base/presentation/widgets/factory/rive_artboard_factory.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rive/rive.dart';
@@ -17,6 +17,7 @@ import '../test_data/rive_animation_test_data.dart';
 void main() {
   group("RiveAnimation", () {
     const assetName = 'name';
+    const artboardName = 'name';
 
     final assetByteData = RiveAnimationTestData.assetByteData;
     final mainArtboard = RiveAnimationTestData.mainArtboard;
@@ -67,7 +68,29 @@ void main() {
     );
 
     testWidgets(
-      "displays the Rive widget with the artboard returned by the artboard factory if the given artboard name is not specified",
+      "creates an artboard using the given artboard factory",
+      (WidgetTester tester) async {
+        when(
+          artboardFactory.create(assetName, artboardName: artboardName),
+        ).thenAnswer((_) => Future.value(mainArtboard));
+
+        await tester.pumpWidget(
+          _RiveAnimationTestbed(
+            assetName,
+            artboardName: artboardName,
+            artboardFactory: artboardFactory,
+          ),
+        );
+        await tester.pump();
+
+        verify(
+          artboardFactory.create(assetName, artboardName: artboardName),
+        ).called(once);
+      },
+    );
+
+    testWidgets(
+      "displays the Rive widget with the artboard created by the artboard factory",
       (WidgetTester tester) async {
         when(artboardFactory.create(assetName)).thenAnswer(
           (_) => Future.value(mainArtboard),
@@ -76,28 +99,6 @@ void main() {
         await tester.pumpWidget(
           _RiveAnimationTestbed(
             assetName,
-            artboardFactory: artboardFactory,
-          ),
-        );
-        await tester.pump();
-
-        final rive = getRive(tester);
-
-        expect(rive.artboard, equals(mainArtboard));
-      },
-    );
-
-    testWidgets(
-      "displays the Rive widget with the artboard with the given artboard name returned by the artboard factory",
-      (WidgetTester tester) async {
-        const artboardName = 'artboard';
-        when(artboardFactory.create(assetName, artboardName: artboardName))
-            .thenAnswer((_) => Future.value(mainArtboard));
-
-        await tester.pumpWidget(
-          _RiveAnimationTestbed(
-            assetName,
-            artboardName: artboardName,
             artboardFactory: artboardFactory,
           ),
         );
@@ -205,7 +206,7 @@ void main() {
     );
 
     testWidgets(
-      "does not use the artboard size in the Rive widget if the given use artboard size is null",
+      "does not apply the use artboard size to the Rive widget if the given use artboard size is null",
       (WidgetTester tester) async {
         when(artboardFactory.create(assetName)).thenAnswer(
           (_) => Future.value(mainArtboard),
@@ -227,7 +228,7 @@ void main() {
     );
 
     testWidgets(
-      "uses the given use artboard size in the Rive widget",
+      "applies the given use artboard size to the Rive widget",
       (WidgetTester tester) async {
         when(artboardFactory.create(assetName)).thenAnswer(
           (_) => Future.value(mainArtboard),
@@ -252,10 +253,11 @@ void main() {
     testWidgets(
       "applies the given controller to the loaded Rive animation artboard",
       (WidgetTester tester) async {
-        when(artboardFactory.create(assetName)).thenAnswer(
-          (_) => Future.value(mainArtboard),
-        );
+        final artboard = _ArtboardMock();
         final controller = SimpleAnimation('');
+        when(artboardFactory.create(assetName)).thenAnswer(
+          (_) => Future.value(artboard),
+        );
 
         await tester.pumpWidget(
           _RiveAnimationTestbed(
@@ -264,14 +266,8 @@ void main() {
             artboardFactory: artboardFactory,
           ),
         );
-        await tester.pump();
 
-        final rive = getRive(tester);
-        final artboard = rive.artboard;
-
-        final canAddController = artboard.addController(controller);
-
-        expect(canAddController, isFalse);
+        verify(artboard.addController(controller)).called(once);
       },
     );
   });
@@ -332,5 +328,7 @@ class _RiveAnimationTestbed extends StatelessWidget {
     );
   }
 }
+
+class _ArtboardMock extends Mock implements Artboard {}
 
 class _RiveArtboardFactoryMock extends Mock implements RiveArtboardFactory {}

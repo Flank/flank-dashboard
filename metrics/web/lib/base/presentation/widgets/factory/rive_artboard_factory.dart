@@ -4,7 +4,8 @@
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-/// A factory class that creates instance of [Artboard].
+/// A factory class that provides a method for creating an instance of the
+/// [Artboard].
 class RiveArtboardFactory {
   /// An [AssetBundle] this factory uses to work with assets.
   final AssetBundle bundle;
