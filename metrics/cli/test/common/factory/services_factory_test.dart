@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("ServicesFactory", () {
-    final servicesFactory = ServicesFactory();
+    const servicesFactory = ServicesFactory();
 
     test(
       ".create() creates a Services instance with the GCloud service adapter",

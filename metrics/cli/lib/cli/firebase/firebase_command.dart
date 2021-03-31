@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:process_run/process_run.dart' as cmd;
@@ -76,6 +76,52 @@ class FirebaseCommand {
           firebaseToken
         ],
         verbose: true);
+  }
+
+  /// Sets the project with the [projectId] identifier as the default one
+  /// for the Firebase project in the [workingDirectory].
+  Future<void> setFirebaseProject(
+    String projectId,
+    String workingDirectory,
+    String firebaseToken,
+  ) async {
+    await cmd.run(
+      'firebase',
+      ['use', '--add', projectId, '--token', firebaseToken],
+      workingDirectory: workingDirectory,
+      verbose: true,
+    );
+  }
+
+  /// Deploys a project's [target] from the given [workingDirectory]
+  /// to the Firebase hosting.
+  Future<void> deployHosting(
+      String target, String workingDirectory, String firebaseToken) async {
+    await cmd.run(
+      'firebase',
+      ['deploy', '--only', 'hosting:$target', '--token', firebaseToken],
+      workingDirectory: workingDirectory,
+      verbose: true,
+    );
+  }
+
+  /// Associates the firebase [target] with the given [hostingName]
+  /// in the given [workingDirectory].
+  Future<void> applyTarget(String hostingName, String target,
+      String workingDirectory, String firebaseToken) {
+    return cmd.run(
+      'firebase',
+      [
+        'target:apply',
+        'hosting',
+        target,
+        hostingName,
+        '--token',
+        firebaseToken,
+      ],
+      workingDirectory: workingDirectory,
+      verbose: true,
+    );
   }
 
   /// Prints CLI version.

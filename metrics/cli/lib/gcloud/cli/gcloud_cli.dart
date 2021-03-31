@@ -18,13 +18,14 @@ class GCloudCli extends Cli {
     return run(['projects', 'create', projectId]);
   }
 
-  /// Displays a list of the GCloud application's available regions.
-  Future<void> listRegions() {
-    return run(['app', 'regions', 'list']);
+  /// Displays a list of the GCloud application's available regions
+  /// for the project with the given [projectId].
+  Future<void> listRegions(String projectId) {
+    return run(['app', 'regions', 'list', '--project', projectId]);
   }
 
   /// Creates a project app located in the provided [region]
-  /// within the project with the given [projectID].
+  /// within the project with the given [projectId].
   Future<void> createProjectApp(String region, String projectId) {
     return run(['app', 'create', '--region', region, '--project', projectId]);
   }
@@ -41,7 +42,7 @@ class GCloudCli extends Cli {
   }
 
   /// Creates a Firestore database located in the provided [region]
-  /// within the project with the given [projectID].
+  /// within the project with the given [projectId].
   Future<void> createDatabase(String region, String projectId) {
     return run([
       'firestore',
