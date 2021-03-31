@@ -35,10 +35,8 @@ class RiveArtboardFactory {
     final riveFile = RiveFile();
     riveFile.import(assetBytes);
 
-    final artboard = artboardName == null
-        ? riveFile.mainArtboard
-        : riveFile.artboardByName(artboardName);
+    if (artboardName == null) return riveFile.mainArtboard;
 
-    return artboard;
+    return riveFile.artboardByName(artboardName);
   }
 }

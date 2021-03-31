@@ -11,7 +11,7 @@ class RiveAnimation extends StatefulWidget {
   /// within its bounds.
   final Alignment alignment;
 
-  /// A [RiveArtboardFactory] this widget uses to get the [Artboard] from the 
+  /// A [RiveArtboardFactory] this widget uses to get the [Artboard] from the
   /// asset with the given [assetName].
   final RiveArtboardFactory artboardFactory;
 
@@ -91,8 +91,6 @@ class _RiveAnimationState extends State<RiveAnimation> {
   ///
   /// If the [RiveAnimation.artboardFactory] is `null`, a new instance of the
   /// [RiveArtboardFactory] with the [DefaultAssetBundle] is used.
-  /// If the [RiveAnimation.artboardName] is `null`, the main [Artboard]
-  /// is loaded.
   ///
   /// If the [RiveAnimation.controller] is not `null` adds it to the obtained
   /// artboard.
