@@ -11,7 +11,7 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_dur
 import 'package:metrics/util/date.dart';
 
 /// A widget that displays the date range of builds, missing bars,
-/// and [BuildResultBarGraph]s.
+/// and a [BuildResultBarGraph].
 class BuildResultsMetricGraph extends StatelessWidget {
   /// A [BuildResultMetricViewModel] with the build results data to display.
   final BuildResultMetricViewModel buildResultMetric;
@@ -32,10 +32,6 @@ class BuildResultsMetricGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final buildResultBarGraphTheme =
         MetricsTheme.of(context).buildResultBarGraphTheme;
-
-    final graphPadding = _numberOfMissingBars > 0
-        ? const EdgeInsets.only(left: 2)
-        : EdgeInsets.zero;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -63,13 +59,14 @@ class BuildResultsMetricGraph extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: graphPadding,
-                child: BuildResultBarGraph(
-                  buildResults: buildResultMetric.buildResults,
-                  durationStrategy: const BuildResultDurationStrategy(),
+              if (_hasResults)
+                Padding(
+                  padding: _graphPadding,
+                  child: BuildResultBarGraph(
+                    buildResultMetric: buildResultMetric,
+                    durationStrategy: const BuildResultDurationStrategy(),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -106,6 +103,21 @@ class BuildResultsMetricGraph extends StatelessWidget {
     final lastDateFormatted = dateFormat.format(lastDate);
 
     return '$firstDateFormatted - $lastDateFormatted';
+  }
+
+  /// Returns `true` if [buildResultMetric.buildResults.isNotEmpty].
+  ///
+  /// Otherwise, returns `false`.
+  bool get _hasResults {
+    return buildResultMetric.buildResults.isNotEmpty;
+  }
+
+  /// Returns an [EdgeInsets] for the [BuildResultBarGraph] padding depending
+  /// on the value of the [_numberOfMissingBars].
+  EdgeInsets get _graphPadding {
+    return _numberOfMissingBars > 0
+        ? const EdgeInsets.only(left: 2)
+        : EdgeInsets.zero;
   }
 
   /// Returns a number of missing bars.
