@@ -18,7 +18,7 @@ import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.d
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_results_metric_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
@@ -332,7 +332,7 @@ void main() {
     );
 
     testWidgets(
-      "contains the bar graph with the build results",
+      "contains the bar results metric graph with the build results",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -340,7 +340,7 @@ void main() {
           ));
         });
 
-        expect(find.byType(BuildResultBarGraph), findsOneWidget);
+        expect(find.byType(BuildResultsMetricGraph), findsOneWidget);
       },
     );
 
