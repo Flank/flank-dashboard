@@ -14,6 +14,8 @@ void main() {
     const maxBuildDuration = Duration.zero;
 
     final buildResults = UnmodifiableListView<BuildResultViewModel>([]);
+    final metricPeriodStart = DateTime(2020);
+    final metricPeriodEnd = DateTime(2022);
 
     test("throws an AssertionError if the given build results is null", () {
       expect(
@@ -49,11 +51,15 @@ void main() {
       final metric = BuildResultMetricViewModel(
         buildResults: buildResults,
         numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+        metricPeriodStart: metricPeriodStart,
+        metricPeriodEnd: metricPeriodEnd,
         maxBuildDuration: maxBuildDuration,
       );
 
       expect(metric.buildResults, equals(buildResults));
       expect(metric.numberOfBuildsToDisplay, equals(numberOfBuildsToDisplay));
+      expect(metric.metricPeriodStart, equals(metricPeriodStart));
+      expect(metric.metricPeriodEnd, equals(metricPeriodEnd));
       expect(metric.maxBuildDuration, equals(maxBuildDuration));
     });
 
@@ -63,12 +69,16 @@ void main() {
         final expected = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+          metricPeriodStart: metricPeriodStart,
+          metricPeriodEnd: metricPeriodEnd,
           maxBuildDuration: maxBuildDuration,
         );
 
         final buildResultMetric = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+          metricPeriodStart: metricPeriodStart,
+          metricPeriodEnd: metricPeriodEnd,
           maxBuildDuration: maxBuildDuration,
         );
 
