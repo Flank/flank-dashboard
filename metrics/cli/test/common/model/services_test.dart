@@ -15,7 +15,7 @@ void main() {
     final gcloudService = GCloudServiceMock();
 
     test(
-      "throws an ArgumentError if the given flutter service is null",
+      "throws an ArgumentError if the given Flutter service is null",
       () {
         expect(
           () => Services(flutterService: null, gcloudService: gcloudService),
@@ -25,7 +25,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given gcloud service is null",
+      "throws an ArgumentError if the given GCloud service is null",
       () {
         expect(
           () => Services(

@@ -21,6 +21,8 @@ import '../test_utils/matchers.dart';
 
 void main() {
   group("Deployer", () {
+    const projectId = 'testId';
+    const firebaseToken = 'testToken';
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
     final firebaseCommand = _FirebaseCommandMock();
@@ -90,7 +92,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given git command is null",
+      "throws an ArgumentError if the given Git command is null",
       () {
         expect(
           () => Deployer(
@@ -153,19 +155,6 @@ void main() {
     );
 
     test(
-      ".deploy() creates the GCloud project before login to the Firebase",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
-
-        verifyInOrder([
-          gcloudService.createProject(),
-          firebaseCommand.login(),
-        ]);
-      },
-    );
-
-    test(
       ".deploy() logs in to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
@@ -191,8 +180,6 @@ void main() {
     test(
       ".deploy() adds the Firebase capabilities to the created project",
       () async {
-        const projectId = 'testId';
-        const firebaseToken = 'testToken';
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
@@ -220,8 +207,6 @@ void main() {
     test(
       ".deploy() creates the Firebase web application",
       () async {
-        const projectId = 'testId';
-        const firebaseToken = 'testToken';
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
@@ -234,7 +219,7 @@ void main() {
     );
 
     test(
-      ".deploy() clones the git repository",
+      ".deploy() clones the Git repository",
       () async {
         whenGetDirectory().thenReturn(directory);
 
@@ -248,7 +233,7 @@ void main() {
     );
 
     test(
-      ".deploy() clones the git repository before building the flutter application",
+      ".deploy() clones the Git repository before building the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
         await deployer.deploy();
@@ -261,7 +246,7 @@ void main() {
     );
 
     test(
-      ".deploy() builds the flutter application",
+      ".deploy() builds the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
 
@@ -274,8 +259,6 @@ void main() {
     test(
       ".deploy() sets the default Firebase project",
       () async {
-        const projectId = 'testId';
-        const firebaseToken = 'testToken';
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
@@ -308,8 +291,6 @@ void main() {
     test(
       ".deploy() applies the Firebase target",
       () async {
-        const projectId = 'testId';
-        const firebaseToken = 'testToken';
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
@@ -341,10 +322,21 @@ void main() {
     );
 
     test(
+      ".deploy() builds the Flutter application before deploying to the hosting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          flutterService.build(any),
+          firebaseCommand.deployHosting(any, any, any),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() deploys the target to the hosting",
       () async {
-        const projectId = 'testId';
-        const firebaseToken = 'testToken';
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);

@@ -14,11 +14,11 @@ class DeployerFactory {
   final ServicesFactory _servicesFactory;
 
   /// Creates a new instance of the [DeployerFactory]
-  /// with the given services factory.
+  /// with the given [ServicesFactory].
   ///
-  /// The [_servicesFactory] default value is [ServicesFactory] instance.
+  /// The services factory defaults to [ServicesFactory] instance.
   ///
-  /// Throws an [ArgumentError] if the given [_servicesFactory] is `null`.
+  /// Throws an [ArgumentError] if the given services factory is `null`.
   DeployerFactory([this._servicesFactory = const ServicesFactory()]) {
     ArgumentError.checkNotNull(_servicesFactory, 'servicesFactory');
   }

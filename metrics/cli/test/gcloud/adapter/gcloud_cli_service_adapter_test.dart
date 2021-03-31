@@ -28,7 +28,7 @@ void main() {
     }
 
     test(
-      "throws an ArgumentError if the given gcloud CLI is null",
+      "throws an ArgumentError if the given GCloud CLI is null",
       () {
         expect(
           () => GCloudCliServiceAdapter(null, prompter),
