@@ -57,8 +57,8 @@ void main() {
           buildResults ?? createBuildResults(5),
         ),
         numberOfBuildsToDisplay: numberOfBuildsToDisplay ?? 5,
-        firstBuildDate: metricPeriodStart,
-        lastBuildDate: metricPeriodEnd,
+        metricPeriodStart: metricPeriodStart,
+        metricPeriodEnd: metricPeriodEnd,
       );
     }
 

@@ -79,8 +79,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
   ///
   /// Otherwise, returns `false`.
   bool get _hasDateRange {
-    return buildResultMetric.firstBuildDate != null &&
-        buildResultMetric.lastBuildDate != null;
+    return buildResultMetric.metricPeriodStart != null &&
+        buildResultMetric.metricPeriodEnd != null;
   }
 
   /// Returns a [String] containing the formatted date range between the first
@@ -91,8 +91,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
   String get _buildsDateRange {
     final dateFormat = DateFormat('d MMM');
 
-    final firstDate = buildResultMetric.firstBuildDate;
-    final lastDate = buildResultMetric.lastBuildDate;
+    final firstDate = buildResultMetric.metricPeriodStart;
+    final lastDate = buildResultMetric.metricPeriodEnd;
 
     final firstDateFormatted = dateFormat.format(firstDate);
 
