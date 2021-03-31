@@ -28,7 +28,7 @@ void main() {
     }
 
     test(
-      "throws an ArgumentError if the given gcloud CLI is null",
+      "throws an ArgumentError if the given GCloud CLI is null",
       () {
         expect(
           () => GCloudCliServiceAdapter(null, prompter),
@@ -57,21 +57,42 @@ void main() {
     );
 
     test(
-      ".createProject() shows available regions",
+      ".createProject() creates the project with the generated project id",
       () async {
-        await gcloudAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
-        verify(gcloudCli.listRegions()).called(once);
+        verify(gcloudCli.createProject(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() creates the project before showing available regions",
+      () async {
+        final projectId = await gcloudAdapter.createProject();
+
+        verifyInOrder([
+          gcloudCli.createProject(projectId),
+          gcloudCli.listRegions(projectId),
+        ]);
+      },
+    );
+
+    test(
+      ".createProject() shows available regions for the created project",
+      () async {
+        final projectId = await gcloudAdapter.createProject();
+
+        verify(gcloudCli.listRegions(projectId)).called(once);
       },
     );
 
     test(
       ".createProject() shows available regions before requesting the region from the user",
       () async {
-        await gcloudAdapter.createProject();
+        final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
-          gcloudCli.listRegions(),
+          gcloudCli.listRegions(projectId),
           prompter.prompt(GcloudStrings.enterRegionName),
         ]);
       },
@@ -87,35 +108,14 @@ void main() {
     );
 
     test(
-      ".createProject() requests the region from the user before creating the project",
-      () async {
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          prompter.prompt(GcloudStrings.enterRegionName),
-          gcloudCli.createProject(projectId),
-        ]);
-      },
-    );
-
-    test(
-      ".createProject() creates the project with the generated project id",
-      () async {
-        final projectId = await gcloudAdapter.createProject();
-
-        verify(gcloudCli.createProject(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() creates the project before creating the project app",
+      ".createProject() requests the region from the user before creating the project application",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
         final projectId = await gcloudAdapter.createProject();
 
         verifyInOrder([
-          gcloudCli.createProject(projectId),
+          prompter.prompt(GcloudStrings.enterRegionName),
           gcloudCli.createProjectApp(region, projectId),
         ]);
       },

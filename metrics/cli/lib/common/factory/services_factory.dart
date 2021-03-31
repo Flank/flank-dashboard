@@ -10,6 +10,9 @@ import 'package:cli/prompt/writer/io_prompt_writer.dart';
 
 /// A class providing method for creating [Services] instance.
 class ServicesFactory {
+  /// Creates a new instance of the [ServicesFactory].
+  const ServicesFactory();
+
   /// Creates a new instance of the [Services].
   Services create() {
     final promptWriter = IOPromptWriter();

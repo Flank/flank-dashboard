@@ -7,6 +7,7 @@ import 'package:cli/helper/file_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/directory_mock.dart';
 import '../test_utils/matchers.dart';
 
 void main() {
@@ -21,7 +22,7 @@ void main() {
     };
 
     final file = _FileMock();
-    final directory = _DirectoryMock();
+    final directory = DirectoryMock();
     final helper = FileHelper();
 
     tearDown(() {
@@ -115,5 +116,3 @@ void main() {
 }
 
 class _FileMock extends Mock implements File {}
-
-class _DirectoryMock extends Mock implements Directory {}
