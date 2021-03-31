@@ -49,6 +49,7 @@ dependencies:
   metrics_core:
     path: ../core
   provider: ^4.0.5+1
+  rive: ^0.6.8
   rxdart: ^0.24.1
   selection_menu: ^0.9.0
   sentry: ^4.0.1
