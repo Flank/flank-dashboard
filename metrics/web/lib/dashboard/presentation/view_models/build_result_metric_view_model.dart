@@ -12,20 +12,28 @@ class BuildResultMetricViewModel extends Equatable {
   /// A list of [BuildResultViewModel]s.
   final UnmodifiableListView<BuildResultViewModel> buildResults;
 
-  /// A number of [buildResults] elements to display.
-  final int numberOfBuildsToDisplay;
-
   /// A maximum [Duration] of a finished build within the [buildResults].
   final Duration maxBuildDuration;
+
+  /// A [DateTime] of the metric period start this view model represents.
+  final DateTime metricPeriodStart;
+
+  /// A [DateTime] of the metric period end this view model represents.
+  final DateTime metricPeriodEnd;
+
+  /// A number of [buildResults] elements to display.
+  final int numberOfBuildsToDisplay;
 
   @override
   List<Object> get props => [
         buildResults,
-        numberOfBuildsToDisplay,
         maxBuildDuration,
+        metricPeriodStart,
+        metricPeriodEnd,
+        numberOfBuildsToDisplay,
       ];
 
-  /// Creates an instance of the [BuildResultMetricViewModel] with the given 
+  /// Creates an instance of the [BuildResultMetricViewModel] with the given
   /// parameters.
   ///
   /// The [numberOfBuildsToDisplay] default value is
@@ -35,6 +43,8 @@ class BuildResultMetricViewModel extends Equatable {
   /// The [numberOfBuildsToDisplay] must not be `null`.
   const BuildResultMetricViewModel({
     @required this.buildResults,
+    this.metricPeriodStart,
+    this.metricPeriodEnd,
     this.maxBuildDuration,
     this.numberOfBuildsToDisplay =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,
