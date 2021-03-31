@@ -411,24 +411,51 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the metric period ranges from the latest number of builds to load for chart metrics build results",
+      "loads a build result metric with the metric period start from the latest number of builds to load for chart metrics build results",
       () async {
         final expectedMetricPeriodStart = DateTime(2020);
-        final expectedMetricPeriodEnd = DateTime(2021);
 
         final buildResults = [
           createBuildResult(
             BuildStatus.successful,
-            duration: const Duration(days: 2),
             date: expectedMetricPeriodStart,
           ),
-          createBuildResult(
-            BuildStatus.successful,
-            duration: const Duration(days: 2),
+          createBuildResult(BuildStatus.successful),
+          createBuildResult(BuildStatus.successful),
+        ];
+
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: buildResults,
           ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
+
+        expect(metricPeriodStart, equals(expectedMetricPeriodStart));
+      },
+    );
+
+    test(
+      "loads a build result metric with the metric period end from the latest number of builds to load for chart metrics build results",
+      () async {
+        final expectedMetricPeriodEnd = DateTime(2021);
+
+        final buildResults = [
+          createBuildResult(BuildStatus.successful),
+          createBuildResult(BuildStatus.successful),
           createBuildResult(
             BuildStatus.successful,
-            duration: const Duration(days: 2),
             date: expectedMetricPeriodEnd,
           ),
         ];
@@ -449,10 +476,8 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
         final metricPeriodEnd = buildResultMetrics.metricPeriodEnd;
 
-        expect(metricPeriodStart, equals(expectedMetricPeriodStart));
         expect(metricPeriodEnd, equals(expectedMetricPeriodEnd));
       },
     );
