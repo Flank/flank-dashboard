@@ -401,7 +401,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildsCount = buildResults.length;
 
     List<BuildResult> latestBuildResults = buildResults;
-    if (buildsCount <= numberOfBuildsToDisplay) {
+    if (buildsCount >= numberOfBuildsToDisplay) {
       latestBuildResults = latestBuildResults.sublist(
         buildsCount - numberOfBuildsToDisplay,
       );
