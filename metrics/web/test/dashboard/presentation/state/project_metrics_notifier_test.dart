@@ -39,6 +39,8 @@ void main() {
       ProjectModel(id: 'id2', name: 'name2'),
     ];
     const String errorMessage = null;
+    const maxNumberOfBuilds =
+        ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
     final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
@@ -49,9 +51,10 @@ void main() {
     BuildResult createBuildResult(
       BuildStatus status, {
       Duration duration = const Duration(minutes: 14),
+      DateTime date,
     }) {
       return BuildResult(
-        date: DateTime.now(),
+        date: date ?? DateTime.now(),
         duration: duration,
         buildStatus: status,
         url: 'some url',
@@ -315,29 +318,18 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the maximum build duration from the build results",
+      "loads a build result metrics with no more than number of builds to load for chart metrics build result view models",
       () async {
-        const expectedMaximumDuration = Duration(days: 3);
         final dashboardMetrics = DashboardProjectMetrics(
           projectId: 'id',
           buildResultMetrics: BuildResultMetric(
-            buildResults: [
-              createBuildResult(
-                BuildStatus.successful,
-                duration: expectedMaximumDuration,
-              ),
-              createBuildResult(
-                BuildStatus.successful,
-                duration: const Duration(days: 1),
-              ),
-              createBuildResult(
-                BuildStatus.successful,
-                duration: const Duration(hours: 2),
-              ),
-              createBuildResult(BuildStatus.failed, duration: Duration.zero),
-            ],
+            buildResults: List.generate(
+              maxNumberOfBuilds * 2,
+              (_) => createBuildResult(BuildStatus.inProgress),
+            ),
           ),
         );
+
         when(receiveProjectMetricsMock.call(any)).thenAnswer(
           (_) => Stream.value(dashboardMetrics),
         );
@@ -349,9 +341,144 @@ void main() {
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
         final buildResultMetrics = projectMetrics.buildResultMetrics;
 
+        final viewModels = buildResultMetrics.buildResults;
+
+        expect(viewModels, hasLength(lessThanOrEqualTo(maxNumberOfBuilds)));
+      },
+    );
+
+    test(
+      "loads a build result metric with the maximum build duration from the latest number of builds to load for chart metrics build results",
+      () async {
+        const expectedMaximumDuration = Duration(days: 3);
+
+        final buildResults = [
+          createBuildResult(
+            BuildStatus.successful,
+            duration: const Duration(days: 2),
+          ),
+          createBuildResult(
+            BuildStatus.successful,
+            duration: expectedMaximumDuration,
+          ),
+        ];
+
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: buildResults,
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
         final maximumDuration = buildResultMetrics.maxBuildDuration;
 
         expect(maximumDuration, equals(expectedMaximumDuration));
+      },
+    );
+
+    test(
+      "loads a build result metric with null metric periods if the build results are empty",
+      () async {
+        const dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
+        final metricPeriodEnd = buildResultMetrics.metricPeriodEnd;
+
+        expect(metricPeriodStart, isNull);
+        expect(metricPeriodEnd, isNull);
+      },
+    );
+
+    test(
+      "loads a build result metric with the metric period start from the latest number of builds to load for chart metrics build results",
+      () async {
+        final expectedMetricPeriodStart = DateTime(2020);
+
+        final buildResults = [
+          createBuildResult(
+            BuildStatus.successful,
+            date: expectedMetricPeriodStart,
+          ),
+          createBuildResult(BuildStatus.successful),
+          createBuildResult(BuildStatus.successful),
+        ];
+
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: buildResults,
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final metricPeriodStart = buildResultMetrics.metricPeriodStart;
+
+        expect(metricPeriodStart, equals(expectedMetricPeriodStart));
+      },
+    );
+
+    test(
+      "loads a build result metric with the metric period end from the latest number of builds to load for chart metrics build results",
+      () async {
+        final expectedMetricPeriodEnd = DateTime(2021);
+
+        final buildResults = [
+          createBuildResult(BuildStatus.successful),
+          createBuildResult(BuildStatus.successful),
+          createBuildResult(
+            BuildStatus.successful,
+            date: expectedMetricPeriodEnd,
+          ),
+        ];
+
+        final dashboardMetrics = DashboardProjectMetrics(
+          projectId: 'id',
+          buildResultMetrics: BuildResultMetric(
+            buildResults: buildResults,
+          ),
+        );
+        when(receiveProjectMetricsMock.call(any)).thenAnswer(
+          (_) => Stream.value(dashboardMetrics),
+        );
+
+        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        await setUpNotifier(notifier: notifier, projects: projects);
+
+        final projectMetrics = notifier.projectsMetricsTileViewModels.first;
+        final buildResultMetrics = projectMetrics.buildResultMetrics;
+
+        final metricPeriodEnd = buildResultMetrics.metricPeriodEnd;
+
+        expect(metricPeriodEnd, equals(expectedMetricPeriodEnd));
       },
     );
 
