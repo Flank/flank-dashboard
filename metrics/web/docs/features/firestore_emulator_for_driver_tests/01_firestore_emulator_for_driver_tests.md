@@ -124,10 +124,6 @@ Or, if you accept the defaults, you can omit them.
 
 As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
 
-The following sequence diagram demonstrate the process of running the integration tests with the emulator:
-
-![Firestore emulator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_sequence_diagram.puml)
-
 ### Database
 
 > How relevant data will be persisted.
@@ -154,6 +150,8 @@ firebase emulators:start --import=../web/test_driver/firestore_test_data
 
 > Fundamental structures of the feature and context (diagram).
 
+Consider the class diagram showing the main feature classes and relationships:
+
 ![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
 ### Program
@@ -167,3 +165,7 @@ To connect the application to the running Firestore emulator, we need to know th
 To group these parameters and simplify the logic of retrieving their values inside the integration tests we should create the `FirestoreEmulator` model.
 
 The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the model's values and pass them to the environment using the `dartDefine` method, so we can access these values in the integration tests using the `FirestoreEmulator.fromEnvironment()` method.
+
+The following sequence diagram demonstrate the process of running the integration tests with the emulator:
+
+![Firestore emulator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_sequence_diagram.puml)
