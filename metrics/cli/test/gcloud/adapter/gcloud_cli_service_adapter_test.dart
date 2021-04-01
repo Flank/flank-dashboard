@@ -17,6 +17,7 @@ void main() {
     final gcloudCli = _GCloudCliMock();
     final prompter = PrompterMock();
     final gcloudAdapter = GCloudCliServiceAdapter(gcloudCli, prompter);
+    final stateError = StateError('test');
 
     tearDown(() {
       reset(gcloudCli);
@@ -196,6 +197,100 @@ void main() {
         await gcloudAdapter.version();
 
         verify(gcloudCli.version()).called(once);
+      },
+    );
+
+    test(
+      ".login() rethrows a StateError if the logging throws it",
+      () {
+        when(gcloudCli.login()).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.login());
+
+        expect(actual, throwsStateError);
+      },
+    );
+
+    test(
+      ".createProject() doesn't show available regions if the creating project throws the StateError",
+      () {
+        when(gcloudCli.createProject(any)).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+        verifyNever(gcloudCli.listRegions(any));
+      },
+    );
+
+    test(
+      ".createProject() doesn't request the region from the user if the showing available regions throws the StateError",
+      () {
+        when(gcloudCli.listRegions(any)).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+        verifyNever(prompter.prompt(GcloudStrings.enterRegionName));
+      },
+    );
+
+    test(
+      ".createProject() doesn't create the project application if requesting the region from the user throws the StateError",
+      () {
+        when(prompter.prompt(GcloudStrings.enterRegionName))
+            .thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+        verifyNever(gcloudCli.createProjectApp(any, any));
+      },
+    );
+
+    test(
+      ".createProject() doesn't enables Firestore API if creating the project app throws the StateError",
+      () {
+        when(gcloudCli.createProjectApp(any, any)).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+        verifyNever(gcloudCli.enableFirestoreApi(any));
+      },
+    );
+
+    test(
+      ".createProject() doesn't create the database if enabling Firestore API throws the StateError",
+      () {
+        when(gcloudCli.enableFirestoreApi(any)).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+        verifyNever(gcloudCli.createDatabase(any, any));
+      },
+    );
+
+    test(
+      ".createProject() rethrows the StateError if creating the database throws it",
+      () {
+        when(gcloudCli.createDatabase(any, any)).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.createProject());
+
+        expect(actual, throwsStateError);
+      },
+    );
+
+    test(
+      ".version() rethrows the StateError if showing the version throws it",
+      () {
+        when(gcloudCli.version()).thenThrow(stateError);
+
+        final actual = expectAsync0(() => gcloudAdapter.version());
+
+        expect(actual, throwsStateError);
       },
     );
   });
