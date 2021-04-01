@@ -1,24 +1,30 @@
 @startuml firestore_emulator_class_diagram
 
-package arg_parser {
-    class ArgParser {}
-}
-
 package test_driver {
     class FlutterWebDriver {
         - _args : DriverTestArguments
+        - _processManager : ProcessManager
         + startDriverTests : Future<void>  
     }
 
     package arguments {
+        package parser {
+            class DriverTestArgumentsParser {
+                - static const _useFirestoreEmulatorFlagName : String
+                - static const _firestoreEmulatorPortOptionName : String
+                - _configureParser() : void
+                + parseArguments(List<String> args) : DriverTestArguments
+            }
+        } 
+
         package model {
             class DriverTestArguments {
                 + firestoreEmulator : FirestoreEmulator
             }
 
             class FirestoreEmulator {
-                + {static} //static// useEmulatorEnvVariableName : String
-                + {static} //static// portEnvVariableName : String
+                + static useFirestoreEmulatorEnvVariableName : String
+                + static firestorePortEnvVariableName : String
 
                 + useEmulator : bool
                 + port : String
@@ -27,38 +33,58 @@ package test_driver {
                 + toMap() : Map<String, String>
             }
         }
+    }
 
-        package parser {
-            class DriverTestArgumentsParser {
-                - {static} //static// _useFirestoreEmulator : String
-                - {static} //static// _emulatorPort : String
-                - _parser : ArgParser
-                - _configureParser : void
+    package cli {
+        package emulator {
+            package runner {
+                class FirebaseEmulatorRunner {
+                    + port : int
+                    + statusRequestUrl : String
+                    + isAppStarted : Future<void>
+                }
+                class FirestoreEmulatorRunner {
+                    - _arguments : FirestoreEmulatorCommand
+                    + args : List<String>
+                    + executableName : String
+                    + statusRequestUrl : String
+                    + run(String workingDir) : Future<FirestoreEmulatorProcess>
+                }
+            }
+            package command {
+                class FirebaseEmulatorCommand {
+                    + static const executableName : String
+                    + emulatorsStart() : void
+                    + only(String emulator) : void
+                }
+                class FirestoreEmulatorCommand {
+                    + import(String directory) : void
+                }
+            }
+            package process {
 
-                + parseArguments(List<String> args) : DriverTestArguments
+                class FirestoreEmulatorProcess {
+                    + static start(FirestoreEmulatorCommand args, String workingDir) : Future<FirestoreEmulatorProcess>
+                }
             }
         }
     }
 
-    package cli.flutter {
-        package model as cli_flutter_model {
-                class FlutterDriveEnvironment {
-                + firestoreEmulator : FirestoreEmulator;
-            }
-        }
-
-        package runner {
-            class FlutterDriveProcessRunner {}
+    package process_manager {
+        class ProcessManager {
+            + run : Future<ProcessWrapper>
         }
     }
 }
 
-DriverTestArgumentsParser --> ArgParser : uses
-DriverTestArgumentsParser --> DriverTestArguments : provides
-DriverTestArguments --> FirestoreEmulator : uses
-FlutterDriveEnvironment --> FirestoreEmulator : uses
-FlutterWebDriver --> FlutterDriveProcessRunner : creates and run
 FlutterWebDriver --> DriverTestArguments : uses
-FlutterDriveProcessRunner --> FlutterDriveEnvironment : uses
+DriverTestArguments -> FirestoreEmulator : uses
+FlutterWebDriver --> ProcessManager : creates
+ProcessManager --> FirestoreEmulatorRunner : runs
+FirestoreEmulatorRunner --> FirestoreEmulatorCommand : uses
+FirestoreEmulatorRunner --> FirestoreEmulatorProcess : starts
+FirestoreEmulatorRunner ..|> FirebaseEmulatorRunner
+DriverTestArgumentsParser --> DriverTestArguments : provides
+FirestoreEmulatorCommand ..|> FirebaseEmulatorCommand
 
 @enduml

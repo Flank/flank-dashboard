@@ -101,12 +101,6 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 # Design
 
-### Architecture
-
-> Fundamental structures of the feature and context (diagram).
-
-![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
-
 ### User Interface
 
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -118,17 +112,21 @@ The next table contains the definitions of the parameters with their default val
 | Parameter         | Default | Description                                                           |
 | ----------------- | -------- | --------------------------------------------------------------------- |
 | **use-firestore-emulator**  | true     | Determines if the integration tests are using the `Firebase Emulator`. |
-| **emulator-port** | 8080     | Specifies the emulator's running port.                                  |
+| **firestore-emulator-port** | 8080     | Specifies the emulator's running port.                                  |
 
 The following code snippet shows an example of using the new parameters:
 
 ```bash
-dart test_driver/main.dart --use-firestore-emulator --emulator-port=8081
+dart test_driver/main.dart --use-firestore-emulator --firestore-emulator-port=8081
 ```
 
 Or, if you accept the defaults, you can omit them.
 
 As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
+
+The following sequence diagram demonstrate the process of running the integration tests with the emulator:
+
+![Firestore emulator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_sequence_diagram.puml)
 
 ### Database
 
@@ -142,91 +140,30 @@ So, to create test data for the Firestore emulator, we should follow the next st
 
 1. Run the Firestore emulator.
 2. Create test data in the Firestore emulator using the Firestore emulator UI. 
-3. Run the `firebase emulators:export export_directory` command to export test data to the `export_directory`.
+3. Run the `firebase emulators:export ../web/test_driver/firestore_test_data` command to export test data to the `export_directory` from inside the `metrics/firebase` directory.
 
-_**Note:** The `export_directory` in our case should be a `firebase/tests/firestore/test_data`._
+The process of the test data creation will be performed only once and, the test data will be added to the version control.
 
-Once we have exported data from the Firestore emulator, we can run an emulator with the exported data using the following command:
+Once we have exported data from the Firestore emulator, we can run an emulator with the exported data using the following command each time before running the driver tests:
 
 ```bash
-firebase emulators:start --import=export_directory
+firebase emulators:start --import=../web/test_driver/firestore_test_data
 ```
+
+### Architecture
+
+> Fundamental structures of the feature and context (diagram).
+
+![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
 ### Program
 
 > Detailed solution description to class/method level.
 
-As we want to use the Firestore emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with a test data. 
+As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data. 
 
-Since the local emulator runs on a specific port we want to connect the application to that specific port via the `emulator-port` parameter.
+To connect the application to the running Firestore emulator, we need to know the emulator's port, so we also should add a `firestore-emulator-port` option to the driver tests script.
 
-So, the `ArgParser` needs to accept the described above parameters:
+To group these parameters and simplify the logic of retrieving their values inside the integration tests we should create the `FirestoreEmulator` model.
 
-```dart
-_parser.addFlag('use-firestore-emulator', defaultsTo: true);
-
-_parser.addOption('emulator-port', defaultsTo: '8080');
-```
-
-To group these parameters, we should create the `FirestoreEmulator` model. Also, it simplifies the logic of retrieving their values inside the integration tests.
-
-The `DriverTestArguments` now accepts one more parameter - the `FirestoreEmulator`.
-
-The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the Firestore emulator's values from the arguments list and pass them to the Flutter drive environment, so we can access these values in the integration tests.
-
-Consider the following example:
-
-```dart
-// flutter_web_driver.dart
-
-  Future<void> _runDriverTests(
-    bool verbose,
-    String logsFileName, {
-    bool useSkia = false,
-  }) async {
-    final driverProcessRunner = FlutterDriveProcessRunner(
-      browserName: _args.browserName,
-      verbose: verbose,
-      environment: FlutterDriveEnvironment(
-        userCredentials: _args.credentials,
-        emulator: _args.emulator,
-      ),
-      useSkia: useSkia,
-    );
-
-    ...
-  }
-```
-
-As you can see, the `FlutterDriveEnvironment` now accepts one more argument - the `emulator`.
-
-So now, in the process of constructing the `FlutterDriveProcessRunner` we can pass the parameters to the environment via the `dartDefine` method:
-
-```dart
-    _driveCommand
-      ...
-      ..dartDefine(
-        key: FirestoreEmulator.emulatorEnvVariableName,
-        value: environment.emulator.useEmulator,
-      )
-      ..dartDefine(
-        key: FirestoreEmulator.portEnvVariableName,
-        value: environment.emulator.port,
-      );
-```
-
-With this, we can use the `FirestoreEmulator.fromEnvironment()` method to retrieve the instance with the passed parameters and use them in the integration tests.
-
-Example:
-
-```dart
-// app_test.dart
-
-final emulator = FirestoreEmulator.fromEnvironment();
-
-if (emulator.useEmulator) {
-    final host = 'localhost:${emulator.port}';
-
-    Firestore.instance.settings(host: host, sslEnabled: false, persistenceEnabled: false);
-}
-```
+The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the model's values and pass them to the environment using the `dartDefine` method, so we can access these values in the integration tests using the `FirestoreEmulator.fromEnvironment()` method.

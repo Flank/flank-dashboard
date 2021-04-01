@@ -1,0 +1,42 @@
+@startuml firestore_emulator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant FlutterWebDriver
+participant ProcessManager
+participant FirestoreEmulatorRunner
+participant FirestoreEmulatorProcess
+participant FlutterDriveProcessRunner
+
+Bob -> FlutterWebDriver : runs tests
+activate FlutterWebDriver
+
+FlutterWebDriver -> ProcessManager : creates
+activate ProcessManager
+deactivate FlutterWebDriver
+
+ProcessManager -> FirestoreEmulatorRunner : run()
+activate FirestoreEmulatorRunner
+
+
+FirestoreEmulatorRunner -> FirestoreEmulatorProcess : start()
+activate FirestoreEmulatorProcess
+deactivate FirestoreEmulatorRunner
+
+FirestoreEmulatorProcess -> FirestoreEmulatorProcess : runs the emulator (firebase emulators:start --only firestore)
+
+ProcessManager -> FlutterDriveProcessRunner : run()
+activate FlutterDriveProcessRunner
+deactivate ProcessManager
+
+deactivate FirestoreEmulatorProcess
+
+FlutterDriveProcessRunner -> FlutterDriveProcessRunner : runs integration tests
+
+FlutterDriveProcessRunner -> Bob : result
+deactivate FlutterDriveProcessRunner
+
+@enduml
