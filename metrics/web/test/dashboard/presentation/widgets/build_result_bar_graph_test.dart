@@ -141,7 +141,7 @@ void main() {
     );
 
     testWidgets(
-      "wraps each build result bar with constrained container having non-null min height",
+      "wraps each build result bar with constrained box having non-null min height",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -154,13 +154,13 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final containers = tester.widgetList<Container>(
-          find.byWidgetPredicate(
-            (widget) => widget is Container && widget.child is BuildResultBar,
-          ),
+        final constrainedBoxes = tester.widgetList<ConstrainedBox>(
+          find.byWidgetPredicate((widget) {
+            return widget is ConstrainedBox && widget.child is BuildResultBar;
+          }),
         );
-        final minHeights = containers.map(
-          (container) => container.constraints.minHeight,
+        final minHeights = constrainedBoxes.map(
+          (box) => box.constraints.minHeight,
         );
 
         expect(minHeights, everyElement(isNotNull));
@@ -220,33 +220,6 @@ void main() {
         expect(barGraph.data, equals(expectedData));
       },
     );
-
-    testWidgets(
-      "trims the build durations to be less than or equal to the given max build duration",
-      (WidgetTester tester) async {
-        const maxBuildDuration = Duration(days: 365);
-        final greaterDuration = maxBuildDuration * 2;
-
-        when(durationStrategy.getDuration(any)).thenReturn(greaterDuration);
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
-            maxBuildDuration: maxBuildDuration,
-          ),
-          durationStrategy: durationStrategy,
-        ));
-
-        final barGraph = tester.widget<BarGraph>(barGraphFinder);
-        final barGraphData = barGraph.data;
-
-        expect(
-          barGraphData,
-          everyElement(lessThanOrEqualTo(maxBuildDuration.inMilliseconds)),
-        );
-      },
-    );
   });
 }
 
@@ -301,7 +274,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: BuildResultBarGraph(
-          buildResultMetric: buildResultMetric,
+          buildResults: buildResultMetric.buildResults,
           durationStrategy: durationStrategy,
         ),
       ),

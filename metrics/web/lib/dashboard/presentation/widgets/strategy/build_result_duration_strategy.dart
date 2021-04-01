@@ -8,7 +8,7 @@ import 'package:metrics/dashboard/presentation/view_models/finished_build_result
 /// A class that represents a strategy for defining the build's duration
 /// depending on the given [BuildResultViewModel].
 class BuildResultDurationStrategy {
-  /// A maximum build's [Duration] this strategy returns.
+  /// A maximum build's [Duration] of this strategy.
   final Duration maxBuildDuration;
 
   /// Creates a new instance of the [BuildResultDurationStrategy] with the
@@ -17,18 +17,18 @@ class BuildResultDurationStrategy {
     this.maxBuildDuration,
   });
 
-  /// Returns the [Duration] of the given [buildResultViewModel].
-  ///
-  /// Constraints the result with the [maxBuildDuration] if it is not `null`.
-  /// For example, if the calculated [buildResultViewModel]'s duration
-  /// is greater than the [maxBuildDuration], then the [maxBuildDuration]
-  /// is returned as a result.
-  /// If the [maxBuildDuration] is `null`, then the result is the calculated
-  /// [Duration] of the [buildResultViewModel].
+  /// Calculates the build [Duration] of the given [buildResultViewModel] 
+  /// based on the [buildResultViewModel] subtype and the
+  /// [maxBuildDuration] value.
+  /// 
+  /// If the [maxBuildDuration] is not `null`, then the [maxBuildDuration] is
+  /// the maximum possible [Duration] this method returns.
+  /// 
+  /// Otherwise, the [Duration] this method returns is not constrained.
   Duration getDuration(BuildResultViewModel buildResultViewModel) {
     final buildDuration = _calculateBuildDuration(buildResultViewModel);
 
-    return _processDuration(buildDuration);
+    return _getMaxBuildDuration(buildDuration);
   }
 
   /// Returns the [Duration] of the given [buildResultViewModel].
@@ -49,13 +49,14 @@ class BuildResultDurationStrategy {
     return currentDateTime.difference(buildResultViewModel.date);
   }
 
-  /// Processes the given [buildDuration].
+  /// Returns the maximum possible [Duration] using the given [buildDuration]
+  /// and [maxBuildDuration].
   ///
   /// Returns the given [buildDuration] if the [maxBuildDuration] is `null`, or
   /// the given [buildDuration] is less than or equal to the [maxBuildDuration].
   ///
   /// Otherwise, returns the [maxBuildDuration].
-  Duration _processDuration(Duration buildDuration) {
+  Duration _getMaxBuildDuration(Duration buildDuration) {
     if (maxBuildDuration == null || buildDuration <= maxBuildDuration) {
       return buildDuration;
     }
