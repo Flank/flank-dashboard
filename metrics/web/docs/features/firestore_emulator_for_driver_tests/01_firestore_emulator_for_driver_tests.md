@@ -111,8 +111,8 @@ The next table contains the definitions of the parameters with their default val
 
 | Parameter         | Default | Description                                                           |
 | ----------------- | -------- | --------------------------------------------------------------------- |
-| **use-firestore-emulator**  | true     | Determines if the integration tests are using the `Firebase Emulator`. |
-| **firestore-emulator-port** | 8080     | Specifies the emulator's running port.                                  |
+| **use-firestore-emulator**  | true     | Determines whether the integration tests should run with the `Firebase Emulator`. |
+| **firestore-emulator-port** | 8080     |  Specifies the Firestore emulator's running port.                                 |
 
 The following code snippet shows an example of using the new parameters:
 
@@ -150,7 +150,7 @@ firebase emulators:start --import=../web/test_driver/firestore_test_data
 
 > Fundamental structures of the feature and context (diagram).
 
-Consider the class diagram showing the main feature classes and relationships:
+Consider the following class diagram showing the main classes and relationships needed to implement this feature:
 
 ![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firestore_emulator_design/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
@@ -158,13 +158,17 @@ Consider the class diagram showing the main feature classes and relationships:
 
 > Detailed solution description to class/method level.
 
-As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data. 
+As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data. Also, to connect the application to the running Firestore emulator, we need to know the emulator's port, so we should add a `firestore-emulator-port` option to the driver tests script. This option represents the port the `Firestore emulator` will run on and provides an ability to change it if it is required.
 
-To connect the application to the running Firestore emulator, we need to know the emulator's port, so we also should add a `firestore-emulator-port` option to the driver tests script.
+To group these parameters and simplify the logic of retrieving their values inside the integration tests, we should create the `FirestoreEmulatorConfig` model.
 
-To group these parameters and simplify the logic of retrieving their values inside the integration tests we should create the `FirestoreEmulator` model.
+To pass the Firestore emulator configuration to the application under tests, we are going to update the `FlutterWebDriver` class and add a new `dart-define` option containing the `Map` representation of the Firestore emulator configuration. It allows us to easily access the configuration from the application under tests using the `FirestoreEmulatorConfig.fromEnvironment()` factory method.
 
-The `FlutterWebDriver` class, that responsible for running the application and driver tests, can use the model's values and pass them to the environment using the `dartDefine` method, so we can access these values in the integration tests using the `FirestoreEmulator.fromEnvironment()` method.
+In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator.
+ 
+If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the port from the `FirestoreEmulatorConfig` instance.
+
+With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
 
 The following sequence diagram demonstrate the process of running the integration tests with the emulator:
 

@@ -8,8 +8,11 @@ actor Bob
 participant FlutterWebDriver
 participant ProcessManager
 participant FirestoreEmulatorRunner
-participant FirestoreEmulatorProcess
+participant FirebaseProcess
 participant FlutterDriveProcessRunner
+participant Application
+participant FirestoreEmulatorConfig
+participant FirestoreInstance
 
 Bob -> FlutterWebDriver : runs tests
 activate FlutterWebDriver
@@ -22,21 +25,38 @@ ProcessManager -> FirestoreEmulatorRunner : run()
 activate FirestoreEmulatorRunner
 
 
-FirestoreEmulatorRunner -> FirestoreEmulatorProcess : start()
-activate FirestoreEmulatorProcess
+FirestoreEmulatorRunner -> FirebaseProcess : start()
+activate FirebaseProcess
 deactivate FirestoreEmulatorRunner
 
-FirestoreEmulatorProcess -> FirestoreEmulatorProcess : runs the emulator (firebase emulators:start --only firestore)
+FirebaseProcess --> FirebaseProcess : runs the emulator (firebase emulators:start --only firestore)
+
+FirebaseProcess -> ProcessManager : emulator is started
+deactivate FirebaseProcess
 
 ProcessManager -> FlutterDriveProcessRunner : run()
 activate FlutterDriveProcessRunner
 deactivate ProcessManager
 
-deactivate FirestoreEmulatorProcess
+deactivate FirebaseProcess
 
-FlutterDriveProcessRunner -> FlutterDriveProcessRunner : runs integration tests
-
-FlutterDriveProcessRunner -> Bob : result
+FlutterDriveProcessRunner -> Application : runs and test
 deactivate FlutterDriveProcessRunner
+activate Application
+
+Application -> FirestoreEmulatorConfig : fromEnvironment()
+activate FirestoreEmulatorConfig
+
+FirestoreEmulatorConfig --> Application : FirestoreEmulatorConfig instance
+deactivate FirestoreEmulatorConfig
+
+Application -> FirestoreInstance : settings(localEmulatorHost)
+activate FirestoreInstance
+
+FirestoreInstance --> FirestoreInstance : points to the local emulator
+
+Application --> Bob : tests result
+deactivate FirestoreInstance
+deactivate Application
 
 @enduml

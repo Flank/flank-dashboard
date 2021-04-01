@@ -19,10 +19,10 @@ package test_driver {
 
         package model {
             class DriverTestArguments {
-                + firestoreEmulator : FirestoreEmulator
+                + firestoreEmulatorConfig : FirestoreEmulatorConfig
             }
 
-            class FirestoreEmulator {
+            class FirestoreEmulatorConfig {
                 + static useFirestoreEmulatorEnvVariableName : String
                 + static firestorePortEnvVariableName : String
 
@@ -36,35 +36,46 @@ package test_driver {
     }
 
     package cli {
-        package emulator {
+        package common.runner {
+            abstract class ProcessRunner {}
+        }
+
+        package firebase {
+            package model as firebase_model {
+                class Emulator {
+                    + static const firestore : Emulator
+                }
+            }
+
             package runner {
-                class FirebaseEmulatorRunner {
+                abstract class FirebaseEmulatorRunner {
                     + port : int
                     + statusRequestUrl : String
-                    + isAppStarted : Future<void>
+                    + isAppStarted() : Future<void>
                 }
                 class FirestoreEmulatorRunner {
                     - _arguments : FirestoreEmulatorCommand
                     + args : List<String>
                     + executableName : String
                     + statusRequestUrl : String
-                    + run(String workingDir) : Future<FirestoreEmulatorProcess>
+                    + run(String workingDir) : Future<FirebaseProcess>
                 }
             }
+
             package command {
-                class FirebaseEmulatorCommand {
+                class StartEmulatorCommand {
                     + static const executableName : String
                     + emulatorsStart() : void
-                    + only(String emulator) : void
-                }
-                class FirestoreEmulatorCommand {
+                    + only(Emulator emulator) : void
+                    + inspectFunctions(int port) : void
                     + import(String directory) : void
+                    + exportOnExit(String directory) : void
                 }
             }
-            package process {
 
-                class FirestoreEmulatorProcess {
-                    + static start(FirestoreEmulatorCommand args, String workingDir) : Future<FirestoreEmulatorProcess>
+            package process {
+                class FirebaseProcess {
+                    + static start(FirestoreEmulatorCommand args, String workingDir) : Future<FirebaseProcess>
                 }
             }
         }
@@ -72,19 +83,20 @@ package test_driver {
 
     package process_manager {
         class ProcessManager {
-            + run : Future<ProcessWrapper>
+            + run() : Future<ProcessWrapper>
         }
     }
 }
 
 FlutterWebDriver --> DriverTestArguments : uses
-DriverTestArguments -> FirestoreEmulator : uses
+DriverTestArguments -> FirestoreEmulatorConfig: uses
 FlutterWebDriver --> ProcessManager : creates
 ProcessManager --> FirestoreEmulatorRunner : runs
-FirestoreEmulatorRunner --> FirestoreEmulatorCommand : uses
-FirestoreEmulatorRunner --> FirestoreEmulatorProcess : starts
+FirestoreEmulatorRunner --> StartEmulatorCommand : uses
+FirestoreEmulatorRunner --> FirebaseProcess : starts
 FirestoreEmulatorRunner ..|> FirebaseEmulatorRunner
+FirebaseEmulatorRunner ..|> ProcessRunner
+StartEmulatorCommand --> Emulator : uses
 DriverTestArgumentsParser --> DriverTestArguments : provides
-FirestoreEmulatorCommand ..|> FirebaseEmulatorCommand
 
 @enduml
