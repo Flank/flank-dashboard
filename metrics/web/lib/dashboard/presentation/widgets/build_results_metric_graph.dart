@@ -24,8 +24,6 @@ class BuildResultsMetricGraph extends StatelessWidget {
   /// Creates a new instance of the [BuildResultsMetricGraph] with the given
   /// [buildResultMetric].
   ///
-  /// The [buildResultMetric] is a required parameter.
-  ///
   /// Throws an [AssertionError] if the given [buildResultMetric] is `null`.
   const BuildResultsMetricGraph({
     Key key,
@@ -46,7 +44,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              _buildsDateRange,
+              _createBuildsDateRange(),
               style: buildResultBarGraphTheme.textStyle,
             ),
           ),
@@ -59,14 +57,14 @@ class BuildResultsMetricGraph extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                    _numberOfMissingBars,
+                    _calculateNumberOfMissingBars(),
                     (index) => const BuildResultBar(),
                   ),
                 ),
               ),
               if (_hasResults)
                 Padding(
-                  padding: _graphPadding,
+                  padding: _calculateGraphPadding(),
                   child: BuildResultBarGraph(
                     buildResultMetric: buildResultMetric,
                     durationStrategy: const BuildResultDurationStrategy(),
@@ -93,7 +91,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
   ///
   /// Returns the formatted first build's date, if it equals to the last build's
   /// date.
-  String get _buildsDateRange {
+  String _createBuildsDateRange() {
     final dateFormat = DateFormat('d MMM');
 
     final firstDate = buildResultMetric.metricPeriodStart;
@@ -118,15 +116,15 @@ class BuildResultsMetricGraph extends StatelessWidget {
   }
 
   /// Returns an [EdgeInsets] for the [BuildResultBarGraph] padding depending
-  /// on the value of the [_numberOfMissingBars].
-  EdgeInsets get _graphPadding {
-    return _numberOfMissingBars > 0
+  /// on the value of the [_calculateNumberOfMissingBars].
+  EdgeInsets _calculateGraphPadding() {
+    return _calculateNumberOfMissingBars() > 0
         ? const EdgeInsets.only(left: 2)
         : EdgeInsets.zero;
   }
 
   /// Returns a number of missing bars.
-  int get _numberOfMissingBars {
+  int _calculateNumberOfMissingBars() {
     final numberOfBarsToDisplay = buildResultMetric.numberOfBuildsToDisplay;
     final numberOfBars = buildResultMetric.buildResults.length;
 

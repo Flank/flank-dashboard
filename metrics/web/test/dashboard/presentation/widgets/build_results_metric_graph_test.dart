@@ -80,7 +80,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a text style from the metrics theme",
+      "applies a text style from the build result bar graph theme data",
       (WidgetTester tester) async {
         const expectedTextStyle = TextStyle(color: Colors.red);
         const theme = MetricsThemeData(
@@ -123,7 +123,7 @@ void main() {
     );
 
     testWidgets(
-      "displays only one date in the date range if the metric period start is equal to the metric period end",
+      "displays only one date in the date range if the start and end of the metric period are equal",
       (WidgetTester tester) async {
         final expectedText = dateFormat.format(metricPeriodStart);
 
