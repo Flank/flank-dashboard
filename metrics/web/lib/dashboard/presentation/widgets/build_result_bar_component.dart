@@ -17,10 +17,10 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A widget that displays the [BuildResultBar], a corresponding [GraphIndicator] 
+/// A widget that displays the [BuildResultBar], a corresponding [GraphIndicator]
 /// and a [BuildResultPopupCard].
 class BuildResultBarComponent extends StatelessWidget {
-  /// A width of the [BuildResultPopupCard] this bar component displays 
+  /// A width of the [BuildResultPopupCard] this bar component displays
   /// in a popup.
   static const double _popupWidth = 162.0;
 
@@ -33,10 +33,6 @@ class BuildResultBarComponent extends StatelessWidget {
 
   /// Creates a new instance of the [BuildResultBarComponent] with the given
   /// [buildResult] and [paddingStrategy].
-  ///
-  /// The [paddingStrategy] is a required parameter.
-  ///
-  /// Throws an [AssertionError] if the [paddingStrategy] is `null`.
   const BuildResultBarComponent({
     Key key,
     this.paddingStrategy,
