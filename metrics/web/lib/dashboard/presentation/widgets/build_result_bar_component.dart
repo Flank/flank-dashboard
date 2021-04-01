@@ -102,7 +102,8 @@ class BuildResultBarComponent extends StatelessWidget {
     );
   }
 
-  /// A [GraphIndicator] widget to use based on the [buildResult.buildStatus].
+  /// A [GraphIndicator] widget to use based on the
+  /// [BuildResultViewModel.buildStatus].
   Widget get _graphIndicator {
     switch (buildResult?.buildStatus) {
       case BuildStatus.successful:
