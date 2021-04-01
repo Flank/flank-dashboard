@@ -63,6 +63,7 @@ dependencies:
 
 dependency_overrides:
   crypto: ^2.0.0
+  test_api: ^0.2.19-nullsafety
   universal_io:
     git:
       url: https://github.com/platform-platform/universal_io
