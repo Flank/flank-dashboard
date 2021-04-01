@@ -130,6 +130,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | sentry | [pub.dev](https://pub.dev/packages/sentry) | [BSD](https://github.com/getsentry/sentry-dart/blob/main/LICENSE) |
 | js | [pub.dev](https://pub.dev/packages/js) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/js/LICENSE) |
 | auto_size_text | [pub.dev](https://pub.dev/packages/auto_size_text) | [MIT](https://github.com/leisim/auto_size_text/blob/master/LICENSE) |
+| rive | [pub.dev](https://pub.dev/packages/rive) | [MIT](https://pub.dev/packages/rive/license) |
 
 ### Dev dependencies
 | Name | Source | License |

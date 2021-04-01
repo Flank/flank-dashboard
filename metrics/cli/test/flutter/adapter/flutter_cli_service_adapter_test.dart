@@ -19,7 +19,7 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given flutter CLI is null",
+      "throws an ArgumentError if the given Flutter CLI is null",
       () {
         expect(() => FlutterCliServiceAdapter(null), throwsArgumentError);
       },

@@ -2,20 +2,20 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/model/services.dart';
-import 'package:cli/flutter/service/flutter_service.dart';
-import 'package:cli/gcloud/service/gcloud_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+import '../../test_utils/flutter_service_mock.dart';
+import '../../test_utils/gcloud_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("Services", () {
-    final flutterService = _FlutterServiceMock();
-    final gcloudService = _GCloudServiceMock();
+    final flutterService = FlutterServiceMock();
+    final gcloudService = GCloudServiceMock();
 
     test(
-      "throws an ArgumentError if the given flutter service is null",
+      "throws an ArgumentError if the given Flutter service is null",
       () {
         expect(
           () => Services(flutterService: null, gcloudService: gcloudService),
@@ -25,7 +25,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given gcloud service is null",
+      "throws an ArgumentError if the given GCloud service is null",
       () {
         expect(
           () => Services(
@@ -51,7 +51,3 @@ void main() {
     );
   });
 }
-
-class _FlutterServiceMock extends Mock implements FlutterService {}
-
-class _GCloudServiceMock extends Mock implements GCloudService {}
