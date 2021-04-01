@@ -201,7 +201,7 @@ void main() {
     );
 
     test(
-      ".login() rethrows a StateError if the logging throws it",
+      ".login() rethrows a StateError if logging throws it",
       () {
         when(gcloudCli.login()).thenThrow(stateError);
 
@@ -212,7 +212,7 @@ void main() {
     );
 
     test(
-      ".createProject() doesn't show available regions if the creating project throws the StateError",
+      ".createProject() doesn't show available regions if creating project throws the StateError",
       () {
         when(gcloudCli.createProject(any)).thenThrow(stateError);
 
@@ -224,7 +224,7 @@ void main() {
     );
 
     test(
-      ".createProject() doesn't request the region from the user if the showing available regions throws the StateError",
+      ".createProject() doesn't request the region from the user if showing available regions throws the StateError",
       () {
         when(gcloudCli.listRegions(any)).thenThrow(stateError);
 
