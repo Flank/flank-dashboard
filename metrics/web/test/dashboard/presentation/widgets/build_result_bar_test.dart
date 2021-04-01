@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
@@ -13,17 +14,12 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
-
-import '../../../test_utils/metrics_themed_testbed.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("BuildResultBar", () {
-    final metricsColoredBarFinder = find.byWidgetPredicate(
-      (widget) => widget is MetricsColoredBar<BuildStatus>,
-    );
-
     final successfulBuildResult = FinishedBuildResultViewModel(
       buildResultPopupViewModel: BuildResultPopupViewModel(
         date: DateTime.now(),
@@ -36,6 +32,27 @@ void main() {
       url: 'url',
     );
 
+    final metricsColoredBarFinder = find.byWidgetPredicate(
+      (widget) => widget is MetricsColoredBar<BuildStatus>,
+    );
+
+    final mouseRegionFinder = find.ancestor(
+      of: find.byType(GestureDetector),
+      matching: find.byType(MouseRegion),
+    );
+
+    MetricsColoredBar getMetricsColoredBar(WidgetTester tester) {
+      return tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
+    }
+
+    Future<void> hoverBar(WidgetTester tester) async {
+      final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+      mouseRegion.onEnter(const PointerEnterEvent());
+      await mockNetworkImagesFor(() {
+        return tester.pumpAndSettle();
+      });
+    }
+
     // const metricsTheme = MetricsThemeData(
     //   inactiveWidgetTheme: MetricsWidgetThemeData(
     //     primaryColor: Colors.red,
@@ -43,18 +60,6 @@ void main() {
     // );
 
     // final placeholderFinder = find.byType(PlaceholderBar);
-    // final mouseRegionFinder = find.ancestor(
-    //   of: find.byType(GestureDetector),
-    //   matching: find.byType(MouseRegion),
-    // );
-
-    // Future<void> _hoverBar(WidgetTester tester) async {
-    //   final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-    //   mouseRegion.onEnter(const PointerEnterEvent());
-    //   await mockNetworkImagesFor(() {
-    //     return tester.pumpAndSettle();
-    //   });
-    // }
 
     // final urlLauncherMock = _UrlLauncherMock();
     // UrlLauncherPlatform.instance = urlLauncherMock;
@@ -333,35 +338,21 @@ void main() {
           buildResult: successfulBuildResult,
         ));
 
-        final bar = tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
+        final bar = getMetricsColoredBar(tester);
 
         expect(bar.strategy, isA<BuildResultBarAppearanceStrategy>());
       },
     );
 
     testWidgets(
-      "displays the MetricsColoredBar with the build status from the build result view model as value",
+      "displays the MetricsColoredBar with the build status from the build result view model",
       (tester) async {
         final expectedStatus = successfulBuildResult.buildStatus;
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,
         ));
 
-        final bar = tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
-
-        expect(bar.value, equals(expectedStatus));
-      },
-    );
-
-    testWidgets(
-      "displays the MetricsColoredBar with the build status from the build result view model as value",
-      (tester) async {
-        final expectedStatus = successfulBuildResult.buildStatus;
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: successfulBuildResult,
-        ));
-
-        final bar = tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
+        final bar = getMetricsColoredBar(tester);
 
         expect(bar.value, equals(expectedStatus));
       },
@@ -385,7 +376,29 @@ void main() {
           buildResult: successfulBuildResult,
         ));
 
-        expect(find.byType(TappableArea), findsOneWidget);
+        await hoverBar(tester);
+
+        final bar = getMetricsColoredBar(tester);
+
+        expect(bar.isHovered, isTrue);
+      },
+    );
+
+    testWidgets(
+      "applies the minimum height to the metrics colored bar from the constraints",
+      (tester) async {
+        const expectedHeight = 10.0;
+
+        await tester.pumpWidget(
+          _BuildResultBarTestbed(
+            constraints: const BoxConstraints(minHeight: expectedHeight),
+            buildResult: successfulBuildResult,
+          ),
+        );
+
+        final bar = getMetricsColoredBar(tester);
+
+        expect(bar.height, equals(expectedHeight));
       },
     );
   });
@@ -396,6 +409,9 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;
 
+  /// A [BoxConstraints] to apply to this bar in tests.
+  final BoxConstraints constraints;
+
   /// Creates an instance of this testbed.
   ///
   /// The [themeData] default value is an empty [MetricsThemeData] instance.
@@ -405,13 +421,19 @@ class _BuildResultBarTestbed extends StatelessWidget {
   const _BuildResultBarTestbed({
     Key key,
     this.buildResult,
+    this.constraints,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      body: BuildResultBar(
-        buildResult: buildResult,
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          constraints: constraints,
+          child: BuildResultBar(
+            buildResult: buildResult,
+          ),
+        ),
       ),
     );
   }

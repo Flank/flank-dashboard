@@ -33,14 +33,16 @@ class BuildResultBar extends StatelessWidget {
       builder: (context, constraints) {
         final barHeight = constraints.minHeight;
 
-        return TappableArea(builder: (context, isHovered, _) {
-          return MetricsColoredBar<BuildStatus>(
-            isHovered: isHovered,
-            height: barHeight,
-            strategy: const BuildResultBarAppearanceStrategy(),
-            value: buildResult.buildStatus,
-          );
-        });
+        return TappableArea(
+          builder: (context, isHovered, _) {
+            return MetricsColoredBar<BuildStatus>(
+              isHovered: isHovered,
+              height: barHeight,
+              strategy: const BuildResultBarAppearanceStrategy(),
+              value: buildResult.buildStatus,
+            );
+          },
+        );
       },
     );
   }
