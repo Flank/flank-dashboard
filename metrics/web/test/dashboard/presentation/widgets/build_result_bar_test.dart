@@ -48,6 +48,7 @@ void main() {
     Future<void> hoverBar(WidgetTester tester) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       mouseRegion.onEnter(const PointerEnterEvent());
+
       await mockNetworkImagesFor(() {
         return tester.pumpAndSettle();
       });
