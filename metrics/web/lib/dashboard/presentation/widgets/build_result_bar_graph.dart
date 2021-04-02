@@ -3,37 +3,37 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 
 /// A [BarGraph] that displays the build results.
-///
-/// Applies the color theme from the [MetricsThemeData.buildResultTheme].
 class BuildResultBarGraph extends StatelessWidget {
-  /// A [List] with [BuildResultViewModel]s to display on this graph's bars.
-  final List<BuildResultViewModel> buildResults;
+  /// A [BuildResultMetric] with the data to display on this graph.
+  final BuildResultMetricViewModel buildResultMetric;
 
-  /// A [BuildResultDurationStrategy] this graph uses to define build [Duration]s.
+  /// A [BuildResultDurationStrategy] this graph uses to define
+  /// build [Duration]s.
   final BuildResultDurationStrategy durationStrategy;
 
-  /// Creates the [BuildResultBarGraph] from the given [buildResults] and
+  /// Creates the [BuildResultBarGraph] from the given [buildResultMetric] and
   /// [durationStrategy].
   ///
-  /// Throws an [AssertionError] if the given [buildResults] or
+  /// Throws an [AssertionError] if the given [buildResultMetric] or
   /// [durationStrategy] is `null`.
   const BuildResultBarGraph({
     Key key,
-    @required this.buildResults,
+    @required this.buildResultMetric,
     @required this.durationStrategy,
-  })  : assert(buildResults != null),
+  })  : assert(buildResultMetric != null),
         assert(durationStrategy != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final buildResults = buildResultMetric.buildResults;
     final barStrategy = BuildResultBarPaddingStrategy(
       buildResults: buildResults,
     );
@@ -52,12 +52,18 @@ class BuildResultBarGraph extends StatelessWidget {
     );
   }
 
-  /// Processes [buildResults] to a [List] with the bar data to display on
-  /// this bar graph.
+  /// Processes the [buildResultMetric] to a [List] with the bar data to display
+  /// on this bar graph.
   List<int> _createBarGraphData() {
-    return buildResults
-        .map(durationStrategy.getDuration)
-        .map((duration) => duration.inMilliseconds)
-        .toList();
+    final maxBuildDuration = buildResultMetric.maxBuildDuration;
+
+    return buildResultMetric.buildResults.map((duration) {
+      final buildDuration = durationStrategy.getDuration(
+        duration,
+        maxBuildDuration: maxBuildDuration,
+      );
+
+      return buildDuration.inMilliseconds;
+    }).toList();
   }
 }

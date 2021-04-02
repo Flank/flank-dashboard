@@ -66,10 +66,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
                 Padding(
                   padding: _calculateGraphPadding(),
                   child: BuildResultBarGraph(
-                    buildResults: buildResultMetric.buildResults,
-                    durationStrategy: BuildResultDurationStrategy(
-                      maxBuildDuration: buildResultMetric.maxBuildDuration,
-                    ),
+                    buildResultMetric: buildResultMetric,
+                    durationStrategy: const BuildResultDurationStrategy(),
                   ),
                 ),
             ],

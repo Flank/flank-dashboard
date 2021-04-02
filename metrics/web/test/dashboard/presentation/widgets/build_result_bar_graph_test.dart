@@ -170,20 +170,28 @@ void main() {
     testWidgets(
       "processes the given build results to duration using the duration strategy",
       (WidgetTester tester) async {
-        when(durationStrategy.getDuration(any)).thenReturn(duration);
+        when(
+          durationStrategy.getDuration(any, maxBuildDuration: duration),
+        ).thenReturn(duration);
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
             numberOfBuildsToDisplay: buildResults.length,
+            maxBuildDuration: duration,
           ),
           durationStrategy: durationStrategy,
         ));
 
         verifyInOrder(
-          buildResults
-              .map((result) => durationStrategy.getDuration(result))
-              .toList(),
+          buildResults.map(
+            (result) {
+              return durationStrategy.getDuration(
+                result,
+                maxBuildDuration: duration,
+              );
+            },
+          ).toList(),
         );
       },
     );
@@ -191,7 +199,9 @@ void main() {
     testWidgets(
       "displays the bar graph with the data created from the build durations returned by the duration strategy",
       (WidgetTester tester) async {
-        when(durationStrategy.getDuration(any)).thenReturn(duration);
+        when(
+          durationStrategy.getDuration(any, maxBuildDuration: duration),
+        ).thenReturn(duration);
         final expectedData = [duration.inMilliseconds, duration.inMilliseconds];
 
         final buildResults = [
@@ -211,6 +221,7 @@ void main() {
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
             numberOfBuildsToDisplay: buildResults.length,
+            maxBuildDuration: duration,
           ),
           durationStrategy: durationStrategy,
         ));
@@ -274,7 +285,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: BuildResultBarGraph(
-          buildResults: buildResultMetric.buildResults,
+          buildResultMetric: buildResultMetric,
           durationStrategy: durationStrategy,
         ),
       ),
