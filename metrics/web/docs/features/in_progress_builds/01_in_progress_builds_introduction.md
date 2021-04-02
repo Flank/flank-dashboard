@@ -33,14 +33,14 @@ The domain layer of the `dashboard` module provides the `MetricsRepository` inte
 
 The following table describes changes in metrics calculation according to the in-progress builds integration:
 
-| Metric           | Required Changes                                                                                                                                                                                          |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Project Status   | No changes required.                                                                                                                                                                                      |
-| Builds' Results  | No changes required.                                                                                                                                                                                      |
-| Performance      | Count only finished builds as in-progress builds have no fixed duration and should be filtered out.                                                                                                       |
-| Number of Builds | No changes required.                                                                                                                                                                                      |
-| Stability        | Divide the number of successful builds by the number of finished builds. This means that in-progress builds should not participate in the calculation of the stability metric and should be filtered out. |
-| Coverage         | No changes required.                                                                                                                                                                                      |
+|Metric|Required Changes|
+|---|---|
+|Project Status|No changes required.|
+|Builds' Results|No changes required.|
+|Performance|Count only finished builds as in-progress builds have no fixed duration and should be filtered out.|
+|Number of Builds|No changes required.|
+|Stability|Divide the number of successful builds by the number of finished builds. This means that in-progress builds should not participate in the calculation of the stability metric and should be filtered out.|
+|Coverage|No changes required.|
 
 The above changes are related to the `ReceiveProjectMetricsUpdates` use case. The following diagram demonstrates the structure of the domain layer for the `dashboard` module:
 
@@ -99,14 +99,14 @@ The introduction of in-progress builds requires changing the UI elements so they
 
 The following table lists the UI elements that require changes (or should be created) with a short description.
 
-| UI Element                 | Widget                    | Classification        | Changes description                                                                                                                                                                                                |
-| -------------------------- | ------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Build result popup         | `BuildResultPopupCard`    | metrics widget        | Hide the subtitle with duration if the given duration is `null`.                                                                                                                                                   |
-| Build result bar component | `BuildResultBarComponent` | metrics widget        | Create a new widget that displays the bar itself and applies a popup with graph indicator to this bar. This allows moving popup displaying logic to the top and separating it from the bar.                        |
-| Build result bar           | `BuildResultBar`          | metrics widget        | Select a widget to display depending on the build result view model type (either `FinishedBuildResultViewModel` or `InProgressBuildResultViewModel`). Displays either `MetricsColoredBar` or `MetricsAnimatedBar`. |
-| Build result metric graph  | `BuildResultsMetricGraph` | metrics widget        | Create a new widget that displays the date range of builds, missing bars, and `BuildResultBarGraph`.                                                                                                               |
-| Build result bar graph     | `BuildResultBarGraph`     | metrics widget        | Change bars displaying to handle in-progress builds with unstable duration. Animate bars if the list of results contains in-progress builds.                                                                       |
-| Animated bar               | `MetricsAnimatedBar`      | common metrics widget | Create a new widget that displays the given Lottie animation clipping it to the given height.                                                                                                                      |
+|UI Element|Widget|Classification|Changes description|
+|---|---|---|---|
+|Build result popup|`BuildResultPopupCard`|metrics widget|Hide the subtitle with duration if the given duration is `null`.|
+|Build result bar component|`BuildResultBarComponent`|metrics widget|Create a new widget that displays the bar itself and applies a popup with graph indicator to this bar. This allows moving popup displaying logic to the top and separating it from the bar.|
+|Build result bar|`BuildResultBar`|metrics widget|Select a widget to display depending on the build result view model type (either `FinishedBuildResultViewModel` or `InProgressBuildResultViewModel`). Displays either `MetricsColoredBar` or `MetricsAnimatedBar`.|
+|Build result metric graph|`BuildResultsMetricGraph`|metrics widget|Create a new widget that displays the date range of builds, missing bars, and `BuildResultBarGraph`.|
+|Build result bar graph|`BuildResultBarGraph`|metrics widget|Change bars displaying to handle in-progress builds with unstable duration. Animate bars if the list of results contains in-progress builds.|
+|Animated bar|`MetricsAnimatedBar`|common metrics widget|Create a new widget that displays the given Lottie animation clipping it to the given height.|
 
 The most important fact is that the in-progress build should be displayed as an animated bar. This results in changes with creating an additional widget that would apply the build result popup with appropriate graph indicator and padding to the bar itself. This additional widget is `BuildResultBarComponent` meaning that this is not the bar itself - it's a component that displays the bar. The bar, in its turn, requires changes to select which of low-level bar implementations to show: `MetricsColoredBar` for finished builds or `MetricsAnimatedBar` for in-progress builds.
 
