@@ -15,40 +15,27 @@ class BuildResultDurationStrategy {
   /// based on the [buildResultViewModel] subtype and the given
   /// [maxBuildDuration]'s value.
   ///
-  /// First, calculates the given [buildResultViewModel]'s [Duration].
+  /// If the given [buildResultViewModel] is [FinishedBuildResultViewModel],
+  /// returns the [FinishedBuildResultViewModel.duration].
   ///
-  /// Then, if the [maxBuildDuration] is `null` or the calculated [Duration]
-  /// is less the given [maxBuildDuration], returns the calculated [Duration].
-  ///
-  /// Otherwise, returns the [maxBuildDuration].
+  /// Otherwise, calculates the difference between the current time and the
+  /// [BuildResultViewModel.date] and returns the min value between calculated
+  /// and [maxBuildDuration].
   Duration getDuration(
     BuildResultViewModel buildResultViewModel, {
     Duration maxBuildDuration,
   }) {
-    final buildDuration = _calculateBuildDuration(buildResultViewModel);
+    if (buildResultViewModel is FinishedBuildResultViewModel) {
+      return buildResultViewModel.duration;
+    }
+
+    final currentDateTime = clock.now();
+    final buildDuration = currentDateTime.difference(buildResultViewModel.date);
 
     if (maxBuildDuration == null || buildDuration < maxBuildDuration) {
       return buildDuration;
     }
 
     return maxBuildDuration;
-  }
-
-  /// Returns the [Duration] of the given [buildResultViewModel].
-  ///
-  /// A [Duration] for a [FinishedBuildResultViewModel] is the
-  /// [FinishedBuildResultViewModel.duration].
-  ///
-  /// A [Duration] for an [InProgressBuildResultViewModel] is calculated as
-  /// the difference between the current timestamp and the
-  /// [InProgressBuildResultViewModel.date].
-  Duration _calculateBuildDuration(BuildResultViewModel buildResultViewModel) {
-    if (buildResultViewModel is FinishedBuildResultViewModel) {
-      return buildResultViewModel.duration;
-    }
-
-    final currentDateTime = clock.now();
-
-    return currentDateTime.difference(buildResultViewModel.date);
   }
 }

@@ -44,7 +44,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              _createBuildsDateRange(),
+              _formatMetricPeriod(),
               style: buildResultBarGraphTheme.textStyle,
             ),
           ),
@@ -77,8 +77,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
     );
   }
 
-  /// Returns `true` if both [buildResultMetric.firstBuildDate] and
-  /// [buildResultMetric.lastBuildDate] are not `null`.
+  /// Returns `true` if both [BuildResultMetricViewModel.metricPeriodStart] and
+  /// [BuildResultMetricViewModel.metricPeriodEnd] are not `null`.
   ///
   /// Otherwise, returns `false`.
   bool get _hasDateRange {
@@ -91,7 +91,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
   ///
   /// Returns the formatted first build's date, if it equals to the last build's
   /// date.
-  String _createBuildsDateRange() {
+  String _formatMetricPeriod() {
     final dateFormat = DateFormat('d MMM');
 
     final firstDate = buildResultMetric.metricPeriodStart;
@@ -108,7 +108,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
     return '$firstDateFormatted - $lastDateFormatted';
   }
 
-  /// Returns `true` if [buildResultMetric.buildResults.isNotEmpty].
+  /// Returns `true` if the [BuildResultMetricViewModel.buildResults] is not
+  /// empty.
   ///
   /// Otherwise, returns `false`.
   bool get _hasResults {
@@ -116,7 +117,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
   }
 
   /// Returns an [EdgeInsets] for the [BuildResultBarGraph] padding depending
-  /// on the value of the [_calculateNumberOfMissingBars].
+  /// on the number of the missing bars.
   EdgeInsets _calculateGraphPadding() {
     return _calculateNumberOfMissingBars() > 0
         ? const EdgeInsets.only(left: 2)

@@ -68,16 +68,17 @@ void main() {
     );
 
     test(
-      ".getDuration() returns the max build duration if the given finished build result view model's duration is greater than the max build duration",
+      ".getDuration() returns the duration of the given finished build result view model if its duration is greater than the max build duration",
       () {
-        final viewModel = createFinishedViewModel(maxBuildDuration * 2);
+        final expectedDuration = maxBuildDuration * 2;
+        final viewModel = createFinishedViewModel(expectedDuration);
 
         final duration = strategy.getDuration(
           viewModel,
           maxBuildDuration: maxBuildDuration,
         );
 
-        expect(duration, equals(maxBuildDuration));
+        expect(duration, equals(expectedDuration));
       },
     );
 

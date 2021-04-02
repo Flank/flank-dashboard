@@ -26,6 +26,7 @@ void main() {
     const duration = Duration(seconds: 5);
 
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
+    final numberOfBuildsToDisplay = buildResults.length;
     final buildResultMetric = BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResults),
     );
@@ -79,7 +80,7 @@ void main() {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
         final buildResultMetric = BuildResultMetricViewModel(
           buildResults: UnmodifiableListView(buildResults),
-          numberOfBuildsToDisplay: buildResults.length,
+          numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
@@ -89,7 +90,7 @@ void main() {
 
         final barWidgets = tester.widgetList(find.byType(BuildResultBar));
 
-        expect(barWidgets, hasLength(equals(buildResults.length)));
+        expect(barWidgets, hasLength(equals(numberOfBuildsToDisplay)));
       },
     );
 
@@ -101,7 +102,7 @@ void main() {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
           durationStrategy: durationStrategy,
         ));
@@ -125,7 +126,7 @@ void main() {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: results,
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
           durationStrategy: durationStrategy,
         ));
@@ -149,7 +150,7 @@ void main() {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: results,
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
           durationStrategy: durationStrategy,
         ));
@@ -168,7 +169,7 @@ void main() {
     );
 
     testWidgets(
-      "processes the given build results to duration using the duration strategy",
+      "gets the duration of the given build results using the duration strategy",
       (WidgetTester tester) async {
         when(
           durationStrategy.getDuration(any, maxBuildDuration: duration),
@@ -177,7 +178,7 @@ void main() {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
             maxBuildDuration: duration,
           ),
           durationStrategy: durationStrategy,
@@ -220,7 +221,7 @@ void main() {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
             maxBuildDuration: duration,
           ),
           durationStrategy: durationStrategy,

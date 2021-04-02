@@ -200,7 +200,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a build result bar graph with the build result duration strategy",
+      "applies the build result duration strategy to the build result bar graph",
       (WidgetTester tester) async {
         final expectedBuildResultMetric = createBuildResultMetric();
 

@@ -52,8 +52,7 @@ class BuildResultBarGraph extends StatelessWidget {
     );
   }
 
-  /// Processes the [buildResultMetric] to a [List] with the bar data to display
-  /// on this bar graph.
+  /// Creates a [List] of the bar data from the [buildResultMetric].
   List<int> _createBarGraphData() {
     final maxBuildDuration = buildResultMetric.maxBuildDuration;
 
