@@ -144,12 +144,11 @@ void main() {
           ),
         );
 
-        final buildResultBarFinder = find.byWidgetPredicate((widget) {
-          return widget is BuildResultBar &&
-              widget.buildResult == successfulBuildResult;
-        });
+        final buildResultBar = tester.widget<BuildResultBar>(
+          find.byType(BuildResultBar),
+        );
 
-        expect(buildResultBarFinder, findsOneWidget);
+        expect(buildResultBar.buildResult, equals(successfulBuildResult));
       },
     );
 
@@ -188,7 +187,7 @@ void main() {
     );
 
     testWidgets(
-      "closes the BuildResultPopupCard widget on exit",
+      "closes the BuildResultPopupCard widget when hover ends",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BuildResultBarComponentTestbed(
@@ -366,7 +365,7 @@ class _BuildResultBarComponentTestbed extends StatelessWidget {
   /// A [MetricsThemeData] to apply to this bar component in tests.
   final MetricsThemeData themeData;
 
-  /// A [BuildResultViewModel] with data to display.
+  /// A [BuildResultViewModel] used in tests
   final BuildResultViewModel buildResult;
 
   /// A [BuildResultBarPaddingStrategy] to apply to this bar component in tests.

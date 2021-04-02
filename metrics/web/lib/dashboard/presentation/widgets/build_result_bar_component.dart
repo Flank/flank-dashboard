@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/metrics_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
@@ -14,6 +15,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_status_graph_indicator_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,6 +47,7 @@ class BuildResultBarComponent extends StatelessWidget {
     const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
     const indicatorRadius = indicatorDiameter / 2.0;
     const indicatorHorizontalOffset = (barWidth - indicatorDiameter) / 2.0;
+    const indicatorStrategy = BuildStatusGraphIndicatorAppearanceStrategy();
 
     if (buildResult == null) {
       final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
@@ -67,6 +70,9 @@ class BuildResultBarComponent extends StatelessWidget {
         triggerSize,
         indicatorRadius,
       ),
+      popup: BuildResultPopupCard(
+        buildResultPopupViewModel: buildResult.buildResultPopupViewModel,
+      ),
       triggerBuilder: (context, openPopup, closePopup, isOpened) {
         return MouseRegion(
           cursor: SystemMouseCursors.click,
@@ -74,7 +80,7 @@ class BuildResultBarComponent extends StatelessWidget {
           onExit: (_) => closePopup(),
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: _onTap,
+            onTap: launchBuildUrl,
             child: Padding(
               padding: _barPadding,
               child: Stack(
@@ -88,7 +94,10 @@ class BuildResultBarComponent extends StatelessWidget {
                     Positioned(
                       right: indicatorHorizontalOffset,
                       bottom: -indicatorRadius,
-                      child: _graphIndicator,
+                      child: MetricsGraphIndicator<BuildStatus>(
+                        value: buildResult.buildStatus,
+                        strategy: indicatorStrategy,
+                      ),
                     ),
                 ],
               ),
@@ -96,27 +105,7 @@ class BuildResultBarComponent extends StatelessWidget {
           ),
         );
       },
-      popup: BuildResultPopupCard(
-        buildResultPopupViewModel: buildResult.buildResultPopupViewModel,
-      ),
     );
-  }
-
-  /// A [GraphIndicator] widget to use based on the
-  /// [BuildResultViewModel.buildStatus].
-  Widget get _graphIndicator {
-    switch (buildResult?.buildStatus) {
-      case BuildStatus.successful:
-        return const PositiveGraphIndicator();
-      case BuildStatus.failed:
-        return const NegativeGraphIndicator();
-      case BuildStatus.unknown:
-        return const NeutralGraphIndicator();
-      case BuildStatus.inProgress:
-        return const NeutralGraphIndicator();
-    }
-
-    return null;
   }
 
   /// An [EdgeInsets] to apply to this bar component.
@@ -137,7 +126,7 @@ class BuildResultBarComponent extends StatelessWidget {
   }
 
   /// Opens the [BuildResultViewModel.url].
-  Future<void> _onTap() async {
+  Future<void> launchBuildUrl() async {
     final url = buildResult.url;
     if (url == null) return;
 

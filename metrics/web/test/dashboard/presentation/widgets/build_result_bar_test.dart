@@ -66,7 +66,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the MetricsColoredBar with the BuildResultBarAppearanceStrategy",
+      "applies the BuildResultBarAppearanceStrategy to the MetricsColoredBar",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,
@@ -104,7 +104,7 @@ void main() {
     );
 
     testWidgets(
-      "hovers the metrics colored bar on hover",
+      "applies the hover state to the MetricsColoredBar",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,

@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -11,9 +10,6 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A single bar for a [BarGraph] widget that displays the
 /// result of a [BuildResultViewModel] instance.
-///
-/// Displays the [PlaceholderBar] if either [buildResult] or
-/// [BuildResultViewModel.buildStatus] is `null`.
 class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
   final BuildResultViewModel buildResult;
