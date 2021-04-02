@@ -15,9 +15,6 @@ void main() {
     const duration = Duration.zero;
     const maxBuildDuration = Duration(days: 365);
     const strategy = BuildResultDurationStrategy();
-    const strategyWithMaxDuration = BuildResultDurationStrategy(
-      maxBuildDuration: maxBuildDuration,
-    );
 
     final date = DateTime(2021);
     final currentDateTime = DateTime(2022);
@@ -43,19 +40,7 @@ void main() {
     }
 
     final finishedBuildViewModel = createFinishedViewModel(duration);
-
     final inProgressBuildResultViewModel = createInProgressViewModel(date);
-
-    test(
-      "creates an instance with the given max build duration",
-      () {
-        const strategy = BuildResultDurationStrategy(
-          maxBuildDuration: duration,
-        );
-
-        expect(strategy.maxBuildDuration, equals(duration));
-      },
-    );
 
     test(
       ".getDuration() returns the duration of the given finished build result view model if the max build duration is not specified",
@@ -73,8 +58,9 @@ void main() {
       () {
         final expectedDuration = finishedBuildViewModel.duration;
 
-        final duration = strategyWithMaxDuration.getDuration(
+        final duration = strategy.getDuration(
           finishedBuildViewModel,
+          maxBuildDuration: maxBuildDuration,
         );
 
         expect(duration, equals(expectedDuration));
@@ -86,7 +72,10 @@ void main() {
       () {
         final viewModel = createFinishedViewModel(maxBuildDuration * 2);
 
-        final duration = strategyWithMaxDuration.getDuration(viewModel);
+        final duration = strategy.getDuration(
+          viewModel,
+          maxBuildDuration: maxBuildDuration,
+        );
 
         expect(duration, equals(maxBuildDuration));
       },
@@ -115,7 +104,10 @@ void main() {
         final expectedDuration = currentDateTime.difference(viewModel.date);
 
         withClock(Clock.fixed(currentDateTime), () {
-          final duration = strategyWithMaxDuration.getDuration(viewModel);
+          final duration = strategy.getDuration(
+            viewModel,
+            maxBuildDuration: maxBuildDuration,
+          );
 
           expect(duration, equals(expectedDuration));
         });
@@ -129,7 +121,10 @@ void main() {
         final viewModel = createInProgressViewModel(buildDate);
 
         withClock(Clock.fixed(currentDateTime), () {
-          final duration = strategyWithMaxDuration.getDuration(viewModel);
+          final duration = strategy.getDuration(
+            viewModel,
+            maxBuildDuration: maxBuildDuration,
+          );
 
           expect(duration, equals(maxBuildDuration));
         });
