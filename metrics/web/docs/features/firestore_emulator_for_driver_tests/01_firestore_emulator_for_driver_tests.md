@@ -164,9 +164,7 @@ To group these parameters and simplify the logic of retrieving their values insi
 
 To pass the Firestore emulator configuration to the application under tests, we are going to update the `FlutterWebDriver` class and add a new `dart-define` option containing the `Map` representation of the Firestore emulator configuration. It allows us to easily access the configuration from the application under tests using the `FirestoreEmulatorConfig.fromEnvironment()` factory method.
 
-In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator.
- 
-If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the port from the `FirestoreEmulatorConfig` instance.
+In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the port from the `FirestoreEmulatorConfig` instance.
 
 With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
 

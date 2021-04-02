@@ -1,5 +1,11 @@
 @startuml firestore_emulator_class_diagram
 
+package core.src.domain.entities {
+        abstract class Enum<T> {
+            + value: T
+        }
+    }
+
 package test_driver {
     class FlutterWebDriver {
         - _args : DriverTestArguments
@@ -42,8 +48,13 @@ package test_driver {
 
         package firebase {
             package model as firebase_model {
-                class Emulator {
-                    + static const firestore : Emulator
+                class FirebaseEmulator{
+                    + static const auth : FirebaseEmulator
+                    + static const functions : FirebaseEmulator
+                    + static const firestore : FirebaseEmulator
+                    + static const database : FirebaseEmulator
+                    + static const hosting : FirebaseEmulator
+                    + static const pubsub : FirebaseEmulator
                 }
             }
 
@@ -54,7 +65,7 @@ package test_driver {
                     + isAppStarted() : Future<void>
                 }
                 class FirestoreEmulatorRunner {
-                    - _arguments : FirestoreEmulatorCommand
+                    - _arguments : StartEmulatorCommand
                     + args : List<String>
                     + executableName : String
                     + statusRequestUrl : String
@@ -66,7 +77,7 @@ package test_driver {
                 class StartEmulatorCommand {
                     + static const executableName : String
                     + emulatorsStart() : void
-                    + only(Emulator emulator) : void
+                    + only(FirebaseEmulator emulator) : void
                     + inspectFunctions(int port) : void
                     + import(String directory) : void
                     + exportOnExit(String directory) : void
@@ -75,7 +86,7 @@ package test_driver {
 
             package process {
                 class FirebaseProcess {
-                    + static start(FirestoreEmulatorCommand args, String workingDir) : Future<FirebaseProcess>
+                    + static start(StartEmulatorCommand args, String workingDir) : Future<FirebaseProcess>
                 }
             }
         }
@@ -90,13 +101,14 @@ package test_driver {
 
 FlutterWebDriver --> DriverTestArguments : uses
 DriverTestArguments -> FirestoreEmulatorConfig: uses
-FlutterWebDriver --> ProcessManager : creates
-ProcessManager --> FirestoreEmulatorRunner : runs
+FlutterWebDriver --> FirestoreEmulatorRunner : creates and runs
+FlutterWebDriver --> ProcessManager : uses
 FirestoreEmulatorRunner --> StartEmulatorCommand : uses
 FirestoreEmulatorRunner --> FirebaseProcess : starts
 FirestoreEmulatorRunner ..|> FirebaseEmulatorRunner
 FirebaseEmulatorRunner ..|> ProcessRunner
-StartEmulatorCommand --> Emulator : uses
+StartEmulatorCommand --> FirebaseEmulator: uses
+FirebaseEmulator..|> Enum
 DriverTestArgumentsParser --> DriverTestArguments : provides
 
 @enduml
