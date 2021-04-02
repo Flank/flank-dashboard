@@ -6,9 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/metrics_graph_indicator.dart';
-import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
-import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
-import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -80,9 +77,9 @@ class BuildResultBarComponent extends StatelessWidget {
           onExit: (_) => closePopup(),
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: launchBuildUrl,
+            onTap: _launchBuildUrl,
             child: Padding(
-              padding: _barPadding,
+              padding: _calculateBarPadding(),
               child: Stack(
                 clipBehavior: Clip.none,
                 fit: StackFit.passthrough,
@@ -108,25 +105,27 @@ class BuildResultBarComponent extends StatelessWidget {
     );
   }
 
-  /// An [EdgeInsets] to apply to this bar component.
-  EdgeInsets get _barPadding {
-    return paddingStrategy.getBarPadding(buildResult);
-  }
-
   /// Calculates the [Offset] for the bar popup.
   Offset _calculatePopupOffset(
     Size triggerSize,
     double indicatorRadius,
   ) {
-    final paddingOffset = _barPadding.left - _barPadding.right;
+    final barPadding = _calculateBarPadding();
+
+    final paddingOffset = barPadding.left - barPadding.right;
     final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
     final dy = triggerSize.height + indicatorRadius + 4.0;
 
     return Offset(dx, dy);
   }
 
+  /// Returns the [EdgeInsets] to apply to this bar component.
+  EdgeInsets _calculateBarPadding() {
+    return paddingStrategy.getBarPadding(buildResult);
+  }
+
   /// Opens the [BuildResultViewModel.url].
-  Future<void> launchBuildUrl() async {
+  Future<void> _launchBuildUrl() async {
     final url = buildResult.url;
     if (url == null) return;
 
