@@ -7,12 +7,12 @@ import 'package:cli/deploy/factory/deployer_factory.dart';
 /// A [Command] implementation that deploy the Metrics Web application.
 class DeployCommand extends Command {
   @override
-  final name = "deploy";
+  final name = 'deploy';
   @override
   final description =
-      "Creates the GCloud and Firebase projects and deploys the Metrics application to the hosting.";
+      'Creates the GCloud and Firebase projects and deploys the Metrics application to the hosting.';
 
-  /// A class that provides method for creating [Deployer].
+  /// A [DeployerFactory] this command uses to create a [Deployer].
   final DeployerFactory _deployerFactory;
 
   /// Creates a new instance of the [DeployCommand]
