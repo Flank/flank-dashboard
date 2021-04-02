@@ -16,8 +16,10 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_status_gra
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A widget that displays the [BuildResultBar], a corresponding [GraphIndicator]
-/// and a [BuildResultPopupCard].
+/// A widget that displays a build result view model as a bar graph component.
+/// 
+/// Displays a [MetricsGraphIndicator] and a [BuildResultPopupCard] when
+/// this widget is hovered.
 class BuildResultBarComponent extends StatelessWidget {
   /// A width of the [BuildResultPopupCard] this bar component displays
   /// in a popup.
