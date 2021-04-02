@@ -146,6 +146,8 @@ Once we have exported data from the Firestore emulator, we can run an emulator w
 firebase emulators:start --import=../web/test_driver/firestore_test_data
 ```
 
+_**Note:** The command must be run inside the firebase folder to apply available Firestore rules._
+
 ### Architecture
 
 > Fundamental structures of the feature and context (diagram).
@@ -158,11 +160,15 @@ Consider the following class diagram showing the main classes and relationships 
 
 > Detailed solution description to class/method level.
 
+#### Configure the test runner
+
 As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data. Also, to connect the application to the running Firestore emulator, we need to know the emulator's port, so we should add a `firestore-emulator-port` option to the driver tests script. This option represents the port the `Firestore emulator` will run on and provides an ability to change it if it is required.
 
 To group these parameters and simplify the logic of retrieving their values inside the integration tests, we should create the `FirestoreEmulatorConfig` model.
 
 To pass the Firestore emulator configuration to the application under tests, we are going to update the `FlutterWebDriver` class and add a new `dart-define` option containing the `Map` representation of the Firestore emulator configuration. It allows us to easily access the configuration from the application under tests using the `FirestoreEmulatorConfig.fromEnvironment()` factory method.
+
+#### Configure the application
 
 In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the port from the `FirestoreEmulatorConfig` instance.
 
