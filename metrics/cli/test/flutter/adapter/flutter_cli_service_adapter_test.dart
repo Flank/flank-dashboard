@@ -12,7 +12,7 @@ void main() {
   group("FlutterCliServiceAdapter", () {
     const path = './test';
     final flutterCli = _FlutterCliMock();
-    final flutterAdapter = FlutterCliServiceAdapter(flutterCli);
+    final flutterService = FlutterCliServiceAdapter(flutterCli);
     final stateError = StateError('test');
 
     tearDown(() {
@@ -29,7 +29,7 @@ void main() {
     test(
       ".version() shows the version information",
       () async {
-        await flutterAdapter.version();
+        await flutterService.version();
 
         verify(flutterCli.version()).called(once);
       },
@@ -38,7 +38,7 @@ void main() {
     test(
       ".build() builds the web application in the given path",
       () async {
-        await flutterAdapter.build(path);
+        await flutterService.build(path);
 
         verify(flutterCli.buildWeb(path)).called(once);
       },
@@ -47,55 +47,39 @@ void main() {
     test(
       ".build() enables web support",
       () async {
-        await flutterAdapter.build(path);
+        await flutterService.build(path);
 
         verify(flutterCli.enableWeb()).called(once);
       },
     );
 
     test(
-      ".build() enables web support before building the web application",
-      () async {
-        await flutterAdapter.build(path);
+      ".version() throws if showing the version throws",
+      () {
+        when(flutterCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        verifyInOrder([
-          flutterCli.enableWeb(),
-          flutterCli.buildWeb(path),
-        ]);
+        expect(flutterService.version(), throwsA(isA<StateError>()));
       },
     );
 
     test(
-      ".version() rethrows the StateError if showing the version throws it",
-          () {
-        when(flutterCli.version()).thenThrow(stateError);
+      ".build() doesn't build the web application if enabling web support throws",
+      () {
+        when(flutterCli.enableWeb())
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => flutterAdapter.version());
-
-        expect(actual, throwsStateError);
-      },
-    );
-
-    test(
-      ".build() doesn't build the web application if enabling web support throws the StateError ",
-          () {
-        when(flutterCli.enableWeb()).thenThrow(stateError);
-
-        final actual = expectAsync0(() => flutterAdapter.build(path));
-
-        expect(actual, throwsStateError);
+        expect(flutterService.build(path), throwsA(isA<StateError>()));
         verifyNever(flutterCli.buildWeb(any));
       },
     );
 
     test(
-      ".build() rethrows the StateError if building the web application throws it",
-          () {
-        when(flutterCli.buildWeb(any)).thenThrow(stateError);
+      ".build() throws if building the web application throws",
+      () {
+        when(flutterCli.buildWeb(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => flutterAdapter.build(path));
-
-        expect(actual, throwsStateError);
+        expect(flutterService.build(path), throwsA(isA<StateError>()));
       },
     );
   });

@@ -16,7 +16,7 @@ void main() {
 
     final gcloudCli = _GCloudCliMock();
     final prompter = PrompterMock();
-    final gcloudAdapter = GCloudCliServiceAdapter(gcloudCli, prompter);
+    final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
     final stateError = StateError('test');
 
     tearDown(() {
@@ -51,7 +51,7 @@ void main() {
     test(
       ".login() logs in to the GCloud CLI",
       () async {
-        await gcloudAdapter.login();
+        await gcloudService.login();
 
         verify(gcloudCli.login()).called(once);
       },
@@ -60,65 +60,27 @@ void main() {
     test(
       ".createProject() creates the project with the generated project id",
       () async {
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.createProject(projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() creates the project before showing available regions",
-      () async {
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          gcloudCli.createProject(projectId),
-          gcloudCli.listRegions(projectId),
-        ]);
-      },
-    );
-
-    test(
       ".createProject() shows available regions for the created project",
       () async {
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.listRegions(projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() shows available regions before requesting the region from the user",
-      () async {
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          gcloudCli.listRegions(projectId),
-          prompter.prompt(GcloudStrings.enterRegionName),
-        ]);
-      },
-    );
-
-    test(
       ".createProject() requests the region from the user",
       () async {
-        await gcloudAdapter.createProject();
+        await gcloudService.createProject();
 
         verify(prompter.prompt(GcloudStrings.enterRegionName)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() requests the region from the user before creating the project application",
-      () async {
-        whenEnterRegionPrompt().thenReturn(region);
-
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          prompter.prompt(GcloudStrings.enterRegionName),
-          gcloudCli.createProjectApp(region, projectId),
-        ]);
       },
     );
 
@@ -127,46 +89,18 @@ void main() {
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.createProjectApp(region, projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() creates the project app before enabling Firestore API",
-      () async {
-        whenEnterRegionPrompt().thenReturn(region);
-
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          gcloudCli.createProjectApp(region, projectId),
-          gcloudCli.enableFirestoreApi(projectId),
-        ]);
-      },
-    );
-
-    test(
       ".createProject() enables Firestore API for the project with the generated project id",
       () async {
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() enables Firestore API before creating the database",
-      () async {
-        whenEnterRegionPrompt().thenReturn(region);
-
-        final projectId = await gcloudAdapter.createProject();
-
-        verifyInOrder([
-          gcloudCli.enableFirestoreApi(projectId),
-          gcloudCli.createDatabase(region, projectId),
-        ]);
       },
     );
 
@@ -175,7 +109,7 @@ void main() {
       () async {
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.createDatabase(region, projectId)).called(once);
       },
@@ -184,7 +118,7 @@ void main() {
     test(
       ".createProject() returns the identifier of the created project",
       () async {
-        final projectId = await gcloudAdapter.createProject();
+        final projectId = await gcloudService.createProject();
 
         expect(projectId, isNotNull);
         verify(gcloudCli.createProject(projectId)).called(once);
@@ -194,103 +128,92 @@ void main() {
     test(
       ".version() shows the version information",
       () async {
-        await gcloudAdapter.version();
+        await gcloudService.version();
 
         verify(gcloudCli.version()).called(once);
       },
     );
 
     test(
-      ".login() rethrows a StateError if logging throws it",
+      ".login() throws if logging throws",
       () {
-        when(gcloudCli.login()).thenThrow(stateError);
+        when(gcloudCli.login()).thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.login());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.login(), throwsA(isA<StateError>()));
       },
     );
 
     test(
-      ".createProject() doesn't show available regions if creating project throws the StateError",
+      ".createProject() doesn't show available regions if creating project throws",
       () {
-        when(gcloudCli.createProject(any)).thenThrow(stateError);
+        when(gcloudCli.createProject(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
         verifyNever(gcloudCli.listRegions(any));
       },
     );
 
     test(
-      ".createProject() doesn't request the region from the user if showing available regions throws the StateError",
+      ".createProject() doesn't request the region from the user if showing available regions throws",
       () {
-        when(gcloudCli.listRegions(any)).thenThrow(stateError);
+        when(gcloudCli.listRegions(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
         verifyNever(prompter.prompt(GcloudStrings.enterRegionName));
       },
     );
 
     test(
-      ".createProject() doesn't create the project application if requesting the region from the user throws the StateError",
+      ".createProject() doesn't create the project application if requesting the region from the user throws",
       () {
         when(prompter.prompt(GcloudStrings.enterRegionName))
             .thenThrow(stateError);
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
         verifyNever(gcloudCli.createProjectApp(any, any));
       },
     );
 
     test(
-      ".createProject() doesn't enables Firestore API if creating the project app throws the StateError",
+      ".createProject() doesn't enables Firestore API if creating the project app throws",
       () {
-        when(gcloudCli.createProjectApp(any, any)).thenThrow(stateError);
+        when(gcloudCli.createProjectApp(any, any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
         verifyNever(gcloudCli.enableFirestoreApi(any));
       },
     );
 
     test(
-      ".createProject() doesn't create the database if enabling Firestore API throws the StateError",
+      ".createProject() doesn't create the database if enabling Firestore API throws",
       () {
-        when(gcloudCli.enableFirestoreApi(any)).thenThrow(stateError);
+        when(gcloudCli.enableFirestoreApi(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
         verifyNever(gcloudCli.createDatabase(any, any));
       },
     );
 
     test(
-      ".createProject() rethrows the StateError if creating the database throws it",
+      ".createProject() throws if creating the database throws",
       () {
-        when(gcloudCli.createDatabase(any, any)).thenThrow(stateError);
+        when(gcloudCli.createDatabase(any, any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.createProject());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.createProject(), throwsA(isA<StateError>()));
       },
     );
 
     test(
-      ".version() rethrows the StateError if showing the version throws it",
+      ".version() throws if showing the version throws",
       () {
-        when(gcloudCli.version()).thenThrow(stateError);
+        when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        final actual = expectAsync0(() => gcloudAdapter.version());
-
-        expect(actual, throwsStateError);
+        expect(gcloudService.version(), throwsA(isA<StateError>()));
       },
     );
   });
