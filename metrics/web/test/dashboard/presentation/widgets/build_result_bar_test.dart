@@ -58,20 +58,9 @@ void main() {
       return tester.widget<MetricsAnimatedBar>(metricsAnimatedBarFinder);
     }
 
-    Future<void> hoverBar(
-      WidgetTester tester, {
-      bool withPumpAndSettle = true,
-    }) async {
+    Future<void> hoverBar(WidgetTester tester) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       mouseRegion.onEnter(const PointerEnterEvent());
-
-      if (withPumpAndSettle) {
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-      } else {
-        await tester.pump();
-      }
     }
 
     testWidgets(
@@ -128,6 +117,9 @@ void main() {
         ));
 
         await hoverBar(tester);
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         final bar = getMetricsColoredBar(tester);
 
@@ -183,7 +175,8 @@ void main() {
           buildResult: inProgressBuildResult,
         ));
 
-        await hoverBar(tester, withPumpAndSettle: false);
+        await hoverBar(tester);
+        await tester.pump();
 
         final animatedBar = getMetricsAnimatedBar(tester);
 
