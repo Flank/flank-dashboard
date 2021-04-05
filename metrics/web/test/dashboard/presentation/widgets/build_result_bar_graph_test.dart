@@ -246,36 +246,6 @@ void main() {
     );
 
     testWidgets(
-      "trims the build durations to be less than or equal to the given max build duration",
-      (WidgetTester tester) async {
-        const maxBuildDuration = Duration(days: 365);
-        final greaterDuration = maxBuildDuration * 2;
-
-        when(durationStrategy.getDuration(
-          any,
-          maxBuildDuration: maxBuildDuration,
-        )).thenReturn(greaterDuration);
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
-            maxBuildDuration: maxBuildDuration,
-          ),
-          durationStrategy: durationStrategy,
-        ));
-
-        final barGraph = tester.widget<BarGraph>(barGraphFinder);
-        final barGraphData = barGraph.data;
-
-        expect(
-          barGraphData,
-          everyElement(lessThanOrEqualTo(maxBuildDuration.inMicroseconds)),
-        );
-      },
-    );
-
-    testWidgets(
       "rebuilds on TimerNotifier tick",
       (WidgetTester tester) async {
         const expectedDuration = Duration(days: 2);
