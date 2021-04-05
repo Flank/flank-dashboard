@@ -135,16 +135,21 @@ void main() {
     );
 
     test(
-      ".login() throws if GCloud CLI throws",
-      () {
+      ".login() throws if GCloud CLI throws during the logging",
+      () async {
         when(gcloudCli.login()).thenAnswer((_) => Future.error(stateError));
 
-        expect(gcloudService.login(), throwsStateError);
+        await expectLater(gcloudService.login(), throwsStateError);
+
+        verify(gcloudCli.login()).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
 
     test(
-      ".createProject() doesn't call any other methods if creating project throws",
+      ".createProject() doesn't call any other methods if GCloud CLI throws during the project creation",
       () async {
         when(gcloudCli.createProject(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -162,7 +167,7 @@ void main() {
     );
 
     test(
-      ".createProject() doesn't call any other methods if showing available regions throws",
+      ".createProject() doesn't call any other methods if GCloud CLI throws during the available regions showing",
       () async {
         when(gcloudCli.listRegions(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -178,7 +183,7 @@ void main() {
     );
 
     test(
-      ".createProject() doesn't call any other methods if requesting the region from the user throws",
+      ".createProject() doesn't call any other methods if GCloud CLI throws during the requesting the region from the user",
       () async {
         when(prompter.prompt(GcloudStrings.enterRegionName))
             .thenThrow(stateError);
@@ -195,7 +200,7 @@ void main() {
     );
 
     test(
-      ".createProject() doesn't call any other methods if creating the project app throws",
+      ".createProject() doesn't call any other methods if GCloud CLI throws during the project app creation",
       () async {
         when(gcloudCli.createProjectApp(any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -207,13 +212,13 @@ void main() {
         verify(prompter.prompt(any)).called(once);
         verify(gcloudCli.createProjectApp(any, any)).called(once);
 
-        verifyNever(gcloudCli.enableFirestoreApi(any));
-        verifyNever(gcloudCli.createDatabase(any, any));
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
 
     test(
-      ".createProject() doesn't call any other methods if enabling Firestore API throws",
+      ".createProject() doesn't call any other methods if GCloud CLI throws during the Firestore API enabling",
       () async {
         when(gcloudCli.enableFirestoreApi(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -226,26 +231,42 @@ void main() {
         verify(gcloudCli.createProjectApp(any, any)).called(once);
         verify(gcloudCli.enableFirestoreApi(any)).called(once);
 
-        verifyNever(gcloudCli.createDatabase(any, any));
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
 
     test(
-      ".createProject() throws if creating the database throws",
-      () {
+      ".createProject() throws if GCloud CLI throws during the database creation",
+      () async {
         when(gcloudCli.createDatabase(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
-        expect(gcloudService.createProject(), throwsStateError);
+        await expectLater(gcloudService.createProject(), throwsStateError);
+
+        verify(gcloudCli.createProject(any)).called(once);
+        verify(gcloudCli.listRegions(any)).called(once);
+        verify(prompter.prompt(any)).called(once);
+        verify(gcloudCli.createProjectApp(any, any)).called(once);
+        verify(gcloudCli.enableFirestoreApi(any)).called(once);
+        verify(gcloudCli.createDatabase(any, any)).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
 
     test(
-      ".version() throws if showing the version throws",
-      () {
+      ".version() throws if GCloud CLI throws during the version showing",
+      () async {
         when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        expect(gcloudService.version(), throwsStateError);
+        await expectLater(gcloudService.version(), throwsStateError);
+
+        verify(gcloudCli.version()).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
   });

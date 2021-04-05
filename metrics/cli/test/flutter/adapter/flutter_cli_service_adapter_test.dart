@@ -54,33 +54,44 @@ void main() {
     );
 
     test(
-      ".version() throws if showing the version throws",
-      () {
+      ".version() throws if Flutter CLI throws during the version showing",
+      () async {
         when(flutterCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        expect(flutterService.version(), throwsStateError);
+        await expectLater(flutterService.version(), throwsStateError);
+
+        verify(flutterCli.version()).called(once);
+
+        verifyNoMoreInteractions(flutterCli);
       },
     );
 
     test(
-      ".build() doesn't build the web application if enabling web support throws",
+      ".build() doesn't build the web application if Flutter CLI throws during the web support enabling",
       () async {
         when(flutterCli.enableWeb())
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(flutterService.build(path), throwsStateError);
 
-        verifyNever(flutterCli.buildWeb(any));
+        verify(flutterCli.enableWeb()).called(once);
+
+        verifyNoMoreInteractions(flutterCli);
       },
     );
 
     test(
-      ".build() throws if building the web application throws",
-      () {
+      ".build() throws if Flutter CLI throws during the web application building",
+      () async {
         when(flutterCli.buildWeb(any))
             .thenAnswer((_) => Future.error(stateError));
 
-        expect(flutterService.build(path), throwsStateError);
+        await expectLater(flutterService.build(path), throwsStateError);
+
+        verify(flutterCli.enableWeb()).called(once);
+        verify(flutterCli.buildWeb(any)).called(once);
+
+        verifyNoMoreInteractions(flutterCli);
       },
     );
   });
