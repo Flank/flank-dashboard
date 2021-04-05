@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -48,23 +48,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the given graph padding",
-      (WidgetTester tester) async {
-        const padding = EdgeInsets.all(8.0);
-
-        await tester.pumpWidget(
-          const _BarGraphTestbed(graphPadding: padding),
-        );
-
-        final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child is LayoutBuilder,
-        ));
-
-        expect(paddingWidget.padding, equals(padding));
-      },
-    );
-
-    testWidgets(
       "builds all bar data from data list in the given order",
       (WidgetTester tester) async {
         const graphBarTestData = [1, 6, 18, 13, 6, 19];
@@ -83,9 +66,9 @@ void main() {
       "builds the graph bars with the height ratio equal to data value ratio",
       (WidgetTester tester) async {
         const barGraphData = [
-          1,
-          3,
-          7,
+          2,
+          4,
+          8,
         ];
 
         await tester.pumpWidget(const _BarGraphTestbed(
@@ -134,9 +117,6 @@ class _BarGraphTestbed extends StatelessWidget {
     );
   }
 
-  /// The padding to inset the [BarGraph].
-  final EdgeInsets graphPadding;
-
   /// The list of data to be displayed on the [BarGraph].
   final List<int> data;
 
@@ -145,13 +125,11 @@ class _BarGraphTestbed extends StatelessWidget {
 
   /// Creates the instance of this testbed.
   ///
-  /// The [graphPadding] defaults to [EdgeInsets.all] with parameter `16.0`.
   /// The [barBuilder] defaults to the [createBar] function.
   const _BarGraphTestbed({
     Key key,
     this.data,
     this.barBuilder = createBar,
-    this.graphPadding = const EdgeInsets.all(16.0),
   }) : super(key: key);
 
   @override
