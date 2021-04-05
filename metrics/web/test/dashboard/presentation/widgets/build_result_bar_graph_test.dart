@@ -75,7 +75,7 @@ void main() {
     );
 
     testWidgets(
-      "creates the number of BuildResultBars equal to the number of the given builds results",
+      "creates the number of BuildResultBarComponents equal to the number of the given builds results",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
         final buildResultMetric = BuildResultMetricViewModel(
@@ -92,7 +92,7 @@ void main() {
           find.byType(BuildResultBarComponent),
         );
 
-        expect(barWidgets, hasLength(equals(numberOfBuildsToDisplay)));
+        expect(barWidgets, hasLength(equals(buildResults.length)));
       },
     );
 
