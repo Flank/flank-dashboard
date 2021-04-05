@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -12,9 +12,6 @@ typedef BarBuilder = Widget Function(int index, double height);
 /// This [Widget] will try to fill all available space defined by it's parent
 /// constraints.
 class BarGraph<T extends num> extends StatelessWidget {
-  /// A padding to inset this graph.
-  final EdgeInsets graphPadding;
-
   /// A list of data to be displayed on the graph.
   final List<T> data;
 
@@ -24,31 +21,25 @@ class BarGraph<T extends num> extends StatelessWidget {
   /// Creates the [BarGraph].
   ///
   /// The [barBuilder] must not be `null`.
-  /// The [graphPadding] default value is [EdgeInsets.all] with
-  /// parameter equal to `16.0`.
   const BarGraph({
     Key key,
     this.data,
     @required this.barBuilder,
-    this.graphPadding = const EdgeInsets.all(16.0),
   })  : assert(barBuilder != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: graphPadding,
-      child: LayoutBuilder(
-        builder: (_, constraints) {
-          final valueUnitHeight = _calculateValueUnitHeight(constraints);
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final valueUnitHeight = _calculateValueUnitHeight(constraints);
 
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: _createChartBars(data, valueUnitHeight),
-          );
-        },
-      ),
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: _createChartBars(data, valueUnitHeight),
+        );
+      },
     );
   }
 

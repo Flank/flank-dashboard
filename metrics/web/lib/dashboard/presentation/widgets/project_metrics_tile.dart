@@ -9,7 +9,7 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_results_metric_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
@@ -87,7 +87,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             height: 80.0,
             child: LoadingBuilder(
               isLoading: projectMetrics.buildResultMetrics == null,
-              builder: (_) => BuildResultBarGraph(
+              builder: (_) => BuildResultsMetricGraph(
                 buildResultMetric: projectMetrics.buildResultMetrics,
               ),
             ),
