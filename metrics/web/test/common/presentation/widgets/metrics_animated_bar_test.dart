@@ -88,6 +88,19 @@ void main() {
     );
 
     testWidgets(
+      "aligns the rive animation to the bottom center",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _MetricsAnimatedBarTestbed(),
+        );
+
+        final align = tester.widget<Align>(find.byType(Align));
+
+        expect(align.alignment, equals(Alignment.bottomCenter));
+      },
+    );
+
+    testWidgets(
       "displays the rive animation with fit width box fit",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -97,19 +110,6 @@ void main() {
         final riveAnimation = getRiveAnimation(tester);
 
         expect(riveAnimation.fit, equals(BoxFit.fitWidth));
-      },
-    );
-
-    testWidgets(
-      "displays the rive animation with bottom center alignment",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(),
-        );
-
-        final riveAnimation = getRiveAnimation(tester);
-
-        expect(riveAnimation.alignment, equals(Alignment.bottomCenter));
       },
     );
 

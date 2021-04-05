@@ -32,14 +32,16 @@ class MetricsAnimatedBar extends StatelessWidget {
     const asset = 'web/animation/in_progress_bar.riv';
     const animationName = 'Animation 1';
 
-    return SizedBox(
-      height: height,
-      width: barWidth,
-      child: RiveAnimation(
-        asset,
-        fit: BoxFit.fitWidth,
-        alignment: Alignment.bottomCenter,
-        controller: SimpleAnimation(animationName),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(
+        height: height,
+        width: barWidth,
+        child: RiveAnimation(
+          asset,
+          fit: BoxFit.fitWidth,
+          controller: SimpleAnimation(animationName),
+        ),
       ),
     );
   }
