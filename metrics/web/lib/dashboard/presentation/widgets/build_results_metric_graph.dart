@@ -10,10 +10,15 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics/util/date.dart';
 
-/// A widget that displays the date range of builds, missing bars,
-/// and a [BuildResultBarGraph].
+/// A widget that displays the build result metric as a bar graph.
+///
+/// Displays the metric date ranges. If the number of
+/// [BuildResultMetricViewModel.buildResults] is less than the
+/// [BuildResultMetricViewModel.numberOfBuildsToDisplay], adds the missing
+/// [BuildResultBar]s.
 class BuildResultsMetricGraph extends StatelessWidget {
-  /// A [BuildResultMetricViewModel] with the build results data to display.
+  /// A [BuildResultMetricViewModel] containing the build results data to
+  /// display.
   final BuildResultMetricViewModel buildResultMetric;
 
   /// Creates a new instance of the [BuildResultsMetricGraph] with the given
