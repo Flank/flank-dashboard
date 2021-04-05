@@ -36,6 +36,8 @@ class BuildResultsMetricGraph extends StatelessWidget {
     final buildResultBarGraphTheme =
         MetricsTheme.of(context).buildResultBarGraphTheme;
 
+    final numberOfMissingBars = _calculateNumberOfMissingBars();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,14 +59,14 @@ class BuildResultsMetricGraph extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                    _calculateNumberOfMissingBars(),
+                    numberOfMissingBars,
                     (index) => const BuildResultBar(),
                   ),
                 ),
               ),
               if (_hasResults)
                 Padding(
-                  padding: _calculateGraphPadding(),
+                  padding: _calculateGraphPadding(numberOfMissingBars),
                   child: BuildResultBarGraph(
                     buildResultMetric: buildResultMetric,
                     durationStrategy: const BuildResultDurationStrategy(),
@@ -86,11 +88,10 @@ class BuildResultsMetricGraph extends StatelessWidget {
         buildResultMetric.metricPeriodEnd != null;
   }
 
-  /// Returns a [String] containing the formatted date range between the first
-  /// and the last build from the [buildResultMetric].
+  /// Returns a [String] containing the formatted metric period.
   ///
-  /// Returns the formatted first build's date, if it equals to the last build's
-  /// date.
+  /// Returns the formatted [BuildResultMetricViewModel.metricPeriodStart],
+  /// if it equals to the [BuildResultMetricViewModel.metricPeriodEnd].
   String _formatMetricPeriod() {
     final dateFormat = DateFormat('d MMM');
 
@@ -117,14 +118,16 @@ class BuildResultsMetricGraph extends StatelessWidget {
   }
 
   /// Returns an [EdgeInsets] for the [BuildResultBarGraph] padding depending
-  /// on the number of the missing bars.
-  EdgeInsets _calculateGraphPadding() {
-    return _calculateNumberOfMissingBars() > 0
+  /// on the given [numberOfMissingBars].
+  EdgeInsets _calculateGraphPadding(int numberOfMissingBars) {
+    return numberOfMissingBars > 0
         ? const EdgeInsets.only(left: 2)
         : EdgeInsets.zero;
   }
 
-  /// Returns a number of missing bars.
+  /// Calculates the number of missing bars based on the length of the
+  /// [BuildResultMetricViewModel.buildResults] and the
+  /// [BuildResultMetricViewModel.numberOfBuildsToDisplay].
   int _calculateNumberOfMissingBars() {
     final numberOfBarsToDisplay = buildResultMetric.numberOfBuildsToDisplay;
     final numberOfBars = buildResultMetric.buildResults.length;

@@ -35,6 +35,12 @@ void main() {
       date: DateTime.now(),
     );
 
+    final buildResultBarGraphFinder = find.byType(BuildResultBarGraph);
+    final barGraphPaddingFinder = find.ancestor(
+      of: buildResultBarGraphFinder,
+      matching: find.byType(Padding),
+    );
+
     List<BuildResultViewModel> createBuildResults(int count) {
       return List.generate(count, (_) {
         return FinishedBuildResultViewModel(
@@ -61,12 +67,6 @@ void main() {
         metricPeriodEnd: metricPeriodEnd,
       );
     }
-
-    final buildResultBarGraphFinder = find.byType(BuildResultBarGraph);
-    final barGraphPaddingFinder = find.ancestor(
-      of: buildResultBarGraphFinder,
-      matching: find.byType(Padding),
-    );
 
     testWidgets(
       "throws an AssertionError if the given build result metric view model is null",
