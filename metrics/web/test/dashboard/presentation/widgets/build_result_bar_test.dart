@@ -7,9 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -20,21 +22,28 @@ import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   group("BuildResultBar", () {
+    const height = 10.0;
+
+    final popupViewModel = BuildResultPopupViewModel(
+      date: DateTime.now(),
+      duration: Duration.zero,
+      buildStatus: BuildStatus.successful,
+    );
     final successfulBuildResult = FinishedBuildResultViewModel(
-      buildResultPopupViewModel: BuildResultPopupViewModel(
-        date: DateTime.now(),
-        duration: Duration.zero,
-        buildStatus: BuildStatus.successful,
-      ),
+      buildResultPopupViewModel: popupViewModel,
       date: DateTime.now(),
       duration: const Duration(seconds: 20),
       buildStatus: BuildStatus.successful,
-      url: 'url',
+    );
+    final inProgressBuildResult = InProgressBuildResultViewModel(
+      buildResultPopupViewModel: popupViewModel,
+      date: DateTime.now(),
     );
 
     final metricsColoredBarFinder = find.byWidgetPredicate(
       (widget) => widget is MetricsColoredBar<BuildStatus>,
     );
+    final metricsAnimatedBarFinder = find.byType(MetricsAnimatedBar);
 
     final mouseRegionFinder = find.ancestor(
       of: find.byType(GestureDetector),
@@ -45,13 +54,24 @@ void main() {
       return tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
     }
 
-    Future<void> hoverBar(WidgetTester tester) async {
+    MetricsAnimatedBar getMetricsAnimatedBar(WidgetTester tester) {
+      return tester.widget<MetricsAnimatedBar>(metricsAnimatedBarFinder);
+    }
+
+    Future<void> hoverBar(
+      WidgetTester tester, {
+      bool withPumpAndSettle = true,
+    }) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       mouseRegion.onEnter(const PointerEnterEvent());
 
-      await mockNetworkImagesFor(() {
-        return tester.pumpAndSettle();
-      });
+      if (withPumpAndSettle) {
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
+      } else {
+        await tester.pump();
+      }
     }
 
     testWidgets(
@@ -62,33 +82,6 @@ void main() {
         ));
 
         expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "applies the BuildResultBarAppearanceStrategy to the MetricsColoredBar",
-      (tester) async {
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: successfulBuildResult,
-        ));
-
-        final bar = getMetricsColoredBar(tester);
-
-        expect(bar.strategy, isA<BuildResultBarAppearanceStrategy>());
-      },
-    );
-
-    testWidgets(
-      "displays the MetricsColoredBar with the build status from the build result view model",
-      (tester) async {
-        final expectedStatus = successfulBuildResult.buildStatus;
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: successfulBuildResult,
-        ));
-
-        final bar = getMetricsColoredBar(tester);
-
-        expect(bar.value, equals(expectedStatus));
       },
     );
 
@@ -104,7 +97,31 @@ void main() {
     );
 
     testWidgets(
-      "applies the hover state to the MetricsColoredBar",
+      "displays the metrics colored bar if the given build result view model is finished",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: successfulBuildResult,
+        ));
+
+        expect(metricsColoredBarFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies the BuildResultBarAppearanceStrategy to the metrics colored bar",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: successfulBuildResult,
+        ));
+
+        final bar = getMetricsColoredBar(tester);
+
+        expect(bar.strategy, isA<BuildResultBarAppearanceStrategy>());
+      },
+    );
+
+    testWidgets(
+      "applies the hover state to the metrics colored bar",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: successfulBuildResult,
@@ -121,18 +138,70 @@ void main() {
     testWidgets(
       "applies the minimum height to the metrics colored bar from the constraints",
       (tester) async {
-        const expectedHeight = 10.0;
-
         await tester.pumpWidget(
           _BuildResultBarTestbed(
-            constraints: const BoxConstraints(minHeight: expectedHeight),
+            constraints: const BoxConstraints(minHeight: height),
             buildResult: successfulBuildResult,
           ),
         );
 
         final bar = getMetricsColoredBar(tester);
 
-        expect(bar.height, equals(expectedHeight));
+        expect(bar.height, equals(height));
+      },
+    );
+
+    testWidgets(
+      "displays the metrics colored bar with the build status from the build result view model",
+      (tester) async {
+        final expectedStatus = successfulBuildResult.buildStatus;
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: successfulBuildResult,
+        ));
+
+        final bar = getMetricsColoredBar(tester);
+
+        expect(bar.value, equals(expectedStatus));
+      },
+    );
+
+    testWidgets(
+      "displays the metrics animated bar if the given build result view model is in-progress",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: inProgressBuildResult,
+        ));
+
+        expect(metricsAnimatedBarFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies the hover state to the metrics animated bar",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: inProgressBuildResult,
+        ));
+
+        await hoverBar(tester, withPumpAndSettle: false);
+
+        final animatedBar = getMetricsAnimatedBar(tester);
+
+        expect(animatedBar.isHovered, isTrue);
+      },
+    );
+
+    testWidgets(
+      "applies the minimum height to the metrics animated bar from the constraints",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          constraints: const BoxConstraints(minHeight: height),
+          buildResult: inProgressBuildResult,
+        ));
+
+        final animatedBar = getMetricsAnimatedBar(tester);
+
+        expect(animatedBar.height, equals(height));
       },
     );
   });

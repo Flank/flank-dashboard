@@ -4,11 +4,13 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
+import 'package:metrics/common/presentation/widgets/metrics_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A single bar that displays a build result using 
+/// A single bar that displays a build result using
 /// the given [BuildResultViewModel].
 class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
@@ -31,11 +33,20 @@ class BuildResultBar extends StatelessWidget {
 
         return TappableArea(
           builder: (context, isHovered, _) {
-            return MetricsColoredBar<BuildStatus>(
+            final isFinishedBuild = buildResult is FinishedBuildResultViewModel;
+
+            if (isFinishedBuild) {
+              return MetricsColoredBar<BuildStatus>(
+                isHovered: isHovered,
+                height: barHeight,
+                strategy: const BuildResultBarAppearanceStrategy(),
+                value: buildResult.buildStatus,
+              );
+            }
+
+            return MetricsAnimatedBar(
               isHovered: isHovered,
               height: barHeight,
-              strategy: const BuildResultBarAppearanceStrategy(),
-              value: buildResult.buildStatus,
             );
           },
         );
