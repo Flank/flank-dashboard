@@ -105,9 +105,7 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-The feature is introduced by adding an additional parameter - `use-firestore-emulator`(default to `true`) with the to the integration tests running command.
-
-It determines whether the integration tests should run with the `Firebase Emulator`.
+The feature is introduced by adding an additional parameter - `use-firestore-emulator`(default to `true`) to the integration tests running command. It determines whether the tests should run with the `Firebase Emulator`.
 
 The following code snippet shows an example of using the new parameter:
 
@@ -157,7 +155,7 @@ Consider the following class diagram showing the main classes and relationships 
 
 #### Configure the test runner
 
-As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data.
+As we want to use the Firestore emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data.
 
 To simplify the logic of retrieving the parameter's value inside the integration tests, we should create the `FirestoreEmulatorConfig` model.
 
@@ -165,7 +163,7 @@ To pass the Firestore emulator configuration to the application under tests, we 
 
 #### Configure the application
 
-In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the default port from the `FirestoreEmulatorConfig` instance.
+In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the default port from the `FirestoreEmulatorConfig`.
 
 With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
 
