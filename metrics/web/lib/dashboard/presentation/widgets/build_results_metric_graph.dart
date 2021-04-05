@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics/util/date.dart';
@@ -60,7 +61,7 @@ class BuildResultsMetricGraph extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
                     numberOfMissingBars,
-                    (index) => const BuildResultBar(),
+                    (index) => const BuildResultBarComponent(),
                   ),
                 ),
               ),

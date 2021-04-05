@@ -13,7 +13,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_results_metric_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
@@ -169,7 +169,8 @@ void main() {
         ));
 
         final emptyBuildResultBarFinder = find.byWidgetPredicate((widget) {
-          return widget is BuildResultBar && widget.buildResult == null;
+          return widget is BuildResultBarComponent &&
+              widget.buildResult == null;
         });
 
         expect(
