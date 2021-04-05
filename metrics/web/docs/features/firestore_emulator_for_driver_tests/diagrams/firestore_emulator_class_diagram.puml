@@ -73,7 +73,6 @@ package test_driver {
             package command {
                 class StartEmulatorCommand {
                     + static const executableName : String
-                    + emulatorsStart() : void
                     + only(FirebaseEmulator emulator) : void
                     + inspectFunctions(int port) : void
                     + import(String directory) : void
@@ -98,7 +97,7 @@ package test_driver {
 
 FlutterWebDriver --> DriverTestArguments : uses
 DriverTestArguments -> FirestoreEmulatorConfig: uses
-FlutterWebDriver --> FirestoreEmulatorRunner : creates and runs
+FlutterWebDriver --> FirestoreEmulatorRunner : uses
 FlutterWebDriver --> ProcessManager : uses
 FirestoreEmulatorRunner --> StartEmulatorCommand : uses
 FirestoreEmulatorRunner --> FirebaseProcess : starts

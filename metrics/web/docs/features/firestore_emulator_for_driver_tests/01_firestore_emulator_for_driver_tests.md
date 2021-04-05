@@ -129,14 +129,14 @@ So, to create test data for the Firestore emulator, we should follow the next st
 
 1. Run the Firestore emulator.
 2. Create test data in the Firestore emulator using the Firestore emulator UI. 
-3. Run the `firebase emulators:export ../web/test_driver/firestore_test_data` command to export test data to the `export_directory` from inside the `metrics/firebase` directory.
+3. Run the `firebase emulators:export emulators/firestore/data` command to export test data to the `export_directory` from inside the `metrics/firebase` directory.
 
 The process of the test data creation will be performed only once and, the test data will be added to the version control.
 
 Once we have exported data from the Firestore emulator, we can run an emulator with the exported data using the following command each time before running the driver tests:
 
 ```bash
-firebase emulators:start --import=../web/test_driver/firestore_test_data
+firebase emulators:start --import=emulators/firestore/data
 ```
 
 _**Note:** The command must be run inside the firebase folder to apply available Firestore rules._

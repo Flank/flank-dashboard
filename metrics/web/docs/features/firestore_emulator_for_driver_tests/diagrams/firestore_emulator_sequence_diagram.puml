@@ -10,7 +10,7 @@ participant ProcessManager
 participant FirestoreEmulatorRunner
 participant FirebaseProcess
 participant FlutterDriveProcessRunner
-participant Application
+participant "Application tests"
 participant FirestoreEmulatorConfig
 participant FirestoreInstance
 
@@ -40,23 +40,23 @@ deactivate ProcessManager
 
 deactivate FirebaseProcess
 
-FlutterDriveProcessRunner -> Application : runs and test
+FlutterDriveProcessRunner -> "Application tests" : runs and test
 deactivate FlutterDriveProcessRunner
-activate Application
+activate "Application tests"
 
-Application -> FirestoreEmulatorConfig : fromEnvironment()
+"Application tests" -> FirestoreEmulatorConfig : fromEnvironment()
 activate FirestoreEmulatorConfig
 
-FirestoreEmulatorConfig --> Application : FirestoreEmulatorConfig instance
+FirestoreEmulatorConfig --> "Application tests" : FirestoreEmulatorConfig instance
 deactivate FirestoreEmulatorConfig
 
-Application -> FirestoreInstance : settings(localEmulatorHost)
+"Application tests" -> FirestoreInstance : settings(localEmulatorHost)
 activate FirestoreInstance
 
 FirestoreInstance --> FirestoreInstance : points to the local emulator
 
-Application --> Bob : tests result
+"Application tests" --> Bob : tests result
 deactivate FirestoreInstance
-deactivate Application
+deactivate "Application tests"
 
 @enduml
