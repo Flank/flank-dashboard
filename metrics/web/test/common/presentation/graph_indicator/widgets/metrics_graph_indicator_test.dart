@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/strategy/metrics_graph_indicator_appearance_strategy.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
@@ -25,8 +24,6 @@ void main() {
       innerColor: innerColor,
       outerColor: outerColor,
     );
-
-    final circleGraphIndicatorFinder = find.byType(CircleGraphIndicator);
 
     final strategy = _MetricsGraphIndicatorAppearanceStrategyMock<int>();
 
@@ -84,48 +81,6 @@ void main() {
         );
 
         expect(graphIndicatorStyle, equals(style));
-      },
-    );
-
-    testWidgets(
-      "applies the inner color of the graph indicator style returned by the strategy",
-      (WidgetTester tester) async {
-        final expectedInnerColor = style.innerColor;
-        when(strategy.selectStyle(any, value)).thenReturn(style);
-
-        await tester.pumpWidget(
-          _MetricsGraphIndicatorTestbed(
-            value: value,
-            strategy: strategy,
-          ),
-        );
-
-        final indicator = tester.widget<CircleGraphIndicator>(
-          circleGraphIndicatorFinder,
-        );
-
-        expect(indicator.innerColor, equals(expectedInnerColor));
-      },
-    );
-
-    testWidgets(
-      "applies the outer color of the graph indicator style returned by the strategy",
-      (WidgetTester tester) async {
-        final expectedOuterColor = style.outerColor;
-        when(strategy.selectStyle(any, value)).thenReturn(style);
-
-        await tester.pumpWidget(
-          _MetricsGraphIndicatorTestbed(
-            value: value,
-            strategy: strategy,
-          ),
-        );
-
-        final indicator = tester.widget<CircleGraphIndicator>(
-          circleGraphIndicatorFinder,
-        );
-
-        expect(indicator.outerColor, equals(expectedOuterColor));
       },
     );
   });
