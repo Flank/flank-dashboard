@@ -279,7 +279,7 @@ void main() {
       "applies the padding returned from the given build result bar strategy",
       (tester) async {
         final paddingStrategy = _BuildResultBarPaddingStrategyMock();
-        final expectedPadding = EdgeInsets.zero;
+        const expectedPadding = EdgeInsets.zero;
         when(
           paddingStrategy.getBarPadding(successfulBuildResult),
         ).thenReturn(expectedPadding);
