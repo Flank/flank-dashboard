@@ -15,6 +15,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -128,7 +129,7 @@ void main() {
     );
 
     testWidgets(
-      "creates the number of BuildResultBars equal to the number of builds to display",
+      "creates the number of build result bar components equal to the number of builds to display",
       (WidgetTester tester) async {
         final buildResultMetric = BuildResultMetricViewModel(
           buildResults: UnmodifiableListView([]),
@@ -139,14 +140,16 @@ void main() {
           buildResultMetric: buildResultMetric,
         ));
 
-        final barWidgets = tester.widgetList(find.byType(BuildResultBar));
+        final barWidgets = tester.widgetList(
+          find.byType(BuildResultBarComponent),
+        );
 
         expect(barWidgets, hasLength(equals(buildResults.length)));
       },
     );
 
     testWidgets(
-      "displays the build result bars with the build result bar padding strategy",
+      "displays the build result bar components with the build result bar padding strategy",
       (WidgetTester tester) async {
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
@@ -155,19 +158,18 @@ void main() {
           ),
         ));
 
-        final barWidgets = tester.widgetList<BuildResultBar>(
-          find.byType(BuildResultBar),
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
         );
 
-        final strategies = barWidgets.map((bar) => bar.strategy);
+        final strategies = barWidgets.map((bar) => bar.paddingStrategy);
 
-        expect(strategies, everyElement(isNotNull));
         expect(strategies, everyElement(isA<BuildResultBarPaddingStrategy>()));
       },
     );
 
     testWidgets(
-      "displays the build result bars with the build result bar padding strategy initialized with build results",
+      "displays the build result bar components with the build result bar padding strategy initialized with build results",
       (WidgetTester tester) async {
         final results = UnmodifiableListView(buildResults);
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
@@ -177,18 +179,20 @@ void main() {
           ),
         ));
 
-        final barWidgets = tester.widgetList<BuildResultBar>(
-          find.byType(BuildResultBar),
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
         );
 
-        final strategies = barWidgets.map((bar) => bar.strategy.buildResults);
+        final strategies = barWidgets.map(
+          (bar) => bar.paddingStrategy.buildResults,
+        );
 
         expect(strategies, everyElement(equals(results)));
       },
     );
 
     testWidgets(
-      "wraps each build result bar with constrained container having non-null min height",
+      "wraps each build result bar component with constrained container having non-null min height",
       (WidgetTester tester) async {
         final results = UnmodifiableListView(buildResults);
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
@@ -212,7 +216,7 @@ void main() {
     );
 
     testWidgets(
-      "creates an empty BuildResultBars to match the numberOfBuildsToDisplay",
+      "creates an empty build result bar components to match the numberOfBuildsToDisplay",
       (WidgetTester tester) async {
         final numberOfBars = buildResults.length + 1;
 
@@ -227,15 +231,19 @@ void main() {
 
         final missingBuildResultsCount = numberOfBars - buildResults.length;
 
-        final buildResultBars = tester.widgetList<BuildResultBar>(
-          find.byType(BuildResultBar),
+        final buildResultBarComponents =
+            tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
         );
 
-        final emptyBuildResultBars = buildResultBars.where(
+        final emptyBuildResultBarComponents = buildResultBarComponents.where(
           (element) => element.buildResult == null,
         );
 
-        expect(emptyBuildResultBars, hasLength(missingBuildResultsCount));
+        expect(
+          emptyBuildResultBarComponents,
+          hasLength(missingBuildResultsCount),
+        );
       },
     );
 

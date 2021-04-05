@@ -10,7 +10,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/util/date.dart';
 
@@ -69,7 +69,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
         ? const EdgeInsets.only(left: 4.0)
         : EdgeInsets.zero;
 
-    final barStrategy = BuildResultBarPaddingStrategy(
+    final paddingStrategy = BuildResultBarPaddingStrategy(
       buildResults: _barsData,
     );
 
@@ -98,7 +98,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
                     _missingBarsCount,
-                    (index) => const BuildResultBar(),
+                    (index) => const BuildResultBarComponent(),
                   ),
                 ),
               ),
@@ -112,9 +112,9 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                     constraints: BoxConstraints(
                       minHeight: height,
                     ),
-                    child: BuildResultBar(
-                      strategy: barStrategy,
+                    child: BuildResultBarComponent(
                       buildResult: data,
+                      paddingStrategy: paddingStrategy,
                     ),
                   );
                 },
