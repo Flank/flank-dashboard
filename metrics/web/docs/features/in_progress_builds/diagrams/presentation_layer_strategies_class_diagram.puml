@@ -79,7 +79,7 @@ package presentation {
         }
 
         class BuildResultDurationStrategy {
-            + getBuildDuration(BuildResultViewModel): Duration
+            + getBuildDuration(BuildResultViewModel, Duration): Duration
         }
     }
 
