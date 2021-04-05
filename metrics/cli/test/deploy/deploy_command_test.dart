@@ -15,7 +15,7 @@ void main() {
     final deployer = _DeployerMock();
     final deployCommand = DeployCommand(deployerFactory);
 
-    PostExpectation<Deployer> whenDeployerFactoryCreate() {
+    PostExpectation<Deployer> whenCreateDeployer() {
       return when(deployerFactory.create());
     }
 
@@ -31,6 +31,15 @@ void main() {
           () => DeployCommand(null),
           throwsArgumentError,
         );
+      },
+    );
+
+    test(
+      "creates an instance with the given deployer factory",
+      () {
+        final command = DeployCommand(deployerFactory);
+
+        expect(command.deployerFactory, equals(deployerFactory));
       },
     );
 
@@ -53,7 +62,7 @@ void main() {
     test(
       ".run() creates deployer using the given deployer factory",
       () async {
-        whenDeployerFactoryCreate().thenReturn(deployer);
+        whenCreateDeployer().thenReturn(deployer);
 
         await deployCommand.run();
 
@@ -64,7 +73,7 @@ void main() {
     test(
       ".run() uses the deployer to deploy the web application",
       () async {
-        whenDeployerFactoryCreate().thenReturn(deployer);
+        whenCreateDeployer().thenReturn(deployer);
 
         await deployCommand.run();
 
