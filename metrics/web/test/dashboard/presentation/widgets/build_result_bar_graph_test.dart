@@ -12,7 +12,6 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_popup_vi
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -89,7 +88,9 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final barWidgets = tester.widgetList(find.byType(BuildResultBar));
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
+        );
 
         expect(barWidgets, hasLength(equals(numberOfBuildsToDisplay)));
       },
