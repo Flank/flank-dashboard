@@ -278,15 +278,16 @@ void main() {
     testWidgets(
       "applies the padding returned from the given build result bar strategy",
       (tester) async {
-        final strategy = BuildResultBarPaddingStrategy(
-          buildResults: [successfulBuildResult],
-        );
-        final expectedPadding = strategy.getBarPadding(successfulBuildResult);
+        final paddingStrategy = _BuildResultBarPaddingStrategyMock();
+        final expectedPadding = EdgeInsets.zero;
+        when(
+          paddingStrategy.getBarPadding(successfulBuildResult),
+        ).thenReturn(expectedPadding);
 
         await tester.pumpWidget(
           _BuildResultBarComponentTestbed(
             buildResult: successfulBuildResult,
-            paddingStrategy: strategy,
+            paddingStrategy: paddingStrategy,
           ),
         );
 
@@ -423,3 +424,6 @@ class _BuildResultBarComponentTestbed extends StatelessWidget {
 class _UrlLauncherMock extends Mock
     with MockPlatformInterfaceMixin
     implements UrlLauncherPlatform {}
+
+class _BuildResultBarPaddingStrategyMock extends Mock
+    implements BuildResultBarPaddingStrategy {}
