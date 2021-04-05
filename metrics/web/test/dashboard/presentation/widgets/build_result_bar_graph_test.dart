@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -18,6 +19,8 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -241,6 +244,68 @@ void main() {
         expect(barGraph.data, equals(expectedData));
       },
     );
+
+    testWidgets(
+      "trims the build durations to be less than or equal to the given max build duration",
+      (WidgetTester tester) async {
+        const maxBuildDuration = Duration(days: 365);
+        final greaterDuration = maxBuildDuration * 2;
+
+        when(durationStrategy.getDuration(
+          any,
+          maxBuildDuration: maxBuildDuration,
+        )).thenReturn(greaterDuration);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+            maxBuildDuration: maxBuildDuration,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+        final barGraphData = barGraph.data;
+
+        expect(
+          barGraphData,
+          everyElement(lessThanOrEqualTo(maxBuildDuration.inMicroseconds)),
+        );
+      },
+    );
+
+    testWidgets(
+      "rebuilds on TimerNotifier tick",
+      (WidgetTester tester) async {
+        const expectedDuration = Duration(days: 2);
+        const initialDuration = Duration(days: 1);
+
+        final timerNotifier = _TimerNotifierMock();
+        when(durationStrategy.getDuration(any)).thenReturn(initialDuration);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          timerNotifier: timerNotifier,
+          durationStrategy: durationStrategy,
+        ));
+
+        when(durationStrategy.getDuration(any)).thenReturn(expectedDuration);
+        timerNotifier.notifyListeners();
+        await tester.pump();
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+        final barGraphData = barGraph.data;
+
+        expect(
+          barGraphData,
+          everyElement(equals(expectedDuration.inMilliseconds)),
+        );
+      },
+    );
   });
 }
 
@@ -281,6 +346,9 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// calculate the build durations.
   final BuildResultDurationStrategy durationStrategy;
 
+  /// A [TimerNotifier] to use in tests.
+  final TimerNotifier timerNotifier;
+
   /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
   ///
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
@@ -288,15 +356,19 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     Key key,
     this.buildResultMetric,
     this.durationStrategy,
+    this.timerNotifier,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: BuildResultBarGraph(
-          buildResultMetric: buildResultMetric,
-          durationStrategy: durationStrategy,
+        body: TestInjectionContainer(
+          timerNotifier: timerNotifier,
+          child: BuildResultBarGraph(
+            buildResultMetric: buildResultMetric,
+            durationStrategy: durationStrategy,
+          ),
         ),
       ),
     );
@@ -305,3 +377,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
 class _BuildResultDurationStrategyMock extends Mock
     implements BuildResultDurationStrategy {}
+
+class _TimerNotifierMock extends Mock
+    with ChangeNotifier
+    implements TimerNotifier {}
