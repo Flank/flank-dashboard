@@ -30,6 +30,7 @@ class MetricsAnimatedBar extends StatelessWidget {
   Widget build(BuildContext context) {
     const barWidth = DimensionsConfig.graphBarWidth;
     const asset = 'web/animation/in_progress_bar.riv';
+    const animationName = 'Animation 1';
 
     return SizedBox(
       height: height,
@@ -38,7 +39,7 @@ class MetricsAnimatedBar extends StatelessWidget {
         asset,
         fit: BoxFit.fitWidth,
         alignment: Alignment.bottomCenter,
-        controller: SimpleAnimation('Animation 1'),
+        controller: SimpleAnimation(animationName),
       ),
     );
   }
