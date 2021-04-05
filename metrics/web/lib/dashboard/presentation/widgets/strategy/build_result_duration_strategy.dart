@@ -11,20 +11,31 @@ class BuildResultDurationStrategy {
   /// Creates a new instance of the [BuildResultDurationStrategy].
   const BuildResultDurationStrategy();
 
-  /// Returns the [Duration] for the given [buildResultViewModel].
+  /// Calculates the build [Duration] of the given [buildResultViewModel]
+  /// based on the [buildResultViewModel] subtype and the given
+  /// [maxBuildDuration]'s value.
   ///
-  /// Returns the [FinishedBuildResultViewModel.duration] if the given
-  /// [buildResultViewModel] is a [FinishedBuildResultViewModel].
+  /// If the given [buildResultViewModel] is [FinishedBuildResultViewModel],
+  /// returns the [FinishedBuildResultViewModel.duration].
   ///
-  /// Otherwise, returns the difference between the current timestamp and the
-  /// [BuildResultViewModel.date].
-  Duration getDuration(BuildResultViewModel buildResultViewModel) {
+  /// Otherwise, calculates the difference between the current time and the
+  /// [BuildResultViewModel.date] and returns the min value between calculated
+  /// and [maxBuildDuration].
+  Duration getDuration(
+    BuildResultViewModel buildResultViewModel, {
+    Duration maxBuildDuration,
+  }) {
     if (buildResultViewModel is FinishedBuildResultViewModel) {
       return buildResultViewModel.duration;
     }
 
     final currentDateTime = clock.now();
+    final buildDuration = currentDateTime.difference(buildResultViewModel.date);
 
-    return currentDateTime.difference(buildResultViewModel.date);
+    if (maxBuildDuration == null || buildDuration < maxBuildDuration) {
+      return buildDuration;
+    }
+
+    return maxBuildDuration;
   }
 }

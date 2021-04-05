@@ -5,41 +5,55 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
-
-import '../../../test_utils/metrics_themed_testbed.dart';
+import 'package:mockito/mockito.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("BuildResultBarGraph", () {
+    const duration = Duration(seconds: 5);
+
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
-    final barGraphFinder = find.byWidgetPredicate(
-      (widget) => widget is BarGraph<int>,
+    final numberOfBuildsToDisplay = buildResults.length;
+    final buildResultMetric = BuildResultMetricViewModel(
+      buildResults: UnmodifiableListView(buildResults),
     );
+
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: Duration.zero,
       date: DateTime.now(),
     );
 
+    final durationStrategy = _BuildResultDurationStrategyMock();
+
+    final barGraphFinder = find.byWidgetPredicate(
+      (widget) => widget is BarGraph<int>,
+    );
+
+    tearDown(() {
+      reset(durationStrategy);
+    });
+
     testWidgets(
       "throws an AssertionError if the given build result metric is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _BuildResultBarGraphTestbed(buildResultMetric: null),
+          _BuildResultBarGraphTestbed(
+            buildResultMetric: null,
+            durationStrategy: durationStrategy,
+          ),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -47,100 +61,34 @@ void main() {
     );
 
     testWidgets(
-      "applies a text style from the metrics theme",
+      "throws an AssertionError if the given build result duration strategy is null",
       (WidgetTester tester) async {
-        const expectedTextStyle = TextStyle(color: Colors.red);
-        const theme = MetricsThemeData(
-          buildResultBarGraphTheme: BuildResultBarGraphThemeData(
-            textStyle: expectedTextStyle,
+        await tester.pumpWidget(
+          _BuildResultBarGraphTestbed(
+            buildResultMetric: buildResultMetric,
+            durationStrategy: null,
           ),
         );
 
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-          theme: theme,
-        ));
-
-        final textWidget = tester.widget<Text>(find.byType(Text));
-        final actualTextStyle = textWidget.style;
-
-        expect(actualTextStyle, equals(expectedTextStyle));
+        expect(tester.takeException(), isAssertionError);
       },
     );
 
     testWidgets(
-      "displays a date range text",
+      "creates the number of BuildResultBarComponents equal to the number of the given builds results",
       (WidgetTester tester) async {
-        final dateFormat = DateFormat('d MMM');
-        final firstDate = buildResults.first.date;
-        final lastDate = buildResults.last.date;
-        final firstDateFormatted = dateFormat.format(firstDate);
-        final lastDateFormatted = dateFormat.format(lastDate);
-        final expected = '$firstDateFormatted - $lastDateFormatted';
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-        ));
-
-        expect(find.text(expected), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays a text with the single date if dates of build results are equal",
-      (WidgetTester tester) async {
-        final firstDate = buildResults.first.date;
-        final expected = DateFormat('d MMM').format(firstDate);
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView([
-              buildResults.first,
-              buildResults.first,
-            ]),
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-        ));
-
-        expect(find.text(expected), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "does not display the date range text if the list of build results is empty",
-      (WidgetTester tester) async {
-        final emptyBuildResults = <BuildResultViewModel>[];
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(emptyBuildResults),
-            numberOfBuildsToDisplay: emptyBuildResults.length,
-          ),
-        ));
-
-        expect(find.byType(Text), findsNothing);
-      },
-    );
-
-    testWidgets(
-      "creates the number of build result bar components equal to the number of builds to display",
-      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
         final buildResultMetric = BuildResultMetricViewModel(
-          buildResults: UnmodifiableListView([]),
-          numberOfBuildsToDisplay: 3,
+          buildResults: UnmodifiableListView(buildResults),
+          numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: buildResultMetric,
+          durationStrategy: durationStrategy,
         ));
 
-        final barWidgets = tester.widgetList(
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
           find.byType(BuildResultBarComponent),
         );
 
@@ -149,13 +97,16 @@ void main() {
     );
 
     testWidgets(
-      "displays the build result bar components with the build result bar padding strategy",
+      "applies the build result bar padding strategy initialized with build results to the build result components",
       (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
+          durationStrategy: durationStrategy,
         ));
 
         final barWidgets = tester.widgetList<BuildResultBarComponent>(
@@ -163,52 +114,37 @@ void main() {
         );
 
         final strategies = barWidgets.map((bar) => bar.paddingStrategy);
+        final strategyBuildResults = strategies.map(
+          (strategy) => strategy.buildResults,
+        );
 
         expect(strategies, everyElement(isA<BuildResultBarPaddingStrategy>()));
+        expect(strategyBuildResults, everyElement(equals(buildResults)));
       },
     );
 
     testWidgets(
-      "displays the build result bar components with the build result bar padding strategy initialized with build results",
+      "wraps each build result bar component with constrained box having non-null min height",
       (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
         final results = UnmodifiableListView(buildResults);
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: results,
-            numberOfBuildsToDisplay: buildResults.length,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
+          durationStrategy: durationStrategy,
         ));
 
-        final barWidgets = tester.widgetList<BuildResultBarComponent>(
-          find.byType(BuildResultBarComponent),
+        final constrainedBoxes = tester.widgetList<ConstrainedBox>(
+          find.byWidgetPredicate((widget) {
+            return widget is ConstrainedBox &&
+                widget.child is BuildResultBarComponent;
+          }),
         );
-
-        final strategies = barWidgets.map(
-          (bar) => bar.paddingStrategy.buildResults,
-        );
-
-        expect(strategies, everyElement(equals(results)));
-      },
-    );
-
-    testWidgets(
-      "wraps each build result bar component with constrained container having non-null min height",
-      (WidgetTester tester) async {
-        final results = UnmodifiableListView(buildResults);
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: results,
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-        ));
-
-        final containers = tester.widgetList<Container>(
-          find.byWidgetPredicate(
-            (widget) => widget is Container && widget.child is BuildResultBar,
-          ),
-        );
-        final minHeights = containers.map(
-          (container) => container.constraints.minHeight,
+        final minHeights = constrainedBoxes.map(
+          (box) => box.constraints.minHeight,
         );
 
         expect(minHeights, everyElement(isNotNull));
@@ -216,188 +152,93 @@ void main() {
     );
 
     testWidgets(
-      "creates an empty build result bar components to match the numberOfBuildsToDisplay",
+      "displays build result bar components with the build results from the build result metric view model",
       (WidgetTester tester) async {
-        final numberOfBars = buildResults.length + 1;
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
 
+        final results = UnmodifiableListView(buildResults);
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(
-              _BuildResultBarGraphTestbed.buildResultBarTestData,
-            ),
-            numberOfBuildsToDisplay: numberOfBars,
+            buildResults: results,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
           ),
+          durationStrategy: durationStrategy,
         ));
 
-        final missingBuildResultsCount = numberOfBars - buildResults.length;
-
-        final buildResultBarComponents =
+        final buildResultComponents =
             tester.widgetList<BuildResultBarComponent>(
           find.byType(BuildResultBarComponent),
         );
-
-        final emptyBuildResultBarComponents = buildResultBarComponents.where(
-          (element) => element.buildResult == null,
+        final actualResults = buildResultComponents.map(
+          (component) => component.buildResult,
         );
 
-        expect(
-          emptyBuildResultBarComponents,
-          hasLength(missingBuildResultsCount),
+        expect(actualResults, equals(results));
+      },
+    );
+
+    testWidgets(
+      "gets the duration of the given build results using the duration strategy",
+      (WidgetTester tester) async {
+        when(
+          durationStrategy.getDuration(any, maxBuildDuration: duration),
+        ).thenReturn(duration);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+            maxBuildDuration: duration,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        verifyInOrder(
+          buildResults.map(
+            (result) {
+              return durationStrategy.getDuration(
+                result,
+                maxBuildDuration: duration,
+              );
+            },
+          ).toList(),
         );
       },
     );
 
     testWidgets(
-      "applies a non-zero padding from the left to the BarGraph if there are both missing and result bars",
+      "displays the bar graph with the data created from the build durations returned by the duration strategy",
       (WidgetTester tester) async {
-        const expectedPadding = EdgeInsets.only(left: 4.0);
+        when(
+          durationStrategy.getDuration(any, maxBuildDuration: duration),
+        ).thenReturn(duration);
+        final expectedData = [duration.inMilliseconds, duration.inMilliseconds];
+
+        final buildResults = [
+          FinishedBuildResultViewModel(
+            duration: const Duration(seconds: 5),
+            date: DateTime.now(),
+            buildStatus: BuildStatus.successful,
+            buildResultPopupViewModel: buildResultPopupViewModel,
+          ),
+          InProgressBuildResultViewModel(
+            date: DateTime.now(),
+            buildResultPopupViewModel: buildResultPopupViewModel,
+          ),
+        ];
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length + 1,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+            maxBuildDuration: duration,
           ),
+          durationStrategy: durationStrategy,
         ));
 
         final barGraph = tester.widget<BarGraph>(barGraphFinder);
 
-        expect(barGraph.graphPadding, equals(expectedPadding));
-      },
-    );
-
-    testWidgets(
-      "applies a zero padding to the BarGraph if there are no missing bars",
-      (WidgetTester tester) async {
-        const expectedPadding = EdgeInsets.zero;
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-        ));
-
-        final barGraph = tester.widget<BarGraph>(barGraphFinder);
-
-        expect(barGraph.graphPadding, equals(expectedPadding));
-      },
-    );
-
-    testWidgets(
-      "applies a zero padding to the BarGraph if there are no result bars",
-      (WidgetTester tester) async {
-        const expectedPadding = EdgeInsets.zero;
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView([]),
-            numberOfBuildsToDisplay: buildResults.length,
-          ),
-        ));
-
-        final barGraph = tester.widget<BarGraph>(barGraphFinder);
-
-        expect(barGraph.graphPadding, equals(expectedPadding));
-      },
-    );
-
-    testWidgets(
-      "trims the build results from the beginning to match the given number of bars",
-      (WidgetTester tester) async {
-        const numberOfBars = 2;
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: numberOfBars,
-          ),
-        ));
-
-        final trimmedData = buildResults
-            .sublist(buildResults.length - numberOfBars)
-            .map((barData) {
-          return barData.duration.inMilliseconds;
-        });
-
-        final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
-          (widget) => widget is BarGraph,
-        ));
-
-        final barGraphData = barGraphWidget.data;
-
-        expect(barGraphData.length, equals(numberOfBars));
-
-        expect(barGraphData, equals(trimmedData));
-      },
-    );
-
-    testWidgets(
-      "correctly parses finished build result view models to the bar graph data",
-      (WidgetTester tester) async {
-        const numberOfBars = 5;
-        final buildResults = List<FinishedBuildResultViewModel>.generate(
-          numberOfBars,
-          (index) {
-            return FinishedBuildResultViewModel(
-              duration: const Duration(seconds: 5),
-              date: DateTime.now(),
-              buildStatus: BuildStatus.successful,
-              buildResultPopupViewModel: buildResultPopupViewModel,
-            );
-          },
-        );
-
-        final expectedData = buildResults
-            .map((result) => result.duration.inMilliseconds)
-            .toList();
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: numberOfBars,
-          ),
-        ));
-
-        final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
-          (widget) => widget is BarGraph,
-        ));
-
-        final barGraphData = barGraphWidget.data;
-
-        expect(barGraphData, equals(expectedData));
-      },
-    );
-
-    testWidgets(
-      "correctly parses in-progress build result view models to the bar graph data",
-      (WidgetTester tester) async {
-        const numberOfBars = 5;
-        final buildResults = List<InProgressBuildResultViewModel>.generate(
-          numberOfBars,
-          (index) {
-            return InProgressBuildResultViewModel(
-              date: DateTime.now(),
-              buildResultPopupViewModel: buildResultPopupViewModel,
-            );
-          },
-        );
-
-        final expectedData = buildResults.map((result) => 1).toList();
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(buildResults),
-            numberOfBuildsToDisplay: numberOfBars,
-          ),
-        ));
-
-        final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
-          (widget) => widget is BarGraph,
-        ));
-
-        final barGraphData = barGraphWidget.data;
-
-        expect(barGraphData, equals(expectedData));
+        expect(barGraph.data, equals(expectedData));
       },
     );
   });
@@ -433,11 +274,12 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     ),
   ];
 
-  /// A [BuildResultMetricViewModel] to display.
+  /// A [BuildResultMetricViewModel] with the data to display.
   final BuildResultMetricViewModel buildResultMetric;
 
-  /// A [MetricsThemeData] used in tests.
-  final MetricsThemeData theme;
+  /// A [BuildResultDurationStrategy] the [BuildResultBarGraph] uses to
+  /// calculate the build durations.
+  final BuildResultDurationStrategy durationStrategy;
 
   /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
   ///
@@ -445,16 +287,21 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   const _BuildResultBarGraphTestbed({
     Key key,
     this.buildResultMetric,
-    this.theme = const MetricsThemeData(),
+    this.durationStrategy,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      metricsThemeData: theme,
-      body: BuildResultBarGraph(
-        buildResultMetric: buildResultMetric,
+    return MaterialApp(
+      home: Scaffold(
+        body: BuildResultBarGraph(
+          buildResultMetric: buildResultMetric,
+          durationStrategy: durationStrategy,
+        ),
       ),
     );
   }
 }
+
+class _BuildResultDurationStrategyMock extends Mock
+    implements BuildResultDurationStrategy {}
