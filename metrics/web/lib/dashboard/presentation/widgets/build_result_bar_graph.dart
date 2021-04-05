@@ -44,7 +44,7 @@ class BuildResultBarGraph extends StatelessWidget {
       return BarGraph(
         data: _createBarGraphData(),
         barBuilder: (index, height) {
-          return Container(
+          return ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: height,
             ),
