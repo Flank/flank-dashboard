@@ -13,6 +13,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
@@ -95,7 +96,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the build result bars with the build result bar padding strategy",
+      "displays the build result bar components with the build result bar padding strategy",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -107,18 +108,18 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final barWidgets = tester.widgetList<BuildResultBar>(
-          find.byType(BuildResultBar),
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
         );
 
-        final strategies = barWidgets.map((bar) => bar.strategy);
+        final strategies = barWidgets.map((bar) => bar.paddingStrategy);
 
         expect(strategies, everyElement(isA<BuildResultBarPaddingStrategy>()));
       },
     );
 
     testWidgets(
-      "displays the build result bars with the build result bar padding strategy initialized with build results",
+      "applies the build result bar padding strategy initialized with build results to the build result bar components",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -131,11 +132,13 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final barWidgets = tester.widgetList<BuildResultBar>(
-          find.byType(BuildResultBar),
+        final barWidgets = tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
         );
 
-        final strategies = barWidgets.map((bar) => bar.strategy.buildResults);
+        final strategies = barWidgets.map(
+          (bar) => bar.paddingStrategy.buildResults,
+        );
 
         expect(strategies, everyElement(equals(results)));
       },

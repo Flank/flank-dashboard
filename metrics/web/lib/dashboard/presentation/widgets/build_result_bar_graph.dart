@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 
@@ -43,8 +43,8 @@ class BuildResultBarGraph extends StatelessWidget {
       barBuilder: (index, height) {
         return ConstrainedBox(
           constraints: BoxConstraints(minHeight: height),
-          child: BuildResultBar(
-            strategy: barStrategy,
+          child: BuildResultBarComponent(
+            paddingStrategy: barStrategy,
             buildResult: buildResults[index],
           ),
         );
