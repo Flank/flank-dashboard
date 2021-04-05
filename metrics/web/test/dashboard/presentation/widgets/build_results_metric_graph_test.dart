@@ -256,6 +256,20 @@ void main() {
         expect(barGraphPadding.padding, equals(expectedPadding));
       },
     );
+
+    testWidgets(
+      "does not display the build result bar graph if the build result view models are empty",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
+          buildResultMetric: createBuildResultMetric(
+            buildResults: createBuildResults(0),
+            numberOfBuildsToDisplay: 0,
+          ),
+        ));
+
+        expect(buildResultBarGraphFinder, findsNothing);
+      },
+    );
   });
 }
 

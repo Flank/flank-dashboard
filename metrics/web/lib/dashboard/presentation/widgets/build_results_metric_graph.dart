@@ -121,9 +121,9 @@ class BuildResultsMetricGraph extends StatelessWidget {
   /// Returns an [EdgeInsets] for the [BuildResultBarGraph] padding depending
   /// on the given [numberOfMissingBars].
   EdgeInsets _calculateGraphPadding(int numberOfMissingBars) {
-    return numberOfMissingBars > 0
-        ? const EdgeInsets.only(left: 2)
-        : EdgeInsets.zero;
+    if (numberOfMissingBars > 0) return const EdgeInsets.only(left: 2);
+
+    return EdgeInsets.zero;
   }
 
   /// Calculates the number of missing bars based on the length of the

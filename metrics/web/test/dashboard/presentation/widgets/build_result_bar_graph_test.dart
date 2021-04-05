@@ -96,7 +96,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the build result bar components with the build result bar padding strategy",
+      "applies the build result bar padding strategy initialized with build results to the build result components",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -113,39 +113,17 @@ void main() {
         );
 
         final strategies = barWidgets.map((bar) => bar.paddingStrategy);
+        final strategyBuildResults = strategies.map(
+          (strategy) => strategy.buildResults,
+        );
 
         expect(strategies, everyElement(isA<BuildResultBarPaddingStrategy>()));
+        expect(strategyBuildResults, everyElement(equals(buildResults)));
       },
     );
 
     testWidgets(
-      "applies the build result bar padding strategy initialized with build results to the build result bar components",
-      (WidgetTester tester) async {
-        when(durationStrategy.getDuration(any)).thenReturn(duration);
-
-        final results = UnmodifiableListView(buildResults);
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          buildResultMetric: BuildResultMetricViewModel(
-            buildResults: results,
-            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-          ),
-          durationStrategy: durationStrategy,
-        ));
-
-        final barWidgets = tester.widgetList<BuildResultBarComponent>(
-          find.byType(BuildResultBarComponent),
-        );
-
-        final strategies = barWidgets.map(
-          (bar) => bar.paddingStrategy.buildResults,
-        );
-
-        expect(strategies, everyElement(equals(results)));
-      },
-    );
-
-    testWidgets(
-      "wraps each build result bar with constrained box having non-null min height",
+      "wraps each build result bar component with constrained box having non-null min height",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -160,7 +138,8 @@ void main() {
 
         final constrainedBoxes = tester.widgetList<ConstrainedBox>(
           find.byWidgetPredicate((widget) {
-            return widget is ConstrainedBox && widget.child is BuildResultBar;
+            return widget is ConstrainedBox &&
+                widget.child is BuildResultBarComponent;
           }),
         );
         final minHeights = constrainedBoxes.map(
@@ -168,6 +147,32 @@ void main() {
         );
 
         expect(minHeights, everyElement(isNotNull));
+      },
+    );
+
+    testWidgets(
+      "displays build result bar components with the build results from the build result metric view model",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
+        final results = UnmodifiableListView(buildResults);
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: results,
+            numberOfBuildsToDisplay: numberOfBuildsToDisplay,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final buildResultComponents =
+            tester.widgetList<BuildResultBarComponent>(
+          find.byType(BuildResultBarComponent),
+        );
+        final actualResults = buildResultComponents.map(
+          (component) => component.buildResult,
+        );
+
+        expect(actualResults, equals(results));
       },
     );
 

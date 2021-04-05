@@ -18,8 +18,8 @@ class BuildResultBarGraph extends StatelessWidget {
   /// build [Duration]s.
   final BuildResultDurationStrategy durationStrategy;
 
-  /// Creates the [BuildResultBarGraph] from the given [buildResultMetric] and
-  /// [durationStrategy].
+  /// Creates a new instance of the [BuildResultBarGraph] with the given
+  /// [buildResultMetric] and [durationStrategy].
   ///
   /// Throws an [AssertionError] if the given [buildResultMetric] or
   /// [durationStrategy] is `null`.
@@ -34,7 +34,7 @@ class BuildResultBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buildResults = buildResultMetric.buildResults;
-    final barStrategy = BuildResultBarPaddingStrategy(
+    final paddingStrategy = BuildResultBarPaddingStrategy(
       buildResults: buildResults,
     );
 
@@ -44,7 +44,7 @@ class BuildResultBarGraph extends StatelessWidget {
         return ConstrainedBox(
           constraints: BoxConstraints(minHeight: height),
           child: BuildResultBarComponent(
-            paddingStrategy: barStrategy,
+            paddingStrategy: paddingStrategy,
             buildResult: buildResults[index],
           ),
         );
