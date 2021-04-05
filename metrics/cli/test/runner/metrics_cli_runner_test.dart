@@ -10,6 +10,9 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsCliRunner", () {
     final runner = MetricsCliRunner();
+    final deployerFactory = DeployerFactory();
+    final deployCommand = DeployCommand(deployerFactory);
+    final deployCommandName = deployCommand.name;
 
     test(
       ".executableName equals to the 'metrics'",
@@ -32,10 +35,6 @@ void main() {
     test(
       "registers a deploy command on create",
       () {
-        final deployerFactory = DeployerFactory();
-        final deployCommand = DeployCommand(deployerFactory);
-        final deployCommandName = deployCommand.name;
-
         final commands = runner.argParser.commands;
 
         expect(commands, contains(deployCommandName));
@@ -51,6 +50,15 @@ void main() {
         final commands = runner.argParser.commands;
 
         expect(commands, contains(doctorCommandName));
+      },
+    );
+
+    test(
+      "creates a deploy command with the deployer factory",
+      () {
+        final command = runner.commands[deployCommandName] as DeployCommand;
+
+        expect(command?.deployerFactory, isNotNull);
       },
     );
   });
