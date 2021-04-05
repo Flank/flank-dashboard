@@ -37,6 +37,13 @@ void main() {
       ),
     );
 
+    final popupViewModel = BuildResultPopupViewModel(
+      date: DateTime.now(),
+      duration: Duration.zero,
+      buildStatus: BuildStatus.successful,
+    );
+    final urlLauncherMock = _UrlLauncherMock();
+
     final placeholderFinder = find.byType(PlaceholderBar);
     final graphIndicatorFinder = find.byWidgetPredicate(
       (widget) {
@@ -62,12 +69,6 @@ void main() {
       });
     }
 
-    final popupViewModel = BuildResultPopupViewModel(
-      date: DateTime.now(),
-      duration: Duration.zero,
-      buildStatus: BuildStatus.successful,
-    );
-
     BuildResultViewModel createBuildResult(BuildStatus status) {
       return FinishedBuildResultViewModel(
         buildResultPopupViewModel: popupViewModel,
@@ -80,8 +81,9 @@ void main() {
 
     final successfulBuildResult = createBuildResult(BuildStatus.successful);
 
-    final urlLauncherMock = _UrlLauncherMock();
-    UrlLauncherPlatform.instance = urlLauncherMock;
+    setUpAll(() {
+      UrlLauncherPlatform.instance = urlLauncherMock;
+    });
 
     tearDown(() {
       reset(urlLauncherMock);
@@ -253,7 +255,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics graph indicator with the build result's build status as a value the bar component is hovered",
+      "displays the metrics graph indicator with the build result's build status as a value when the bar component is hovered",
       (tester) async {
         final expectedBuildStatus = successfulBuildResult.buildStatus;
 
@@ -393,7 +395,7 @@ class _BuildResultBarComponentTestbed extends StatelessWidget {
   /// A [MetricsThemeData] to apply to this bar component in tests.
   final MetricsThemeData themeData;
 
-  /// A [BuildResultViewModel] used in tests
+  /// A [BuildResultViewModel] used in tests.
   final BuildResultViewModel buildResult;
 
   /// A [BuildResultBarPaddingStrategy] to apply to this bar component in tests.

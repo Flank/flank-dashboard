@@ -30,6 +30,6 @@ class BuildStatusGraphIndicatorAppearanceStrategy
         return attentionLevel.neutral;
     }
 
-    return null;
+    return attentionLevel.neutral;
   }
 }

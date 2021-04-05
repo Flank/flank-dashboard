@@ -8,8 +8,8 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A single bar for a [BarGraph] widget that displays the
-/// result of a [BuildResultViewModel] instance.
+/// A single bar that displays a build result using 
+/// the given [BuildResultViewModel].
 class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
   final BuildResultViewModel buildResult;

@@ -70,11 +70,11 @@ void main() {
     );
 
     test(
-      ".selectStyle() returns null if the given status is null",
+      ".selectStyle() returns the neutral style from the given attention level if the given status is null",
       () {
         final result = strategy.selectStyle(attentionLevel, null);
 
-        expect(result, isNull);
+        expect(result, equals(neutralStyle));
       },
     );
   });

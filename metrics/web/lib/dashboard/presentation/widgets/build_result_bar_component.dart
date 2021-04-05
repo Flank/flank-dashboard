@@ -43,6 +43,7 @@ class BuildResultBarComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const barWidth = DimensionsConfig.graphBarWidth;
+    final barPadding = _calculateBarPadding();
     const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
     const indicatorRadius = indicatorDiameter / 2.0;
     const indicatorHorizontalOffset = (barWidth - indicatorDiameter) / 2.0;
@@ -67,6 +68,7 @@ class BuildResultBarComponent extends StatelessWidget {
       ),
       offsetBuilder: (triggerSize) => _calculatePopupOffset(
         triggerSize,
+        barPadding,
         indicatorRadius,
       ),
       popup: BuildResultPopupCard(
@@ -81,7 +83,7 @@ class BuildResultBarComponent extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             onTap: _launchBuildUrl,
             child: Padding(
-              padding: _calculateBarPadding(),
+              padding: barPadding,
               child: Stack(
                 clipBehavior: Clip.none,
                 fit: StackFit.passthrough,
@@ -110,10 +112,9 @@ class BuildResultBarComponent extends StatelessWidget {
   /// Calculates the [Offset] for the bar popup.
   Offset _calculatePopupOffset(
     Size triggerSize,
+    EdgeInsets barPadding,
     double indicatorRadius,
   ) {
-    final barPadding = _calculateBarPadding();
-
     final paddingOffset = barPadding.left - barPadding.right;
     final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
     final dy = triggerSize.height + indicatorRadius + 4.0;

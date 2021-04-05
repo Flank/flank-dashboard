@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/strategy/metrics_graph_indicator_appearance_strategy.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/metrics_graph_indicator.dart';
 import 'package:mockito/mockito.dart';
@@ -60,6 +61,29 @@ void main() {
         );
 
         verify(strategy.selectStyle(any, value)).called(once);
+      },
+    );
+
+    testWidgets(
+      ".selectStyle() returns the graph indicator style returned by the metrics graph indicator appearance strategy",
+      (WidgetTester tester) async {
+        when(strategy.selectStyle(any, value)).thenReturn(style);
+
+        await tester.pumpWidget(
+          _MetricsGraphIndicatorTestbed(
+            value: value,
+            strategy: strategy,
+          ),
+        );
+
+        final graphIndicator = tester.widget<MetricsGraphIndicator>(
+          find.byType(MetricsGraphIndicator),
+        );
+        final graphIndicatorStyle = graphIndicator.selectStyle(
+          const GraphIndicatorAttentionLevel(),
+        );
+
+        expect(graphIndicatorStyle, equals(style));
       },
     );
 
