@@ -3,6 +3,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:rive/rive.dart';
 
 /// A widget that displays the the bar with the in-progress [RiveAnimation].
 class MetricsAnimatedBar extends StatelessWidget {
@@ -13,27 +15,30 @@ class MetricsAnimatedBar extends StatelessWidget {
   final bool isHovered;
 
   /// Creates a new instance of the [MetricsAnimatedBar] with the given
-  /// parameters.
+  /// [isHovered] and [height].
   ///
-  /// Throws an [AssertionError] if the given [isHovered] is `null`.
+  /// Throws an [AssertionError] if the given [height] or [isHovered] is `null`.
   const MetricsAnimatedBar({
     Key key,
-    this.height,
+    @required this.height,
     @required this.isHovered,
-  })  : assert(isHovered != null),
+  })  : assert(height != null),
+        assert(isHovered != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    const barWidth = DimensionsConfig.graphBarWidth;
+    const asset = 'web/animation/in_progress_bar.riv';
+
+    return SizedBox(
       height: height,
-      child: FittedBox(
+      width: barWidth,
+      child: RiveAnimation(
+        asset,
         fit: BoxFit.fitWidth,
-        child: isHovered
-            ? const RiveAnimation(
-                'assets/in_progress.riv',
-              )
-            : const RiveAnimation('asset/in_progress_hovered.riv'),
+        alignment: Alignment.bottomCenter,
+        controller: SimpleAnimation('Animation 1'),
       ),
     );
   }
