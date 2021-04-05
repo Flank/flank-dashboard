@@ -17,7 +17,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A widget that displays a build result view model as a bar graph component.
-/// 
+///
 /// Displays a [MetricsGraphIndicator] and a [BuildResultPopupCard] when
 /// this widget is hovered.
 class BuildResultBarComponent extends StatelessWidget {
@@ -43,11 +43,6 @@ class BuildResultBarComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const barWidth = DimensionsConfig.graphBarWidth;
-    final barPadding = _calculateBarPadding();
-    const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
-    const indicatorRadius = indicatorDiameter / 2.0;
-    const indicatorHorizontalOffset = (barWidth - indicatorDiameter) / 2.0;
-    const indicatorStrategy = BuildStatusGraphIndicatorAppearanceStrategy();
 
     if (buildResult == null) {
       final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
@@ -58,6 +53,12 @@ class BuildResultBarComponent extends StatelessWidget {
         color: inactiveTheme.primaryColor,
       );
     }
+
+    final barPadding = _calculateBarPadding();
+    const indicatorDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
+    const indicatorRadius = indicatorDiameter / 2.0;
+    const indicatorHorizontalOffset = (barWidth - indicatorDiameter) / 2.0;
+    const indicatorStrategy = BuildStatusGraphIndicatorAppearanceStrategy();
 
     return BasePopup(
       popupOpaque: false,
