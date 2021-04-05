@@ -58,17 +58,18 @@ void main() {
       () {
         when(flutterCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        expect(flutterService.version(), throwsA(isA<StateError>()));
+        expect(flutterService.version(), throwsStateError);
       },
     );
 
     test(
       ".build() doesn't build the web application if enabling web support throws",
-      () {
+      () async {
         when(flutterCli.enableWeb())
             .thenAnswer((_) => Future.error(stateError));
 
-        expect(flutterService.build(path), throwsA(isA<StateError>()));
+        await expectLater(flutterService.build(path), throwsStateError);
+
         verifyNever(flutterCli.buildWeb(any));
       },
     );
@@ -79,7 +80,7 @@ void main() {
         when(flutterCli.buildWeb(any))
             .thenAnswer((_) => Future.error(stateError));
 
-        expect(flutterService.build(path), throwsA(isA<StateError>()));
+        expect(flutterService.build(path), throwsStateError);
       },
     );
   });
