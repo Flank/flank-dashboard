@@ -17,7 +17,6 @@ package test_driver {
         package parser {
             class DriverTestArgumentsParser {
                 - static const _useFirestoreEmulatorFlagName : String
-                - static const _firestoreEmulatorPortOptionName : String
                 - _configureParser() : void
                 + parseArguments(List<String> args) : DriverTestArguments
             }
@@ -30,10 +29,9 @@ package test_driver {
 
             class FirestoreEmulatorConfig {
                 + static useFirestoreEmulatorEnvVariableName : String
-                + static firestorePortEnvVariableName : String
+                + static port : int
 
                 + useEmulator : bool
-                + port : String
 
                 + factory fromEnvironment()
                 + toMap() : Map<String, String>
@@ -60,7 +58,6 @@ package test_driver {
 
             package runner {
                 abstract class FirebaseEmulatorRunner {
-                    + port : int
                     + statusRequestUrl : String
                     + isAppStarted() : Future<void>
                 }

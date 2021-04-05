@@ -105,22 +105,17 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-The feature is introduced by adding additional parameters to the integration tests running command.
+The feature is introduced by adding an additional parameter - `use-firestore-emulator`(default to `true`) with the to the integration tests running command.
 
-The next table contains the definitions of the parameters with their default values.
+It determines whether the integration tests should run with the `Firebase Emulator`.
 
-| Parameter         | Default | Description                                                           |
-| ----------------- | -------- | --------------------------------------------------------------------- |
-| **use-firestore-emulator**  | true     | Determines whether the integration tests should run with the `Firebase Emulator`. |
-| **firestore-emulator-port** | 8080     |  Specifies the Firestore emulator's running port.                                 |
-
-The following code snippet shows an example of using the new parameters:
+The following code snippet shows an example of using the new parameter:
 
 ```bash
-dart test_driver/main.dart --use-firestore-emulator --firestore-emulator-port=8081
+dart test_driver/main.dart --use-firestore-emulator
 ```
 
-Or, if you accept the defaults, you can omit them.
+Or, if you accept the default value, you can omit it.
 
 As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
 
@@ -162,15 +157,15 @@ Consider the following class diagram showing the main classes and relationships 
 
 #### Configure the test runner
 
-As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data. Also, to connect the application to the running Firestore emulator, we need to know the emulator's port, so we should add a `firestore-emulator-port` option to the driver tests script. This option represents the port the `Firestore emulator` will run on and provides an ability to change it if it is required.
+As we want to use the Firebase emulator to run integration tests, we should add a parameter - `use-firestore-emulator`, that determines whether tests should use the production database or run the local emulator with test data.
 
-To group these parameters and simplify the logic of retrieving their values inside the integration tests, we should create the `FirestoreEmulatorConfig` model.
+To simplify the logic of retrieving the parameter's value inside the integration tests, we should create the `FirestoreEmulatorConfig` model.
 
 To pass the Firestore emulator configuration to the application under tests, we are going to update the `FlutterWebDriver` class and add a new `dart-define` option containing the `Map` representation of the Firestore emulator configuration. It allows us to easily access the configuration from the application under tests using the `FirestoreEmulatorConfig.fromEnvironment()` factory method.
 
 #### Configure the application
 
-In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the port from the `FirestoreEmulatorConfig` instance.
+In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the default port from the `FirestoreEmulatorConfig` instance.
 
 With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
 
