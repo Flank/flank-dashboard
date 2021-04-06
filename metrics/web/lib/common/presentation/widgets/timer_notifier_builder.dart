@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 /// the [TimerNotifier].
 ///
 /// This widget rebuilds on each [TimerNotifier] tick, if the given
-/// [rebuildsEnabled] is `true`. Otherwise, the widget does not rebuild.
+/// [shouldSubscribe] is `true`. Otherwise, the widget does not rebuild.
 class TimerNotifierBuilder extends StatelessWidget {
   /// A flag that indicates whether this widget should subscribe
   /// to [TimerNotifier]'s ticks.

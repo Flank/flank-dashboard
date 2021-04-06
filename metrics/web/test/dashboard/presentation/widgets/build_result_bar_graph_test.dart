@@ -44,7 +44,7 @@ void main() {
     final barGraphFinder = find.byWidgetPredicate(
       (widget) => widget is BarGraph<int>,
     );
-    final metricsTimerBuilderFinder = find.ancestor(
+    final timerNotifierBuilderFinder = find.ancestor(
       of: barGraphFinder,
       matching: find.byType(TimerNotifierBuilder),
     );
@@ -250,7 +250,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a metrics timer builder",
+      "applies a timer notifier builder",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -262,12 +262,12 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        expect(metricsTimerBuilderFinder, findsOneWidget);
+        expect(timerNotifierBuilderFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies a true should subscribe value to the metrics timer builder if the given build results contain in-progress builds",
+      "applies a true should subscribe value to the timer notifier builder if the given build results contain in-progress builds",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -286,16 +286,16 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final metricsTimerBuilder = tester.widget<TimerNotifierBuilder>(
-          metricsTimerBuilderFinder,
+        final timerBuilderBuilder = tester.widget<TimerNotifierBuilder>(
+          timerNotifierBuilderFinder,
         );
 
-        expect(metricsTimerBuilder.shouldSubscribe, isTrue);
+        expect(timerBuilderBuilder.shouldSubscribe, isTrue);
       },
     );
 
     testWidgets(
-      "applies a false should subscribe value to the metrics timer builder if the given build results does not contain in-progress builds",
+      "applies a false should subscribe value to the timer notifier builder if the given build results does not contain in-progress builds",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -316,11 +316,11 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final metricsTimerBuilder = tester.widget<TimerNotifierBuilder>(
-          metricsTimerBuilderFinder,
+        final timerNotifierBuilder = tester.widget<TimerNotifierBuilder>(
+          timerNotifierBuilderFinder,
         );
 
-        expect(metricsTimerBuilder.shouldSubscribe, isFalse);
+        expect(timerNotifierBuilder.shouldSubscribe, isFalse);
       },
     );
   });
