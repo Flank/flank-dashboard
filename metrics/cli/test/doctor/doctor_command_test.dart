@@ -15,7 +15,7 @@ void main() {
     final doctor = _DoctorMock();
     final doctorCommand = DoctorCommand(doctorFactory);
 
-    PostExpectation<Doctor> whenDoctorFactoryCreate() {
+    PostExpectation<Doctor> whenCreateDoctor() {
       return when(doctorFactory.create());
     }
 
@@ -53,7 +53,7 @@ void main() {
     test(
       ".run() creates doctor using the given doctor factory",
       () async {
-        whenDoctorFactoryCreate().thenReturn(doctor);
+        whenCreateDoctor().thenReturn(doctor);
 
         await doctorCommand.run();
 
@@ -64,7 +64,7 @@ void main() {
     test(
       ".run() uses the doctor to check versions",
       () async {
-        whenDoctorFactoryCreate().thenReturn(doctor);
+        whenCreateDoctor().thenReturn(doctor);
 
         await doctorCommand.run();
 

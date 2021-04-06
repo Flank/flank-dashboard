@@ -48,10 +48,6 @@ void main() {
     test(
       "registers a doctor command on create",
       () {
-        final doctorFactory = DoctorFactory();
-        final doctorCommand = DoctorCommand(doctorFactory);
-        final doctorCommandName = doctorCommand.name;
-
         final commands = runner.argParser.commands;
 
         expect(commands, contains(doctorCommandName));
