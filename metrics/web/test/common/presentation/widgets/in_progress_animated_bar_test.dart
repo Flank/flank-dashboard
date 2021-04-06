@@ -6,13 +6,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/widgets/metrics_animated_bar.dart';
+import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:rive/rive.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group("MetricsAnimatedBar", () {
+  group("InProgressAnimatedBar", () {
     const asset = 'web/animation/in_progress_bar.riv';
     const artboardName = 'In progress bar';
 
@@ -28,7 +28,7 @@ void main() {
       "throws an AssertionError if the given height is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(height: null),
+          const _InProgressAnimatedBarTestbed(height: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -39,7 +39,7 @@ void main() {
       "throws an AssertionError if the given rive asset is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(riveAsset: null),
+          const _InProgressAnimatedBarTestbed(riveAsset: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -52,7 +52,7 @@ void main() {
         const expectedHeight = 20.0;
 
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(
+          const _InProgressAnimatedBarTestbed(
             riveAsset: asset,
             height: expectedHeight,
           ),
@@ -71,7 +71,7 @@ void main() {
         const expectedWidth = DimensionsConfig.graphBarWidth;
 
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(
+          const _InProgressAnimatedBarTestbed(
             riveAsset: asset,
           ),
         );
@@ -87,7 +87,7 @@ void main() {
       "displays the rive animation with the given asset",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(
+          const _InProgressAnimatedBarTestbed(
             riveAsset: asset,
           ),
         );
@@ -102,7 +102,7 @@ void main() {
       "aligns the rive animation to the bottom center",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(riveAsset: asset),
+          const _InProgressAnimatedBarTestbed(riveAsset: asset),
         );
 
         final align = tester.widget<Align>(find.byType(Align));
@@ -115,7 +115,7 @@ void main() {
       "displays the rive animation with fit width box fit",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(
+          const _InProgressAnimatedBarTestbed(
             riveAsset: asset,
           ),
         );
@@ -130,7 +130,7 @@ void main() {
       "displays the rive animation with given controller",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          _MetricsAnimatedBarTestbed(
+          _InProgressAnimatedBarTestbed(
             riveAsset: asset,
             controller: controller,
           ),
@@ -147,7 +147,7 @@ void main() {
       "displays the rive animation with the given artboard name",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsAnimatedBarTestbed(
+          const _InProgressAnimatedBarTestbed(
             riveAsset: asset,
             artboardName: artboardName,
           ),
@@ -161,8 +161,8 @@ void main() {
   });
 }
 
-/// A testbed widget used to test the [MetricsAnimatedBar] widget.
-class _MetricsAnimatedBarTestbed extends StatelessWidget {
+/// A testbed widget used to test the [InProgressAnimatedBar] widget.
+class _InProgressAnimatedBarTestbed extends StatelessWidget {
   /// A rive animation asset to be used in tests.
   final String riveAsset;
 
@@ -175,8 +175,8 @@ class _MetricsAnimatedBarTestbed extends StatelessWidget {
   /// A height of this bar to be used in tests.
   final double height;
 
-  /// Create a new instance of the [_MetricsAnimatedBarTestbed],
-  const _MetricsAnimatedBarTestbed({
+  /// Create a new instance of the [_InProgressAnimatedBarTestbed],
+  const _InProgressAnimatedBarTestbed({
     Key key,
     this.controller,
     this.artboardName,
@@ -188,7 +188,7 @@ class _MetricsAnimatedBarTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: MetricsAnimatedBar(
+        body: InProgressAnimatedBar(
           height: height,
           riveAsset: riveAsset,
           controller: controller,

@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
-import 'package:metrics/common/presentation/widgets/metrics_animated_bar.dart';
+import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
@@ -45,7 +45,7 @@ class BuildResultBar extends StatelessWidget {
               );
             }
 
-            return MetricsAnimatedBar(
+            return InProgressAnimatedBar(
               riveAsset: 'web/animation/in_progress_bar.riv',
               height: barHeight,
               controller: SimpleAnimation('Animation 1'),

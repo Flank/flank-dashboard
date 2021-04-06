@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/widgets/metrics_animated_bar.dart';
+import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
@@ -46,7 +46,7 @@ void main() {
     final metricsColoredBarFinder = find.byWidgetPredicate(
       (widget) => widget is MetricsColoredBar<BuildStatus>,
     );
-    final metricsAnimatedBarFinder = find.byType(MetricsAnimatedBar);
+    final metricsAnimatedBarFinder = find.byType(InProgressAnimatedBar);
 
     final mouseRegionFinder = find.ancestor(
       of: find.byType(GestureDetector),
@@ -57,8 +57,8 @@ void main() {
       return tester.widget<MetricsColoredBar>(metricsColoredBarFinder);
     }
 
-    MetricsAnimatedBar getMetricsAnimatedBar(WidgetTester tester) {
-      return tester.widget<MetricsAnimatedBar>(metricsAnimatedBarFinder);
+    InProgressAnimatedBar getMetricsAnimatedBar(WidgetTester tester) {
+      return tester.widget<InProgressAnimatedBar>(metricsAnimatedBarFinder);
     }
 
     Future<void> hoverBar(WidgetTester tester) async {
