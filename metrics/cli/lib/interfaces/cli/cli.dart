@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell_run.dart';
 
@@ -27,18 +28,26 @@ abstract class Cli {
   /// from the current terminal's working directory.
   /// Provide the [stdin] to enable the interaction with the [executable].
   /// If the [stdin] is `null`, the [sharedStdIn] is used.
+  ///
+  /// Throws a [StateError] if the process execution exit code is not `0`.
   Future<ProcessResult> run(
     List<String> arguments, {
     bool attachOutput = true,
     String workingDirectory,
     Stream<List<int>> stdin,
   }) async {
-    return cmd.run(
+    final result = await cmd.run(
       executable,
       arguments ?? [],
       verbose: attachOutput,
       workingDirectory: workingDirectory,
       stdin: stdin ?? sharedStdIn,
     );
+
+    if (result.exitCode == 0) {
+      return result;
+    }
+
+    throw StateError(CommonStrings.executionWentWrong(executable));
   }
 }
