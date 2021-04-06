@@ -17,12 +17,15 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:rive/rive.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("BuildResultBar", () {
     const height = 10.0;
+    const inProgressAsset = 'web/animation/in_progress_bar.riv';
+    const animationName = 'Animation 1';
 
     final popupViewModel = BuildResultPopupViewModel(
       date: DateTime.now(),
@@ -169,18 +172,46 @@ void main() {
     );
 
     testWidgets(
-      "applies the hover state to the metrics animated bar",
+      "displays the metrics animated bar with the in-progress bar animation asset",
       (tester) async {
         await tester.pumpWidget(_BuildResultBarTestbed(
+          constraints: const BoxConstraints(minHeight: height),
           buildResult: inProgressBuildResult,
         ));
 
-        await hoverBar(tester);
-        await tester.pump();
-
         final animatedBar = getMetricsAnimatedBar(tester);
 
-        expect(animatedBar.isHovered, isTrue);
+        expect(animatedBar.riveAsset, equals(inProgressAsset));
+      },
+    );
+
+    testWidgets(
+      "displays the metrics animated bar with the simple animation controller",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          constraints: const BoxConstraints(minHeight: height),
+          buildResult: inProgressBuildResult,
+        ));
+
+        final animatedBar = getMetricsAnimatedBar(tester);
+        final controller = animatedBar.controller;
+
+        expect(controller, isA<SimpleAnimation>());
+      },
+    );
+
+    testWidgets(
+      "displays the metrics animated bar with the right animation name in the animation controller",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          constraints: const BoxConstraints(minHeight: height),
+          buildResult: inProgressBuildResult,
+        ));
+
+        final animatedBar = getMetricsAnimatedBar(tester);
+        final controller = animatedBar.controller as SimpleAnimation;
+
+        expect(controller.animationName, equals(animationName));
       },
     );
 

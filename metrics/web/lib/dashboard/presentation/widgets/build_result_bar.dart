@@ -9,6 +9,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:rive/rive.dart';
 
 /// A single bar that displays a build result using
 /// the given [BuildResultViewModel].
@@ -45,8 +46,9 @@ class BuildResultBar extends StatelessWidget {
             }
 
             return MetricsAnimatedBar(
-              isHovered: isHovered,
+              riveAsset: 'web/animation/in_progress_bar.riv',
               height: barHeight,
+              controller: SimpleAnimation('Animation 1'),
             );
           },
         );

@@ -8,29 +8,36 @@ import 'package:rive/rive.dart';
 
 /// A widget that displays the the bar with the in-progress [RiveAnimation].
 class MetricsAnimatedBar extends StatelessWidget {
+  /// A [String] representing a path to the [RiveAnimation] asset this bar displays.
+  final String riveAsset;
+
+  /// A [RiveAnimationController] to control this bar's animation.
+  final RiveAnimationController controller;
+
+  /// A [String] representing a name of the [Artboard] to load for this bar's
+  /// animation.
+  final String artboardName;
+
   /// A height of this bar.
   final double height;
 
-  /// A flag that indicates whether this bar is hovered.
-  final bool isHovered;
-
   /// Creates a new instance of the [MetricsAnimatedBar] with the given
-  /// [isHovered] and [height].
+  /// parameters.
   ///
-  /// Throws an [AssertionError] if the given [height] or [isHovered] is `null`.
+  /// Throws an [AssertionError] if the given [riveAsset] or [height] is `null`.
   const MetricsAnimatedBar({
     Key key,
+    @required this.riveAsset,
     @required this.height,
-    @required this.isHovered,
-  })  : assert(height != null),
-        assert(isHovered != null),
+    this.controller,
+    this.artboardName,
+  })  : assert(riveAsset != null),
+        assert(height != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const barWidth = DimensionsConfig.graphBarWidth;
-    const asset = 'web/animation/in_progress_bar.riv';
-    const animationName = 'Animation 1';
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -38,9 +45,10 @@ class MetricsAnimatedBar extends StatelessWidget {
         height: height,
         width: barWidth,
         child: RiveAnimation(
-          asset,
+          riveAsset,
           fit: BoxFit.fitWidth,
-          controller: SimpleAnimation(animationName),
+          controller: controller,
+          artboardName: artboardName,
         ),
       ),
     );
