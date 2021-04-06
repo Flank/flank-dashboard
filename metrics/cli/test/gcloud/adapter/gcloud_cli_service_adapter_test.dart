@@ -144,6 +144,16 @@ void main() {
     );
 
     test(
+      ".createProject() throws if GCloud CLI throws during the project creation",
+      () {
+        when(gcloudCli.createProject(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
       ".createProject() stops the project creation process if GCloud CLI throws during the project creation",
       () async {
         when(gcloudCli.createProject(any))
@@ -158,6 +168,16 @@ void main() {
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() throws if GCloud CLI throws during the available regions showing",
+      () async {
+        when(gcloudCli.listRegions(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.createProject(), throwsStateError);
       },
     );
 
@@ -178,6 +198,16 @@ void main() {
     );
 
     test(
+      ".createProject() throws if GCloud CLI throws during the requesting the region from the user",
+      () {
+        when(prompter.prompt(GcloudStrings.enterRegionName))
+            .thenThrow(stateError);
+
+        expect(gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
       ".createProject() stops the project creation process if there is an error during the requesting the region from the user",
       () async {
         when(prompter.prompt(GcloudStrings.enterRegionName))
@@ -191,6 +221,16 @@ void main() {
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() throws if GCloud CLI throws during the project app creation",
+      () {
+        when(gcloudCli.createProjectApp(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.createProject(), throwsStateError);
       },
     );
 
@@ -213,6 +253,16 @@ void main() {
     );
 
     test(
+      ".createProject() throws if GCloud CLI throws during the Firestore API enabling",
+      () {
+        when(gcloudCli.enableFirestoreApi(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
       ".createProject() stops the project creation process if GCloud CLI throws during the Firestore API enabling",
       () async {
         when(gcloudCli.enableFirestoreApi(any))
@@ -228,6 +278,16 @@ void main() {
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() throws if GCloud CLI throws during the database creation",
+      () {
+        when(gcloudCli.createDatabase(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.createProject(), throwsStateError);
       },
     );
 

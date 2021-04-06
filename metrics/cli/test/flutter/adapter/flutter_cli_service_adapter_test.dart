@@ -63,6 +63,16 @@ void main() {
     );
 
     test(
+      ".build() throws if Flutter CLI throws during the web support enabling",
+      () {
+        when(flutterCli.enableWeb())
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(flutterService.build(path), throwsStateError);
+      },
+    );
+
+    test(
       ".build() doesn't build the web application if Flutter CLI throws during the web support enabling",
       () async {
         when(flutterCli.enableWeb())
@@ -78,6 +88,16 @@ void main() {
 
     test(
       ".build() throws if Flutter CLI throws during the web application building",
+      () {
+        when(flutterCli.buildWeb(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(flutterService.build(path), throwsStateError);
+      },
+    );
+
+    test(
+      ".build() stops the build process if Flutter CLI throws during the web application building",
       () async {
         when(flutterCli.buildWeb(any))
             .thenAnswer((_) => Future.error(stateError));
