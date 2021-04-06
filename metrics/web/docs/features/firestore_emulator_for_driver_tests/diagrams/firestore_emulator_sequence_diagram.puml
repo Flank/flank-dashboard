@@ -54,9 +54,11 @@ deactivate FirestoreEmulatorConfig
 activate FirestoreInstance
 
 FirestoreInstance --> FirestoreInstance : points to the local emulator
-
-"Application tests" --> Bob : tests result
+FirestoreInstance --> "Application tests" : settings applied
 deactivate FirestoreInstance
+
+"Application tests" --> "Application tests" : runs tests
+"Application tests" --> Bob : tests result
 deactivate "Application tests"
 
 @enduml
