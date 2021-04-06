@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
+import 'package:metrics/common/presentation/widgets/metrics_timer_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -43,6 +43,10 @@ void main() {
 
     final barGraphFinder = find.byWidgetPredicate(
       (widget) => widget is BarGraph<int>,
+    );
+    final metricsTimerBuilderFinder = find.ancestor(
+      of: barGraphFinder,
+      matching: find.byType(MetricsTimerBuilder),
     );
 
     tearDown(() {
@@ -246,34 +250,77 @@ void main() {
     );
 
     testWidgets(
-      "rebuilds on TimerNotifier tick",
+      "applies a metrics timer builder",
       (WidgetTester tester) async {
-        const expectedDuration = Duration(days: 2);
-        const initialDuration = Duration(days: 1);
-
-        final timerNotifier = _TimerNotifierMock();
-        when(durationStrategy.getDuration(any)).thenReturn(initialDuration);
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
             buildResults: UnmodifiableListView(buildResults),
             numberOfBuildsToDisplay: buildResults.length,
           ),
-          timerNotifier: timerNotifier,
           durationStrategy: durationStrategy,
         ));
 
-        when(durationStrategy.getDuration(any)).thenReturn(expectedDuration);
-        timerNotifier.notifyListeners();
-        await tester.pump();
+        expect(metricsTimerBuilderFinder, findsOneWidget);
+      },
+    );
 
-        final barGraph = tester.widget<BarGraph>(barGraphFinder);
-        final barGraphData = barGraph.data;
+    testWidgets(
+      "applies a true rebuilds enabled value to the metrics timer builder if the given build results contain in-progress builds",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
 
-        expect(
-          barGraphData,
-          everyElement(equals(expectedDuration.inMilliseconds)),
+        final buildResults = [
+          InProgressBuildResultViewModel(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            date: DateTime.now(),
+          ),
+        ];
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final metricsTimerBuilder = tester.widget<MetricsTimerBuilder>(
+          metricsTimerBuilderFinder,
         );
+
+        expect(metricsTimerBuilder.rebuildsEnabled, isTrue);
+      },
+    );
+
+    testWidgets(
+      "applies a false rebuilds enabled value to the metrics timer builder if the given build results does not contain in-progress builds",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
+        final buildResults = [
+          FinishedBuildResultViewModel(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            duration: duration,
+            buildStatus: BuildStatus.successful,
+            date: DateTime.now(),
+          ),
+        ];
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final metricsTimerBuilder = tester.widget<MetricsTimerBuilder>(
+          metricsTimerBuilderFinder,
+        );
+
+        expect(metricsTimerBuilder.rebuildsEnabled, isFalse);
       },
     );
   });
@@ -316,9 +363,6 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// calculate the build durations.
   final BuildResultDurationStrategy durationStrategy;
 
-  /// A [TimerNotifier] to use in tests.
-  final TimerNotifier timerNotifier;
-
   /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
   ///
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
@@ -326,7 +370,6 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     Key key,
     this.buildResultMetric,
     this.durationStrategy,
-    this.timerNotifier,
   }) : super(key: key);
 
   @override
@@ -334,7 +377,6 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: TestInjectionContainer(
-          timerNotifier: timerNotifier,
           child: BuildResultBarGraph(
             buildResultMetric: buildResultMetric,
             durationStrategy: durationStrategy,
@@ -347,7 +389,3 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
 class _BuildResultDurationStrategyMock extends Mock
     implements BuildResultDurationStrategy {}
-
-class _TimerNotifierMock extends Mock
-    with ChangeNotifier
-    implements TimerNotifier {}

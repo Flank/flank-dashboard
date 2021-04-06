@@ -15,10 +15,10 @@ void main() {
   group("MetricsTimerBuilder", () {
     const child = Text('child');
 
-    final timerNotifier = _TimerNotifierMock();
+    TimerNotifier timerNotifier;
 
-    tearDown(() {
-      reset(timerNotifier);
+    setUp(() {
+      timerNotifier = _TimerNotifierMock();
     });
 
     testWidgets(

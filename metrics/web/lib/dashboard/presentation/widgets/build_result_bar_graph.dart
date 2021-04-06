@@ -3,13 +3,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
+import 'package:metrics/common/presentation/widgets/metrics_timer_builder.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
-import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
-import 'package:provider/provider.dart';
 
 /// A [BarGraph] that displays the build results.
 class BuildResultBarGraph extends StatelessWidget {
@@ -40,22 +40,35 @@ class BuildResultBarGraph extends StatelessWidget {
       buildResults: buildResults,
     );
 
-    return Consumer<TimerNotifier>(builder: (_, timerNotifier, __) {
-      return BarGraph(
-        data: _createBarGraphData(),
-        barBuilder: (index, height) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: height,
-            ),
-            child: BuildResultBarComponent(
-              paddingStrategy: paddingStrategy,
-              buildResult: buildResults[index],
-            ),
-          );
-        },
-      );
-    });
+    return MetricsTimerBuilder(
+      rebuildsEnabled: _hasInProgressBuilds,
+      builder: (context) {
+        return BarGraph(
+          data: _createBarGraphData(),
+          barBuilder: (index, height) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: height,
+              ),
+              child: BuildResultBarComponent(
+                paddingStrategy: paddingStrategy,
+                buildResult: buildResults[index],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// Returns `true` if any of the [BuildResultMetricViewModel.buildResults] is
+  /// an [InProgressBuildResultViewModel].
+  ///
+  /// Otherwise, returns `false`.
+  bool get _hasInProgressBuilds {
+    return buildResultMetric.buildResults.any(
+      (result) => result is InProgressBuildResultViewModel,
+    );
   }
 
   /// Creates a [List] of the bar data from the [buildResultMetric].
