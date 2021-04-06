@@ -13,45 +13,121 @@ void main() {
   group("BuildResultDurationStrategy", () {
     const buildStatus = BuildStatus.unknown;
     const duration = Duration.zero;
+    const maxBuildDuration = Duration(days: 365);
     const strategy = BuildResultDurationStrategy();
 
     final date = DateTime(2021);
+    final currentDateTime = DateTime(2022);
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: duration,
       date: date,
     );
-    final finishedBuildViewModel = FinishedBuildResultViewModel(
-      duration: duration,
-      date: date,
-      buildResultPopupViewModel: buildResultPopupViewModel,
-      buildStatus: buildStatus,
-    );
-    final inProgressBuildResultViewModel = InProgressBuildResultViewModel(
-      date: date,
-      buildResultPopupViewModel: buildResultPopupViewModel,
-    );
+
+    FinishedBuildResultViewModel createFinishedViewModel(Duration duration) {
+      return FinishedBuildResultViewModel(
+        duration: duration,
+        date: date,
+        buildResultPopupViewModel: buildResultPopupViewModel,
+        buildStatus: buildStatus,
+      );
+    }
+
+    InProgressBuildResultViewModel createInProgressViewModel(DateTime date) {
+      return InProgressBuildResultViewModel(
+        buildResultPopupViewModel: buildResultPopupViewModel,
+        date: date,
+      );
+    }
+
+    final finishedBuildViewModel = createFinishedViewModel(duration);
+    final inProgressBuildResultViewModel = createInProgressViewModel(date);
 
     test(
-      ".getDuration() returns the duration of the given build result view model if it is finished",
+      ".getDuration() returns the duration of the given finished build result view model if the max build duration is not specified",
       () {
-        final result = strategy.getDuration(finishedBuildViewModel);
+        final expectedDuration = finishedBuildViewModel.duration;
 
-        expect(result, equals(duration));
+        final duration = strategy.getDuration(finishedBuildViewModel);
+
+        expect(duration, equals(expectedDuration));
       },
     );
 
     test(
-      ".getDuration() returns the difference between the current time and the build date if the given build result view model is in progress",
+      ".getDuration() returns the duration of the given finished build result view model if its duration is less than the max build duration",
       () {
-        final currentDateTime = DateTime(2022);
-        final expectedResult = currentDateTime.difference(
+        final expectedDuration = finishedBuildViewModel.duration;
+
+        final duration = strategy.getDuration(
+          finishedBuildViewModel,
+          maxBuildDuration: maxBuildDuration,
+        );
+
+        expect(duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".getDuration() returns the duration of the given finished build result view model if its duration is greater than the max build duration",
+      () {
+        final expectedDuration = maxBuildDuration * 2;
+        final viewModel = createFinishedViewModel(expectedDuration);
+
+        final duration = strategy.getDuration(
+          viewModel,
+          maxBuildDuration: maxBuildDuration,
+        );
+
+        expect(duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".getDuration() returns the difference between the current time and the build date if the given build result view model is in progress and the max build duration is not specified",
+      () {
+        final expectedDuration = currentDateTime.difference(
           inProgressBuildResultViewModel.date,
         );
 
         withClock(Clock.fixed(currentDateTime), () {
-          final result = strategy.getDuration(inProgressBuildResultViewModel);
+          final duration = strategy.getDuration(inProgressBuildResultViewModel);
 
-          expect(result, equals(expectedResult));
+          expect(duration, equals(expectedDuration));
+        });
+      },
+    );
+
+    test(
+      ".getDuration() returns the difference between the current time and the build date if the given build result view model is in progress and the resulting build duration is less than the max build duration",
+      () {
+        final buildDate = currentDateTime.subtract(maxBuildDuration ~/ 2);
+        final viewModel = createInProgressViewModel(buildDate);
+        final expectedDuration = currentDateTime.difference(viewModel.date);
+
+        withClock(Clock.fixed(currentDateTime), () {
+          final duration = strategy.getDuration(
+            viewModel,
+            maxBuildDuration: maxBuildDuration,
+          );
+
+          expect(duration, equals(expectedDuration));
+        });
+      },
+    );
+
+    test(
+      ".getDuration() returns the max build duration if the given build result view model is in progress and the resulting build duration greater than the max build duration",
+      () {
+        final buildDate = currentDateTime.subtract(maxBuildDuration * 2);
+        final viewModel = createInProgressViewModel(buildDate);
+
+        withClock(Clock.fixed(currentDateTime), () {
+          final duration = strategy.getDuration(
+            viewModel,
+            maxBuildDuration: maxBuildDuration,
+          );
+
+          expect(duration, equals(maxBuildDuration));
         });
       },
     );

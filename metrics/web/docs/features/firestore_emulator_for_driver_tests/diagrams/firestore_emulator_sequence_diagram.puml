@@ -1,0 +1,64 @@
+@startuml firestore_emulator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant FlutterWebDriver
+participant ProcessManager
+participant FirestoreEmulatorRunner
+participant FirebaseProcess
+participant FlutterDriveProcessRunner
+participant "Application tests"
+participant FirestoreEmulatorConfig
+participant FirestoreInstance
+
+Bob -> FlutterWebDriver : runs tests
+activate FlutterWebDriver
+
+FlutterWebDriver -> ProcessManager : creates
+activate ProcessManager
+deactivate FlutterWebDriver
+
+ProcessManager -> FirestoreEmulatorRunner : run()
+activate FirestoreEmulatorRunner
+
+
+FirestoreEmulatorRunner -> FirebaseProcess : start()
+activate FirebaseProcess
+deactivate FirestoreEmulatorRunner
+
+FirebaseProcess --> FirebaseProcess : runs the emulator (firebase emulators:start --only firestore)
+
+FirebaseProcess -> ProcessManager : emulator is started
+deactivate FirebaseProcess
+
+ProcessManager -> FlutterDriveProcessRunner : run()
+activate FlutterDriveProcessRunner
+deactivate ProcessManager
+
+deactivate FirebaseProcess
+
+FlutterDriveProcessRunner -> "Application tests" : runs and test
+deactivate FlutterDriveProcessRunner
+activate "Application tests"
+
+"Application tests" -> FirestoreEmulatorConfig : fromEnvironment()
+activate FirestoreEmulatorConfig
+
+FirestoreEmulatorConfig --> "Application tests" : FirestoreEmulatorConfig instance
+deactivate FirestoreEmulatorConfig
+
+"Application tests" -> FirestoreInstance : settings(localEmulatorHost)
+activate FirestoreInstance
+
+FirestoreInstance --> FirestoreInstance : points to the local emulator
+FirestoreInstance --> "Application tests" : settings applied
+deactivate FirestoreInstance
+
+"Application tests" --> "Application tests" : runs tests
+"Application tests" --> Bob : tests result
+deactivate "Application tests"
+
+@enduml

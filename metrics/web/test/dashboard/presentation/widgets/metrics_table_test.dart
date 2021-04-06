@@ -8,7 +8,7 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_results_metric_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
@@ -133,7 +133,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the last builds title above the build result bar graph widget",
+      "displays the last builds title above the build results metric graph widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTestbed());
@@ -141,7 +141,7 @@ void main() {
         await tester.pumpAndSettle();
 
         final buildResultBarGraphWidgetCenter = tester.getCenter(
-          find.byType(BuildResultBarGraph),
+          find.byType(BuildResultsMetricGraph),
         );
 
         final lastBuildsTitleCenter =
