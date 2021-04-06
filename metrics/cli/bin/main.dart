@@ -1,16 +1,13 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
-import 'package:cli/doctor/doctor_command.dart';
-import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/runner/metrics_cli_runner.dart';
 
 Future main(List<String> arguments) async {
-  final runner = CommandRunner("metrics", "Metrics installer.")
-    ..addCommand(DoctorCommand())
-    ..addCommand(DeployCommand());
+  final runner = MetricsCliRunner();
+
   try {
     await runner.run(arguments);
     exit(0);

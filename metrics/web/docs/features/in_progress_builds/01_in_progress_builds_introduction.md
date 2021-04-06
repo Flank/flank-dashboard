@@ -143,10 +143,12 @@ Image strategies (which selects an image asset to display) require adding new as
 
 The `BuildResultBarAppearanceStrategy` selects the proper `MetricsColoredBarStyle` from the `MetricsColoredBarAttentionLevel` depending on the `BuildStatus` value. This strategy is passed to the `MetricsColoredBar` widget where is used to provide appearance configurations (i.e. style). As the `MetricsColoredBar` isn't used to display in-progress builds, the `BuildResultBarAppearanceStrategy` shouldn't support in-progress status and thus we keep it unchanged.
 
-Also, we should introduce a new `BuildResultDurationStrategy` that returns a build's duration depending on the view model type representing this build. More precisely, if the view model is `FinishedBuildResultViewModel` the strategy returns `FinishedBuildResultViewModel.duration` value as finished builds have fixed duration. For the `InProgressBuildResultViewModel`, the strategy returns the difference between current timestamp and the build start timestamp: 
+Also, we should introduce a new `BuildResultDurationStrategy` that returns a build's duration depending on the view model type representing this build. More precisely, if the view model is `FinishedBuildResultViewModel` the strategy returns `FinishedBuildResultViewModel.duration` value as finished builds have fixed duration. For the `InProgressBuildResultViewModel`, the strategy returns the minimum between the given max build duration(to prevent displaying bars for in-progress builds significantly larger than bars for finished builds) and the difference of current timestamp and the build start timestamp: 
 ```dart
   final dateTimeNow = DateTime.now();
-  final duration = dateTimeNow.difference(viewModel.startedAt);
+  final buildDuration = dateTimeNow.difference(viewModel.startedAt);
+
+  return min(buildDuration, maxBuildDuration);
 ```
 
 About other style changes consider the [Appearance Changes Notes](#appearance-changes-notes) section.
