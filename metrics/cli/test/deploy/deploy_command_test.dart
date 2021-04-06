@@ -1,53 +1,88 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:args/command_runner.dart';
 import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/deploy/deployer.dart';
+import 'package:cli/deploy/factory/deployer_factory.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/matchers.dart';
+
 void main() {
-  CommandRunner runner;
-
-  const _defaultUsage = '''
-Usage: metrics <command> [arguments]
-
-Global options:
--h, --help    Print this usage information.
-
-Available commands:
-  help   Display help information for metrics.
-
-Run "metrics help <command>" for more information about a command.''';
   group("DeployCommand", () {
-    setUpAll(() {
-      runner = CommandRunner('metrics', 'Metrics installer.');
+    final deployerFactory = _DeployerFactoryMock();
+    final deployer = _DeployerMock();
+    final deployCommand = DeployCommand(deployerFactory);
+
+    PostExpectation<Deployer> whenCreateDeployer() {
+      return when(deployerFactory.create());
+    }
+
+    tearDown(() {
+      reset(deployerFactory);
+      reset(deployer);
     });
+
     test(
-      ".invocation has a sane default",
+      "throws an ArgumentError if the given deployer factory is null",
       () {
-        expect(runner.invocation, equals('metrics <command> [arguments]'));
+        expect(
+          () => DeployCommand(null),
+          throwsArgumentError,
+        );
       },
     );
-    test("returns the usage string", () {
-      expect(runner.usage, equals('''
-Metrics installer.
 
-$_defaultUsage'''));
-    });
-    test("contains custom commands", () {
-      runner.addCommand(DeployCommand());
-      expect(runner.usage, equals('''
-Metrics installer.
+    test(
+      "creates an instance with the given deployer factory",
+      () {
+        final command = DeployCommand(deployerFactory);
 
-Usage: metrics <command> [arguments]
+        expect(command.deployerFactory, equals(deployerFactory));
+      },
+    );
 
-Global options:
--h, --help    Print this usage information.
+    test(
+      ".name equals to the 'deploy'",
+      () {
+        expect(deployCommand.name, equals('deploy'));
+      },
+    );
 
-Available commands:
-  deploy   Creates GCloud and Firebase project and deploy metrics app.
+    test(
+      ".description is not empty",
+      () {
+        final description = deployCommand.description;
 
-Run "metrics help <command>" for more information about a command.'''));
-    });
+        expect(description, isNotEmpty);
+      },
+    );
+
+    test(
+      ".run() creates deployer using the given deployer factory",
+      () async {
+        whenCreateDeployer().thenReturn(deployer);
+
+        await deployCommand.run();
+
+        verify(deployerFactory.create()).called(once);
+      },
+    );
+
+    test(
+      ".run() uses the deployer to deploy the web application",
+      () async {
+        whenCreateDeployer().thenReturn(deployer);
+
+        await deployCommand.run();
+
+        verify(deployer.deploy()).called(once);
+      },
+    );
   });
 }
+
+class _DeployerMock extends Mock implements Deployer {}
+
+class _DeployerFactoryMock extends Mock implements DeployerFactory {}
