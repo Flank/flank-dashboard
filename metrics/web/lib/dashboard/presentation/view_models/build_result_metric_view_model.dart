@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 
 /// A view model that represents the build result metric.
 class BuildResultMetricViewModel extends Equatable {
@@ -15,11 +16,8 @@ class BuildResultMetricViewModel extends Equatable {
   /// A maximum [Duration] of a finished build within the [buildResults].
   final Duration maxBuildDuration;
 
-  /// A [DateTime] of the metric period start this view model represents.
-  final DateTime metricPeriodStart;
-
-  /// A [DateTime] of the metric period end this view model represents.
-  final DateTime metricPeriodEnd;
+  /// A [DateRangeViewModel] containing the this view model's date range.
+  final DateRangeViewModel dateRangeViewModel;
 
   /// A number of [buildResults] elements to display.
   final int numberOfBuildsToDisplay;
@@ -28,8 +26,7 @@ class BuildResultMetricViewModel extends Equatable {
   List<Object> get props => [
         buildResults,
         maxBuildDuration,
-        metricPeriodStart,
-        metricPeriodEnd,
+        dateRangeViewModel,
         numberOfBuildsToDisplay,
       ];
 
@@ -43,8 +40,7 @@ class BuildResultMetricViewModel extends Equatable {
   /// The [numberOfBuildsToDisplay] must not be `null`.
   const BuildResultMetricViewModel({
     @required this.buildResults,
-    this.metricPeriodStart,
-    this.metricPeriodEnd,
+    this.dateRangeViewModel,
     this.maxBuildDuration,
     this.numberOfBuildsToDisplay =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,

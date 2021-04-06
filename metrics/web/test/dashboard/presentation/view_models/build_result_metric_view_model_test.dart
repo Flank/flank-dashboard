@@ -4,6 +4,7 @@
 import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
@@ -14,8 +15,9 @@ void main() {
     const maxBuildDuration = Duration.zero;
 
     final buildResults = UnmodifiableListView<BuildResultViewModel>([]);
-    final metricPeriodStart = DateTime(2020);
-    final metricPeriodEnd = DateTime(2022);
+    final startDate = DateTime(2020);
+    final endDate = DateTime(2021);
+    final dateRange = DateRangeViewModel(start: startDate, end: endDate);
 
     test("throws an AssertionError if the given build results is null", () {
       expect(
@@ -51,15 +53,13 @@ void main() {
       final metric = BuildResultMetricViewModel(
         buildResults: buildResults,
         numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-        metricPeriodStart: metricPeriodStart,
-        metricPeriodEnd: metricPeriodEnd,
+        dateRangeViewModel: dateRange,
         maxBuildDuration: maxBuildDuration,
       );
 
       expect(metric.buildResults, equals(buildResults));
       expect(metric.numberOfBuildsToDisplay, equals(numberOfBuildsToDisplay));
-      expect(metric.metricPeriodStart, equals(metricPeriodStart));
-      expect(metric.metricPeriodEnd, equals(metricPeriodEnd));
+      expect(metric.dateRangeViewModel, equals(dateRange));
       expect(metric.maxBuildDuration, equals(maxBuildDuration));
     });
 
@@ -69,16 +69,14 @@ void main() {
         final expected = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-          metricPeriodStart: metricPeriodStart,
-          metricPeriodEnd: metricPeriodEnd,
+          dateRangeViewModel: dateRange,
           maxBuildDuration: maxBuildDuration,
         );
 
         final buildResultMetric = BuildResultMetricViewModel(
           buildResults: buildResults,
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
-          metricPeriodStart: metricPeriodStart,
-          metricPeriodEnd: metricPeriodEnd,
+          dateRangeViewModel: dateRange,
           maxBuildDuration: maxBuildDuration,
         );
 

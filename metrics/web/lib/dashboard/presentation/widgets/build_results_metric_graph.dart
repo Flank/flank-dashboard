@@ -2,14 +2,12 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/date_range.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
-import 'package:metrics/util/date.dart';
 
 /// A widget that displays the build result metric as a bar graph.
 ///
@@ -34,22 +32,17 @@ class BuildResultsMetricGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buildResultBarGraphTheme =
-        MetricsTheme.of(context).buildResultBarGraphTheme;
-
     final numberOfMissingBars = _calculateNumberOfMissingBars();
+    final dateRange = buildResultMetric.dateRangeViewModel;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (_hasDateRange)
+        if (dateRange != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              _formatMetricPeriod(),
-              style: buildResultBarGraphTheme.textStyle,
-            ),
+            child: DateRange(dateRange: dateRange),
           ),
         SizedBox(
           height: 56.0,
@@ -78,36 +71,6 @@ class BuildResultsMetricGraph extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  /// Returns `true` if both [BuildResultMetricViewModel.metricPeriodStart] and
-  /// [BuildResultMetricViewModel.metricPeriodEnd] are not `null`.
-  ///
-  /// Otherwise, returns `false`.
-  bool get _hasDateRange {
-    return buildResultMetric.metricPeriodStart != null &&
-        buildResultMetric.metricPeriodEnd != null;
-  }
-
-  /// Returns a [String] containing the formatted metric period.
-  ///
-  /// Returns the formatted [BuildResultMetricViewModel.metricPeriodStart],
-  /// if it equals to the [BuildResultMetricViewModel.metricPeriodEnd].
-  String _formatMetricPeriod() {
-    final dateFormat = DateFormat('d MMM');
-
-    final firstDate = buildResultMetric.metricPeriodStart;
-    final lastDate = buildResultMetric.metricPeriodEnd;
-
-    final firstDateFormatted = dateFormat.format(firstDate);
-
-    if (firstDate.date == lastDate.date) {
-      return firstDateFormatted;
-    }
-
-    final lastDateFormatted = dateFormat.format(lastDate);
-
-    return '$firstDateFormatted - $lastDateFormatted';
   }
 
   /// Returns `true` if the [BuildResultMetricViewModel.buildResults] is not

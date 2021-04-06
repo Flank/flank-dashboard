@@ -18,8 +18,11 @@ class DateRangeViewModel extends Equatable {
 
   /// Creates a new instance of the [DateRangeViewModel] with the given [start]
   /// and [end].
+  ///
+  /// Throws an [AssertionError] if the given [start] or [end] is `null`.
   const DateRangeViewModel({
     @required this.start,
     @required this.end,
-  });
+  })  : assert(start != null),
+        assert(end != null);
 }
