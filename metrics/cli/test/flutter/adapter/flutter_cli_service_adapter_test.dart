@@ -55,14 +55,10 @@ void main() {
 
     test(
       ".version() throws if Flutter CLI throws during the version showing",
-      () async {
+      () {
         when(flutterCli.version()).thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(flutterService.version(), throwsStateError);
-
-        verify(flutterCli.version()).called(once);
-
-        verifyNoMoreInteractions(flutterCli);
+        expect(flutterService.version(), throwsStateError);
       },
     );
 
