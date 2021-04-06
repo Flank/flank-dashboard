@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 import 'package:cli/deploy/deploy_command.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
 import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/doctor/factory/doctor_factory.dart';
 
 /// A [CommandRunner] implementation for the Metrics CLI.
 class MetricsCliRunner extends CommandRunner<void> {
@@ -13,8 +14,9 @@ class MetricsCliRunner extends CommandRunner<void> {
   /// Registers the [DeployCommand] and the [DoctorCommand] for this instance.
   MetricsCliRunner() : super('metrics', 'Metrics CLI.') {
     final deployerFactory = DeployerFactory();
+    final doctorFactory = DoctorFactory();
     final deployCommand = DeployCommand(deployerFactory);
-    final doctorCommand = DoctorCommand();
+    final doctorCommand = DoctorCommand(doctorFactory);
 
     addCommand(deployCommand);
     addCommand(doctorCommand);

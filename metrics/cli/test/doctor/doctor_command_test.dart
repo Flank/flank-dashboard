@@ -1,52 +1,79 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:args/command_runner.dart';
+import 'package:cli/doctor/doctor.dart';
 import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/doctor/factory/doctor_factory.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/matchers.dart';
+
 void main() {
-  CommandRunner<dynamic> runner;
-  const _defaultUsage = '''
-Usage: metrics <command> [arguments]
-
-Global options:
--h, --help    Print this usage information.
-
-Available commands:
-  help   Display help information for metrics.
-
-Run "metrics help <command>" for more information about a command.''';
   group("DoctorCommand", () {
-    setUpAll(() {
-      runner = CommandRunner('metrics', 'Metrics installer.');
+    final doctorFactory = _DoctorFactoryMock();
+    final doctor = _DoctorMock();
+    final doctorCommand = DoctorCommand(doctorFactory);
+
+    PostExpectation<Doctor> whenDoctorFactoryCreate() {
+      return when(doctorFactory.create());
+    }
+
+    tearDown(() {
+      reset(doctorFactory);
+      reset(doctor);
     });
+
     test(
-      ".invocation has a sane default",
+      "throws an ArgumentError if the given doctor factory is null",
       () {
-        expect(runner.invocation, equals('metrics <command> [arguments]'));
+        expect(
+          () => DoctorCommand(null),
+          throwsArgumentError,
+        );
       },
     );
-    test('returns the usage string', () {
-      expect(runner.usage, equals('''
-Metrics installer.
 
-$_defaultUsage'''));
-    });
-    test("contains custom commands", () {
-      runner.addCommand(DoctorCommand());
-      expect(runner.usage, equals('''
-Metrics installer.
+    test(
+      ".name equals to the 'doctor'",
+      () {
+        expect(doctorCommand.name, equals('doctor'));
+      },
+    );
 
-Usage: metrics <command> [arguments]
+    test(
+      ".description is not empty",
+      () {
+        final description = doctorCommand.description;
 
-Global options:
--h, --help    Print this usage information.
+        expect(description, isNotEmpty);
+      },
+    );
 
-Available commands:
-  doctor   Check dependencies.
+    test(
+      ".run() creates doctor using the given doctor factory",
+      () async {
+        whenDoctorFactoryCreate().thenReturn(doctor);
 
-Run "metrics help <command>" for more information about a command.'''));
-    });
+        await doctorCommand.run();
+
+        verify(doctorFactory.create()).called(once);
+      },
+    );
+
+    test(
+      ".run() uses the doctor to check versions",
+      () async {
+        whenDoctorFactoryCreate().thenReturn(doctor);
+
+        await doctorCommand.run();
+
+        verify(doctor.checkVersions()).called(once);
+      },
+    );
   });
 }
+
+class _DoctorMock extends Mock implements Doctor {}
+
+class _DoctorFactoryMock extends Mock implements DoctorFactory {}

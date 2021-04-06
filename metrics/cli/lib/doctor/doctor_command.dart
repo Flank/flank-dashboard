@@ -1,37 +1,33 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:cli/cli/firebase/firebase_command.dart';
-import 'package:cli/cli/flutter/flutter_command.dart';
-import 'package:cli/cli/gcloud/gcloud_command.dart';
-import 'package:cli/cli/git/git_command.dart';
+import 'package:cli/doctor/factory/doctor_factory.dart';
 
-/// A class providing doctor command to verify dependencies.
+/// A [Command] that shows version information of the third-party dependencies.
 class DoctorCommand extends Command {
   @override
-  final String name = "doctor";
+  final String name = 'doctor';
 
   @override
-  final String description = "Check dependencies.";
+  final String description =
+      'Show version information of the third-party dependencies';
 
-  /// A [FirebaseCommand] needed to get the Firebase CLI version.
-  final FirebaseCommand _firebase = FirebaseCommand();
+  /// A [DoctorFactory] this command uses to create a [Doctor].
+  final DoctorFactory doctorFactory;
 
-  /// A [GCloudCommand] needed to get the GCloud CLI version.
-  final GCloudCommand _gcloud = GCloudCommand();
-
-  /// A [GitCommand] needed to get the Git CLI version.
-  final GitCommand _git = GitCommand();
-
-  /// A [FlutterCommand] needed to get the Flutter CLI version.
-  final FlutterCommand _flutter = FlutterCommand();
+  /// Creates a new instance of the [DoctorCommand]
+  /// with the given [DoctorFactory].
+  ///
+  /// Throws an [ArgumentError] if the given [DoctorFactory] is `null`.
+  DoctorCommand(this.doctorFactory) {
+    ArgumentError.checkNotNull(doctorFactory, 'doctorFactory');
+  }
 
   @override
   Future<void> run() async {
-    await _flutter.version();
-    await _firebase.version();
-    await _gcloud.version();
-    await _git.version();
+    final doctor = doctorFactory.create();
+
+    return doctor.checkVersions();
   }
 }

@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/model/services.dart';
-import 'package:cli/deploy/deployer.dart';
-import 'package:cli/deploy/factory/deployer_factory.dart';
+import 'package:cli/doctor/doctor.dart';
+import 'package:cli/doctor/factory/doctor_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -12,10 +12,10 @@ import '../../test_utils/services_factory_mock.dart';
 import '../../test_utils/services_mock.dart';
 
 void main() {
-  group("DeployerFactory", () {
+  group("DoctorFactory", () {
     final servicesFactory = ServicesFactoryMock();
     final services = ServicesMock();
-    final deployerFactory = DeployerFactory(servicesFactory);
+    final doctorFactory = DoctorFactory(servicesFactory);
 
     PostExpectation<Services> whenCreateServices() {
       return when(servicesFactory.create());
@@ -25,7 +25,7 @@ void main() {
       "throws an ArgumentError if the given services factory is null",
       () {
         expect(
-          () => DeployerFactory(null),
+          () => DoctorFactory(null),
           throwsArgumentError,
         );
       },
@@ -36,20 +36,20 @@ void main() {
       () {
         whenCreateServices().thenReturn(services);
 
-        deployerFactory.create();
+        doctorFactory.create();
 
         verify(servicesFactory.create()).called(once);
       },
     );
 
     test(
-      ".create() successfully creates a Deployer instance",
+      ".create() successfully creates a Doctor instance",
       () {
         whenCreateServices().thenReturn(services);
 
-        final deployer = deployerFactory.create();
+        final doctor = doctorFactory.create();
 
-        expect(deployer, isA<Deployer>());
+        expect(doctor, isA<Doctor>());
       },
     );
   });
