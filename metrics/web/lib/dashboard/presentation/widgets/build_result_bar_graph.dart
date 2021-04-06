@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/widgets/metrics_timer_builder.dart';
+import 'package:metrics/common/presentation/widgets/timer_notifier_builder.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
@@ -40,8 +40,8 @@ class BuildResultBarGraph extends StatelessWidget {
       buildResults: buildResults,
     );
 
-    return MetricsTimerBuilder(
-      rebuildsEnabled: _hasInProgressBuilds,
+    return TimerNotifierBuilder(
+      shouldSubscribe: _hasInProgressBuilds,
       builder: (context) {
         return BarGraph(
           data: _createBarGraphData(),

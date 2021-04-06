@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/widgets/metrics_timer_builder.dart';
+import 'package:metrics/common/presentation/widgets/timer_notifier_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -46,7 +46,7 @@ void main() {
     );
     final metricsTimerBuilderFinder = find.ancestor(
       of: barGraphFinder,
-      matching: find.byType(MetricsTimerBuilder),
+      matching: find.byType(TimerNotifierBuilder),
     );
 
     tearDown(() {
@@ -267,7 +267,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a true rebuilds enabled value to the metrics timer builder if the given build results contain in-progress builds",
+      "applies a true should subscribe value to the metrics timer builder if the given build results contain in-progress builds",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -286,16 +286,16 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final metricsTimerBuilder = tester.widget<MetricsTimerBuilder>(
+        final metricsTimerBuilder = tester.widget<TimerNotifierBuilder>(
           metricsTimerBuilderFinder,
         );
 
-        expect(metricsTimerBuilder.rebuildsEnabled, isTrue);
+        expect(metricsTimerBuilder.shouldSubscribe, isTrue);
       },
     );
 
     testWidgets(
-      "applies a false rebuilds enabled value to the metrics timer builder if the given build results does not contain in-progress builds",
+      "applies a false should subscribe value to the metrics timer builder if the given build results does not contain in-progress builds",
       (WidgetTester tester) async {
         when(durationStrategy.getDuration(any)).thenReturn(duration);
 
@@ -316,11 +316,11 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final metricsTimerBuilder = tester.widget<MetricsTimerBuilder>(
+        final metricsTimerBuilder = tester.widget<TimerNotifierBuilder>(
           metricsTimerBuilderFinder,
         );
 
-        expect(metricsTimerBuilder.rebuildsEnabled, isFalse);
+        expect(metricsTimerBuilder.shouldSubscribe, isFalse);
       },
     );
   });
