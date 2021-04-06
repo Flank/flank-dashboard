@@ -86,4 +86,3 @@ function onCreateEventHandler(DocumentSnapshot snapshot, _) {
 Using the `cloud_firestore` package we've started creating test documents in parallel using multiple clients.
 
 As a result, our event handler is fired each time, when a new Firestore document is created and we have a counter value with the number of the documents. 
-
