@@ -146,7 +146,7 @@ service cloud.firestore {
           && isFloatOrNull("coverage", 0.0, 1.0);
   }
 
-  /// Checks whether the build data represents a finished build with a valid duration or is an in-progress build with the null duration.
+  /// Checks whether the build data represents a finished build with a valid duration or an in-progress build with the null duration.
   function isDurationValid() {
     let isFinishedBuildStatus = isFinishedBuildStatus();
     let isInProgressBuildStatus = !isFinishedBuildStatus;
