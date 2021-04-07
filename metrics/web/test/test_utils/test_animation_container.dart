@@ -3,15 +3,16 @@ import 'package:flutter/services.dart';
 
 import '../base/presentation/test_data/rive_animation_test_data.dart';
 
-/// A class that mocks the assets used in tests.
-class TestAssetContainer extends StatelessWidget {
+/// A class that mocks the animation used in tests.
+class TestAnimationContainer extends StatelessWidget {
   /// A child widget to display.
   final Widget child;
 
-  /// Creates a new instance of the [TestAssetContainer] with the given [child].
+  /// Creates a new instance of the [TestAnimationContainer] with
+  /// the given [child].
   ///
-  /// Throws an [AssertionError] if the given child is `null`.
-  const TestAssetContainer({
+  /// Throws an [AssertionError] if the given [child] is `null`.
+  const TestAnimationContainer({
     Key key,
     @required this.child,
   })  : assert(child != null),

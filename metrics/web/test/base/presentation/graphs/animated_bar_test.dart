@@ -163,7 +163,7 @@ class _AnimatedBarTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TestAssetContainer(
+        body: TestAnimationContainer(
           child: AnimatedBar(
             height: height,
             width: width,
