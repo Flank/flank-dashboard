@@ -276,6 +276,16 @@ describe("", async () => {
       );
     });
 
+    it("does not allow creating builds with a null build status and a null duration", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
+      build.duration = null;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
     it("does not allow creating builds with a successful build status and a non integer duration", async () => {
       let build = getBuild();
       build.buildStatus = "BuildStatus.successful";
@@ -306,22 +316,22 @@ describe("", async () => {
       );
     });
 
+    it("does not allow creating builds with a null build status and a non-integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
+      build.duration = "123";
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
     it("allows creating builds with an in-progress build status and a null duration", async () => {
       let build = getBuild();
       build.buildStatus = "BuildStatus.inProgress";
       build.duration = null;
 
       await assertSucceeds(
-        passwordProviderAllowedEmailApp.collection(collection).add(build)
-      );
-    });
-
-    it("does not allow creating builds with a null build status and a null duration", async () => {
-      let build = getBuild();
-      build.buildStatus = null;
-      build.duration = null;
-
-      await assertFails(
         passwordProviderAllowedEmailApp.collection(collection).add(build)
       );
     });
@@ -334,22 +344,12 @@ describe("", async () => {
       await assertFails(
         passwordProviderAllowedEmailApp.collection(collection).add(build)
       );
-    });  
-    
+    });
+
     it("does not allow creating builds with an in-progress build status and a non-integer duration", async () => {
       let build = getBuild();
       build.buildStatus = "BuildStatus.inProgress";
       build.duration = "test";
-
-      await assertFails(
-        passwordProviderAllowedEmailApp.collection(collection).add(build)
-      );
-    });
-
-    it("does not allow creating builds with a null build status and a non-integer duration", async () => {
-      let build = getBuild();
-      build.buildStatus = null;
-      build.duration = "123";
 
       await assertFails(
         passwordProviderAllowedEmailApp.collection(collection).add(build)
