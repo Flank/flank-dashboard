@@ -129,7 +129,8 @@ service cloud.firestore {
     let validBuildStatuses = [
       "BuildStatus.successful",
       "BuildStatus.unknown",
-      "BuildStatus.failed"
+      "BuildStatus.failed",
+      "BuildStatus.inProgress"
     ];
 
     return isBuildDataValid()
@@ -138,14 +139,38 @@ service cloud.firestore {
           && isInteger("buildNumber")
           && isTimestamp("startedAt", false)
           && isEnumOrNull("buildStatus", validBuildStatuses)
-          && isInteger("duration")
+          && isDurationValid()
           && isStringOrNull("workflowName")
           && isString("url")
           && isStringOrNull("apiUrl")
           && isFloatOrNull("coverage", 0.0, 1.0);
   }
 
-  /// Check whether the request data contains only allowed for build document fields.
+  /// Checks whether the request data contains a valid duration.
+  ///
+  /// A valid duration for a build with the in-progress status is `null`.
+  /// For all other build statuses, the build duration must be a non-null integer.
+  function isDurationValid() {
+    let isFinishedBuildStatusOrNull = isFinishedBuildStatusOrNull();
+    let isInProgressBuildStatus = !isFinishedBuildStatusOrNull;
+    let containsDuration = isInteger("duration");
+
+    return  (isFinishedBuildStatusOrNull && containsDuration)
+         || (isInProgressBuildStatus && isNotInRequestOrNull("duration"));
+  }
+
+  /// Checks whether the build status is finished or null.
+  function isFinishedBuildStatusOrNull() {
+    let finishedBuildStatuses = [
+      "BuildStatus.successful",
+      "BuildStatus.unknown",
+      "BuildStatus.failed"
+    ];
+
+    return isEnumOrNull("buildStatus", finishedBuildStatuses);
+  }
+
+  /// Checks whether the request data contains only allowed for build document fields.
   function isBuildDataValid() {
     let requestData = request.resource.data;
 
