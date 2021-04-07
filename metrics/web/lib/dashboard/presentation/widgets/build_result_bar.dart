@@ -13,6 +13,11 @@ import 'package:rive/rive.dart';
 
 /// A single bar that displays a build result using
 /// the given [BuildResultViewModel].
+///
+/// Displays the [MetricsColoredBar] if the given [BuildResultViewModel]
+/// is a [FinishedBuildResultViewModel].
+///
+/// Otherwise, displays the [InProgressAnimatedBar].
 class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
   final BuildResultViewModel buildResult;
@@ -46,8 +51,8 @@ class BuildResultBar extends StatelessWidget {
             }
 
             return InProgressAnimatedBar(
-              riveAsset: 'web/animation/in_progress_bar.riv',
               height: barHeight,
+              isHovered: isHovered,
               controller: SimpleAnimation('Animation 1'),
             );
           },
