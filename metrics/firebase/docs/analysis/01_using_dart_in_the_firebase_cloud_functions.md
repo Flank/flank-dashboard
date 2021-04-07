@@ -2,7 +2,7 @@
 
 > Feature description / User story.
 
-As we want to reduce usage/document reads we should explore possibilities to add more server-side processing for metrics calculations and use Dart language for it.
+As we want to add more server-side processing to the Cloud Firestore, we should explore the possibility of writing the Cloud Functions using the Dart language.
 
 # Analysis
 
@@ -28,27 +28,28 @@ Also, it allows us to write Cloud Functions using Dart programming language.
 
 #### The `firebase-functions-interop` package
 
-The first solution is to use the [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop) package. It is a Firebase Cloud Functions SDK for Dart, written as a JS interop wrapper for official Node.js SDK.
+The first approach is to use the [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop) package. It is a Firebase Cloud Functions SDK for Dart, written as a JS interop wrapper for official Node.js SDK.
 
 Pros:
  - Implemented wrappers for a major part of Firebase features, such as `functions.firestore`, `functions.auth`, etc.
- - Has good documentation for getting started.
+ - Provides interop for the `firebase.admin` package.
+ - Has [good documentation](https://pub.dev/documentation/firebase_functions_interop/latest) for getting started.
 
 Cons:
  - Not an official Firebase package.
  - Rare package updates.
- - No functionality for the Firebase Remote Config and Analytics.
+ - Does not support the Firebase Remote Config and Analytics.
 
 #### The `functions_framework` package
 
 An open source FaaS (Function as a Service) framework for writing portable Dart functions.
 
 Pros:
- - Active evolve with frequent updates.
+ - Actively evolves with frequent updates.
 
 Cons:
  - Not an official Firebase package.
- - Undocumented way of interaction with the Cloud Firestore functions.
+ - Does not have a documented way of creating Cloud Firestore functions using this framework.
 
 #### Decision
 
@@ -58,24 +59,25 @@ We've considered and analyzed the described above packages and chose the `fireba
 
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-To test that the package is working we've registered a Firestore trigger using the `onCreate` method provided by the `firebase-functions-interop` package that fires every time new data is created in the Cloud Firestore specified collection.
+Let's consider an example of registering a new Cloud Firestore `onCreate` trigger using the `firebase-functions-interop` package: 
 
 ```dart
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
     
-functions['ourCloudFunctionName'] = functions.firestore.document('/collection/{documentId}').onCreate(onCreateEventHandler);
+functions['incrementCounter'] = functions.firestore.document('/documents/{documentId}').onCreate(onCreateEventHandler);
 ```
 
-As the `onCreate` handler, we've registered a `onCreateEventHandler` function, that increments a counter value in the different Firestore collection of the created documents, using the Firestore transaction.
+Once we've registered a new `onCreate` trigger, let's review the trigger function itself. The following function increments the counter in the `aggregation/documents` document once the new document created in the `documents` collection:
 
 ```dart
 function onCreateEventHandler(DocumentSnapshot snapshot, _) {
-    final ref = await snapshot.firestore.collection('collection').document('documentId');
-
-  return snapshot.firestore.runTransaction((transaction) async {
-    return transaction.get(ref).then((doc) {
-      
-      ... // get and increment counter
+    final ref = await snapshot.firestore.collection('documents').document('documentId');
+    return snapshot.firestore.runTransaction((transaction) async {
+    final ref = 'aggregation/documents';
+    return transaction.get(ref).then((doc) {      
+      final incrementedCounter = countDoc.data.getInt('count') + 1;
+      final updatedCounter = UpdateData();
+      updatedCounter.setInt('count', incrementedCounter);
 
       transaction.update(ref, updatedCounter);
     });
