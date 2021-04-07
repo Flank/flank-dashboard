@@ -7,9 +7,9 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 import 'package:metrics/util/date.dart';
 
-/// A widget that display the given [dateRange].
+/// A widget that displays the given [dateRange].
 ///
-/// Applies the [TextStyle] from the [MetricsTheme].
+/// Applies the date range [TextStyle] from the [MetricsTheme].
 class DateRange extends StatelessWidget {
   /// A [DateRangeViewModel] with the data to display.
   final DateRangeViewModel dateRange;
@@ -25,12 +25,11 @@ class DateRange extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buildResultBarGraphTheme =
-        MetricsTheme.of(context).buildResultBarGraphTheme;
+    final dateRangeTheme = MetricsTheme.of(context).dateRangeTheme;
 
     return Text(
-      _formatDatePeriod(),
-      style: buildResultBarGraphTheme.textStyle,
+      _formatDateRange(),
+      style: dateRangeTheme.textStyle,
     );
   }
 
@@ -38,20 +37,20 @@ class DateRange extends StatelessWidget {
   ///
   /// Returns the formatted [DateRangeViewModel.start],
   /// if it equals to the [DateRangeViewModel.end].
-  String _formatDatePeriod() {
+  String _formatDateRange() {
     final dateFormat = DateFormat('d MMM');
 
-    final firstDate = dateRange.start;
-    final lastDate = dateRange.end;
+    final startDate = dateRange.start;
+    final endDate = dateRange.end;
 
-    final firstDateFormatted = dateFormat.format(firstDate);
+    final startDateFormatted = dateFormat.format(startDate);
 
-    if (firstDate.date == lastDate.date) {
-      return firstDateFormatted;
+    if (startDate.date == endDate.date) {
+      return startDateFormatted;
     }
 
-    final lastDateFormatted = dateFormat.format(lastDate);
+    final endDateFormatted = dateFormat.format(endDate);
 
-    return '$firstDateFormatted - $lastDateFormatted';
+    return '$startDateFormatted - $endDateFormatted';
   }
 }

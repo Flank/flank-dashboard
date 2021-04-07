@@ -25,7 +25,7 @@ void main() {
         expect(lightMetricsThemeData.loginTheme, isNotNull);
         expect(lightMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(lightMetricsThemeData.buildNumberScorecardTheme, isNotNull);
-        expect(lightMetricsThemeData.buildResultBarGraphTheme, isNotNull);
+        expect(lightMetricsThemeData.dateRangeTheme, isNotNull);
         expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(lightMetricsThemeData.toggleTheme, isNotNull);

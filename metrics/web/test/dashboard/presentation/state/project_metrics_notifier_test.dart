@@ -407,7 +407,7 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the date range with the start date from the latest number of builds to load for chart metrics build results",
+      "loads a build result metric with the date range containing the start date from the latest number of builds to load for chart metrics build results",
       () async {
         final expectedStartDate = DateTime(2020);
 
@@ -443,7 +443,7 @@ void main() {
     );
 
     test(
-      "loads a build result metric with the date range with the end date from the latest number of builds to load for chart metrics build results",
+      "loads a build result metric with the date range containing the end date from the latest number of builds to load for chart metrics build results",
       () async {
         final expectedEndDate = DateTime(2021);
 

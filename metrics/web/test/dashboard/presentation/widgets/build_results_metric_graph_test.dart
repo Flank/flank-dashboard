@@ -78,7 +78,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a date range widget with the date range view model if it is not null",
+      "displays the date range widget if the date range view model is not null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
           buildResultMetric: createBuildResultMetric(
@@ -86,16 +86,29 @@ void main() {
           ),
         ));
 
-        final dateRangeFinder = find.byWidgetPredicate((widget) {
-          return widget is DateRange && widget.dateRange == dateRange;
-        });
-
-        expect(dateRangeFinder, findsOneWidget);
+        expect(find.byType(DateRange), findsOneWidget);
       },
     );
 
     testWidgets(
-      "does not display the date range widget if the date range view model is nul",
+      "applies the date range view model to the date range widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
+          buildResultMetric: createBuildResultMetric(
+            dateRange: dateRange,
+          ),
+        ));
+
+        final dateRangeWidget = tester.widget<DateRange>(
+          find.byType(DateRange),
+        );
+
+        expect(dateRangeWidget.dateRange, equals(dateRange));
+      },
+    );
+
+    testWidgets(
+      "does not display the date range widget if the date range view model is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
           buildResultMetric: createBuildResultMetric(

@@ -4,7 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/date_range/theme_data/date_range_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/date_range.dart';
@@ -73,11 +74,11 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style from the metrics theme",
+      "applies the date range text style from the metrics theme",
       (WidgetTester tester) async {
-        const textStyle = TextStyle(color: Colors.yellow);
+        const textStyle = MetricsTextStyle(color: Colors.yellow);
         const metricsThemeData = MetricsThemeData(
-          buildResultBarGraphTheme: BuildResultBarGraphThemeData(
+          dateRangeTheme: DateRangeThemeData(
             textStyle: textStyle,
           ),
         );
@@ -110,6 +111,8 @@ class _DateRangeTestbed extends StatelessWidget {
 
   /// Creates a new instance of this testbed with the given [dateRange]
   /// and [metricsThemeData].
+  ///
+  /// A [metricsThemeData] defaults to an empty [MetricsThemeData].
   const _DateRangeTestbed({
     Key key,
     this.dateRange,
