@@ -1,13 +1,13 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/deploy/command/deploy_command.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/matchers.dart';
+import '../../test_utils/matchers.dart';
 
 void main() {
   group("DeployCommand", () {

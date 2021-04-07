@@ -36,7 +36,7 @@ abstract class Cli {
     String workingDirectory,
     Stream<List<int>> stdin,
   }) async {
-    final result = await cmd.run(
+    final result = await cmd.runExecutableArguments(
       executable,
       arguments ?? [],
       verbose: attachOutput,

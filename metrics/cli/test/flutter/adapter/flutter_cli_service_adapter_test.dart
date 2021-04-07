@@ -54,15 +54,6 @@ void main() {
     );
 
     test(
-      ".version() throws if Flutter CLI throws during the version showing",
-      () {
-        when(flutterCli.version()).thenAnswer((_) => Future.error(stateError));
-
-        expect(flutterService.version(), throwsStateError);
-      },
-    );
-
-    test(
       ".build() throws if Flutter CLI throws during the web support enabling",
       () {
         when(flutterCli.enableWeb())

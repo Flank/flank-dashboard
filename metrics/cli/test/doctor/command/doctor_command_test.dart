@@ -2,12 +2,12 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/doctor/doctor.dart';
-import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/doctor/command/doctor_command.dart';
 import 'package:cli/doctor/factory/doctor_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/matchers.dart';
+import '../../test_utils/matchers.dart';
 
 void main() {
   group("DoctorCommand", () {

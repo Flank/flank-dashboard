@@ -14,7 +14,13 @@ class NpmCli extends Cli {
   }
 
   @override
-  Future<void> version() {
-    return run(['--version']);
+  Future<void> version() async {
+    try {
+      await run(['--version']);
+    } catch (error) {
+      if (error is StateError) {
+        print(error.message);
+      }
+    }
   }
 }

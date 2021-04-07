@@ -310,15 +310,6 @@ void main() {
         verifyNoMoreInteractions(prompter);
       },
     );
-
-    test(
-      ".version() throws if GCloud CLI throws during the version showing",
-      () {
-        when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
-
-        expect(gcloudService.version(), throwsStateError);
-      },
-    );
   });
 }
 

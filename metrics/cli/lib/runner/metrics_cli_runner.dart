@@ -2,9 +2,9 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/deploy/command/deploy_command.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
-import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/doctor/command/doctor_command.dart';
 import 'package:cli/doctor/factory/doctor_factory.dart';
 
 /// A [CommandRunner] implementation for the Metrics CLI.

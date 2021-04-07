@@ -7,8 +7,8 @@ import 'package:cli/common/model/services.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 
-/// A class providing method for checking whether all required third-party CLIs
-/// are installed and getting their version.
+/// A class that provides an ability to check whether all required third-party
+/// services are available and get their version.
 class Doctor {
   /// A service that provides methods for working with Flutter.
   final FlutterService _flutterService;
@@ -25,8 +25,8 @@ class Doctor {
   /// Creates a new instance of the [Doctor] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
-  /// Throws an [ArgumentError] if the given [FirebaseCommand] is `null`.
-  /// Throws an [ArgumentError] if the given [GitCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
   Doctor({
     Services services,
     FirebaseCommand firebaseCommand,
@@ -40,7 +40,7 @@ class Doctor {
     ArgumentError.checkNotNull(_gitCommand, 'gitCommand');
   }
 
-  /// Checks versions of the required third-party CLIs.
+  /// Checks versions of the required third-party services.
   Future<void> checkVersions() async {
     await _flutterService.version();
     await _firebaseCommand.version();

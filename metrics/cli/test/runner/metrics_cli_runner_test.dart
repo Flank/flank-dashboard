@@ -1,9 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/deploy/deploy_command.dart';
+import 'package:cli/deploy/command/deploy_command.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
-import 'package:cli/doctor/doctor_command.dart';
+import 'package:cli/doctor/command/doctor_command.dart';
 import 'package:cli/doctor/factory/doctor_factory.dart';
 import 'package:cli/runner/metrics_cli_runner.dart';
 import 'package:test/test.dart';
@@ -65,7 +65,7 @@ void main() {
 
     test(
       "creates a doctor command with the doctor factory",
-          () {
+      () {
         final command = runner.commands[doctorCommandName] as DoctorCommand;
 
         expect(command?.doctorFactory, isNotNull);
