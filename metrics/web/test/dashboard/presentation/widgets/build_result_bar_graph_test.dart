@@ -286,11 +286,11 @@ void main() {
           durationStrategy: durationStrategy,
         ));
 
-        final timerBuilderBuilder = tester.widget<TimerNotifierBuilder>(
+        final timerNotifierBuilder = tester.widget<TimerNotifierBuilder>(
           timerNotifierBuilderFinder,
         );
 
-        expect(timerBuilderBuilder.shouldSubscribe, isTrue);
+        expect(timerNotifierBuilder.shouldSubscribe, isTrue);
       },
     );
 
