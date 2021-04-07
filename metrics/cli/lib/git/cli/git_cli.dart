@@ -17,7 +17,7 @@ class GitCli extends Cli {
   }
 
   @override
-  Future<void> version() async {
+  Future<void> version() {
     return run(['--version']);
   }
 }

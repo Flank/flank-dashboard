@@ -71,7 +71,7 @@ class SentryCli extends Cli {
   }
 
   @override
-  Future<void> version() async {
+  Future<void> version() {
     return run(['--version']);
   }
 }
