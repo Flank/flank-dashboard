@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
