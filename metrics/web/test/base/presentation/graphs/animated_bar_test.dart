@@ -150,13 +150,18 @@ class _AnimatedBarTestbed extends StatelessWidget {
   /// An artboard name to use in tests.
   final String artboardName;
 
+  /// Creates a new instance of this testbed with the given parameters.
+  ///
+  /// The [riveAsset] defaults to `'asset'`.
+  /// The [width] defaults to `10.0`.
+  /// The [height] defaults to `10.0`.
   const _AnimatedBarTestbed({
     Key key,
     this.controller,
     this.artboardName,
-    this.riveAsset = 'some asset',
-    this.width = 1.0,
-    this.height = 1.0,
+    this.riveAsset = 'asset',
+    this.width = 10.0,
+    this.height = 10.0,
   }) : super(key: key);
 
   @override
