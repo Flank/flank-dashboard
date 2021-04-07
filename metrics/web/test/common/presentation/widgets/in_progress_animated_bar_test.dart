@@ -4,31 +4,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/rive_animation.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:rive/rive.dart';
+
+import '../../../test_utils/test_animation_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("InProgressAnimatedBar", () {
-    const asset = 'web/animation/in_progress_bar.riv';
-    const artboardName = 'In progress bar';
-
     final controller = SimpleAnimation('Animation 1');
 
-    final riveAnimationFinder = find.byType(RiveAnimation);
+    final animatedBarFinder = find.byType(AnimatedBar);
 
-    RiveAnimation getRiveAnimation(WidgetTester tester) {
-      return tester.widget<RiveAnimation>(riveAnimationFinder);
+    AnimatedBar getAnimatedBar(WidgetTester tester) {
+      return tester.widget<AnimatedBar>(animatedBarFinder);
     }
 
     testWidgets(
       "throws an AssertionError if the given height is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(height: null),
+          const _InProgressAnimatedBarTestbed(
+            height: null,
+          ),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -36,10 +36,12 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given rive asset is null",
+      "throws an AssertionError if the given height is negative",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(riveAsset: null),
+          const _InProgressAnimatedBarTestbed(
+            height: -1.0,
+          ),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -47,115 +49,143 @@ void main() {
     );
 
     testWidgets(
-      "applies the given height",
+      "throws an AssertionError if the given width is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _InProgressAnimatedBarTestbed(
+            width: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given width is negative",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _InProgressAnimatedBarTestbed(
+            width: -1.0,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given isHovered is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _InProgressAnimatedBarTestbed(
+            isHovered: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "displays the animated bar with the in progress asset if the given is hovered is false",
+      (WidgetTester tester) async {
+        const expectedAsset = 'web/animation/in_progress_bar.riv';
+
+        await tester.pumpWidget(
+          const _InProgressAnimatedBarTestbed(
+            isHovered: false,
+          ),
+        );
+
+        final animatedBar = getAnimatedBar(tester);
+
+        expect(animatedBar.riveAsset, equals(expectedAsset));
+      },
+    );
+    testWidgets(
+      "displays the animated bar with the hovered in progress asset if the given is hovered is true",
+      (WidgetTester tester) async {
+        const expectedAsset = 'web/animation/in_progress_bar_hover.riv';
+
+        await tester.pumpWidget(
+          const _InProgressAnimatedBarTestbed(
+            isHovered: true,
+          ),
+        );
+
+        final animatedBar = getAnimatedBar(tester);
+
+        expect(animatedBar.riveAsset, equals(expectedAsset));
+      },
+    );
+
+    testWidgets(
+      "applies the given height to the animated bar",
       (WidgetTester tester) async {
         const expectedHeight = 20.0;
 
         await tester.pumpWidget(
           const _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
             height: expectedHeight,
           ),
         );
-        await tester.pump();
 
-        final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
+        final animatedBar = getAnimatedBar(tester);
 
-        expect(sizedBox.height, equals(expectedHeight));
+        expect(animatedBar.height, equals(expectedHeight));
       },
     );
 
     testWidgets(
-      "applies the bar width from the dimensions config",
+      "applies the given width to the animated bar",
       (WidgetTester tester) async {
-        const expectedWidth = DimensionsConfig.graphBarWidth;
+        const expectedWidth = 20.0;
 
         await tester.pumpWidget(
           const _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
-          ),
-        );
-        await tester.pump();
-
-        final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
-
-        expect(sizedBox.width, equals(expectedWidth));
-      },
-    );
-
-    testWidgets(
-      "displays the rive animation with the given asset",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
+            width: expectedWidth,
           ),
         );
 
-        final riveAnimation = getRiveAnimation(tester);
+        final animatedBar = getAnimatedBar(tester);
 
-        expect(riveAnimation.assetName, equals(asset));
+        expect(animatedBar.width, equals(expectedWidth));
       },
     );
 
     testWidgets(
-      "aligns the rive animation to the bottom center",
+      "aligns the animated bar to the bottom center",
       (WidgetTester tester) async {
+        final expectedAlignment = Alignment.bottomCenter;
+
         await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(riveAsset: asset),
+          const _InProgressAnimatedBarTestbed(),
         );
 
-        final align = tester.widget<Align>(find.byType(Align));
-
-        expect(align.alignment, equals(Alignment.bottomCenter));
-      },
-    );
-
-    testWidgets(
-      "displays the rive animation with fit width box fit",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
-          ),
+        final alignFinder = find.ancestor(
+          of: animatedBarFinder,
+          matching: find.byType(Align),
         );
+        final align = tester.widget<Align>(alignFinder);
 
-        final riveAnimation = getRiveAnimation(tester);
-
-        expect(riveAnimation.fit, equals(BoxFit.fitWidth));
+        expect(align.alignment, equals(expectedAlignment));
       },
     );
 
     testWidgets(
-      "displays the rive animation with given controller",
+      "applies the given controller to the animated bar",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
             controller: controller,
           ),
         );
 
-        final riveAnimation = getRiveAnimation(tester);
-        final animationController = riveAnimation.controller;
+        final animatedBar = getAnimatedBar(tester);
+        final animationController = animatedBar.controller;
 
         expect(animationController, equals(controller));
-      },
-    );
-
-    testWidgets(
-      "displays the rive animation with the given artboard name",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            riveAsset: asset,
-            artboardName: artboardName,
-          ),
-        );
-
-        final riveAnimation = getRiveAnimation(tester);
-
-        expect(riveAnimation.artboardName, equals(artboardName));
       },
     );
   });
@@ -163,36 +193,42 @@ void main() {
 
 /// A testbed widget used to test the [InProgressAnimatedBar] widget.
 class _InProgressAnimatedBarTestbed extends StatelessWidget {
-  /// A rive animation asset to be used in tests.
-  final String riveAsset;
-
   /// A [RiveAnimationController] to be used in tests.
   final RiveAnimationController controller;
 
-  /// An artboard name to be used in tests.
-  final String artboardName;
+  /// A flag that indicates whether this animated bar is hovered in tests.
+  final bool isHovered;
 
   /// A height of this bar to be used in tests.
   final double height;
 
-  /// Create a new instance of the [_InProgressAnimatedBarTestbed],
+  /// A width of this bar to be used in tests.
+  final double width;
+
+  /// Creates a new instance of the [_InProgressAnimatedBarTestbed].
+  ///
+  /// The [isHovered] defaults to `false`.
+  /// The [height] defaults to `10.0`.
+  /// The [width] defaults to `10.0`.
   const _InProgressAnimatedBarTestbed({
     Key key,
     this.controller,
-    this.artboardName,
-    this.height = 10,
-    this.riveAsset = 'asset',
+    this.isHovered = false,
+    this.height = 10.0,
+    this.width = 10.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: InProgressAnimatedBar(
-          height: height,
-          riveAsset: riveAsset,
-          controller: controller,
-          artboardName: artboardName,
+        body: TestAnimationContainer(
+          child: InProgressAnimatedBar(
+            height: height,
+            width: width,
+            isHovered: isHovered,
+            controller: controller,
+          ),
         ),
       ),
     );

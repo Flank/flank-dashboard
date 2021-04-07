@@ -76,6 +76,15 @@ class _RiveAnimationState extends State<RiveAnimation> {
   }
 
   @override
+  void didUpdateWidget(covariant RiveAnimation oldWidget) {
+    if (oldWidget.assetName != widget.assetName) {
+      _loadAnimation();
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_isAnimationLoading) return const SizedBox();
 

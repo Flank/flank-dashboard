@@ -9,47 +9,52 @@ import 'package:rive/rive.dart';
 
 /// A widget that displays the the bar with the in-progress [RiveAnimation].
 class InProgressAnimatedBar extends StatelessWidget {
-  /// A [String] representing a path to the [RiveAnimation] asset this bar
-  /// displays.
-  final String riveAsset;
+  /// A height of this bar.
+  final double height;
+
+  /// A width of this bar.
+  final double width;
+
+  /// A flag that indicates whether this animated bar is hovered.
+  final bool isHovered;
 
   /// A [RiveAnimationController] to control this bar's animation.
   final RiveAnimationController controller;
 
-  /// A [String] representing a name of the [Artboard] to load for this bar's
-  /// animation.
-  final String artboardName;
-
-  /// A height of this bar.
-  final double height;
-
   /// Creates a new instance of the [InProgressAnimatedBar] with the given
   /// parameters.
   ///
-  /// Throws an [AssertionError] if the given [riveAsset] or [height] is `null`.
+  /// The [width] defaults to the [DimensionsConfig.graphBarWidth].
+  /// The [isHovered] defaults to `false`
+  ///
+  /// Throws an [AssertionError] if the given [isHovered] is `null`.
+  /// Throws an [AssertionError] if the given [height] or [width]
+  /// is `null` or negative.
   const InProgressAnimatedBar({
     Key key,
-    @required this.riveAsset,
     @required this.height,
+    this.width = DimensionsConfig.graphBarWidth,
+    this.isHovered = false,
     this.controller,
-    this.artboardName,
-  })  : assert(riveAsset != null),
-        assert(height != null),
+  })  : assert(height != null && height >= 0),
+        assert(width != null && width >= 0),
+        assert(isHovered != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const barWidth = DimensionsConfig.graphBarWidth;
+    const animationRootPath = 'web/animation';
+    final asset = isHovered
+        ? '$animationRootPath/in_progress_bar_hover.riv'
+        : '$animationRootPath/in_progress_bar.riv';
 
     return Align(
       alignment: Alignment.bottomCenter,
       child: AnimatedBar(
-        fit: BoxFit.fitWidth,
+        riveAsset: asset,
         height: height,
-        width: barWidth,
-        riveAsset: riveAsset,
+        width: width,
         controller: controller,
-        artboardName: artboardName,
       ),
     );
   }
