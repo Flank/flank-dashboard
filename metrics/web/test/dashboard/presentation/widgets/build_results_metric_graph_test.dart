@@ -20,6 +20,7 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_dur
 import 'package:metrics_core/metrics_core.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -262,8 +263,10 @@ class _BuildResultsMetricGraphTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
-      body: BuildResultsMetricGraph(
-        buildResultMetric: buildResultMetric,
+      body: TestInjectionContainer(
+        child: BuildResultsMetricGraph(
+          buildResultMetric: buildResultMetric,
+        ),
       ),
     );
   }
