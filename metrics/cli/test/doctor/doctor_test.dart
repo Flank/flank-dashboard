@@ -16,6 +16,7 @@ import '../test_utils/matchers.dart';
 
 void main() {
   group("Doctor", () {
+    final stateError = StateError('test');
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
     final firebaseService = FirebaseCommandMock();
@@ -111,6 +112,66 @@ void main() {
       () async {
         await doctor.checkVersions();
 
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if GCloud service throws during the version showing",
+          () async {
+        when(gcloudService.version())
+            .thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Flutter service throws during the version showing",
+          () async {
+        when(flutterService.version())
+            .thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Firebase service throws during the version showing",
+          () async {
+        when(firebaseService.version())
+            .thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Git service throws during the version showing",
+          () async {
+        when(gitService.version())
+            .thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(gitService.version()).called(once);
       },
     );

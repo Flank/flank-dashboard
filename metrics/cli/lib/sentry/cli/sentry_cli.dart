@@ -72,12 +72,6 @@ class SentryCli extends Cli {
 
   @override
   Future<void> version() async {
-    try {
-      await run(['--version']);
-    } catch (error) {
-      if (error is StateError) {
-        print(error.message);
-      }
-    }
+    return run(['--version']);
   }
 }
