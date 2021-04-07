@@ -76,12 +76,12 @@ class _RiveAnimationState extends State<RiveAnimation> {
   }
 
   @override
-  void didUpdateWidget(covariant RiveAnimation oldWidget) {
+  void didUpdateWidget(RiveAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
     if (oldWidget.assetName != widget.assetName) {
       _loadAnimation();
     }
-
-    super.didUpdateWidget(oldWidget);
   }
 
   @override

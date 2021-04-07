@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -15,12 +14,11 @@ import 'package:metrics/dashboard/presentation/view_models/finished_build_result
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/test_animation_container.dart';
+import '../../../test_utils/testbed/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -142,7 +140,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the minimum height to the metrics colored bar from the constraints",
+      "applies the minimum height to the metrics colored bar height from the constraints",
       (tester) async {
         await tester.pumpWidget(
           _BuildResultBarTestbed(
@@ -242,7 +240,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the minimum height to the in-progress animated bar from the constraints",
+      "applies the minimum height to the in-progress animated bar height from the constraints",
       (tester) async {
         await tester.pumpWidget(
           _BuildResultBarTestbed(
@@ -283,22 +281,19 @@ class _BuildResultBarTestbed extends StatelessWidget {
   final BoxConstraints constraints;
 
   /// Creates an instance of this testbed.
-  ///
-  /// The [themeData] default value is an empty [MetricsThemeData] instance.
-  /// The [strategy] default value is an empty
-  /// [BuildResultBarPaddingStrategy] instance.
-  /// The [barHeight] default value is `20.0`.
-  const _BuildResultBarTestbed({
+  /// The [constraints] defaults to a [BoxConstraints] instance with the
+  /// [BoxConstraints.minHeight] equal to `10`.
+   const _BuildResultBarTestbed({
     Key key,
     this.buildResult,
-    this.constraints,
+    this.constraints = const BoxConstraints(minHeight: 10),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TestAnimationContainer(
+        body: RiveAnimationTestbed(
           child: Container(
             constraints: constraints,
             child: BuildResultBar(

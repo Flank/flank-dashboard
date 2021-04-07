@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/test_animation_container.dart';
+import '../../../test_utils/testbed/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -43,6 +43,19 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given height equals to zero",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _AnimatedBarTestbed(
+            height: 0.0,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "throws an AssertionError if the given width is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -69,7 +82,54 @@ void main() {
     );
 
     testWidgets(
-      "displays the rive animation with the given asset",
+      "throws an AssertionError if the given width equals to zero",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _AnimatedBarTestbed(
+            width: 0.0,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "applies the given height to the animated bar",
+      (WidgetTester tester) async {
+        const expectedHeight = 20.0;
+
+        await tester.pumpWidget(
+          const _AnimatedBarTestbed(
+            height: expectedHeight,
+          ),
+        );
+
+        final animatedBar = tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+
+        expect(animatedBar.height, equals(expectedHeight));
+      },
+    );
+
+    testWidgets(
+      "applies the given width to the animated bar",
+      (WidgetTester tester) async {
+        const expectedWidth = 20.0;
+
+        await tester.pumpWidget(
+          const _AnimatedBarTestbed(
+            width: expectedWidth,
+          ),
+        );
+
+        final animatedBar = tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+
+        expect(animatedBar.width, equals(expectedWidth));
+      },
+    );
+
+    testWidgets(
+      "applies the given asset to the rive animation widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _AnimatedBarTestbed(
@@ -84,7 +144,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the rive animation with the given controller",
+      "applies the given controller to the rive animation widget",
       (WidgetTester tester) async {
         final controller = SimpleAnimation('1');
 
@@ -101,7 +161,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the rive animation with the given artboard name",
+      "applies the given artboard name to the rive animation widget",
       (WidgetTester tester) async {
         const artboardName = 'name';
 
@@ -118,7 +178,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the BoxFit.fitWidth to the rive animation",
+      "applies the BoxFit.fitWidth to the rive animation widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _AnimatedBarTestbed(),
@@ -167,7 +227,7 @@ class _AnimatedBarTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TestAnimationContainer(
+        body: RiveAnimationTestbed(
           child: AnimatedBar(
             height: height,
             width: width,

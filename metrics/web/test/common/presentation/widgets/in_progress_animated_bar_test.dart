@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0
+  // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/test_animation_container.dart';
+import '../../../test_utils/testbed/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -20,58 +20,6 @@ void main() {
     AnimatedBar getAnimatedBar(WidgetTester tester) {
       return tester.widget<AnimatedBar>(animatedBarFinder);
     }
-
-    testWidgets(
-      "throws an AssertionError if the given height is null",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            height: null,
-          ),
-        );
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "throws an AssertionError if the given height is negative",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            height: -1.0,
-          ),
-        );
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "throws an AssertionError if the given width is null",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            width: null,
-          ),
-        );
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "throws an AssertionError if the given width is negative",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InProgressAnimatedBarTestbed(
-            width: -1.0,
-          ),
-        );
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
 
     testWidgets(
       "throws an AssertionError if the given isHovered is null",
@@ -156,7 +104,7 @@ void main() {
     testWidgets(
       "aligns the animated bar to the bottom center",
       (WidgetTester tester) async {
-        final expectedAlignment = Alignment.bottomCenter;
+        const expectedAlignment = Alignment.bottomCenter;
 
         await tester.pumpWidget(
           const _InProgressAnimatedBarTestbed(),
@@ -221,7 +169,7 @@ class _InProgressAnimatedBarTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TestAnimationContainer(
+        body: RiveAnimationTestbed(
           child: InProgressAnimatedBar(
             height: height,
             width: width,

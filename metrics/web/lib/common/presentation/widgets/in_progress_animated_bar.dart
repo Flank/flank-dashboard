@@ -28,34 +28,39 @@ class InProgressAnimatedBar extends StatelessWidget {
   /// The [isHovered] defaults to `false`
   ///
   /// Throws an [AssertionError] if the given [isHovered] is `null`.
-  /// Throws an [AssertionError] if the given [height] or [width]
-  /// is `null` or negative.
+  /// Throws an [AssertionError] if the given [height] or [width] is `null` or
+  /// less or equal to `0`.
   const InProgressAnimatedBar({
     Key key,
     @required this.height,
     this.width = DimensionsConfig.graphBarWidth,
     this.isHovered = false,
     this.controller,
-  })  : assert(height != null && height >= 0),
-        assert(width != null && width >= 0),
-        assert(isHovered != null),
+  })  : assert(isHovered != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const animationRootPath = 'web/animation';
-    final asset = isHovered
-        ? '$animationRootPath/in_progress_bar_hover.riv'
-        : '$animationRootPath/in_progress_bar.riv';
-
     return Align(
       alignment: Alignment.bottomCenter,
       child: AnimatedBar(
-        riveAsset: asset,
+        riveAsset: _animationAsset,
         height: height,
         width: width,
         controller: controller,
       ),
     );
+  }
+
+  /// Returns a path to the animation asset this bar displays depending on the
+  /// [isHovered] value.
+  String get _animationAsset {
+    const animationRootPath = 'web/animation';
+
+    if (isHovered) {
+      return '$animationRootPath/in_progress_bar_hover.riv';
+    }
+
+    return '$animationRootPath/in_progress_bar.riv';
   }
 }
