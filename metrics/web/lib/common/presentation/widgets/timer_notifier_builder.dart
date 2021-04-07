@@ -35,11 +35,11 @@ class TimerNotifierBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!shouldSubscribe) return builder.call(context);
+    if (!shouldSubscribe) return builder(context);
 
     return Consumer<TimerNotifier>(
       builder: (_, __, child) {
-        return builder.call(context);
+        return builder(context);
       },
     );
   }
