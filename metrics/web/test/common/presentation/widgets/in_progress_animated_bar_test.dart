@@ -1,4 +1,4 @@
-  // Use of this source code is governed by the Apache License, Version 2.0
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/testbed/rive_animation_testbed.dart';
+import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

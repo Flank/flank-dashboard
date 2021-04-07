@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/graphs/animated_bar.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/testbed/rive_animation_testbed.dart';
+import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -105,7 +105,8 @@ void main() {
           ),
         );
 
-        final animatedBar = tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+        final animatedBar =
+            tester.widget<AnimatedBar>(find.byType(AnimatedBar));
 
         expect(animatedBar.height, equals(expectedHeight));
       },
@@ -122,7 +123,8 @@ void main() {
           ),
         );
 
-        final animatedBar = tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+        final animatedBar =
+            tester.widget<AnimatedBar>(find.byType(AnimatedBar));
 
         expect(animatedBar.width, equals(expectedWidth));
       },

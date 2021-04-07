@@ -18,7 +18,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:rive/rive.dart';
 
-import '../../../test_utils/testbed/rive_animation_testbed.dart';
+import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -283,7 +283,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// Creates an instance of this testbed.
   /// The [constraints] defaults to a [BoxConstraints] instance with the
   /// [BoxConstraints.minHeight] equal to `10`.
-   const _BuildResultBarTestbed({
+  const _BuildResultBarTestbed({
     Key key,
     this.buildResult,
     this.constraints = const BoxConstraints(minHeight: 10),

@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../rive_asset_bundle_stub.dart';
+import '../../rive_asset_bundle_stub.dart';
 
 /// A testbed class required to test the [RiveAnimation] widget.
 class RiveAnimationTestbed extends StatelessWidget {
