@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/timer_notifier_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -18,6 +19,8 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -40,6 +43,10 @@ void main() {
 
     final barGraphFinder = find.byWidgetPredicate(
       (widget) => widget is BarGraph<int>,
+    );
+    final timerNotifierBuilderFinder = find.ancestor(
+      of: barGraphFinder,
+      matching: find.byType(TimerNotifierBuilder),
     );
 
     tearDown(() {
@@ -241,6 +248,81 @@ void main() {
         expect(barGraph.data, equals(expectedData));
       },
     );
+
+    testWidgets(
+      "applies a timer notifier builder",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        expect(timerNotifierBuilderFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a true should subscribe value to the timer notifier builder if the given build results contain in-progress builds",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
+        final buildResults = [
+          InProgressBuildResultViewModel(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            date: DateTime.now(),
+          ),
+        ];
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final timerNotifierBuilder = tester.widget<TimerNotifierBuilder>(
+          timerNotifierBuilderFinder,
+        );
+
+        expect(timerNotifierBuilder.shouldSubscribe, isTrue);
+      },
+    );
+
+    testWidgets(
+      "applies a false should subscribe value to the timer notifier builder if the given build results does not contain in-progress builds",
+      (WidgetTester tester) async {
+        when(durationStrategy.getDuration(any)).thenReturn(duration);
+
+        final buildResults = [
+          FinishedBuildResultViewModel(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            duration: duration,
+            buildStatus: BuildStatus.successful,
+            date: DateTime.now(),
+          ),
+        ];
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+          durationStrategy: durationStrategy,
+        ));
+
+        final timerNotifierBuilder = tester.widget<TimerNotifierBuilder>(
+          timerNotifierBuilderFinder,
+        );
+
+        expect(timerNotifierBuilder.shouldSubscribe, isFalse);
+      },
+    );
   });
 }
 
@@ -294,9 +376,11 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: BuildResultBarGraph(
-          buildResultMetric: buildResultMetric,
-          durationStrategy: durationStrategy,
+        body: TestInjectionContainer(
+          child: BuildResultBarGraph(
+            buildResultMetric: buildResultMetric,
+            durationStrategy: durationStrategy,
+          ),
         ),
       ),
     );
