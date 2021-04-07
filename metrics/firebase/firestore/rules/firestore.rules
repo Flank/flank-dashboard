@@ -151,16 +151,16 @@ service cloud.firestore {
   /// A valid duration for a build with the in-progress status is `null`.
   /// For all other build statuses, the build duration must be a non-null integer.
   function isDurationValid() {
-    let isFinishedBuildStatus = isFinishedBuildStatus();
-    let isInProgressBuildStatus = !isFinishedBuildStatus;
+    let isFinishedBuildStatusOrNull = isFinishedBuildStatusOrNull();
+    let isInProgressBuildStatus = !isFinishedBuildStatusOrNull;
     let containsDuration = isInteger("duration");
 
-    return  (isFinishedBuildStatus && containsDuration)
+    return  (isFinishedBuildStatusOrNull && containsDuration)
          || (isInProgressBuildStatus && isNotInRequestOrNull("duration"));
   }
 
   /// Checks whether the build status is finished or null.
-  function isFinishedBuildStatus() {
+  function isFinishedBuildStatusOrNull() {
     let finishedBuildStatuses = [
       "BuildStatus.successful",
       "BuildStatus.unknown",
