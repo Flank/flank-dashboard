@@ -3,6 +3,7 @@
 
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
+import 'package:cli/npm/service/npm_service.dart';
 
 /// A class that holds services needed to deploy the Metrics application.
 class Services {
@@ -12,15 +13,21 @@ class Services {
   /// A service that provides methods for working with GCloud.
   final GCloudService gcloudService;
 
+  /// A service that provides methods for working with Npm.
+  final NpmService npmService;
+
   /// Creates a new instance of the [Services] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [gcloudService] is `null`.
+  /// Throws an [ArgumentError] if the given [npmService] is `null`.
   Services({
     this.flutterService,
     this.gcloudService,
+    this.npmService,
   }) {
     ArgumentError.checkNotNull(flutterService, 'flutterService');
     ArgumentError.checkNotNull(gcloudService, 'gcloudService');
+    ArgumentError.checkNotNull(npmService, 'npmService');
   }
 }

@@ -11,6 +11,7 @@ import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
+import '../test_utils/npm_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -21,9 +22,11 @@ void main() {
     final flutterService = FlutterServiceMock();
     final firebaseCommand = FirebaseCommandMock();
     final gitCommand = GitCommandMock();
+    final npmService = NpmServiceMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
+      npmService: npmService,
     );
     final doctor = Doctor(
       services: services,
@@ -36,6 +39,7 @@ void main() {
       reset(flutterService);
       reset(firebaseCommand);
       reset(gitCommand);
+      reset(npmService);
     });
 
     test(
@@ -117,6 +121,15 @@ void main() {
     );
 
     test(
+      ".checkVersions() shows the Npm CLI version",
+          () async {
+        await doctor.checkVersions();
+
+        verify(npmService.version()).called(once);
+      },
+    );
+
+    test(
       ".checkVersions() proceeds if GCloud service throws during the version showing",
           () async {
         when(gcloudService.version())
@@ -128,6 +141,7 @@ void main() {
         verify(flutterService.version()).called(once);
         verify(firebaseCommand.version()).called(once);
         verify(gitCommand.version()).called(once);
+        verify(npmService.version()).called(once);
       },
     );
 
@@ -143,6 +157,7 @@ void main() {
         verify(flutterService.version()).called(once);
         verify(firebaseCommand.version()).called(once);
         verify(gitCommand.version()).called(once);
+        verify(npmService.version()).called(once);
       },
     );
 
@@ -158,6 +173,7 @@ void main() {
         verify(flutterService.version()).called(once);
         verify(firebaseCommand.version()).called(once);
         verify(gitCommand.version()).called(once);
+        verify(npmService.version()).called(once);
       },
     );
 
@@ -173,6 +189,23 @@ void main() {
         verify(flutterService.version()).called(once);
         verify(firebaseCommand.version()).called(once);
         verify(gitCommand.version()).called(once);
+        verify(npmService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Npm service throws during the version showing",
+          () async {
+        when(npmService.version())
+            .thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
+        verify(gitCommand.version()).called(once);
+        verify(npmService.version()).called(once);
       },
     );
   });

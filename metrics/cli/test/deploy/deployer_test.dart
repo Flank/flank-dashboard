@@ -16,6 +16,7 @@ import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
+import '../test_utils/npm_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -25,6 +26,7 @@ void main() {
     const firebaseToken = 'testToken';
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
+    final npmService = NpmServiceMock();
     final firebaseCommand = FirebaseCommandMock();
     final gitCommand = GitCommandMock();
     final fileHelper = _FileHelperMock();
@@ -32,6 +34,7 @@ void main() {
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
+      npmService: npmService,
     );
     final deployer = Deployer(
       services: services,
@@ -55,6 +58,7 @@ void main() {
     tearDown(() {
       reset(gcloudService);
       reset(flutterService);
+      reset(npmService);
       reset(firebaseCommand);
       reset(gitCommand);
       reset(fileHelper);
@@ -228,6 +232,35 @@ void main() {
         verify(gitCommand.clone(
           DeployConstants.repoURL,
           DeployConstants.tempDir,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository before installing the npm dependencies",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
+          npmService.installDependencies(DeployConstants.firebasePath),
+          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+
+        await deployer.deploy();
+
+        verify(npmService.installDependencies(DeployConstants.firebasePath))
+            .called(once);
+        verify(npmService.installDependencies(
+          DeployConstants.firebaseFunctionsPath,
         )).called(once);
       },
     );

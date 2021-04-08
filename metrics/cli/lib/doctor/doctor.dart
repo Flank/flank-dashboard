@@ -6,6 +6,7 @@ import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
+import 'package:cli/npm/service/npm_service.dart';
 
 /// A class that provides an ability to check whether all required third-party
 /// services are available and get their versions.
@@ -15,6 +16,9 @@ class Doctor {
 
   /// A service that provides methods for working with GCloud.
   final GCloudService _gcloudService;
+
+  /// A service that provides methods for working with Npm.
+  final NpmService _npmService;
 
   /// A class that provides methods for working with the Firebase.
   final FirebaseCommand _firebaseCommand;
@@ -33,6 +37,7 @@ class Doctor {
     GitCommand gitCommand,
   })  : _gcloudService = services?.gcloudService,
         _flutterService = services?.flutterService,
+        _npmService = services?.npmService,
         _firebaseCommand = firebaseCommand,
         _gitCommand = gitCommand {
     ArgumentError.checkNotNull(services, 'services');
@@ -46,6 +51,7 @@ class Doctor {
     await _checkVersion(_firebaseCommand.version);
     await _checkVersion(_gcloudService.version);
     await _checkVersion(_gitCommand.version);
+    await _checkVersion(_npmService.version);
   }
 
   /// Checks version of the third-party service using the given

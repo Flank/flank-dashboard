@@ -8,6 +8,7 @@ import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/helper/file_helper.dart';
+import 'package:cli/npm/service/npm_service.dart';
 
 /// A class providing method for deploying the Metrics Web Application.
 class Deployer {
@@ -16,6 +17,9 @@ class Deployer {
 
   /// A service that provides methods for working with GCloud.
   final GCloudService _gcloudService;
+
+  /// A service that provides methods for working with Npm.
+  final NpmService _npmService;
 
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
@@ -39,6 +43,7 @@ class Deployer {
     FileHelper fileHelper,
   })  : _gcloudService = services?.gcloudService,
         _flutterService = services?.flutterService,
+        _npmService = services?.npmService,
         _firebaseCommand = firebaseCommand,
         _gitCommand = gitCommand,
         _fileHelper = fileHelper {
@@ -58,6 +63,10 @@ class Deployer {
     await _firebaseCommand.addFirebase(projectId, firebaseToken);
     await _firebaseCommand.createWebApp(projectId, firebaseToken);
     await _gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir);
+    await _npmService.installDependencies(DeployConstants.firebasePath);
+    await _npmService.installDependencies(
+      DeployConstants.firebaseFunctionsPath,
+    );
     await _flutterService.build(DeployConstants.webPath);
     await _firebaseCommand.setFirebaseProject(
       projectId,

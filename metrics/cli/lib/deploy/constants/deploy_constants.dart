@@ -14,4 +14,10 @@ class DeployConstants {
 
   /// A Firebase target name.
   static const String firebaseTarget = 'metrics';
+
+  /// A path to the firebase sources.
+  static const String firebasePath = '$tempDir/metrics/firebase';
+
+  /// A path to the firebase functions sources.
+  static const String firebaseFunctionsPath = '$firebasePath/functions';
 }
