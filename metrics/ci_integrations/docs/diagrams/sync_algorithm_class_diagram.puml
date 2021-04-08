@@ -29,7 +29,7 @@ package integration.ci as CI {
             + sourceProjectId: String
             + destinationProjectId: String
             + initialSyncLimit: int
-            + inProgressTimeout: int
+            + inProgressTimeout: Duration
             + coverage: bool
         }
     }
