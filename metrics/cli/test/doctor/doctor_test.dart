@@ -19,23 +19,23 @@ void main() {
     final stateError = StateError('test');
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
-    final firebaseService = FirebaseCommandMock();
-    final gitService = GitCommandMock();
+    final firebaseCommand = FirebaseCommandMock();
+    final gitCommand = GitCommandMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
     );
     final doctor = Doctor(
       services: services,
-      firebaseCommand: firebaseService,
-      gitCommand: gitService,
+      firebaseCommand: firebaseCommand,
+      gitCommand: gitCommand,
     );
 
     tearDown(() {
       reset(gcloudService);
       reset(flutterService);
-      reset(firebaseService);
-      reset(gitService);
+      reset(firebaseCommand);
+      reset(gitCommand);
     });
 
     test(
@@ -44,8 +44,8 @@ void main() {
         expect(
           () => Doctor(
             services: null,
-            firebaseCommand: firebaseService,
-            gitCommand: gitService,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
           ),
           throwsArgumentError,
         );
@@ -59,7 +59,7 @@ void main() {
           () => Doctor(
             services: services,
             firebaseCommand: null,
-            gitCommand: gitService,
+            gitCommand: gitCommand,
           ),
           throwsArgumentError,
         );
@@ -72,7 +72,7 @@ void main() {
         expect(
           () => Doctor(
             services: services,
-            firebaseCommand: firebaseService,
+            firebaseCommand: firebaseCommand,
             gitCommand: null,
           ),
           throwsArgumentError,
@@ -94,7 +94,7 @@ void main() {
       () async {
         await doctor.checkVersions();
 
-        verify(firebaseService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
       },
     );
 
@@ -112,7 +112,7 @@ void main() {
       () async {
         await doctor.checkVersions();
 
-        verify(gitService.version()).called(once);
+        verify(gitCommand.version()).called(once);
       },
     );
 
@@ -126,8 +126,8 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseService.version()).called(once);
-        verify(gitService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
+        verify(gitCommand.version()).called(once);
       },
     );
 
@@ -141,38 +141,38 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseService.version()).called(once);
-        verify(gitService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
+        verify(gitCommand.version()).called(once);
       },
     );
 
     test(
-      ".checkVersions() proceeds if Firebase service throws during the version showing",
+      ".checkVersions() proceeds if Firebase command throws during the version showing",
           () async {
-        when(firebaseService.version())
+        when(firebaseCommand.version())
             .thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseService.version()).called(once);
-        verify(gitService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
+        verify(gitCommand.version()).called(once);
       },
     );
 
     test(
-      ".checkVersions() proceeds if Git service throws during the version showing",
+      ".checkVersions() proceeds if Git command throws during the version showing",
           () async {
-        when(gitService.version())
+        when(gitCommand.version())
             .thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseService.version()).called(once);
-        verify(gitService.version()).called(once);
+        verify(firebaseCommand.version()).called(once);
+        verify(gitCommand.version()).called(once);
       },
     );
   });

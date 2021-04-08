@@ -42,9 +42,16 @@ class Doctor {
 
   /// Checks versions of the required third-party services.
   Future<void> checkVersions() async {
-    await Future.sync(_flutterService.version).catchError((_) {});
-    await Future.sync(_firebaseCommand.version).catchError((_) {});
-    await Future.sync(_gcloudService.version).catchError((_) {});
-    await Future.sync(_gitCommand.version).catchError((_) {});
+    await _tryCatch(_flutterService.version);
+    await _tryCatch(_firebaseCommand.version);
+    await _tryCatch(_gcloudService.version);
+    await _tryCatch(_gitCommand.version);
+  }
+
+  /// Executes a [function] and catches errors if any.
+  Future<void> _tryCatch(Function function) async {
+    try {
+      await function();
+    } catch (_) {}
   }
 }
