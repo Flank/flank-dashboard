@@ -84,7 +84,7 @@ _**Note**: The algorithm parts shouldn't be performed in parallel. The first sta
 
 The in-progress builds introduction adds a new controlling parameter for the sync algorithm. This parameter controls the timeout duration for in-progress builds. According to the definition, if the in-progress build duration is greater than the configured timeout duration, this build is considered as finished with an unknown status (i.e., `BuildStatus.unknown`). The described parameter is called **in-progress timeout**. The `SyncConfig` provides controlling parameters and other configurations to the sync algorithm. Thus, the **in-progress timeout** should be a part of the `SyncConfig` class. Therefore, `SyncConfig` class updates include adding the `inProgressTimeout` field having the `Duration` type.
 
-As in the Builds Synchronization document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
+As in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
 
 ![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
@@ -225,7 +225,7 @@ The following methods are to be implemented for the `FirestoreDestinationClientA
 
 The `fetchBuildsWithStatus` is used by the sync algorithm to fetch in-progress builds stored in the database. This method should throw if the project with the given identifier does not exist. If the project exists but doesn't have synchronized builds yet, the method should return an empty list.
 
-The `updateBuilds` method is used to update in-progress builds with new data and status. This method should throw if the project with the given identifier does not exist. If updating one of the builds fails, the method should continue updating other builds, as the failed build can be re-synced later, during the next synchronization. Generally speaking, the implementation should consider the following cases:
+The `updateBuilds` method is used to update in-progress builds with new data and status. This method should throw if the project with the given identifier does not exist. If updating one of the builds fails, the method should continue updating other builds, as the failed build can be re-synced later, during the next synchronization. Generally speaking, the implementation should be flexible, providing an ability to switch between the following options:
 
 - a build updating is mandatory - if an update throws, the method throws as well;
 - a build updating is not mandatory - if an update throws, the method should continue updating other builds.
