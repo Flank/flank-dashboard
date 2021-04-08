@@ -17,6 +17,9 @@ class AnimatedBar extends StatelessWidget {
   /// A width of this bar.
   final double width;
 
+  /// An [Alignment] of the animation this bar displays.
+  final Alignment animationAlignment;
+
   /// A [RiveAnimationController] to control this bar's animation.
   final RiveAnimationController controller;
 
@@ -26,13 +29,14 @@ class AnimatedBar extends StatelessWidget {
   /// Creates a new instance of the [AnimatedBar] with the given parameters.
   ///
   /// Throws an [AssertionError] if the given [riveAsset] is `null`.
-  /// Throws an [AssertionError] if the given [height] or [width] is `null` 
+  /// Throws an [AssertionError] if the given [height] or [width] is `null`
   /// or less or equal to `0`.
   const AnimatedBar({
     Key key,
     @required this.riveAsset,
     @required this.height,
     @required this.width,
+    this.animationAlignment,
     this.controller,
     this.artboardName,
   })  : assert(riveAsset != null),
@@ -47,6 +51,7 @@ class AnimatedBar extends StatelessWidget {
       width: width,
       child: RiveAnimation(
         riveAsset,
+        alignment: animationAlignment,
         controller: controller,
         artboardName: artboardName,
         fit: BoxFit.fitWidth,

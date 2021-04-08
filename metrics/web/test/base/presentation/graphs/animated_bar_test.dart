@@ -131,6 +131,23 @@ void main() {
     );
 
     testWidgets(
+      "applies the animation alignment to the rive animation widget",
+      (WidgetTester tester) async {
+        const expectedAlignment = Alignment.topLeft;
+
+        await tester.pumpWidget(
+          const _AnimatedBarTestbed(
+            animationAlignment: expectedAlignment,
+          ),
+        );
+
+        final rive = tester.widget<RiveAnimation>(riveAnimationFinder);
+
+        expect(rive.alignment, equals(expectedAlignment));
+      },
+    );
+
+    testWidgets(
       "applies the given asset to the rive animation widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -202,6 +219,9 @@ class _AnimatedBarTestbed extends StatelessWidget {
   /// A height to use in tests.
   final double height;
 
+  /// An animation [Alignment] to use in tests.
+  final Alignment animationAlignment;
+
   /// A rive animation asset to use in tests.
   final String riveAsset;
 
@@ -221,6 +241,7 @@ class _AnimatedBarTestbed extends StatelessWidget {
     this.controller,
     this.artboardName,
     this.riveAsset = 'asset',
+    this.animationAlignment,
     this.width = 10.0,
     this.height = 10.0,
   }) : super(key: key);
@@ -233,6 +254,7 @@ class _AnimatedBarTestbed extends StatelessWidget {
           child: AnimatedBar(
             height: height,
             width: width,
+            animationAlignment: animationAlignment,
             riveAsset: riveAsset,
             controller: controller,
             artboardName: artboardName,
