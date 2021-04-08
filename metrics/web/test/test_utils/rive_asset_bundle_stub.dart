@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../base/presentation/test_data/rive_animation_test_data.dart';
 
-/// A class that represents an [AssetBundle] used in tests.
+/// A stub implementation of the [AssetBundle] used to test the Rive animations.
 class RiveAssetBundleStub extends CachingAssetBundle {
   /// A [ByteData] of the rive animation assets used in tests.
   static final ByteData _animationByteData =

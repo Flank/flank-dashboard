@@ -25,7 +25,7 @@ class InProgressAnimatedBar extends StatelessWidget {
   /// parameters.
   ///
   /// The [width] defaults to the [DimensionsConfig.graphBarWidth].
-  /// The [isHovered] defaults to `false`
+  /// The [isHovered] defaults to `false`.
   ///
   /// Throws an [AssertionError] if the given [isHovered] is `null`.
   /// Throws an [AssertionError] if the given [height] or [width] is `null` or

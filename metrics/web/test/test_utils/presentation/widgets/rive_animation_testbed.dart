@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../rive_asset_bundle_stub.dart';
 
-/// A testbed class required to test the [RiveAnimation] widget.
+/// A testbed class required to test widgets that display Rive animations.
 class RiveAnimationTestbed extends StatelessWidget {
   /// A child widget to display.
   final Widget child;
