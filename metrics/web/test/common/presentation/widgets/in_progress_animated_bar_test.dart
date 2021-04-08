@@ -50,6 +50,7 @@ void main() {
         expect(animatedBar.riveAsset, equals(expectedAsset));
       },
     );
+
     testWidgets(
       "displays the animated bar with the hovered in progress asset if the given is hovered is true",
       (WidgetTester tester) async {
