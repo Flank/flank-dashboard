@@ -29,19 +29,19 @@ void main() {
     final flutterService = FlutterServiceMock();
     final npmService = NpmServiceMock();
     final firebaseCommand = FirebaseCommandMock();
-    final gitCommand = GitCommandMock();
+    final gitService = GitServiceMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
+      gitService: gitService,
       npmService: npmService,
     );
     final deployer = Deployer(
       services: services,
       firebaseCommand: firebaseCommand,
-      gitCommand: gitCommand,
       fileHelper: fileHelper,
     );
 
@@ -62,7 +62,7 @@ void main() {
       reset(flutterService);
       reset(npmService);
       reset(firebaseCommand);
-      reset(gitCommand);
+      reset(gitService);
       reset(fileHelper);
       reset(directory);
       reset(servicesMock);
@@ -79,7 +79,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -98,7 +97,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -117,7 +115,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -132,22 +129,6 @@ void main() {
           () => Deployer(
             services: services,
             firebaseCommand: null,
-            gitCommand: gitCommand,
-            fileHelper: fileHelper,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given Git command is null",
-      () {
-        expect(
-          () => Deployer(
-            services: services,
-            firebaseCommand: firebaseCommand,
-            gitCommand: null,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -162,7 +143,6 @@ void main() {
           () => Deployer(
             services: services,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: null,
           ),
           throwsArgumentError,
@@ -274,38 +254,9 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gitCommand.clone(
+        verify(gitService.checkout(
           DeployConstants.repoURL,
           DeployConstants.tempDir,
-        )).called(once);
-      },
-    );
-
-    test(
-      ".deploy() clones the Git repository before installing the npm dependencies",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
-
-        verifyInOrder([
-          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
-          npmService.installDependencies(DeployConstants.firebasePath),
-          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
-        ]);
-      },
-    );
-
-    test(
-      ".deploy() installs the npm dependencies",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-
-        await deployer.deploy();
-
-        verify(npmService.installDependencies(DeployConstants.firebasePath))
-            .called(once);
-        verify(npmService.installDependencies(
-          DeployConstants.firebaseFunctionsPath,
         )).called(once);
       },
     );
@@ -317,9 +268,24 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
+          gitService.checkout(DeployConstants.repoURL, DeployConstants.tempDir),
           flutterService.build(DeployConstants.webPath),
         ]);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies",
+          () async {
+        whenGetDirectory().thenReturn(directory);
+
+        await deployer.deploy();
+
+        verify(npmService.installDependencies(DeployConstants.firebasePath))
+            .called(once);
+        verify(npmService.installDependencies(
+          DeployConstants.firebaseFunctionsPath,
+        )).called(once);
       },
     );
 

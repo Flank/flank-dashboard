@@ -2,11 +2,11 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/firebase/firebase_command.dart';
-import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
+import 'package:cli/git/service/git_service.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/npm/service/npm_service.dart';
 
@@ -21,39 +21,39 @@ class Deployer {
   /// A service that provides methods for working with Npm.
   final NpmService _npmService;
 
+  /// A class that provides methods for working with the Git.
+  final GitService _gitService;
+
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
 
   /// A class that provides methods for working with the Firebase.
   final FirebaseCommand _firebaseCommand;
 
-  /// A class that provides methods for working with the Git.
-  final GitCommand _gitCommand;
-
   /// Creates a new instance of the [Deployer] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
   /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
-  /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
   /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
   Deployer({
     Services services,
     FirebaseCommand firebaseCommand,
-    GitCommand gitCommand,
     FileHelper fileHelper,
-  })  : _flutterService = services?.flutterService,
+  })  :
+        _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
+        _gitService = services?.gitService,
         _firebaseCommand = firebaseCommand,
-        _gitCommand = gitCommand,
         _fileHelper = fileHelper {
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(_npmService, 'npmService');
+    ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseCommand, 'firebaseCommand');
-    ArgumentError.checkNotNull(_gitCommand, 'gitCommand');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
   }
 
@@ -66,7 +66,10 @@ class Deployer {
 
     await _firebaseCommand.addFirebase(projectId, firebaseToken);
     await _firebaseCommand.createWebApp(projectId, firebaseToken);
-    await _gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir);
+    await _gitService.checkout(
+      DeployConstants.repoURL,
+      DeployConstants.tempDir,
+    );
     await _npmService.installDependencies(DeployConstants.firebasePath);
     await _npmService.installDependencies(
       DeployConstants.firebaseFunctionsPath,

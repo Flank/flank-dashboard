@@ -24,7 +24,7 @@ package flutter.service {
 
 package git.service{
     interface GitService  {
-        + checkout() : Future<void>
+        + checkout(String repoUrl, String srcPath) : Future<void>
     }
 }
 

@@ -88,7 +88,7 @@ package flutter {
 package git {
     package service as git.service {
         interface GitService  {
-            + checkout() : Future<void>
+            + checkout(String repoUrl, String srcPath) : Future<void>
         }
     }
 
