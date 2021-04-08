@@ -30,7 +30,7 @@ describe("", async () => {
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(passwordSignInProviderId, true)
+        getAllowedEmailUser(passwordSignInProviderId, true)
       ),
       'can': {
         'create': true,
@@ -206,8 +206,49 @@ describe("", async () => {
       );
     });
 
-    it("does not allow creating builds if the duration is null", async () => {
+    it("allows creating builds with a successful build status and non-null integer duration", async () => {
       let build = getBuild();
+      build.buildStatus = "BuildStatus.successful";
+      build.duration = 10;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("allows creating builds with a failed build status and non-null integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.failed";
+      build.duration = 10;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("allows creating builds with an unknown build status and non-null integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.unknown";
+      build.duration = 10;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("allows creating builds with a null build status and an integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
+      build.duration = 10;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with a successful build status and a null duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.successful";
       build.duration = null;
 
       await assertFails(
@@ -215,9 +256,100 @@ describe("", async () => {
       );
     });
 
-    it("does not allow creating a build if the duration is not an integer", async () => {
+    it("does not allow creating builds with a failed build status and a null duration", async () => {
       let build = getBuild();
+      build.buildStatus = "BuildStatus.failed";
+      build.duration = null;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with an unknown build status and a null duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.unknown";
+      build.duration = null;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with a null build status and a null duration", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
+      build.duration = null;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with a successful build status and a non integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.successful";
       build.duration = "123";
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with a failed build status and a non integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.failed";
+      build.duration = "123";
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with an unknown build status and a non integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.unknown";
+      build.duration = "123";
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with a null build status and a non-integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
+      build.duration = "123";
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("allows creating builds with an in-progress build status and a null duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.inProgress";
+      build.duration = null;
+
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with an in-progress build status and an integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.inProgress";
+      build.duration = 10;
+
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
+
+    it("does not allow creating builds with an in-progress build status and a non-integer duration", async () => {
+      let build = getBuild();
+      build.buildStatus = "BuildStatus.inProgress";
+      build.duration = "test";
 
       await assertFails(
         passwordProviderAllowedEmailApp.collection(collection).add(build)

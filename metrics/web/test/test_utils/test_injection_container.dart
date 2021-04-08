@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -55,6 +56,9 @@ class TestInjectionContainer extends StatelessWidget {
   /// A [NavigationNotifier] to inject.
   final NavigationNotifier navigationNotifier;
 
+  /// A [TimerNotifier] to inject.
+  final TimerNotifier timerNotifier;
+
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
   /// If the [metricsNotifier] is `null`, the [ProjectMetricsNotifierStub] is used.
@@ -66,6 +70,7 @@ class TestInjectionContainer extends StatelessWidget {
   /// If the [featureConfigNotifier] is `null`, the [FeatureConfigNotifierStub] is used.
   /// If the [debugMenuNotifier] is `null`, the [DebugMenuNotifierStub] is used.
   /// If the [navigationNotifier] is `null`, the [NavigationNotifierMock] is used.
+  /// If the [timerNotifier] is `null`, the [TimerNotifier] is used.
   const TestInjectionContainer({
     Key key,
     this.child,
@@ -78,6 +83,7 @@ class TestInjectionContainer extends StatelessWidget {
     this.featureConfigNotifier,
     this.debugMenuNotifier,
     this.navigationNotifier,
+    this.timerNotifier,
   }) : super(key: key);
 
   @override
@@ -110,7 +116,10 @@ class TestInjectionContainer extends StatelessWidget {
         ),
         ChangeNotifierProvider<NavigationNotifier>(
           create: (_) => navigationNotifier ?? NavigationNotifierMock(),
-        )
+        ),
+        ChangeNotifierProvider<TimerNotifier>(
+          create: (_) => timerNotifier ?? TimerNotifier(),
+        ),
       ],
       child: child,
     );

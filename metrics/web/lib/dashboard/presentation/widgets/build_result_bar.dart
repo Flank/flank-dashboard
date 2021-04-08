@@ -4,17 +4,25 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
+import 'package:metrics/common/presentation/widgets/in_progress_animated_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:rive/rive.dart';
 
-/// A single bar that displays a build result using 
+/// A single bar that displays a build result using
 /// the given [BuildResultViewModel].
+///
+/// Displays the [MetricsColoredBar] if the given [BuildResultViewModel]
+/// is a [FinishedBuildResultViewModel].
+///
+/// Otherwise, displays the [InProgressAnimatedBar].
 class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
   final BuildResultViewModel buildResult;
 
-  /// Creates the [BuildResultBar] with the given [buildResult].
+  /// Creates an instance of the [BuildResultBar] with the given [buildResult].
   ///
   /// Throws an [AssertionError] if the given [buildResult] is `null`.
   const BuildResultBar({
@@ -31,11 +39,21 @@ class BuildResultBar extends StatelessWidget {
 
         return TappableArea(
           builder: (context, isHovered, _) {
-            return MetricsColoredBar<BuildStatus>(
-              isHovered: isHovered,
+            final isFinishedBuild = buildResult is FinishedBuildResultViewModel;
+
+            if (isFinishedBuild) {
+              return MetricsColoredBar<BuildStatus>(
+                isHovered: isHovered,
+                height: barHeight,
+                strategy: const BuildResultBarAppearanceStrategy(),
+                value: buildResult.buildStatus,
+              );
+            }
+
+            return InProgressAnimatedBar(
               height: barHeight,
-              strategy: const BuildResultBarAppearanceStrategy(),
-              value: buildResult.buildStatus,
+              isHovered: isHovered,
+              controller: SimpleAnimation('Animation 1'),
             );
           },
         );
