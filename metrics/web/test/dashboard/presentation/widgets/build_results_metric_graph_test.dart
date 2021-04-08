@@ -6,16 +6,16 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar_graph/theme_data/build_result_bar_graph_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_component.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_results_metric_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/date_range.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_duration_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -26,10 +26,9 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("BuildResultsMetricGraph", () {
-    final metricPeriodStart = DateTime(2020);
-    final metricPeriodEnd = DateTime(2021);
-
-    final dateFormat = DateFormat('d MMM');
+    final startDate = DateTime(2020);
+    final endDate = DateTime(2021);
+    final dateRange = DateRangeViewModel(start: startDate, end: endDate);
 
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: Duration.zero,
@@ -41,6 +40,7 @@ void main() {
       of: buildResultBarGraphFinder,
       matching: find.byType(Padding),
     );
+    final dateRangeFinder = find.byType(DateRange);
 
     List<BuildResultViewModel> createBuildResults(int count) {
       return List.generate(count, (_) {
@@ -56,16 +56,14 @@ void main() {
     BuildResultMetricViewModel createBuildResultMetric({
       List<BuildResultViewModel> buildResults,
       int numberOfBuildsToDisplay,
-      DateTime metricPeriodStart,
-      DateTime metricPeriodEnd,
+      DateRangeViewModel dateRange,
     }) {
       return BuildResultMetricViewModel(
         buildResults: UnmodifiableListView(
           buildResults ?? createBuildResults(5),
         ),
         numberOfBuildsToDisplay: numberOfBuildsToDisplay ?? 5,
-        metricPeriodStart: metricPeriodStart,
-        metricPeriodEnd: metricPeriodEnd,
+        dateRangeViewModel: dateRange,
       );
     }
 
@@ -81,75 +79,45 @@ void main() {
     );
 
     testWidgets(
-      "applies a text style from the build result bar graph theme data",
+      "displays the date range widget if the date range view model is not null",
       (WidgetTester tester) async {
-        const expectedTextStyle = TextStyle(color: Colors.red);
-        const theme = MetricsThemeData(
-          buildResultBarGraphTheme: BuildResultBarGraphThemeData(
-            textStyle: expectedTextStyle,
+        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
+          buildResultMetric: createBuildResultMetric(
+            dateRange: dateRange,
           ),
+        ));
+
+        expect(find.byType(DateRange), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies the date range view model to the date range widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
+          buildResultMetric: createBuildResultMetric(
+            dateRange: dateRange,
+          ),
+        ));
+
+        final dateRangeWidget = tester.widget<DateRange>(
+          find.byType(DateRange),
         );
 
-        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
-          buildResultMetric: createBuildResultMetric(
-            metricPeriodStart: metricPeriodStart,
-            metricPeriodEnd: metricPeriodEnd,
-          ),
-          theme: theme,
-        ));
-
-        final textWidget = tester.widget<Text>(find.byType(Text));
-        final actualTextStyle = textWidget.style;
-
-        expect(actualTextStyle, equals(expectedTextStyle));
+        expect(dateRangeWidget.dateRange, equals(dateRange));
       },
     );
 
     testWidgets(
-      "displays a date range from the view model",
-      (WidgetTester tester) async {
-        final firstDate = dateFormat.format(metricPeriodStart);
-        final lastDate = dateFormat.format(metricPeriodEnd);
-        final expectedText = '$firstDate - $lastDate';
-
-        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
-          buildResultMetric: createBuildResultMetric(
-            metricPeriodStart: metricPeriodStart,
-            metricPeriodEnd: metricPeriodEnd,
-          ),
-        ));
-
-        expect(find.text(expectedText), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays only one date in the date range if the start and end of the metric period are equal",
-      (WidgetTester tester) async {
-        final expectedText = dateFormat.format(metricPeriodStart);
-
-        await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
-          buildResultMetric: createBuildResultMetric(
-            metricPeriodStart: metricPeriodStart,
-            metricPeriodEnd: metricPeriodStart,
-          ),
-        ));
-
-        expect(find.text(expectedText), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "does not display the date range if the metric period dates are null",
+      "does not display the date range widget if the date range view model is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
           buildResultMetric: createBuildResultMetric(
-            metricPeriodStart: null,
-            metricPeriodEnd: null,
+            dateRange: null,
           ),
         ));
 
-        expect(find.byType(Text), findsNothing);
+        expect(dateRangeFinder, findsNothing);
       },
     );
 
@@ -243,7 +211,7 @@ void main() {
     testWidgets(
       "applies a zero padding to the build result bar graph if there are no missing builds",
       (WidgetTester tester) async {
-        final expectedPadding = EdgeInsets.zero;
+        const expectedPadding = EdgeInsets.zero;
 
         await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
           buildResultMetric: createBuildResultMetric(
