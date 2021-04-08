@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -191,6 +191,11 @@ class GithubActionsSourceClientAdapter
     );
 
     return _processInteraction(interaction);
+  }
+
+  @override
+  Future<BuildData> fetchBuild(String projectId, int buildNumber) {
+    return Future.value();
   }
 
   /// Maps the given [job] and [run] to the [BuildData] instance.

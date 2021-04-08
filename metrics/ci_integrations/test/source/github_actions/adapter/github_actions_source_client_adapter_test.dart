@@ -1172,6 +1172,15 @@ void main() {
     );
 
     test(
+      ".fetchBuild() returns null",
+      () async {
+        final result = await adapter.fetchBuild(jobName, 1);
+
+        expect(result, isNull);
+      },
+    );
+
+    test(
       ".dispose() closes the Github Actions client",
       () {
         adapter.dispose();
