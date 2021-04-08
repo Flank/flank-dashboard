@@ -8,9 +8,8 @@ environment:
 
 dependencies:
   args: ^2.0.0
-  process_run: ^0.10.12+3
+  process_run: ^0.12.1
   random_string: ^2.1.0
-  safe_config: ^2.0.2
 
 dev_dependencies:
   lint: ^1.0.0

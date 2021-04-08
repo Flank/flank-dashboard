@@ -29,9 +29,9 @@ class Deployer {
   /// Creates a new instance of the [Deployer] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
-  /// Throws an [ArgumentError] if the given [FirebaseCommand] is `null`.
-  /// Throws an [ArgumentError] if the given [GitCommand] is `null`.
-  /// Throws an [ArgumentError] if the given [FileHelper] is `null`.
+  /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
+  /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
   Deployer({
     Services services,
     FirebaseCommand firebaseCommand,

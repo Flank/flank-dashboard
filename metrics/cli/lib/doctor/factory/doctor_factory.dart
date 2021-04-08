@@ -4,36 +4,33 @@
 import 'package:cli/cli/firebase/firebase_command.dart';
 import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/factory/services_factory.dart';
-import 'package:cli/deploy/deployer.dart';
-import 'package:cli/helper/file_helper.dart';
+import 'package:cli/doctor/doctor.dart';
 
-/// A class providing method for creating a [Deployer] instance.
-class DeployerFactory {
+/// A class providing method for creating a [Doctor] instance.
+class DoctorFactory {
   /// A [ServicesFactory] class this factory uses to create the services.
   final ServicesFactory _servicesFactory;
 
-  /// Creates a new instance of the [DeployerFactory]
+  /// Creates a new instance of the [DoctorFactory]
   /// with the given [ServicesFactory].
   ///
   /// The services factory defaults to the [ServicesFactory] instance.
   ///
   /// Throws an [ArgumentError] if the given services factory is `null`.
-  DeployerFactory([this._servicesFactory = const ServicesFactory()]) {
+  DoctorFactory([this._servicesFactory = const ServicesFactory()]) {
     ArgumentError.checkNotNull(_servicesFactory, 'servicesFactory');
   }
 
-  /// Creates a new instance of the [Deployer].
-  Deployer create() {
+  /// Creates a new instance of the [Doctor].
+  Doctor create() {
     final services = _servicesFactory.create();
-    final fileHelper = FileHelper();
     final firebaseCommand = FirebaseCommand();
     final gitCommand = GitCommand();
 
-    return Deployer(
+    return Doctor(
       services: services,
       firebaseCommand: firebaseCommand,
       gitCommand: gitCommand,
-      fileHelper: fileHelper,
     );
   }
 }

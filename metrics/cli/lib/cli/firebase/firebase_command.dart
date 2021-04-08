@@ -10,7 +10,11 @@ class FirebaseCommand {
   Future<String> login() async {
     // Logins to Firebase.
     print('Firebase login.');
-    await cmd.run('firebase', ['login:ci', '--interactive'], verbose: true);
+    await cmd.runExecutableArguments(
+      'firebase',
+      ['login:ci', '--interactive'],
+      verbose: true,
+    );
     // Configures firebase project.
     return prompt('Copy Firebase Token from above');
   }
@@ -20,9 +24,11 @@ class FirebaseCommand {
   Future<void> addFirebase(String projectID, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project ?')) {
       print('Adding Firebase capabilities.');
-      await cmd.run('firebase',
-          ['projects:addfirebase', projectID, '--token', firebaseToken],
-          verbose: true);
+      await cmd.runExecutableArguments(
+        'firebase',
+        ['projects:addfirebase', projectID, '--token', firebaseToken],
+        verbose: true,
+      );
     } else {
       print('Skipping adding Firebase capabilities.');
     }
@@ -33,23 +39,26 @@ class FirebaseCommand {
     //firebase apps:create --project $projectID
     if (await promptConfirm('Add web app?')) {
       print('Adding Firebase web app.');
-      await cmd.run(
-          'firebase',
-          [
-            'apps:create',
-            '--project',
-            projectID,
-            '--token',
-            firebaseToken,
-            "WEB",
-            projectID
-          ],
-          verbose: true);
+      await cmd.runExecutableArguments(
+        'firebase',
+        [
+          'apps:create',
+          '--project',
+          projectID,
+          '--token',
+          firebaseToken,
+          "WEB",
+          projectID
+        ],
+        verbose: true,
+      );
     } else {
       print('List existings apps.');
-      await cmd.run('firebase',
-          ['apps:list', '--project', projectID, '--token', firebaseToken],
-          verbose: true);
+      await cmd.runExecutableArguments(
+        'firebase',
+        ['apps:list', '--project', projectID, '--token', firebaseToken],
+        verbose: true,
+      );
     }
     print('Select appID.');
     return prompt('appID');
@@ -60,22 +69,23 @@ class FirebaseCommand {
       String projectID, String firebaseToken) async {
     // Gets config.
     print('Write web app SDK config to firebase-config.js file.');
-    await cmd.run(
-        'firebase',
-        [
-          'apps:sdkconfig',
-          '-i',
-          'WEB',
-          appID,
-          '--interactive',
-          '--out',
-          configPath,
-          '--project',
-          projectID,
-          '--token',
-          firebaseToken
-        ],
-        verbose: true);
+    await cmd.runExecutableArguments(
+      'firebase',
+      [
+        'apps:sdkconfig',
+        '-i',
+        'WEB',
+        appID,
+        '--interactive',
+        '--out',
+        configPath,
+        '--project',
+        projectID,
+        '--token',
+        firebaseToken
+      ],
+      verbose: true,
+    );
   }
 
   /// Sets the project with the [projectId] identifier as the default one
@@ -85,7 +95,7 @@ class FirebaseCommand {
     String workingDirectory,
     String firebaseToken,
   ) async {
-    await cmd.run(
+    await cmd.runExecutableArguments(
       'firebase',
       ['use', '--add', projectId, '--token', firebaseToken],
       workingDirectory: workingDirectory,
@@ -97,7 +107,7 @@ class FirebaseCommand {
   /// to the Firebase hosting.
   Future<void> deployHosting(
       String target, String workingDirectory, String firebaseToken) async {
-    await cmd.run(
+    await cmd.runExecutableArguments(
       'firebase',
       ['deploy', '--only', 'hosting:$target', '--token', firebaseToken],
       workingDirectory: workingDirectory,
@@ -109,7 +119,7 @@ class FirebaseCommand {
   /// in the given [workingDirectory].
   Future<void> applyTarget(String hostingName, String target,
       String workingDirectory, String firebaseToken) {
-    return cmd.run(
+    return cmd.runExecutableArguments(
       'firebase',
       [
         'target:apply',
@@ -126,6 +136,6 @@ class FirebaseCommand {
 
   /// Prints CLI version.
   Future<void> version() async {
-    await cmd.run('firebase', ['--version'], verbose: true);
+    await cmd.runExecutableArguments('firebase', ['--version'], verbose: true);
   }
 }
