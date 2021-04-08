@@ -40,7 +40,7 @@ The following subsections describe changes in the described parts of the tool. T
 
 #### Sync Command
 
-The `SyncCommand` class represents an implementation of the `ci_integration sync` command. The main purpose of this class is to start the synchronization process with the configured `source` and `destination` clients and controlling parameters. The in-progress builds introduction requires a new controlling parameter to be passed to the sync algorithm - `SyncConfig.inProgressTimeout`. This parameters defines a timeout duration for in-progress builds and is represented by the `--in-progress-timeout` option of the `sync` command. The [Timeout In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#timeout-in-progress-builds) section of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document describes and examples how this parameter is used.
+The `SyncCommand` class represents an implementation of the `ci_integration sync` command. The main purpose of this class is to start the synchronization process with the configured `source` and `destination` clients and controlling parameters. The in-progress builds introduction requires a new controlling parameter to be passed to the sync algorithm - `SyncConfig.inProgressTimeout`. This parameter defines a timeout duration for in-progress builds and is represented by the `--in-progress-timeout` option of the `sync` command. The [Timeout In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#timeout-in-progress-builds) section of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document describes and examples how this parameter is used.
 
 The `SyncCommand` should add the `--in-progress-timeout` option using the [`ArgParser.addOption`](https://pub.dev/documentation/args/latest/args/ArgParser/addOption.html) method as follows:
 
@@ -65,7 +65,7 @@ The following class diagram demonstrates the described changes:
 
 The algorithm synchronizes builds for the specified `source` and `destination` integrations. The in-progress builds introduction requires this algorithm to be divided into two main parts: re-sync in-progress builds and sync new builds. The second part is how the synchronization algorithm is implemented now. So the purpose of the algorithm changes is to implement the re-syncing in-progress builds.
 
-The re-syncing in-progress builds is described within the [Re-Sync In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
+The re-syncing in-progress builds stage is described within the [Re-Sync In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
 
 The following table contains methods to implement for the `CiIntegration` with a short description:
 
@@ -82,9 +82,9 @@ Following the table above, it is obvious that the algorithm parts are now placed
 
 _**Note**: The algorithm parts shouldn't be performed in parallel. The first stage is to re-sync in-progress builds. If and only if the first stage finishes successfully, the second stage with syncing new builds is started. To follow this requirement, `_syncInProgressBuilds` and `_syncBuilds` finish with `InteractionResult` instances._
 
-The in-progress builds introduction adds a new controlling parameter for the sync algorithm. This parameter controls the timeout duration for in-progress builds. According to the definition, if the in-progress build duration is greater than the configured timeout duration, this build is considered as finished with an unknown status (i.e., `BuildStatus.unknown`). The described parameter is called **in progress timeout**. The `SyncConfig` provides controlling parameters and other configurations to the sync algorithm. Thus, the **in progress timeout** should be a part of the `SyncConfig` class. Therefore, `SyncConfig` class updates include adding the `inProgressTimeout` field having the `Duration` type.
+The in-progress builds introduction adds a new controlling parameter for the sync algorithm. This parameter controls the timeout duration for in-progress builds. According to the definition, if the in-progress build duration is greater than the configured timeout duration, this build is considered as finished with an unknown status (i.e., `BuildStatus.unknown`). The described parameter is called **in-progress timeout**. The `SyncConfig` provides controlling parameters and other configurations to the sync algorithm. Thus, the **in-progress timeout** should be a part of the `SyncConfig` class. Therefore, `SyncConfig` class updates include adding the `inProgressTimeout` field having the `Duration` type.
 
-As in the Builds Synchronization document, the following class diagram that contains the main classes and interfaces that participate in the sync algorithm:
+As in the Builds Synchronization document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
 
 ![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
@@ -100,7 +100,7 @@ Also, the `source` clients should now return in-progress builds. The following s
 
 ##### Jenkins Integration
 
-The Jenkins source integration allows fetching builds data from the Jenkins CI. This integrations should be updated to return running builds as well as finished ones. Currently, the `JenkinsSourceClientAdapter` filters out running builds using the `JenkinsBuild.building` flag.
+The Jenkins source integration allows fetching builds data from the Jenkins CI. This integration should be updated to return running builds as well as finished ones. Currently, the `JenkinsSourceClientAdapter` filters out running builds using their `JenkinsBuild.building` flag.
 
 Once builds are fetched, the adapter filters these builds using the `_checkBuildFinishedAndInRange` method. This method checks the given build to be finished and its number to be greater than the given minimal build number. More precisely, the concrete `jenkinsBuild` satisfies the `_checkBuildFinishedAndInRange` method if the following holds:
 
@@ -115,9 +115,9 @@ Also, the `JenkinsSourceClientAdapter` should now implement the new `fetchBuild`
 
 ##### Buildkite Integration
 
-The Buildkite source integration allows fetching builds data from the Buildkite CI. This integrations should be updated to return running builds as well as finished ones. Currently, the `BuildkiteSourceClientAdapter` fetches builds having the `BuildkiteBuildState.finished` state. The `finished` state is actually a shortcut for the set of `passed`, `failed`, `blocked`, `canceled` states and used for API requests to filter builds.
+The Buildkite source integration allows fetching builds data from the Buildkite CI. This integration should be updated to return running builds as well as finished ones. Currently, the `BuildkiteSourceClientAdapter` fetches all builds having the `BuildkiteBuildState.finished` state. The `finished` state is a shortcut for the set of `passed`, `failed`, `blocked`, `canceled` states, and is used for API requests to filter builds.
 
-According to the above, the `BuildkiteSourceClientAdapter` doesn't filters builds by status - it requests builds by status. To include in-progress builds, the adapter is to request builds with statuses indicating progress. The Buildkite build can be one of the following states: `running`, `scheduled`, `passed`, `failed`, `blocked`, `canceled`, `canceling`, `skipped`, `not_run` (`finished` state is a shortcut for API requests). For the Buildkite integration we assume that the build is in-progress if this build has state `running` or `canceling`. So the integration should be updated to fetch such builds as well.
+According to the above, the `BuildkiteSourceClientAdapter` doesn't filter builds by status - it requests builds by status. To include in-progress builds, the adapter is to request builds with statuses indicating progress. The Buildkite build can be one of the following states: `running`, `scheduled`, `passed`, `failed`, `blocked`, `canceled`, `canceling`, `skipped`, `not_run` (`finished` state is a shortcut for API requests). For the Buildkite integration, we assume that the build is in progress if this build has a state `running` or `canceling`. So the integration should be updated to fetch such builds as well.
 
 Consider the following mapping of Buildkite state to Metrics `BuildStatus`:
 
@@ -155,14 +155,14 @@ Also, the `BuildkiteSourceClientAdapter` should now implement the new `fetchBuil
 
 ##### GitHub Actions Integration
 
-The GitHub Actions source integration allows fetching builds data from the GitHub Actions CI. This integrations should be updated to return running builds as well as finished ones. The build is considered as a job execution within a single workflow run. Thus, the workflow run number is considered as the build number and the job status/conclusion as the build status. Currently, the `GithubActionsSourceClientAdapter` fetches workflow runs having the `GithubActionStatus.completed` status. Let's take a closer look at GitHub statuses and conclusions for runs and jobs.
+The GitHub Actions source integration allows fetching builds data from the GitHub Actions CI. This integration should be updated to return running builds as well as finished ones. The build is considered as a job execution within a single workflow run. Thus, the workflow run number is considered as the build number and the job status/conclusion as the build status. Currently, the `GithubActionsSourceClientAdapter` fetches workflow runs having the `GithubActionStatus.completed` status. Let's take a closer look at GitHub statuses and conclusions for runs and jobs.
 
-In the context of GitHub, the `status` means the execution status of an entity meaning and answers the question _"What is going on with the process?"_ The `conclusion` is the result of the process that answers the question _"What was the outcome of the process?"_ So the following statements holds:
+In the context of GitHub, the `status` means the execution status of an entity meaning and answers the question _"What is going on with the process?"_ The `conclusion` is the result of the process that answers the question _"What was the outcome of the process?"_ So the following statements hold:
 
-- `status` depends on the progress of the process - **what is happening now**;
-- `conclusion` describes the result of the process - **what happened**.
+- the `status` depends on the progress of the process - **what is happening now**;
+- the `conclusion` describes the result of the process - **what happened**.
 
-Evidently, while the process is running, the `conclusion` is always `null`. On the other hand, if the `conclusion` is not `null`, the `state` is always `completed`. Thus, the current GitHub Actions integration queries workflow runs that has only `completed` status to ensure that all jobs within that run are finished and prove their results. However, the in-progress builds introduction requires querying running jobs (and therefore runs) as well. The following table describes possible statuses and conclusions for jobs and how are they mapped to the Metrics `BuildStatus` (note that the `queued` status is ignored):
+While the process is running, the `conclusion` is always `null`. On the other hand, if the `conclusion` is not `null`, the `state` is always `completed`. Thus, the current GitHub Actions integration queries workflow runs that have only `completed` status to ensure that all jobs within that run are finished and provide their results. However, the in-progress builds introduction requires querying running jobs (and therefore runs) as well. The following table describes possible statuses and conclusions for jobs and how are they mapped to the Metrics `BuildStatus` (note that the `queued` status is ignored):
 
 |Status|Conclusion|BuildStatus|
 |---|---|---|
@@ -195,15 +195,15 @@ According to the table above, the `GithubActionsSourceClientAdapter` should fetc
   }
 ```
 
-Then, runs and jobs having the status `queued` should be filtered out manually. Consider the [List workflow runs for a repository](https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository) and [List jobs for a workflow run](https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run) sections of the [GitHub Actions API](https://docs.github.com/en/rest/reference/actions) documentation for more information.
+Then, runs and jobs having the status `queued` should be filtered out manually. Consider [List workflow runs for a repository](https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository) and [List jobs for a workflow run](https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run) sections of the [GitHub Actions API](https://docs.github.com/en/rest/reference/actions) documentation for more information.
 
 Also, the `GithubActionsSourceClientAdapter` should now implement the new `fetchBuild` method to match the `SourceClient` interface. The adapter should use the specified `GithubActionsClient` instance to fetch the build with the given number.
 
 #### Destination Client
 
-The `DestinationClient` is an interface for `destination` clients that provide abilities to store synchronized builds and interact with the database. As mentioned in the [Sync Algorithm](#sync-algorithm) section, the in-progress builds introduction requires adding the re-syncing in-progress builds stage into the sync algorithm. This stage queries in-progress builds from the database and then updates them after re-syncing. Thus, the `DestinationClient` should be updated with appropriate methods to perform required functionality.
+The `DestinationClient` is an interface for `destination` clients that provide abilities to store synchronized builds and interact with the database. As mentioned in the [Sync Algorithm](#sync-algorithm) section, the in-progress builds introduction requires adding the re-syncing in-progress builds stage into the sync algorithm. This stage queries in-progress builds from the database and then updates them after re-syncing. Thus, the `DestinationClient` should be updated with appropriate methods to perform the required functionality.
 
-The following methods are to added to the `DestinationClient` interface:
+The following methods are to be added to the `DestinationClient` interface:
 
 - `fetchBuildsWithStatus` - fetches all builds having the given status for the given project.
 - `updateBuilds` - updates all the given builds with new values for the given project.
@@ -225,16 +225,16 @@ The following methods are to be implemented for the `FirestoreDestinationClientA
 
 The `fetchBuildsWithStatus` is used by the sync algorithm to fetch in-progress builds stored in the database. This method should throw if the project with the given identifier does not exist. If the project exists but doesn't have synchronized builds yet, the method should return an empty list.
 
-The `updateBuilds` method is used to update in-progress builds with a new data and status. This method should throw if the project with the given identifier does not exist. If updating one of the builds fails, the method should continue updating other builds, as the failed build can be re-synced later, during the next synchronization. Generally speaking, the implementation should consider the following cases:
+The `updateBuilds` method is used to update in-progress builds with new data and status. This method should throw if the project with the given identifier does not exist. If updating one of the builds fails, the method should continue updating other builds, as the failed build can be re-synced later, during the next synchronization. Generally speaking, the implementation should consider the following cases:
 
-- a build updating is mandatory - if update throws, the method throws as well;
-- a build updating is not mandatory - if update throws, the method should continue updating other builds.
+- a build updating is mandatory - if an update throws, the method throws as well;
+- a build updating is not mandatory - if an update throws, the method should continue updating other builds.
 
 Thus, using the `Future.wait` method is recommended as allows controlling the described behavior. Also, if it is possible, using [batched writes](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes) would be a plus as performs a set of write operations atomically.
 
 ### Firebase
 
-The `firebase` component contains the implementations related to Firebase such as Cloud Functions, Firestore Security Rules, Firestore Indexes definition, and the set of tests for interactions with Cloud Firestore database. As in-progress builds lack some data during the synchronization, the Firestore Security Rules require changes to allow writing in-progress builds. The following subsection examines the updates for Security Rules.
+The `firebase` component contains the implementations related to Firebase such as Cloud Functions, Firestore Security Rules, Firestore Indexes definition, and the set of tests for interactions with the Cloud Firestore database. As in-progress builds lack some data during the synchronization, the Firestore Security Rules require changes to allow writing in-progress builds. The following subsection examines the updates for Security Rules.
 
 #### Firestore Security Rules
 
@@ -247,7 +247,7 @@ Rules for the `build` collection are placed within the `match /build/{buildId}` 
 3. Only valid build data can be used to **create** and/or **update** builds.
 4. Nobody can **delete** builds.
 
-According to the third statement, the build's data in **create** and **update** requests are validated to contain the proper data. The following table describes field's validation and the required changes according to in-progress builds structure:
+According to the third statement, the build's data of **create** and **update** requests are validated to contain the proper data. The following table describes fields validation and the required changes according to the structure of the in-progress build:
 
 |Field|Required|Type|Validation|Changes|
 |---|---|---|---|---|
@@ -263,7 +263,7 @@ According to the third statement, the build's data in **create** and **update** 
 
 So the required changes are related to the `duration` and `buildStatus` fields validation. The former one must not be required for in-progress builds (more precisely, it __must be null__), and the latter field now has a new valid value - `BuildStatus.inProgress`.
 
-The appropriated tests for rules should be updated as well to match the new build data validation. These tests are located under the `test/firestore/rules/` directory within the `firebase` component.
+The appropriate tests for rules should be updated as well to match the new build data validation. These tests are located under the `test/firestore/rules/` directory within the `firebase` component.
 
 ## Results
 > What was the outcome of the project?
