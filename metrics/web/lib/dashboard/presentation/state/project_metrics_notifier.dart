@@ -22,6 +22,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
@@ -412,14 +413,15 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildResultViewModels =
         latestBuildResults.map(_createBuildResultViewModel).toList();
 
-    final metricPeriodStart = buildResultViewModels.first.date;
-    final metricPeriodEnd = buildResultViewModels.last.date;
+    final dateRange = DateRangeViewModel(
+      start: buildResultViewModels.first.date,
+      end: buildResultViewModels.last.date,
+    );
 
     return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
       maxBuildDuration: maxBuildDuration,
-      metricPeriodStart: metricPeriodStart,
-      metricPeriodEnd: metricPeriodEnd,
+      dateRangeViewModel: dateRange,
     );
   }
 
