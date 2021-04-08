@@ -22,7 +22,7 @@ class BuildResultBar extends StatelessWidget {
   /// A [BuildResultViewModel] with the data to display.
   final BuildResultViewModel buildResult;
 
-  /// Creates the [BuildResultBar] with the given [buildResult].
+  /// Creates an instance of the [BuildResultBar] with the given [buildResult].
   ///
   /// Throws an [AssertionError] if the given [buildResult] is `null`.
   const BuildResultBar({
