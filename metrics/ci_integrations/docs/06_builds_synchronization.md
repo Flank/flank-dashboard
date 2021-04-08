@@ -79,12 +79,12 @@ The following activity diagram details the second step for a single in-progress 
 
 ![Re-sync single build activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_activity_diagram.puml)
 
-More precisely, the code snippet below demonstrates the meaning of the *should force timeout* statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
+More precisely, the code snippet below demonstrates the meaning of the **should force timeout** statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
 
 ```dart
     final now = DateTime.now();
     final duration = now.difference(build.startedAt);
-    final shouldTimeout = duration > config.inProgressTimeout;
+    final shouldTimeout = duration >= config.inProgressTimeout;
 ```
 
 Finally, the following activity diagram describes the re-sync in-progress builds stage:

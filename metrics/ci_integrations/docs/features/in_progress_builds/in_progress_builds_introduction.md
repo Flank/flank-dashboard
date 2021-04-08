@@ -74,7 +74,7 @@ The following table contains methods to implement for the `CiIntegration` with a
 |`_syncInProgressBuilds`|Re-syncs in-progress builds for the specified projects. This method represents the `Re-Sync In-Progress Builds` stage of the sync algorithm.|
 |`_syncInProgressBuild`|Re-syncs the given in-progress build and returns a new build data. If the build shouldn't be changed, returns `null`.|
 |`_fetchBuild`|Fetches the build with the given number of a project with the given identifier.|
-|`_shouldTimeoutBuild`|Defines whether a build having the start timestamp exceeds the given timeout duration. Returns `true` if the current timestamp differs from the given start timestamp on a value greater than the given timeout duration.|
+|`_shouldTimeoutBuild`|Defines whether a build having the start timestamp exceeds the given timeout duration. Returns `true` if the current timestamp differs from the given start timestamp on a value greater than or equal to the given timeout duration.|
 |`_syncBuilds`|Syncs new builds for the specified projects. This method represents the `Sync Builds` stage of the sync algorithm.|
 |`_addCoverageData`|Fetches the coverage data for each build in the given list of builds. Returns a list with updated build data values.|
 
