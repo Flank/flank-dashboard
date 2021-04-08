@@ -3,8 +3,6 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/firebase/firebase_command.dart';
-import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
@@ -13,8 +11,10 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/directory_mock.dart';
+import '../test_utils/firebase_command_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
+import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,8 +25,8 @@ void main() {
     const firebaseToken = 'testToken';
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
-    final firebaseCommand = _FirebaseCommandMock();
-    final gitCommand = _GitCommandMock();
+    final firebaseCommand = FirebaseCommandMock();
+    final gitCommand = GitCommandMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
     final services = Services(
@@ -381,7 +381,3 @@ void main() {
 }
 
 class _FileHelperMock extends Mock implements FileHelper {}
-
-class _GitCommandMock extends Mock implements GitCommand {}
-
-class _FirebaseCommandMock extends Mock implements FirebaseCommand {}
