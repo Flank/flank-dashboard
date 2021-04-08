@@ -8,7 +8,7 @@ import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 
 /// A class that provides an ability to check whether all required third-party
-/// services are available and get their version.
+/// services are available and get their versions.
 class Doctor {
   /// A service that provides methods for working with Flutter.
   final FlutterService _flutterService;
@@ -42,16 +42,20 @@ class Doctor {
 
   /// Checks versions of the required third-party services.
   Future<void> checkVersions() async {
-    await _tryCatch(_flutterService.version);
-    await _tryCatch(_firebaseCommand.version);
-    await _tryCatch(_gcloudService.version);
-    await _tryCatch(_gitCommand.version);
+    await _checkVersion(_flutterService.version);
+    await _checkVersion(_firebaseCommand.version);
+    await _checkVersion(_gcloudService.version);
+    await _checkVersion(_gitCommand.version);
   }
 
-  /// Executes a [function] and catches errors if any.
-  Future<void> _tryCatch(Function function) async {
+  /// Checks version of the third-party service using the given
+  /// [versionCallback].
+  ///
+  /// Catches all thrown exceptions to be able to proceed with checking the
+  /// version of all the rest services.
+  Future<void> _checkVersion(Future<void> Function() versionCallback) async {
     try {
-      await function();
+      await versionCallback();
     } catch (_) {}
   }
 }
