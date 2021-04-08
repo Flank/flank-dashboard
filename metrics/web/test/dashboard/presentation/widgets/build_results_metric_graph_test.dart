@@ -211,7 +211,7 @@ void main() {
     testWidgets(
       "applies a zero padding to the build result bar graph if there are no missing builds",
       (WidgetTester tester) async {
-        final expectedPadding = EdgeInsets.zero;
+        const expectedPadding = EdgeInsets.zero;
 
         await tester.pumpWidget(_BuildResultsMetricGraphTestbed(
           buildResultMetric: createBuildResultMetric(
