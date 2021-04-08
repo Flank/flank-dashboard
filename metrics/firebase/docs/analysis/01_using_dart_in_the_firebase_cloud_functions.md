@@ -8,29 +8,25 @@ As we want to add more server-side processing to the Cloud Firestore, we should 
 
 > Describe general analysis approach.
 
-To implement this feature, we analyze the possibility to add the Firestore Cloud Function trigger. The trigger's handler should increment the count value of another Firestore collection.
-
-The described above Firestore Cloud Function we should write using the Dart language.
+During the analysis stage, we are going to investigate the packages providing an ability to write Cloud Functions using the Dart programming language and chose the most suitable one for us. Also, we'll provide a simple example explaining the way of creating a Cloud Function using the Dart lang and deploying it to the Firebase. 
 
 ### Feasibility study
 
 > A preliminary study of the feasibility of implementing this feature.
 
-The Firestore provides an ability to register triggers - functions, which allow creating handlers tied to specific Cloud Firestore events. One of the existing triggers is `onCreate`, that fires when a new document is created, so we can place the increment logic to the trigger's handler.
+Since the `Dart` code could be compiled to the `JavaScript` code, we are able to write a Cloud Functions using `Dart`. Another problem we are facing is the Dart package providing an API for writing the Cloud Functions. There are few packages providing this functionality: 
 
-The following packages realize the described above logic:
  - [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop)
  - [functions_framework](https://pub.dev/packages/functions_framework)
-
-Also, they allow us to write Cloud Functions using Dart programming language.
 
 ### Requirements
 
 > Define requirements and make sure that they are complete.
 
 1. A Firebase project, with the Firestore and Cloud Functions services enabled.
-2. The Firestore collection holds the initial counter value.
-3. The Cloud Firestore Function deployed to the Firebase.
+2. Set up [Node.js and the Firebase CLI](https://firebase.google.com/docs/functions/get-started#set-up-node.js-and-the-firebase-cli).
+3. [Point the Firebase CLI to the existing project](https://firebase.google.com/docs/cli#sign-in-test-cli).
+4. The Firestore collection holds the initial counter value.
 
 ### Landscape
 
@@ -74,6 +70,8 @@ We've considered and analyzed the described above packages and chose the `fireba
 
 > Create a simple prototype to confirm that implementing this feature is possible.
 
+#### Cloud Function creation
+
 Let's consider an example of registering a new Cloud Firestore `onCreate` trigger using the `firebase-functions-interop` package: 
 
 ```dart
@@ -101,9 +99,11 @@ function onCreateEventHandler(DocumentSnapshot snapshot, _) {
 }
 ```
 
+#### Cloud Function deployment
+ 
 After we've created the `onCreate` trigger with the `onCreateEventHandler`, we should compile the code into JavaScript, using the [build_runner](https://pub.dev/packages/build_runner) and [build_node_compilers](https://pub.dev/packages/build_node_compilers) packages.
 
-The following `yaml` file contains an example configuration:
+To do so, we should create a `build.yaml` configuration file defining the sources to build and the compiler used to compile `Dart` code to `JavaScript`. The following code snippet provides a sample configuration file:
 
 ```yaml
 targets:
@@ -115,7 +115,6 @@ targets:
       build_node_compilers|entrypoint:
         options:
           compiler: dart2js
-
 ```
 
 With this, we can use the following command to compile our `main.dart`:
