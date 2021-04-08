@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -67,6 +67,11 @@ class SourceClientStub implements SourceClient {
     } else {
       return Future.value(BuildsTestData.firstBuild.coverage);
     }
+  }
+
+  @override
+  Future<BuildData> fetchBuild(String projectId, int buildNumber) {
+    return Future.value();
   }
 
   @override

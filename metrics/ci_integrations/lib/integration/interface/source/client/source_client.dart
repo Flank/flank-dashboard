@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -29,4 +29,8 @@ abstract class SourceClient extends IntegrationClient {
   /// is not found.
   /// Throws an [ArgumentError] if the given [build] is `null`.
   Future<Percent> fetchCoverage(BuildData build);
+
+  /// Fetches a build with the given [buildNumber] for the project identified
+  /// by the given [projectId].
+  Future<BuildData> fetchBuild(String projectId, int buildNumber);
 }
