@@ -11,7 +11,7 @@ class DoctorCommand extends Command {
 
   @override
   final String description =
-      'Show version information of the third-party dependencies';
+      'Shows the version information of the third-party dependencies.';
 
   /// A [DoctorFactory] this command uses to create a [Doctor].
   final DoctorFactory doctorFactory;
