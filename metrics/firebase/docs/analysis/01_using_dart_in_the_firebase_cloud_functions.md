@@ -8,31 +8,46 @@ As we want to add more server-side processing to the Cloud Firestore, we should 
 
 > Describe general analysis approach.
 
-To implement this feature, we've investigated the possibility of using the [Cloud Functions for Firebase](https://firebase.google.com/docs/functions). The special type of Cloud Functions is [Cloud Firestore Function triggers](https://firebase.google.com/docs/functions/firestore-events#function_triggers) that allow creating handlers tied to specific Cloud Firestore events.
+To implement this feature, we analyze the possibility to add the Firestore Cloud Function trigger. The trigger's handler should increment the count value of another Firestore collection.
 
-For this purposes, we have explored the following packages:
- - [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop)
- - [functions_framework](https://pub.dev/packages/functions_framework)
+The described above Firestore Cloud Function we should write using the Dart language.
 
 ### Feasibility study
 
 > A preliminary study of the feasibility of implementing this feature.
 
-Using Firebase Cloud Functions for metrics calculations opens the possibility to reduce usage and document reads.
+The Firestore provides an ability to register triggers - functions, which allow creating handlers tied to specific Cloud Firestore events. One of the existing triggers is `onCreate`, that fires when a new document is created, so we can place the increment logic to the trigger's handler.
 
-Also, it allows us to write Cloud Functions using Dart programming language.
+The following packages realize the described above logic:
+ - [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop)
+ - [functions_framework](https://pub.dev/packages/functions_framework)
+
+Also, they allow us to write Cloud Functions using Dart programming language.
+
+### Requirements
+
+> Define requirements and make sure that they are complete.
+
+1. A Firebase project, with the Firestore and Cloud Functions services enabled.
+2. The Firestore collection holds the initial counter value.
+3. The Cloud Firestore Function deployed to the Firebase.
 
 ### Landscape
 
 > Look for existing solutions in the area.
 
+At this time, there are only a few packages, that allow writing Cloud Functions using the Dart language. All of them are in the early development stage, which means not all features are ready to use or provided.
+
+The packages, presented below are a limited set, that meets our requirements.  
+
 #### The `firebase-functions-interop` package
 
 The first approach is to use the [firebase-functions-interop](https://pub.dev/packages/firebase_functions_interop) package. It is a Firebase Cloud Functions SDK for Dart, written as a JS interop wrapper for official Node.js SDK.
 
+As a dependency, it uses the [firebase-admin-interop](https://github.com/pulyaevskiy/firebase-admin-interop), which provides a set of methods to interact with the Firestore. 
+
 Pros:
  - Implemented wrappers for a major part of Firebase features, such as `functions.firestore`, `functions.auth`, etc.
- - Provides interop for the `firebase.admin` package.
  - Has [good documentation](https://pub.dev/documentation/firebase_functions_interop/latest) for getting started.
 
 Cons:
@@ -42,7 +57,7 @@ Cons:
 
 #### The `functions_framework` package
 
-An open source FaaS (Function as a Service) framework for writing portable Dart functions.
+An open-source FaaS (Function as a Service) framework for writing portable Dart functions.
 
 Pros:
  - Actively evolves with frequent updates.
@@ -71,18 +86,60 @@ Once we've registered a new `onCreate` trigger, let's review the trigger functio
 
 ```dart
 function onCreateEventHandler(DocumentSnapshot snapshot, _) {
-    final ref = await snapshot.firestore.collection('documents').document('documentId');
-    return snapshot.firestore.runTransaction((transaction) async {
-    final ref = 'aggregation/documents';
+  final ref = await snapshot.firestore.collection('aggregation').document('documents');
+
+  return snapshot.firestore.runTransaction((transaction) async {
+
     return transaction.get(ref).then((doc) {      
       final incrementedCounter = countDoc.data.getInt('count') + 1;
-      final updatedCounter = UpdateData();
-      updatedCounter.setInt('count', incrementedCounter);
+      final updatedData = UpdateData();
+      updatedData.setInt('count', incrementedCounter);
 
-      transaction.update(ref, updatedCounter);
+      transaction.update(ref, updatedData);
     });
   });
 }
+```
+
+After we've created the `onCreate` trigger with the `onCreateEventHandler`, we should compile the code into JavaScript, using the [build_runner](https://pub.dev/packages/build_runner) and [build_node_compilers](https://pub.dev/packages/build_node_compilers) packages.
+
+The following `yaml` file contains an example configuration:
+
+```yaml
+targets:
+  $default:
+    sources:
+    # main.dart file location directory
+      - lib/**
+    builders:
+      build_node_compilers|entrypoint:
+        options:
+          compiler: dart2js
+
+```
+
+With this, we can use the following command to compile our `main.dart`:
+
+```bash
+pub run build_runner build --output=build
+```
+
+With that in place, we can [deploy](https://firebase.google.com/docs/functions/get-started#deploy-functions-to-a-production-environment) the compiled function to the Firebase.
+
+Modify the `main` key in the `package.json` to point the compiled js file, in the `build` folder:
+
+```json
+{
+  ...
+  "main": "build/.../index.dart.js"
+  ...
+}
+```
+
+The deploy command example:
+
+```bash
+firebase deploy --only functions
 ```
 
 Using the `cloud_firestore` package we've started creating test documents in parallel using multiple clients.
