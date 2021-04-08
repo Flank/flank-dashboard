@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -141,6 +141,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     }
 
     return builds;
+  }
+
+  @override
+  Future<BuildData> fetchBuild(String projectId, int buildNumber) {
+    return Future.value();
   }
 
   /// Processes the given [builds] to the list of [BuildData]s.
