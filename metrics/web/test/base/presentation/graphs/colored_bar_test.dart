@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -11,13 +11,15 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ColoredBar", () {
-    testWidgets("throws if the given width is null", (tester) async {
+    testWidgets("throws an AssertionError if the given width is null",
+        (tester) async {
       await tester.pumpWidget(const _ColoredBarTestbed(width: null));
 
       expect(tester.takeException(), isAssertionError);
     });
 
-    testWidgets("throws if the given width is negative", (tester) async {
+    testWidgets("throws an AssertionError if the given width is negative",
+        (tester) async {
       await tester.pumpWidget(const _ColoredBarTestbed(width: -1.0));
 
       expect(tester.takeException(), isAssertionError);
