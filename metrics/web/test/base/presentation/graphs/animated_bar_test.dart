@@ -104,11 +104,11 @@ void main() {
             height: expectedHeight,
           ),
         );
+        await tester.pump();
 
-        final animatedBar =
-            tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+        final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
 
-        expect(animatedBar.height, equals(expectedHeight));
+        expect(sizedBox.height, equals(expectedHeight));
       },
     );
 
@@ -122,11 +122,11 @@ void main() {
             width: expectedWidth,
           ),
         );
+        await tester.pump();
 
-        final animatedBar =
-            tester.widget<AnimatedBar>(find.byType(AnimatedBar));
+        final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
 
-        expect(animatedBar.width, equals(expectedWidth));
+        expect(sizedBox.width, equals(expectedWidth));
       },
     );
 
