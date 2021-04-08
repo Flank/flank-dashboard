@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -24,13 +24,19 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A default number of builds to sync during the initial synchronization
   /// of the project.
-  static const defaultInitialSyncLimit = '28';
+  static const String defaultInitialSyncLimit = '28';
+
+  /// A default timeout in-minutes for in-progress builds.
+  static const Duration defaulInProgressTimeout = Duration(minutes: 120);
 
   /// A name of the option that holds a path to the YAML configuration file.
-  static const _configFileOptionName = 'config-file';
+  static const String _configFileOptionName = 'config-file';
 
   /// A name of the initial sync limit option.
-  static const _initialSyncLimitOptionName = 'initial-sync-limit';
+  static const String _initialSyncLimitOptionName = 'initial-sync-limit';
+
+  /// A name of the in-progress timeout option.
+  static const String _inProgressTimeoutOptionName = 'in-progress-timeout';
 
   /// A name of the flag that indicates whether to fetch coverage data
   /// for builds or not.
@@ -69,6 +75,13 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
           'number greater than 0.',
       valueHelp: defaultInitialSyncLimit,
       defaultsTo: defaultInitialSyncLimit,
+    );
+
+    argParser.addOption(
+      _inProgressTimeoutOptionName,
+      help: 'A timeout duration in minutes for in-progress builds.',
+      valueHelp: '${defaulInProgressTimeout.inMinutes}',
+      defaultsTo: '${defaulInProgressTimeout.inMinutes}',
     );
 
     argParser.addFlag(
@@ -126,10 +139,18 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
         final initialSyncLimit = parseInitialSyncLimit(
           initialSyncLimitArgument,
         );
+
+        final inProgressTimeoutArgument =
+            getArgumentValue(_inProgressTimeoutOptionName) as String;
+        final inProgressTimeout = parseInProgressTimeout(
+          inProgressTimeoutArgument,
+        );
+
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
           initialSyncLimit: initialSyncLimit,
+          inProgressTimeout: inProgressTimeout,
           coverage: coverage,
         );
 
@@ -242,6 +263,23 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     logger.info('Parsing initial sync limit...');
 
     return int.tryParse(value);
+  }
+
+  /// Parses the in-progress timeout [Duration] from the given [value].
+  ///
+  /// Throws an [ArgumentError] if the given [value] does not represent an
+  /// integer value.
+  Duration parseInProgressTimeout(String value) {
+    logger.info('Parsing in-progress timeout...');
+
+    final timeoutInMinutes = int.tryParse(value);
+
+    if (timeoutInMinutes == null) {
+      throw ArgumentError(
+          'The given in-progress timeout must be an integer value.');
+    }
+
+    return Duration(minutes: timeoutInMinutes);
   }
 
   /// Closes both [sourceClient] and [destinationClient] and cleans up any
