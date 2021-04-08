@@ -862,6 +862,15 @@ void main() {
       },
     );
 
+    test(
+      ".fetchBuild() returns null",
+      () async {
+        final result = await adapter.fetchBuild(pipelineSlug, 1);
+
+        expect(result, isNull);
+      },
+    );
+
     test(".dispose() closes the Buildkite client", () {
       adapter.dispose();
 
