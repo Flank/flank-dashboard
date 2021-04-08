@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -18,4 +18,15 @@ abstract class DestinationClient extends IntegrationClient {
   ///
   /// Does nothing if a project with the given [projectId] is not found.
   Future<void> addBuilds(String projectId, List<BuildData> builds);
+
+  /// Fetches a list of builds with the given [status] for a project identified
+  /// by the given [projectId].
+  Future<List<BuildData>> fetchBuildsWithStatus(
+    String projectId,
+    BuildStatus status,
+  );
+
+  /// Updates the builds of the project identified by the given [projectId]
+  /// with the given [builds].
+  Future<void> updateBuilds(String projectId, List<BuildData> builds);
 }
