@@ -147,7 +147,7 @@ void main() {
       );
 
       test(
-        "has the non-null value help for the 'in-progress-timeout' option",
+        "has the non-null help for the 'in-progress-timeout' option",
         () {
           final argParser = syncCommand.argParser;
           final option = argParser.options['in-progress-timeout'];
@@ -163,7 +163,7 @@ void main() {
           final option = argParser.options['in-progress-timeout'];
 
           final expectedValue =
-              '${SyncCommand.defaulInProgressTimeout.inMinutes}';
+              '${SyncCommand.defaultInProgressTimeout.inMinutes}';
 
           expect(option.defaultsTo, equals(expectedValue));
         },
@@ -176,7 +176,7 @@ void main() {
           final option = argParser.options['in-progress-timeout'];
 
           final expectedValue =
-              '${SyncCommand.defaulInProgressTimeout.inMinutes}';
+              '${SyncCommand.defaultInProgressTimeout.inMinutes}';
 
           expect(option.valueHelp, equals(expectedValue));
         },
@@ -411,6 +411,16 @@ void main() {
           );
 
           expect(actualLimit, equals(expectedLimit));
+        },
+      );
+
+      test(
+        ".parseInProgressTimeout() throws an ArgumentError if the given value is null",
+        () async {
+          expect(
+            () => syncCommand.parseInProgressTimeout(null),
+            throwsArgumentError,
+          );
         },
       );
 

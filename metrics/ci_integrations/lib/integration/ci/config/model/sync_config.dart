@@ -59,7 +59,7 @@ class SyncConfig extends Equatable {
 
     if (inProgressTimeout == null || inProgressTimeout.isNegative) {
       throw ArgumentError(
-        'The in-progress timeout must be a non-negative duration in minutes.',
+        'The in-progress timeout must be a non-negative duration.',
       );
     }
   }
