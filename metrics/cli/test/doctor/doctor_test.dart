@@ -24,6 +24,7 @@ void main() {
     final firebaseCommand = FirebaseCommandMock();
     final gitCommand = GitCommandMock();
     final npmService = NpmServiceMock();
+    final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
@@ -41,19 +42,19 @@ void main() {
       reset(firebaseCommand);
       reset(gitCommand);
       reset(npmService);
+      reset(servicesMock);
     });
 
     test(
       "throws an ArgumentError if the Flutter service in the given services is null",
       () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(null);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.npmService).thenReturn(npmService);
+        when(servicesMock.flutterService).thenReturn(null);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
           () => Doctor(
-            services: services,
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
           ),
@@ -65,14 +66,13 @@ void main() {
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
       () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(null);
-        when(services.npmService).thenReturn(npmService);
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(null);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
           () => Doctor(
-            services: services,
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
           ),
@@ -84,14 +84,13 @@ void main() {
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
       () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.npmService).thenReturn(null);
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(null);
 
         expect(
           () => Doctor(
-            services: services,
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
           ),
@@ -129,7 +128,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() shows the Flutter CLI version",
+      ".checkVersions() shows the Flutter version",
       () async {
         await doctor.checkVersions();
 
@@ -138,7 +137,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() shows the Firebase CLI version",
+      ".checkVersions() shows the Firebase version",
       () async {
         await doctor.checkVersions();
 
@@ -147,7 +146,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() shows the GCloud CLI version",
+      ".checkVersions() shows the GCloud version",
       () async {
         await doctor.checkVersions();
 
@@ -156,7 +155,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() shows the Git CLI version",
+      ".checkVersions() shows the Git version",
       () async {
         await doctor.checkVersions();
 
@@ -165,7 +164,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() shows the Npm CLI version",
+      ".checkVersions() shows the Npm version",
       () async {
         await doctor.checkVersions();
 
