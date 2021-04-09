@@ -223,7 +223,7 @@ The following methods are to be implemented for the `FirestoreDestinationClientA
 - `fetchBuildsWithStatus`
 - `updateBuilds`
 
-The `fetchBuildsWithStatus` is used by the sync algorithm to fetch in-progress builds stored in the database. This method should throw if the project with the given identifier does not exist. If the project exists but doesn't have synchronized builds yet, the method should return an empty list.
+The `fetchBuildsWithStatus` is used by the sync algorithm to fetch in-progress builds stored in the database. This method should throw if the project with the given identifier does not exist. If the project exists but doesn't have builds with the given status, the method should return an empty list.
 
 The `updateBuilds` method is used to update in-progress builds with new data and status. This method should throw if the project with the given identifier does not exist. If updating one of the builds fails, the method should continue updating other builds, as the failed build can be re-synced later, during the next synchronization. Generally speaking, the implementation should be flexible, providing an ability to switch between the following options:
 
