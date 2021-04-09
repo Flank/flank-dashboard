@@ -23,9 +23,9 @@ Since the `Dart` code could be compiled to the `JavaScript` code, we are able to
 
 > Define requirements and make sure that they are complete.
 
-1. The Cloud Firestore Function trigger is registered.
-2. The Firestore processing logic is defined in the trigger's event handler.
-3. The described above logic is written using Dart.
+1. Possibility to create Cloud Functions for Firebase.
+2. Allows using the Admin SDK to manipulate the Firestore data.
+3. Provides an ability to write Cloud Functions using Dart.
 
 ### Landscape
 
