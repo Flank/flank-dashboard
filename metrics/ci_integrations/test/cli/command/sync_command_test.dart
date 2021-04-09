@@ -159,11 +159,10 @@ void main() {
       test(
         "'in-progress-timeout' option has the default value equal to the default in progress timeout in minutes",
         () {
+          const expectedValue = SyncCommand.defaultInProgressTimeout;
+
           final argParser = syncCommand.argParser;
           final option = argParser.options['in-progress-timeout'];
-
-          final expectedValue =
-              '${SyncCommand.defaultInProgressTimeout.inMinutes}';
 
           expect(option.defaultsTo, equals(expectedValue));
         },
@@ -172,11 +171,10 @@ void main() {
       test(
         "'in-progress-timeout' option has the value help equal to the default in progress timeout in minutes",
         () {
+          const expectedValue = SyncCommand.defaultInProgressTimeout;
+
           final argParser = syncCommand.argParser;
           final option = argParser.options['in-progress-timeout'];
-
-          final expectedValue =
-              '${SyncCommand.defaultInProgressTimeout.inMinutes}';
 
           expect(option.valueHelp, equals(expectedValue));
         },

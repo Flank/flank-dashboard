@@ -26,8 +26,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// of the project.
   static const String defaultInitialSyncLimit = '28';
 
-  /// A default timeout [Duration] for in-progress builds.
-  static const Duration defaultInProgressTimeout = Duration(minutes: 120);
+  /// A default timeout in minutes for in-progress builds.
+  static const String defaultInProgressTimeout = "120";
 
   /// A name of the option that holds a path to the YAML configuration file.
   static const String _configFileOptionName = 'config-file';
@@ -80,8 +80,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     argParser.addOption(
       _inProgressTimeoutOptionName,
       help: 'A timeout duration in minutes for in-progress builds.',
-      valueHelp: '${defaultInProgressTimeout.inMinutes}',
-      defaultsTo: '${defaultInProgressTimeout.inMinutes}',
+      valueHelp: defaultInProgressTimeout,
+      defaultsTo: defaultInProgressTimeout,
     );
 
     argParser.addFlag(
@@ -270,11 +270,11 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// Throws an [ArgumentError] if the given [value] does not represent an
   /// integer value.
   Duration parseInProgressTimeout(String value) {
-    if (value == null) {
-      throw ArgumentError('The given in-progress timeout must be null');
-    }
-
     logger.info('Parsing in-progress timeout...');
+
+    if (value == null) {
+      throw ArgumentError('The given in-progress timeout must not be null');
+    }
 
     final timeoutInMinutes = int.tryParse(value);
 
