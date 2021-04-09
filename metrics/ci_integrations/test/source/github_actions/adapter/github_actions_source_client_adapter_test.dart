@@ -1172,9 +1172,9 @@ void main() {
     );
 
     test(
-      ".fetchBuild() returns null",
+      ".fetchOneBuild() returns null",
       () async {
-        final result = await adapter.fetchBuild(jobName, 1);
+        final result = await adapter.fetchOneBuild(jobName, 1);
 
         expect(result, isNull);
       },

@@ -673,9 +673,9 @@ void main() {
     );
 
     test(
-      ".fetchBuild() returns null",
+      ".fetchOneBuild() returns null",
       () async {
-        final result = await adapter.fetchBuild(jobName, defaultBuildNumber);
+        final result = await adapter.fetchOneBuild(jobName, defaultBuildNumber);
 
         expect(result, isNull);
       },

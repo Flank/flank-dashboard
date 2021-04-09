@@ -144,7 +144,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<BuildData> fetchBuild(String projectId, int buildNumber) {
+  Future<BuildData> fetchOneBuild(String projectId, int buildNumber) {
     return Future.value();
   }
 
