@@ -457,7 +457,7 @@ void main() {
     );
 
     test(
-      ".fetchBuild() returns a buildkite build with the given build number",
+      ".fetchBuild() returns a buildkite build with build number equal to the requested one",
       () async {
         final interactionResult = await client.fetchBuild(
           pipelineSlug,

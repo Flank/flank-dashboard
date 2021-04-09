@@ -144,7 +144,8 @@ class BuildkiteMockServer extends ApiMockServer {
     await MockServerUtils.writeResponse(request, body: response);
   }
 
-  /// Responses with a [BuildkiteBuild].
+  /// Responses with a [BuildkiteBuild] with the build number extracted from
+  /// thr given [request].
   Future<void> _buildResponse(HttpRequest request) async {
     final buildNumber = _extractBuildNumber(request);
 
@@ -223,7 +224,7 @@ class BuildkiteMockServer extends ApiMockServer {
     await request.response.close();
   }
 
-  /// Returns the build number extracted from the given [request].
+  /// Returns the build number extracted from the path of the given [request].
   int _extractBuildNumber(HttpRequest request) {
     final buildNumber = request.uri.pathSegments.last;
 
