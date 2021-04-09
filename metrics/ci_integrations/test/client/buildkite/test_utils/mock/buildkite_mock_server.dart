@@ -40,13 +40,31 @@ class BuildkiteMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/pipeline_slug/builds/1',
+          ),
+          dispatcher: _buildResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/not_found/builds/1',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/pipeline_slug/builds/-1',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/pipeline_slug/builds/1/artifacts',
           ),
           dispatcher: _pipelineBuildArtifactsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '$basePath/pipelines/pipeline_slug/builds/not_found/artifacts',
+            '$basePath/pipelines/pipeline_slug/builds/-1/artifacts',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
@@ -126,6 +144,17 @@ class BuildkiteMockServer extends ApiMockServer {
     await MockServerUtils.writeResponse(request, body: response);
   }
 
+  /// Responses with a [BuildkiteBuild] with the build number extracted from
+  /// the given [request].
+  Future<void> _buildResponse(HttpRequest request) async {
+    final buildNumber = _extractBuildNumber(request);
+
+    final build = BuildkiteBuild(number: buildNumber);
+    final data = build.toJson();
+
+    await MockServerUtils.writeResponse(request, body: data);
+  }
+
   /// Responses with a list of [BuildkiteArtifact]s.
   ///
   /// Takes the per page and the page number parameters from the [request]
@@ -193,6 +222,13 @@ class BuildkiteMockServer extends ApiMockServer {
     );
 
     await request.response.close();
+  }
+
+  /// Returns the build number extracted from the path of the given [request].
+  int _extractBuildNumber(HttpRequest request) {
+    final buildNumber = request.uri.pathSegments.last;
+
+    return int.tryParse(buildNumber);
   }
 
   /// Returns the [BuildkiteBuildState], based on the `state` query parameter

@@ -20,6 +20,7 @@ void main() {
   group("BuildkiteClient", () {
     const testPageNumber = 1;
     const buildNumber = 1;
+    const notFoundBuildNumber = -1;
     const organizationSlug = 'organization_slug';
     const pipelineSlug = 'pipeline_slug';
     const notFound = 'not_found';
@@ -399,9 +400,83 @@ void main() {
     );
 
     test(
+      ".fetchBuild() throws an AssertionError if the given pipeline slug is null",
+      () {
+        expect(
+          () => client.fetchBuild(null, buildNumber),
+          throwsA(isA<AssertionError>()),
+        );
+      },
+    );
+
+    test(
+      ".fetchBuild() throws an AssertionError if the given build number is null",
+      () {
+        expect(
+          () => client.fetchBuild(pipelineSlug, null),
+          throwsA(isA<AssertionError>()),
+        );
+      },
+    );
+
+    test(
+      ".fetchBuild() returns an error if a pipeline with the given pipeline slug is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          notFound,
+          buildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns an error if a build with the given build number is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          notFoundBuildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns a buildkite build",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          buildNumber,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns a buildkite build with build number equal to the requested one",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          buildNumber,
+        );
+
+        final build = interactionResult.result;
+
+        expect(build.number, equals(buildNumber));
+      },
+    );
+
+    test(
       ".fetchArtifacts() fails if an associated build with such number is not found",
       () async {
-        final interactionResult = await client.fetchArtifacts(pipelineSlug, 10);
+        final interactionResult = await client.fetchArtifacts(
+          pipelineSlug,
+          notFoundBuildNumber,
+        );
 
         expect(interactionResult.isError, isTrue);
       },
