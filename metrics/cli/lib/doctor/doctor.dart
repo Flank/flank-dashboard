@@ -28,9 +28,9 @@ class Doctor {
 
   /// Creates a new instance of the [Doctor] with the given services.
   ///
-  /// Throws an [ArgumentError] if the given [FlutterService] is `null`.
-  /// Throws an [ArgumentError] if the given [GCloudService] is `null`.
-  /// Throws an [ArgumentError] if the given [NpmService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
   /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
   /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
   Doctor({

@@ -67,7 +67,7 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given Flutter service is null",
+      "throws an ArgumentError if the Flutter service in the given services is null",
       () {
         final services = ServicesMock();
         when(services.flutterService).thenReturn(null);
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given GCloud service is null",
+      "throws an ArgumentError if the GCloud service in the given services is null",
           () {
         final services = ServicesMock();
         when(services.flutterService).thenReturn(flutterService);
@@ -107,7 +107,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given Npm service is null",
+      "throws an ArgumentError if the Npm service in the given services is null",
           () {
         final services = ServicesMock();
         when(services.flutterService).thenReturn(flutterService);
