@@ -75,6 +75,21 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
     );
   }
 
+  /// @override
+  Future<BuildData> fetchOneBuild(String pipelineSlug, int buildNumber) async {
+    ArgumentError.checkNotNull(pipelineSlug, 'pipelneSlug');
+    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+
+    final buildInteraction = await buildkiteClient.fetchBuild(
+      pipelineSlug,
+      buildNumber,
+    );
+
+    final build = _processInteraction(buildInteraction);
+
+    return _mapBuildToBuildData(pipelineSlug, build);
+  }
+
   @override
   Future<Percent> fetchCoverage(BuildData build) async {
     ArgumentError.checkNotNull(build, 'build');

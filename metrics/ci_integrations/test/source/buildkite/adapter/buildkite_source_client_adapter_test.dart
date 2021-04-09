@@ -26,6 +26,14 @@ import '../test_utils/test_data/buildkite_test_data_generator.dart';
 void main() {
   group("BuildkiteSourceClientAdapter", () {
     const pipelineSlug = "pipelineSlug";
+    const buildNumber = 1;
+    const fetchLimit = 20;
+    const coverageJson = <String, dynamic>{'pct': 0.5};
+    const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
+      BuildkiteArtifact(filename: "coverage-summary.json"),
+    ]);
+
+    final currentDate = DateTime.now();
     final testData = BuildkiteTestDataGenerator(
       pipelineSlug: pipelineSlug,
       coverage: Percent(0.5),
@@ -35,19 +43,13 @@ void main() {
       duration: DateTime(2021).difference(DateTime(2020)),
     );
 
-    const fetchLimit = 20;
-
     final buildkiteClientMock = BuildkiteClientMock();
     final adapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClientMock,
     );
 
-    const coverageJson = <String, dynamic>{'pct': 0.5};
     final coverageBytes = utf8.encode(jsonEncode(coverageJson)) as Uint8List;
 
-    const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
-      BuildkiteArtifact(filename: "coverage-summary.json"),
-    ]);
     final emptyArtifactsPage = BuildkiteArtifactsPage(
       page: 1,
       nextPageUrl: testData.webUrl,
@@ -73,6 +75,11 @@ void main() {
           page: anyNamed('page'),
         ),
       );
+    }
+
+    PostExpectation<Future<InteractionResult<BuildkiteBuild>>>
+        whenFetchOneBuild() {
+      return when(buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber));
     }
 
     PostExpectation<Future<InteractionResult<BuildkiteArtifactsPage>>>
@@ -394,8 +401,9 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchBuilds()
-            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(
+          const BuildkiteBuildsPage(values: [build]),
+        );
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
@@ -701,8 +709,9 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds()
-            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(
+          const BuildkiteBuildsPage(values: [build]),
+        );
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final url = result.first.url;
@@ -729,6 +738,104 @@ void main() {
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(finishedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given pipeline slug is null",
+      () {
+        expect(() => adapter.fetchOneBuild(null, 1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given build number is null",
+      () {
+        expect(
+          () => adapter.fetchOneBuild(pipelineSlug, null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if fetching build fails",
+      () {
+        whenFetchOneBuild().thenErrorWith();
+
+        final result = adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if fetching build fails",
+      () {
+        whenFetchOneBuild().thenErrorWith();
+
+        final result = adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data if fetching a build succeeds",
+      () async {
+        whenFetchOneBuild().thenSuccessWith(const BuildkiteBuild());
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the build number equal to the fetched build's number",
+      () async {
+        const build = BuildkiteBuild(number: buildNumber);
+        whenFetchOneBuild().thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.buildNumber, equals(buildNumber));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's started at date if it is not null",
+      () async {
+        final build = BuildkiteBuild(startedAt: currentDate);
+        whenFetchOneBuild().thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, equals(currentDate));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's finished at date if the build's started at date is null",
+      () async {
+        final build = BuildkiteBuild(startedAt: null, finishedAt: currentDate);
+        whenFetchOneBuild().thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, equals(currentDate));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the current date time if the fetched build's started at and finished at dates are null",
+      () async {
+        const build = BuildkiteBuild(startedAt: null, finishedAt: null);
+        whenFetchOneBuild().thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, isNotNull);
       },
     );
 
@@ -815,8 +922,9 @@ void main() {
           nextPageUrl: 'url',
         );
         whenFetchCoverage().thenSuccessWith(artifactsPage);
-        when(buildkiteClientMock.fetchArtifactsNext(artifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
+        when(
+          buildkiteClientMock.fetchArtifactsNext(artifactsPage),
+        ).thenSuccessWith(defaultArtifactsPage);
 
         final result = await adapter.fetchCoverage(defaultBuild);
 
