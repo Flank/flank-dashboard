@@ -190,16 +190,17 @@ class BuildkiteClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [BuildkiteBuild] by the given [pipelineSlug] and [buildNumber].
+  /// Fetches a [BuildkiteBuild] of a pipeline with the given [pipelineSlug] 
+  /// and having the given [buildNumber].
   ///
-  /// Throws an [ArgumentError] if the given [pipelineSlug] or [buildNumber] is
+  /// Throws an [AssertionError] if the given [pipelineSlug] or [buildNumber] is
   /// `null`.
   Future<InteractionResult<BuildkiteBuild>> fetchBuild(
     String pipelineSlug,
     int buildNumber,
   ) {
-    ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
-    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+    assert(pipelineSlug != null);
+    assert(buildNumber != null);
 
     logger.info('Fetching the build #$buildNumber...');
 

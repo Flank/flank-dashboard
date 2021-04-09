@@ -146,11 +146,12 @@ class BuildkiteMockServer extends ApiMockServer {
 
   /// Responses with a [BuildkiteBuild].
   Future<void> _buildResponse(HttpRequest request) async {
-    const build = BuildkiteBuild();
+    final buildNumber = _extractBuildNumber(request);
 
-    final response = build.toJson();
+    final build = BuildkiteBuild(number: buildNumber);
+    final data = build.toJson();
 
-    await MockServerUtils.writeResponse(request, body: response);
+    await MockServerUtils.writeResponse(request, body: data);
   }
 
   /// Responses with a list of [BuildkiteArtifact]s.
@@ -220,6 +221,13 @@ class BuildkiteMockServer extends ApiMockServer {
     );
 
     await request.response.close();
+  }
+
+  /// Returns the build number extracted from the given [request].
+  int _extractBuildNumber(HttpRequest request) {
+    final buildNumber = request.uri.pathSegments.last;
+
+    return int.tryParse(buildNumber);
   }
 
   /// Returns the [BuildkiteBuildState], based on the `state` query parameter

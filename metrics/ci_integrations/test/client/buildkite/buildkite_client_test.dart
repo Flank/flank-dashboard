@@ -400,24 +400,27 @@ void main() {
     );
 
     test(
-      ".fetchBuild() throws an ArgumentError if the given pipeline slug is null",
-      () async {
-        expect(() => client.fetchBuild(null, buildNumber), throwsArgumentError);
-      },
-    );
-
-    test(
-      ".fetchBuild() throws an ArgumentError if the given build number is null",
-      () async {
+      ".fetchBuild() throws an AssertionError if the given pipeline slug is null",
+      () {
         expect(
-          () => client.fetchBuild(pipelineSlug, null),
-          throwsArgumentError,
+          () => client.fetchBuild(null, buildNumber),
+          throwsA(isA<AssertionError>()),
         );
       },
     );
 
     test(
-      ".fetchBuild() returns an error if the pipeline with the given slug is not found",
+      ".fetchBuild() throws an AssertionError if the given build number is null",
+      () {
+        expect(
+          () => client.fetchBuild(pipelineSlug, null),
+          throwsA(isA<AssertionError>()),
+        );
+      },
+    );
+
+    test(
+      ".fetchBuild() returns an error if a pipeline with the given pipeline slug is not found",
       () async {
         final interactionResult = await client.fetchBuild(
           notFound,
@@ -429,7 +432,7 @@ void main() {
     );
 
     test(
-      ".fetchBuild() returns an error if the build with the build with the given build number is not found",
+      ".fetchBuild() returns an error if a build with the given build number is not found",
       () async {
         final interactionResult = await client.fetchBuild(
           pipelineSlug,
@@ -448,7 +451,21 @@ void main() {
           buildNumber,
         );
 
+        expect(interactionResult.isSuccess, isTrue);
         expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns a buildkite build with the given build number",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          buildNumber,
+        );
+        final build = interactionResult.result;
+
+        expect(build.number, equals(buildNumber));
       },
     );
 
