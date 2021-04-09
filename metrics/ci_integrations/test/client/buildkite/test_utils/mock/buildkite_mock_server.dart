@@ -145,7 +145,7 @@ class BuildkiteMockServer extends ApiMockServer {
   }
 
   /// Responses with a [BuildkiteBuild] with the build number extracted from
-  /// thr given [request].
+  /// the given [request].
   Future<void> _buildResponse(HttpRequest request) async {
     final buildNumber = _extractBuildNumber(request);
 
