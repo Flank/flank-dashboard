@@ -463,6 +463,7 @@ void main() {
           pipelineSlug,
           buildNumber,
         );
+
         final build = interactionResult.result;
 
         expect(build.number, equals(buildNumber));
