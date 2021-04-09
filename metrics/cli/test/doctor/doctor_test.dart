@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import '../test_utils/firebase_command_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
-import '../test_utils/git_command_mock.dart';
+import '../test_utils/git_service_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
 import '../test_utils/services_mock.dart';
@@ -46,15 +46,31 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the Flutter service in the given services is null",
+      "throws an ArgumentError if the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(null);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-
         expect(
           () => Doctor(
-            services: servicesMock,
+            services: null,
+            firebaseCommand: firebaseCommand,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Flutter service in the given services is null",
+          () {
+            final services = ServicesMock();
+            when(services.flutterService).thenReturn(null);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(npmService);
+        when(services.gitService).thenReturn(gitService);
+
+
+        expect(
+              () => Doctor(
+            services: services,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -64,14 +80,37 @@ void main() {
 
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(null);
-        when(servicesMock.npmService).thenReturn(npmService);
+          () {
+            final services = ServicesMock();
+
+            when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(null);
+        when(services.npmService).thenReturn(npmService);
+        when(services.gitService).thenReturn(gitService);
 
         expect(
-          () => Doctor(
-            services: servicesMock,
+              () => Doctor(
+            services: services,
+            firebaseCommand: firebaseCommand,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Git service in the given services is null",
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.gitService).thenReturn(null);
+        when(services.npmService).thenReturn(npmService);
+
+
+        expect(
+              () => Doctor(
+            services: services,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -81,14 +120,16 @@ void main() {
 
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(null);
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(null);
+        when(services.gitService).thenReturn(null);
 
         expect(
-          () => Doctor(
-            services: servicesMock,
+              () => Doctor(
+            services: services,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -204,9 +245,8 @@ void main() {
 
     test(
       ".checkVersions() proceeds if Git service throws during the version showing",
-          () async {
-        when(gitService.version())
-            .thenAnswer((_) => Future.error(stateError));
+      () async {
+        when(gitService.version()).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 

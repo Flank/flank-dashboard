@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
-import '../../test_utils/git_command_mock.dart';
+import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/npm_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -82,7 +82,7 @@ void main() {
       "throws an ArgumentError if the given Git service is null",
           () {
         expect(
-              () => Services(
+          () => Services(
             flutterService: flutterService,
             gcloudService: gcloudService,
             gitService: null,

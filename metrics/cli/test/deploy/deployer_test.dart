@@ -14,7 +14,7 @@ import '../test_utils/directory_mock.dart';
 import '../test_utils/firebase_command_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
-import '../test_utils/git_command_mock.dart';
+import '../test_utils/git_service_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
 import '../test_utils/services_mock.dart';
@@ -32,7 +32,6 @@ void main() {
     final gitService = GitServiceMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
-    final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
@@ -65,19 +64,35 @@ void main() {
       reset(gitService);
       reset(fileHelper);
       reset(directory);
-      reset(servicesMock);
+      reset(services);
     });
 
     test(
-      "throws an ArgumentError if the Flutter service in the given services is null",
+      "throws an ArgumentError if the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(null);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-
         expect(
           () => Deployer(
-            services: servicesMock,
+            services: null,
+            firebaseCommand: firebaseCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Flutter service in the given services is null",
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(null);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.gitService).thenReturn(gitService);
+        when(services.npmService).thenReturn(npmService);
+
+        expect(
+              () => Deployer(
+            services: services,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
@@ -88,14 +103,36 @@ void main() {
 
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(null);
-        when(servicesMock.npmService).thenReturn(npmService);
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(null);
+        when(services.gitService).thenReturn(gitService);
+        when(services.npmService).thenReturn(npmService);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
+              () => Deployer(
+            services: services,
+            firebaseCommand: firebaseCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Git service in the given services is null",
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.gitService).thenReturn(null);
+        when(services.npmService).thenReturn(npmService);
+
+        expect(
+              () => Deployer(
+            services: services,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
@@ -106,14 +143,17 @@ void main() {
 
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(null);
+          () {
+        final services = ServicesMock();
+
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.gitService).thenReturn(gitService);
+        when(services.npmService).thenReturn(null);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
+              () => Deployer(
+            services: services,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),

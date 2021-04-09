@@ -32,6 +32,7 @@ class Deployer {
 
   /// Creates a new instance of the [Deployer] with the given services.
   ///
+  /// Throws an [ArgumentError] if the given [services] is `null`.
   /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
@@ -49,6 +50,7 @@ class Deployer {
         _gitService = services?.gitService,
         _firebaseCommand = firebaseCommand,
         _fileHelper = fileHelper {
+    ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(_npmService, 'npmService');
