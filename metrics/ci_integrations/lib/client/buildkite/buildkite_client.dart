@@ -205,7 +205,7 @@ class BuildkiteClient with LoggerMixin {
 
     final url = UrlUtils.buildUrl(
       basePath,
-      path: 'pipelines/$pipelineSlug/builds/buildNumber',
+      path: 'pipelines/$pipelineSlug/builds/$buildNumber',
     );
 
     return _handleResponse(

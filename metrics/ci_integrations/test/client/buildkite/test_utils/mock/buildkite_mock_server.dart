@@ -40,13 +40,31 @@ class BuildkiteMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/pipeline_slug/builds/1',
+          ),
+          dispatcher: _buildResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/not_found/builds/1',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '$basePath/pipelines/pipeline_slug/builds/-1',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/pipeline_slug/builds/1/artifacts',
           ),
           dispatcher: _pipelineBuildArtifactsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '$basePath/pipelines/pipeline_slug/builds/not_found/artifacts',
+            '$basePath/pipelines/pipeline_slug/builds/-1/artifacts',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
@@ -122,6 +140,15 @@ class BuildkiteMockServer extends ApiMockServer {
     builds = MockServerUtils.paginate(builds, perPage, pageNumber);
 
     final response = builds.map((build) => build.toJson()).toList();
+
+    await MockServerUtils.writeResponse(request, body: response);
+  }
+
+  /// Responses with a [BuildkiteBuild].
+  Future<void> _buildResponse(HttpRequest request) async {
+    const build = BuildkiteBuild();
+
+    final response = build.toJson();
 
     await MockServerUtils.writeResponse(request, body: response);
   }

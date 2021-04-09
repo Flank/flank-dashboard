@@ -20,6 +20,7 @@ void main() {
   group("BuildkiteClient", () {
     const testPageNumber = 1;
     const buildNumber = 1;
+    const notFoundBuildNumber = -1;
     const organizationSlug = 'organization_slug';
     const pipelineSlug = 'pipeline_slug';
     const notFound = 'not_found';
@@ -416,9 +417,48 @@ void main() {
     );
 
     test(
+      ".fetchBuild() returns an error if the pipeline with the given slug is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          notFound,
+          buildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns an error if the build with the build with the given build number is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          notFoundBuildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns a buildkite build",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          buildNumber,
+        );
+
+        expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
       ".fetchArtifacts() fails if an associated build with such number is not found",
       () async {
-        final interactionResult = await client.fetchArtifacts(pipelineSlug, 10);
+        final interactionResult = await client.fetchArtifacts(
+          pipelineSlug,
+          notFoundBuildNumber,
+        );
 
         expect(interactionResult.isError, isTrue);
       },
