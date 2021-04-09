@@ -6,7 +6,7 @@ import 'package:cli/npm/service/npm_service.dart';
 
 /// An adapter for the [NpmCli] to implement the [NpmService] interface.
 class NpmCliServiceAdapter implements NpmService {
-  /// A [NpmCli] class that provides an ability to interact with the Npm CLI.
+  /// An [NpmCli] class that provides an ability to interact with the Npm CLI.
   final NpmCli _npmCli;
 
   /// Creates a new instance of the [NpmCliServiceAdapter]

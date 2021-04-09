@@ -5,6 +5,6 @@ import 'package:cli/interfaces/service/info_service.dart';
 
 /// An abstract class for Npm service that provides methods for working with Npm.
 abstract class NpmService extends InfoService {
-  /// Installs npm dependencies into the given [path].
+  /// Installs npm dependencies in the given [path].
   Future<void> installDependencies(String path);
 }
