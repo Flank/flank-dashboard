@@ -23,10 +23,9 @@ Since the `Dart` code could be compiled to the `JavaScript` code, we are able to
 
 > Define requirements and make sure that they are complete.
 
-1. A Firebase project, with the Firestore and Cloud Functions services enabled.
-2. Set up [Node.js and the Firebase CLI](https://firebase.google.com/docs/functions/get-started#set-up-node.js-and-the-firebase-cli).
-3. [Point the Firebase CLI to the existing project](https://firebase.google.com/docs/cli#sign-in-test-cli).
-4. The Firestore collection holds the initial counter value.
+1. The Cloud Firestore Function trigger is registered.
+2. The Firestore processing logic is defined in the trigger's event handler.
+3. The described above logic is written using Dart.
 
 ### Landscape
 
@@ -64,7 +63,7 @@ Cons:
 
 #### Decision
 
-We've considered and analyzed the described above packages and chose the `firebase-functions-interop`, as it satisfies our [goals](#feasibility-study). 
+We've considered and analyzed the described above packages and chose the `firebase-functions-interop`, as it satisfies our [requirements](#requirements).
 
 ### Prototyping
 
