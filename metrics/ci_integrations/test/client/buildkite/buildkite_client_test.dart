@@ -471,6 +471,23 @@ void main() {
     );
 
     test(
+      ".fetchBuild() throws an ArgumentError if the given pipeline slug is null",
+      () async {
+        expect(() => client.fetchBuild(null, buildNumber), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchBuild() throws an ArgumentError if the given build number is null",
+      () async {
+        expect(
+          () => client.fetchBuild(pipelineSlug, null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
       ".fetchArtifacts() fails if an associated build with such number is not found",
       () async {
         final interactionResult = await client.fetchArtifacts(
