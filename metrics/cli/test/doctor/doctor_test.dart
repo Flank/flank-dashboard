@@ -43,6 +43,7 @@ void main() {
       reset(npmService);
       reset(servicesMock);
       reset(gitService);
+      reset(servicesMock);
     });
 
     test(
@@ -60,17 +61,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the Flutter service in the given services is null",
-          () {
-            final services = ServicesMock();
-            when(services.flutterService).thenReturn(null);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.npmService).thenReturn(npmService);
-        when(services.gitService).thenReturn(gitService);
-
+      () {
+        when(servicesMock.flutterService).thenReturn(null);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
-              () => Doctor(
-            services: services,
+          () => Doctor(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -80,17 +79,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
-          () {
-            final services = ServicesMock();
-
-            when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(null);
-        when(services.npmService).thenReturn(npmService);
-        when(services.gitService).thenReturn(gitService);
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(null);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
-              () => Doctor(
-            services: services,
+          () => Doctor(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -100,17 +97,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the Git service in the given services is null",
-          () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.gitService).thenReturn(null);
-        when(services.npmService).thenReturn(npmService);
-
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.gitService).thenReturn(null);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
-              () => Doctor(
-            services: services,
+          () => Doctor(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,
@@ -121,15 +116,15 @@ void main() {
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
           () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.npmService).thenReturn(null);
-        when(services.gitService).thenReturn(null);
+            when(servicesMock.flutterService).thenReturn(flutterService);
+            when(servicesMock.gcloudService).thenReturn(gcloudService);
+            when(servicesMock.gitService).thenReturn(gitService);
+            when(servicesMock.npmService).thenReturn(null);
+
 
         expect(
               () => Doctor(
-            services: services,
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
           ),
           throwsArgumentError,

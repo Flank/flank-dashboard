@@ -32,6 +32,7 @@ void main() {
     final gitService = GitServiceMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
+    final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
@@ -65,6 +66,7 @@ void main() {
       reset(fileHelper);
       reset(directory);
       reset(services);
+      reset(servicesMock);
     });
 
     test(
@@ -83,16 +85,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the Flutter service in the given services is null",
-          () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(null);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.gitService).thenReturn(gitService);
+      () {
+        when(servicesMock.flutterService).thenReturn(null);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.gitService).thenReturn(gitService);
         when(services.npmService).thenReturn(npmService);
 
         expect(
-              () => Deployer(
-            services: services,
+          () => Deployer(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
@@ -103,16 +104,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
-          () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(null);
-        when(services.gitService).thenReturn(gitService);
-        when(services.npmService).thenReturn(npmService);
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(null);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
-              () => Deployer(
-            services: services,
+          () => Deployer(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
@@ -123,16 +123,15 @@ void main() {
 
     test(
       "throws an ArgumentError if the Git service in the given services is null",
-          () {
-        final services = ServicesMock();
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.gitService).thenReturn(null);
-        when(services.npmService).thenReturn(npmService);
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.gitService).thenReturn(null);
+        when(servicesMock.npmService).thenReturn(npmService);
 
         expect(
-              () => Deployer(
-            services: services,
+          () => Deployer(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
@@ -144,16 +143,15 @@ void main() {
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
           () {
-        final services = ServicesMock();
+            when(servicesMock.flutterService).thenReturn(flutterService);
+            when(servicesMock.gcloudService).thenReturn(gcloudService);
+            when(servicesMock.gitService).thenReturn(gitService);
+            when(servicesMock.npmService).thenReturn(null);
 
-        when(services.flutterService).thenReturn(flutterService);
-        when(services.gcloudService).thenReturn(gcloudService);
-        when(services.gitService).thenReturn(gitService);
-        when(services.npmService).thenReturn(null);
 
         expect(
               () => Deployer(
-            services: services,
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
