@@ -488,6 +488,42 @@ void main() {
     );
 
     test(
+      ".fetchBuild() returns an error if the pipeline with the given slug is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          notFound,
+          buildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns an error if the build with the build with the given build number is not found",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          notFoundBuildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuild() returns a buildkite build",
+      () async {
+        final interactionResult = await client.fetchBuild(
+          pipelineSlug,
+          buildNumber,
+        );
+
+        expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
       ".fetchArtifacts() fails if an associated build with such number is not found",
       () async {
         final interactionResult = await client.fetchArtifacts(
