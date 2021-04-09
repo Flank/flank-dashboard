@@ -43,6 +43,6 @@ abstract class DestinationClient extends IntegrationClient {
   /// Throws an [ArgumentError] if the given [projectId] or [builds] is `null`.
   /// Throws an [ArgumentError] if a project with the given [projectId]
   /// does not exist.
-  /// Throws a [DestinationError] if updating [builds] fails.
+  /// Throws a [DestinationError] if updating builds fails.
   Future<void> updateBuilds(String projectId, List<BuildData> builds);
 }
