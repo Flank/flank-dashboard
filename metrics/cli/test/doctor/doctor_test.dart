@@ -12,6 +12,7 @@ import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
+import '../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -43,11 +44,54 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given services is null",
+      "throws an ArgumentError if the given Flutter service is null",
       () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(null);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(npmService);
+
         expect(
           () => Doctor(
-            services: null,
+            services: services,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given GCloud service is null",
+      () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(null);
+        when(services.npmService).thenReturn(npmService);
+
+        expect(
+          () => Doctor(
+            services: services,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given Npm service is null",
+      () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(null);
+
+        expect(
+          () => Doctor(
+            services: services,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
           ),
@@ -122,7 +166,7 @@ void main() {
 
     test(
       ".checkVersions() shows the Npm CLI version",
-          () async {
+      () async {
         await doctor.checkVersions();
 
         verify(npmService.version()).called(once);
@@ -131,7 +175,7 @@ void main() {
 
     test(
       ".checkVersions() proceeds if GCloud service throws during the version showing",
-          () async {
+      () async {
         when(gcloudService.version())
             .thenAnswer((_) => Future.error(stateError));
 
@@ -147,7 +191,7 @@ void main() {
 
     test(
       ".checkVersions() proceeds if Flutter service throws during the version showing",
-          () async {
+      () async {
         when(flutterService.version())
             .thenAnswer((_) => Future.error(stateError));
 
@@ -163,7 +207,7 @@ void main() {
 
     test(
       ".checkVersions() proceeds if Firebase command throws during the version showing",
-          () async {
+      () async {
         when(firebaseCommand.version())
             .thenAnswer((_) => Future.error(stateError));
 
@@ -179,9 +223,8 @@ void main() {
 
     test(
       ".checkVersions() proceeds if Git command throws during the version showing",
-          () async {
-        when(gitCommand.version())
-            .thenAnswer((_) => Future.error(stateError));
+      () async {
+        when(gitCommand.version()).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -195,9 +238,8 @@ void main() {
 
     test(
       ".checkVersions() proceeds if Npm service throws during the version showing",
-          () async {
-        when(npmService.version())
-            .thenAnswer((_) => Future.error(stateError));
+      () async {
+        when(npmService.version()).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 

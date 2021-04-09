@@ -17,6 +17,7 @@ import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
+import '../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -66,11 +67,56 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given services is null",
+      "throws an ArgumentError if the given Flutter service is null",
       () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(null);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(npmService);
+
         expect(
           () => Deployer(
-            services: null,
+            services: services,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given GCloud service is null",
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(null);
+        when(services.npmService).thenReturn(npmService);
+
+        expect(
+              () => Deployer(
+            services: services,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given Npm service is null",
+          () {
+        final services = ServicesMock();
+        when(services.flutterService).thenReturn(flutterService);
+        when(services.gcloudService).thenReturn(gcloudService);
+        when(services.npmService).thenReturn(null);
+
+        expect(
+              () => Deployer(
+            services: services,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
             fileHelper: fileHelper,

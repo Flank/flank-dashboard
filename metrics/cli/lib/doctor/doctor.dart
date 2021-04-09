@@ -28,19 +28,23 @@ class Doctor {
 
   /// Creates a new instance of the [Doctor] with the given services.
   ///
-  /// Throws an [ArgumentError] if the given [services] is `null`.
+  /// Throws an [ArgumentError] if the given [FlutterService] is `null`.
+  /// Throws an [ArgumentError] if the given [GCloudService] is `null`.
+  /// Throws an [ArgumentError] if the given [NpmService] is `null`.
   /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
   /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
   Doctor({
     Services services,
     FirebaseCommand firebaseCommand,
     GitCommand gitCommand,
-  })  : _gcloudService = services?.gcloudService,
-        _flutterService = services?.flutterService,
+  })  : _flutterService = services?.flutterService,
+        _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _firebaseCommand = firebaseCommand,
         _gitCommand = gitCommand {
-    ArgumentError.checkNotNull(services, 'services');
+    ArgumentError.checkNotNull(_flutterService, 'flutterService');
+    ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
+    ArgumentError.checkNotNull(_npmService, 'npmService');
     ArgumentError.checkNotNull(_firebaseCommand, 'firebaseCommand');
     ArgumentError.checkNotNull(_gitCommand, 'gitCommand');
   }
