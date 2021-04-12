@@ -13,6 +13,7 @@ abstract class SourceClient extends IntegrationClient {
   ///
   /// Returns an empty [List] if there are no new builds after the given [build].
   ///
+  /// Throws an [ArgumentError] if the given [build] is null.
   /// Throws a [StateError] if fetching builds after the given [build] fails.
   Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build);
 
@@ -33,6 +34,7 @@ abstract class SourceClient extends IntegrationClient {
   /// is not found.
   ///
   /// Throws an [ArgumentError] if the given [build] is `null`.
+  /// Throws a [StateError] if coverage artifact fetching fails.
   Future<Percent> fetchCoverage(BuildData build);
 
   /// Fetches a build with the given [buildNumber] for the project identified
