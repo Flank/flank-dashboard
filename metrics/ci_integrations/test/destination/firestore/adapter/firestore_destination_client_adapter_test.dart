@@ -503,6 +503,17 @@ void main() {
     );
 
     test(
+      ".updateBuilds() throws a DestinationError if fetching a project with the given id fails",
+      () {
+        whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
+
+        final result = adapter.updateBuilds(testProjectId, []);
+
+        expect(result, throwsDestinationError);
+      },
+    );
+
+    test(
       ".updateBuilds() throws an ArgumentError if a project with the given id does not exist",
       () {
         whenCheckProjectExists().thenReturn(false);
