@@ -190,7 +190,7 @@ class BuildkiteClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [BuildkiteBuild] of a pipeline with the given [pipelineSlug] 
+  /// Fetches a [BuildkiteBuild] of a pipeline with the given [pipelineSlug]
   /// and having the given [buildNumber].
   ///
   /// Throws an [AssertionError] if the given [pipelineSlug] or [buildNumber] is
@@ -201,36 +201,6 @@ class BuildkiteClient with LoggerMixin {
   ) {
     assert(pipelineSlug != null);
     assert(buildNumber != null);
-
-    logger.info('Fetching the build #$buildNumber...');
-
-    final url = UrlUtils.buildUrl(
-      basePath,
-      path: 'pipelines/$pipelineSlug/builds/$buildNumber',
-    );
-
-    return _handleResponse(
-      _client.get(url, headers: headers),
-      (body, headers) {
-        final buildJson = body as Map<String, dynamic>;
-
-        return InteractionResult.success(
-          result: BuildkiteBuild.fromJson(buildJson),
-        );
-      },
-    );
-  }
-
-  /// Fetches a [BuildkiteBuild] by the given [pipelineSlug] and [buildNumber].
-  ///
-  /// Throws an [ArgumentError] if the given [pipelineSlug] or [buildNumber] is
-  /// `null`.
-  Future<InteractionResult<BuildkiteBuild>> fetchBuild(
-    String pipelineSlug,
-    int buildNumber,
-  ) {
-    ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
-    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
 
     logger.info('Fetching the build #$buildNumber...');
 

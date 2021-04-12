@@ -75,9 +75,9 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
     );
   }
 
-  /// @override
+  @override
   Future<BuildData> fetchOneBuild(String pipelineSlug, int buildNumber) async {
-    ArgumentError.checkNotNull(pipelineSlug, 'pipelneSlug');
+    ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
     ArgumentError.checkNotNull(buildNumber, 'buildNumber');
 
     final buildInteraction = await buildkiteClient.fetchBuild(
@@ -171,11 +171,6 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
     );
 
     return _processInteraction(interaction);
-  }
-
-  @override
-  Future<BuildData> fetchOneBuild(String projectId, int buildNumber) {
-    return Future.value();
   }
 
   /// Maps the given [build] to the [BuildData] instance.
