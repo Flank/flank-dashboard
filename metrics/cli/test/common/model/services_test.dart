@@ -6,6 +6,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
+import '../../test_utils/npm_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -13,12 +14,17 @@ void main() {
   group("Services", () {
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
+    final npmService = NpmServiceMock();
 
     test(
       "throws an ArgumentError if the given Flutter service is null",
       () {
         expect(
-          () => Services(flutterService: null, gcloudService: gcloudService),
+          () => Services(
+            flutterService: null,
+            gcloudService: gcloudService,
+            npmService: npmService,
+          ),
           throwsArgumentError,
         );
       },
@@ -31,6 +37,21 @@ void main() {
           () => Services(
             flutterService: flutterService,
             gcloudService: null,
+            npmService: npmService,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given Npm service is null",
+      () {
+        expect(
+          () => Services(
+            flutterService: flutterService,
+            gcloudService: gcloudService,
+            npmService: null,
           ),
           throwsArgumentError,
         );
@@ -43,10 +64,12 @@ void main() {
         final services = Services(
           flutterService: flutterService,
           gcloudService: gcloudService,
+          npmService: npmService,
         );
 
         expect(services.flutterService, equals(flutterService));
         expect(services.gcloudService, equals(gcloudService));
+        expect(services.npmService, equals(npmService));
       },
     );
   });
