@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -42,6 +42,17 @@ class DestinationClientStub implements DestinationClient {
       return addBuildsCallback(projectId, builds);
     }
   }
+
+  @override
+  Future<List<BuildData>> fetchBuildsWithStatus(
+    String projectId,
+    BuildStatus status,
+  ) {
+    return Future.value(const []);
+  }
+
+  @override
+  Future<void> updateBuilds(String projectId, List<BuildData> builds) async {}
 
   @override
   void dispose() {}
