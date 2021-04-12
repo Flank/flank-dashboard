@@ -8,7 +8,7 @@ import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
-import 'package:grpc/grpc.dart';
+import 'package:firedart/firedart.dart' as fd;
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides methods for interactions between
@@ -52,7 +52,7 @@ class FirestoreDestinationClientAdapter
         await collection.document(documentId).create(map);
         logger.info('Added build id $documentId.');
       }
-    } on GrpcError catch (e) {
+    } on fd.FirestoreException catch (e) {
       if (buildJson != null) {
         logger.info('Failed to add build: $buildJson');
         buildJson = null;
@@ -83,12 +83,71 @@ class FirestoreDestinationClientAdapter
   Future<List<BuildData>> fetchBuildsWithStatus(
     String projectId,
     BuildStatus status,
-  ) {
-    return Future.value(const []);
+  ) async {
+    ArgumentError.checkNotNull(projectId, 'projectId');
+    ArgumentError.checkNotNull(status, 'status');
+
+    if (!await _projectExists(projectId)) {
+      throw ArgumentError(
+        'Project with the given ID $projectId is not found',
+      );
+    }
+
+    try {
+      final documents = await _firestore
+          .collection('build')
+          .where('projectId', isEqualTo: projectId)
+          .where('buildStatus', isEqualTo: '$status')
+          .getDocuments();
+
+      return documents.map((document) {
+        return BuildDataDeserializer.fromJson(document.map, document.id);
+      }).toList();
+    } on fd.FirestoreException catch (e) {
+      throw DestinationError(message: '$e');
+    }
   }
 
   @override
-  Future<void> updateBuilds(String projectId, List<BuildData> builds) async {}
+  Future<void> updateBuilds(String projectId, List<BuildData> newBuilds) async {
+    ArgumentError.checkNotNull(projectId, 'projectId');
+    ArgumentError.checkNotNull(newBuilds, 'newBuilds');
+
+    if (!await _projectExists(projectId)) {
+      throw ArgumentError(
+        'Project with the given ID $projectId is not found',
+      );
+    }
+
+    for (final newBuild in newBuilds) {
+      final buildId = newBuild.id;
+
+      final oldBuild = _firestore.collection('build').document(buildId);
+
+      try {
+        await oldBuild.update(newBuild.toJson());
+      } on fd.FirestoreException catch (e) {
+        throw DestinationError(
+          message:
+              'Failed to update the following build ${newBuild.id} with the following error: ${e.message}',
+        );
+      }
+    }
+  }
+
+  /// Returns `true` if a project with the given [projectId] exists.
+  ///
+  /// Otherwise, returns `false`.
+  Future<bool> _projectExists(String projectId) async {
+    final project = await _firestore
+        .collection(
+          'projects',
+        )
+        .document(projectId)
+        .get();
+
+    return project.exists;
+  }
 
   @override
   void dispose() {}
