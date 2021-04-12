@@ -32,9 +32,9 @@ The following class diagram demonstrates the core structure of classes related t
 
 ### CI Integrations Tool
 
-The CI Integrations Tool is implemented within the `ci_integrations` component. The CLI provides several integrations for different `source` clients - i.e., CI tools (as Jenkins, Buildkite, GitHub Actions) - and `destination` client - Firestore database. These integrations are used by the `CiIntegration` class that performs the synchronization algorithm. And finally, the `SyncCommand` class represents the tool's `sync` command and starts the synchronization providing [Controlling Parameters](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#control-synchronization) and appropriate `source` and `destination` integrations.
+The CI Integrations Tool is implemented within the `ci_integrations` component. The CLI provides several integrations for different `source` clients - i.e., CI tools (as Jenkins, Buildkite, GitHub Actions) - and `destination` client - Firestore database. These integrations are used by the `SyncStage`s that perform the stages of the synchronization algorithm, controlled by the `CiIntegration` class. And finally, the `SyncCommand` class represents the tool's `sync` command and starts the synchronization providing [Controlling Parameters](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#control-synchronization) and synchronization algorithm `SyncStage`s with appropriate `source` and `destination` integrations.
 
-All the components listed above are participants of the synchronization process. As the in-progress builds introduction affects the synchronization process, the participants of that process should be changed to meet the latest requirements. The synchronization process in details described in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. 
+All the components listed above are participants of the synchronization process. As the in-progress builds introduction affects the synchronization process, the participants of that process should be changed to meet the latest requirements. The `SyncStage` and concrete stage implementations should be added and integrated to the `CiIntegration` class. The synchronization process in details is described in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document.
 
 The following subsections describe changes in the described parts of the tool. To know more about the CI Integration tool, its usage, and architecture consider the [CI Integration Module Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md) and [CI Integration User Guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) documents.
 
@@ -63,26 +63,29 @@ The following class diagram demonstrates the described changes:
 
 #### Sync Algorithm
 
-The algorithm synchronizes builds for the specified `source` and `destination` integrations. The in-progress builds introduction requires this algorithm to be divided into two main parts: re-sync in-progress builds and sync new builds. The second part is how the synchronization algorithm is implemented now. So the purpose of the algorithm changes is to implement the re-syncing in-progress builds.
+The algorithm synchronizes builds for the specified `source` and `destination` integrations. The in-progress builds introduction requires this algorithm to be divided into two main parts: re-sync in-progress builds and sync new builds. The second part is how the synchronization algorithm is implemented now. So the purpose of the algorithm changes is to implement the re-syncing in-progress builds. 
 
-The re-syncing in-progress builds stage is described within the [Re-Sync In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
-
-The following table contains methods to implement for the `CiIntegration` with a short description:
-
-|Method|Description|
-|---|---|
-|`_syncInProgressBuilds`|Re-syncs in-progress builds for the specified projects. This method represents the `Re-Sync In-Progress Builds` stage of the sync algorithm.|
-|`_syncInProgressBuild`|Re-syncs the given in-progress build and returns a new build data. If the build shouldn't be changed, returns `null`.|
-|`_fetchBuild`|Fetches the build with the given number of a project with the given identifier.|
-|`_shouldTimeoutBuild`|Defines whether a build having the start timestamp exceeds the given timeout duration. Returns `true` if the current timestamp differs from the given start timestamp on a value greater than or equal to the given timeout duration.|
-|`_syncBuilds`|Syncs new builds for the specified projects. This method represents the `Sync Builds` stage of the sync algorithm.|
-|`_addCoverageData`|Fetches the coverage data for each build in the given list of builds. Returns a list with updated build data values.|
-
-Following the table above, it is obvious that the algorithm parts are now placed within different methods `_syncInProgressBuilds` and `_syncBuilds` for re-sync in-progress builds and sync new builds respectively. Thus, the `CiIntegration.sync` method should be updated to call the different parts of an algorithm delegating their execution to the appropriate private methods.
+Moreover, the synchronization algorithm is now divided into stages that are represented by `SyncStage`s implementers. Thus, the existing sync algorithm should now be interpreted as one of the `SyncStage` implementations. Consider the [Sync Algorithm Stages](#sync_algorithm_stages) to know the details about `SyncStage`s.
 
 _**Note**: The algorithm parts shouldn't be performed in parallel. The first stage is to re-sync in-progress builds. If and only if the first stage finishes successfully, the second stage with syncing new builds is started. To follow this requirement, `_syncInProgressBuilds` and `_syncBuilds` finish with `InteractionResult` instances._
 
 The in-progress builds introduction adds a new controlling parameter for the sync algorithm. This parameter controls the timeout duration for in-progress builds. According to the definition, if the in-progress build duration is greater than the configured timeout duration, this build is considered as finished with an unknown status (i.e., `BuildStatus.unknown`). The described parameter is called **in-progress timeout**. The `SyncConfig` provides controlling parameters and other configurations to the sync algorithm. Thus, the **in-progress timeout** should be a part of the `SyncConfig` class. Therefore, `SyncConfig` class updates include adding the `inProgressTimeout` field having the `Duration` type.
+
+##### Sync Algorithm Stages
+
+As the `CiIntegration` class is used to perform the synchronization algorithm, it should be updated to call the given stages. The list of stages should be integrated to the `CiIntegration` instance in the `SyncCommand` class. The proper list of stages is created by the `SyncStagesFactory`. And the algorithm parts are now placed within different classes `InProgressBuildsSyncStage` and `NewBuildsSyncStage` for re-sync in-progress builds and sync new builds respectively. Thus, the `CiIntegration.sync` method should be updated to call the different parts of an algorithm delegating their execution to the appropriate stage classes.
+
+The following table contains classes to implement with a short description:
+
+|Class|Description|
+|---|---|
+|`SyncStage`|An interface representing a stage of the synchronization algorithm.|
+|`BuildsSyncStage`|An abstract class that implements the `SyncStage` interface and provides the common methods for the stages that synchronizes builds.|
+|`InProgressBuildsSyncStage`|An implementation of the `BuildsSyncStage` that represents a stage for re-syncing in-progress builds.|
+|`NewBuildsSyncStage`|An implementation of the `BuildsSyncStage` that represents a stage for syncing new builds.|
+|`SyncStagesFactory`|A factory class that creates a list of stages for the synchronization algorithm in the proper order.|
+
+The re-syncing in-progress builds stage is described within the [Re-Sync In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
 
 As in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
 
@@ -90,7 +93,7 @@ As in the [Builds Synchronization](https://github.com/platform-platform/monorepo
 
 #### Source Client
 
-The `SourceClient` is an interface for `source` clients that provide abilities to fetch builds for synchronization. As mentioned in the [Sync Algorithm](#sync-algorithm) section, the in-progress builds introduction requires adding the re-syncing in-progress builds stage into the sync algorithm. For this stage, `source` clients should be able to fetch a build by the specified build number. Thus, the `SourceClient` should be updated with the appropriate method for the concrete build fetching. The required method is the `SourceClient.fetchBuild` method.
+The `SourceClient` is an interface for `source` clients that provide abilities to fetch builds for synchronization. As mentioned in the [Sync Algorithm](#sync-algorithm) section, the in-progress builds introduction requires adding the re-syncing in-progress builds stage into the sync algorithm. For this stage, `source` clients should be able to fetch a build by the specified build number. Thus, the `SourceClient` should be updated with the appropriate method for the concrete build fetching. The required method is the `SourceClient.fetchOneBuild` method.
 
 The following class diagram demonstrates the structure of `source` clients:
 
@@ -111,7 +114,7 @@ To allow fetching running builds, the method described above is to be updated by
 
 _**Note**: Generally speaking, this method can be inlined as it is used only in one place. However, keeping this logic separately is better according to the SOLID principles. Thus, the method that maps a list of builds doesn't know conditions to filter these builds and calls the responsible method._
 
-Also, the `JenkinsSourceClientAdapter` should now implement the new `fetchBuild` method to match the `SourceClient` interface. The adapter should use the specified `JenkinsClient` instance to fetch the build with the given number.
+Also, the `JenkinsSourceClientAdapter` should now implement the new `fetchOneBuild` method to match the `SourceClient` interface. The adapter should use the specified `JenkinsClient` instance to fetch the build with the given number.
 
 ##### Buildkite Integration
 
@@ -151,7 +154,7 @@ So, in-progress builds introduction requires the `BuildkiteSourceClientAdapter` 
   }
 ```
 
-Also, the `BuildkiteSourceClientAdapter` should now implement the new `fetchBuild` method to match the `SourceClient` interface. The adapter should use the specified `BuildkiteClient` instance to fetch the build with the given number.
+Also, the `BuildkiteSourceClientAdapter` should now implement the new `fetchOneBuild` method to match the `SourceClient` interface. The adapter should use the specified `BuildkiteClient` instance to fetch the build with the given number.
 
 ##### GitHub Actions Integration
 
@@ -197,7 +200,7 @@ According to the table above, the `GithubActionsSourceClientAdapter` should fetc
 
 Then, runs and jobs having the status `queued` should be filtered out manually. Consider [List workflow runs for a repository](https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository) and [List jobs for a workflow run](https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run) sections of the [GitHub Actions API](https://docs.github.com/en/rest/reference/actions) documentation for more information.
 
-Also, the `GithubActionsSourceClientAdapter` should now implement the new `fetchBuild` method to match the `SourceClient` interface. The adapter should use the specified `GithubActionsClient` instance to fetch the build with the given number.
+Also, the `GithubActionsSourceClientAdapter` should now implement the new `fetchOneBuild` method to match the `SourceClient` interface. The adapter should use the specified `GithubActionsClient` instance to fetch the build with the given number.
 
 #### Destination Client
 

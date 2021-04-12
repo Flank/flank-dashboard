@@ -4,7 +4,7 @@
 package integration.interface as Interface {
     package source {
         interface SourceClient {
-            + fetchBuild(String projectId, int buildNumber): BuildData
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
             + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
             + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
             + fetchCoverage(BuildData build): Percent

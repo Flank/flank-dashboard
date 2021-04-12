@@ -11,7 +11,7 @@ note right of InProgressBuildsSyncStage: //BuildData newBuild//
 ||8||
 InProgressBuildsSyncStage -> InProgressBuildsSyncStage ++ : _fetchBuild(//config.sourceProjectId, build.buildNumber//)
 group try [build fetched successfully]
-    InProgressBuildsSyncStage -> SourceClient ++ : fetchBuild(//config.sourceProjectId, build.buildNumber//)
+    InProgressBuildsSyncStage -> SourceClient ++ : fetchOneBuild(//config.sourceProjectId, build.buildNumber//)
     return //sourceBuild//
     note right of InProgressBuildsSyncStage: //refreshedBuild = sourceBuild//
 else catch error

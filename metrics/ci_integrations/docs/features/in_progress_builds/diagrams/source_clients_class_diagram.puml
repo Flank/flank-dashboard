@@ -5,7 +5,7 @@ hide empty members
 
 package integration.interface.source.client {
     interface SourceClient {
-        + fetchBuild(String projectId, int buildNumber): BuildData
+        + fetchOneBuild(String projectId, int buildNumber): BuildData
         + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
         + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
         + fetchCoverage(BuildData build): Percent
@@ -18,7 +18,7 @@ package source {
         class BuildkiteSourceClientAdapter {
             + buildkiteClient: BuildkiteClient
             --
-            + fetchBuild(String projectId, int buildNumber): BuildData
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
             + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
             + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
             + fetchCoverage(BuildData build): Percent
@@ -34,7 +34,7 @@ package source {
             + coverageArtifactName: String
             + archiveHelper: ArchiveHelper
             --
-            + fetchBuild(String projectId, int buildNumber): BuildData
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
             + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
             + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
             + fetchCoverage(BuildData build): Percent
@@ -47,7 +47,7 @@ package source {
         class JenkinsSourceClientAdapter {
             + jenkinsClient: JenkinsClient
             --
-            + fetchBuild(String projectId, int buildNumber): BuildData
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
             + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
             + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
             + fetchCoverage(BuildData build): Percent
