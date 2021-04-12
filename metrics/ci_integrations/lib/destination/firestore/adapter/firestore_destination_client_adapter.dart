@@ -109,9 +109,9 @@ class FirestoreDestinationClientAdapter
   }
 
   @override
-  Future<void> updateBuilds(String projectId, List<BuildData> newBuilds) async {
+  Future<void> updateBuilds(String projectId, List<BuildData> builds) async {
     ArgumentError.checkNotNull(projectId, 'projectId');
-    ArgumentError.checkNotNull(newBuilds, 'newBuilds');
+    ArgumentError.checkNotNull(builds, 'newBuilds');
 
     if (!await _projectExists(projectId)) {
       throw ArgumentError(
@@ -119,17 +119,21 @@ class FirestoreDestinationClientAdapter
       );
     }
 
-    for (final newBuild in newBuilds) {
-      final buildId = newBuild.id;
+    final updatedBuilds = builds.map(
+      (build) => build.copyWith(projectId: projectId),
+    );
+
+    for (final build in updatedBuilds) {
+      final buildId = build.id;
 
       final oldBuild = _firestore.collection('build').document(buildId);
 
       try {
-        await oldBuild.update(newBuild.toJson());
+        await oldBuild.update(build.toJson());
       } on fd.FirestoreException catch (e) {
         throw DestinationError(
           message:
-              'Failed to update the following build ${newBuild.id} with the following error: ${e.message}',
+              'Failed to update the following build ${build.id} with the following error: ${e.message}',
         );
       }
     }
@@ -138,15 +142,21 @@ class FirestoreDestinationClientAdapter
   /// Returns `true` if a project with the given [projectId] exists.
   ///
   /// Otherwise, returns `false`.
+  ///
+  /// Throws a [DestinationError] if fetching a project with the given
+  /// [projectId] fails.
   Future<bool> _projectExists(String projectId) async {
-    final project = await _firestore
-        .collection(
-          'projects',
-        )
-        .document(projectId)
-        .get();
+    try {
+      final project =
+          await _firestore.collection('projects').document(projectId).get();
 
-    return project.exists;
+      return project.exists;
+    } on fd.FirestoreException catch (e) {
+      throw DestinationError(
+        message:
+            'Failed to fetch a project with the $projectId id due to the following error: ${e.message}',
+      );
+    }
   }
 
   @override
