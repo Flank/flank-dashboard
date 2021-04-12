@@ -80,5 +80,16 @@ class FirestoreDestinationClientAdapter
   }
 
   @override
+  Future<List<BuildData>> fetchBuildsWithStatus(
+    String projectId,
+    BuildStatus status,
+  ) {
+    return Future.value(const []);
+  }
+
+  @override
+  Future<void> updateBuilds(String projectId, List<BuildData> builds) async {}
+
+  @override
   void dispose() {}
 }
