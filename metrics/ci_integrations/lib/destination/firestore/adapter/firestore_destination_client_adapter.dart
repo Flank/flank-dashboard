@@ -84,6 +84,10 @@ class FirestoreDestinationClientAdapter
     String projectId,
     BuildStatus status,
   ) async {
+    logger.info(
+      'Fetching builds for the project id $projectId with status: $status...',
+    );
+
     ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(status, 'status');
 
@@ -110,6 +114,10 @@ class FirestoreDestinationClientAdapter
 
   @override
   Future<void> updateBuilds(String projectId, List<BuildData> builds) async {
+    logger.info(
+      'Updating builds for the project id $projectId...',
+    );
+
     ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(builds, 'newBuilds');
 
@@ -147,6 +155,10 @@ class FirestoreDestinationClientAdapter
   /// [projectId] fails.
   Future<bool> _projectExists(String projectId) async {
     try {
+      logger.info(
+        'Ensuring a project with the project id $projectId exists...',
+      );
+
       final project =
           await _firestore.collection('projects').document(projectId).get();
 
