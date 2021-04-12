@@ -121,14 +121,12 @@ void main() {
       return when(_collectionReferenceMock.getDocuments());
     }
 
-    PostExpectation<DocumentReference> whenReferenceBuild({
-      String withId,
-    }) {
+    PostExpectation<DocumentReference> whenReferenceBuild() {
       when(
         _firestoreMock.collection('build'),
       ).thenReturn(_collectionReferenceMock);
 
-      return when(_collectionReferenceMock.document(withId));
+      return when(_collectionReferenceMock.document(any));
     }
 
     setUp(() {
@@ -374,7 +372,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsWithStatus() references 'build' collection",
+      ".fetchBuildsWithStatus() references the 'build' collection",
       () async {
         whenFetchBuildsWithStatus().thenAnswer((_) => Future.value([]));
 
@@ -503,7 +501,7 @@ void main() {
     );
 
     test(
-      ".updateBuilds() throws a DestinationError if fetching a project with the given id fails",
+      ".updateBuilds() throws a DestinationError if fetching a project with the given project id fails",
       () {
         whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
@@ -525,15 +523,13 @@ void main() {
     );
 
     test(
-      ".updateBuilds() references old builds with the given builds' ids in the given order",
+      ".updateBuilds() gets old builds using the given builds' ids",
       () async {
         whenCheckProjectExists().thenReturn(true);
-
-        for (final build in builds) {
-          whenReferenceBuild(
-            withId: build.id,
-          ).thenReturn(_documentReferenceMock);
-        }
+        whenReferenceBuild().thenReturn(_documentReferenceMock);
+        when(_documentReferenceMock.update(any)).thenAnswer(
+          (_) => Future.sync(() {}),
+        );
 
         await adapter.updateBuilds(testProjectId, builds);
 
@@ -546,18 +542,17 @@ void main() {
     );
 
     test(
-      ".updateBuilds() updates old builds with the given ones having the given project id in the given order",
+      ".updateBuilds() updates old builds with the given builds in the given order",
       () async {
         const projectId = 'id';
         final expectedBuilds = builds.map(
           (build) => build.copyWith(projectId: projectId),
         );
         whenCheckProjectExists(withProjectId: projectId).thenReturn(true);
-        for (final build in expectedBuilds) {
-          whenReferenceBuild(
-            withId: build.id,
-          ).thenReturn(_documentReferenceMock);
-        }
+        whenReferenceBuild().thenReturn(_documentReferenceMock);
+        when(_documentReferenceMock.update(any)).thenAnswer(
+          (_) => Future.sync(() {}),
+        );
 
         await adapter.updateBuilds(projectId, builds);
 
@@ -570,22 +565,26 @@ void main() {
     );
 
     test(
-      ".updateBuilds() throws a DestinationError if updating a project fails",
-      () {
+      ".updateBuilds() continues updating other builds if updating one of the given builds fails",
+      () async {
+        const firstBuild = BuildData(buildNumber: 1, projectId: testProjectId);
+        const secondBuild = BuildData(buildNumber: 2, projectId: testProjectId);
+        const builds = [firstBuild, secondBuild];
+
         whenCheckProjectExists().thenReturn(true);
-        for (final build in builds) {
-          whenReferenceBuild(
-            withId: build.id,
-          ).thenReturn(_documentReferenceMock);
-        }
+        whenReferenceBuild().thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(any)).thenAnswer(
           (_) => Future.error(firestoreException),
         );
-
-        expect(
-          () => adapter.updateBuilds(testProjectId, builds),
-          throwsDestinationError,
+        when(_documentReferenceMock.update(secondBuild.toJson())).thenAnswer(
+          (_) => Future.sync(() {}),
         );
+
+        await adapter.updateBuilds(testProjectId, builds);
+
+        verify(
+          _documentReferenceMock.update(secondBuild.toJson()),
+        ).called(once);
       },
     );
   });

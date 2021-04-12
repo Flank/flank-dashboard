@@ -119,7 +119,7 @@ class FirestoreDestinationClientAdapter
     );
 
     ArgumentError.checkNotNull(projectId, 'projectId');
-    ArgumentError.checkNotNull(builds, 'newBuilds');
+    ArgumentError.checkNotNull(builds, 'builds');
 
     if (!await _projectExists(projectId)) {
       throw ArgumentError(
@@ -127,24 +127,38 @@ class FirestoreDestinationClientAdapter
       );
     }
 
-    final updatedBuilds = builds.map(
-      (build) => build.copyWith(projectId: projectId),
-    );
+    final updatedBuilds = builds
+        .map(
+          (build) => build.copyWith(projectId: projectId),
+        )
+        .toList();
 
-    for (final build in updatedBuilds) {
+    await _updateBuilds(updatedBuilds);
+  }
+
+  /// Updates the builds having the same [BuildData.id] with the given [builds].
+  ///
+  /// Logs any errors occurred when updating builds.
+  Future<void> _updateBuilds(List<BuildData> builds) {
+    final updateFutures = <Future<void>>[];
+
+    for (final build in builds) {
       final buildId = build.id;
 
       final oldBuild = _firestore.collection('build').document(buildId);
 
-      try {
-        await oldBuild.update(build.toJson());
-      } on fd.FirestoreException catch (e) {
-        throw DestinationError(
-          message:
-              'Failed to update the following build ${build.id} with the following error: ${e.message}',
-        );
-      }
+      final updateFuture = oldBuild.update(build.toJson()).catchError(
+        (error) {
+          logger.info(
+            'Failed to update the following build ${build.id} with the following error: $error',
+          );
+        },
+      );
+
+      updateFutures.add(updateFuture);
     }
+
+    return Future.wait(updateFutures);
   }
 
   /// Returns `true` if a project with the given [projectId] exists.
