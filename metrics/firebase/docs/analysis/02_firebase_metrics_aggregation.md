@@ -18,14 +18,11 @@ Advanced queries in Cloud Firestore allow quickly find documents in large collec
 
 Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation somehow, because of the Firestore limitations.
 
-<!-- Cloud Firestore does not support native aggregation queries. However, we can use [Cloud Functions to easily maintain aggregate information](#aggregating-data-using-the-cloud-functions). -->
-
-
 ## Objectives of the analysis
 
 > This section serves as a summary of the proposed analysis.
 
-As, Cloud Firestore does not support the aggregation queries we need to analyze existing approaches to provide metrics calculations. Each solution, must be described with theirs pros and cons.
+As Cloud Firestore does not support the aggregation queries we need to analyze existing approaches to provide metrics calculations. Each solution, must be described with theirs pros and cons.
 
 The last section, [Decision](#decision), holds a summary of the analysis and the approach we've chosen.
 
@@ -34,7 +31,7 @@ The last section, [Decision](#decision), holds a summary of the analysis and the
 > Look for existing solutions in the area.
 
 There are a few approaches to get data for the aggregated metrics:
-- Load all collection's documents.
+- Load all collection's documents and provide aggregation using the client.
 - Aggregate data in the Firestore Cloud Functions using:
   - `transaction`;
   - `FieldValue.increment`;
@@ -57,7 +54,7 @@ Cons:
 
 With Cloud Functions, we can move our aggregation logic to the cloud and process calculations on the back-end, provided by Firebase.
 
-There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#FieldValue.increment) method or create a [Distributed counter](#distributed-counter).
+There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#fieldValue.increment) method or create a [Distributed counter](#distributed-counter).
 
 #### Firebase transactions
 
@@ -111,6 +108,6 @@ Cons:
 
 As we possibly have a concurrent updates, we can't use the transaction method, because some of counter increments may fail.
 
-The [Distributed counter](#distributed-counter) is too complicated for our purposes. Also, the document writes is not so frequent.
+The [Distributed counter](#distributed-counter) is too complicated for our purposes. Also, document writes is not so frequent.
 
 So, after the analysis of possible approaches of data aggregation, theirs pros and cons, we should use the [FieldValue.increment](#FieldValue.increment) approach.
