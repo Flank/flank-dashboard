@@ -24,11 +24,11 @@ class Deployer {
   /// A class that provides methods for working with the Git.
   final GitService _gitService;
 
-  /// A class that provides methods for working with the file system.
-  final FileHelper _fileHelper;
-
   /// A class that provides methods for working with the Firebase.
   final FirebaseCommand _firebaseCommand;
+
+  /// A class that provides methods for working with the file system.
+  final FileHelper _fileHelper;
 
   /// Creates a new instance of the [Deployer] with the given services.
   ///
@@ -43,8 +43,7 @@ class Deployer {
     Services services,
     FirebaseCommand firebaseCommand,
     FileHelper fileHelper,
-  })  :
-        _flutterService = services?.flutterService,
+  })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _gitService = services?.gitService,

@@ -18,15 +18,15 @@ void main() {
   group("DoctorFactory", () {
     final servicesFactory = ServicesFactoryMock();
     final doctorFactory = DoctorFactory(servicesFactory);
-    final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
-    final gitService = GitServiceMock();
+    final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
+    final gitService = GitServiceMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
+      npmService: npmService,
       gitService: gitService,
-        npmService: npmService,
     );
 
     PostExpectation<Services> whenCreateServices() {

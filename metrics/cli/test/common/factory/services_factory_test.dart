@@ -13,20 +13,20 @@ void main() {
     const servicesFactory = ServicesFactory();
 
     test(
-      ".create() creates a Services instance with the GCloud service adapter",
-      () {
-        final services = servicesFactory.create();
-
-        expect(services.gcloudService, isA<GCloudCliServiceAdapter>());
-      },
-    );
-
-    test(
       ".create() creates a Services instance with the Flutter service adapter",
       () {
         final services = servicesFactory.create();
 
         expect(services.flutterService, isA<FlutterCliServiceAdapter>());
+      },
+    );
+
+    test(
+      ".create() creates a Services instance with the GCloud service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.gcloudService, isA<GCloudCliServiceAdapter>());
       },
     );
 
@@ -41,7 +41,7 @@ void main() {
 
     test(
       ".create() creates a Services instance with the Git service adapter",
-          () {
+      () {
         final services = servicesFactory.create();
 
         expect(services.gitService, isA<GitCliServiceAdapter>());

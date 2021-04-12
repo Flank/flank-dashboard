@@ -15,8 +15,8 @@ void main() {
   group("Services", () {
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
-    final gitService = GitServiceMock();
     final npmService = NpmServiceMock();
+    final gitService = GitServiceMock();
 
     test(
       "throws an ArgumentError if the given Flutter service is null",
@@ -25,8 +25,8 @@ void main() {
           () => Services(
             flutterService: null,
             gcloudService: gcloudService,
-            gitService: gitService,
             npmService: npmService,
+            gitService: gitService,
           ),
           throwsArgumentError,
         );
@@ -65,26 +65,12 @@ void main() {
 
     test(
       "throws an ArgumentError if the given Git service is null",
-          () {
-        expect(
-              () => Services(
-            flutterService: flutterService,
-            gcloudService: gcloudService,
-            gitService: null,
-            npmService: npmService,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given Git service is null",
-          () {
+      () {
         expect(
           () => Services(
             flutterService: flutterService,
             gcloudService: gcloudService,
+            npmService: npmService,
             gitService: null,
           ),
           throwsArgumentError,

@@ -5,10 +5,10 @@ import 'package:cli/flutter/adapter/flutter_cli_service_adapter.dart';
 import 'package:cli/flutter/cli/flutter_cli.dart';
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
-import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
-import 'package:cli/npm/cli/npm_cli.dart';
 import 'package:cli/git/adapter/git_cli_service_adapter.dart';
 import 'package:cli/git/cli/git_cli.dart';
+import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
+import 'package:cli/npm/cli/npm_cli.dart';
 import 'package:cli/prompt/prompter.dart';
 import 'package:cli/prompt/writer/io_prompt_writer.dart';
 
@@ -24,8 +24,8 @@ class ServicesFactory {
 
     final flutterCli = FlutterCli();
     final gcloudCli = GCloudCli();
-    final gitCli = GitCli();
     final npmCli = NpmCli();
+    final gitCli = GitCli();
 
     final flutterService = FlutterCliServiceAdapter(flutterCli);
     final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
@@ -35,8 +35,8 @@ class ServicesFactory {
     return Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
-      gitService: gitService,
       npmService: npmService,
+      gitService: gitService,
     );
   }
 }
