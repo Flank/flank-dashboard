@@ -36,7 +36,7 @@ The synchronization is performed by the `CiIntegration.sync` method. This method
 
 ||Description|
 |--|--|
-|**Input**|A list of `SyncStages`, an instance of `SyncConfig` with project identifiers for both `source` and `destination`, and _sync parameters_|
+|**Input**|An instance of `SyncConfig` with project identifiers for both `source` and `destination`, and _sync parameters_|
 |**Output**|An instance of `InteractionResult` with a message about the synchronization result|
 
 The above table is not complete meaning that the sync algorithm can throw an error at some point if something went wrong. These errors are strongly related to concrete implementations of `source` and `destination` integrations and thus are not examined.
