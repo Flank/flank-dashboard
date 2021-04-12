@@ -21,6 +21,8 @@ package integration.interface as Interface {
             + dispose(): void
         }
     }
+
+    SourceClient -[hidden]down- DestinationClient
 }
 
 package integration.ci as CI {
@@ -34,24 +36,60 @@ package integration.ci as CI {
         }
     }
 
+    package sync_stage {
+        class SyncStagesFactory {
+            + source: SourceClient
+            + destination: DestinationClient
+            + create(): List<SyncStage>
+        }
+
+        package builds {
+            abstract class BuildsSyncStage {
+                + {abstract} source: SourceClient
+                + {abstract} destination: DestinationClient
+                + {abstract} call(SyncConfig): FutureOr<InteractionResult>
+                + addCoverageData(List<BuildData> builds): List<BuildData>
+            }
+            class InProgressBuildsSyncStage extends BuildsSyncStage {
+                + source: SourceClient
+                + destination: DestinationClient
+                + call(SyncConfig): Future<InteractionResult>
+                - _syncInProgressBuild(SyncConfig config, BuildData build): BuildData
+                - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
+                - _shouldTimeoutBuild(DateTime startedAt, Duration timeout): bool
+            }
+
+            class NewBuildsSyncStage extends BuildsSyncStage {
+                + source: SourceClient
+                + destination: DestinationClient
+                + call(SyncConfig): Future<InteractionResult>
+            }
+        }
+
+        interface SyncStage {
+            + {abstract} source: SourceClient
+            + {abstract} destination: DestinationClient
+            + {abstract} call(SyncConfig): FutureOr<InteractionResult>
+        }
+
+        BuildsSyncStage .up.|> SyncStage
+    }
+
     class CiIntegration {
-        + sourceClient: SourceClient
-        + destinationClient: DestinationClient
-        + sync(SyncConfig config): InteractionResult
-        - _syncInProgressBuilds(SyncConfig config): InteractionResult
-        - _syncInProgressBuild(SyncConfig config, BuildData build): BuildData
-        - _fetchBuild(String sourceProjectId, int buildNumber): BuildData
-        - _shouldTimeoutBuild(DateTime startedAt, Duration timeout): bool
-        - _syncBuilds(SyncConfig config): InteractionResult
-        - _addCoverageData(List<BuildData> builds): List<BuildData>
+        + stages: List<SyncStage>
+        + CiIntegration(List<SyncStage>)
+        + sync(SyncConfig config): Future<InteractionResult>
     }
 
     CiIntegration -right-> SyncConfig: uses
+    SyncStagesFactory -right-> "1..N" SyncStage: creates
+    CiIntegration "1" *-down-> "1..N" SyncStage: uses
 }
 
 Interface -[hidden]down-> CI
 
-CiIntegration -up-> SourceClient: uses
-CiIntegration -up-> DestinationClient: uses
+SyncStage -right-> SourceClient: uses
+SyncStage -right-> DestinationClient: uses
+SyncStage -up-> SyncConfig: uses
 
 @enduml

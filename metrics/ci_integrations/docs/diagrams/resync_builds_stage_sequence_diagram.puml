@@ -3,32 +3,32 @@
 
 skinparam SequenceMessageAlignment center
 
-participant CiIntegration
+participant InProgressBuildsSyncStage
 participant SourceClient
 participant DestinationClient
 
-?-> CiIntegration ++ : _syncInProgressBuilds(//config//)
+?-> InProgressBuildsSyncStage ++ : call(//config//)
 |||
-CiIntegration -> DestinationClient ++ : fetchBuildsWithStatus(//config.destinationProjectId, BuildStatus.inProgress//)
+InProgressBuildsSyncStage -> DestinationClient ++ : fetchBuildsWithStatus(//config.destinationProjectId, BuildStatus.inProgress//)
 return //buildsInProgress//
-note right of CiIntegration: //final buildsUpdate = []//
+note right of InProgressBuildsSyncStage: //final buildsUpdate = []//
 loop for each //build// in //buildsInProgress//
-    CiIntegration -> CiIntegration ++ : _syncInProgressBuild(//config, build//)
+    InProgressBuildsSyncStage -> InProgressBuildsSyncStage ++ : _syncInProgressBuild(//config, build//)
     return //refreshedBuild//
     |||
     opt //refreshedBuild// != null
-        note right of CiIntegration: //buildsUpdate.add(refreshedBuild)//
+        note right of InProgressBuildsSyncStage: //buildsUpdate.add(refreshedBuild)//
     end
 end
 |||
-opt config.coverage
+opt //config.coverage//
     ||8||
-    CiIntegration -> CiIntegration ++ : //_addCoverageData(buildsUpdate)//
+    InProgressBuildsSyncStage -> InProgressBuildsSyncStage ++ : //addCoverageData(buildsUpdate)//
     return //buildsUpdate//
     ||8||
 end
 
-CiIntegration -> DestinationClient ++ : updateBuilds(//config.destinationProjectId, buildsUpdate//)
+InProgressBuildsSyncStage -> DestinationClient ++ : updateBuilds(//config.destinationProjectId, buildsUpdate//)
 return void
 
 return InteractionResult
