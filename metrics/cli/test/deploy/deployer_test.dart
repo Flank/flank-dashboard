@@ -16,6 +16,8 @@ import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_command_mock.dart';
 import '../test_utils/matchers.dart';
+import '../test_utils/npm_service_mock.dart';
+import '../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -25,13 +27,16 @@ void main() {
     const firebaseToken = 'testToken';
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
+    final npmService = NpmServiceMock();
     final firebaseCommand = FirebaseCommandMock();
     final gitCommand = GitCommandMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
+    final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
+      npmService: npmService,
     );
     final deployer = Deployer(
       services: services,
@@ -55,18 +60,62 @@ void main() {
     tearDown(() {
       reset(gcloudService);
       reset(flutterService);
+      reset(npmService);
       reset(firebaseCommand);
       reset(gitCommand);
       reset(fileHelper);
       reset(directory);
+      reset(servicesMock);
     });
 
     test(
-      "throws an ArgumentError if the given services is null",
+      "throws an ArgumentError if the Flutter service in the given services is null",
       () {
+        when(servicesMock.flutterService).thenReturn(null);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
+
         expect(
           () => Deployer(
-            services: null,
+            services: servicesMock,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the GCloud service in the given services is null",
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(null);
+        when(servicesMock.npmService).thenReturn(npmService);
+
+        expect(
+          () => Deployer(
+            services: servicesMock,
+            firebaseCommand: firebaseCommand,
+            gitCommand: gitCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Npm service in the given services is null",
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(null);
+
+        expect(
+          () => Deployer(
+            services: servicesMock,
             firebaseCommand: firebaseCommand,
             gitCommand: gitCommand,
             fileHelper: fileHelper,
@@ -228,6 +277,35 @@ void main() {
         verify(gitCommand.clone(
           DeployConstants.repoURL,
           DeployConstants.tempDir,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository before installing the npm dependencies",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
+          npmService.installDependencies(DeployConstants.firebasePath),
+          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+
+        await deployer.deploy();
+
+        verify(npmService.installDependencies(DeployConstants.firebasePath))
+            .called(once);
+        verify(npmService.installDependencies(
+          DeployConstants.firebaseFunctionsPath,
         )).called(once);
       },
     );

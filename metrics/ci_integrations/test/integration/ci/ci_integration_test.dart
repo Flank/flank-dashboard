@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -185,6 +185,7 @@ void main() {
           destinationProjectId: 'test',
           coverage: true,
           initialSyncLimit: 10,
+          inProgressTimeout: const Duration(minutes: 1),
         );
 
         int calledTimes = 0;

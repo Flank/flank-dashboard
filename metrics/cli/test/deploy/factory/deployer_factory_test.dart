@@ -7,15 +7,24 @@ import 'package:cli/deploy/factory/deployer_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/flutter_service_mock.dart';
+import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/matchers.dart';
+import '../../test_utils/npm_service_mock.dart';
 import '../../test_utils/services_factory_mock.dart';
-import '../../test_utils/services_mock.dart';
 
 void main() {
   group("DeployerFactory", () {
     final servicesFactory = ServicesFactoryMock();
-    final services = ServicesMock();
     final deployerFactory = DeployerFactory(servicesFactory);
+    final gcloudService = GCloudServiceMock();
+    final flutterService = FlutterServiceMock();
+    final npmService = NpmServiceMock();
+    final services = Services(
+      flutterService: flutterService,
+      gcloudService: gcloudService,
+      npmService: npmService,
+    );
 
     PostExpectation<Services> whenCreateServices() {
       return when(servicesFactory.create());

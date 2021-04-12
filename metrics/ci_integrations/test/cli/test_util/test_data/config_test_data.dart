@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
@@ -49,6 +49,7 @@ class ConfigTestData {
     destinationProjectId: FirestoreConfigTestData.metricsProjectId,
     sourceProjectId: JenkinsConfigTestData.jobName,
     initialSyncLimit: 20,
+    inProgressTimeout: const Duration(minutes: 20),
     coverage: false,
   );
 }
