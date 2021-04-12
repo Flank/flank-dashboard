@@ -177,19 +177,19 @@ When a user starts the synchronization process, the tool creates the `CiIntegrat
 
 First, the `CiIntegration.sync` calls the `InProgressBuildsSyncStage.call` method on the given stage instance. This call re-syncs in-progress builds. The sequence diagram below details the method's algorithm:
 
-![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
+![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
 In the above diagram, the method `_syncInProgressBuild` re-syncs a single in-progress build returning either a new build data to store or `null` (meaning the build has no updates). The following sequence diagram explains the activity diagram for a single build from the [Re-Sync In-Progress Builds](#re-sync-in-progress-builds) section:
 
-![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
+![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
 
 After the re-syncing process completes, the sync algorithm proceeds to the sync builds stage and calls the `NewBuildsSyncStage.call` method on the given stage instance. The sequence diagram below details the method's algorithm:
 
-![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
+![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
 
 Both of the above stages uses the `BuildsSyncStage.addCoverageData` method to fetch coverage for builds if the appropriate configuration is enabled. The diagram below examines the coverage fetching for the given list of builds:
 
-![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
+![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?
