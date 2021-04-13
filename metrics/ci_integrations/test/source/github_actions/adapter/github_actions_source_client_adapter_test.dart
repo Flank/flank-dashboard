@@ -31,6 +31,7 @@ void main() {
   group("GithubActionsSourceClientAdapter", () {
     const jobName = 'job';
     const fetchLimit = 28;
+    const buildNumber = 1;
     final testData = GithubActionsTestDataGenerator(
       workflowIdentifier: 'workflow',
       jobName: jobName,
@@ -1172,11 +1173,766 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() returns null",
-      () async {
-        final result = await adapter.fetchOneBuild(jobName, 1);
+      ".fetchOneBuild() throws an ArgumentError if the given job name is null",
+      () {
+        final buildFuture = adapter.fetchOneBuild(null, buildNumber);
 
-        expect(result, isNull);
+        expect(buildFuture, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given build number is null",
+      () {
+        final buildFuture = adapter.fetchOneBuild(jobName, null);
+
+        expect(buildFuture, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() fetches the latest workflow run",
+      () async {
+        const workflowRunsPage = WorkflowRunsPage(values: []);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verify(githubActionsClientMock.fetchWorkflowRuns(
+          any,
+          status: anyNamed('status'),
+          page: 1,
+          perPage: 1,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if there are no workflow runs",
+      () {
+        const emptyRunsPage = WorkflowRunsPage(values: []);
+        whenFetchWorkflowRuns().thenSuccessWith(emptyRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the GitHub Actions client returns the page with null values while fetching the latest workflow run",
+      () {
+        const workflowRunsPage = WorkflowRunsPage();
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, 2);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the workflow with the given build number is skipped",
+      () {
+        const workflowRun = WorkflowRun(
+          number: buildNumber,
+          conclusion: GithubActionConclusion.skipped,
+        );
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if there is no workflow run with the given number",
+      () {
+        final workflowRuns = testData.generateWorkflowRunsByNumbers(
+          runNumbers: [1, 3, 4],
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, 2);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the latest workflow run's number is less than the given build number",
+      () {
+        final latestWorkflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber - 1,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [latestWorkflowRun]);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(
+          jobName,
+          buildNumber,
+        );
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if the latest workflow run fetching failed",
+      () {
+        whenFetchWorkflowRuns().thenErrorWith();
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() fetches the latest workflow runs up to the run with the given build number if the latest workflow run is greater than the given build number",
+      () async {
+        const latestRunNumber = buildNumber + 3;
+        const expectedBuildsToFetch = latestRunNumber - buildNumber + 1;
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: latestRunNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verify(githubActionsClientMock.fetchWorkflowRuns(
+          any,
+          status: anyNamed('status'),
+          perPage: expectedBuildsToFetch,
+          page: 1,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if the latest builds fetching failed",
+      () {
+        const latestRunNumber = buildNumber + 3;
+        const expectedBuildsToFetch = latestRunNumber - buildNumber + 1;
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: latestRunNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+
+        when(githubActionsClientMock.fetchWorkflowRuns(
+          any,
+          status: anyNamed('status'),
+          perPage: 1,
+          page: 1,
+        )).thenSuccessWith(workflowRunsPage);
+
+        when(githubActionsClientMock.fetchWorkflowRuns(
+          any,
+          status: anyNamed('status'),
+          perPage: expectedBuildsToFetch,
+          page: 1,
+        )).thenErrorWith();
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() fetches the first workflow run jobs page for the workflow run with the given build number",
+      () async {
+        const runId = 1;
+        final workflowRun = testData.generateWorkflowRun(
+          id: runId,
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verify(githubActionsClientMock.fetchRunJobs(
+          runId,
+          status: anyNamed('status'),
+          page: 1,
+          perPage: anyNamed('perPage'),
+        )).called(once);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the first workflow run jobs page does not contain the job with the given name and does not have the next page",
+      () {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJobsPage = WorkflowRunJobsPage(values: []);
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the first workflow run jobs page contains skipped job with the given name",
+      () {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const skippedRunJob = WorkflowRunJob(
+          name: jobName,
+          conclusion: GithubActionConclusion.skipped,
+        );
+        const workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [skippedRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if the fetching of the first workflow run jobs page fails",
+      () {
+        const runId = 1;
+        final workflowRun = testData.generateWorkflowRun(
+          id: runId,
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          runId,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenErrorWith();
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() does not fetch the next workflow run jobs page if the first one contains the job with the given name",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+          nextPageUrl: testData.url,
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verifyNever(
+          githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage),
+        );
+      },
+    );
+
+    test(
+      ".fetchOneBuild() fetches the workflow run job with the given name using the pagination if the first page does not contain the job with the given name",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: const [],
+          nextPageUrl: testData.url,
+        );
+        final nextWorkflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage))
+            .thenSuccessWith(nextWorkflowRunJobsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verify(githubActionsClientMock.fetchRunJobsNext(
+          workflowRunJobsPage,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the next workflow run jobs page does not have the job with the given name",
+      () {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: const [],
+          nextPageUrl: testData.url,
+        );
+        const nextWorkflowRunJobsPage = WorkflowRunJobsPage(
+          values: [],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage))
+            .thenSuccessWith(nextWorkflowRunJobsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns null if the next workflow run jobs page contains the skipped job with the given name",
+      () {
+        const skippedRunJob = WorkflowRunJob(
+          name: jobName,
+          conclusion: GithubActionConclusion.skipped,
+        );
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: const [],
+          nextPageUrl: testData.url,
+        );
+        const nextWorkflowRunJobsPage = WorkflowRunJobsPage(
+          values: [skippedRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage))
+            .thenSuccessWith(nextWorkflowRunJobsPage);
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, completion(isNull));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if fetching next workflow run jobs page fails",
+      () {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: const [],
+          nextPageUrl: testData.url,
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobsNext(any)).thenErrorWith();
+
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(buildFuture, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run's number to the build number",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.buildNumber, equals(buildNumber));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run job's startedAt to the build startedAt",
+      () async {
+        final expectedStartedAt = DateTime(2007);
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: expectedStartedAt,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.startedAt, equals(expectedStartedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run job's completedAt to the build's startedAt if the job's startedAt is null",
+      () async {
+        final expectedStartedAt = DateTime(2007);
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          completedAt: expectedStartedAt,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.startedAt, equals(expectedStartedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() applies the current date to the build's startedAt if the fetched job's startedAt and completedAt are null",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
+          name: jobName,
+        );
+        const workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched workflow run job's success conclusion to successful build status",
+      () async {
+        const conclusion = GithubActionConclusion.success;
+        const expectedConclusion = BuildStatus.successful;
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          conclusion: conclusion,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.buildStatus, equals(expectedConclusion));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched workflow run job's failure conclusion to failed build status",
+      () async {
+        const conclusion = GithubActionConclusion.failure;
+        const expectedConclusion = BuildStatus.failed;
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          conclusion: conclusion,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.buildStatus, equals(expectedConclusion));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched workflow run job's timed out conclusion to failed build status",
+      () async {
+        const conclusion = GithubActionConclusion.timedOut;
+        const expectedConclusion = BuildStatus.failed;
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          conclusion: conclusion,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.buildStatus, equals(expectedConclusion));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched workflow run job's conclusion different from success, failure or timed out to unknown build status",
+      () async {
+        const conclusion = GithubActionConclusion.actionRequired;
+        const expectedConclusion = BuildStatus.unknown;
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          conclusion: conclusion,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.buildStatus, equals(expectedConclusion));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() calculates duration based on the job's startedAt and completedAt timestamps",
+      () async {
+        final startedAt = DateTime(2020);
+        final completedAt = DateTime(2021);
+        final expectedDuration = completedAt.difference(startedAt);
+
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: startedAt,
+          completedAt: completedAt,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() sets the zero duration if the fetched workflow run job's startedAt is null",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          completedAt: DateTime(2021),
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() sets the zero duration if the fetched workflow run job's completedAt is null",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: DateTime(2021),
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run job's name to the build's workflow name",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(name: jobName);
+        const workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.workflowName, equals(jobName));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run job's url to the build's url",
+      () async {
+        const url = 'url';
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          url: url,
+        );
+        const workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.url, equals(url));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() sets the empty build url if the fetched job's url is null",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(name: jobName);
+        const workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.url, isEmpty);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the workflow run's api url to the build's api url",
+      () async {
+        const expectedApiUrl = 'apiUrl';
+
+        const workflowRun = WorkflowRun(
+          number: buildNumber,
+          apiUrl: expectedApiUrl,
+        );
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        final build = await adapter.fetchOneBuild(jobName, buildNumber);
+
+        expect(build.apiUrl, equals(expectedApiUrl));
       },
     );
 

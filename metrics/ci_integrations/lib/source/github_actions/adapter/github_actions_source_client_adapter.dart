@@ -95,6 +95,7 @@ class GithubActionsSourceClientAdapter
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
       perPage: 1,
+      status: GithubActionStatus.completed,
     );
 
     final runs = firstRunsPage.values ?? [];
@@ -124,6 +125,66 @@ class GithubActionsSourceClientAdapter
     return _mapArtifactToCoverage(artifactBytes);
   }
 
+  @override
+  Future<BuildData> fetchOneBuild(String jobName, int buildNumber) async {
+    ArgumentError.checkNotNull(jobName, 'jobName');
+    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+
+    logger.info(
+      'Fetching $jobName build with the build number equal to $buildNumber...',
+    );
+
+    final run = await _fetchWorkflowRun(
+      buildNumber,
+    );
+
+    if (run == null || !_isConclusionValid(run.conclusion)) {
+      return null;
+    }
+
+    final job = await _fetchJob(run, jobName);
+
+    if (job == null || !_isConclusionValid(job.conclusion)) {
+      return null;
+    }
+
+    return _mapJobToBuildData(job, run);
+  }
+
+  /// Fetches the [WorkflowRun] with the given [runNumber].
+  ///
+  /// Returns `null` if there is no workflow run with the given [runNumber].
+  Future<WorkflowRun> _fetchWorkflowRun(int runNumber) async {
+    final latestWorkflowRunsPage = await _fetchRunsPage(
+      page: 1,
+      perPage: 1,
+    );
+    final latestWorkflowRuns = latestWorkflowRunsPage.values;
+
+    if (latestWorkflowRuns == null || latestWorkflowRuns.isEmpty) return null;
+
+    final latestWorkflowRun = latestWorkflowRuns.first;
+    final latestWorkflowRunNumber = latestWorkflowRun.number;
+
+    if (latestWorkflowRunNumber < runNumber) return null;
+
+    if (latestWorkflowRunNumber == runNumber) {
+      return latestWorkflowRun;
+    }
+
+    final numberOfRunsToFetch = latestWorkflowRunNumber - runNumber + 1;
+    final workflowRunsPage = await _fetchRunsPage(
+      page: 1,
+      perPage: numberOfRunsToFetch,
+    );
+    final workflowRuns = workflowRunsPage.values;
+
+    return workflowRuns.firstWhere(
+      (run) => run.number == runNumber,
+      orElse: () => null,
+    );
+  }
+
   /// Fetches the latest builds by the given [jobName].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
@@ -140,6 +201,7 @@ class GithubActionsSourceClientAdapter
     WorkflowRunsPage runsPage = await _fetchRunsPage(
       page: 1,
       perPage: defaultPerPage,
+      status: GithubActionStatus.completed,
     );
 
     do {
@@ -168,9 +230,7 @@ class GithubActionsSourceClientAdapter
       }
 
       if (hasNext) {
-        final interaction =
-            await githubActionsClient.fetchWorkflowRunsNext(runsPage);
-        runsPage = _processInteraction(interaction);
+        runsPage = await _fetchNextRunsPage(runsPage);
       }
     } while (hasNext);
 
@@ -182,20 +242,16 @@ class GithubActionsSourceClientAdapter
   Future<WorkflowRunsPage> _fetchRunsPage({
     int page,
     int perPage,
+    GithubActionStatus status,
   }) async {
     final interaction = await githubActionsClient.fetchWorkflowRuns(
       workflowIdentifier,
-      status: GithubActionStatus.completed,
+      status: status,
       page: page,
       perPage: perPage,
     );
 
     return _processInteraction(interaction);
-  }
-
-  @override
-  Future<BuildData> fetchOneBuild(String projectId, int buildNumber) {
-    return Future.value();
   }
 
   /// Maps the given [job] and [run] to the [BuildData] instance.
@@ -219,17 +275,11 @@ class GithubActionsSourceClientAdapter
   Future<WorkflowRunJob> _fetchJob(WorkflowRun run, String jobName) async {
     final runId = run.id;
 
-    final interaction = await githubActionsClient.fetchRunJobs(
-      runId,
-      page: 1,
-      perPage: defaultPerPage,
-    );
-
-    WorkflowRunJobsPage page = _processInteraction(interaction);
+    WorkflowRunJobsPage runJobsPage = await _fetchWorkflowRunJobs(runId);
     bool hasNext = false;
 
     do {
-      final jobs = page.values;
+      final jobs = runJobsPage.values;
 
       final job = jobs.firstWhere(
         (job) => job.name == jobName,
@@ -240,16 +290,61 @@ class GithubActionsSourceClientAdapter
         return job;
       }
 
-      hasNext = page.hasNextPage;
+      hasNext = runJobsPage.hasNextPage;
 
       if (hasNext) {
-        final interaction = await githubActionsClient.fetchRunJobsNext(page);
-
-        page = _processInteraction(interaction);
+        runJobsPage = await _fetchNextWorkflowRunJobs(runJobsPage);
       }
     } while (hasNext);
 
     return null;
+  }
+
+  /// Fetches the next [WorkflowRunsPage] after to the given [workflowRunsPage].
+  Future<WorkflowRunsPage> _fetchNextRunsPage(
+    WorkflowRunsPage workflowRunsPage,
+  ) async {
+    final interaction = await githubActionsClient.fetchWorkflowRunsNext(
+      workflowRunsPage,
+    );
+
+    return _processInteraction(interaction);
+  }
+
+  /// Determines whether the given [conclusion] is valid.
+  ///
+  /// The [conclusion] is valid if and only if it is not equal
+  /// to the [GithubActionConclusion.skipped].
+  bool _isConclusionValid(GithubActionConclusion conclusion) {
+    return conclusion != GithubActionConclusion.skipped;
+  }
+
+  /// Fetches the [WorkflowRunJobsPage] with the given parameters delegating
+  /// them to the [githubActionsClient].
+  ///
+  /// The [page] defaults to `1`.
+  /// The [perPage] defaults to [defaultPerPage].
+  Future<WorkflowRunJobsPage> _fetchWorkflowRunJobs(
+    int runId, {
+    int page = 1,
+    int perPage = defaultPerPage,
+  }) async {
+    final interaction = await githubActionsClient.fetchRunJobs(
+      runId,
+      page: page,
+      perPage: perPage,
+    );
+
+    return _processInteraction(interaction);
+  }
+
+  /// Fetches the next [WorkflowRunJobsPage] after to the given [runJobsPage].
+  Future<WorkflowRunJobsPage> _fetchNextWorkflowRunJobs(
+    WorkflowRunJobsPage runJobsPage,
+  ) async {
+    final interaction = await githubActionsClient.fetchRunJobsNext(runJobsPage);
+
+    return _processInteraction(interaction);
   }
 
   /// Fetches an artifact with coverage data for the given workflow [run].
