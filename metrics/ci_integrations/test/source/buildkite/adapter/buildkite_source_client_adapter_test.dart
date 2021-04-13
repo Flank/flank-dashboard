@@ -3,7 +3,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
@@ -77,11 +76,6 @@ void main() {
           page: anyNamed('page'),
         ),
       );
-    }
-
-    PostExpectation<Future<InteractionResult<BuildkiteBuild>>>
-        whenFetchOneBuild() {
-      return when(buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber));
     }
 
     PostExpectation<Future<InteractionResult<BuildkiteArtifactsPage>>>
@@ -760,9 +754,11 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() throws a StateError if fetching build fails",
+      ".fetchOneBuild() throws a StateError if fetching a build fails",
       () {
-        whenFetchOneBuild().thenErrorWith();
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenErrorWith();
 
         final result = adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -773,7 +769,9 @@ void main() {
     test(
       ".fetchOneBuild() returns a build data if fetching a build succeeds",
       () async {
-        whenFetchOneBuild().thenSuccessWith(const BuildkiteBuild());
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(const BuildkiteBuild());
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -782,10 +780,12 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() returns a build data with the build number equal to the fetched build's number",
+      ".fetchOneBuild() returns a build data with the build number equal to the requested build number",
       () async {
         const build = BuildkiteBuild(number: buildNumber);
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -797,7 +797,9 @@ void main() {
       ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's started at date if it is not null",
       () async {
         final build = BuildkiteBuild(startedAt: startedAt);
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -809,7 +811,9 @@ void main() {
       ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's finished at date if the build's started at date is null",
       () async {
         final build = BuildkiteBuild(startedAt: null, finishedAt: finishedAt);
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -821,7 +825,9 @@ void main() {
       ".fetchOneBuild() returns a build data with the started at date equal to the current date time if the fetched build's started at and finished at dates are null",
       () async {
         const build = BuildkiteBuild(startedAt: null, finishedAt: null);
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -840,7 +846,6 @@ void main() {
           BuildkiteBuildState.scheduled,
           BuildkiteBuildState.blocked,
           BuildkiteBuildState.notRun,
-          BuildkiteBuildState.finished,
           BuildkiteBuildState.running,
           BuildkiteBuildState.skipped,
           null,
@@ -857,17 +862,18 @@ void main() {
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,
-          BuildStatus.unknown,
         ];
 
-        final statesLength = min(states.length, expectedStatuses.length);
+        final statesLength = states.length;
 
         for (int i = 0; i < statesLength; ++i) {
           final expectedStatus = expectedStatuses[i];
 
           final state = states[i];
           final build = BuildkiteBuild(state: state);
-          whenFetchOneBuild().thenSuccessWith(build);
+          when(
+            buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+          ).thenSuccessWith(build);
 
           final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -885,7 +891,9 @@ void main() {
           finishedAt: finishedAt,
         );
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -902,7 +910,9 @@ void main() {
           finishedAt: finishedAt,
         );
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -919,7 +929,9 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -936,7 +948,9 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -950,7 +964,9 @@ void main() {
         const url = 'url';
         const build = BuildkiteBuild(webUrl: url);
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
@@ -963,7 +979,9 @@ void main() {
       () async {
         const build = BuildkiteBuild(webUrl: null);
 
-        whenFetchOneBuild().thenSuccessWith(build);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
 
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
