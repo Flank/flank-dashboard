@@ -233,7 +233,7 @@ class JenkinsMockServer extends ApiMockServer {
     final uriSegments = request.uri.pathSegments;
 
     final apiPathIndex = uriSegments.indexOf('api');
-    if (apiPathIndex == null || apiPathIndex == 0) return null;
+    if (apiPathIndex <= 0) return null;
 
     return int.tryParse(uriSegments[apiPathIndex - 1]);
   }
