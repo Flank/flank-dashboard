@@ -3,31 +3,31 @@
 
 skinparam SequenceMessageAlignment center
 
-participant CiIntegration
+participant InProgressBuildsSyncStage
 participant SourceClient
 
-?-> CiIntegration ++ : _syncInProgressBuild(//config, build//)
-note right of CiIntegration: //BuildData newBuild//
+?-> InProgressBuildsSyncStage ++ : _syncInProgressBuild(//config, build//)
+note right of InProgressBuildsSyncStage: //BuildData newBuild//
 ||8||
-CiIntegration -> CiIntegration ++ : _fetchBuild(//config.sourceProjectId, build.buildNumber//)
+InProgressBuildsSyncStage -> InProgressBuildsSyncStage ++ : _fetchBuild(//config.sourceProjectId, build.buildNumber//)
 group try [build fetched successfully]
-    CiIntegration -> SourceClient ++ : fetchBuild(//config.sourceProjectId, build.buildNumber//)
+    InProgressBuildsSyncStage -> SourceClient ++ : fetchOneBuild(//config.sourceProjectId, build.buildNumber//)
     return //sourceBuild//
-    note right of CiIntegration: //refreshedBuild = sourceBuild//
+    note right of InProgressBuildsSyncStage: //refreshedBuild = sourceBuild//
 else catch error
-    note right of CiIntegration: //refreshedBuild = null//
+    note right of InProgressBuildsSyncStage: //refreshedBuild = null//
 end
 return //refreshedBuild//
 ||8||
-alt refreshedBuild == null || refreshedBuild.status == BuildStatus.inProgress
-    opt _shouldTimeout(build.startedAt, config.inProgressTimeout)
-        note right of CiIntegration
+alt //refreshedBuild// == null || //refreshedBuild.status// == BuildStatus.inProgress
+    opt _shouldTimeout(//build.startedAt//, //config.inProgressTimeout//)
+        note right of InProgressBuildsSyncStage
             //final duration = config.inProgressTimeout//
             //newBuild = build.copyWith(duration: duration, status: BuildStatus.unknown)//
         end note
     end
-else refreshedBuild is finished
-    note right of CiIntegration: //newBuild = refreshedBuild.copyWith(id: build.id, projectId: build.projectId)//
+else //refreshedBuild// is finished
+    note right of InProgressBuildsSyncStage: //newBuild = refreshedBuild.copyWith(id: build.id, projectId: build.projectId)//
 end
 return newBuild
 

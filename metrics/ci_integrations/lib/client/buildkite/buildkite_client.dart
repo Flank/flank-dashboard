@@ -190,7 +190,7 @@ class BuildkiteClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [BuildkiteBuild] of a pipeline with the given [pipelineSlug] 
+  /// Fetches a [BuildkiteBuild] of a pipeline with the given [pipelineSlug]
   /// and having the given [buildNumber].
   ///
   /// Throws an [AssertionError] if the given [pipelineSlug] or [buildNumber] is

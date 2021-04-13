@@ -14,7 +14,7 @@ import '../test_utils/directory_mock.dart';
 import '../test_utils/firebase_command_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
-import '../test_utils/git_command_mock.dart';
+import '../test_utils/git_service_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
 import '../test_utils/services_mock.dart';
@@ -25,11 +25,11 @@ void main() {
   group("Deployer", () {
     const projectId = 'testId';
     const firebaseToken = 'testToken';
-    final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
+    final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
+    final gitService = GitServiceMock();
     final firebaseCommand = FirebaseCommandMock();
-    final gitCommand = GitCommandMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
@@ -37,11 +37,11 @@ void main() {
       flutterService: flutterService,
       gcloudService: gcloudService,
       npmService: npmService,
+      gitService: gitService,
     );
     final deployer = Deployer(
       services: services,
       firebaseCommand: firebaseCommand,
-      gitCommand: gitCommand,
       fileHelper: fileHelper,
     );
 
@@ -58,15 +58,29 @@ void main() {
     }
 
     tearDown(() {
-      reset(gcloudService);
       reset(flutterService);
+      reset(gcloudService);
       reset(npmService);
+      reset(gitService);
       reset(firebaseCommand);
-      reset(gitCommand);
       reset(fileHelper);
       reset(directory);
       reset(servicesMock);
     });
+
+    test(
+      "throws an ArgumentError if the given services is null",
+      () {
+        expect(
+          () => Deployer(
+            services: null,
+            firebaseCommand: firebaseCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test(
       "throws an ArgumentError if the Flutter service in the given services is null",
@@ -74,12 +88,12 @@ void main() {
         when(servicesMock.flutterService).thenReturn(null);
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(gitService);
 
         expect(
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -93,12 +107,12 @@ void main() {
         when(servicesMock.flutterService).thenReturn(flutterService);
         when(servicesMock.gcloudService).thenReturn(null);
         when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(gitService);
 
         expect(
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -112,12 +126,31 @@ void main() {
         when(servicesMock.flutterService).thenReturn(flutterService);
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(null);
+        when(servicesMock.gitService).thenReturn(gitService);
 
         expect(
           () => Deployer(
             services: servicesMock,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
+            fileHelper: fileHelper,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Git service in the given services is null",
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(null);
+
+        expect(
+          () => Deployer(
+            services: servicesMock,
+            firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -132,22 +165,6 @@ void main() {
           () => Deployer(
             services: services,
             firebaseCommand: null,
-            gitCommand: gitCommand,
-            fileHelper: fileHelper,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given Git command is null",
-      () {
-        expect(
-          () => Deployer(
-            services: services,
-            firebaseCommand: firebaseCommand,
-            gitCommand: null,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -162,7 +179,6 @@ void main() {
           () => Deployer(
             services: services,
             firebaseCommand: firebaseCommand,
-            gitCommand: gitCommand,
             fileHelper: null,
           ),
           throwsArgumentError,
@@ -274,7 +290,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gitCommand.clone(
+        verify(gitService.checkout(
           DeployConstants.repoURL,
           DeployConstants.tempDir,
         )).called(once);
@@ -282,15 +298,14 @@ void main() {
     );
 
     test(
-      ".deploy() clones the Git repository before installing the npm dependencies",
+      ".deploy() clones the Git repository before building the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
         await deployer.deploy();
 
         verifyInOrder([
-          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
-          npmService.installDependencies(DeployConstants.firebasePath),
-          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+          gitService.checkout(DeployConstants.repoURL, DeployConstants.tempDir),
+          flutterService.build(DeployConstants.webPath),
         ]);
       },
     );
@@ -307,19 +322,6 @@ void main() {
         verify(npmService.installDependencies(
           DeployConstants.firebaseFunctionsPath,
         )).called(once);
-      },
-    );
-
-    test(
-      ".deploy() clones the Git repository before building the Flutter application",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
-
-        verifyInOrder([
-          gitCommand.clone(DeployConstants.repoURL, DeployConstants.tempDir),
-          flutterService.build(DeployConstants.webPath),
-        ]);
       },
     );
 
