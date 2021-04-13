@@ -1,9 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:firedart/firedart.dart' as fd;
 import 'package:test/test.dart';
+
+import '../../test_utils/matchers.dart';
 
 void main() {
   group("Firestore", () {
@@ -13,7 +15,7 @@ void main() {
     test(
       "throws an AssertionError if the given project id is empty",
       () {
-        expect(() => Firestore(''), throwsA(isA<AssertionError>()));
+        expect(() => Firestore(''), throwsAssertionError);
       },
     );
 
