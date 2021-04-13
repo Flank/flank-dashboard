@@ -739,7 +739,10 @@ void main() {
     test(
       ".fetchOneBuild() throws an ArgumentError if the given pipeline slug is null",
       () {
-        expect(() => adapter.fetchOneBuild(null, 1), throwsArgumentError);
+        expect(
+          () => adapter.fetchOneBuild(null, buildNumber),
+          throwsArgumentError,
+        );
       },
     );
 
