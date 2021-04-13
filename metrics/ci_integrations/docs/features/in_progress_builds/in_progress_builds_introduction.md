@@ -59,7 +59,7 @@ Also, the `SyncCommand` should be able to parse the given `--in-progress-timeout
 
 The following class diagram demonstrates the described changes:
 
-![Sync command class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/sync_command_class_diagram.puml)
+![Sync command class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/sync_command_class_diagram.puml)
 
 #### Sync Algorithm
 
@@ -89,7 +89,7 @@ The re-syncing in-progress builds stage is described within the [Re-Sync In-Prog
 
 As in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
 
-![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
 #### Source Client
 
@@ -97,7 +97,7 @@ The `SourceClient` is an interface for `source` clients that provide abilities t
 
 The following class diagram demonstrates the structure of `source` clients:
 
-![Source clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/source_clients_class_diagram.puml)
+![Source clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/source_clients_class_diagram.puml)
 
 Also, the `source` clients should now return in-progress builds. The following subsections cover the details of changes to concrete clients implemented within the CI Integrations tool.
 
@@ -213,7 +213,7 @@ The following methods are to be added to the `DestinationClient` interface:
 
 The following class diagram demonstrates the structure of `destination` clients:
 
-![Destination clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_in_progress_doc/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/destination_clients_class_diagram.puml)
+![Destination clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/destination_clients_class_diagram.puml)
 
 The following subsection covers the details of changes to the Firestore integration.
 
