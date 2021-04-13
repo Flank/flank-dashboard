@@ -1,0 +1,37 @@
+@startuml source_clients_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package integration.interface.destination.client {
+    interface DestinationClient {
+        + fetchLastBuild(String projectId): BuildData
+        + fetchBuildsWithStatus(String projectId, BuildStatus status): List<BuildData>
+        + addBuilds(String projectId, List<BuildData> builds): void
+        + updateBuilds(String projectId, List<BuildData> builds): void
+        + dispose(): void
+    }
+}
+
+package destination.firestore.adapter {
+    class FirestoreDestinationClientAdapter {
+        - _firestore: Firestore
+        --
+        + fetchLastBuild(String projectId): BuildData
+        + fetchBuildsWithStatus(String projectId, BuildStatus status): List<BuildData>
+        + addBuilds(String projectId, List<BuildData> builds): void
+        + updateBuilds(String projectId, List<BuildData> builds): void
+        + dispose(): void
+        .. //other private methods// ..
+    }
+}
+
+FirestoreDestinationClientAdapter .up.|> DestinationClient
+
+package client.firestore {
+    class Firestore {}
+}
+
+FirestoreDestinationClientAdapter -down-> Firestore: uses
+
+@enduml
