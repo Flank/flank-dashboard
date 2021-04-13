@@ -836,7 +836,7 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() maps fetched builds states according to the specification",
+      ".fetchOneBuild() maps fetched build's state according to the specification",
       () async {
         const states = [
           BuildkiteBuildState.passed,
@@ -940,7 +940,7 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to Duration.zero if the started at and finished at of the fetched build is null",
+      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to Duration.zero if the started at and finished at of the fetched build are null",
       () async {
         const expectedDuration = Duration.zero;
         const build = BuildkiteBuild(
