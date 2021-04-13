@@ -136,6 +136,10 @@ void main() {
       reset(_documentMock);
     });
 
+    tearDown(() {
+      reset(_collectionReferenceMock);
+    });
+
     test(
       "throws an ArgumentError if the given Firestore is null",
       () {
@@ -324,16 +328,6 @@ void main() {
     );
 
     test(
-      ".fetchBuildsWithStatus() throws an ArgumentError if the given project id is null",
-      () {
-        expect(
-          () => adapter.fetchBuildsWithStatus(null, BuildStatus.successful),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
       ".fetchBuildsWithStatus() throws an ArgumentError if the given build status is null",
       () {
         expect(
@@ -427,31 +421,20 @@ void main() {
       ".fetchBuildsWithStatus() gets documents after filtering them with the given project id and build status",
       () async {
         const buildStatus = BuildStatus.inProgress;
-        whenFetchBuildsWithStatus(
-          withBuildStatus: buildStatus,
-        ).thenAnswer((_) => Future.value([]));
+        whenFetchBuildsWithStatus(withBuildStatus: buildStatus)
+            .thenAnswer((_) => Future.value([]));
 
         await adapter.fetchBuildsWithStatus(
           testProjectId,
           buildStatus,
         );
 
-        verifyInOrder([
-          _collectionReferenceMock.where(
-            'projectId',
-            isEqualTo: testProjectId,
-          ),
-          _collectionReferenceMock.where(
-            'buildStatus',
-            isEqualTo: '$buildStatus',
-          ),
-          _collectionReferenceMock.getDocuments(),
-        ]);
+        verify(_collectionReferenceMock.getDocuments()).called(once);
       },
     );
 
     test(
-      ".fetchBuildsWithStatus() returns the build data created from the documents fetched from the firestore",
+      ".fetchBuildsWithStatus() returns the builds with requested status",
       () async {
         when(_documentMock.map).thenReturn(buildDataTestJson);
         whenFetchBuildsWithStatus().thenAnswer(
@@ -523,7 +506,7 @@ void main() {
     );
 
     test(
-      ".updateBuilds() gets old builds using the given builds' ids",
+      ".updateBuilds() references builds using their ids",
       () async {
         whenCheckProjectExists().thenReturn(true);
         whenReferenceBuild().thenReturn(_documentReferenceMock);
@@ -542,7 +525,7 @@ void main() {
     );
 
     test(
-      ".updateBuilds() updates old builds with the given builds in the given order",
+      ".updateBuilds() updates builds with the given builds data in the given order",
       () async {
         const projectId = 'id';
         final expectedBuilds = builds.map(
@@ -565,7 +548,7 @@ void main() {
     );
 
     test(
-      ".updateBuilds() continues updating other builds if updating one of the given builds fails",
+      ".updateBuilds() continues updating other builds if updating one fails",
       () async {
         const firstBuild = BuildData(buildNumber: 1, projectId: testProjectId);
         const secondBuild = BuildData(buildNumber: 2, projectId: testProjectId);

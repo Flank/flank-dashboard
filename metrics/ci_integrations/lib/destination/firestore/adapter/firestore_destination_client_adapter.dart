@@ -35,11 +35,7 @@ class FirestoreDestinationClientAdapter
       final project =
           await _firestore.collection('projects').document(projectId).get();
 
-      if (!project.exists) {
-        throw ArgumentError(
-          'Project with the given ID $projectId is not found',
-        );
-      }
+      await _ensureProjectExists(projectId);
 
       final collection = _firestore.collection('build');
 
@@ -52,13 +48,13 @@ class FirestoreDestinationClientAdapter
         await collection.document(documentId).create(map);
         logger.info('Added build id $documentId.');
       }
-    } on fd.FirestoreException catch (e) {
+    } on fd.FirestoreException catch (error) {
       if (buildJson != null) {
         logger.info('Failed to add build: $buildJson');
         buildJson = null;
       }
 
-      throw DestinationError(message: '$e');
+      throw DestinationError(message: error.message);
     }
   }
 
@@ -85,17 +81,12 @@ class FirestoreDestinationClientAdapter
     BuildStatus status,
   ) async {
     logger.info(
-      'Fetching builds for the project id $projectId with status: $status...',
+      'Fetching builds for the project id $projectId with status $status...',
     );
 
-    ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(status, 'status');
 
-    if (!await _projectExists(projectId)) {
-      throw ArgumentError(
-        'Project with the given ID $projectId is not found',
-      );
-    }
+    await _ensureProjectExists(projectId);
 
     try {
       final documents = await _firestore
@@ -107,8 +98,8 @@ class FirestoreDestinationClientAdapter
       return documents.map((document) {
         return BuildDataDeserializer.fromJson(document.map, document.id);
       }).toList();
-    } on fd.FirestoreException catch (e) {
-      throw DestinationError(message: '$e');
+    } on fd.FirestoreException catch (error) {
+      throw DestinationError(message: error.message);
     }
   }
 
@@ -121,17 +112,11 @@ class FirestoreDestinationClientAdapter
     ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(builds, 'builds');
 
-    if (!await _projectExists(projectId)) {
-      throw ArgumentError(
-        'Project with the given ID $projectId is not found',
-      );
-    }
+    await _ensureProjectExists(projectId);
 
-    final updatedBuilds = builds
-        .map(
-          (build) => build.copyWith(projectId: projectId),
-        )
-        .toList();
+    final updatedBuilds = builds.map((build) {
+      return build.copyWith(projectId: projectId);
+    }).toList();
 
     await _updateBuilds(updatedBuilds);
   }
@@ -161,26 +146,32 @@ class FirestoreDestinationClientAdapter
     return Future.wait(updateFutures);
   }
 
-  /// Returns `true` if a project with the given [projectId] exists.
+  /// Ensures that a project with the given [projectId] exists.
   ///
-  /// Otherwise, returns `false`.
-  ///
+  /// Throws an [ArgumentError] if the project with the given [projectId]
+  /// does not exist.
   /// Throws a [DestinationError] if fetching a project with the given
   /// [projectId] fails.
-  Future<bool> _projectExists(String projectId) async {
+  Future<void> _ensureProjectExists(String projectId) async {
     try {
       logger.info(
-        'Ensuring a project with the project id $projectId exists...',
+        'Checking a project with the project id $projectId exists...',
       );
 
       final project =
           await _firestore.collection('projects').document(projectId).get();
 
+      if (!project.exists) {
+        throw ArgumentError(
+          'Project with the given ID $projectId is not found',
+        );
+      }
+
       return project.exists;
-    } on fd.FirestoreException catch (e) {
+    } on fd.FirestoreException catch (error) {
       throw DestinationError(
         message:
-            'Failed to fetch a project with the $projectId id due to the following error: ${e.message}',
+            'Failed to fetch a project with the $projectId id due to the following error: ${error.message}',
       );
     }
   }
