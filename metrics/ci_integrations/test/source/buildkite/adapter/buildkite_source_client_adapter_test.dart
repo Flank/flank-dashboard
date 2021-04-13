@@ -26,28 +26,31 @@ import '../test_utils/test_data/buildkite_test_data_generator.dart';
 void main() {
   group("BuildkiteSourceClientAdapter", () {
     const pipelineSlug = "pipelineSlug";
+    const buildNumber = 1;
+    const fetchLimit = 20;
+    const coverageJson = <String, dynamic>{'pct': 0.5};
+    const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
+      BuildkiteArtifact(filename: "coverage-summary.json"),
+    ]);
+
+    final startedAt = DateTime(2020);
+    final finishedAt = DateTime(2021);
     final testData = BuildkiteTestDataGenerator(
       pipelineSlug: pipelineSlug,
       coverage: Percent(0.5),
       webUrl: 'url',
-      startedAt: DateTime(2020),
-      finishedAt: DateTime(2021),
-      duration: DateTime(2021).difference(DateTime(2020)),
+      startedAt: startedAt,
+      finishedAt: finishedAt,
+      duration: finishedAt.difference(startedAt),
     );
-
-    const fetchLimit = 20;
 
     final buildkiteClientMock = BuildkiteClientMock();
     final adapter = BuildkiteSourceClientAdapter(
       buildkiteClient: buildkiteClientMock,
     );
 
-    const coverageJson = <String, dynamic>{'pct': 0.5};
     final coverageBytes = utf8.encode(jsonEncode(coverageJson)) as Uint8List;
 
-    const defaultArtifactsPage = BuildkiteArtifactsPage(values: [
-      BuildkiteArtifact(filename: "coverage-summary.json"),
-    ]);
     final emptyArtifactsPage = BuildkiteArtifactsPage(
       page: 1,
       nextPageUrl: testData.webUrl,
@@ -306,7 +309,7 @@ void main() {
         final build = BuildkiteBuild(
           blocked: false,
           startedAt: null,
-          finishedAt: DateTime.now(),
+          finishedAt: finishedAt,
         );
 
         whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(values: [build]));
@@ -326,7 +329,7 @@ void main() {
       () async {
         final build = BuildkiteBuild(
           blocked: false,
-          startedAt: DateTime.now(),
+          startedAt: startedAt,
           finishedAt: null,
         );
 
@@ -394,8 +397,9 @@ void main() {
           finishedAt: null,
         );
 
-        whenFetchBuilds()
-            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(
+          const BuildkiteBuildsPage(values: [build]),
+        );
 
         final result = await adapter.fetchBuilds(
           pipelineSlug,
@@ -637,7 +641,7 @@ void main() {
           number: 2,
           blocked: false,
           startedAt: null,
-          finishedAt: DateTime.now(),
+          finishedAt: finishedAt,
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
@@ -656,7 +660,7 @@ void main() {
         final build = BuildkiteBuild(
           number: 2,
           blocked: false,
-          startedAt: DateTime.now(),
+          startedAt: startedAt,
           finishedAt: null,
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
@@ -701,8 +705,9 @@ void main() {
         );
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
-        whenFetchBuilds()
-            .thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+        whenFetchBuilds().thenSuccessWith(
+          const BuildkiteBuildsPage(values: [build]),
+        );
 
         final result = await adapter.fetchBuildsAfter(pipelineSlug, firstBuild);
         final url = result.first.url;
@@ -714,7 +719,6 @@ void main() {
     test(
       ".fetchBuildsAfter() maps fetched builds' startedAt date to the finishedAt date if the startedAt date is null",
       () async {
-        final finishedAt = DateTime.now();
         final build = BuildkiteBuild(
           number: 2,
           blocked: false,
@@ -729,6 +733,262 @@ void main() {
         final startedAt = result.first.startedAt;
 
         expect(startedAt, equals(finishedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given pipeline slug is null",
+      () {
+        expect(
+          () => adapter.fetchOneBuild(null, buildNumber),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given build number is null",
+      () {
+        expect(
+          () => adapter.fetchOneBuild(pipelineSlug, null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if fetching a build fails",
+      () {
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenErrorWith();
+
+        final result = adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data if fetching a build succeeds",
+      () async {
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(const BuildkiteBuild());
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the build number equal to the requested build number",
+      () async {
+        const build = BuildkiteBuild(number: buildNumber);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.buildNumber, equals(buildNumber));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's started at date if it is not null",
+      () async {
+        final build = BuildkiteBuild(startedAt: startedAt);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, equals(startedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's finished at date if the build's started at date is null",
+      () async {
+        final build = BuildkiteBuild(startedAt: null, finishedAt: finishedAt);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, equals(finishedAt));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the current date time if the fetched build's started at and finished at dates are null",
+      () async {
+        const build = BuildkiteBuild(startedAt: null, finishedAt: null);
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched build's state according to the specification",
+      () async {
+        const states = [
+          BuildkiteBuildState.passed,
+          BuildkiteBuildState.failed,
+          BuildkiteBuildState.canceled,
+          BuildkiteBuildState.notRun,
+          BuildkiteBuildState.scheduled,
+          BuildkiteBuildState.blocked,
+          BuildkiteBuildState.notRun,
+          BuildkiteBuildState.running,
+          BuildkiteBuildState.skipped,
+          null,
+        ];
+
+        const expectedStatuses = [
+          BuildStatus.successful,
+          BuildStatus.failed,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+        ];
+
+        final statesLength = states.length;
+
+        for (int i = 0; i < statesLength; ++i) {
+          final expectedStatus = expectedStatuses[i];
+
+          final state = states[i];
+          final build = BuildkiteBuild(state: state);
+          when(
+            buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+          ).thenSuccessWith(build);
+
+          final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+          expect(result.buildStatus, equals(expectedStatus));
+        }
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to the build duration",
+      () async {
+        final expectedDuration = finishedAt.difference(startedAt);
+        final build = BuildkiteBuild(
+          startedAt: startedAt,
+          finishedAt: finishedAt,
+        );
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to Duration.zero if the started at of the fetched build is null",
+      () async {
+        const expectedDuration = Duration.zero;
+        final build = BuildkiteBuild(
+          startedAt: null,
+          finishedAt: finishedAt,
+        );
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to Duration.zero if the finished at of the fetched build is null",
+      () async {
+        const expectedDuration = Duration.zero;
+        final build = BuildkiteBuild(
+          startedAt: startedAt,
+          finishedAt: null,
+        );
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps fetched build's difference between the startedAt and finishedAt dates to Duration.zero if the started at and finished at of the fetched build are null",
+      () async {
+        const expectedDuration = Duration.zero;
+        const build = BuildkiteBuild(
+          startedAt: null,
+          finishedAt: null,
+        );
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build with the fetched build's web url if it is not null",
+      () async {
+        const url = 'url';
+        const build = BuildkiteBuild(webUrl: url);
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.url, equals(url));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the null fetched build's web url to an empty string",
+      () async {
+        const build = BuildkiteBuild(webUrl: null);
+
+        when(
+          buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+        ).thenSuccessWith(build);
+
+        final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+        expect(result.url, isEmpty);
       },
     );
 
@@ -815,8 +1075,9 @@ void main() {
           nextPageUrl: 'url',
         );
         whenFetchCoverage().thenSuccessWith(artifactsPage);
-        when(buildkiteClientMock.fetchArtifactsNext(artifactsPage))
-            .thenSuccessWith(defaultArtifactsPage);
+        when(
+          buildkiteClientMock.fetchArtifactsNext(artifactsPage),
+        ).thenSuccessWith(defaultArtifactsPage);
 
         final result = await adapter.fetchCoverage(defaultBuild);
 
@@ -859,15 +1120,6 @@ void main() {
         final result = adapter.fetchCoverage(defaultBuild);
 
         expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchOneBuild() returns null",
-      () async {
-        final result = await adapter.fetchOneBuild(pipelineSlug, 1);
-
-        expect(result, isNull);
       },
     );
 
