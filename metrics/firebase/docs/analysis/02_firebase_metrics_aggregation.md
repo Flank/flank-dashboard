@@ -12,11 +12,7 @@ The same aggregation definition we can apply to Firebase aggregations.
 
 ### Aggregating data in Firestore
 
-If we want to quickly find documents in large collections, we should use Firebase advanced queries. 
-
-Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g.g. builds per week), we need an aggregation over a collection.
-
-Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation somehow, because of the Firestore limitations.
+If we want to quickly find documents in large collections, we should use Firebase advanced queries. Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g.g. builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation somehow, because of the Firestore limitations.
 
 ## Objectives of the analysis
 
@@ -47,8 +43,8 @@ Pros:
 - Easy to implement.
 
 Cons:
-- With an increase in the number of builds, the number of writes/reads to/from the database grows that triggers heavy load/price implications.
-- Increase time for calculating the aggregation metric.
+- With an increase in the number of builds, the number of reads from the database grows respectively. It leads to heavy load/price implications.
+- Increases the time of calculating the aggregation metric.
 
 ### Aggregating data using the Cloud Functions
 
@@ -74,11 +70,11 @@ Cons:
 
 The [FieldValue.increment](https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue#static-increment) method gives the ability to increment (or decrement) numeric values directly in the database.
 
-Keep in mind, that documents are still limited to a [sustained write limit](https://firebase.google.com/docs/firestore/quotas#soft_limits).
+Keep in mind, that documents are still limited to a [sustained write limit](https://firebase.google.com/docs/firestore/quotas#soft_limits). Although it has limits for document writes to 1 per second as a default soft limit, we can increase this number to 500 by creating the [indexed field](https://firebase.google.com/docs/firestore/query-data/indexing).
 
 Pros:
 - Easy to implement.
-- Not much code is required to implement.
+- Requires less code to implement compared to transactions.
 - Provide a solution to prevent concurrent edit problem.
 
 Cons:
@@ -97,7 +93,7 @@ With that, we can increase our write document limit to the count of "shards"(e.g
 There are certain disadvantages of this approach. With too few shards, some transactions may have to retry before succeeding, which will slow writes. With too many shards, reads become slower and more expensive. Also, as we have a subcollection of "shards" that we must load, so the cost of reading a counter value increases.
 
 Pros:
-- Gives an ability to increase the document write limit.
+- Provides an ability to increase the document write limit.
 
 Cons:
 - The number of shards controls the performance of the distributed counter.
