@@ -76,21 +76,6 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<BuildData> fetchOneBuild(String pipelineSlug, int buildNumber) async {
-    ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
-    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
-
-    final buildInteraction = await buildkiteClient.fetchBuild(
-      pipelineSlug,
-      buildNumber,
-    );
-
-    final build = _processInteraction(buildInteraction);
-
-    return _mapBuildToBuildData(pipelineSlug, build);
-  }
-
-  @override
   Future<Percent> fetchCoverage(BuildData build) async {
     ArgumentError.checkNotNull(build, 'build');
 
@@ -103,6 +88,21 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
 
     final bytes = await _downloadArtifact(coverageArtifact);
     return _mapArtifactToCoverage(bytes);
+  }
+
+  @override
+  Future<BuildData> fetchOneBuild(String pipelineSlug, int buildNumber) async {
+    ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
+    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+
+    final buildInteraction = await buildkiteClient.fetchBuild(
+      pipelineSlug,
+      buildNumber,
+    );
+
+    final build = _processInteraction(buildInteraction);
+
+    return _mapBuildToBuildData(pipelineSlug, build);
   }
 
   /// Fetches the latest builds by the given [pipelineSlug].
@@ -137,7 +137,7 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
         if (build == null || build.blocked) {
           continue;
         } else {
-          final buildData = await _mapBuildToBuildData(pipelineSlug, build);
+          final buildData = _mapBuildToBuildData(pipelineSlug, build);
           result.add(buildData);
 
           if (latestBuildNumber == null && result.length == fetchLimit) {
@@ -174,10 +174,10 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   /// Maps the given [build] to the [BuildData] instance.
-  Future<BuildData> _mapBuildToBuildData(
+  BuildData _mapBuildToBuildData(
     String pipelineSlug,
     BuildkiteBuild build,
-  ) async {
+  ) {
     return BuildData(
       buildNumber: build.number,
       startedAt: build.startedAt ?? build.finishedAt ?? DateTime.now(),
