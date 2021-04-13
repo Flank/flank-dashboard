@@ -280,6 +280,28 @@ class JenkinsClient with LoggerMixin {
     return _fetchBuilds(url);
   }
 
+  /// Fetches a [JenkinsBuild] of a job with the given [jobName] having
+  /// the given [buildNumber].
+  ///
+  /// Throws an [AssertionError] if the given [jobName] or [buildNumber] is
+  /// `null`.
+  Future<InteractionResult<JenkinsBuild>> fetchBuildByNumber(
+    String jobName,
+    int buildNumber,
+  ) {
+    logger.info('Fetching a #$buildNumber build of a $jobName job...');
+
+    assert(jobName != null);
+    assert(buildNumber != null);
+
+    final url = _jenkinsUrlBuilder.build(
+      jenkinsUrl,
+      path: 'job/$jobName/$buildNumber',
+    );
+
+    return fetchBuildByUrl(url);
+  }
+
   /// Fetches a [JenkinsBuild] by the given [buildUrl].
   Future<InteractionResult<JenkinsBuild>> fetchBuildByUrl(String buildUrl) {
     logger.info('Fetching a build by the URL: $buildUrl');
