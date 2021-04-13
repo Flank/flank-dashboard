@@ -36,6 +36,24 @@ class JenkinsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
+            '/job/test/1/${JenkinsConstants.jsonApiPath}',
+          ),
+          dispatcher: _jenkinsBuildResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/job/name/1/${JenkinsConstants.jsonApiPath}',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/job/test/-1/${JenkinsConstants.jsonApiPath}',
+          ),
+          dispatcher: MockServerUtils.notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
             '/job/test/1${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: _buildResponse,
@@ -194,6 +212,30 @@ class JenkinsMockServer extends ApiMockServer {
         builds: [],
       );
     }
+  }
+
+  /// Responses with a [JenkinsBuild] with a build number extracted from
+  /// the given [request].
+  Future<void> _jenkinsBuildResponse(HttpRequest request) {
+    final buildNumber = _extractBuildNumber(request);
+
+    final jenkinsBuild = JenkinsBuild(number: buildNumber);
+    final data = jenkinsBuild.toJson();
+
+    return MockServerUtils.writeResponse(request, body: data);
+  }
+
+  /// Returns a build number extracted from the given [request].
+  ///
+  /// Returns `null` if there is no build number
+  /// in the given [HttpRequest.uri.pathSegments].
+  int _extractBuildNumber(HttpRequest request) {
+    final uriSegments = request.uri.pathSegments;
+
+    final apiPathIndex = uriSegments.indexOf('api');
+    if (apiPathIndex == null || apiPathIndex == 0) return null;
+
+    return int.tryParse(uriSegments[apiPathIndex - 1]);
   }
 
   /// Checks whether a tree query parameter of the [request] contains [pattern].

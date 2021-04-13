@@ -16,11 +16,17 @@ import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/matchers.dart';
 import 'test_utils/mock/jenkins_mock_server.dart';
 import 'test_utils/test_data/jenkins_build_test_data.dart';
 
 void main() {
   group("JenkinsClient", () {
+    const jobName = 'test';
+    const notFoundJobName = 'name';
+    const buildNumber = 1;
+    const notFoundBuildNumber = -1;
+
     final jenkinsMockServer = JenkinsMockServer();
 
     JenkinsBuild firstBuild;
@@ -350,6 +356,77 @@ void main() {
         );
 
         expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() throws an AssertionError if the given job name is null",
+      () {
+        expect(
+          () => jenkinsClient.fetchBuildByNumber(null, 1),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() throws an AssertionError if the given build number is null",
+      () {
+        expect(
+          () => jenkinsClient.fetchBuildByNumber(jobName, null),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() returns an error if a job with the given job name is not found",
+      () async {
+        final interactionResult = await jenkinsClient.fetchBuildByNumber(
+          notFoundJobName,
+          buildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() returns an error if a build with the given build number is not found",
+      () async {
+        final interactionResult = await jenkinsClient.fetchBuildByNumber(
+          jobName,
+          notFoundBuildNumber,
+        );
+
+        expect(interactionResult.isError, isTrue);
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() returns a jenkins build if the given job name and build number are valid",
+      () async {
+        final interactionResult = await jenkinsClient.fetchBuildByNumber(
+          jobName,
+          buildNumber,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuildByNumber() returns a jenkins build with the requested build number",
+      () async {
+        final interactionResult = await jenkinsClient.fetchBuildByNumber(
+          jobName,
+          buildNumber,
+        );
+
+        final jenkinsBuild = interactionResult.result;
+
+        expect(jenkinsBuild.number, equals(buildNumber));
       },
     );
 
