@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/ci/ci_integration.dart';
@@ -11,13 +11,18 @@ abstract class SourceClient extends IntegrationClient {
   /// Fetches a list of builds for a project, identified by [projectId],
   /// which have been performed after the given [build].
   ///
-  /// Returns `null` if a project with the given [projectId] is not found.
+  /// Returns an empty [List] if there are no new builds after the given [build].
+  ///
+  /// Throws an [ArgumentError] if the given [build] is null.
+  /// Throws a [StateError] if fetching builds after the given [build] fails.
   Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build);
 
   /// Fetches no more than [fetchLimit] number of builds for a project,
   /// identified by [projectId].
   ///
-  /// Returns `null` if a project with the given [projectId] is not found.
+  /// Returns an empty [List] if there are no builds.
+  ///
+  /// Throws a [StateError] if fetching builds fails.
   Future<List<BuildData>> fetchBuilds(
     String projectId,
     int fetchLimit,
@@ -27,6 +32,16 @@ abstract class SourceClient extends IntegrationClient {
   ///
   /// Returns `null` if a coverage artifact for the given [build]
   /// is not found.
+  ///
   /// Throws an [ArgumentError] if the given [build] is `null`.
+  /// Throws a [StateError] if coverage artifact fetching fails.
   Future<Percent> fetchCoverage(BuildData build);
+
+  /// Fetches a build with the given [buildNumber] for the project identified
+  /// by the given [projectId].
+  ///
+  /// Throws an [ArgumentError] is the given [projectId] or [buildNumber]
+  /// is `null`.
+  /// Throws a [StateError] if fetching the build fails.
+  Future<BuildData> fetchOneBuild(String projectId, int buildNumber);
 }

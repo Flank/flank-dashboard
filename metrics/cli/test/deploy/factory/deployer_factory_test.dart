@@ -1,22 +1,33 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-// ignore_for_file: avoid_redundant_argument_values
-
-import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/flutter_service_mock.dart';
+import '../../test_utils/gcloud_service_mock.dart';
+import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
+import '../../test_utils/npm_service_mock.dart';
+import '../../test_utils/services_factory_mock.dart';
 
 void main() {
   group("DeployerFactory", () {
-    final servicesFactory = _ServicesFactoryMock();
-    final services = _ServicesMock();
+    final servicesFactory = ServicesFactoryMock();
     final deployerFactory = DeployerFactory(servicesFactory);
+    final gcloudService = GCloudServiceMock();
+    final flutterService = FlutterServiceMock();
+    final gitService = GitServiceMock();
+    final npmService = NpmServiceMock();
+    final services = Services(
+      flutterService: flutterService,
+      gcloudService: gcloudService,
+      gitService: gitService,
+      npmService: npmService,
+    );
 
     PostExpectation<Services> whenCreateServices() {
       return when(servicesFactory.create());
@@ -55,7 +66,3 @@ void main() {
     );
   });
 }
-
-class _ServicesFactoryMock extends Mock implements ServicesFactory {}
-
-class _ServicesMock extends Mock implements Services {}

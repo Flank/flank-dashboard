@@ -2,11 +2,9 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/firebase/firebase_command.dart';
-import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/factory/services_factory.dart';
+import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
-
-import '../deployer.dart';
 
 /// A class providing method for creating a [Deployer] instance.
 class DeployerFactory {
@@ -16,7 +14,7 @@ class DeployerFactory {
   /// Creates a new instance of the [DeployerFactory]
   /// with the given [ServicesFactory].
   ///
-  /// The services factory defaults to [ServicesFactory] instance.
+  /// The services factory defaults to the [ServicesFactory] instance.
   ///
   /// Throws an [ArgumentError] if the given services factory is `null`.
   DeployerFactory([this._servicesFactory = const ServicesFactory()]) {
@@ -28,12 +26,10 @@ class DeployerFactory {
     final services = _servicesFactory.create();
     final fileHelper = FileHelper();
     final firebaseCommand = FirebaseCommand();
-    final gitCommand = GitCommand();
 
     return Deployer(
       services: services,
       firebaseCommand: firebaseCommand,
-      gitCommand: gitCommand,
       fileHelper: fileHelper,
     );
   }

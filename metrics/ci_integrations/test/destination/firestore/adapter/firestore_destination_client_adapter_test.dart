@@ -271,5 +271,17 @@ void main() {
         expect(buildData, completion(equals(expectedBuildData)));
       },
     );
+
+    test(
+      ".fetchBuildsWithStatus() returns an empty list",
+      () async {
+        final result = await adapter.fetchBuildsWithStatus(
+          'id',
+          BuildStatus.unknown,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
   });
 }

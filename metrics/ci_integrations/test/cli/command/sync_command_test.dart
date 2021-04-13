@@ -15,11 +15,11 @@ import 'package:ci_integration/destination/firestore/config/model/firestore_dest
 import 'package:ci_integration/destination/firestore/config/parser/firestore_destination_config_parser.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
+import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/destination/party/destination_party.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
-import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/source/jenkins/party/jenkins_source_party.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:firedart/firedart.dart';
@@ -133,6 +133,50 @@ void main() {
             syncLimitOption.defaultsTo,
             equals(expectedInitialSyncLimit),
           );
+        },
+      );
+
+      test(
+        "has the 'in-progress-timeout' option",
+        () {
+          final argParser = syncCommand.argParser;
+          final options = argParser.options;
+
+          expect(options, contains('in-progress-timeout'));
+        },
+      );
+
+      test(
+        "has the non-null help for the 'in-progress-timeout' option",
+        () {
+          final argParser = syncCommand.argParser;
+          final option = argParser.options['in-progress-timeout'];
+
+          expect(option.help, isNotNull);
+        },
+      );
+
+      test(
+        "'in-progress-timeout' option has the default value equal to the default in progress timeout in minutes",
+        () {
+          const expectedValue = SyncCommand.defaultInProgressTimeout;
+
+          final argParser = syncCommand.argParser;
+          final option = argParser.options['in-progress-timeout'];
+
+          expect(option.defaultsTo, equals(expectedValue));
+        },
+      );
+
+      test(
+        "'in-progress-timeout' option has the value help equal to the default in progress timeout in minutes",
+        () {
+          const expectedValue = SyncCommand.defaultInProgressTimeout;
+
+          final argParser = syncCommand.argParser;
+          final option = argParser.options['in-progress-timeout'];
+
+          expect(option.valueHelp, equals(expectedValue));
         },
       );
 
@@ -369,6 +413,40 @@ void main() {
       );
 
       test(
+        ".parseInProgressTimeout() throws an ArgumentError if the given value is null",
+        () async {
+          expect(
+            () => syncCommand.parseInProgressTimeout(null),
+            throwsArgumentError,
+          );
+        },
+      );
+
+      test(
+        ".parseInProgressTimeout() throws an ArgumentError if the given value is not an integer",
+        () async {
+          expect(
+            () => syncCommand.parseInProgressTimeout('test'),
+            throwsArgumentError,
+          );
+        },
+      );
+
+      test(
+        ".parseInProgressTimeout() parses the given value to a Duration with the parsed number of minutes",
+        () async {
+          const timeoutInMinutes = 2;
+          const expectedTimeout = Duration(minutes: timeoutInMinutes);
+
+          final actualTimeout = syncCommand.parseInProgressTimeout(
+            '$timeoutInMinutes',
+          );
+
+          expect(actualTimeout, equals(expectedTimeout));
+        },
+      );
+
+      test(
         ".dispose() disposes the given source client",
         () async {
           final syncCommand = SyncCommand();
@@ -414,7 +492,7 @@ class _FirestoreDestinationPartyStub implements FirestoreDestinationParty {
       const FirestoreDestinationConfigParser();
 
   @override
-  ConfigValidatorFactoryStub<FirestoreDestinationConfig>
+  ConfigValidatorFactory<FirestoreDestinationConfig>
       get configValidatorFactory => null;
 
   @override
@@ -472,6 +550,8 @@ class SyncCommandStub extends SyncCommand {
     if (name == 'initial-sync-limit') return '20';
 
     if (name == 'config-file') return 'config.yaml';
+
+    if (name == 'in-progress-timeout') return '20';
 
     if (name == 'coverage') return false;
 

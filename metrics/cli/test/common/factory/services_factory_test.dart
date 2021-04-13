@@ -4,11 +4,22 @@
 import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/flutter/adapter/flutter_cli_service_adapter.dart';
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
+import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
+import 'package:cli/git/adapter/git_cli_service_adapter.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("ServicesFactory", () {
     const servicesFactory = ServicesFactory();
+
+    test(
+      ".create() creates a Services instance with the Flutter service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.flutterService, isA<FlutterCliServiceAdapter>());
+      },
+    );
 
     test(
       ".create() creates a Services instance with the GCloud service adapter",
@@ -20,11 +31,20 @@ void main() {
     );
 
     test(
-      ".create() creates a Services instance with the Flutter service adapter",
+      ".create() creates a Services instance with the Npm service adapter",
       () {
         final services = servicesFactory.create();
 
-        expect(services.flutterService, isA<FlutterCliServiceAdapter>());
+        expect(services.npmService, isA<NpmCliServiceAdapter>());
+      },
+    );
+
+    test(
+      ".create() creates a Services instance with the Git service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.gitService, isA<GitCliServiceAdapter>());
       },
     );
   });

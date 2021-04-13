@@ -672,6 +672,15 @@ void main() {
       },
     );
 
+    test(
+      ".fetchOneBuild() returns null",
+      () async {
+        final result = await adapter.fetchOneBuild(jobName, defaultBuildNumber);
+
+        expect(result, isNull);
+      },
+    );
+
     test(".dispose() closes the Jenkins client", () {
       adapter.dispose();
 
