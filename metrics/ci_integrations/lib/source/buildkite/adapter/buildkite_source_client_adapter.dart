@@ -92,6 +92,10 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
 
   @override
   Future<BuildData> fetchOneBuild(String pipelineSlug, int buildNumber) async {
+    logger.info(
+      'Fetching a #$buildNumber build of the $pipelineSlug pipeline...',
+    );
+
     ArgumentError.checkNotNull(pipelineSlug, 'pipelineSlug');
     ArgumentError.checkNotNull(buildNumber, 'buildNumber');
 
