@@ -9,6 +9,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
+import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
 import '../../test_utils/npm_service_mock.dart';
 import '../../test_utils/services_factory_mock.dart';
@@ -17,13 +18,15 @@ void main() {
   group("DoctorFactory", () {
     final servicesFactory = ServicesFactoryMock();
     final doctorFactory = DoctorFactory(servicesFactory);
-    final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
+    final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
+    final gitService = GitServiceMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
       npmService: npmService,
+      gitService: gitService,
     );
 
     PostExpectation<Services> whenCreateServices() {

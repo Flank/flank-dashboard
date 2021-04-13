@@ -2,10 +2,10 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/firebase/firebase_command.dart';
-import 'package:cli/cli/git/git_command.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
+import 'package:cli/git/service/git_service.dart';
 import 'package:cli/npm/service/npm_service.dart';
 
 /// A class that provides an ability to check whether all required third-party
@@ -20,42 +20,43 @@ class Doctor {
   /// A service that provides methods for working with Npm.
   final NpmService _npmService;
 
+  /// A class that provides methods for working with the Git.
+  final GitService _gitService;
+
   /// A class that provides methods for working with the Firebase.
   final FirebaseCommand _firebaseCommand;
 
-  /// A class that provides methods for working with the Git.
-  final GitCommand _gitCommand;
-
   /// Creates a new instance of the [Doctor] with the given services.
   ///
+  /// Throws an [ArgumentError] if the given [services] is `null`.
   /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
   /// Throws an [ArgumentError] if the given [firebaseCommand] is `null`.
-  /// Throws an [ArgumentError] if the given [gitCommand] is `null`.
   Doctor({
     Services services,
     FirebaseCommand firebaseCommand,
-    GitCommand gitCommand,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
-        _firebaseCommand = firebaseCommand,
-        _gitCommand = gitCommand {
+        _gitService = services?.gitService,
+        _firebaseCommand = firebaseCommand {
+    ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(_npmService, 'npmService');
+    ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseCommand, 'firebaseCommand');
-    ArgumentError.checkNotNull(_gitCommand, 'gitCommand');
   }
 
   /// Checks versions of the required third-party services.
   Future<void> checkVersions() async {
     await _checkVersion(_flutterService.version);
-    await _checkVersion(_firebaseCommand.version);
     await _checkVersion(_gcloudService.version);
-    await _checkVersion(_gitCommand.version);
     await _checkVersion(_npmService.version);
+    await _checkVersion(_gitService.version);
+    await _checkVersion(_firebaseCommand.version);
   }
 
   /// Checks version of the third-party service using the given
