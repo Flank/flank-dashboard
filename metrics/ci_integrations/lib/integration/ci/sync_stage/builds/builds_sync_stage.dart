@@ -8,6 +8,8 @@ import 'package:metrics_core/metrics_core.dart';
 abstract class BuildsSyncStage implements SyncStage {
   /// Returns a [List] of [BuildData] with the fetched coverage data for the
   /// given list of [builds].
+  ///
+  /// Returns an empty [List] if the given [builds] is `null` or [List.isEmpty].
   Future<List<BuildData>> addCoverageData(List<BuildData> builds) async {
     if (builds == null || builds.isEmpty) return const [];
 
