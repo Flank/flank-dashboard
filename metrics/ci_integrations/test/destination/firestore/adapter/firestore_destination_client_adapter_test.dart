@@ -301,7 +301,7 @@ void main() {
 
     test(
       ".fetchLastBuild() throws an DestinationError if fetching a project with the given id fails",
-          () {
+      () {
         whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
         final result = adapter.fetchLastBuild(testProjectId);
@@ -323,7 +323,7 @@ void main() {
 
     test(
       ".fetchLastBuild() does not fetch the last build if the project with the given project id does not exist",
-          () {
+      () {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.fetchLastBuild(testProjectId);
@@ -332,7 +332,6 @@ void main() {
         verifyNever(_firestoreMock.collection('build'));
       },
     );
-
 
     test(
       ".fetchLastBuild() returns null if there are no builds for a project with the given id",
@@ -415,7 +414,6 @@ void main() {
       },
     );
 
-
     test(
       ".fetchBuildsWithStatus() references the 'build' collection",
       () async {
@@ -472,8 +470,9 @@ void main() {
       ".fetchBuildsWithStatus() gets documents after filtering them with the given project id and build status",
       () async {
         const buildStatus = BuildStatus.inProgress;
-        whenFetchBuildsWithStatus(withBuildStatus: buildStatus)
-            .thenAnswer((_) => Future.value([]));
+        whenFetchBuildsWithStatus(withBuildStatus: buildStatus).thenAnswer(
+          (_) => Future.value([]),
+        );
 
         await adapter.fetchBuildsWithStatus(
           testProjectId,
@@ -551,7 +550,7 @@ void main() {
 
     test(
       ".updateBuilds() does not update builds if the project with the given project id does not exist",
-          () {
+      () {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.updateBuilds(testProjectId, builds);
