@@ -31,7 +31,7 @@ class FirestoreDestinationClientAdapter
     Map<String, dynamic> buildJson;
 
     try {
-      await _ensureProjectExists(projectId);
+      await _throwIfProjectAbsent(projectId);
 
       final collection = _firestore.collection('build');
 
@@ -58,7 +58,7 @@ class FirestoreDestinationClientAdapter
   Future<BuildData> fetchLastBuild(String projectId) async {
     logger.info('Fetching last build for the project id $projectId...');
 
-    await _ensureProjectExists(projectId);
+    await _throwIfProjectAbsent(projectId);
 
     final documents = await _firestore
         .collection('build')
@@ -84,7 +84,7 @@ class FirestoreDestinationClientAdapter
 
     ArgumentError.checkNotNull(status, 'status');
 
-    await _ensureProjectExists(projectId);
+    await _throwIfProjectAbsent(projectId);
 
     try {
       final documents = await _firestore
@@ -109,7 +109,7 @@ class FirestoreDestinationClientAdapter
 
     ArgumentError.checkNotNull(builds, 'builds');
 
-    await _ensureProjectExists(projectId);
+    await _throwIfProjectAbsent(projectId);
 
     final updatedBuilds = builds.map((build) {
       return build.copyWith(projectId: projectId);
@@ -146,13 +146,26 @@ class FirestoreDestinationClientAdapter
     );
   }
 
-  /// Ensures that a project with the given [projectId] exists.
+  /// Checks if a project with the given [projectId] exists.
   ///
-  /// Throws an [ArgumentError] if the project with the given [projectId]
+  /// Throws an [ArgumentError] if a project with the given [projectId]
   /// does not exist.
+  Future<void> _throwIfProjectAbsent(String projectId) async {
+    final projectExists = await _projectExists(projectId);
+
+    if (!projectExists) {
+      throw ArgumentError(
+        'A project with the given ID $projectId is not found',
+      );
+    }
+  }
+
+  /// Returns `true` if a project with the given [projectId] exists. Otherwise,
+  /// returns `false`.
+  ///
   /// Throws a [DestinationError] if fetching a project with the given
   /// [projectId] fails.
-  Future<void> _ensureProjectExists(String projectId) async {
+  Future<bool> _projectExists(String projectId) async {
     try {
       logger.info(
         'Checking a project with the project id $projectId exists...',
@@ -160,11 +173,7 @@ class FirestoreDestinationClientAdapter
 
       final project = await _firestore.document('projects/$projectId').get();
 
-      if (!project.exists) {
-        throw ArgumentError(
-          'Project with the given ID $projectId is not found',
-        );
-      }
+      return project.exists;
     } on fd.FirestoreException catch (error) {
       throw DestinationError(
         message:
