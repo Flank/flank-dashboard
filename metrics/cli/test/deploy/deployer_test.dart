@@ -290,6 +290,59 @@ void main() {
     );
 
     test(
+      ".deploy() installs the npm dependencies to the Firebase folder before deploying to the Firebase",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          npmService.installDependencies(DeployConstants.firebasePath),
+          firebaseService.deployFirebase(any, any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies to the functions folder before deploying to the Firebase",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+          firebaseService.deployFirebase(any, any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() deploys Firebase rules, indexes, and functions to the Firebase",
+      () async {
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenGetDirectory().thenReturn(directory);
+
+        await deployer.deploy();
+
+        verify(firebaseService.deployFirebase(
+                any, DeployConstants.firebasePath))
+            .called(once);
+      },
+    );
+
+    test(
+      ".deploy() deploys Firebase rules, indexes, and functions before deploying to the hosting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        await deployer.deploy();
+
+        verifyInOrder([
+          firebaseService.deployFirebase(any, any),
+          firebaseService.deployHosting(any, any),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() builds the Flutter application before deploying to the hosting",
       () async {
         whenGetDirectory().thenReturn(directory);

@@ -7,6 +7,7 @@ import 'package:cli/deploy/factory/deployer_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/firebase_service_mock.dart';
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/git_service_mock.dart';
@@ -22,12 +23,23 @@ void main() {
     final flutterService = FlutterServiceMock();
     final gitService = GitServiceMock();
     final npmService = NpmServiceMock();
+    final firebaseService = FirebaseServiceMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
       gitService: gitService,
       npmService: npmService,
+      firebaseService: firebaseService,
     );
+
+    tearDown(() {
+      reset(servicesFactory);
+      reset(gcloudService);
+      reset(flutterService);
+      reset(gitService);
+      reset(npmService);
+      reset(firebaseService);
+    });
 
     PostExpectation<Services> whenCreateServices() {
       return when(servicesFactory.create());

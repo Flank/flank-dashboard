@@ -1,5 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
+
 import 'package:cli/common/model/services.dart';
 import 'package:cli/firebase/adapter/firebase_cli_service_adapter.dart';
 import 'package:cli/firebase/cli/firebase_cli.dart';

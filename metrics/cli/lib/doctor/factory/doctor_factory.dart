@@ -23,8 +23,6 @@ class DoctorFactory {
   Doctor create() {
     final services = _servicesFactory.create();
 
-    return Doctor(
-      services: services,
-    );
+    return Doctor(services: services);
   }
 }

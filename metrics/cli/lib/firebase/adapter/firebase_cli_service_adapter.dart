@@ -4,26 +4,25 @@
 import 'package:cli/firebase/cli/firebase_cli.dart';
 import 'package:cli/firebase/constants/firebase_constants.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
-import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/prompt/prompter.dart';
 
 /// An adapter for the [FirebaseCli] to implement
 /// the [FirebaseService] interface.
 class FirebaseCliServiceAdapter implements FirebaseService {
-  /// A [GCloudCli] class that provides an ability to interact
-  /// with the GCloud CLI.
+  /// A [FirebaseCli] class that provides an ability to interact
+  /// with the Firebase CLI.
   final FirebaseCli _firebaseCli;
 
   /// A [Prompter] class this adapter uses to interact with a user.
   final Prompter _prompter;
 
   /// Creates a new instance of the [FirebaseCliServiceAdapter]
-  /// with the given [GCloudCli].
+  /// with the given [FirebaseCli].
   ///
-  /// Throws an [ArgumentError] if the given [GCloudCli] is `null`.
+  /// Throws an [ArgumentError] if the given [FirebaseCli] is `null`.
   /// Throws an [ArgumentError] if the given [Prompter] is `null`.
   FirebaseCliServiceAdapter(this._firebaseCli, this._prompter) {
-    ArgumentError.checkNotNull(_firebaseCli, 'gcloudCli');
+    ArgumentError.checkNotNull(_firebaseCli, 'firebaseCli');
     ArgumentError.checkNotNull(_prompter, 'prompter');
   }
 

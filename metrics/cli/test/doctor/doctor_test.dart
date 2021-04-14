@@ -189,7 +189,7 @@ void main() {
     );
 
     test(
-      ".checkVersions() proceeds if Firebase command throws during the version showing",
+      ".checkVersions() proceeds if Firebase service throws during the version showing",
       () async {
         when(firebaseService.version())
             .thenAnswer((_) => Future.error(stateError));

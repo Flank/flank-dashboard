@@ -73,10 +73,10 @@ class Deployer {
     );
     await _npmService.installDependencies(firebasePath);
     await _npmService.installDependencies(
-      DeployConstants.firebaseFunctionsPath
+      DeployConstants.firebaseFunctionsPath,
     );
-    await _flutterService.build(webPath);
     await _firebaseService.deployFirebase(projectId, firebasePath);
+    await _flutterService.build(webPath);
     await _firebaseService.deployHosting(projectId, webPath);
 
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
