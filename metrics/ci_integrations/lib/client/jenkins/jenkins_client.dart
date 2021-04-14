@@ -294,9 +294,11 @@ class JenkinsClient with LoggerMixin {
     assert(jobName != null);
     assert(buildNumber != null);
 
+    final jobPath = _jobFullNameToPath(jobName);
+
     final url = _jenkinsUrlBuilder.build(
       jenkinsUrl,
-      path: 'job/$jobName/$buildNumber',
+      path: '$jobPath/$buildNumber',
     );
 
     return fetchBuildByUrl(url);
