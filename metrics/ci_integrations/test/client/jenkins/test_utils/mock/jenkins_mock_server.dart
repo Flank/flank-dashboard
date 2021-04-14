@@ -219,20 +219,26 @@ class JenkinsMockServer extends ApiMockServer {
   Future<void> _jenkinsBuildResponse(HttpRequest request) {
     final buildNumber = _extractBuildNumber(request);
 
-    final requestUri = '${request.requestedUri}';
-    final apiJsonIndex = requestUri.indexOf(JenkinsConstants.jsonApiPath);
-    final buildUrl = requestUri.substring(0, apiJsonIndex);
-
-    final jenkinsBuild = JenkinsBuild(number: buildNumber, url: buildUrl);
+    final jenkinsBuild = JenkinsBuild(
+      number: buildNumber,
+      url: _extractBuildUrl(request),
+    );
     final data = jenkinsBuild.toJson();
 
     return MockServerUtils.writeResponse(request, body: data);
   }
 
+  /// Returns a build url extracted from the given [request].
+  String _extractBuildUrl(HttpRequest request) {
+    final requestUri = '${request.requestedUri}';
+    final apiJsonIndex = requestUri.indexOf(JenkinsConstants.jsonApiPath);
+
+    return requestUri.substring(0, apiJsonIndex);
+  }
+
   /// Returns a build number extracted from the given [request].
   ///
-  /// Returns `null` if there is no build number
-  /// in the given [HttpRequest.uri.pathSegments].
+  /// Returns `null` if the given [request] does not contain a build number.
   int _extractBuildNumber(HttpRequest request) {
     final uriSegments = request.requestedUri.pathSegments;
 
