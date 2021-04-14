@@ -289,7 +289,7 @@ class JenkinsClient with LoggerMixin {
     String jobName,
     int buildNumber,
   ) {
-    logger.info('Fetching a #$buildNumber build of a $jobName job...');
+    logger.info('Fetching a build #$buildNumber of a $jobName job...');
 
     assert(jobName != null);
     assert(buildNumber != null);
