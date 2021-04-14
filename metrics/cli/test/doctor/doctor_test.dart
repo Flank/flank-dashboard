@@ -47,6 +47,13 @@ void main() {
     });
 
     test(
+      "throws an ArgumentError if the given services is null",
+      () {
+        expect(() => Doctor(services: null), throwsArgumentError);
+      },
+    );
+
+    test(
       "throws an ArgumentError if the Flutter service in the given services is null",
       () {
         when(servicesMock.flutterService).thenReturn(null);

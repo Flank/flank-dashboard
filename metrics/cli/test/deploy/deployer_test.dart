@@ -33,11 +33,12 @@ void main() {
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
     final services = Services(
-        flutterService: flutterService,
-        gcloudService: gcloudService,
-        npmService: npmService,
-        gitService: gitService,
-        firebaseService: firebaseService);
+      flutterService: flutterService,
+      gcloudService: gcloudService,
+      npmService: npmService,
+      gitService: gitService,
+      firebaseService: firebaseService,
+    );
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,

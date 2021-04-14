@@ -27,8 +27,8 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> login() async {
-    await _firebaseCli.login();
+  Future<void> login() {
+    return _firebaseCli.login();
   }
 
   @override
@@ -38,10 +38,7 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> deployFirebase(
-    String projectId,
-    String firebasePath,
-  ) async {
+  Future<void> deployFirebase(String projectId, String firebasePath) async {
     await _firebaseCli.setFirebaseProject(projectId, firebasePath);
     await _firebaseCli.deployFirestore(firebasePath);
     await _firebaseCli.deployFunctions(firebasePath);
