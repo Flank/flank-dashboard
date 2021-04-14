@@ -30,25 +30,19 @@ class JenkinsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/name/${JenkinsConstants.jsonApiPath}',
+            '/job/name${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/1/${JenkinsConstants.jsonApiPath}',
-          ),
-          dispatcher: _jenkinsBuildResponse,
-        ),
-        RequestHandler.get(
-          pathMatcher: ExactPathMatcher(
-            '/job/name/1/${JenkinsConstants.jsonApiPath}',
+            '/job/name/1${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/-1/${JenkinsConstants.jsonApiPath}',
+            '/job/test/-1${JenkinsConstants.jsonApiPath}',
           ),
           dispatcher: MockServerUtils.notFoundResponse,
         ),
@@ -56,7 +50,13 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/1${JenkinsConstants.jsonApiPath}',
           ),
-          dispatcher: _buildResponse,
+          dispatcher: _jenkinsBuildResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/main/1${JenkinsConstants.jsonApiPath}',
+          ),
+          dispatcher: _jenkinsBuildResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -219,7 +219,11 @@ class JenkinsMockServer extends ApiMockServer {
   Future<void> _jenkinsBuildResponse(HttpRequest request) {
     final buildNumber = _extractBuildNumber(request);
 
-    final jenkinsBuild = JenkinsBuild(number: buildNumber);
+    final requestUri = '${request.requestedUri}';
+    final apiJsonIndex = requestUri.indexOf(JenkinsConstants.jsonApiPath);
+    final buildUrl = requestUri.substring(0, apiJsonIndex);
+
+    final jenkinsBuild = JenkinsBuild(number: buildNumber, url: buildUrl);
     final data = jenkinsBuild.toJson();
 
     return MockServerUtils.writeResponse(request, body: data);
@@ -230,7 +234,7 @@ class JenkinsMockServer extends ApiMockServer {
   /// Returns `null` if there is no build number
   /// in the given [HttpRequest.uri.pathSegments].
   int _extractBuildNumber(HttpRequest request) {
-    final uriSegments = request.uri.pathSegments;
+    final uriSegments = request.requestedUri.pathSegments;
 
     final apiPathIndex = uriSegments.indexOf('api');
     if (apiPathIndex <= 0) return null;
@@ -268,17 +272,6 @@ class JenkinsMockServer extends ApiMockServer {
     } else {
       response = _buildMultiBranchJob();
     }
-
-    await MockServerUtils.writeResponse(request, body: response);
-  }
-
-  /// Responses with a jenkins build for the given [request].
-  Future<void> _buildResponse(HttpRequest request) async {
-    const buildNumber = 1;
-    final buildUrl = '$url/job/test/$buildNumber';
-    final jenkinsBuild = JenkinsBuild(number: buildNumber, url: buildUrl);
-
-    final response = jenkinsBuild.toJson();
 
     await MockServerUtils.writeResponse(request, body: response);
   }
