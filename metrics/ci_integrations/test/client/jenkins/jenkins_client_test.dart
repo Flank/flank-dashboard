@@ -417,6 +417,20 @@ void main() {
     );
 
     test(
+      ".fetchBuildByNumber() returns a jenkins build if a name of the given job contains multiple parts, and a build number is valid",
+      () async {
+        const jobName = 'test/main';
+        final interactionResult = await jenkinsClient.fetchBuildByNumber(
+          jobName,
+          buildNumber,
+        );
+
+        expect(interactionResult.isSuccess, isTrue);
+        expect(interactionResult.result, isNotNull);
+      },
+    );
+
+    test(
       ".fetchBuildByNumber() returns a jenkins build with the requested build number",
       () async {
         final interactionResult = await jenkinsClient.fetchBuildByNumber(
