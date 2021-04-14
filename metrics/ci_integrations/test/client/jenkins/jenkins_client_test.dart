@@ -363,7 +363,7 @@ void main() {
       ".fetchBuildByNumber() throws an AssertionError if the given job name is null",
       () {
         expect(
-          () => jenkinsClient.fetchBuildByNumber(null, 1),
+          () => jenkinsClient.fetchBuildByNumber(null, buildNumber),
           throwsAssertionError,
         );
       },
