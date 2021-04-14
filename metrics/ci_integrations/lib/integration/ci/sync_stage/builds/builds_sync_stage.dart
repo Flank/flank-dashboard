@@ -6,18 +6,17 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class that represents a [SyncStage] for builds.
 abstract class BuildsSyncStage implements SyncStage {
-  /// Returns a [List] of [BuildData] with the fetched coverage data for the 
+  /// Returns a [List] of [BuildData] with the fetched coverage data for the
   /// given list of [builds].
   Future<List<BuildData>> addCoverageData(List<BuildData> builds) async {
-    List<BuildData> result;
+    if (builds == null || builds.isEmpty) return const [];
 
-    for (final build in builds) {
+    final buildDataWithCoverage = builds.map((build) async {
       final coverage = await sourceClient.fetchCoverage(build);
-      final newBuild = build.copyWith(coverage: coverage);
 
-      result.add(newBuild);
-    }
+      return build.copyWith(coverage: coverage);
+    });
 
-    return result;
+    return Future.wait(buildDataWithCoverage);
   }
 }
