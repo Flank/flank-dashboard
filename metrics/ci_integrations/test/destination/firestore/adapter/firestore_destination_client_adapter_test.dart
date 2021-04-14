@@ -322,6 +322,19 @@ void main() {
     );
 
     test(
+      ".fetchLastBuild() does not fetch the last build if the project with the given project id does not exist",
+          () {
+        whenCheckProjectExists().thenReturn(false);
+
+        final result = adapter.fetchLastBuild(testProjectId);
+
+        expect(result, throwsArgumentError);
+        verifyNever(_firestoreMock.collection('build'));
+      },
+    );
+
+
+    test(
       ".fetchLastBuild() returns null if there are no builds for a project with the given id",
       () {
         whenFetchLastBuild().thenAnswer((_) => Future.value([]));
@@ -386,6 +399,22 @@ void main() {
         expect(result, throwsArgumentError);
       },
     );
+
+    test(
+      ".fetchBuildsWithStatus() does not fetch builds if the project with the given project id does not exist",
+      () {
+        whenCheckProjectExists().thenReturn(false);
+
+        final result = adapter.fetchBuildsWithStatus(
+          testProjectId,
+          BuildStatus.successful,
+        );
+
+        expect(result, throwsArgumentError);
+        verifyNever(_firestoreMock.collection('build'));
+      },
+    );
+
 
     test(
       ".fetchBuildsWithStatus() references the 'build' collection",
@@ -517,6 +546,18 @@ void main() {
         final result = adapter.updateBuilds(testProjectId, []);
 
         expect(result, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".updateBuilds() does not update builds if the project with the given project id does not exist",
+          () {
+        whenCheckProjectExists().thenReturn(false);
+
+        final result = adapter.updateBuilds(testProjectId, builds);
+
+        expect(result, throwsArgumentError);
+        verifyNever(_firestoreMock.collection('build'));
       },
     );
 
