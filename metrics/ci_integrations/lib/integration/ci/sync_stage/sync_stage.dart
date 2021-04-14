@@ -10,10 +10,12 @@ import 'package:ci_integration/util/model/interaction_result.dart';
 
 /// An abstract class that represents a stage of the synchronization process.
 abstract class SyncStage {
-  /// A [SourceClient] of this stage.
+  /// A [SourceClient] this stage uses to interact with the synchronization
+  /// source.
   SourceClient get sourceClient;
 
-  /// A [DestinationClient] of this stage.
+  /// A [DestinationClient] this stage uses to interact with the synchronization
+  /// destination.
   DestinationClient get destinationClient;
 
   /// Runs this stage using the given [syncConfig].

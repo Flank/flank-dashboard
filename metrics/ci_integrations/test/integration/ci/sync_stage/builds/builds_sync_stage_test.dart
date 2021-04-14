@@ -28,7 +28,7 @@ void main() {
     });
 
     test(
-      ".addCoverageData() returns an empty list if the given builds is null",
+      ".addCoverageData() returns an empty list if the given builds are null",
       () async {
         final result = await buildsSyncStage.addCoverageData(null);
 
@@ -46,7 +46,7 @@ void main() {
     );
 
     test(
-      ".addCoverageData() fetches coverage the given builds",
+      ".addCoverageData() fetches the coverage of the given builds",
       () async {
         const builds = [firstBuild, secondBuild];
 
@@ -58,13 +58,13 @@ void main() {
     );
 
     test(
-      ".addCoverageData() returns the build data with updated coverage fetched by the source client",
+      ".addCoverageData() returns the build data with the updated coverage fetched by the source client",
       () async {
         const builds = [firstBuild, secondBuild];
 
         final firstBuildCoverage = Percent(0.1);
         final secondBuildCoverage = Percent(0.2);
-        final buildsWithCoverage = [
+        final expectedBuilds = [
           firstBuild.copyWith(coverage: firstBuildCoverage),
           secondBuild.copyWith(coverage: secondBuildCoverage)
         ];
@@ -78,7 +78,7 @@ void main() {
 
         final result = await buildsSyncStage.addCoverageData(builds);
 
-        expect(result, equals(buildsWithCoverage));
+        expect(result, equals(expectedBuilds));
       },
     );
   });
