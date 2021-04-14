@@ -199,10 +199,10 @@ class BuildkiteClient with LoggerMixin {
     String pipelineSlug,
     int buildNumber,
   ) {
+    logger.info('Fetching the build #$buildNumber...');
+
     assert(pipelineSlug != null);
     assert(buildNumber != null);
-
-    logger.info('Fetching the build #$buildNumber...');
 
     final url = UrlUtils.buildUrl(
       basePath,
