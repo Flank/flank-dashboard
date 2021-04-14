@@ -1,8 +1,8 @@
-# Builds aggregation design
+# Firestore Builds Aggregation design
 
 ## Introduction
 
-At this time, for the builds per week metric, we download all the builds of the project for the last 7 days using Firebase advanced query, count the number of builds, and display the information on the Metrics dashboard.
+At this time, for the `builds per week` metric, we download all the builds of the project for the last 7 days using Firebase advanced query, count the number of builds, and display the information on the `Metrics` dashboard.
 
 This solution is okay for now, with the current number of builds, but we might have cases when there are more than 1000 builds per week. This increases the number of reads from the database and leads to heavy load/price implications.
 
@@ -10,7 +10,7 @@ To resolve the described problem, we've investigated a [possibility to provide s
 
 With that we do not need to calculate a builds count every time we load the dashboard. Instead, we should have that count in a separate collection and can just read that value without additional processing on the client.
 
-This document lists steps and designs the `Builds Aggregations` feature to introduce in the Metrics Web Application.
+This document lists steps and designs the `Builds Aggregations` feature to introduce in the `Metrics Web Application`.
 
 ## References
 
@@ -25,7 +25,7 @@ This document lists steps and designs the `Builds Aggregations` feature to intro
 
 ### Document structure
 
-The first collection, we should create is the `builds_per_day`. It holds builds with, grouped by the status and started at day. Each status contains the count of builds, created per day. 
+The first collection, we should create is the `builds_per_day`. It holds builds grouped by the `status` and `started at` day. Each status contains the count of builds, created per day. 
 
 The collection's document has the following structure:
 
@@ -72,7 +72,7 @@ Later, using the `projectId` and `buildNumber` we can fetch a build from the `bu
 
 ### Firestore security rules
 
-Once we have a new collections, we have to add security rules for them.
+Once we have new collections, we have to add security rules for them.
 
 First, the `builds_per_day` collection, everyone can read the content but no one has access to create, update or delete collection documents.
 
@@ -90,9 +90,9 @@ Second, for the `failed_builds_per_day` collection - no one has access to read, 
 
 ### Firestore Cloud Functions
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. In addition, we can [write this functions using the Dart programming language](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md).
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. In addition, we can [write these functions using the Dart programming language](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md).
 
-If we want to provide builds aggregations, we need to process calculations in react to added build. For this purpose, we should create the `onCreate` function trigger on the `build` collection.
+If we want to provide builds aggregations, we need to process calculations in reaction to added build. For this purpose, we should create the `onCreate` function trigger on the `build` collection.
 
 ```dart
 functions['onAddedBuild'] = functions.firestore
