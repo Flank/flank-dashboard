@@ -32,8 +32,6 @@ class FirestoreDestinationClientAdapter
 
     try {
       logger.info('Getting a project with the project id $projectId ...');
-      final project =
-          await _firestore.collection('projects').document(projectId).get();
 
       await _ensureProjectExists(projectId);
 
@@ -41,8 +39,8 @@ class FirestoreDestinationClientAdapter
 
       logger.info('Adding ${builds.length} builds...');
       for (final build in builds) {
-        final documentId = '${project.id}_${build.buildNumber}';
-        final map = build.copyWith(projectId: project.id).toJson();
+        final documentId = '${projectId}_${build.buildNumber}';
+        final map = build.copyWith(projectId: projectId).toJson();
         buildJson = map;
 
         await collection.document(documentId).create(map);
@@ -61,6 +59,8 @@ class FirestoreDestinationClientAdapter
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
     logger.info('Fetching last build for the project id $projectId...');
+
+    await _ensureProjectExists(projectId);
 
     final documents = await _firestore
         .collection('build')
@@ -109,7 +109,6 @@ class FirestoreDestinationClientAdapter
       'Updating builds for the project id $projectId...',
     );
 
-    ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(builds, 'builds');
 
     await _ensureProjectExists(projectId);
@@ -159,15 +158,13 @@ class FirestoreDestinationClientAdapter
       );
 
       final project =
-          await _firestore.collection('projects').document(projectId).get();
+          await _firestore.document('projects/$projectId').get();
 
       if (!project.exists) {
         throw ArgumentError(
           'Project with the given ID $projectId is not found',
         );
       }
-
-      return project.exists;
     } on fd.FirestoreException catch (error) {
       throw DestinationError(
         message:

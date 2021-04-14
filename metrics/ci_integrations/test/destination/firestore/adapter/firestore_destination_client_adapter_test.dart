@@ -64,10 +64,9 @@ void main() {
       String collectionId = 'projects',
       String projectId = testProjectId,
     }) {
-      when(_firestoreMock.collection(collectionId))
-          .thenReturn(_collectionReferenceMock);
-      when(_collectionReferenceMock.document(projectId))
+      when(_firestoreMock.document('$collectionId/$projectId'))
           .thenReturn(_documentReferenceMock);
+
       return when(_documentReferenceMock.get());
     }
 
@@ -88,6 +87,7 @@ void main() {
       String orderByFieldPath = 'startedAt',
       int limit = 1,
     }) {
+      whenCheckProjectExists().thenReturn(true);
       when(_firestoreMock.collection(collectionId))
           .thenReturn(_collectionReferenceMock);
       when(_collectionReferenceMock.where(whereFieldPath, isEqualTo: isEqualTo))
@@ -164,7 +164,7 @@ void main() {
     test(
       ".addBuilds() throws a DestinationError if fetching a project throws",
       () {
-        whenFetchProject().thenThrow(firestoreException);
+        whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
         final result = adapter.addBuilds(testProjectId, []);
 
@@ -175,7 +175,7 @@ void main() {
     test(
       ".addBuilds() does not add builds if fetching the project throws",
       () {
-        whenFetchProject().thenThrow(firestoreException);
+        whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
         final result = adapter.addBuilds(testProjectId, []);
 
@@ -298,6 +298,28 @@ void main() {
         _documentReferenceMock.create(buildsData[1]),
       ]);
     });
+
+    test(
+      ".fetchLastBuild() throws an DestinationError if fetching a project with the given id fails",
+          () {
+        whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
+
+        final result = adapter.fetchLastBuild(testProjectId);
+
+        expect(result, throwsDestinationError);
+      },
+    );
+
+    test(
+      ".fetchLastBuild() throws an ArgumentError if a project with the given id is not found",
+      () {
+        whenCheckProjectExists().thenReturn(false);
+
+        final result = adapter.fetchLastBuild(testProjectId);
+
+        expect(result, throwsArgumentError);
+      },
+    );
 
     test(
       ".fetchLastBuild() returns null if there are no builds for a project with the given id",
@@ -463,13 +485,6 @@ void main() {
         );
 
         expect(result, throwsDestinationError);
-      },
-    );
-
-    test(
-      ".updateBuilds() throws an ArgumentError if the given project id is null",
-      () {
-        expect(() => adapter.updateBuilds(null, []), throwsArgumentError);
       },
     );
 
