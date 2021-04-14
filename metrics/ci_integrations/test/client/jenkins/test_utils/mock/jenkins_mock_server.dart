@@ -218,22 +218,15 @@ class JenkinsMockServer extends ApiMockServer {
   /// the given [request].
   Future<void> _jenkinsBuildResponse(HttpRequest request) {
     final buildNumber = _extractBuildNumber(request);
+    final buildUrl = _extractBuildUrl(request);
 
     final jenkinsBuild = JenkinsBuild(
       number: buildNumber,
-      url: _extractBuildUrl(request),
+      url: buildUrl,
     );
-    final data = jenkinsBuild.toJson();
+    final response = jenkinsBuild.toJson();
 
-    return MockServerUtils.writeResponse(request, body: data);
-  }
-
-  /// Returns a build url extracted from the given [request].
-  String _extractBuildUrl(HttpRequest request) {
-    final requestUri = '${request.requestedUri}';
-    final apiJsonIndex = requestUri.indexOf(JenkinsConstants.jsonApiPath);
-
-    return requestUri.substring(0, apiJsonIndex);
+    return MockServerUtils.writeResponse(request, body: response);
   }
 
   /// Returns a build number extracted from the given [request].
@@ -246,6 +239,14 @@ class JenkinsMockServer extends ApiMockServer {
     if (apiPathIndex <= 0) return null;
 
     return int.tryParse(uriSegments[apiPathIndex - 1]);
+  }
+
+  /// Returns a build url extracted from the given [request].
+  String _extractBuildUrl(HttpRequest request) {
+    final requestUri = '${request.requestedUri}';
+    final apiJsonIndex = requestUri.indexOf(JenkinsConstants.jsonApiPath);
+
+    return requestUri.substring(0, apiJsonIndex);
   }
 
   /// Checks whether a tree query parameter of the [request] contains [pattern].
