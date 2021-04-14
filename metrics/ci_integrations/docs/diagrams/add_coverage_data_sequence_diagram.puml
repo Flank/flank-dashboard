@@ -4,17 +4,17 @@
 skinparam SequenceMessageAlignment center
 skinparam ParticipantPadding 80
 
-participant CiIntegration
+participant BuildsSyncStage
 participant SourceClient
 
-?-> CiIntegration ++ : _addCoverageData(//builds//)
-note right of CiIntegration: //final result = []//
+?-> BuildsSyncStage ++ : addCoverageData(//builds//)
+note right of BuildsSyncStage: //final result = []//
 ||8||
 loop for each //build// in //builds//
-    CiIntegration -> SourceClient ++ : fetchCoverage(//build//)
+    BuildsSyncStage -> SourceClient ++ : fetchCoverage(//build//)
     return //coverage//
-    note right of CiIntegration: //final newBuild = build.copyWith(coverage: coverage)//
-    note right of CiIntegration: //result.add(newBuild)//
+    note right of BuildsSyncStage: //final newBuild = build.copyWith(coverage: coverage)//
+    note right of BuildsSyncStage: //result.add(newBuild)//
 end
 ||8||
 return result

@@ -1,0 +1,41 @@
+@startuml sync_command_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package cli.command as Command {
+    abstract class CiIntegrationCommand<T> {
+        + {abstract} run(): FutureOr<T>
+        + getArgumentValue(String name): dynamic
+    }
+
+    class SyncCommand<void> extends CiIntegrationCommand {
+        + {static} //static// defaultInProgressTimeout: Duration = const Duration(inMinutes: 120)
+        - {static} //static// _inProgressTimeoutOptionName: String = "in-progress-timeout"
+        ..
+        --
+        + run(): Future<void>
+        + parseInProgressTimeout(String): Duration
+        ..
+    }
+}
+
+package integration.ci as CI {
+    package config.model as Config {
+        class SyncConfig {
+            + sourceProjectId: String
+            + destinationProjectId: String
+            + initialSyncLimit: int
+            + inProgressTimeout: Duration
+            + coverage: bool
+        }
+    }
+
+    class CiIntegration {}
+}
+
+SyncCommand -> SyncConfig: creates
+SyncCommand --> CiIntegration: uses
+CiIntegration -> SyncConfig: uses
+
+@enduml

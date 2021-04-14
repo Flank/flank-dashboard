@@ -1,0 +1,82 @@
+@startuml source_clients_class_diagram
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+package integration.interface.source.client {
+    interface SourceClient {
+        + fetchOneBuild(String projectId, int buildNumber): BuildData
+        + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
+        + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
+        + fetchCoverage(BuildData build): Percent
+        + dispose(): void
+    }
+}
+
+package source {
+    package buildkite.adapter {
+        class BuildkiteSourceClientAdapter {
+            + buildkiteClient: BuildkiteClient
+            --
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
+            + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
+            + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
+            + fetchCoverage(BuildData build): Percent
+            + dispose(): void
+            .. //other private methods// ..
+        }
+    }
+
+    package github_actions.adapter {
+        class GithubActionsSourceClientAdapter {
+            + githubActionsClient: GithubActionsClient
+            + workflowIdentifier: String
+            + coverageArtifactName: String
+            + archiveHelper: ArchiveHelper
+            --
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
+            + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
+            + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
+            + fetchCoverage(BuildData build): Percent
+            + dispose(): void
+            .. //other private methods// ..
+        }
+    }
+
+    package jenkins.adapter {
+        class JenkinsSourceClientAdapter {
+            + jenkinsClient: JenkinsClient
+            --
+            + fetchOneBuild(String projectId, int buildNumber): BuildData
+            + fetchBuilds(String projectId, int fetchLimit): List<BuildData>
+            + fetchBuildsAfter(String projectId, BuildData build): List<BuildData>
+            + fetchCoverage(BuildData build): Percent
+            + dispose(): void
+            .. //other private methods// ..
+        }
+    }
+}
+
+BuildkiteSourceClientAdapter .up.|> SourceClient
+GithubActionsSourceClientAdapter .up.|> SourceClient
+JenkinsSourceClientAdapter .up.|> SourceClient
+
+package client {
+    package buildkite {
+        class BuildkiteClient {}
+    }
+
+    package github_actions {
+        class GithubActionsClient {}
+    }
+
+    package jenkins {
+        class JenkinsClient {}
+    }
+}
+
+BuildkiteSourceClientAdapter -down-> BuildkiteClient: uses
+GithubActionsSourceClientAdapter -down-> GithubActionsClient: uses
+JenkinsSourceClientAdapter -down-> JenkinsClient: uses
+
+@enduml

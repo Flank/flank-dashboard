@@ -32,7 +32,7 @@ The following sections cover the synchronization algorithm of the CI Integration
 
 ### Synchronization Algorithm
 
-The synchronization is performed by the `CiIntegration.sync` method that orchestrates the specified `source` and `destination` clients. To describe an algorithm, let's first define its input and output as in the following table:
+The synchronization is performed by the `CiIntegration.sync` method. This method uses the specified synchronization stages which are implementation of the `SyncStage`. The `SyncStage` represents a big complete step of the sync algorithm independent from others steps - this means that the order of stages doesn't matter. Implementers of the `SyncStage` orchestrates the specified `source` and `destination` clients. To describe an algorithm, let's first define its input and output as in the following table:
 
 ||Description|
 |--|--|
@@ -45,7 +45,7 @@ The following activity diagram demonstrates main stages of the algorithm:
 
 ![Sync activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_activity_diagram.puml)
 
-The below sections discover two main parts of the sync process ([Re-Sync In-Progress Builds](#re-sync-in-progress-builds) and [Sync Builds](#sync-builds)) but first, let's take a closer look at the controlling parameters.
+The below sections discover two main stages of the sync process ([Re-Sync In-Progress Builds](#re-sync-in-progress-builds) and [Sync Builds](#sync-builds)) but first, let's take a closer look at the controlling parameters.
 
 #### Control Synchronization
 
@@ -59,7 +59,7 @@ The CI Integrations tool provides several parameters to control the parts of the
 
 ### Re-Sync In-Progress Builds
 
-The first stage of the synchronization algorithm is to re-sync the stored In-Progress builds. These builds have the `BuildStatus.inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to the status of the same build from the `source`. The algorithm performs the following steps:
+The re-sync in-progress builds stage is represented by the `InProgressBuildsSyncStage` class that implements its algorithm. This stage is to re-sync the stored In-Progress builds. These builds have the `BuildStatus.inProgress` status, and the purpose of the re-syncing is to change this status to another one, specific for finished builds, that corresponds to the status of the same build from the `source`. The algorithm performs the following steps:
 
 1. Query builds having In-Progress status from the `destination`.
 2. Re-sync each build from the list of in-progress builds:
@@ -79,12 +79,12 @@ The following activity diagram details the second step for a single in-progress 
 
 ![Re-sync single build activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_activity_diagram.puml)
 
-More precisely, the code snippet below demonstrates the meaning of the *should force timeout* statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
+More precisely, the code snippet below demonstrates the meaning of the **should force timeout** statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
 
 ```dart
     final now = DateTime.now();
     final duration = now.difference(build.startedAt);
-    final shouldTimeout = duration > config.inProgressTimeout;
+    final shouldTimeout = duration >= config.inProgressTimeout;
 ```
 
 Finally, the following activity diagram describes the re-sync in-progress builds stage:
@@ -142,7 +142,7 @@ According to the noticed points, the CI Integration tool considers that the envi
 
 ### Sync Builds
 
-The second stage of the synchronization algorithm is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate the `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
+The second stage of the synchronization algorithm is represented by the `NewBuildsSyncStage` class that implements its algorithm. This stage is to sync new builds from the `source` to the `destination`. The purpose of this stage is to populate the `destination` database with new builds and make them available in the Metrics Web Application. The algorithm performs the following steps:
 
 1. Fetch the last build from the `destination`.
 2. If the last build is `null`:
@@ -152,7 +152,7 @@ The second stage of the synchronization algorithm is to sync new builds from the
 4. Fetch coverage data for builds if necessary.
 5. Add new builds to the `destination`.
 
-Each new build can have one of the possible statuses:
+Each new build can have one of the following possible statuses:
 
 - `inProgress` - means that the build is running.
 - `successful` - means that the build has finished successfully.
@@ -173,9 +173,9 @@ Let's consider the following class diagram that contains the main classes and in
 
 ![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
-When a user starts the synchronization process, the tool invokes the `CiIntegration.sync` method that performs sync algorithm calling `_syncInProgressBuilds` and `_syncBuilds` methods. These methods stand for re-syncing in-progress builds and syncing builds stages respectively.
+When a user starts the synchronization process, the tool creates the `CiIntegration` instance with the proper list of `SyncStage`s (`InProgressBuildsSyncStage` and `NewBuildsSyncStage` - order matters). The tool then invokes the `CiIntegration.sync` method on the created instance. This method performs sync algorithm calling the given stages in the given order.
 
-First, the `CiIntegration.sync` calls the `_syncInProgressBuilds` method that re-syncs in-progress builds. The sequence diagram below details the method's algorithm:
+First, the `CiIntegration.sync` calls the `InProgressBuildsSyncStage.call` method on the given stage instance. This call re-syncs in-progress builds. The sequence diagram below details the method's algorithm:
 
 ![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
@@ -183,11 +183,11 @@ In the above diagram, the method `_syncInProgressBuild` re-syncs a single in-pro
 
 ![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
 
-After the re-syncing process completes, the sync algorithm proceeds to the sync builds stage and calls the `_syncBuilds` method. The sequence diagram below details the method's algorithm:
+After the re-syncing process completes, the sync algorithm proceeds to the sync builds stage and calls the `NewBuildsSyncStage.call` method on the given stage instance. The sequence diagram below details the method's algorithm:
 
 ![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
 
-Both of the above stages uses the `_addCoverageData` method to fetch coverage for builds if the appropriate configuration is enabled. The diagram below examines the coverage fetching for the given list of builds:
+Both of the above stages uses the `BuildsSyncStage.addCoverageData` method to fetch coverage for builds if the appropriate configuration is enabled. The diagram below examines the coverage fetching for the given list of builds:
 
 ![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
 
