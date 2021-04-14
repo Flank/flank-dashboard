@@ -31,8 +31,6 @@ class FirestoreDestinationClientAdapter
     Map<String, dynamic> buildJson;
 
     try {
-      logger.info('Getting a project with the project id $projectId ...');
-
       await _ensureProjectExists(projectId);
 
       final collection = _firestore.collection('build');
