@@ -24,6 +24,11 @@ import '../test_utils/services_mock.dart';
 void main() {
   group("Deployer", () {
     const projectId = 'testId';
+    const firebasePath = DeployConstants.firebasePath;
+    const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
+    const webPath = DeployConstants.webPath;
+    const repoURL = DeployConstants.repoURL;
+    const tempDir = DeployConstants.tempDir;
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -244,10 +249,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gitService.checkout(
-          DeployConstants.repoURL,
-          DeployConstants.tempDir,
-        )).called(once);
+        verify(gitService.checkout(repoURL, tempDir)).called(once);
       },
     );
 
@@ -258,8 +260,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(DeployConstants.repoURL, DeployConstants.tempDir),
-          flutterService.build(DeployConstants.webPath),
+          gitService.checkout(repoURL, tempDir),
+          flutterService.build(webPath),
         ]);
       },
     );
@@ -271,11 +273,9 @@ void main() {
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(DeployConstants.firebasePath))
+        verify(npmService.installDependencies(firebasePath)).called(once);
+        verify(npmService.installDependencies(firebaseFunctionsPath))
             .called(once);
-        verify(npmService.installDependencies(
-          DeployConstants.firebaseFunctionsPath,
-        )).called(once);
       },
     );
 
@@ -286,7 +286,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(flutterService.build(DeployConstants.webPath)).called(once);
+        verify(flutterService.build(webPath)).called(once);
       },
     );
 
@@ -297,7 +297,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          npmService.installDependencies(DeployConstants.firebasePath),
+          npmService.installDependencies(firebasePath),
           firebaseService.deployFirebase(any, any),
         ]);
       },
@@ -310,7 +310,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+          npmService.installDependencies(firebaseFunctionsPath),
           firebaseService.deployFirebase(any, any),
         ]);
       },
@@ -324,8 +324,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.deployFirebase(
-                any, DeployConstants.firebasePath))
+        verify(firebaseService.deployFirebase(projectId, firebasePath))
             .called(once);
       },
     );
@@ -364,8 +363,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.deployHosting(any, DeployConstants.webPath))
-            .called(once);
+        verify(firebaseService.deployHosting(projectId, webPath)).called(once);
       },
     );
 
