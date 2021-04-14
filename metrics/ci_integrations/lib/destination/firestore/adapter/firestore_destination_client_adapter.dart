@@ -122,27 +122,30 @@ class FirestoreDestinationClientAdapter
 
   /// Updates the builds having the same [BuildData.id] with the given [builds].
   ///
-  /// Logs any errors occurred when updating builds.
+  /// Logs any errors occurred when updating [builds].
   Future<void> _updateBuilds(List<BuildData> builds) {
     final updateFutures = <Future<void>>[];
 
     for (final build in builds) {
+      final buildData = build.toJson();
       final buildId = build.id;
 
-      final oldBuild = _firestore.collection('build').document(buildId);
-
-      final updateFuture = oldBuild.update(build.toJson()).catchError(
-        (error) {
-          logger.info(
-            'Failed to update the following build ${build.id} with the following error: $error',
-          );
-        },
-      );
+      final reference = _firestore.collection('build').document(buildId);
+      final updateFuture = reference
+          .update(buildData)
+          .catchError((error) => _handleBuildUpdateError(build, error));
 
       updateFutures.add(updateFuture);
     }
 
     return Future.wait(updateFutures);
+  }
+
+  /// Handles the given [error] occurred during updating the given [build].
+  void _handleBuildUpdateError(BuildData build, dynamic error) {
+    logger.info(
+      'Failed to update the following build ${build.id} with the following error: $error',
+    );
   }
 
   /// Ensures that a project with the given [projectId] exists.
@@ -157,8 +160,7 @@ class FirestoreDestinationClientAdapter
         'Checking a project with the project id $projectId exists...',
       );
 
-      final project =
-          await _firestore.document('projects/$projectId').get();
+      final project = await _firestore.document('projects/$projectId').get();
 
       if (!project.exists) {
         throw ArgumentError(
