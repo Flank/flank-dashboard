@@ -6,7 +6,7 @@ import 'package:cli/doctor/doctor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/firebase_command_mock.dart';
+import '../test_utils/firebase_service_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_service_mock.dart';
@@ -23,17 +23,17 @@ void main() {
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
-    final firebaseCommand = FirebaseCommandMock();
+    final firebaseService = FirebaseServiceMock();
     final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
       npmService: npmService,
       gitService: gitService,
+      firebaseService: firebaseService,
     );
     final doctor = Doctor(
       services: services,
-      firebaseCommand: firebaseCommand,
     );
 
     tearDown(() {
@@ -41,20 +41,10 @@ void main() {
       reset(gcloudService);
       reset(npmService);
       reset(gitService);
-      reset(firebaseCommand);
+      reset(firebaseService);
       reset(servicesMock);
       reset(servicesMock);
     });
-
-    test(
-      "throws an ArgumentError if the given services is null",
-      () {
-        expect(
-          () => Doctor(services: null, firebaseCommand: firebaseCommand),
-          throwsArgumentError,
-        );
-      },
-    );
 
     test(
       "throws an ArgumentError if the Flutter service in the given services is null",
@@ -63,14 +53,9 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
-        expect(
-          () => Doctor(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-          ),
-          throwsArgumentError,
-        );
+        expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
     );
 
@@ -81,14 +66,9 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(null);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
-        expect(
-          () => Doctor(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-          ),
-          throwsArgumentError,
-        );
+        expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
     );
 
@@ -99,14 +79,9 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(null);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
-        expect(
-          () => Doctor(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-          ),
-          throwsArgumentError,
-        );
+        expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
     );
 
@@ -117,23 +92,24 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(null);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
-        expect(
-          () => Doctor(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-          ),
-          throwsArgumentError,
-        );
+        expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
     );
 
-    test("throws an ArgumentError if the given Firebase command is null", () {
-      expect(
-        () => Doctor(services: services, firebaseCommand: null),
-        throwsArgumentError,
-      );
-    });
+    test(
+      "throws an ArgumentError if the Firebase service in the given services is null",
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(null);
+
+        expect(() => Doctor(services: servicesMock), throwsArgumentError);
+      },
+    );
 
     test(
       ".checkVersions() shows the Flutter version",
@@ -149,7 +125,7 @@ void main() {
       () async {
         await doctor.checkVersions();
 
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
       },
     );
 
@@ -190,7 +166,7 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(npmService.version()).called(once);
         verify(gitService.version()).called(once);
       },
@@ -206,7 +182,7 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(npmService.version()).called(once);
         verify(gitService.version()).called(once);
       },
@@ -215,14 +191,14 @@ void main() {
     test(
       ".checkVersions() proceeds if Firebase command throws during the version showing",
       () async {
-        when(firebaseCommand.version())
+        when(firebaseService.version())
             .thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(npmService.version()).called(once);
         verify(gitService.version()).called(once);
       },
@@ -237,7 +213,7 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(npmService.version()).called(once);
         verify(gitService.version()).called(once);
       },
@@ -252,7 +228,7 @@ void main() {
 
         verify(gcloudService.version()).called(once);
         verify(flutterService.version()).called(once);
-        verify(firebaseCommand.version()).called(once);
+        verify(firebaseService.version()).called(once);
         verify(npmService.version()).called(once);
         verify(gitService.version()).called(once);
       },

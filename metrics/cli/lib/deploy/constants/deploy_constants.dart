@@ -12,9 +12,6 @@ class DeployConstants {
   /// A path to the Web project sources.
   static const String webPath = '$tempDir/metrics/web';
 
-  /// A Firebase target name.
-  static const String firebaseTarget = 'metrics';
-
   /// A path to the Firebase sources.
   static const String firebasePath = '$tempDir/metrics/firebase';
 
