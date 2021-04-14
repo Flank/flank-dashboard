@@ -8,12 +8,7 @@ import 'package:ci_integration/integration/ci/sync_stage/builds/builds_sync_stag
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:metrics_core/metrics_core.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-
-import '../../../../cli/test_util/mock/integration_client_mock.dart';
-import '../../../../test_utils/matchers.dart';
 
 void main() {
   group("BuildsSyncStage", () {
@@ -84,16 +79,17 @@ void main() {
   });
 }
 
-/// A fake class needed to test the [BuildsSyncStage]'s non-abstract methods.
+/// A fake class needed to test the [BuildsSyncStage] non-abstract methods.
 class _BuildsSyncStageFake extends BuildsSyncStage {
   @override
   final SourceClient sourceClient;
 
   @override
-  DestinationClient get destinationClient => null;
+  final DestinationClient destinationClient;
 
-  /// Creates a new instance of this fake with the given [sourceClient].
-  _BuildsSyncStageFake(this.sourceClient);
+  /// Creates a new instance of this fake with the given [sourceClient]
+  /// and [destinationClient].
+  _BuildsSyncStageFake(this.sourceClient, this.destinationClient);
 
   @override
   FutureOr<InteractionResult> call(SyncConfig syncConfig) {
