@@ -557,7 +557,7 @@ void main() {
       () async {
         whenCheckProjectExists().thenReturn(true);
         when(
-          _firestoreMock.document(argThat(contains('build/'))),
+          _firestoreMock.document(argThat(startsWith('build/'))),
         ).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(any)).thenAnswer(
           (_) => Future.sync(() {}),
@@ -581,7 +581,7 @@ void main() {
         );
         whenCheckProjectExists(withProjectId: projectId).thenReturn(true);
         when(
-          _firestoreMock.document(argThat(contains('build/'))),
+          _firestoreMock.document(argThat(startsWith('build/'))),
         ).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(any)).thenAnswer(
           (_) => Future.sync(() {}),
@@ -605,7 +605,7 @@ void main() {
 
         whenCheckProjectExists().thenReturn(true);
         when(
-          _firestoreMock.document(argThat(contains('build/'))),
+          _firestoreMock.document(argThat(startsWith('build/'))),
         ).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(firstBuild.toJson())).thenAnswer(
           (_) => Future.error(firestoreException),
