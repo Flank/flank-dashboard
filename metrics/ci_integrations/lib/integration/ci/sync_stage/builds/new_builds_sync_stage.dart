@@ -60,7 +60,7 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         );
       }
 
-      if (newBuilds == null || newBuilds.isEmpty) {
+      if (newBuilds.isEmpty) {
         return const InteractionResult.success(
           message: 'The project data is up-to-date!',
         );

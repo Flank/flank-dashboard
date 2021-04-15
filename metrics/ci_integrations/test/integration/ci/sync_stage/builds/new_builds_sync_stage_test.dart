@@ -6,22 +6,66 @@ import 'dart:async';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/ci/sync_stage/builds/new_builds_sync_stage.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../../cli/test_util/mock/integration_client_mock.dart';
 import '../../../../cli/test_util/test_data/config_test_data.dart';
-import '../../test_utils/stub/destination_client_stub.dart';
-import '../../test_utils/stub/source_client_stub.dart';
-import '../../test_utils/test_data/builds_test_data.dart';
+import '../../../../test_utils/matchers.dart';
 
 void main() {
   group("NewBuildsSyncStage", () {
-    final sourceClient = SourceClientStub();
-    final destinationClient = DestinationClientStub();
+    const build = BuildData(buildNumber: 1);
+    const anotherBuild = BuildData(buildNumber: 2);
+    const builds = [build, anotherBuild];
+
+    final coverage = Percent(0.1);
+    final buildWithCoverage = build.copyWith(coverage: coverage);
+    final anotherBuildWithCoverage = anotherBuild.copyWith(coverage: coverage);
+    final buildsWithCoverage = [buildWithCoverage, anotherBuildWithCoverage];
+
+    final sourceClient = SourceClientMock();
+    final destinationClient = DestinationClientMock();
+
     final newBuildsSyncStage = NewBuildsSyncStage(
       sourceClient,
       destinationClient,
     );
+
     final syncConfig = ConfigTestData.syncConfig;
+    final sourceProjectId = syncConfig.sourceProjectId;
+    final destinationProjectId = syncConfig.destinationProjectId;
+    final initialSyncLimit = syncConfig.initialSyncLimit;
+    final syncConfigWithCoverage = SyncConfig(
+      sourceProjectId: sourceProjectId,
+      destinationProjectId: destinationProjectId,
+      initialSyncLimit: initialSyncLimit,
+      inProgressTimeout: syncConfig.inProgressTimeout,
+      coverage: true,
+    );
+
+    final error = Error();
+
+    PostExpectation<Future<List<BuildData>>> whenFetchBuilds() {
+      when(
+        destinationClient.fetchLastBuild(destinationProjectId),
+      ).thenAnswer((_) => Future.value());
+
+      return when(sourceClient.fetchBuilds(sourceProjectId, initialSyncLimit));
+    }
+
+    PostExpectation<Future<List<BuildData>>> whenFetchBuildsAfter() {
+      when(
+        destinationClient.fetchLastBuild(destinationProjectId),
+      ).thenAnswer((_) => Future.value(build));
+
+      return when(sourceClient.fetchBuildsAfter(sourceProjectId, build));
+    }
+
+    tearDown(() {
+      reset(sourceClient);
+      reset(destinationClient);
+    });
 
     test(
       "throws an ArgumentError if the given source client is null",
@@ -46,177 +90,405 @@ void main() {
     test(
       ".call() throws an ArgumentError if the given sync config is null",
       () {
-        final result = newBuildsSyncStage(null);
-
-        expect(result, throwsArgumentError);
+        expect(() => newBuildsSyncStage.call(null), throwsArgumentError);
       },
     );
 
     test(
-      ".call() returns an error if a source client throws fetching all builds",
+      ".call() fetches the last build using the destination client and the given destination project id",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsCallback: (_) => throw UnimplementedError(),
-        );
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        await newBuildsSyncStage.call(syncConfig);
+
+        verify(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".call() returns an error if an error occurs while fetching the last build from the destination",
+      () async {
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.error(error));
+
+        final result = await newBuildsSyncStage.call(syncConfig);
 
         expect(result.isError, isTrue);
       },
     );
 
     test(
-      ".call() returns an error if a source client throws fetching the builds after the given one",
+      ".call() does not continue the sync if an error occurs while fetching the last build from the destination",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.error(error));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyZeroInteractions(sourceClient);
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
+
+    test(
+      ".call() fetches the initial sync limit number of builds from the source if the fetched last build is null",
+      () async {
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.value());
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verify(
+          sourceClient.fetchBuilds(sourceProjectId, initialSyncLimit),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".call() does not fetch the builds after from the source if the fetched last build is null",
+      () async {
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.value());
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchBuildsAfter(any, any));
+      },
+    );
+
+    test(
+      ".call() does not continue the sync if an error occurs while fetching the last builds from the source",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.error(error));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchCoverage(any));
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
+
+    test(
+      ".call() returns an error if an error occurs while fetching the last builds from the source",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.error(error));
+
+        final result = await newBuildsSyncStage.call(syncConfig);
 
         expect(result.isError, isTrue);
       },
     );
 
     test(
-      ".call() returns an error if a destination client throws fetching the last build",
+      ".call() does not continue the sync if the fetched last builds are empty",
       () async {
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => throw UnimplementedError(),
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        whenFetchBuilds().thenAnswer((_) => Future.value([]));
 
-        expect(result.isError, isTrue);
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchCoverage(any));
+        verifyNever(destinationClient.addBuilds(any, any));
       },
     );
 
     test(
-      ".call() returns an error if a destination client throws adding new builds",
+      ".call() returns a success if the fetched last builds are empty",
       () async {
-        final destinationClient = DestinationClientStub(
-          addBuildsCallback: (_, __) => throw UnimplementedError(),
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        whenFetchBuilds().thenAnswer((_) => Future.value([]));
 
-        expect(result.isError, isTrue);
-      },
-    );
-
-    test(
-      ".call() ignores empty list of new builds and not call adding builds",
-      () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsAfterCallback: (_, __) => Future.value([]),
-        );
-        final destinationClient = DestinationClientStub(
-          addBuildsCallback: (_, __) => throw UnimplementedError(),
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        final result = await newBuildsSyncStage.call(syncConfig);
 
         expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".call() synchronizes builds",
+      ".call() does not fetch coverage for the fetched last builds if the coverage option is not enabled in the sync config",
       () async {
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchCoverage(any));
+      },
+    );
+
+    test(
+      ".call() adds fetched last builds to the destination if the coverage option is not enabled",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verify(destinationClient.addBuilds(destinationProjectId, builds));
+      },
+    );
+
+    test(
+      ".call() fetches coverage for the fetched last builds if the coverage option is enabled",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verify(sourceClient.fetchCoverage(build)).called(once);
+        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
+      },
+    );
+
+    test(
+      ".call() does not continue the sync if an error occurs while fetching the coverage for the fetched last builds",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.error(error));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
+
+    test(
+      ".call() returns an error if an error occurs while fetching the coverage for the fetched last builds",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.error(error));
+
+        final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".call() adds the last builds with the fetched coverage to the destination",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.value(coverage));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verify(
+          destinationClient.addBuilds(destinationProjectId, buildsWithCoverage),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".call() returns an error if an error occurs while adding the last builds",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          destinationClient.addBuilds(destinationProjectId, builds),
+        ).thenAnswer((_) => Future.error(error));
+
+        final result = await newBuildsSyncStage.call(syncConfig);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".call() returns a success if adding the last builds succeeds",
+      () async {
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          destinationClient.addBuilds(destinationProjectId, builds),
+        ).thenAnswer((_) => Future.value());
+
+        final result = await newBuildsSyncStage.call(syncConfig);
 
         expect(result.isSuccess, isTrue);
       },
     );
 
     test(
-      ".call() does not fetch coverage for builds if the coverage value is false in the given config",
+      ".call() fetches the builds after the the fetched last build if it is not null",
       () async {
-        bool isCalled = false;
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.value(build));
 
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
+        await newBuildsSyncStage.call(syncConfig);
 
-        final sourceClient = SourceClientStub(
-          fetchCoverageCallback: (_) {
-            isCalled = true;
-
-            return Future.value(Percent(0.7));
-          },
-        );
-
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-
-        final result = await (newBuildsSyncStage(syncConfig) as Future)
-            .then((result) => result.isSuccess);
-
-        expect(result, isTrue);
-        expect(isCalled, isFalse);
+        verify(
+          sourceClient.fetchBuildsAfter(sourceProjectId, build),
+        ).called(once);
       },
     );
 
     test(
-      ".call() fetches coverage for each build if the coverage value is true in the given config",
+      ".call() does not fetch the last builds if the fetched last build is not null",
       () async {
-        final syncConfig = SyncConfig(
-          sourceProjectId: 'test',
-          destinationProjectId: 'test',
-          coverage: true,
-          initialSyncLimit: 10,
-          inProgressTimeout: const Duration(minutes: 1),
-        );
+        when(
+          destinationClient.fetchLastBuild(destinationProjectId),
+        ).thenAnswer((_) => Future.value(build));
 
-        final expectedCalledTimes = BuildsTestData.builds.length;
-        int calledTimes = 0;
+        await newBuildsSyncStage.call(syncConfig);
 
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
+        verifyNever(sourceClient.fetchBuilds(any, any));
+      },
+    );
 
-        final sourceClient = SourceClientStub(
-          fetchCoverageCallback: (_) {
-            calledTimes += 1;
+    test(
+      ".call() does not continue the sync if an error occurs while fetching the builds after the fetched last build",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.error(error));
 
-            return Future.value(Percent(0.7));
-          },
-        );
+        await newBuildsSyncStage.call(syncConfig);
 
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
+        verifyNever(sourceClient.fetchCoverage(any));
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
 
-        final result = await (newBuildsSyncStage(syncConfig) as Future)
-            .then((result) => result.isSuccess);
+    test(
+      ".call() returns an error if an error occurs while fetching the builds after the fetched last build",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.error(error));
 
-        expect(result, isTrue);
-        expect(calledTimes, equals(expectedCalledTimes));
+        final result = await newBuildsSyncStage.call(syncConfig);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".call() does not continue the sync if the fetched builds after are empty",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value([]));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchCoverage(any));
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
+
+    test(
+      ".call() returns a success if the fetched builds after are empty",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value([]));
+
+        final result = await newBuildsSyncStage.call(syncConfig);
+
+        expect(result.isSuccess, isTrue);
+      },
+    );
+
+    test(
+      ".call() does not fetch the coverage for the fetched builds after if the coverage option is not enabled in the sync config",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verifyNever(sourceClient.fetchCoverage(build));
+      },
+    );
+
+    test(
+      ".call() adds the fetched builds after to the destination if the coverage option is not enabled in the sync config",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfig);
+
+        verify(
+          destinationClient.addBuilds(destinationProjectId, builds),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".call() fetches coverage for the fetched builds after if the coverage option is enabled in the sync config",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verify(sourceClient.fetchCoverage(build)).called(once);
+        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
+      },
+    );
+
+    test(
+      ".call() fetches coverage for the fetched builds after if the coverage option is enabled in the sync config",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verify(sourceClient.fetchCoverage(build)).called(once);
+        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
+      },
+    );
+
+    test(
+      ".call() does not continue the sync if an error occurs while fetching the coverage for the fetched builds after",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.error(error));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verifyNever(destinationClient.addBuilds(any, any));
+      },
+    );
+
+    test(
+      ".call() returns an error if an error occurs while fetching the coverage for the fetched builds after",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.error(error));
+
+        final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".call() adds fetched builds after with the fetched coverage to the destination",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.value(coverage));
+
+        await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        verify(
+          destinationClient.addBuilds(destinationProjectId, buildsWithCoverage),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".call() returns a success if adding builds with coverage to the destination succeeds",
+      () async {
+        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
+        when(
+          sourceClient.fetchCoverage(any),
+        ).thenAnswer((_) => Future.value(coverage));
+
+        final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
+
+        expect(result.isSuccess, isTrue);
       },
     );
   });
