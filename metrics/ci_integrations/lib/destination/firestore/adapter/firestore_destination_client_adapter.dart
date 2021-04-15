@@ -103,9 +103,7 @@ class FirestoreDestinationClientAdapter
 
   @override
   Future<void> updateBuilds(String projectId, List<BuildData> builds) async {
-    logger.info(
-      'Updating builds for the project id $projectId...',
-    );
+    logger.info('Updating builds for the project id $projectId...');
 
     ArgumentError.checkNotNull(builds, 'builds');
 
@@ -118,9 +116,7 @@ class FirestoreDestinationClientAdapter
     await _updateBuilds(updatedBuilds);
   }
 
-  /// Updates the builds having the same [BuildData.id] with the given [builds].
-  ///
-  /// Logs any errors occurred when updating [builds].
+  /// Updates builds with the given [builds] data using their [BuildData.id].
   Future<void> _updateBuilds(List<BuildData> builds) {
     final updateFutures = <Future<void>>[];
 
@@ -128,7 +124,8 @@ class FirestoreDestinationClientAdapter
       final buildData = build.toJson();
       final buildId = build.id;
 
-      final reference = _firestore.collection('build').document(buildId);
+      final reference = _firestore.document('build/$buildId');
+
       final updateFuture = reference
           .update(buildData)
           .catchError((error) => _handleBuildUpdateError(build, error));
@@ -140,7 +137,7 @@ class FirestoreDestinationClientAdapter
   }
 
   /// Handles the given [error] occurred during updating the given [build].
-  void _handleBuildUpdateError(BuildData build, dynamic error) {
+  void _handleBuildUpdateError(BuildData build, Object error) {
     logger.info(
       'Failed to update the following build ${build.id} with the following error: $error',
     );

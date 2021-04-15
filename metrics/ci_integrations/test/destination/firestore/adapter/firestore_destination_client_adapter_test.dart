@@ -121,14 +121,6 @@ void main() {
       return when(_collectionReferenceMock.getDocuments());
     }
 
-    PostExpectation<DocumentReference> whenReferenceBuild() {
-      when(
-        _firestoreMock.collection('build'),
-      ).thenReturn(_collectionReferenceMock);
-
-      return when(_collectionReferenceMock.document(any));
-    }
-
     setUp(() {
       reset(_firestoreMock);
       reset(_collectionReferenceMock);
@@ -174,24 +166,24 @@ void main() {
 
     test(
       ".addBuilds() does not add builds if fetching the project throws",
-      () {
+      () async {
         whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
         final result = adapter.addBuilds(testProjectId, []);
 
-        expect(result, throwsDestinationError);
+        await expectLater(result, throwsDestinationError);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
 
     test(
       ".addBuilds() does not add builds if a project with the given id does not exist",
-      () {
+      () async {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.addBuilds(testProjectId, []);
 
-        expect(result, throwsArgumentError);
+        await expectLater(result, throwsArgumentError);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
@@ -323,12 +315,12 @@ void main() {
 
     test(
       ".fetchLastBuild() does not fetch the last build if the project with the given project id does not exist",
-      () {
+      () async {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.fetchLastBuild(testProjectId);
 
-        expect(result, throwsArgumentError);
+        await expectLater(result, throwsArgumentError);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
@@ -401,7 +393,7 @@ void main() {
 
     test(
       ".fetchBuildsWithStatus() does not fetch builds if the project with the given project id does not exist",
-      () {
+      () async {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.fetchBuildsWithStatus(
@@ -409,7 +401,7 @@ void main() {
           BuildStatus.successful,
         );
 
-        expect(result, throwsArgumentError);
+        await expectLater(result, throwsArgumentError);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
@@ -484,7 +476,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsWithStatus() returns the builds with requested status",
+      ".fetchBuildsWithStatus() returns builds with the requested status",
       () async {
         when(_documentMock.map).thenReturn(buildDataTestJson);
         whenFetchBuildsWithStatus().thenAnswer(
@@ -517,7 +509,7 @@ void main() {
     );
 
     test(
-      ".updateBuilds() throws an ArgumentError if the given builds is null",
+      ".updateBuilds() throws an ArgumentError if the given builds list is null",
       () {
         expect(
           () => adapter.updateBuilds(testProjectId, null),
@@ -550,12 +542,12 @@ void main() {
 
     test(
       ".updateBuilds() does not update builds if the project with the given project id does not exist",
-      () {
+      () async {
         whenCheckProjectExists().thenReturn(false);
 
         final result = adapter.updateBuilds(testProjectId, builds);
 
-        expect(result, throwsArgumentError);
+        await expectLater(result, throwsArgumentError);
         verifyNever(_firestoreMock.collection('build'));
       },
     );
@@ -564,18 +556,19 @@ void main() {
       ".updateBuilds() references builds using their ids",
       () async {
         whenCheckProjectExists().thenReturn(true);
-        whenReferenceBuild().thenReturn(_documentReferenceMock);
+        when(
+          _firestoreMock.document(argThat(contains('build/'))),
+        ).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(any)).thenAnswer(
           (_) => Future.sync(() {}),
         );
 
         await adapter.updateBuilds(testProjectId, builds);
 
-        verifyInOrder(
-          builds.map((build) {
-            _collectionReferenceMock.document(build.id);
-          }).toList(),
-        );
+        verifyInOrder([
+          for (final build in builds)
+            _firestoreMock.document('build/${build.id}'),
+        ]);
       },
     );
 
@@ -587,18 +580,19 @@ void main() {
           (build) => build.copyWith(projectId: projectId),
         );
         whenCheckProjectExists(withProjectId: projectId).thenReturn(true);
-        whenReferenceBuild().thenReturn(_documentReferenceMock);
+        when(
+          _firestoreMock.document(argThat(contains('build/'))),
+        ).thenReturn(_documentReferenceMock);
         when(_documentReferenceMock.update(any)).thenAnswer(
           (_) => Future.sync(() {}),
         );
 
         await adapter.updateBuilds(projectId, builds);
 
-        verifyInOrder(
-          expectedBuilds.map((build) {
-            return _documentReferenceMock.update(build.toJson());
-          }).toList(),
-        );
+        verifyInOrder([
+          for (final build in expectedBuilds)
+            _documentReferenceMock.update(build.toJson()),
+        ]);
       },
     );
 
@@ -610,8 +604,10 @@ void main() {
         const builds = [firstBuild, secondBuild];
 
         whenCheckProjectExists().thenReturn(true);
-        whenReferenceBuild().thenReturn(_documentReferenceMock);
-        when(_documentReferenceMock.update(any)).thenAnswer(
+        when(
+          _firestoreMock.document(argThat(contains('build/'))),
+        ).thenReturn(_documentReferenceMock);
+        when(_documentReferenceMock.update(firstBuild.toJson())).thenAnswer(
           (_) => Future.error(firestoreException),
         );
         when(_documentReferenceMock.update(secondBuild.toJson())).thenAnswer(
