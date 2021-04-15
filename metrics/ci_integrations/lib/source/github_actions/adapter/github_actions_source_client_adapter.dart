@@ -155,34 +155,33 @@ class GithubActionsSourceClientAdapter
   ///
   /// Returns `null` if there is no workflow run with the given [runNumber].
   Future<WorkflowRun> _fetchWorkflowRun(int runNumber) async {
-    final latestWorkflowRunsPage = await _fetchRunsPage(
+    WorkflowRunsPage workflowRunsPage = await _fetchRunsPage(
       page: 1,
-      perPage: 1,
+      perPage: defaultPerPage,
     );
-    final latestWorkflowRuns = latestWorkflowRunsPage.values;
+    bool hasNext = true;
 
-    if (latestWorkflowRuns == null || latestWorkflowRuns.isEmpty) return null;
+    do {
+      hasNext = workflowRunsPage.hasNextPage;
+      final workflowRuns = workflowRunsPage.values ?? [];
 
-    final latestWorkflowRun = latestWorkflowRuns.first;
-    final latestWorkflowRunNumber = latestWorkflowRun.number;
+      for (final workflowRun in workflowRuns) {
+        if (workflowRun.number < runNumber) {
+          hasNext = false;
+          break;
+        }
 
-    if (latestWorkflowRunNumber < runNumber) return null;
+        if (workflowRun.number == runNumber) {
+          return workflowRun;
+        }
+      }
 
-    if (latestWorkflowRunNumber == runNumber) {
-      return latestWorkflowRun;
-    }
+      if (hasNext) {
+        workflowRunsPage = await _fetchNextRunsPage(workflowRunsPage);
+      }
+    } while (hasNext);
 
-    final numberOfRunsToFetch = latestWorkflowRunNumber - runNumber + 1;
-    final workflowRunsPage = await _fetchRunsPage(
-      page: 1,
-      perPage: numberOfRunsToFetch,
-    );
-    final workflowRuns = workflowRunsPage.values;
-
-    return workflowRuns.firstWhere(
-      (run) => run.number == runNumber,
-      orElse: () => null,
-    );
+    return null;
   }
 
   /// Fetches the latest builds by the given [jobName].

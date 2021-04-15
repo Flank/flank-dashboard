@@ -1191,7 +1191,7 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() fetches the latest workflow run",
+      ".fetchOneBuild() fetches the first workflow runs page with the default number of builds per page",
       () async {
         const workflowRunsPage = WorkflowRunsPage(values: []);
         whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
@@ -1202,7 +1202,7 @@ void main() {
           any,
           status: anyNamed('status'),
           page: 1,
-          perPage: 1,
+          perPage: GithubActionsSourceClientAdapter.defaultPerPage,
         )).called(once);
       },
     );
@@ -1220,19 +1220,19 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() returns null if the GitHub Actions client returns the page with null values while fetching the latest workflow run",
+      ".fetchOneBuild() returns null if the GitHub Actions client returns a first workflow runs page with values equal to null",
       () {
         const workflowRunsPage = WorkflowRunsPage();
         whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
 
-        final buildFuture = adapter.fetchOneBuild(jobName, 2);
+        final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
 
         expect(buildFuture, completion(isNull));
       },
     );
 
     test(
-      ".fetchOneBuild() returns null if the workflow with the given build number is skipped",
+      ".fetchOneBuild() returns null if the workflow run with the given build number has the skipped conclusion",
       () {
         const workflowRun = WorkflowRun(
           number: buildNumber,
@@ -1251,7 +1251,7 @@ void main() {
       ".fetchOneBuild() returns null if there is no workflow run with the given number",
       () {
         final workflowRuns = testData.generateWorkflowRunsByNumbers(
-          runNumbers: [1, 3, 4],
+          runNumbers: [4, 3, 1],
         );
         final workflowRunsPage = WorkflowRunsPage(values: workflowRuns);
         whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
@@ -1281,7 +1281,7 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() throws a StateError if the latest workflow run fetching failed",
+      ".fetchOneBuild() throws a StateError if the workflow runs page fetching failed",
       () {
         whenFetchWorkflowRuns().thenErrorWith();
 
@@ -1292,50 +1292,86 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() fetches the latest workflow runs up to the run with the given build number if the latest workflow run is greater than the given build number",
+      ".fetchOneBuild() fetches the workflow run with the given number using the pagination if the first page does not contain the run with the given build number",
       () async {
-        const latestRunNumber = buildNumber + 3;
-        const expectedBuildsToFetch = latestRunNumber - buildNumber + 1;
-        final workflowRun = testData.generateWorkflowRun(
-          runNumber: latestRunNumber,
+        final workflowRuns = testData.generateWorkflowRunsByNumbers(
+          runNumbers: [2],
         );
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunsPage = WorkflowRunsPage(
+          values: workflowRuns,
+          nextPageUrl: testData.url,
+        );
+        const nextWorkflowRunsPage = WorkflowRunsPage();
         whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchWorkflowRunsNext(any))
+            .thenSuccessWith(nextWorkflowRunsPage);
 
         await adapter.fetchOneBuild(jobName, buildNumber);
 
-        verify(githubActionsClientMock.fetchWorkflowRuns(
-          any,
-          status: anyNamed('status'),
-          perPage: expectedBuildsToFetch,
-          page: 1,
-        )).called(once);
+        verify(githubActionsClientMock.fetchWorkflowRunsNext(workflowRunsPage))
+            .called(once);
       },
     );
 
     test(
-      ".fetchOneBuild() throws a StateError if the latest builds fetching failed",
-      () {
-        const latestRunNumber = buildNumber + 3;
-        const expectedBuildsToFetch = latestRunNumber - buildNumber + 1;
-        final workflowRun = testData.generateWorkflowRun(
-          runNumber: latestRunNumber,
+      ".fetchOneBuild() does not fetch the next workflow runs page is the first page contains the workflow run with number equal to the given build number",
+      () async {
+        final workflowRuns = testData.generateWorkflowRunsByNumbers(
+          runNumbers: [buildNumber],
         );
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunsPage = WorkflowRunsPage(
+          values: workflowRuns,
+          nextPageUrl: testData.url,
+        );
+        const workflowRunJobsPage = WorkflowRunJobsPage(values: []);
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
 
-        when(githubActionsClientMock.fetchWorkflowRuns(
-          any,
-          status: anyNamed('status'),
-          perPage: 1,
-          page: 1,
-        )).thenSuccessWith(workflowRunsPage);
+        await adapter.fetchOneBuild(jobName, buildNumber);
 
-        when(githubActionsClientMock.fetchWorkflowRuns(
-          any,
-          status: anyNamed('status'),
-          perPage: expectedBuildsToFetch,
-          page: 1,
-        )).thenErrorWith();
+        verifyNever(
+            githubActionsClientMock.fetchWorkflowRunsNext(workflowRunsPage));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() does not fetch the next workflow runs page is the previous page contains the workflow run with number equal to the given build number",
+      () async {
+        const workflowRunJobsPage = WorkflowRunJobsPage(values: []);
+        final workflowRunsPage = WorkflowRunsPage(
+          values: const [],
+          nextPageUrl: testData.url,
+        );
+        final nextWorkflowRuns = testData.generateWorkflowRunsByNumbers(
+          runNumbers: [buildNumber],
+        );
+        final nextWorkflowRunsPage = WorkflowRunsPage(values: nextWorkflowRuns);
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchWorkflowRunsNext(workflowRunsPage))
+            .thenSuccessWith(nextWorkflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verifyNever(githubActionsClientMock
+            .fetchWorkflowRunsNext(nextWorkflowRunsPage));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if the next workflow runs page fetching failed",
+      () {
+        final workflowRuns = testData.generateWorkflowRunsByNumbers(
+          runNumbers: [4, 3, 2],
+        );
+        final workflowRunsPage = WorkflowRunsPage(
+          values: workflowRuns,
+          nextPageUrl: testData.url,
+        );
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchWorkflowRunsNext(any))
+            .thenErrorWith();
 
         final buildFuture = adapter.fetchOneBuild(jobName, buildNumber);
 
@@ -1438,30 +1474,6 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() does not fetch the next workflow run jobs page if the first one contains the job with the given name",
-      () async {
-        final workflowRun = testData.generateWorkflowRun(
-          runNumber: buildNumber,
-        );
-        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
-        final workflowRunJob = testData.generateWorkflowRunJob();
-        final workflowRunJobsPage = WorkflowRunJobsPage(
-          values: [workflowRunJob],
-          nextPageUrl: testData.url,
-        );
-
-        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
-            .thenSuccessWith(workflowRunsPage);
-
-        await adapter.fetchOneBuild(jobName, buildNumber);
-
-        verifyNever(
-          githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage),
-        );
-      },
-    );
-
-    test(
       ".fetchOneBuild() fetches the workflow run job with the given name using the pagination if the first page does not contain the job with the given name",
       () async {
         final workflowRun = testData.generateWorkflowRun(
@@ -1487,6 +1499,61 @@ void main() {
         verify(githubActionsClientMock.fetchRunJobsNext(
           workflowRunJobsPage,
         )).called(once);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() does not fetch the next workflow run jobs page if the first one contains the job with the given name",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob();
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+          nextPageUrl: testData.url,
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verifyNever(
+          githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage),
+        );
+      },
+    );
+
+    test(
+      ".fetchOneBuild() does not fetch the next workflow run jobs page if the previous one contains the job with the given name",
+      () async {
+        final workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
+        );
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        const workflowRunJob = WorkflowRunJob(name: 'name');
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: const [workflowRunJob],
+          nextPageUrl: testData.url,
+        );
+        final nextWorkflowRunJob = testData.generateWorkflowRunJob();
+        final nextWorkflowRunJobsPage = WorkflowRunJobsPage(
+          values: [nextWorkflowRunJob],
+          nextPageUrl: testData.url,
+        );
+
+        whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobsNext(workflowRunJobsPage))
+            .thenSuccessWith(nextWorkflowRunJobsPage);
+
+        await adapter.fetchOneBuild(jobName, buildNumber);
+
+        verifyNever(
+          githubActionsClientMock.fetchRunJobsNext(nextWorkflowRunJobsPage),
+        );
       },
     );
 
