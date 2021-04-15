@@ -707,12 +707,12 @@ void main() {
 
     test(
       ".fetchOneBuild() returns a build data if fetching a build succeeds",
-      () {
+      () async {
         when(
           jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
         ).thenSuccessWith(jenkinsBuild);
 
-        final result = adapter.fetchOneBuild(jobName, defaultBuildNumber);
+        final result = await adapter.fetchOneBuild(jobName, defaultBuildNumber);
 
         expect(result, isNotNull);
       },
