@@ -68,9 +68,10 @@ class Deployer {
       DeployConstants.repoURL,
       DeployConstants.tempDir,
     );
-    await _deployFirebase(projectId);
-    await _deployHosting(projectId);
-    await _clearResources();
+    await _installNpmDependencies();
+    await _flutterService.build(DeployConstants.webPath);
+    await _deployToFirebase(projectId);
+    await _cleanup();
   }
 
   /// Logins to the necessary services.
@@ -79,33 +80,30 @@ class Deployer {
     await _firebaseService.login();
   }
 
-  /// Installs npm dependencies and deploys Firebase configuration
-  /// to the Firebase project with the given [projectId].
-  Future<void> _deployFirebase(String projectId) async {
-    const firebasePath = DeployConstants.firebasePath;
-
-    await _npmService.installDependencies(firebasePath);
+  /// Installs npm dependencies.
+  Future<void> _installNpmDependencies() async {
+    await _npmService.installDependencies(DeployConstants.firebasePath);
     await _npmService.installDependencies(
       DeployConstants.firebaseFunctionsPath,
     );
-    await _firebaseService.deployFirebase(projectId, firebasePath);
   }
 
-  /// Builds a Flutter application and deploys to the Firebase project
-  /// with the given [projectId] hosting.
-  Future<void> _deployHosting(String projectId) async {
-    const webAppPath = DeployConstants.webPath;
-
-    await _flutterService.build(webAppPath);
+  /// Deploys Firebase configuration to the Firebase project
+  /// with the given [projectId].
+  Future<void> _deployToFirebase(String projectId) async {
+    await _firebaseService.deployFirebase(
+      projectId,
+      DeployConstants.firebasePath,
+    );
     await _firebaseService.deployHosting(
       projectId,
       DeployConstants.firebaseTarget,
-      webAppPath,
+      DeployConstants.webPath,
     );
   }
 
-  /// Clears temporary resources created during the deploy process.
-  Future<void> _clearResources() async {
+  /// Cleans temporary resources created during the deploy process.
+  Future<void> _cleanup() async {
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
     await tempDirectory.delete(recursive: true);
   }
