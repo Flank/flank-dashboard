@@ -59,9 +59,11 @@ class Deployer {
 
   /// Deploys the Metrics Web Application.
   Future<void> deploy() async {
-    final projectId = await _createGcloudProject();
+    await _servicesLogin();
 
-    await _createFirebaseApp(projectId);
+    final projectId = await _gcloudService.createProject();
+
+    await _firebaseService.createWebApp(projectId);
     await _gitService.checkout(
       DeployConstants.repoURL,
       DeployConstants.tempDir,
@@ -71,17 +73,14 @@ class Deployer {
     await _clearResources();
   }
 
-  Future<String> _createGcloudProject() async {
+  /// Logins to the necessary services.
+  Future<void> _servicesLogin() async {
     await _gcloudService.login();
-
-    return _gcloudService.createProject();
-  }
-
-  Future<void> _createFirebaseApp(String projectId) async {
     await _firebaseService.login();
-    await _firebaseService.createWebApp(projectId);
   }
 
+  /// Installs npm dependencies and deploys Firebase configuration
+  /// to the Firebase project with the given [projectId].
   Future<void> _deployFirebase(String projectId) async {
     const firebasePath = DeployConstants.firebasePath;
 
@@ -92,6 +91,8 @@ class Deployer {
     await _firebaseService.deployFirebase(projectId, firebasePath);
   }
 
+  /// Builds a Flutter application and deploys to the Firebase project
+  /// with the given [projectId] hosting.
   Future<void> _deployHosting(String projectId) async {
     const webAppPath = DeployConstants.webPath;
 
@@ -103,6 +104,7 @@ class Deployer {
     );
   }
 
+  /// Clears temporary resources created during the deploy process.
   Future<void> _clearResources() async {
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
     await tempDirectory.delete(recursive: true);
