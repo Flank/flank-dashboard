@@ -150,12 +150,12 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     ArgumentError.checkNotNull(jobName, 'jobName');
     ArgumentError.checkNotNull(buildNumber, 'buildNumber');
 
-    final jenkinsBuildInteraction = await jenkinsClient.fetchBuildByNumber(
+    final interaction = await jenkinsClient.fetchBuildByNumber(
       jobName,
       buildNumber,
     );
 
-    final jenkinsBuild = _processInteraction(jenkinsBuildInteraction);
+    final jenkinsBuild = _processInteraction(interaction);
 
     return _mapJenkinsBuild(jobName, jenkinsBuild);
   }
@@ -172,14 +172,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     String jobName, {
     int startAfterBuildNumber,
   }) {
-    final buildData = builds
-        .where((build) {
-          return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
-        })
-        .map((build) => _mapJenkinsBuild(jobName, build))
-        .toList();
+    final buildData = builds.where((build) {
+      return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
+    }).map((build) => _mapJenkinsBuild(jobName, build));
 
-    return buildData;
+    return buildData.toList();
   }
 
   /// Checks a [build] to be not [JenkinsBuild.building] and
