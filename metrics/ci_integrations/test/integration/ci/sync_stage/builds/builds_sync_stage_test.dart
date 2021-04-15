@@ -84,7 +84,7 @@ void main() {
   });
 }
 
-/// A fake class needed to test the [BuildsSyncStage] non-abstract methods.
+/// A fake class needed to test the [BuildsSyncStage]'s non-abstract methods.
 class _BuildsSyncStageFake extends BuildsSyncStage {
   @override
   final SourceClient sourceClient;
