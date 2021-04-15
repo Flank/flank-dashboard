@@ -10,8 +10,6 @@ To resolve the described problem, we've investigated a [possibility to provide s
 
 With that we do not need to calculate a builds count every time we load the dashboard. Instead, we should have that count in a separate collection and can just read that value without additional processing on the client.
 
-This document lists steps and designs the `Builds Aggregations` feature to introduce in the `Metrics Web Application`.
-
 ## References
 
 > Link to supporting documentation, GitHub tickets, etc.
@@ -21,9 +19,7 @@ This document lists steps and designs the `Builds Aggregations` feature to intro
 - [Firebase aggregation](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md)
 - [Firestore Cloud Function using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md)
 
-## Firestore
-
-### Document structure
+## Document structure
 
 The first collection, we should create is the `builds_per_day`. It holds builds grouped by the `status` and `started at` day. Each status contains the count of builds, created per day. 
 
@@ -70,7 +66,7 @@ _**Note:** The collection contains the `projectId` and `buildNumber` to uniquely
 
 Later, using the `projectId` and `buildNumber` we can fetch a build from the `build` collection with the latest status and update the `builds_per_day` collection.
 
-### Firestore security rules
+## Firestore security rules
 
 Once we have new collections, we have to add security rules for them.
 
@@ -88,7 +84,7 @@ Second, for the `failed_builds_per_day` collection - no one has access to read, 
   - not authenticated users **cannot** read, create, update, delete this document;
   - authenticated users **cannot** read, create, update, delete this document.
 
-### Firestore Cloud Functions
+## Firestore Cloud Functions
 
 When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. In addition, we can [write these functions using the Dart programming language](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md).
 
@@ -115,4 +111,4 @@ functions['onUpdatedBuild'] = functions.firestore
 FutureOr<void> onUpdatedBuildHandler(Change<DocumentSnapshot> change, EventContext context) {...}
 ```
 
-In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we should create a new document inside the `failed_builds_per_day` collection. Later, we can use this collection to fix the `builds_per_day` counters. 
+In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we should create a new document inside the `failed_builds_per_day` collection. Later, we can use this collection to fix the `builds_per_day` counters.
