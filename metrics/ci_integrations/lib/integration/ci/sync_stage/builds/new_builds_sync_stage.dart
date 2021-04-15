@@ -12,7 +12,7 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents a [SyncStage] for new build.
+/// A class that represents a [SyncStage] for new builds.
 class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   @override
   final SourceClient sourceClient;
