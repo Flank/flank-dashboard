@@ -8,7 +8,9 @@ This solution is okay for now, with the current number of builds, but we might h
 
 To resolve the described problem, we've investigated a [possibility to provide some aggregation calculations using the back-end, provided by the Firebase using the Cloud Functions](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md).
 
-With that we do not need to calculate a builds count every time we load the dashboard. Instead, we should have that count in a separate collection and can just read that value without additional processing on the client.
+With that we do not need to calculate a builds count every time we load the dashboard, instead, we should have that count in a separate collection. 
+
+The same logic we can apply to other metrics such as failed or success builds count.
 
 ## References
 
@@ -21,7 +23,7 @@ With that we do not need to calculate a builds count every time we load the dash
 
 ## Document structure
 
-The first collection, we should create is the `builds_per_day`. It holds builds grouped by the `status` and `started at` day. Each status contains the count of builds, created per day. 
+The first collection we should create is the `builds_per_day`. It holds builds grouped by the `status` and `started at` day. Each status contains the count of builds, created per day. 
 
 The collection's document has the following structure:
 
