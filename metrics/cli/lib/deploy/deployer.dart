@@ -60,13 +60,13 @@ class Deployer {
   /// Deploys the Metrics Web Application.
   Future<void> deploy() async {
     const firebasePath = DeployConstants.firebasePath;
-    const webPath = DeployConstants.webPath;
+    const webAppPath = DeployConstants.webPath;
     await _gcloudService.login();
 
     final projectId = await _gcloudService.createProject();
 
     await _firebaseService.login();
-    await _firebaseService.addProject(projectId);
+    await _firebaseService.createWebApp(projectId);
     await _gitService.checkout(
       DeployConstants.repoURL,
       DeployConstants.tempDir,
@@ -76,8 +76,12 @@ class Deployer {
       DeployConstants.firebaseFunctionsPath,
     );
     await _firebaseService.deployFirebase(projectId, firebasePath);
-    await _flutterService.build(webPath);
-    await _firebaseService.deployHosting(projectId, webPath);
+    await _flutterService.build(webAppPath);
+    await _firebaseService.deployHosting(
+      projectId,
+      DeployConstants.firebaseTarget,
+      webAppPath,
+    );
 
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
     await tempDirectory.delete(recursive: true);

@@ -43,7 +43,7 @@ FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in
 FirebaseService --> Deployer -- : sign in finished
 
-Deployer -> FirebaseService ++ : addProject(projectId)
+Deployer -> FirebaseService ++ : createWebApp(projectId)
 
 FirebaseService --> Deployer -- : firebase project has been added
 
@@ -85,7 +85,7 @@ SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> SentryService -- : config has been updated
 SentryService -> Deployer -- : release created
 
-Deployer -> FirebaseService ++ : deployHosting(appPath)
+Deployer -> FirebaseService ++ : deployHosting(projectId, target, appPath)
 FirebaseService -> Deployer -- : deploy finished
 
 Deployer -> FileHelper ++: getDirectory(path)

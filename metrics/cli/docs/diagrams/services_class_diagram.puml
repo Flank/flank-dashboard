@@ -4,8 +4,8 @@ package firebase {
     package service as firebase.service {
         interface FirebaseService {
             + login(): Future<void>
-            + addProject(String projectId): Future<void>
-            + deployHosting(String projectId, String appPath): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + deployHosting(String projectId, String target, String appPath): Future<void>
             + deployFirebase(String projectId, String firebasePath): Future<void>
         }
     }

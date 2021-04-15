@@ -26,6 +26,7 @@ void main() {
     const projectId = 'testId';
     const firebasePath = DeployConstants.firebasePath;
     const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
+    const firebaseTarget = DeployConstants.firebaseTarget;
     const webPath = DeployConstants.webPath;
     const repoURL = DeployConstants.repoURL;
     const tempDir = DeployConstants.tempDir;
@@ -225,7 +226,7 @@ void main() {
 
         verifyInOrder([
           firebaseService.login(),
-          firebaseService.addProject(any),
+          firebaseService.createWebApp(any),
         ]);
       },
     );
@@ -238,7 +239,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.addProject(projectId)).called(once);
+        verify(firebaseService.createWebApp(projectId)).called(once);
       },
     );
 
@@ -291,7 +292,7 @@ void main() {
     );
 
     test(
-      ".deploy() installs the npm dependencies to the Firebase folder before deploying to the Firebase",
+      ".deploy() installs the npm dependencies in the Firebase folder before deploying to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
         await deployer.deploy();
@@ -337,7 +338,7 @@ void main() {
 
         verifyInOrder([
           firebaseService.deployFirebase(any, any),
-          firebaseService.deployHosting(any, any),
+          firebaseService.deployHosting(any, any, any),
         ]);
       },
     );
@@ -350,7 +351,7 @@ void main() {
 
         verifyInOrder([
           flutterService.build(any),
-          firebaseService.deployHosting(any, any),
+          firebaseService.deployHosting(any, any, any),
         ]);
       },
     );
@@ -363,7 +364,11 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.deployHosting(projectId, webPath)).called(once);
+        verify(firebaseService.deployHosting(
+          projectId,
+          firebaseTarget,
+          webPath,
+        )).called(once);
       },
     );
 
@@ -375,7 +380,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          firebaseService.deployHosting(any, any),
+          firebaseService.deployHosting(any, any, any),
           directory.delete(recursive: true),
         ]);
       },

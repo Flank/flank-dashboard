@@ -5,6 +5,7 @@ import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/git/service/git_service.dart';
+import 'package:cli/interfaces/service/info_service.dart';
 import 'package:cli/npm/service/npm_service.dart';
 
 /// A class that provides an ability to check whether all required third-party
@@ -49,21 +50,20 @@ class Doctor {
 
   /// Checks versions of the required third-party services.
   Future<void> checkVersions() async {
-    await _checkVersion(_flutterService.version);
-    await _checkVersion(_gcloudService.version);
-    await _checkVersion(_npmService.version);
-    await _checkVersion(_gitService.version);
-    await _checkVersion(_firebaseService.version);
+    await _checkVersion(_flutterService);
+    await _checkVersion(_gcloudService);
+    await _checkVersion(_npmService);
+    await _checkVersion(_gitService);
+    await _checkVersion(_firebaseService);
   }
 
-  /// Checks version of the third-party service using the given
-  /// [versionCallback].
+  /// Checks version of the third-party [service].
   ///
   /// Catches all thrown exceptions to be able to proceed with checking the
   /// version of all the rest services.
-  Future<void> _checkVersion(Future<void> Function() versionCallback) async {
+  Future<void> _checkVersion(InfoService service) async {
     try {
-      await versionCallback();
+      await service.version();
     } catch (_) {}
   }
 }

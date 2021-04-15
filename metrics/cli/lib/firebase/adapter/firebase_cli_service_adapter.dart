@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/firebase/cli/firebase_cli.dart';
-import 'package:cli/firebase/constants/firebase_constants.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/prompt/prompter.dart';
 
@@ -17,7 +16,7 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   final Prompter _prompter;
 
   /// Creates a new instance of the [FirebaseCliServiceAdapter]
-  /// with the given [FirebaseCli].
+  /// with the given [FirebaseCli] and [Prompter].
   ///
   /// Throws an [ArgumentError] if the given [FirebaseCli] is `null`.
   /// Throws an [ArgumentError] if the given [Prompter] is `null`.
@@ -32,7 +31,7 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> addProject(String projectId) async {
+  Future<void> createWebApp(String projectId) async {
     await _firebaseCli.addFirebase(projectId);
     await _firebaseCli.createWebApp(projectId, projectId);
   }
@@ -45,11 +44,13 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> deployHosting(String projectId, String appPath) async {
-    const target = FirebaseConstants.target;
-
+  Future<void> deployHosting(
+    String projectId,
+    String target,
+    String appPath,
+  ) async {
     await _firebaseCli.setFirebaseProject(projectId, appPath);
-    await _firebaseCli.clearTarget(projectId, appPath);
+    await _firebaseCli.clearTarget(target, appPath);
     await _firebaseCli.applyTarget(projectId, target, appPath);
     await _firebaseCli.deployHosting(target, appPath);
   }
