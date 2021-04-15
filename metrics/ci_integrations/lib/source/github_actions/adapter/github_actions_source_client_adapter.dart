@@ -127,16 +127,14 @@ class GithubActionsSourceClientAdapter
 
   @override
   Future<BuildData> fetchOneBuild(String jobName, int buildNumber) async {
-    ArgumentError.checkNotNull(jobName, 'jobName');
-    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
-
     logger.info(
       'Fetching $jobName build with the build number equal to $buildNumber...',
     );
 
-    final run = await _fetchWorkflowRun(
-      buildNumber,
-    );
+    ArgumentError.checkNotNull(jobName, 'jobName');
+    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+
+    final run = await _fetchWorkflowRun(buildNumber);
 
     if (run == null || !_isConclusionValid(run.conclusion)) {
       return null;
@@ -215,7 +213,7 @@ class GithubActionsSourceClientAdapter
 
         final job = await _fetchJob(run, jobName);
 
-        if (job == null || job.conclusion == GithubActionConclusion.skipped) {
+        if (job == null || !_isConclusionValid(job.conclusion)) {
           continue;
         } else {
           final build = await _mapJobToBuildData(job, run);
@@ -321,8 +319,8 @@ class GithubActionsSourceClientAdapter
   /// Fetches the [WorkflowRunJobsPage] with the given parameters delegating
   /// them to the [githubActionsClient].
   ///
-  /// The [page] defaults to `1`.
-  /// The [perPage] defaults to [defaultPerPage].
+  /// The [page] defaults to `1` (the first page).
+  /// The [perPage] defaults to the [defaultPerPage].
   Future<WorkflowRunJobsPage> _fetchWorkflowRunJobs(
     int runId, {
     int page = 1,
