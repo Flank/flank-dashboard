@@ -84,7 +84,7 @@ void main() {
     );
 
     test(
-      ".createWebApp() stops the Firebase adding process if Firebase CLI throws during the Firestore capabilities adding",
+      ".createWebApp() stops the Firebase web app creation process if Firebase CLI throws during the Firestore capabilities adding",
       () async {
         when(firebaseCli.addFirebase(projectId)).thenAnswer(
           (_) => Future.error(stateError),
@@ -101,7 +101,7 @@ void main() {
     );
 
     test(
-      ".createWebApp() creates the web app with the given name within the project with the given projectId",
+      ".createWebApp() creates the Firebase web app with the given name within the project with the given projectId",
       () async {
         await firebaseService.createWebApp(projectId);
 
@@ -110,7 +110,7 @@ void main() {
     );
 
     test(
-      ".createWebApp() throws if Firebase CLI throws during the web app creation",
+      ".createWebApp() throws if Firebase CLI throws during the Firebase web app creation",
       () {
         when(firebaseCli.createWebApp(projectId, projectId)).thenAnswer(
           (_) => Future.error(stateError),
@@ -278,8 +278,7 @@ void main() {
           workingDirectory,
         );
 
-        verify(firebaseCli.clearTarget(target, workingDirectory))
-            .called(once);
+        verify(firebaseCli.clearTarget(target, workingDirectory)).called(once);
       },
     );
 
@@ -309,8 +308,7 @@ void main() {
 
         verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
             .called(once);
-        verify(firebaseCli.clearTarget(target, workingDirectory))
-            .called(once);
+        verify(firebaseCli.clearTarget(target, workingDirectory)).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
     );
@@ -355,8 +353,7 @@ void main() {
 
         verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
             .called(once);
-        verify(firebaseCli.clearTarget(target, workingDirectory))
-            .called(once);
+        verify(firebaseCli.clearTarget(target, workingDirectory)).called(once);
         verify(firebaseCli.applyTarget(projectId, target, workingDirectory))
             .called(once);
         verifyNoMoreInteractions(firebaseCli);

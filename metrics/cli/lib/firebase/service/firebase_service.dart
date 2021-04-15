@@ -9,11 +9,12 @@ abstract class FirebaseService extends InfoService {
   /// Logins into the Firebase.
   Future<void> login();
 
-  /// Adds Firebase capabilities to the project based on the given [projectId].
+  /// Creates a Firebase Web application in the Firebase project with the given
+  /// [projectId].
   Future<void> createWebApp(String projectId);
 
-  /// Deploys a project with the given [projectId] from the given [appPath]
-  /// to the firebase hosting.
+  /// Deploys the given Firebase hosting [target] from the given [appPath]
+  /// to the Firebase project with the given [projectId] hosting.
   Future<void> deployHosting(String projectId, String target, String appPath);
 
   /// Deploys Firebase rules, indexes, and functions to the project

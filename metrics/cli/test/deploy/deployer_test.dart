@@ -30,6 +30,7 @@ void main() {
     const webPath = DeployConstants.webPath;
     const repoURL = DeployConstants.repoURL;
     const tempDir = DeployConstants.tempDir;
+
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -219,7 +220,7 @@ void main() {
     );
 
     test(
-      ".deploy() logs in to the Firebase before adding the Firebase capabilities to the project",
+      ".deploy() logs in to the Firebase before creating the Firebase web app",
       () async {
         whenGetDirectory().thenReturn(directory);
         await deployer.deploy();
@@ -232,7 +233,7 @@ void main() {
     );
 
     test(
-      ".deploy() adds the Firebase capabilities to the created project",
+      ".deploy() creates the Firebase web app for the created GCloud project",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);

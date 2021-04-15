@@ -59,30 +59,51 @@ class Deployer {
 
   /// Deploys the Metrics Web Application.
   Future<void> deploy() async {
-    const firebasePath = DeployConstants.firebasePath;
-    const webAppPath = DeployConstants.webPath;
-    await _gcloudService.login();
+    final projectId = await _createGcloudProject();
 
-    final projectId = await _gcloudService.createProject();
-
-    await _firebaseService.login();
-    await _firebaseService.createWebApp(projectId);
+    await _createFirebaseApp(projectId);
     await _gitService.checkout(
       DeployConstants.repoURL,
       DeployConstants.tempDir,
     );
+    await _deployFirebase(projectId);
+    await _deployHosting(projectId);
+    await _clearResources();
+  }
+
+  Future<String> _createGcloudProject() async {
+    await _gcloudService.login();
+
+    return _gcloudService.createProject();
+  }
+
+  Future<void> _createFirebaseApp(String projectId) async {
+    await _firebaseService.login();
+    await _firebaseService.createWebApp(projectId);
+  }
+
+  Future<void> _deployFirebase(String projectId) async {
+    const firebasePath = DeployConstants.firebasePath;
+
     await _npmService.installDependencies(firebasePath);
     await _npmService.installDependencies(
       DeployConstants.firebaseFunctionsPath,
     );
     await _firebaseService.deployFirebase(projectId, firebasePath);
+  }
+
+  Future<void> _deployHosting(String projectId) async {
+    const webAppPath = DeployConstants.webPath;
+
     await _flutterService.build(webAppPath);
     await _firebaseService.deployHosting(
       projectId,
       DeployConstants.firebaseTarget,
       webAppPath,
     );
+  }
 
+  Future<void> _clearResources() async {
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
     await tempDirectory.delete(recursive: true);
   }

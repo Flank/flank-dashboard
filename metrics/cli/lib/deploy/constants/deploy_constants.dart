@@ -18,6 +18,6 @@ class DeployConstants {
   /// A path to the Firebase functions sources.
   static const String firebaseFunctionsPath = '$firebasePath/functions';
 
-  /// A Firebase target name.
+  /// A Firebase Hosting target name.
   static const String firebaseTarget = 'metrics';
 }
