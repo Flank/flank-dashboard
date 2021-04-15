@@ -103,7 +103,7 @@ FutureOr<void> onAddedBuildHandler(DocumentSnapshot snapshot, EventContext conte
 
 The trigger's `onAddedBuildHandler` handler should process incrementing logic for the `builds_per_day` collection document, based on the created build's status and started date.
 
-The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to the changes in the build status. For example, if the build with an `in-progress` status changes to `success`, we should increment `BuildStatus.success` count of the document, and decrement the `BuildStatus.in-progress` count.
+The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. For example, if the build with an `in-progress` status changes to `success`, we should increment `BuildStatus.success` count of the document, and decrement the `BuildStatus.in-progress` count.
 
 ```dart
 functions['onUpdatedBuild'] = functions.firestore
