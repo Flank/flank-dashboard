@@ -68,7 +68,6 @@ void main() {
     /// and default build arguments.
     JenkinsBuild createJenkinsBuild({
       @required int buildNumber,
-      DateTime timeStamp,
       JenkinsBuildResult result = JenkinsBuildResult.success,
       bool building = false,
       List<JenkinsBuildArtifact> artifacts = const [defaultArtifact],
@@ -76,7 +75,7 @@ void main() {
       return JenkinsBuild(
         number: buildNumber,
         duration: defaultDuration,
-        timestamp: timeStamp ?? defaultDateTime,
+        timestamp: defaultDateTime,
         result: result,
         url: defaultBuildUrl,
         building: building,
