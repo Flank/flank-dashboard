@@ -83,6 +83,8 @@ void main() {
       );
     }
 
+    final jenkinsBuild = createJenkinsBuild(buildNumber: defaultBuildNumber);
+
     /// Creates a list of [JenkinsBuild] using the given [buildNumbers].
     List<JenkinsBuild> createJenkinsBuilds({
       @required List<int> buildNumbers,
@@ -673,11 +675,247 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() returns null",
+      ".fetchOneBuild() throws an ArgumentError if the given job name is null",
+      () {
+        final result = adapter.fetchOneBuild(null, defaultBuildNumber);
+
+        expect(result, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws an ArgumentError if the given build number is null",
+      () {
+        final result = adapter.fetchOneBuild(jobName, null);
+
+        expect(result, throwsArgumentError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() throws a StateError if fetching a build fails",
+      () {
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenErrorWith();
+
+        final result = adapter.fetchOneBuild(jobName, defaultBuildNumber);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data if fetching a build succeeds",
       () async {
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
         final result = await adapter.fetchOneBuild(jobName, defaultBuildNumber);
 
-        expect(result, isNull);
+        expect(result, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the build number equal to the requested build number",
+      () async {
+        const expectedBuildNumber = 1;
+        const jenkinsBuild = JenkinsBuild(number: expectedBuildNumber);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, expectedBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          expectedBuildNumber,
+        );
+
+        expect(result.buildNumber, equals(expectedBuildNumber));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the fetched build's timestamp if it is not null",
+      () async {
+        final expectedTimeStamp = DateTime.now();
+        final jenkinsBuild = JenkinsBuild(timestamp: expectedTimeStamp);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.startedAt, equals(expectedTimeStamp));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the started at date equal to the current date time if the fetched build's timestamp is null",
+      () async {
+        const jenkinsBuild = JenkinsBuild(timestamp: null);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the fetched build's build statuses according to the specification",
+      () async {
+        const jenkinsBuildResults = [
+          JenkinsBuildResult.success,
+          JenkinsBuildResult.failure,
+          JenkinsBuildResult.notBuild,
+          JenkinsBuildResult.aborted,
+          JenkinsBuildResult.unstable,
+          null,
+        ];
+
+        const expectedBuildStatuses = [
+          BuildStatus.successful,
+          BuildStatus.failed,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+        ];
+
+        final buildResultsLength = jenkinsBuildResults.length;
+
+        for (int i = 0; i < buildResultsLength; ++i) {
+          final expectedStatus = expectedBuildStatuses[i];
+
+          final jenkinsBuildResult = jenkinsBuildResults[i];
+          final jenkinsBuild = JenkinsBuild(result: jenkinsBuildResult);
+          when(
+            jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+          ).thenSuccessWith(jenkinsBuild);
+
+          final result = await adapter.fetchOneBuild(
+            jobName,
+            defaultBuildNumber,
+          );
+
+          expect(result.buildStatus, equals(expectedStatus));
+        }
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the fetched build's duration to the build duration",
+      () async {
+        const expectedDuration = Duration(hours: 1);
+        const jenkinsBuild = JenkinsBuild(duration: expectedDuration);
+
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the Duration.zero duration if the fetched build's duration is null",
+      () async {
+        const jenkinsBuild = JenkinsBuild(duration: null);
+
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() returns a build data with the workflow name equal to the given job name",
+      () async {
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.workflowName, equals(jobName));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the fetched build's url to the build url",
+      () async {
+        const expectedUrl = 'url';
+        const jenkinsBuild = JenkinsBuild(url: expectedUrl);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.url, equals(expectedUrl));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the null fetched build's url to an empty string",
+      () async {
+        const jenkinsBuild = JenkinsBuild(url: null);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.url, isEmpty);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps the fetched build's api url to the build api url",
+      () async {
+        const expectedApiUrl = 'url';
+        const jenkinsBuild = JenkinsBuild(apiUrl: expectedApiUrl);
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.apiUrl, equals(expectedApiUrl));
       },
     );
 
