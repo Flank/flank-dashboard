@@ -18,7 +18,6 @@ abstract class BuildsSyncStage with LoggerMixin implements SyncStage {
 
     final buildsWithCoverageFutures = builds.map((build) async {
       final coverage = await sourceClient.fetchCoverage(build);
-      final newBuild = build.copyWith(coverage: coverage);
 
       return build.copyWith(coverage: coverage);
     });
