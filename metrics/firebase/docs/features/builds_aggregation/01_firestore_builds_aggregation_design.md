@@ -76,7 +76,7 @@ Every authenticated user can read the documents from the `build_days` collection
 
 > Explain the main purpose of the collection.
 
-There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the build on which the counter was failed to the specific collection - `tasks` to restore this data later.
+There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the required for builds aggregation fields to the context of the specific collection - `tasks` to process this data later.
 
 #### Document Structure
 
