@@ -62,6 +62,8 @@ Let's take a closer look at the document's fields:
 | `totalDuration` | A total builds duration. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
+Also, we should produce a composite identifier which consist of a project's id and a day this aggregation document belongs to. This identifier we can use to easily update value of the `build_days` document.
+
 #### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
