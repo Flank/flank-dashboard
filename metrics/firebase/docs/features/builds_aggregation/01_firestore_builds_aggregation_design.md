@@ -43,10 +43,10 @@ The collection's document has the following structure:
 ```json
 {
   "projectId": String,
-  "BuildStatus.successful": number,
-  "BuildStatus.failed": number,
-  "BuildStatus.unknown": number,
-  "BuildStatus.inProgress": number,
+  "successful": number,
+  "failed": number,
+  "unknown": number,
+  "inProgress": number,
   "totalDuration": number,
   "day": timestamp,
 }
@@ -57,10 +57,10 @@ Let's take a closer look at the document's fields:
 | Field | Description |
 | --- | --- |
 | `projectId`   | An identifier of the project, this aggregation relates to. |
-| `BuildStatus.successful` | A count of builds with a `successful` status. |
-| `BuildStatus.failed` | A count of builds with a `failed` status. |
-| `BuildStatus.unknown` | A count of builds with an `unknown` status. |
-| `BuildStatus.inProgress` | A count of builds with an `inProgress` status. |
+| `successful` | A count of builds with a `successful` status. |
+| `failed` | A count of builds with a `failed` status. |
+| `unknown` | A count of builds with an `unknown` status. |
+| `inProgress` | A count of builds with an `inProgress` status. |
 | `totalDuration` | A total builds duration. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
@@ -78,7 +78,7 @@ Every authenticated user can read the documents from the `build_days` collection
 
 > Explain the main purpose of the collection.
 
-There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the required for builds aggregation fields to the context of the specific collection - `tasks` to process this data later.
+There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the required for builds aggregation fields to the `data` field of the specific collection - `tasks` to process this data later.
 
 #### Document Structure
 
@@ -88,8 +88,9 @@ The collection's document has the following structure:
 
 ```json
 {
-  "action": String,
-  "context": Map,
+  "code": String,
+  "data": Map,
+  "context": String,
   "createdAt": timestamp,
 }
 ```
@@ -98,8 +99,9 @@ Let's take a closer look at the document's fields:
 
 | Field | Description |
 | --- | --- |
-| `action`   | A string representation of the specific processing failure. |
-| `context`   | A map, containing the required fields to complete the task. |
+| `code`   | A code that identifies the task. |
+| `data`   | A map, containing the required fields to complete the task. |
+| `context`   | A string, containing the reason of the event failure. |
 | `createdAt`   | A timestamp, determine when the task is created. |
 
 The `action` should be a specific string, which contains an information about event failure. It can be a collection name and a function name, on which the processing is interrupted.
@@ -149,7 +151,7 @@ The following sequence diagram shows the overall process of how the `onCreate` t
 
 > Explain the main purpose of the trigger.
 
-The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. For example, if the build with an `inProgress` status changes to `successful`, we should increment `BuildStatus.successful` count of the document, and decrement the `BuildStatus.inProgress` count.
+The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, and decrement the `inProgress` count.
 
 ```dart
 functions['onBuildUpdated'] = functions.firestore
