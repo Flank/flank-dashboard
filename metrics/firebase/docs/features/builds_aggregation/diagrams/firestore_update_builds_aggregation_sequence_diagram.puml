@@ -1,0 +1,27 @@
+@startuml firestore_update_builds_aggregation_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    participant API
+
+    database Firestore
+
+    participant "Firestore Cloud Functions" as FCF
+
+    API -> Firestore : updates a Build status
+    activate Firestore
+
+    Firestore -> FCF : emits an onUpdate event on a build collection
+    activate FCF
+    
+    FCF -> FCF : triggers an onUpdate event handler
+    FCF -> Firestore : increases and decreases counters inside the 'builds_per_day' collection
+    alt Firestore Cloud Functions onUpdate handler fails
+        FCF -> FCF : function fails
+        FCF -> Firestore : adds information about an aggregation fail to the 'tasks' collection
+    end
+
+    deactivate FCF
+    deactivate Firestore
+
+@enduml

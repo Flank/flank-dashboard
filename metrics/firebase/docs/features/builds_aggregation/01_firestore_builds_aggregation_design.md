@@ -20,17 +20,17 @@ To resolve the described problem, we've investigated a possibility to provide so
 
 > Explain and diagram the technical design.
 
-The Firestore Builds Aggregation implementation requires changes in the Firestore Database and Firestore Cloud Functions. The design describes new collections we should create and a list of security rules we should apply. There is, also, an information about Firestore Cloud Function triggers.
-
-The design section ends with a diagram, shows the overall process of how it works together.
+The Firestore builds aggregation implementation requires changes in the Firestore Database and Firestore Cloud Functions. The design describes new collections we should create and a list of security rules we should apply. There is also information about Firestore Cloud Function triggers.
 
 ### Firestore
 
-### `builds_per_day`
+The section contains information about the main purposes of new collections, their document structures with field descriptions, and a set of security rules.
+
+### `build_days`
 
 > Explain the main purpose of the collection.
 
-The first collection we should create is the `builds_per_day`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
+The first collection we should create is the `build_days`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
 
 #### Document Structure
 
@@ -45,10 +45,12 @@ The collection's document has the following structure:
   "BuildStatus.failed": number,
   "BuildStatus.unknown": number,
   "BuildStatus.inProgress": number,
-  "duration": number,
+  "totalDuration": number,
   "day": timestamp,
 }
 ```
+
+Let's take a closer look at the document's fields:
 
 | Field | Description |
 | --- | --- |
@@ -57,24 +59,24 @@ The collection's document has the following structure:
 | `BuildStatus.failed` | A count of builds with a `failed` status. |
 | `BuildStatus.unknown` | A count of builds with an `unknown` status. |
 | `BuildStatus.inProgress` | A count of builds with an `inProgress` status. |
-| `duration` | A total builds duration. |
+| `totalDuration` | A total builds duration. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
 #### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
 
-Every authenticated user can read the documents from the `builds_per_day` collection, but no one can write to this collection. Let's consider the security rules for this collection in more details:
+Every authenticated user can read the documents from the `build_days` collection, but no one can write to this collection. Let's consider the security rules for this collection in more details:
 
 - Access-related rules:
   - not authenticated users **cannot** read, create, update, delete this document;
   - authenticated users **can** read and **cannot** create, update, delete this document.
 
-### `failed_builds_per_day`
+### `tasks`
 
 > Explain the main purpose of the collection.
 
-There are situations, where creating or updating the `builds_per_day` collection fails. If it happens, we should store the build on which the counter was failed to the specific collection - `failed_builds_per_day`.
+There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the build on which the counter was failed to the specific collection - `tasks` to restore this data later.
 
 #### Document Structure
 
@@ -84,25 +86,27 @@ The collection's document has the following structure:
 
 ```json
 {
-  "projectId": String,
-  "buildId": number,
-  "buildStatus": String,
-  "buildDuration": number,
-  "day": timestamp,
-  "action": String
+  "action": String,
+  "context": Map,
+  "createdAt": timestamp,
 }
 ```
 
+Let's take a closer look at the document's fields:
+
 | Field | Description |
 | --- | --- |
-| `projectId`   | An identifier of the project, this aggregation relates to. |
-| `buildId` | An identifier of the build. |
-| `buildStatus` | A status of the build. |
-| `buildDuration` | A build duration. |
-| `day`   | A timestamp that represents the day start this aggregation belongs to. |
-| `action`   | The process, that is failed (e.g.g. onCreate trigger for the builds collection). |
+| `action`   | A string representation of the specific processing failure. |
+| `context`   | A map, containing the required fields to complete the task. |
+| `createdAt`   | A timestamp, determine when the task is created. |
 
-Later, using the described above information we can fix counters inside the `builds_per_day` collection.
+The `action` should be a specific string, which contains an information about event failure. It can be a collection name and a function name, on which the processing is interrupted.
+
+For our purposes, the following action strings we can create, related to the function trigger type, that is failed:
+ - `build_days.onCreate`
+ - `build_days.onUpdate`
+
+Later, using the described above information we can fix counters inside the `build_days` collection.
 
 #### Security Rules
 
@@ -118,6 +122,10 @@ No one can read from or write to this collection. Let's consider the security ru
 
 When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. In addition, we can [write these functions using the Dart programming language](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md).
 
+#### onCreate trigger
+
+> Explain the main purpose of the trigger.
+
 If we want to provide builds aggregations, we need to process calculations in reaction to added build. For this purpose, we should create the `onCreate` function trigger on the `build` collection.
 
 ```dart
@@ -129,7 +137,15 @@ functions['onBuildAdded'] = functions.firestore
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, EventContext context) {...}
 ```
 
-The trigger's `onBuildAddedHandler` handler should process incrementing logic for the `builds_per_day` collection document, based on the created build's status and started date.
+The trigger's `onBuildAddedHandler` handler should process incrementing logic for the `build_days` collection document, based on the created build's status and started date.
+
+The following sequence diagram shows the overall process of how the `onCreate` triggers works:
+
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/builds_aggregation_design/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_create_builds_aggregation_sequence_diagram.puml)
+
+#### onUpdate trigger
+
+> Explain the main purpose of the trigger.
 
 The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. For example, if the build with an `inProgress` status changes to `successful`, we should increment `BuildStatus.successful` count of the document, and decrement the `BuildStatus.inProgress` count.
 
@@ -141,8 +157,14 @@ functions['onBuildUpdated'] = functions.firestore
 Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, EventContext context) {...}
 ```
 
-In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we should create a new document inside the `failed_builds_per_day` collection. Later, we can use this collection to fix the `builds_per_day` counters.
+In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we should create a new document inside the `tasks` collection. Later, we can use this collection to fix the `build_days` counters.
 
-The following sequence diagram shows the overall process of how the feature works:
+The following sequence diagram shows the overall process of how the `onUpdate` triggers works:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/builds_aggregation_design/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_builds_aggregation_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/builds_aggregation_design/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_update_builds_aggregation_sequence_diagram.puml)
+
+#### Testing
+
+> How will the functions be tested?
+
+The described above functions will be unit-tested using the [test](https://pub.dev/packages/test) package. To mock document snapshots we can use the [mockito](https://pub.dev/packages/mockito) package.
