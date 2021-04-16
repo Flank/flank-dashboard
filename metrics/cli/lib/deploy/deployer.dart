@@ -74,7 +74,7 @@ class Deployer {
       await _flutterService.build(DeployConstants.webPath);
       await _deployToFirebase(projectId);
     } finally {
-      await _cleanup();
+      _cleanup();
     }
   }
 
@@ -107,12 +107,12 @@ class Deployer {
   }
 
   /// Cleans temporary resources created during the deployment process.
-  Future<void> _cleanup() async {
+  void _cleanup() {
     final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
-    final directoryExist = await tempDirectory.exists();
+    final directoryExist = tempDirectory.existsSync();
 
-    if (directoryExist) {
-      await tempDirectory.delete(recursive: true);
-    }
+    if (!directoryExist) return;
+
+    tempDirectory.deleteSync(recursive: true);
   }
 }

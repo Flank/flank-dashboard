@@ -56,8 +56,8 @@ void main() {
       return when(fileHelper.getDirectory(any));
     }
 
-    PostExpectation<Future<bool>> whenDirectoryExist() {
-      return when(directory.exists());
+    PostExpectation<bool> whenDirectoryExist() {
+      return when(directory.existsSync());
     }
 
     PostExpectation<Future<String>> whenCreateGCloudProject() {
@@ -185,7 +185,7 @@ void main() {
       ".deploy() logs in to the GCloud",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -197,7 +197,7 @@ void main() {
       ".deploy() logs in to the GCloud before creating the GCloud project",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -212,7 +212,7 @@ void main() {
       ".deploy() creates the GCloud project",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -224,7 +224,7 @@ void main() {
       ".deploy() logs in to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -236,7 +236,7 @@ void main() {
       ".deploy() logs in to the Firebase before creating the Firebase web app",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -252,7 +252,7 @@ void main() {
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -264,7 +264,7 @@ void main() {
       ".deploy() clones the Git repository",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -273,10 +273,24 @@ void main() {
     );
 
     test(
+      ".deploy() deletes the temporary directory if Git service throws during the checkout process",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(gitService.checkout(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
       ".deploy() clones the Git repository before building the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -288,10 +302,40 @@ void main() {
     );
 
     test(
+      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase folder",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDir),
+          npmService.installDependencies(DeployConstants.firebasePath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase functions folder",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDir),
+          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() installs the npm dependencies",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -302,14 +346,16 @@ void main() {
     );
 
     test(
-      ".deploy() builds the Flutter application",
+      ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
+        when(npmService.installDependencies(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        await deployer.deploy();
+        await expectLater(deployer.deploy(), throwsStateError);
 
-        verify(flutterService.build(webPath)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -317,7 +363,7 @@ void main() {
       ".deploy() installs the npm dependencies in the Firebase folder before deploying to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -332,7 +378,7 @@ void main() {
       ".deploy() installs the npm dependencies to the functions folder before deploying to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -344,31 +390,28 @@ void main() {
     );
 
     test(
-      ".deploy() deploys Firebase rules, indexes, and functions to the Firebase",
+      ".deploy() builds the Flutter application",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(firebaseService.deployFirebase(projectId, firebasePath))
-            .called(once);
+        verify(flutterService.build(webPath)).called(once);
       },
     );
 
     test(
-      ".deploy() deploys Firebase rules, indexes, and functions before deploying to the hosting",
+      ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
+        when(flutterService.build(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        await deployer.deploy();
+        await expectLater(deployer.deploy(), throwsStateError);
 
-        verifyInOrder([
-          firebaseService.deployFirebase(any, any),
-          firebaseService.deployHosting(any, any, any),
-        ]);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -376,7 +419,7 @@ void main() {
       ".deploy() builds the Flutter application before deploying to the hosting",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -388,11 +431,54 @@ void main() {
     );
 
     test(
+      ".deploy() deploys Firebase components to the Firebase",
+      () async {
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(firebaseService.deployFirebase(projectId, firebasePath))
+            .called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(firebaseService.deployFirebase(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deploys Firebase components before deploying to the hosting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          firebaseService.deployFirebase(any, any),
+          firebaseService.deployHosting(any, any, any),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() deploys the target to the hosting",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
@@ -405,16 +491,30 @@ void main() {
     );
 
     test(
+      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(firebaseService.deployHosting(any, any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
       ".deploy() deploys a target to the hosting before deleting the temporary directory",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
         verifyInOrder([
           firebaseService.deployHosting(any, any, any),
-          directory.delete(recursive: true),
+          directory.deleteSync(recursive: true),
         ]);
       },
     );
@@ -423,93 +523,23 @@ void main() {
       ".deploy() deletes the temporary directory if it exists",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(directory.delete(recursive: true)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
-      ".deploy() does not delete the temporary directory if it not exists",
+      ".deploy() does not delete the temporary directory if it does not exist",
       () async {
         whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(false));
+        whenDirectoryExist().thenReturn(false);
 
         await deployer.deploy();
 
         verifyNever(directory.delete(recursive: true));
-      },
-    );
-
-    test(
-      ".deploy() deletes the temporary directory if Git service throws during the checkout process",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
-        when(gitService.checkout(any, any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(deployer.deploy(), throwsStateError);
-
-        verify(directory.delete(recursive: true)).called(once);
-      },
-    );
-
-    test(
-      ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
-        when(npmService.installDependencies(any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(deployer.deploy(), throwsStateError);
-
-        verify(directory.delete(recursive: true)).called(once);
-      },
-    );
-
-    test(
-      ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
-        when(flutterService.build(any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(deployer.deploy(), throwsStateError);
-
-        verify(directory.delete(recursive: true)).called(once);
-      },
-    );
-
-    test(
-      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
-        when(firebaseService.deployFirebase(any, any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(deployer.deploy(), throwsStateError);
-
-        verify(directory.delete(recursive: true)).called(once);
-      },
-    );
-
-    test(
-      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenAnswer((_) => Future.value(true));
-        when(firebaseService.deployHosting(any, any, any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(deployer.deploy(), throwsStateError);
-
-        verify(directory.delete(recursive: true)).called(once);
       },
     );
   });
