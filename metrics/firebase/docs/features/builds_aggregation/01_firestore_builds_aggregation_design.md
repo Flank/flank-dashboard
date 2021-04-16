@@ -32,11 +32,11 @@ The section contains information about the main purposes of new collections, the
 
 The first collection we should create is the `build_days`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
 
-We should produce a composite document identifier that consists of a project's id and a day this aggregation document belongs to. This identifier we can use to easily update a value of the `build_days` document.
-
 #### Document Structure
 
 > Explain the structure of the documents under this collection.
+
+We should produce a composite document identifier that consists of a project's id and a day this aggregation document belongs to. This identifier we can use to easily update a value of the `build_days` document.
 
 The collection's document has the following structure:
 
