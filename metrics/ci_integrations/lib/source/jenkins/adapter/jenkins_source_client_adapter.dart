@@ -144,8 +144,20 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   @override
-  Future<BuildData> fetchOneBuild(String projectId, int buildNumber) {
-    return Future.value();
+  Future<BuildData> fetchOneBuild(String jobName, int buildNumber) async {
+    logger.info('Fetching a #$buildNumber build of the $jobName job...');
+
+    ArgumentError.checkNotNull(jobName, 'jobName');
+    ArgumentError.checkNotNull(buildNumber, 'buildNumber');
+
+    final interaction = await jenkinsClient.fetchBuildByNumber(
+      jobName,
+      buildNumber,
+    );
+
+    final jenkinsBuild = _processInteraction(interaction);
+
+    return _mapJenkinsBuild(jobName, jenkinsBuild);
   }
 
   /// Processes the given [builds] to the list of [BuildData]s.
@@ -155,16 +167,16 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
-  Future<List<BuildData>> _processJenkinsBuilds(
+  List<BuildData> _processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
     int startAfterBuildNumber,
   }) {
-    final buildDataFutures = builds.where((build) {
+    final buildData = builds.where((build) {
       return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
     }).map((build) => _mapJenkinsBuild(jobName, build));
 
-    return Future.wait(buildDataFutures);
+    return buildData.toList();
   }
 
   /// Checks a [build] to be not [JenkinsBuild.building] and
@@ -179,10 +191,10 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   }
 
   /// Maps the given [jenkinsBuild] to the [BuildData] instance.
-  Future<BuildData> _mapJenkinsBuild(
+  BuildData _mapJenkinsBuild(
     String jobName,
     JenkinsBuild jenkinsBuild,
-  ) async {
+  ) {
     logger.info('Mapping build to build data...');
 
     return BuildData(
