@@ -128,27 +128,16 @@ class FirestoreDestinationClientAdapter
       return build.copyWith(projectId: projectId);
     }).toList();
 
-    await _updateBuilds(updatedBuilds);
-  }
-
-  /// Updates builds with the given [builds] data using their [BuildData.id].
-  Future<void> _updateBuilds(List<BuildData> builds) {
-    final updateFutures = <Future<void>>[];
-
-    for (final build in builds) {
+    for (final build in updatedBuilds) {
       final buildData = build.toJson();
       final buildId = build.id;
 
       final reference = _firestore.document('build/$buildId');
 
-      final updateFuture = reference
+      await reference
           .update(buildData)
           .catchError((error) => _handleBuildUpdateError(build, error));
-
-      updateFutures.add(updateFuture);
     }
-
-    return Future.wait(updateFutures);
   }
 
   /// Handles the given [error] occurred during updating the given [build].
