@@ -14,6 +14,7 @@ import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
+import 'package:ci_integration/integration/ci/sync_stage/factory/sync_stages_factory.dart';
 import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
@@ -235,10 +236,14 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     SourceClient sourceClient,
     DestinationClient destinationClient,
   ) {
-    return CiIntegration(
+    final syncStagesFactory = SyncStageFactory(
       sourceClient: sourceClient,
       destinationClient: destinationClient,
     );
+
+    final syncStages = syncStagesFactory.create();
+
+    return CiIntegration(stages: syncStages);
   }
 
   /// Runs the [CiIntegration.sync] method on the given [syncConfig].
