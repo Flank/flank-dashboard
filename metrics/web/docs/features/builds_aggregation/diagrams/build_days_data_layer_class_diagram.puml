@@ -1,0 +1,55 @@
+@startuml build_days_data_layer_class_diagram
+
+package common {
+    package domain {
+        package repositories {
+            interface BuildDayRepository {
+                + buildDaysStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+            }
+        }
+
+        package entities {
+            class BuildDay {
+                + projectId : String
+                + statusCounters : Map<BuildStatus, int>
+                + totalDuration : int
+                + day : Timestamp
+            }
+
+            enum BuildDayStatusCounters {
+                successful,
+                failed,
+                unknown,
+                inProgress,
+            }
+        }
+    }
+
+    package data {
+        package repositories as data_repositories {
+            class FirestoreBuildDayRepository {}
+        }
+
+        package deserializer {
+            class BuildDayDataDeserializer {
+                + static fromJson(Map<String, dynamic> json) : BuildDay
+            }
+        }
+
+        package mappers {
+            class BuildDayStatusCountersMapper {
+                + map(String status): BuildStatus
+            }
+        }
+    }
+}
+
+
+FirestoreBuildDayRepository ..|> BuildDayRepository
+FirestoreBuildDayRepository --> BuildDayDataDeserializer : uses
+BuildDayDataDeserializer --> BuildDayStatusCountersMapper: uses
+BuildDayStatusCountersMapper --> BuildDayStatusCounters : uses
+
+BuildDayDataDeserializer --> BuildDay : uses
+
+@enduml

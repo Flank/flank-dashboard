@@ -1,0 +1,51 @@
+@startuml build_days_domain_layer_class_diagram
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+
+package common.domain {
+    package entities {
+        class BuildDay {
+            + projectId : String
+            + statusCounters : Map<BuildStatus, int>
+            + duration : int
+            + day : Timestamp
+        }
+
+        enum BuildDayStatusCounters {
+                successful,
+                failed,
+                unknown,
+                inProgress,
+            }
+    }
+    
+    package repositories {
+        interface BuildDayRepository {
+            + buildDaysStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+        }
+    }
+
+    package usecases {
+        class ReceiveBuildDayMetricsUpdates {
+            + call(BuildDayParam params) : Stream<BuildDayProjectMetrics>
+        }
+
+        package parameters {
+            class BuildDayParam {
+                + projectId : String
+                + day : Timestamp
+            }
+        }
+    }    
+}
+
+BuildDayRepository --> BuildDay : uses
+ReceiveBuildDayMetricsUpdates ..|> UseCase
+ReceiveBuildDayMetricsUpdates --> BuildDayRepository : uses
+ReceiveBuildDayMetricsUpdates --> BuildDayParam : uses
+
+@enduml
