@@ -127,7 +127,7 @@ void main() {
     );
 
     test(
-      ".call() returns an error if a source client throws fetching the builds after the given one",
+      ".call() does not continue the sync if an error occurs while fetching the last build from the destination",
       () async {
         when(
           destinationClient.fetchLastBuild(destinationProjectId),
@@ -193,7 +193,7 @@ void main() {
     );
 
     test(
-      ".call() returns an error if a destination client throws fetching the last build",
+      ".call() does not continue the sync if the fetched last builds are empty",
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value([]));
 
@@ -279,7 +279,7 @@ void main() {
     );
 
     test(
-      ".call() returns an error if a destination client throws adding new builds",
+      ".call() adds the last builds with the fetched coverage to the destination",
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
@@ -309,19 +309,14 @@ void main() {
     );
 
     test(
-      ".call() ignores empty list of new builds and not call adding builds",
+      ".call() returns a success if adding the last builds succeeds",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsAfterCallback: (_, __) => Future.value([]),
-        );
-        final destinationClient = DestinationClientStub(
-          addBuildsCallback: (_, __) => throw UnimplementedError(),
-        );
-        final newBuildsSyncStage = NewBuildsSyncStage(
-          sourceClient,
-          destinationClient,
-        );
-        final result = await newBuildsSyncStage(syncConfig);
+        whenFetchBuilds().thenAnswer((_) => Future.value(builds));
+        when(
+          destinationClient.addBuilds(destinationProjectId, builds),
+        ).thenAnswer((_) => Future.value());
+
+        final result = await newBuildsSyncStage.call(syncConfig);
 
         expect(result.isSuccess, isTrue);
       },
