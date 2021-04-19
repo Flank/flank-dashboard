@@ -36,7 +36,7 @@ The first collection we should create is the `build_days`. It holds builds group
 
 > Explain the structure of the documents under this collection.
 
-We should produce a composite document identifier that consists of a project's id and a day (represented as a `timestamp` in a UTC) this aggregation document belongs to. This identifier we can use to easily update a value of the `build_days` document.
+We should produce a composite document identifier that consists of a project's id and a day (represented as milliseconds since the epoch in a UTC) this aggregation document belongs to. We can use this identifier to easily update a value of the `build_days` document.
 
 So, the identifier of the document can looks like the following: `projectId_1618790400`.
 
@@ -103,13 +103,13 @@ Let's take a closer look at the document's fields:
 | Field | Description |
 | --- | --- |
 | `code`   | A string that identifies the task to perform. |
-| `data`   | A map, containing the map needed to run the task with the specified `code`. |
+| `data`   | A map, containing the data needed to run the task with the specified `code`. |
 | `context`   | A string, containing the additional context for this task. |
 | `createdAt`   | A timestamp, determine when this task is created. |
 
 For our purposes, the following code strings we can create, related to the function trigger type, that is failed:
- - `build_days.onCreate`
- - `build_days.onUpdate`
+ - `build_day_created`
+ - `build_day_updated`
 
 Later, using the described above information we can fix counters inside the `build_days` collection.
 
@@ -125,7 +125,7 @@ No one can read from or write to this collection. Let's consider the security ru
 
 ### Firestore Cloud Functions
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create cloud functions using the Dart programming language.
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
 
 Let's review each Cloud Function we need for this feature separately: 
 
@@ -181,3 +181,5 @@ The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContex
 The `onUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, we should create an instance of `Change` class using the mocked `DocumentSnapshot`s and pass it as the first argument to the handler.
 
 As our functions process some actions using the `FirebaseAdmin` instance (creating documents or updating existing ones), we should test, that documents are actually created or updated. So we should mock the `FirebaseAdmin` instance and use the mockito's methods, such as `verify()` to complete the test purposes.
+
+As our functions process some actions(creating documents or updating existing ones) using the Firestore instance from the `DocumentSnapshot` through `documentSnapshot.firestore` we can use our mocked instance to override this call and replace it with our created mock. This gives us the ability to verify that the functions actually write or updates documents.
