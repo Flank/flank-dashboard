@@ -92,7 +92,8 @@ class FirestoreDestinationClientAdapter
   }
 
   /// Returns `true` if the given [error] is a [fd.FirestoreException] having
-  /// the `alreadyExists` [fd.FirestoreExceptionCode].
+  /// the `alreadyExists` [fd.FirestoreExceptionCode]. Otherwise, returns
+  /// `false`.
   bool _isAlreadyExistsError(Object error) {
     return error is fd.FirestoreException &&
         error.code == fd.FirestoreExceptionCode.alreadyExists;
