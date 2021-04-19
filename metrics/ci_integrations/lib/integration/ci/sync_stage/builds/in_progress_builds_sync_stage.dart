@@ -44,15 +44,22 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         BuildStatus.inProgress,
       );
 
-      List<BuildData> updatedBuilds;
-
-      for (final build in inProgressBuilds) {
-        final refreshedBuild = await _syncInProgressBuild(syncConfig, build);
-
-        if (refreshedBuild != null) updatedBuilds.add(refreshedBuild);
+      if (inProgressBuilds.isEmpty) {
+        return const InteractionResult.success(
+          message: 'There are no in-progress builds in the destination.',
+        );
       }
 
-      if (syncConfig.coverage) await addCoverageData(updatedBuilds);
+      List<BuildData> updatedBuilds;
+
+      updatedBuilds = await _fetchUpdatedBuilds(
+        inProgressBuilds,
+        syncConfig,
+      );
+
+      if (syncConfig.coverage) {
+        updatedBuilds = await addCoverageData(updatedBuilds);
+      }
 
       await destinationClient.updateBuilds(destinationProjectId, updatedBuilds);
 
@@ -66,64 +73,95 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
     }
   }
 
-  /// Synchronized the given in-progress [build].
+  /// Fetches the updated [BuildData] using the given [inProgressBuilds] and
+  /// [syncConfig].
+  Future<List<BuildData>> _fetchUpdatedBuilds(
+    List<BuildData> inProgressBuilds,
+    SyncConfig syncConfig,
+  ) async {
+    final updatedBuilds = <BuildData>[];
+    for (final build in inProgressBuilds) {
+      final refreshedBuild = await _syncInProgressBuild(syncConfig, build);
+
+      if (refreshedBuild != null) updatedBuilds.add(refreshedBuild);
+    }
+
+    return updatedBuilds;
+  }
+
+  /// Synchronizes the given in-progress [build].
   ///
-  /// If the build duration has reached the [SyncConfig.inProgressTimeout] and
-  /// its status is still [BuildStatus.inProgress], returns the updated build
-  /// with the [BuildStatus.unknown] status.
-  /// If the build status is not [BuildStatus.inProgress] anymore, returns the
-  /// updated build with the new status.
-  /// Otherwise, returns `null`.
+  /// First, fetches the refreshed [BuildData] using the given
+  /// [SyncConfig.sourceProjectId] and [BuildData.buildNumber] using the
+  /// [sourceClient].
+  ///
+  /// Timeouts the build if the refreshed [BuildData] is `null` or has the
+  /// [BuildData.buildStatus] equal to the [BuildStatus.inProgress] and the
+  /// given [SyncConfig.inProgressTimeout] is reached. Returns `null` if the
+  /// [SyncConfig.inProgressTimeout] is not reached.
+  ///
+  /// Otherwise, returns the refreshed [BuildData] with the updated
+  /// [BuildData.id] and the [BuildData.projectId].
   Future<BuildData> _syncInProgressBuild(
-      SyncConfig syncConfig, BuildData build) async {
-    final sourceProjectId = syncConfig.sourceProjectId;
-    final buildNumber = build.buildNumber;
-
-    BuildData updatedBuild;
-
-    final refreshedBuild = await _fetchBuild(sourceProjectId, buildNumber);
+    SyncConfig syncConfig,
+    BuildData build,
+  ) async {
+    final refreshedBuild = await _fetchBuild(
+      syncConfig.sourceProjectId,
+      build.buildNumber,
+    );
 
     if (refreshedBuild == null ||
         refreshedBuild.buildStatus == BuildStatus.inProgress) {
-      final startedAt = refreshedBuild.startedAt;
-      final timeout = syncConfig.inProgressTimeout;
-
-      if (_shouldTimeoutBuild(startedAt, timeout)) {
-        updatedBuild = build.copyWith(
-          duration: timeout,
-          buildStatus: BuildStatus.unknown,
-        );
-      }
-    } else {
-      updatedBuild = refreshedBuild.copyWith(
-        id: build.id,
-        projectId: build.projectId,
-      );
+      return _processInProgressBuild(build, syncConfig.inProgressTimeout);
     }
 
-    return updatedBuild;
+    return refreshedBuild.copyWith(id: build.id, projectId: build.projectId);
   }
 
-  /// Fetches a build with the given [buildNumber] for the project identified
+  /// Fetches a build with the given [buildNumber] of the project identified
   /// by the given [sourceProjectId].
   ///
-  /// Returns `null` if fetching of the build with the given [buildNumber] fails.
+  /// Returns `null` if fetching a build fails.
   Future<BuildData> _fetchBuild(String sourceProjectId, int buildNumber) {
     return sourceClient
         .fetchOneBuild(sourceProjectId, buildNumber)
-        .catchError(() => null);
+        .catchError((_) => null);
   }
 
-  /// Determines whether the build that started at given [startedAt] date
-  /// has reached the given [timeout].
+  /// Processes the given in-progress [build].
+  ///
+  /// Delegates to [_timeoutBuild] if the given [build] reaches the given
+  /// [timeout].
+  ///
+  /// Otherwise, returns `null`.
+  BuildData _processInProgressBuild(BuildData build, Duration timeout) {
+    if (_shouldTimeoutBuild(build.startedAt, timeout)) {
+      return _timeoutBuild(build, timeout);
+    }
+
+    return null;
+  }
+
+  /// Determines whether a build with the given [startedAt] date reaches
+  /// the given [timeout].
   ///
   /// Returns `true` if the difference between the current date and
-  /// the [startedAt] is greater or equal to the given [timeout].
+  /// the [startedAt] is greater than or equal to the given [timeout].
   /// Otherwise, returns `false`.
   bool _shouldTimeoutBuild(DateTime startedAt, Duration timeout) {
     final currentDate = DateTime.now();
     final buildDuration = currentDate.difference(startedAt);
 
     return buildDuration >= timeout;
+  }
+
+  /// Timeouts the given [build].
+  ///
+  /// Returns a new [BuildData] instance with the [BuildData.duration] equal
+  /// to the given [timeout] and the [BuildStatus.unknown]
+  /// [BuildData.buildStatus].
+  BuildData _timeoutBuild(BuildData build, Duration timeout) {
+    return build.copyWith(duration: timeout, buildStatus: BuildStatus.unknown);
   }
 }
