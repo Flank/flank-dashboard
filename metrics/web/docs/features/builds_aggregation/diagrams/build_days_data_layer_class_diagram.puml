@@ -4,7 +4,7 @@ package common {
     package domain {
         package repositories {
             interface BuildDayRepository {
-                + buildDaysStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+                + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
             }
         }
 
