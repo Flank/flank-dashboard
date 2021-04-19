@@ -180,6 +180,4 @@ The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContex
 
 The `onUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, we should create an instance of `Change` class using the mocked `DocumentSnapshot`s and pass it as the first argument to the handler.
 
-As our functions process some actions using the `FirebaseAdmin` instance (creating documents or updating existing ones), we should test, that documents are actually created or updated. So we should mock the `FirebaseAdmin` instance and use the mockito's methods, such as `verify()` to complete the test purposes.
-
 As our functions process some actions(creating documents or updating existing ones) using the Firestore instance from the `DocumentSnapshot` through `documentSnapshot.firestore` we can use our mocked instance to override this call and replace it with our created mock. This gives us the ability to verify that the functions actually write or updates documents.
