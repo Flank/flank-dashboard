@@ -47,3 +47,7 @@ The following class diagram demonstrates the presentation layer structure:
 ![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_presentation_layer_class_diagram.puml)
 
 So, as we have the `PerformanceMetric` and `BuildNumberMetric` in the `BuildDayProjectMetrics`, we don't need them inside the existing `DashboardProjectMetrics`. Also, these metrics should be a move to the `common` folder. 
+
+The following sequence diagram describes how the application loads and shows aggregation metrics:
+
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_sequence_diagram.puml)
