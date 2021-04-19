@@ -110,7 +110,7 @@ void main() {
       return when(_documentReferenceMock.create(withBuildJson ?? any));
     }
 
-    PostExpectation<Future<void>> whenSetBuilds({
+    PostExpectation<Future<void>> whenSetBuild({
       Map<String, dynamic> withBuildJson,
     }) {
       when(
@@ -216,7 +216,7 @@ void main() {
       ".addBuilds() adds the given builds using the .set() method if the given builds are finished",
       () async {
         whenCheckProjectExists().thenReturn(true);
-        whenSetBuilds().thenAnswer((_) => Future.value());
+        whenSetBuild().thenAnswer((_) => Future.value());
 
         const builds = [
           BuildData(buildNumber: 1, buildStatus: BuildStatus.successful),
@@ -265,7 +265,7 @@ void main() {
       () async {
         whenCheckProjectExists().thenReturn(true);
         whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
-        whenSetBuilds().thenAnswer((_) => Future.value());
+        whenSetBuild().thenAnswer((_) => Future.value());
         const builds = [
           BuildData(buildNumber: 1),
           BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
@@ -287,7 +287,7 @@ void main() {
       ".addBuilds() throws a DestinationError if adding a finished build fails",
       () {
         whenCheckProjectExists().thenReturn(true);
-        whenSetBuilds().thenAnswer((_) => Future.error(firestoreException));
+        whenSetBuild().thenAnswer((_) => Future.error(firestoreException));
         const builds = [BuildData(buildNumber: 1)];
 
         final result = adapter.addBuilds(testProjectId, builds);
@@ -315,7 +315,7 @@ void main() {
       ".addBuilds() stops adding builds if adding a finished build fails",
       () async {
         whenCheckProjectExists().thenReturn(true);
-        whenSetBuilds().thenAnswer((_) => Future.value());
+        whenSetBuild().thenAnswer((_) => Future.value());
 
         const builds = [
           BuildData(buildNumber: 1),
@@ -326,7 +326,7 @@ void main() {
             .map((build) => build.copyWith(projectId: testProjectId).toJson())
             .toList();
 
-        whenSetBuilds(
+        whenSetBuild(
           withBuildJson: buildsData[1],
         ).thenAnswer((_) => Future.error(firestoreException));
 
@@ -368,11 +368,11 @@ void main() {
     );
 
     test(
-      ".addBuilds() continues adding builds if adding one of them throws a FirestoreException with the 'already exists' exception code",
+      ".addBuilds() continues adding builds if adding an in-progress build throws a FirestoreException with the 'already exists' exception code",
       () async {
         const builds = [
           BuildData(buildNumber: 1),
-          BuildData(buildNumber: 2),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
           BuildData(buildNumber: 3),
         ];
         final buildsData = builds
@@ -380,7 +380,7 @@ void main() {
             .toList();
 
         whenCheckProjectExists().thenReturn(true);
-        whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
+        whenSetBuild().thenAnswer((_) => Future.value());
         whenCreateBuild(
           withBuildJson: buildsData[1],
         ).thenAnswer((_) => Future.error(alreadyExistsFirestoreException));
