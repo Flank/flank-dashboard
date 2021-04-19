@@ -11,16 +11,12 @@ package common {
         package entities {
             class BuildDay {
                 + projectId : String
-                + statusCounters : Map<BuildStatus, int>
+                + successful: int
+                + failed: int
+                + unknown: int
+                + inProgress: int
                 + totalDuration : int
                 + day : Timestamp
-            }
-
-            enum BuildDayStatusCounters {
-                successful,
-                failed,
-                unknown,
-                inProgress,
             }
         }
     }
@@ -35,20 +31,12 @@ package common {
                 + static fromJson(Map<String, dynamic> json) : BuildDay
             }
         }
-
-        package mappers {
-            class BuildDayStatusCountersMapper {
-                + map(String status): BuildStatus
-            }
-        }
     }
 }
 
 
 FirestoreBuildDayRepository ..|> BuildDayRepository
 FirestoreBuildDayRepository --> BuildDayDataDeserializer : uses
-BuildDayDataDeserializer --> BuildDayStatusCountersMapper: uses
-BuildDayStatusCountersMapper --> BuildDayStatusCounters : uses
 
 BuildDayDataDeserializer --> BuildDay : uses
 

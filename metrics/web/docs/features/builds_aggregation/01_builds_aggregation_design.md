@@ -20,17 +20,17 @@ The following sub-sections provide an implementation of Build aggregation integr
 
 ### Data layer
 
-The data layer provides the `FirestoreBuildDayRepository` implementation of `BuildDayRepository` and `BuildDayDataDeserializer` that provides deserialization methods for `BuildDay` entity. Also, the `BuildDayDataDeserializer` uses the `BuildDayStatusCountersMapper` that maps the given status string to the `BuildStatus`.
+The data layer provides the `FirestoreBuildDayRepository` implementation of `BuildDayRepository` and `BuildDayDataDeserializer` that provides deserialization methods for the `BuildDay` entity.
 
 ![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
 
 ### Domain layer
 
-The domain layer should provide an interface for the `FirestoreBuildDayRepository` we need to interact with the `Firestore database`. Also, the layer provides a use case required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+The domain layer should provide an interface for the `FirestoreBuildDayRepository` we need to interact with the `Firestore database`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
-- Add the `ReceiveBuildDayMetricsUpdates` usecase with the `BuildDayParam`.
+- Add the `ReceiveBuildDayProjectMetricsUpdates` usecase with the `BuildDayParam`.
 
 The following class diagram demonstrates the domain layer structure:
 

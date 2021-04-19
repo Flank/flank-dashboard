@@ -38,12 +38,12 @@
         }
     }
 
-    ProjectMetricsNotifier -> ReceiveBuildDayProjectMetricsUpdates : uses
-    ReceiveBuildDayProjectMetricsUpdates -> BuildDayProjectMetrics : provides
-    ProjectMetricsNotifier -> BuildDayProjectMetrics : uses
+    ProjectMetricsNotifier --> ReceiveBuildDayProjectMetricsUpdates : uses
+    ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides
+    ProjectMetricsNotifier --> BuildDayProjectMetrics : uses
 
-    BuildDayProjectMetrics -> BuildNumberMetric : uses
-    BuildDayProjectMetrics -> PerformanceMetric : uses
-    PerformanceMetric -> BuildPerformance : uses
+    BuildDayProjectMetrics --> BuildNumberMetric : uses
+    BuildDayProjectMetrics --> PerformanceMetric : uses
+    PerformanceMetric --> BuildPerformance : uses
     
 @enduml

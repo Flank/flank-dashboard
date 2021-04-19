@@ -10,17 +10,13 @@ package common.domain {
     package entities {
         class BuildDay {
             + projectId : String
-            + statusCounters : Map<BuildStatus, int>
+            + successful: int
+            + failed: int
+            + unknown: int
+            + inProgress: int
             + duration : int
             + day : Timestamp
         }
-
-        enum BuildDayStatusCounters {
-                successful,
-                failed,
-                unknown,
-                inProgress,
-            }
     }
     
     package repositories {
@@ -30,7 +26,7 @@ package common.domain {
     }
 
     package usecases {
-        class ReceiveBuildDayMetricsUpdates {
+        class ReceiveBuildDayProjectMetricsUpdates {
             + call(BuildDayParam params) : Stream<BuildDayProjectMetrics>
         }
 
@@ -44,8 +40,8 @@ package common.domain {
 }
 
 BuildDayRepository --> BuildDay : uses
-ReceiveBuildDayMetricsUpdates ..|> UseCase
-ReceiveBuildDayMetricsUpdates --> BuildDayRepository : uses
-ReceiveBuildDayMetricsUpdates --> BuildDayParam : uses
+ReceiveBuildDayProjectMetricsUpdates ..|> UseCase
+ReceiveBuildDayProjectMetricsUpdates --> BuildDayRepository : uses
+ReceiveBuildDayProjectMetricsUpdates --> BuildDayParam : uses
 
 @enduml
