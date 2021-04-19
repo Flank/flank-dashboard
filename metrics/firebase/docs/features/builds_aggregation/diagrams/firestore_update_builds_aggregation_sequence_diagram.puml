@@ -18,7 +18,7 @@
     FCF -> Firestore : increases and decreases counters inside the 'build_days' collection
     alt Firestore Cloud Functions onUpdate handler fails
         FCF -> FCF : function fails
-        FCF -> Firestore : adds information about an aggregation fail to the 'tasks' collection
+        FCF -> Firestore : creates a new 'task' to re-run this trigger later
     end
 
     deactivate FCF

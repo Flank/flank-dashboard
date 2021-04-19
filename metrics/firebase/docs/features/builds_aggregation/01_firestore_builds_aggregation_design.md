@@ -36,7 +36,9 @@ The first collection we should create is the `build_days`. It holds builds group
 
 > Explain the structure of the documents under this collection.
 
-We should produce a composite document identifier that consists of a project's id and a day this aggregation document belongs to. This identifier we can use to easily update a value of the `build_days` document.
+We should produce a composite document identifier that consists of a project's id and a day (represented as a `timestamp` in a UTC) this aggregation document belongs to. This identifier we can use to easily update a value of the `build_days` document.
+
+So, the identifier of the document can looks like the following: `projectId_1618790400`.
 
 The collection's document has the following structure:
 
@@ -72,13 +74,14 @@ Every authenticated user can read the documents from the `build_days` collection
 
 - Access-related rules:
   - not authenticated users **cannot** read, create, update, delete this document;
-  - authenticated users **can** read and **cannot** create, update, delete this document.
+  - authenticated users **can** read;
+  - authenticated users **cannot** create, update, delete this document.
 
 ### `tasks`
 
 > Explain the main purpose of the collection.
 
-There may be situations where creating or updating the `build_days` collection fails. If it happens, we should store the required for builds aggregation fields to the `data` field of the specific collection - `tasks` to process this data later.
+The collection stands for a list of delayed jobs and lets you separate out pieces of work that can be performed independently, outside of your main application flow. The collection's fields contain all required information for each job to perform required actions.
 
 #### Document Structure
 
@@ -99,10 +102,10 @@ Let's take a closer look at the document's fields:
 
 | Field | Description |
 | --- | --- |
-| `code`   | A string that identifies the task. |
-| `data`   | A map, containing the required fields to complete the task. |
-| `context`   | A string, containing the reason of the event failure. |
-| `createdAt`   | A timestamp, determine when the task is created. |
+| `code`   | A string that identifies the task to perform. |
+| `data`   | A map, containing the map needed to run the task with the specified `code`. |
+| `context`   | A string, containing the additional context for this task. |
+| `createdAt`   | A timestamp, determine when this task is created. |
 
 For our purposes, the following code strings we can create, related to the function trigger type, that is failed:
  - `build_days.onCreate`
@@ -122,9 +125,11 @@ No one can read from or write to this collection. Let's consider the security ru
 
 ### Firestore Cloud Functions
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. In addition, we can [write these functions using the Dart programming language](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md).
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create cloud functions using the Dart programming language.
 
-#### onCreate trigger
+Let's review each Cloud Function we need for this feature separately: 
+
+#### onBuildAdded
 
 > Explain the main purpose of the trigger.
 
@@ -141,11 +146,11 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, EventContext context
 
 The trigger's `onBuildAddedHandler` handler should process incrementing logic for the `build_days` collection document, based on the created build's status and started date.
 
-The following sequence diagram shows the overall process of how the `onCreate` triggers works:
+The following sequence diagram shows the overall process of how the `onBuildAdded` triggers works:
 
 ![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/builds_aggregation_design/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_create_builds_aggregation_sequence_diagram.puml)
 
-#### onUpdate trigger
+#### onBuildUpdated
 
 > Explain the main purpose of the trigger.
 
@@ -161,7 +166,7 @@ Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, EventContext
 
 In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we should create a new document inside the `tasks` collection. Later, we can use this collection to fix the `build_days` counters.
 
-The following sequence diagram shows the overall process of how the `onUpdate` triggers works:
+The following sequence diagram shows the overall process of how the `onBuildUpdated` triggers works:
 
 ![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/builds_aggregation_design/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_update_builds_aggregation_sequence_diagram.puml)
 
@@ -171,6 +176,8 @@ The following sequence diagram shows the overall process of how the `onUpdate` t
 
 The described above functions we will test using the [test](https://pub.dev/packages/test) package, and perform unit-testing the functions' event handlers.
 
-The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContext`. As we don't want to reference the real instance of Firestore, we need to "mock" the `DocumentSnapshot` using the [mockito](https://pub.dev/packages/mockito) package. This gives us a possibility to emulate a Firestore and return specific results depending on the test. Also, we should mock the `EventContext` and pass that instance as the second parameter to the handler.
+The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContext`. As we don't want to reference the real instance of Firestore, we need to mock the `DocumentSnapshot` using the [mockito](https://pub.dev/packages/mockito) package. This gives us a possibility to emulate a Firestore and return specific results depending on the test. Also, we should mock the `EventContext` and pass that instance as the second parameter to the handler.
 
-The `OnUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, so we should create an instance of `Change` class using the "mocked" `DocumentSnapshot`s and pass it as the first argument to the handler.
+The `onUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, we should create an instance of `Change` class using the mocked `DocumentSnapshot`s and pass it as the first argument to the handler.
+
+As our functions process some actions using the `FirebaseAdmin` instance (creating documents or updating existing ones), we should test, that documents are actually created or updated. So we should mock the `FirebaseAdmin` instance and use the mockito's methods, such as `verify()` to complete the test purposes.

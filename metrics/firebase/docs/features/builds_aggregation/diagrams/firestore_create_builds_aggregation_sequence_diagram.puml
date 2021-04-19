@@ -20,7 +20,7 @@
 
     alt Firestore Cloud Functions onCreate handler fails
         FCF -> FCF : function fails
-        FCF -> Firestore : adds information about an aggregation fail to the 'tasks' collection
+        FCF -> Firestore : creates a new 'task' to re-run this trigger later
     end
 
     deactivate FCF
