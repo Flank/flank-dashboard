@@ -75,7 +75,6 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   /// If the given [lastBuild] is `null`, fetches the given
   /// [SyncConfig.initialSyncLimit] number of builds using the
   /// [SourceClient.fetchBuilds] method.
-  ///
   /// Otherwise, fetches the new builds after the given [lastBuild] using the
   /// [SourceClient.fetchBuildsAfter] method.
   Future<List<BuildData>> _fetchNewBuilds(
