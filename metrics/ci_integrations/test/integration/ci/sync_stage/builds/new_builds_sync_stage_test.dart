@@ -10,11 +10,13 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../cli/test_util/mock/integration_client_mock.dart';
-import '../../../../cli/test_util/test_data/config_test_data.dart';
 import '../../../../test_utils/matchers.dart';
 
 void main() {
   group("NewBuildsSyncStage", () {
+    const sourceProjectId = 'sourceId';
+    const destinationProjectId = 'destinationId';
+    const initialSyncLimit = 28;
     const build = BuildData(buildNumber: 1);
     const anotherBuild = BuildData(buildNumber: 2);
     const builds = [build, anotherBuild];
@@ -23,6 +25,7 @@ void main() {
     final buildWithCoverage = build.copyWith(coverage: coverage);
     final anotherBuildWithCoverage = anotherBuild.copyWith(coverage: coverage);
     final buildsWithCoverage = [buildWithCoverage, anotherBuildWithCoverage];
+    final error = Error();
 
     final sourceClient = SourceClientMock();
     final destinationClient = DestinationClientMock();
@@ -32,19 +35,18 @@ void main() {
       destinationClient,
     );
 
-    final syncConfig = ConfigTestData.syncConfig;
-    final sourceProjectId = syncConfig.sourceProjectId;
-    final destinationProjectId = syncConfig.destinationProjectId;
-    final initialSyncLimit = syncConfig.initialSyncLimit;
-    final syncConfigWithCoverage = SyncConfig(
-      sourceProjectId: sourceProjectId,
-      destinationProjectId: destinationProjectId,
-      initialSyncLimit: initialSyncLimit,
-      inProgressTimeout: syncConfig.inProgressTimeout,
-      coverage: true,
-    );
+    SyncConfig createSyncConfig({bool coverage}) {
+      return SyncConfig(
+        sourceProjectId: sourceProjectId,
+        destinationProjectId: destinationProjectId,
+        initialSyncLimit: initialSyncLimit,
+        inProgressTimeout: Duration.zero,
+        coverage: coverage,
+      );
+    }
 
-    final error = Error();
+    final syncConfig = createSyncConfig(coverage: false);
+    final syncConfigWithCoverage = createSyncConfig(coverage: true);
 
     PostExpectation<Future<List<BuildData>>> whenFetchBuilds() {
       when(
@@ -90,17 +92,21 @@ void main() {
     test(
       ".call() throws an ArgumentError if the given sync config is null",
       () {
-        expect(() => newBuildsSyncStage.call(null), throwsArgumentError);
+        final result = newBuildsSyncStage.call(null);
+
+        expect(result, throwsArgumentError);
       },
     );
 
     test(
       ".call() fetches the last build using the destination client and the given destination project id",
       () async {
+        final expectedDestinationProjectId = syncConfig.destinationProjectId;
+
         await newBuildsSyncStage.call(syncConfig);
 
         verify(
-          destinationClient.fetchLastBuild(destinationProjectId),
+          destinationClient.fetchLastBuild(expectedDestinationProjectId),
         ).called(once);
       },
     );
@@ -128,21 +134,22 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verifyZeroInteractions(sourceClient);
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
     test(
       ".call() fetches the initial sync limit number of builds from the source if the fetched last build is null",
       () async {
+        final expectedInitialSyncLimit = syncConfig.initialSyncLimit;
         when(
           destinationClient.fetchLastBuild(destinationProjectId),
-        ).thenAnswer((_) => Future.value());
+        ).thenAnswer((_) => Future.value(null));
 
         await newBuildsSyncStage.call(syncConfig);
 
         verify(
-          sourceClient.fetchBuilds(sourceProjectId, initialSyncLimit),
+          sourceClient.fetchBuilds(sourceProjectId, expectedInitialSyncLimit),
         ).called(once);
       },
     );
@@ -152,11 +159,11 @@ void main() {
       () async {
         when(
           destinationClient.fetchLastBuild(destinationProjectId),
-        ).thenAnswer((_) => Future.value());
+        ).thenAnswer((_) => Future.value(null));
 
         await newBuildsSyncStage.call(syncConfig);
 
-        verifyNever(sourceClient.fetchBuildsAfter(any, any));
+        verifyNever(sourceClient.fetchBuildsAfter(sourceProjectId, any));
       },
     );
 
@@ -168,7 +175,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verifyNever(sourceClient.fetchCoverage(any));
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -191,7 +198,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verifyNever(sourceClient.fetchCoverage(any));
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -235,8 +242,9 @@ void main() {
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
-        verify(sourceClient.fetchCoverage(build)).called(once);
-        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
+        verify(
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+        ).called(equals(builds.length));
       },
     );
 
@@ -245,12 +253,12 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -259,7 +267,7 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -273,7 +281,7 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -313,8 +321,9 @@ void main() {
     );
 
     test(
-      ".call() fetches the builds after the the fetched last build if it is not null",
+      ".call() fetches the builds after the fetched last build with the given source project id",
       () async {
+        final expectedSourceProjectId = syncConfig.sourceProjectId;
         when(
           destinationClient.fetchLastBuild(destinationProjectId),
         ).thenAnswer((_) => Future.value(build));
@@ -322,7 +331,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verify(
-          sourceClient.fetchBuildsAfter(sourceProjectId, build),
+          sourceClient.fetchBuildsAfter(expectedSourceProjectId, build),
         ).called(once);
       },
     );
@@ -336,7 +345,7 @@ void main() {
 
         await newBuildsSyncStage.call(syncConfig);
 
-        verifyNever(sourceClient.fetchBuilds(any, any));
+        verifyNever(sourceClient.fetchBuilds(sourceProjectId, any));
       },
     );
 
@@ -348,7 +357,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verifyNever(sourceClient.fetchCoverage(any));
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -371,7 +380,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfig);
 
         verifyNever(sourceClient.fetchCoverage(any));
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -393,7 +402,7 @@ void main() {
 
         await newBuildsSyncStage.call(syncConfig);
 
-        verifyNever(sourceClient.fetchCoverage(build));
+        verifyNever(sourceClient.fetchCoverage(any));
       },
     );
 
@@ -417,20 +426,9 @@ void main() {
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
-        verify(sourceClient.fetchCoverage(build)).called(once);
-        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
-      },
-    );
-
-    test(
-      ".call() fetches coverage for the fetched builds after if the coverage option is enabled in the sync config",
-      () async {
-        whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
-
-        await newBuildsSyncStage.call(syncConfigWithCoverage);
-
-        verify(sourceClient.fetchCoverage(build)).called(once);
-        verify(sourceClient.fetchCoverage(anotherBuild)).called(once);
+        verify(
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+        ).called(equals(builds.length));
       },
     );
 
@@ -439,12 +437,12 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
-        verifyNever(destinationClient.addBuilds(any, any));
+        verifyNever(destinationClient.addBuilds(destinationProjectId, any));
       },
     );
 
@@ -453,7 +451,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -467,7 +465,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -483,7 +481,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(any),
+          sourceClient.fetchCoverage(argThat(anyOf(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
