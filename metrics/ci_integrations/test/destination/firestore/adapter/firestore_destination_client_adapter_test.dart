@@ -260,7 +260,7 @@ void main() {
         verify(
           _documentReferenceMock.create(buildJsons[1]),
         ).called(once);
-        verifyNever(_documentReferenceMock.set(argThat(isIn(buildJsons))));
+        verifyNever(_documentReferenceMock.set(any));
       },
     );
 
