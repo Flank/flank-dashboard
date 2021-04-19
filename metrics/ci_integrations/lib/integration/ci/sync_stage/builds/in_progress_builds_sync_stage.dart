@@ -51,7 +51,6 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
       }
 
       List<BuildData> updatedBuilds;
-
       updatedBuilds = await _fetchUpdatedBuilds(
         inProgressBuilds,
         syncConfig,
