@@ -8,7 +8,7 @@ import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
-import 'package:firedart/firedart.dart' as fd;
+import 'package:firedart/firedart.dart' hide Firestore;
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides methods for interactions between
@@ -55,10 +55,9 @@ class FirestoreDestinationClientAdapter
   /// Adds a new [build] using the given [documentReference].
   ///
   /// If the given [build] is not in-progress, adds it using the
-  /// `set` method of the [fd.DocumentReference]. Otherwise, uses the `create`
-  /// method of the [fd.DocumentReference].
+  /// [DocumentReference.set]. Otherwise, uses the [DocumentReference.create].
   Future<void> _addBuild(
-    fd.DocumentReference documentReference,
+    DocumentReference documentReference,
     BuildData build,
   ) {
     final buildJson = build.toJson();
@@ -75,8 +74,9 @@ class FirestoreDestinationClientAdapter
   /// Handles the given [error] occurred during creating a build with the
   /// given [buildJson].
   ///
-  /// Ignores the given [error] if it represents an already exists
-  /// [fd.FirestoreException]. Otherwise, throws the given [error].
+  /// Ignores the given [error] if it is a [FirestoreException] with the
+  /// [FirestoreExceptionCode.alreadyExists]. Otherwise, throws
+  /// the given [error].
   void _handleAddBuildError(
     Object error,
     Map<String, dynamic> buildJson,
@@ -91,12 +91,12 @@ class FirestoreDestinationClientAdapter
     throw error;
   }
 
-  /// Returns `true` if the given [error] is a [fd.FirestoreException] having
-  /// the `alreadyExists` [fd.FirestoreExceptionCode]. Otherwise, returns
+  /// Returns `true` if the given [error] is a [FirestoreException] having
+  /// the [FirestoreExceptionCode.alreadyExists]. Otherwise, returns
   /// `false`.
   bool _isAlreadyExistsError(Object error) {
-    return error is fd.FirestoreException &&
-        error.code == fd.FirestoreExceptionCode.alreadyExists;
+    return error is FirestoreException &&
+        error.code == FirestoreExceptionCode.alreadyExists;
   }
 
   @override
@@ -141,7 +141,7 @@ class FirestoreDestinationClientAdapter
       return documents.map((document) {
         return BuildDataDeserializer.fromJson(document.map, document.id);
       }).toList();
-    } on fd.FirestoreException catch (error) {
+    } on FirestoreException catch (error) {
       throw DestinationError(message: error.message);
     }
   }
@@ -201,7 +201,7 @@ class FirestoreDestinationClientAdapter
       final project = await _firestore.document('projects/$projectId').get();
 
       return project.exists;
-    } on fd.FirestoreException catch (error) {
+    } on FirestoreException catch (error) {
       throw DestinationError(
         message:
             'Failed to fetch a project with the $projectId id due to the following error: ${error.message}',
