@@ -171,4 +171,8 @@ The following sequence diagram shows the overall process of how the `onUpdate` t
 
 > How will the functions be tested?
 
-The described above functions will be unit-tested using the [test](https://pub.dev/packages/test) package. To mock document snapshots we can use the [mockito](https://pub.dev/packages/mockito) package.
+The described above functions we will test using the [test](https://pub.dev/packages/test) package, and perform unit-testing the functions' event handlers.
+
+The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContext`. As we don't want to reference the real instance of Firestore, we need to "mock" the `DocumentSnapshot` using the [mockito](https://pub.dev/packages/mockito) package. This gives us a possibility to emulate a Firestore and return specific results depending on the test. Also, we should mock the `EventContext` and pass that instance as the second parameter to the handler.
+
+The `OnUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, so we should create an instance of `Change` class using the "mocked" `DocumentSnapshot`s and pass it as the first argument to the handler.
