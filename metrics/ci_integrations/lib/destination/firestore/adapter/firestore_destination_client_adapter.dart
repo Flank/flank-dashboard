@@ -16,11 +16,6 @@ import 'package:metrics_core/metrics_core.dart';
 class FirestoreDestinationClientAdapter
     with LoggerMixin
     implements DestinationClient {
-  /// An [fd.FirestoreExceptionCode] that indicates that a document with the
-  /// given identifier already exists.
-  static const fd.FirestoreExceptionCode _alreadyExistsExceptionCode =
-      fd.FirestoreExceptionCode.alreadyExists;
-
   /// A [Firestore] instance this adapter uses to interact with the Firestore.
   final Firestore _firestore;
 
@@ -38,35 +33,69 @@ class FirestoreDestinationClientAdapter
 
     await _throwIfProjectAbsent(projectId);
 
-    Map<String, dynamic> buildJson;
-    for (final build in builds) {
-      buildJson = build.copyWith(projectId: projectId).toJson();
+    final collection = _firestore.collection('build');
+    try {
+      for (final build in builds) {
+        final newBuild = build.copyWith(projectId: projectId);
 
-      final documentId = '${projectId}_${build.buildNumber}';
-      await _firestore
-          .document('build/$documentId')
-          .create(buildJson)
-          .catchError((error) => _handleAddBuildError(error, buildJson));
+        final documentId = '${projectId}_${newBuild.buildNumber}';
+        final documentReference = collection.document(documentId);
 
-      logger.info('Added build id $documentId.');
+        await _addBuild(documentReference, newBuild);
+
+        logger.info('Added build id $documentId.');
+      }
+    } catch (error) {
+      throw DestinationError(
+        message: 'Failed to add new builds with the following error: $error.',
+      );
     }
+  }
+
+  /// Adds a new [build] using the given [documentReference].
+  ///
+  /// If the given [build] is not in-progress, adds it using the
+  /// `set` method of the [fd.DocumentReference]. Otherwise, uses the `create`
+  /// method of the [fd.DocumentReference].
+  Future<void> _addBuild(
+    fd.DocumentReference documentReference,
+    BuildData build,
+  ) {
+    final buildJson = build.toJson();
+
+    if (build.buildStatus != BuildStatus.inProgress) {
+      return documentReference.set(buildJson);
+    }
+
+    return documentReference
+        .create(buildJson)
+        .catchError((error) => _handleAddBuildError(error, buildJson));
   }
 
   /// Handles the given [error] occurred during creating a build with the
   /// given [buildJson].
+  ///
+  /// Ignores the given [error] if it represents an already exists
+  /// [fd.FirestoreException]. Otherwise, throws the given [error].
   void _handleAddBuildError(
     Object error,
     Map<String, dynamic> buildJson,
   ) {
-    if (error is fd.FirestoreException &&
-        error.code == _alreadyExistsExceptionCode) {
+    if (_isAlreadyExistsError(error)) {
       logger.info('The build $buildJson already exists. Skipping this build.');
 
       return;
     }
 
     logger.info('Failed to add build: $buildJson');
-    throw DestinationError(message: '$error');
+    throw error;
+  }
+
+  /// Returns `true` if the given [error] is a [fd.FirestoreException] having
+  /// the `alreadyExists` [fd.FirestoreExceptionCode].
+  bool _isAlreadyExistsError(Object error) {
+    return error is fd.FirestoreException &&
+        error.code == fd.FirestoreExceptionCode.alreadyExists;
   }
 
   @override
@@ -124,12 +153,8 @@ class FirestoreDestinationClientAdapter
 
     await _throwIfProjectAbsent(projectId);
 
-    final updatedBuilds = builds.map((build) {
-      return build.copyWith(projectId: projectId);
-    }).toList();
-
-    for (final build in updatedBuilds) {
-      final buildData = build.toJson();
+    for (final build in builds) {
+      final buildData = build.copyWith(projectId: projectId).toJson();
       final buildId = build.id;
 
       final reference = _firestore.document('build/$buildId');
