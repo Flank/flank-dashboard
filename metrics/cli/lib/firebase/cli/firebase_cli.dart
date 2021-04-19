@@ -60,10 +60,11 @@ class FirebaseCli extends Cli {
     );
   }
 
-  /// Deploys Firestore rules from the given [workingDirectory] to the Firebase.
-  Future<void> deployRules(String target, String workingDirectory) {
+  /// Deploys Firestore rules and indexes from the given [workingDirectory]
+  /// to the Firebase.
+  Future<void> deployFirestore(String workingDirectory) {
     return run(
-      ['deploy', '--only', 'firestore:rules'],
+      ['deploy', '--only', 'firestore'],
       workingDirectory: workingDirectory,
     );
   }

@@ -4,6 +4,7 @@
 import 'package:cli/common/model/services.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/firebase_service_mock.dart';
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/git_service_mock.dart';
@@ -17,6 +18,7 @@ void main() {
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
+    final firebaseService = FirebaseServiceMock();
 
     test(
       "throws an ArgumentError if the given Flutter service is null",
@@ -27,6 +29,7 @@ void main() {
             gcloudService: gcloudService,
             npmService: npmService,
             gitService: gitService,
+            firebaseService: firebaseService,
           ),
           throwsArgumentError,
         );
@@ -42,6 +45,7 @@ void main() {
             gcloudService: null,
             npmService: npmService,
             gitService: gitService,
+            firebaseService: firebaseService,
           ),
           throwsArgumentError,
         );
@@ -57,6 +61,7 @@ void main() {
             gcloudService: gcloudService,
             npmService: null,
             gitService: gitService,
+            firebaseService: firebaseService,
           ),
           throwsArgumentError,
         );
@@ -72,6 +77,23 @@ void main() {
             gcloudService: gcloudService,
             npmService: npmService,
             gitService: null,
+            firebaseService: firebaseService,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given Firebase service is null",
+      () {
+        expect(
+          () => Services(
+            flutterService: flutterService,
+            gcloudService: gcloudService,
+            npmService: npmService,
+            gitService: gitService,
+            firebaseService: null,
           ),
           throwsArgumentError,
         );
@@ -86,12 +108,14 @@ void main() {
           gcloudService: gcloudService,
           gitService: gitService,
           npmService: npmService,
+          firebaseService: firebaseService,
         );
 
         expect(services.flutterService, equals(flutterService));
         expect(services.gcloudService, equals(gcloudService));
         expect(services.gitService, equals(gitService));
         expect(services.npmService, equals(npmService));
+        expect(services.firebaseService, equals(firebaseService));
       },
     );
   });

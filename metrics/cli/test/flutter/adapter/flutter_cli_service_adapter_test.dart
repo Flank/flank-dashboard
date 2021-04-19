@@ -95,21 +95,6 @@ void main() {
         expect(flutterService.build(path), throwsStateError);
       },
     );
-
-    test(
-      ".build() stops the build process if Flutter CLI throws during the web application building",
-      () async {
-        when(flutterCli.buildWeb(any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(flutterService.build(path), throwsStateError);
-
-        verify(flutterCli.enableWeb()).called(once);
-        verify(flutterCli.buildWeb(any)).called(once);
-
-        verifyNoMoreInteractions(flutterCli);
-      },
-    );
   });
 }
 
