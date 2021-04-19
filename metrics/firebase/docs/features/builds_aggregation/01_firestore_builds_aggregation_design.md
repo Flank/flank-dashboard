@@ -99,14 +99,12 @@ Let's take a closer look at the document's fields:
 
 | Field | Description |
 | --- | --- |
-| `code`   | A code that identifies the task. |
+| `code`   | A string that identifies the task. |
 | `data`   | A map, containing the required fields to complete the task. |
 | `context`   | A string, containing the reason of the event failure. |
 | `createdAt`   | A timestamp, determine when the task is created. |
 
-The `action` should be a specific string, which contains an information about event failure. It can be a collection name and a function name, on which the processing is interrupted.
-
-For our purposes, the following action strings we can create, related to the function trigger type, that is failed:
+For our purposes, the following code strings we can create, related to the function trigger type, that is failed:
  - `build_days.onCreate`
  - `build_days.onUpdate`
 
