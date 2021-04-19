@@ -5,6 +5,7 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/ci/sync_stage/sync_stage.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:meta/meta.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
 /// performed on a CI tool and stored in a builds storage.
@@ -15,7 +16,9 @@ class CiIntegration with LoggerMixin {
   /// Creates a [CiIntegration] instance with the given [stages].
   ///
   /// Throws an [ArgumentError] if the given [stages] is `null`.
-  CiIntegration({this.stages}) {
+  CiIntegration({
+    @required this.stages,
+  }) {
     ArgumentError.checkNotNull(stages, 'stages');
   }
 
