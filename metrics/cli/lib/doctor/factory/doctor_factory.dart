@@ -1,7 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/cli/firebase/firebase_command.dart';
 import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/doctor/doctor.dart';
 
@@ -23,11 +22,7 @@ class DoctorFactory {
   /// Creates a new instance of the [Doctor].
   Doctor create() {
     final services = _servicesFactory.create();
-    final firebaseCommand = FirebaseCommand();
 
-    return Doctor(
-      services: services,
-      firebaseCommand: firebaseCommand,
-    );
+    return Doctor(services: services);
   }
 }

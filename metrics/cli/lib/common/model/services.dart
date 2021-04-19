@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/git/service/git_service.dart';
@@ -20,21 +21,27 @@ class Services {
   /// A service that provides methods for working with Git.
   final GitService gitService;
 
+  /// A service that provides methods for working with Firebase.
+  final FirebaseService firebaseService;
+
   /// Creates a new instance of the [Services] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [npmService] is `null`.
   /// Throws an [ArgumentError] if the given [gitService] is `null`.
+  /// Throws an [ArgumentError] if the given [firebaseService] is `null`.
   Services({
     this.flutterService,
     this.gcloudService,
     this.npmService,
     this.gitService,
+    this.firebaseService,
   }) {
     ArgumentError.checkNotNull(flutterService, 'flutterService');
     ArgumentError.checkNotNull(gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(npmService, 'npmService');
     ArgumentError.checkNotNull(gitService, 'gitService');
+    ArgumentError.checkNotNull(firebaseService, 'firebaseService');
   }
 }
