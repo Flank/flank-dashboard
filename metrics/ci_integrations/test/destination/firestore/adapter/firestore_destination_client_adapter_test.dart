@@ -221,8 +221,6 @@ void main() {
         const builds = [
           BuildData(buildNumber: 1, buildStatus: BuildStatus.successful),
           BuildData(buildNumber: 2, buildStatus: BuildStatus.failed),
-          BuildData(buildNumber: 3, buildStatus: BuildStatus.unknown),
-          BuildData(buildNumber: 4, buildStatus: null),
         ];
         final buildJsons = builds
             .map((build) => build.copyWith(projectId: testProjectId).toJson())
@@ -231,9 +229,12 @@ void main() {
         await adapter.addBuilds(testProjectId, builds);
 
         verify(
-          _documentReferenceMock.set(argThat(anyOf(buildJsons))),
-        ).called(builds.length);
-        verifyNever(_documentReferenceMock.create(argThat(anyOf(buildJsons))));
+          _documentReferenceMock.set(buildJsons[0]),
+        ).called(once);
+        verify(
+          _documentReferenceMock.set(buildJsons[1]),
+        ).called(once);
+        verifyNever(_documentReferenceMock.create(any));
       },
     );
 
@@ -254,9 +255,12 @@ void main() {
         await adapter.addBuilds(testProjectId, builds);
 
         verify(
-          _documentReferenceMock.create(argThat(anyOf(buildJsons))),
-        ).called(builds.length);
-        verifyNever(_documentReferenceMock.set(argThat(anyOf(buildJsons))));
+          _documentReferenceMock.create(buildJsons[0]),
+        ).called(once);
+        verify(
+          _documentReferenceMock.create(buildJsons[1]),
+        ).called(once);
+        verifyNever(_documentReferenceMock.set(argThat(isIn(buildJsons))));
       },
     );
 

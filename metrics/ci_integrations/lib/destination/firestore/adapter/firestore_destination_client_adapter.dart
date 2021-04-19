@@ -55,7 +55,8 @@ class FirestoreDestinationClientAdapter
   /// Adds a new [build] using the given [documentReference].
   ///
   /// If the given [build] is not in-progress, adds it using the
-  /// [DocumentReference.set]. Otherwise, uses the [DocumentReference.create].
+  /// [DocumentReference.set] method. Otherwise, uses the
+  /// [DocumentReference.create] method.
   Future<void> _addBuild(
     DocumentReference documentReference,
     BuildData build,
