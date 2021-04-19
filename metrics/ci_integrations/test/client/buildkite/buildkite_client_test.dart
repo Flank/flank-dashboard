@@ -12,6 +12,7 @@ import 'package:ci_integration/constants/http_constants.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/matchers.dart';
 import 'test_utils/mock/buildkite_mock_server.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -404,7 +405,7 @@ void main() {
       () {
         expect(
           () => client.fetchBuild(null, buildNumber),
-          throwsA(isA<AssertionError>()),
+          throwsAssertionError,
         );
       },
     );
@@ -414,7 +415,7 @@ void main() {
       () {
         expect(
           () => client.fetchBuild(pipelineSlug, null),
-          throwsA(isA<AssertionError>()),
+          throwsAssertionError,
         );
       },
     );
