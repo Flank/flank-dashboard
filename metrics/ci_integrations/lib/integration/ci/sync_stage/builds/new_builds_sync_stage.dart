@@ -12,7 +12,7 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents a [SyncStage] for new builds.
+/// A [SyncStage] implementation that synchronizes new builds.
 class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   @override
   final SourceClient sourceClient;
@@ -21,7 +21,7 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   final DestinationClient destinationClient;
 
   /// Creates a new instance of the [NewBuildsSyncStage] with the
-  /// given [sourceClient] and [destinationClient]
+  /// given [sourceClient] and [destinationClient].
   ///
   /// Throws an [ArgumentError] if the given [sourceClient] or
   /// [destinationClient] is `null`.
@@ -31,34 +31,19 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   }
 
   @override
-  FutureOr<InteractionResult> call(SyncConfig syncConfig) async {
-    logger.info('Running NewBuildsSyncStage...');
+  Future<InteractionResult> call(SyncConfig syncConfig) async {
+    logger.info('Running a NewBuildsSyncStage...');
 
     ArgumentError.checkNotNull(syncConfig, 'syncConfig');
 
     try {
-      final sourceProjectId = syncConfig.sourceProjectId;
       final destinationProjectId = syncConfig.destinationProjectId;
 
       final lastBuild = await destinationClient.fetchLastBuild(
         destinationProjectId,
       );
 
-      List<BuildData> newBuilds;
-      if (lastBuild == null) {
-        logger.info('There are no builds in the destination...');
-
-        final initialSyncLimit = syncConfig.initialSyncLimit;
-        newBuilds = await sourceClient.fetchBuilds(
-          sourceProjectId,
-          initialSyncLimit,
-        );
-      } else {
-        newBuilds = await sourceClient.fetchBuildsAfter(
-          sourceProjectId,
-          lastBuild,
-        );
-      }
+      List<BuildData> newBuilds = await _fetchNewBuilds(lastBuild, syncConfig);
 
       if (newBuilds.isEmpty) {
         return const InteractionResult.success(
@@ -83,5 +68,34 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         message: 'Failed to sync the data! Details: $error',
       );
     }
+  }
+
+  /// Fetches the new builds from the source of the given [syncConfig].
+  ///
+  /// If the given [lastBuild] is `null`, fetches the given
+  /// [SyncConfig.initialSyncLimit] number of builds using the
+  /// [SourceClient.fetchBuilds] method.
+  ///
+  /// Otherwise, fetches the new builds after the given [lastBuild] using the
+  /// [SourceClient.fetchBuildsAfter] method.
+  Future<List<BuildData>> _fetchNewBuilds(
+    BuildData lastBuild,
+    SyncConfig syncConfig,
+  ) {
+    final sourceProjectId = syncConfig.sourceProjectId;
+
+    if (lastBuild == null) {
+      logger.info('There are no builds in the destination...');
+
+      return sourceClient.fetchBuilds(
+        sourceProjectId,
+        syncConfig.initialSyncLimit,
+      );
+    }
+
+    return sourceClient.fetchBuildsAfter(
+      sourceProjectId,
+      lastBuild,
+    );
   }
 }
