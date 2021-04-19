@@ -11,7 +11,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/directory_mock.dart';
-import '../test_utils/firebase_command_mock.dart';
+import '../test_utils/firebase_service_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_service_mock.dart';
@@ -24,12 +24,18 @@ import '../test_utils/services_mock.dart';
 void main() {
   group("Deployer", () {
     const projectId = 'testId';
-    const firebaseToken = 'testToken';
+    const firebasePath = DeployConstants.firebasePath;
+    const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
+    const firebaseTarget = DeployConstants.firebaseTarget;
+    const webPath = DeployConstants.webPath;
+    const repoURL = DeployConstants.repoURL;
+    const tempDir = DeployConstants.tempDir;
+
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
-    final firebaseCommand = FirebaseCommandMock();
+    final firebaseService = FirebaseServiceMock();
     final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
@@ -38,23 +44,24 @@ void main() {
       gcloudService: gcloudService,
       npmService: npmService,
       gitService: gitService,
+      firebaseService: firebaseService,
     );
     final deployer = Deployer(
       services: services,
-      firebaseCommand: firebaseCommand,
       fileHelper: fileHelper,
     );
+    final stateError = StateError('test');
 
     PostExpectation<Directory> whenGetDirectory() {
       return when(fileHelper.getDirectory(any));
     }
 
-    PostExpectation<Future<String>> whenCreateGCloudProject() {
-      return when(gcloudService.createProject());
+    PostExpectation<bool> whenDirectoryExist() {
+      return when(directory.existsSync());
     }
 
-    PostExpectation<Future<String>> whenLoginToFirebase() {
-      return when(firebaseCommand.login());
+    PostExpectation<Future<String>> whenCreateGCloudProject() {
+      return when(gcloudService.createProject());
     }
 
     tearDown(() {
@@ -62,7 +69,7 @@ void main() {
       reset(gcloudService);
       reset(npmService);
       reset(gitService);
-      reset(firebaseCommand);
+      reset(firebaseService);
       reset(fileHelper);
       reset(directory);
       reset(servicesMock);
@@ -74,7 +81,6 @@ void main() {
         expect(
           () => Deployer(
             services: null,
-            firebaseCommand: firebaseCommand,
             fileHelper: fileHelper,
           ),
           throwsArgumentError,
@@ -89,13 +95,10 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-            fileHelper: fileHelper,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
@@ -108,13 +111,10 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(null);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-            fileHelper: fileHelper,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
@@ -127,13 +127,10 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(null);
         when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-            fileHelper: fileHelper,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
@@ -146,27 +143,26 @@ void main() {
         when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(null);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
-            firebaseCommand: firebaseCommand,
-            fileHelper: fileHelper,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      "throws an ArgumentError if the given Firebase command is null",
+      "throws an ArgumentError if the Firebase service in the given services is null",
       () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(null);
+
         expect(
-          () => Deployer(
-            services: services,
-            firebaseCommand: null,
-            fileHelper: fileHelper,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
@@ -178,7 +174,6 @@ void main() {
         expect(
           () => Deployer(
             services: services,
-            firebaseCommand: firebaseCommand,
             fileHelper: null,
           ),
           throwsArgumentError,
@@ -190,6 +185,8 @@ void main() {
       ".deploy() logs in to the GCloud",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verify(gcloudService.login()).called(once);
@@ -200,6 +197,8 @@ void main() {
       ".deploy() logs in to the GCloud before creating the GCloud project",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verifyInOrder([
@@ -213,6 +212,8 @@ void main() {
       ".deploy() creates the GCloud project",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verify(gcloudService.createProject()).called(once);
@@ -223,6 +224,8 @@ void main() {
       ".deploy() logs in to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verify(gcloudService.createProject()).called(once);
@@ -230,56 +233,30 @@ void main() {
     );
 
     test(
-      ".deploy() logs in to the Firebase before adding the Firebase capabilities to the project",
+      ".deploy() logs in to the Firebase before creating the Firebase web app",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verifyInOrder([
-          firebaseCommand.login(),
-          firebaseCommand.addFirebase(any, any),
+          firebaseService.login(),
+          firebaseService.createWebApp(any),
         ]);
       },
     );
 
     test(
-      ".deploy() adds the Firebase capabilities to the created project",
+      ".deploy() creates the Firebase web app for the created GCloud project",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(firebaseCommand.addFirebase(projectId, firebaseToken))
-            .called(once);
-      },
-    );
-
-    test(
-      ".deploy() adds the Firebase capabilities to the project before creating the web application",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
-
-        verifyInOrder([
-          firebaseCommand.addFirebase(any, any),
-          firebaseCommand.createWebApp(any, any),
-        ]);
-      },
-    );
-
-    test(
-      ".deploy() creates the Firebase web application",
-      () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
-        whenGetDirectory().thenReturn(directory);
-
-        await deployer.deploy();
-
-        verify(firebaseCommand.createWebApp(projectId, firebaseToken))
-            .called(once);
+        verify(firebaseService.createWebApp(projectId)).called(once);
       },
     );
 
@@ -287,13 +264,25 @@ void main() {
       ".deploy() clones the Git repository",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(gitService.checkout(
-          DeployConstants.repoURL,
-          DeployConstants.tempDir,
-        )).called(once);
+        verify(gitService.checkout(repoURL, tempDir)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Git service throws during the checkout process",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(gitService.checkout(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -301,11 +290,43 @@ void main() {
       ".deploy() clones the Git repository before building the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(DeployConstants.repoURL, DeployConstants.tempDir),
-          flutterService.build(DeployConstants.webPath),
+          gitService.checkout(repoURL, tempDir),
+          flutterService.build(webPath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase folder",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDir),
+          npmService.installDependencies(DeployConstants.firebasePath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase functions folder",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDir),
+          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
         ]);
       },
     );
@@ -314,14 +335,57 @@ void main() {
       ".deploy() installs the npm dependencies",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(DeployConstants.firebasePath))
+        verify(npmService.installDependencies(firebasePath)).called(once);
+        verify(npmService.installDependencies(firebaseFunctionsPath))
             .called(once);
-        verify(npmService.installDependencies(
-          DeployConstants.firebaseFunctionsPath,
-        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(npmService.installDependencies(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies in the Firebase folder before deploying to the Firebase",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          npmService.installDependencies(firebasePath),
+          firebaseService.deployFirebase(any, any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies to the functions folder before deploying to the Firebase",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          npmService.installDependencies(firebaseFunctionsPath),
+          firebaseService.deployFirebase(any, any),
+        ]);
       },
     );
 
@@ -329,75 +393,25 @@ void main() {
       ".deploy() builds the Flutter application",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(flutterService.build(DeployConstants.webPath)).called(once);
+        verify(flutterService.build(webPath)).called(once);
       },
     );
 
     test(
-      ".deploy() sets the default Firebase project",
-      () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
-        whenGetDirectory().thenReturn(directory);
-
-        await deployer.deploy();
-
-        verify(
-          firebaseCommand.setFirebaseProject(
-            projectId,
-            DeployConstants.webPath,
-            firebaseToken,
-          ),
-        ).called(once);
-      },
-    );
-
-    test(
-      ".deploy() sets the default Firebase project before applying the Firebase target",
+      ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
         whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
+        whenDirectoryExist().thenReturn(true);
+        when(flutterService.build(any))
+            .thenAnswer((_) => Future.error(stateError));
 
-        verifyInOrder([
-          firebaseCommand.setFirebaseProject(any, any, any),
-          firebaseCommand.applyTarget(any, any, any, any),
-        ]);
-      },
-    );
+        await expectLater(deployer.deploy(), throwsStateError);
 
-    test(
-      ".deploy() applies the Firebase target",
-      () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
-        whenGetDirectory().thenReturn(directory);
-
-        await deployer.deploy();
-
-        verify(
-          firebaseCommand.applyTarget(
-            projectId,
-            DeployConstants.firebaseTarget,
-            DeployConstants.webPath,
-            firebaseToken,
-          ),
-        ).called(once);
-      },
-    );
-
-    test(
-      ".deploy() applies the Firebase target before deploying to the hosting",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        await deployer.deploy();
-
-        verifyInOrder([
-          firebaseCommand.applyTarget(any, any, any, any),
-          firebaseCommand.deployHosting(any, any, any),
-        ]);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -405,11 +419,56 @@ void main() {
       ".deploy() builds the Flutter application before deploying to the hosting",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
         await deployer.deploy();
 
         verifyInOrder([
           flutterService.build(any),
-          firebaseCommand.deployHosting(any, any, any),
+          firebaseService.deployHosting(any, any, any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() deploys Firebase components to the Firebase",
+      () async {
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(firebaseService.deployFirebase(projectId, firebasePath))
+            .called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(firebaseService.deployFirebase(any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deploys Firebase components before deploying to the hosting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          firebaseService.deployFirebase(any, any),
+          firebaseService.deployHosting(any, any, any),
         ]);
       },
     );
@@ -418,18 +477,30 @@ void main() {
       ".deploy() deploys the target to the hosting",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenLoginToFirebase().thenAnswer((_) => Future.value(firebaseToken));
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(
-          firebaseCommand.deployHosting(
-            DeployConstants.firebaseTarget,
-            DeployConstants.webPath,
-            firebaseToken,
-          ),
-        ).called(once);
+        verify(firebaseService.deployHosting(
+          projectId,
+          firebaseTarget,
+          webPath,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        when(firebaseService.deployHosting(any, any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -437,24 +508,38 @@ void main() {
       ".deploy() deploys a target to the hosting before deleting the temporary directory",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
         verifyInOrder([
-          firebaseCommand.deployHosting(any, any, any),
-          directory.delete(recursive: true),
+          firebaseService.deployHosting(any, any, any),
+          directory.deleteSync(recursive: true),
         ]);
       },
     );
 
     test(
-      ".deploy() deletes the temporary directory",
+      ".deploy() deletes the temporary directory if it exists",
       () async {
         whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(directory.delete(recursive: true)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() does not delete the temporary directory if it does not exist",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(false);
+
+        await deployer.deploy();
+
+        verifyNever(directory.delete(recursive: true));
       },
     );
   });

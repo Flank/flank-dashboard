@@ -2,10 +2,11 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/factory/services_factory.dart';
+import 'package:cli/firebase/adapter/firebase_cli_service_adapter.dart';
 import 'package:cli/flutter/adapter/flutter_cli_service_adapter.dart';
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
-import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
 import 'package:cli/git/adapter/git_cli_service_adapter.dart';
+import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -45,6 +46,15 @@ void main() {
         final services = servicesFactory.create();
 
         expect(services.gitService, isA<GitCliServiceAdapter>());
+      },
+    );
+
+    test(
+      ".create() creates a Services instance with the Firebase service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.firebaseService, isA<FirebaseCliServiceAdapter>());
       },
     );
   });

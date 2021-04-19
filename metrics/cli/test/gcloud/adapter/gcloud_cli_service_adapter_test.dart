@@ -292,26 +292,6 @@ void main() {
     );
 
     test(
-      ".createProject() stops the project creation process if GCloud CLI throws during the database creation",
-      () async {
-        when(gcloudCli.createDatabase(any, any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(gcloudService.createProject(), throwsStateError);
-
-        verify(gcloudCli.createProject(any)).called(once);
-        verify(gcloudCli.listRegions(any)).called(once);
-        verify(prompter.prompt(any)).called(once);
-        verify(gcloudCli.createProjectApp(any, any)).called(once);
-        verify(gcloudCli.enableFirestoreApi(any)).called(once);
-        verify(gcloudCli.createDatabase(any, any)).called(once);
-
-        verifyNoMoreInteractions(gcloudCli);
-        verifyNoMoreInteractions(prompter);
-      },
-    );
-
-    test(
       ".version() throws if GCloud CLI throws during the version showing",
       () {
         when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
