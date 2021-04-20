@@ -13,7 +13,6 @@ import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
 import '../../test_utils/npm_service_mock.dart';
-import '../../test_utils/sentry_service_mock.dart';
 import '../../test_utils/services_factory_mock.dart';
 
 void main() {
@@ -25,14 +24,12 @@ void main() {
     final gitService = GitServiceMock();
     final npmService = NpmServiceMock();
     final firebaseService = FirebaseServiceMock();
-    final sentryService = SentryServiceMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
       gitService: gitService,
       npmService: npmService,
       firebaseService: firebaseService,
-      sentryService: sentryService,
     );
 
     tearDown(() {
@@ -42,7 +39,6 @@ void main() {
       reset(gitService);
       reset(npmService);
       reset(firebaseService);
-      reset(sentryService);
     });
 
     PostExpectation<Services> whenCreateServices() {

@@ -12,7 +12,6 @@ import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_service_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
-import '../test_utils/sentry_service_mock.dart';
 import '../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,7 +24,6 @@ void main() {
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
     final firebaseService = FirebaseServiceMock();
-    final sentryService = SentryServiceMock();
     final servicesMock = ServicesMock();
     final services = Services(
       flutterService: flutterService,
@@ -33,7 +31,6 @@ void main() {
       npmService: npmService,
       gitService: gitService,
       firebaseService: firebaseService,
-      sentryService: sentryService,
     );
     final doctor = Doctor(
       services: services,
@@ -45,7 +42,7 @@ void main() {
       reset(npmService);
       reset(gitService);
       reset(firebaseService);
-      reset(sentryService);
+      reset(servicesMock);
       reset(servicesMock);
     });
 
@@ -64,7 +61,6 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -78,7 +74,6 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -92,7 +87,6 @@ void main() {
         when(servicesMock.npmService).thenReturn(null);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -106,7 +100,6 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(null);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -120,21 +113,6 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(null);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(() => Doctor(services: servicesMock), throwsArgumentError);
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Sentry service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(null);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -178,15 +156,6 @@ void main() {
 
     test(
       ".checkVersions() shows the Npm version",
-      () async {
-        await doctor.checkVersions();
-
-        verify(npmService.version()).called(once);
-      },
-    );
-
-    test(
-      ".checkVersions() shows the Sentry version",
       () async {
         await doctor.checkVersions();
 
@@ -261,22 +230,6 @@ void main() {
       ".checkVersions() proceeds if Npm service throws during the version showing",
       () async {
         when(npmService.version()).thenAnswer((_) => Future.error(stateError));
-
-        await doctor.checkVersions();
-
-        verify(gcloudService.version()).called(once);
-        verify(flutterService.version()).called(once);
-        verify(firebaseService.version()).called(once);
-        verify(npmService.version()).called(once);
-        verify(gitService.version()).called(once);
-      },
-    );
-
-    test(
-      ".checkVersions() proceeds if Sentry service throws during the version showing",
-      () async {
-        when(sentryService.version())
-            .thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 

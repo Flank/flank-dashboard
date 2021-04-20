@@ -9,7 +9,6 @@ import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/npm_service_mock.dart';
-import '../../test_utils/sentry_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -20,7 +19,6 @@ void main() {
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
     final firebaseService = FirebaseServiceMock();
-    final sentryService = SentryServiceMock();
 
     test(
       "throws an ArgumentError if the given Flutter service is null",
@@ -32,7 +30,6 @@ void main() {
             npmService: npmService,
             gitService: gitService,
             firebaseService: firebaseService,
-            sentryService: sentryService,
           ),
           throwsArgumentError,
         );
@@ -49,7 +46,6 @@ void main() {
             npmService: npmService,
             gitService: gitService,
             firebaseService: firebaseService,
-            sentryService: sentryService,
           ),
           throwsArgumentError,
         );
@@ -66,7 +62,6 @@ void main() {
             npmService: null,
             gitService: gitService,
             firebaseService: firebaseService,
-            sentryService: sentryService,
           ),
           throwsArgumentError,
         );
@@ -83,7 +78,6 @@ void main() {
             npmService: npmService,
             gitService: null,
             firebaseService: firebaseService,
-            sentryService: sentryService,
           ),
           throwsArgumentError,
         );
@@ -100,24 +94,6 @@ void main() {
             npmService: npmService,
             gitService: gitService,
             firebaseService: null,
-            sentryService: sentryService,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given Sentry service is null",
-      () {
-        expect(
-          () => Services(
-            flutterService: flutterService,
-            gcloudService: gcloudService,
-            npmService: npmService,
-            gitService: gitService,
-            firebaseService: firebaseService,
-            sentryService: null,
           ),
           throwsArgumentError,
         );
@@ -133,7 +109,6 @@ void main() {
           gitService: gitService,
           npmService: npmService,
           firebaseService: firebaseService,
-          sentryService: sentryService,
         );
 
         expect(services.flutterService, equals(flutterService));
@@ -141,7 +116,6 @@ void main() {
         expect(services.gitService, equals(gitService));
         expect(services.npmService, equals(npmService));
         expect(services.firebaseService, equals(firebaseService));
-        expect(services.sentryService, equals(sentryService));
       },
     );
   });

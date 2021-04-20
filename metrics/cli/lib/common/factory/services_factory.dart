@@ -10,13 +10,10 @@ import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/git/adapter/git_cli_service_adapter.dart';
 import 'package:cli/git/cli/git_cli.dart';
-import 'package:cli/helper/file_helper.dart';
 import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
 import 'package:cli/npm/cli/npm_cli.dart';
 import 'package:cli/prompt/prompter.dart';
 import 'package:cli/prompt/writer/io_prompt_writer.dart';
-import 'package:cli/sentry/adapter/sentry_cli_service_adapter.dart';
-import 'package:cli/sentry/cli/sentry_cli.dart';
 
 /// A class providing method for creating [Services] instance.
 class ServicesFactory {
@@ -27,25 +24,18 @@ class ServicesFactory {
   Services create() {
     final promptWriter = IOPromptWriter();
     final prompter = Prompter(promptWriter);
-    final fileHelper = FileHelper();
 
     final flutterCli = FlutterCli();
     final gcloudCli = GCloudCli();
     final npmCli = NpmCli();
     final gitCli = GitCli();
     final firebaseCli = FirebaseCli();
-    final sentryCli = SentryCli();
 
     final flutterService = FlutterCliServiceAdapter(flutterCli);
     final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
     final npmService = NpmCliServiceAdapter(npmCli);
     final gitService = GitCliServiceAdapter(gitCli);
     final firebaseService = FirebaseCliServiceAdapter(firebaseCli, prompter);
-    final sentryService = SentryCliServiceAdapter(
-      sentryCli: sentryCli,
-      prompter: prompter,
-      fileHelper: fileHelper,
-    );
 
     return Services(
       flutterService: flutterService,
@@ -53,7 +43,6 @@ class ServicesFactory {
       npmService: npmService,
       gitService: gitService,
       firebaseService: firebaseService,
-      sentryService: sentryService,
     );
   }
 }
