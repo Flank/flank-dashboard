@@ -10,6 +10,8 @@ import 'package:test/test.dart';
 import '../../../../cli/test_util/mock/integration_client_mock.dart';
 import '../../../../test_utils/matchers.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("InProgressBuildsSyncStage", () {
     const inProgressTimeout = Duration(hours: 1);
