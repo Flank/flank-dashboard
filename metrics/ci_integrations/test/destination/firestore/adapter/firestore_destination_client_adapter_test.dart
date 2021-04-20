@@ -213,14 +213,16 @@ void main() {
     );
 
     test(
-      ".addBuilds() adds the given builds using the .set() method if the given builds are finished",
+      ".addBuilds() adds the given builds using the .set() method for finished builds",
       () async {
         whenCheckProjectExists().thenReturn(true);
         whenSetBuild().thenAnswer((_) => Future.value());
+        whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
 
         const builds = [
           BuildData(buildNumber: 1, buildStatus: BuildStatus.successful),
           BuildData(buildNumber: 2, buildStatus: BuildStatus.failed),
+          BuildData(buildNumber: 3, buildStatus: BuildStatus.inProgress),
         ];
         final buildJsons = builds
             .map((build) => build.copyWith(projectId: testProjectId).toJson())
@@ -234,12 +236,12 @@ void main() {
         verify(
           _documentReferenceMock.set(buildJsons[1]),
         ).called(once);
-        verifyNever(_documentReferenceMock.create(any));
+        verifyNever(_documentReferenceMock.set(buildJsons[2]));
       },
     );
 
     test(
-      ".addBuilds() adds the given builds using the .create() method if the given builds are in-progress",
+      ".addBuilds() adds the given builds using the .create() method for in-progress builds",
       () async {
         whenCheckProjectExists().thenReturn(true);
         whenCreateBuild().thenAnswer((_) => Future.value());
@@ -247,6 +249,7 @@ void main() {
         const builds = [
           BuildData(buildNumber: 1, buildStatus: BuildStatus.inProgress),
           BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 3, buildStatus: BuildStatus.successful),
         ];
         final buildJsons = builds
             .map((build) => build.copyWith(projectId: testProjectId).toJson())
@@ -260,7 +263,7 @@ void main() {
         verify(
           _documentReferenceMock.create(buildJsons[1]),
         ).called(once);
-        verifyNever(_documentReferenceMock.set(any));
+        verifyNever(_documentReferenceMock.create(buildJsons[2]));
       },
     );
 
@@ -372,7 +375,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() continues adding builds if adding an in-progress build throws a FirestoreException with the 'already exists' exception code",
+      ".addBuilds() continues adding builds if adding an in-progress build fails with the already exists exception",
       () async {
         const builds = [
           BuildData(buildNumber: 1),
