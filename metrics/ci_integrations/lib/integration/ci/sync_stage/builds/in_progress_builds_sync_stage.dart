@@ -79,6 +79,7 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
     SyncConfig syncConfig,
   ) async {
     final updatedBuilds = <BuildData>[];
+
     for (final build in inProgressBuilds) {
       final refreshedBuild = await _syncInProgressBuild(syncConfig, build);
 
