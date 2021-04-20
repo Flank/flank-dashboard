@@ -6,17 +6,20 @@ import 'dart:io';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
-import 'package:cli/helper/file_helper.dart';
+import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/directory_mock.dart';
+import '../test_utils/file_helper_mock.dart';
 import '../test_utils/firebase_service_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
 import '../test_utils/git_service_mock.dart';
 import '../test_utils/matchers.dart';
 import '../test_utils/npm_service_mock.dart';
+import '../test_utils/prompter_mock.dart';
+import '../test_utils/sentry_service_mock.dart';
 import '../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -36,7 +39,9 @@ void main() {
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
     final firebaseService = FirebaseServiceMock();
-    final fileHelper = _FileHelperMock();
+    final sentryService = SentryServiceMock();
+    final fileHelper = FileHelperMock();
+    final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
     final services = Services(
@@ -45,10 +50,12 @@ void main() {
       npmService: npmService,
       gitService: gitService,
       firebaseService: firebaseService,
+      sentryService: sentryService,
     );
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
+      prompter: prompter,
     );
     final stateError = StateError('test');
 
@@ -64,15 +71,21 @@ void main() {
       return when(gcloudService.createProject());
     }
 
+    PostExpectation<bool> whenSetupSentry() {
+      return when(prompter.promptConfirm(DeployStrings.setupSentry));
+    }
+
     tearDown(() {
       reset(flutterService);
       reset(gcloudService);
       reset(npmService);
       reset(gitService);
       reset(firebaseService);
+      reset(sentryService);
       reset(fileHelper);
       reset(directory);
       reset(servicesMock);
+      reset(prompter);
     });
 
     test(
@@ -96,6 +109,7 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
+        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
           () => Deployer(services: servicesMock, fileHelper: fileHelper),
@@ -112,6 +126,7 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
+        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
           () => Deployer(services: servicesMock, fileHelper: fileHelper),
@@ -128,6 +143,7 @@ void main() {
         when(servicesMock.npmService).thenReturn(null);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
+        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
           () => Deployer(services: servicesMock, fileHelper: fileHelper),
@@ -144,6 +160,7 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(null);
         when(servicesMock.firebaseService).thenReturn(firebaseService);
+        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
           () => Deployer(services: servicesMock, fileHelper: fileHelper),
@@ -160,6 +177,24 @@ void main() {
         when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(null);
+        when(servicesMock.sentryService).thenReturn(sentryService);
+
+        expect(
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the Sentry service in the given services is null",
+      () {
+        when(servicesMock.flutterService).thenReturn(flutterService);
+        when(servicesMock.gcloudService).thenReturn(gcloudService);
+        when(servicesMock.npmService).thenReturn(npmService);
+        when(servicesMock.gitService).thenReturn(gitService);
+        when(servicesMock.firebaseService).thenReturn(firebaseService);
+        when(servicesMock.sentryService).thenReturn(null);
 
         expect(
           () => Deployer(services: servicesMock, fileHelper: fileHelper),
@@ -186,6 +221,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -198,6 +234,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -213,6 +250,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -225,6 +263,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -237,6 +276,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -253,6 +293,7 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -265,6 +306,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -277,6 +319,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
         when(gitService.checkout(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -291,6 +334,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -306,6 +350,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -321,6 +366,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -336,6 +382,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -350,6 +397,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
         when(npmService.installDependencies(any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -364,6 +412,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -379,6 +428,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -394,6 +444,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -406,6 +457,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
         when(flutterService.build(any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -420,6 +472,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -431,11 +484,175 @@ void main() {
     );
 
     test(
+      ".deploy() builds the Flutter application before the Sentry configuration prompting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          flutterService.build(any),
+          prompter.promptConfirm(DeployStrings.setupSentry),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() prompts the user to configure the Sentry",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(prompter.promptConfirm(DeployStrings.setupSentry)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if prompter throws during the Sentry config prompting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenThrow(stateError);
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() prompts the user to configure the Sentry before the Sentry release creation",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          prompter.promptConfirm(DeployStrings.setupSentry),
+          sentryService.createRelease(any, any, any)
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() logs in to the Sentry if the user's prompt returns true",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(sentryService.login()).called(once);
+      },
+    );
+
+    test(
+      ".deploy() does not log in to the Sentry if the user's prompt returns false",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verifyNever(sentryService.login());
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Sentry service throws during the login process",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+        when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() logs in to the Sentry before creating the Sentry release",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.login(),
+          gcloudService.createProject(),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() creates the Sentry release if the user's prompt returns true",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(sentryService.createRelease(
+          DeployConstants.webPath,
+          DeployConstants.buildWebPath,
+          DeployConstants.configPath,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() does not create the Sentry release if the user's prompt returns false",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verifyNever(sentryService.createRelease(
+          DeployConstants.webPath,
+          DeployConstants.buildWebPath,
+          DeployConstants.configPath,
+        ));
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
+        when(sentryService.createRelease(any, any, any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
       ".deploy() deploys Firebase components to the Firebase",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -449,6 +666,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
         when(firebaseService.deployFirebase(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -463,6 +681,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -479,6 +698,7 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -495,6 +715,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
         when(firebaseService.deployHosting(any, any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -509,6 +730,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -524,6 +746,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -536,6 +759,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(false);
+        whenSetupSentry().thenReturn(true);
 
         await deployer.deploy();
 
@@ -544,5 +768,3 @@ void main() {
     );
   });
 }
-
-class _FileHelperMock extends Mock implements FileHelper {}

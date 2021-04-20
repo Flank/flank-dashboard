@@ -4,6 +4,8 @@
 import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
+import 'package:cli/prompt/prompter.dart';
+import 'package:cli/prompt/writer/io_prompt_writer.dart';
 
 /// A class providing method for creating a [Deployer] instance.
 class DeployerFactory {
@@ -24,10 +26,13 @@ class DeployerFactory {
   Deployer create() {
     final services = _servicesFactory.create();
     final fileHelper = FileHelper();
+    final promptWriter = IOPromptWriter();
+    final prompter = Prompter(promptWriter);
 
     return Deployer(
       services: services,
       fileHelper: fileHelper,
+      prompter: prompter,
     );
   }
 }
