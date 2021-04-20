@@ -34,6 +34,10 @@ service cloud.firestore {
     match /allowed_email_domains/{domain} {
       allow read, write: if false;
     }
+
+    match /tasks/{taskId} {
+      allow read, write: if false;
+    }
   }
 
   /// Checks if a user access is authorized.

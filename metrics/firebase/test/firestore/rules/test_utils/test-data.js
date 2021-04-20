@@ -65,6 +65,26 @@ const featureConfig = {
 const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
 
+/** A list of test tasks */
+const tasks = {
+  "tasks/1": {
+    code: "code_1",
+    data: {
+      projectId: "1",
+    },
+    context: "context1",
+    createdAt: new firestore.Timestamp.now(),
+  },
+  "tasks/2": {
+    code: "code_2",
+    data: {
+      projectId: "2",
+    },
+    context: "context2",
+    createdAt: new firestore.Timestamp.now(),
+  },
+};
+
 /** Creates a firebase user with the given `email`, `signInProviderId`, `emailVerified` and `uid` */
 function getUser(email, signInProviderId, emailVerified, uid) {
   return {
@@ -96,7 +116,8 @@ exports.projectGroups = projectGroups;
 exports.builds = builds;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
-exports.featureConfig = featureConfig
+exports.featureConfig = featureConfig;
+exports.tasks = tasks;
 
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
@@ -127,4 +148,9 @@ exports.getBuild = function () {
 /** Get a test user profile */
 exports.getUserProfile = function () {
   return cloneDeep(userProfiles["user_profiles/1"]);
+};
+
+/** Get a test task */
+exports.getTask = function () {
+  return cloneDeep(tasks["tasks/1"]);
 };
