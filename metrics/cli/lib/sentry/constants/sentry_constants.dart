@@ -6,6 +6,6 @@ class SentryConstants {
   /// A Sentry DSN variable name in the config file.
   static const String dsn = 'SENTRY_DSN';
 
-  /// A Sentry DSN variable name in the config file.
+  /// A Sentry release variable name in the config file.
   static const String releaseName = 'SENTRY_RELEASE';
 }
