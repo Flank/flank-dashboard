@@ -42,6 +42,28 @@ const builds = {
   },
 };
 
+/** A list of test build days */
+const buildDays = {
+  "build_days/1": {
+    projectId: "1",
+    successful: 1,
+    failed: 2,
+    unknown: 3,
+    inProgress: 4,
+    totalDuration: 1234,
+    day: new firestore.Timestamp.now(),
+  },
+  "build_days/2": {
+    projectId: "2",
+    successful: 1,
+    failed: 2,
+    unknown: 3,
+    inProgress: 4,
+    totalDuration: 1234,
+    day: new firestore.Timestamp.now(),
+  },
+};
+
 /** A list of test user profiles */
 const userProfiles = {
   "user_profiles/1": {
@@ -114,6 +136,7 @@ exports.projects = {
 
 exports.projectGroups = projectGroups;
 exports.builds = builds;
+exports.buildDays = buildDays;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 exports.featureConfig = featureConfig;
@@ -143,6 +166,11 @@ exports.getProjectGroup = function () {
 /** Get a test build */
 exports.getBuild = function () {
   return cloneDeep(builds["build/1"]);
+};
+
+/** Get a test build day */
+exports.getBuildDay = function () {
+  return cloneDeep(buildDays["build_days/1"]);
 };
 
 /** Get a test user profile */

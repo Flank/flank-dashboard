@@ -19,6 +19,11 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /build_days/{buildDayId} {
+      allow read: if isAccessAuthorized(database);
+      allow write: if false; 
+    }
+
     match /user_profiles/{userProfileId} {
       allow get: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
       allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
