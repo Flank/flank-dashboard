@@ -1,43 +1,50 @@
 @startuml build_days_data_layer_class_diagram
 
-package common {
-    package domain {
-        package repositories {
-            interface BuildDayRepository {
-                + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
-            }
-        }
+package core.data.model {
+    class DataModel {
+        + toJson() : Map<String, dynamic>
+    }
+}
 
-        package entities {
-            class BuildDay {
-                + projectId : String
-                + successful: int
-                + failed: int
-                + unknown: int
-                + inProgress: int
-                + totalDuration : int
-                + day : Timestamp
-            }
+package common {
+    package domain.repositories {
+        interface BuildDayRepository {
+            + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
         }
     }
 
     package data {
         package repositories as data_repositories {
-            class FirestoreBuildDayRepository {}
+            class FirestoreBuildDayRepository {
+                - _firestore : Firestore
+            }
         }
 
-        package deserializer {
-            class BuildDayDataDeserializer {
-                + static fromJson(Map<String, dynamic> json) : BuildDay
+        package model {
+            class BuildDayData {
+                + factory fromJson(Map<String, dynamic> json) : BuildDay
+                + toJson() : Map<String, dynamic>
             }
         }
     }
 }
 
+package dashboard.domain.entities {
+    class BuildDay {
+        + projectId : String
+        + successful: int
+        + failed: int
+        + unknown: int
+        + inProgress: int
+        + totalDuration : Duration
+        + day : DateTime
+    }
+}
 
 FirestoreBuildDayRepository ..|> BuildDayRepository
-FirestoreBuildDayRepository --> BuildDayDataDeserializer : uses
+FirestoreBuildDayRepository --> BuildDayData : uses
 
-BuildDayDataDeserializer --> BuildDay : uses
+BuildDayData --> BuildDay : uses
+BuildDayData ..|> DataModel
 
 @enduml

@@ -6,7 +6,13 @@ package base.domain.usecases {
     }
 }
 
-package common.domain {
+package common.domain.repositories {
+    interface BuildDayRepository {
+        + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+    } 
+}
+
+package dashboard.domain {
     package entities {
         class BuildDay {
             + projectId : String
@@ -14,19 +20,32 @@ package common.domain {
             + failed: int
             + unknown: int
             + inProgress: int
-            + duration : int
-            + day : Timestamp
+            + totalDuration : Duration
+            + day : DateTime
         }
-    }
-    
-    package repositories {
-        interface BuildDayRepository {
-            + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+
+        package metrics {
+            class BuildNumberMetric {
+                + numberOfBuilds : int
+            }
+            class BuildPerformance {
+                    + date : DateTime
+                    + duration: Duration
+            }
+            class PerformanceMetric {
+                + buildsPerformance : DateTimeSet<BuildPerformance>
+                + averageBuildDuration : Duration
+            }
+            class BuildDayProjectMetrics {
+                + buildNumberMetric : BuildNumberMetric
+                + performanceMetric : PerformanceMetric
+            }
         }
     }
 
     package usecases {
         class ReceiveBuildDayProjectMetricsUpdates {
+            - _repository : BuildDayRepository
             + call(BuildDayParam params) : Stream<BuildDayProjectMetrics>
         }
 
@@ -36,12 +55,17 @@ package common.domain {
                 + day : Timestamp
             }
         }
-    }    
+    }  
 }
 
 BuildDayRepository --> BuildDay : uses
 ReceiveBuildDayProjectMetricsUpdates ..|> UseCase
 ReceiveBuildDayProjectMetricsUpdates --> BuildDayRepository : uses
 ReceiveBuildDayProjectMetricsUpdates --> BuildDayParam : uses
+ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : uses
+
+BuildDayProjectMetrics --> BuildNumberMetric : uses
+BuildDayProjectMetrics --> PerformanceMetric : uses
+PerformanceMetric --> BuildPerformance : uses
 
 @enduml

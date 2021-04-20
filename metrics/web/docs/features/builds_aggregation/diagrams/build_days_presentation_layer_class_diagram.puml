@@ -1,23 +1,21 @@
 @startuml build_days_presentation_layer_class_diagram
-    package common {
+    package dashboard {
         package domain {
-            package entities {
-                package metrics {
-                    class BuildNumberMetric {
-                        + numberOfBuilds : int
-                    }
-                    class BuildPerformance {
-                          + date : DateTime
-                          + duration: Duration
-                    }
-                    class PerformanceMetric {
-                        + buildsPerformance : DateTimeSet<BuildPerformance>
-                        + averageBuildDuration : Duration
-                    }
-                    class BuildDayProjectMetrics {
-                        + buildNumberMetric : BuildNumberMetric
-                        + performanceMetric : PerformanceMetric
-                    }
+            package entities.metrics {
+                class BuildNumberMetric {
+                    + numberOfBuilds : int
+                }
+                class BuildPerformance {
+                        + date : DateTime
+                        + duration: Duration
+                }
+                class PerformanceMetric {
+                    + buildsPerformance : DateTimeSet<BuildPerformance>
+                    + averageBuildDuration : Duration
+                }
+                class BuildDayProjectMetrics {
+                    + buildNumberMetric : BuildNumberMetric
+                    + performanceMetric : PerformanceMetric
                 }
             }
 
@@ -27,16 +25,14 @@
                 }
             }
         }
-    }
 
-    package dashboard {
         package presentation.state {
             class ProjectMetricsNotifier {
                 - _receiveBuildDayProjectMetricsUpdates : ReceiveBuildDayProjectMetricsUpdates
                 - _subscribeToBuildDayMetrics(String projectId) : void
             }
         }
-    }
+    }       
 
     ProjectMetricsNotifier --> ReceiveBuildDayProjectMetricsUpdates : uses
     ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides

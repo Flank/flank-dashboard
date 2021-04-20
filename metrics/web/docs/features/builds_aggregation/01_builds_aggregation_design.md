@@ -18,15 +18,9 @@ There are Firestore collection and Cloud Functions, which [provides builds aggre
 
 The following sub-sections provide an implementation of Build aggregation integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
-### Data layer
-
-The data layer provides the `FirestoreBuildDayRepository` implementation of `BuildDayRepository` and `BuildDayDataDeserializer` that provides deserialization methods for the `BuildDay` entity.
-
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
-
 ### Domain layer
 
-The domain layer should provide an interface for the `FirestoreBuildDayRepository` to interact with the `Firestore database`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+The domain layer should provide an interface for the `FirestoreBuildDayRepository`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
@@ -35,6 +29,12 @@ The domain layer should provide an interface for the `FirestoreBuildDayRepositor
 The following class diagram demonstrates the domain layer structure:
 
 ![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_domain_layer_class_diagram.puml)
+
+### Data layer
+
+The data layer provides the `FirestoreBuildDayRepository` implementation of `BuildDayRepository` and `BuildDayData` that represents a `DataModel` implementation for the `BuildDay` entity.
+
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
 
 ### Presentation layer
 
@@ -46,7 +46,7 @@ The following class diagram demonstrates the presentation layer structure:
 
 ![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_presentation_layer_class_diagram.puml)
 
-So, as we have the `PerformanceMetric` and `BuildNumberMetric` in the `BuildDayProjectMetrics`, we don't need them inside the existing `DashboardProjectMetrics`. Also, these metrics should be a move to the `common` folder. 
+So, as we have the `PerformanceMetric` and `BuildNumberMetric` in the `BuildDayProjectMetrics`, we don't need them inside the existing `DashboardProjectMetrics`.
 
 The following sequence diagram describes how the application loads and shows aggregation metrics:
 
