@@ -32,7 +32,7 @@
                 - _subscribeToBuildDayMetrics(String projectId) : void
             }
         }
-    }       
+    }
 
     ProjectMetricsNotifier --> ReceiveBuildDayProjectMetricsUpdates : uses
     ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides
