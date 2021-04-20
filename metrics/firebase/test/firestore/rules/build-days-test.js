@@ -19,7 +19,6 @@ const {
 } = require("./test_utils/test-data");
 
 describe("", async () => {
-  const unauthenticatedApp = await getApplicationWith(null);
   const collection = "build_days";
 
   const users = [
@@ -121,7 +120,7 @@ describe("", async () => {
     },
     {
       'describe': 'Unauthenticated user',
-      'app': unauthenticatedApp,
+      'app': await getApplicationWith(null),
       'can': {
         'create': false,
         'read': false,
