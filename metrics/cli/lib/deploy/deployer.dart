@@ -33,7 +33,7 @@ class Deployer {
   /// A class that provides methods for working with the Sentry.
   final SentryService _sentryService;
 
-  /// A [Prompter] class this adapter uses to interact with a user.
+  /// A [Prompter] class this deployer uses to interact with a user.
   final Prompter _prompter;
 
   /// A class that provides methods for working with the file system.

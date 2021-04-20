@@ -5,8 +5,6 @@
 
 /// A class that holds the strings for the Sentry prompts.
 class SentryStrings {
-
-
   static const String enterReleaseName = '''
 The last thing required for the Sentry configuration is a release name. The Sentry web page will display the entered release name in the issues tags.
 While creating a release name, consider it cannot:  

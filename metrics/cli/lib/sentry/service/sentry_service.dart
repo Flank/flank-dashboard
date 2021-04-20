@@ -6,8 +6,6 @@ import 'package:cli/interfaces/service/info_service.dart';
 /// An abstract class for Sentry service that provides methods
 /// for working with Sentry.
 abstract class SentryService extends InfoService {
-
-
   /// Logins into the Sentry.
   Future<void> login();
 

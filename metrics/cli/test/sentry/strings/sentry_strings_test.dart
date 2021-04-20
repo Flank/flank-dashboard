@@ -8,6 +8,7 @@ void main() {
   group('SentryStrings', () {
     const organizationSlug = 'organizationSlug';
     const projectSlug = 'projectSlug';
+
     test(
       ".enterProjectSlug() returns a message that contains the given organization slug",
       () {

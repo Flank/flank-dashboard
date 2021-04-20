@@ -61,7 +61,7 @@ void main() {
 
     test(
       ".create() creates a Services instance with the Sentry service adapter",
-          () {
+      () {
         final services = servicesFactory.create();
 
         expect(services.sentryService, isA<SentryCliServiceAdapter>());

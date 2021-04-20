@@ -32,6 +32,7 @@ void main() {
     final sentryCli = _SentryCliMock();
     final prompter = PrompterMock();
     final fileHelper = FileHelperMock();
+    final file = _FileMock();
     final sentryService = SentryCliServiceAdapter(
       sentryCli: sentryCli,
       prompter: prompter,
@@ -41,7 +42,6 @@ void main() {
       organizationSlug: organizationSlug,
       projectSlug: projectSlug,
     );
-    final file = _FileMock();
     final stateError = StateError('test');
     final environment = <String, dynamic>{
       SentryConstants.dsn: dsn,
@@ -52,6 +52,7 @@ void main() {
       reset(sentryCli);
       reset(prompter);
       reset(fileHelper);
+      reset(file);
     });
 
     String enterProjectSlug() =>
@@ -565,37 +566,6 @@ void main() {
           sentryService.createRelease(appPath, buildPath, configPath),
           throwsStateError,
         );
-      },
-    );
-
-    test(
-      ".createRelease() stops the release creation process if Sentry CLI throws during the web project config updating",
-      () async {
-        setupPrompts();
-        when(fileHelper.replaceEnvironmentVariables(any, any))
-            .thenThrow(stateError);
-        when(fileHelper.getFile(any)).thenReturn(file);
-
-        await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug())).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
-            .called(equals(2));
-        verify(sentryCli.finalizeRelease(releaseName, sentryProject))
-            .called(once);
-        verify(prompter.prompt(enterDsn())).called(once);
-        verify(fileHelper.getFile(configPath)).called(once);
-        verify(fileHelper.replaceEnvironmentVariables(file, environment))
-            .called(once);
-
-        checkNoMoreInteractions();
       },
     );
 

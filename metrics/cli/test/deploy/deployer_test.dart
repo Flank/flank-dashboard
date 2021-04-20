@@ -526,7 +526,7 @@ void main() {
     );
 
     test(
-      ".deploy() prompts the user to configure the Sentry before the Sentry release creation",
+      ".deploy() prompts the user to configure the Sentry before login in to the Sentry",
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
@@ -536,7 +536,7 @@ void main() {
 
         verifyInOrder([
           prompter.promptConfirm(DeployStrings.setupSentry),
-          sentryService.createRelease(any, any, any)
+          sentryService.login()
         ]);
       },
     );

@@ -38,7 +38,7 @@ class Doctor {
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.firebaseService] is `null`.
-  ///   /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
   Doctor({
     Services services,
   })  : _flutterService = services?.flutterService,
