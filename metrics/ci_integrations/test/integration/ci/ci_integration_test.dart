@@ -52,27 +52,27 @@ void main() {
     test(
       ".sync() calls each given sync stage only once",
       () async {
-        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
-        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
 
         await ciIntegration.sync(syncConfig);
 
-        verify(firstSyncStage(syncConfig)).called(once);
-        verify(secondSyncStage(syncConfig)).called(once);
+        verify(firstSyncStage.call(syncConfig)).called(once);
+        verify(secondSyncStage.call(syncConfig)).called(once);
       },
     );
 
     test(
       ".sync() calls the given sync stages in the same order with the given sync config",
       () async {
-        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
-        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
 
         await ciIntegration.sync(syncConfig);
 
         verifyInOrder([
-          firstSyncStage(syncConfig),
-          secondSyncStage(syncConfig),
+          firstSyncStage.call(syncConfig),
+          secondSyncStage.call(syncConfig),
         ]);
       },
     );
@@ -80,29 +80,31 @@ void main() {
     test(
       ".sync() does not continue the sync if one of the stages fails",
       () async {
-        when(firstSyncStage(syncConfig)).thenErrorWith();
+        when(firstSyncStage.call(syncConfig)).thenErrorWith();
 
         await ciIntegration.sync(syncConfig);
 
-        verifyNever(secondSyncStage(any));
+        verifyNever(secondSyncStage.call(any));
       },
     );
 
     test(
       ".sync() does not continue the sync if one of the stages returns null",
       () async {
-        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenAnswer((_) => Future.value(null));
 
         await ciIntegration.sync(syncConfig);
 
-        verifyNever(secondSyncStage(any));
+        verifyNever(secondSyncStage.call(any));
       },
     );
 
     test(
       ".sync() returns an error if one of the stages fails",
       () async {
-        when(firstSyncStage(syncConfig)).thenErrorWith();
+        when(firstSyncStage.call(syncConfig)).thenErrorWith();
 
         final result = await ciIntegration.sync(syncConfig);
 
@@ -113,7 +115,9 @@ void main() {
     test(
       ".sync() returns an error if one of the stages returns null",
       () async {
-        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenAnswer((_) => Future.value(null));
 
         final result = await ciIntegration.sync(syncConfig);
 
@@ -126,7 +130,7 @@ void main() {
       () async {
         final expectedStageType = '${firstSyncStage.runtimeType}';
         when(
-          firstSyncStage(syncConfig),
+          firstSyncStage.call(syncConfig),
         ).thenErrorWith(null, null);
 
         final result = await ciIntegration.sync(syncConfig);
@@ -139,7 +143,9 @@ void main() {
       ".sync() returns an error with the message specifying which sync stage returned null",
       () async {
         final expectedStageType = '${firstSyncStage.runtimeType}';
-        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenAnswer((_) => Future.value(null));
 
         final result = await ciIntegration.sync(syncConfig);
 
@@ -152,7 +158,7 @@ void main() {
       () async {
         const expectedMessage = 'message';
         when(
-          firstSyncStage(syncConfig),
+          firstSyncStage.call(syncConfig),
         ).thenErrorWith(null, expectedMessage);
 
         final result = await ciIntegration.sync(syncConfig);
@@ -164,8 +170,8 @@ void main() {
     test(
       ".sync() returns a success if all stages pass successfully",
       () async {
-        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
-        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
 
         final result = await ciIntegration.sync(syncConfig);
 
