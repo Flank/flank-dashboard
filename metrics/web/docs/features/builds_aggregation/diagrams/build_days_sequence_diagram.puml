@@ -30,7 +30,7 @@ activate ReceiveBuildDayProjectMetricsUpdates
 ReceiveBuildDayProjectMetricsUpdates -> FirestoreBuildDayRepository : projectBuildDaysFromDateStream(String projectId, DateTime from)
 activate FirestoreBuildDayRepository
 
-FirestoreBuildDayRepository -> Firestore : get a build days request
+FirestoreBuildDayRepository -> Firestore : gets a build days request
 activate Firestore
 
 Firestore -> FirestoreBuildDayRepository : returns a list of build days response
@@ -40,14 +40,14 @@ loop for json in list
     FirestoreBuildDayRepository -> BuildDayDataDeserializer : .fromJson(json)
     activate BuildDayDataDeserializer
 
-    BuildDayDataDeserializer -> FirestoreBuildDayRepository : returns BuildData instance
+    BuildDayDataDeserializer -> FirestoreBuildDayRepository : returns a BuildData instance
     deactivate BuildDayDataDeserializer
 end
 
 FirestoreBuildDayRepository -> ReceiveBuildDayProjectMetricsUpdates : returns a list of BuildDay instances
 deactivate FirestoreBuildDayRepository
 
-ReceiveBuildDayProjectMetricsUpdates -> ReceiveBuildDayProjectMetricsUpdates : creates BuildDayProjectMetrics instance
+ReceiveBuildDayProjectMetricsUpdates -> ReceiveBuildDayProjectMetricsUpdates : creates a BuildDayProjectMetrics instance
 ReceiveBuildDayProjectMetricsUpdates -> ProjectMetricsNotifier : provides a BuildDayProjectMetrics
 deactivate ReceiveBuildDayProjectMetricsUpdates
 
