@@ -13,20 +13,17 @@ import '../../test_utils/stub/destination_client_stub.dart';
 import '../../test_utils/stub/source_client_stub.dart';
 
 void main() {
-  group("SyncStageFactory", () {
+  group("SyncStagesFactory", () {
     final sourceClient = SourceClientStub();
     final destinationClient = DestinationClientStub();
 
-    final stagesFactory = SyncStageFactory(
-      sourceClient: sourceClient,
-      destinationClient: destinationClient,
-    );
+    const stagesFactory = SyncStagesFactory();
 
     test(
-      "throws an ArgumentError if the given source client is null",
+      ".create() throws an ArgumentError if the given source client is null",
       () {
         expect(
-          () => SyncStageFactory(
+          () => stagesFactory.create(
             sourceClient: null,
             destinationClient: destinationClient,
           ),
@@ -36,10 +33,10 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given destination client is null",
+      ".create() throws an ArgumentError if the given destination client is null",
       () {
         expect(
-          () => SyncStageFactory(
+          () => stagesFactory.create(
             sourceClient: sourceClient,
             destinationClient: null,
           ),
@@ -51,7 +48,10 @@ void main() {
     test(
       ".create() returns an unmodifiable list",
       () {
-        final stages = stagesFactory.create();
+        final stages = stagesFactory.create(
+          sourceClient: sourceClient,
+          destinationClient: destinationClient,
+        );
 
         expect(stages, isA<UnmodifiableListView>());
       },
@@ -60,7 +60,10 @@ void main() {
     test(
       ".create() returns a list of sync stages with the given source and destination clients",
       () {
-        final stages = stagesFactory.create();
+        final stages = stagesFactory.create(
+          sourceClient: sourceClient,
+          destinationClient: destinationClient,
+        );
 
         final syncStagePredicate = predicate<SyncStage>((stage) {
           return stage.sourceClient == sourceClient &&
@@ -74,15 +77,15 @@ void main() {
     test(
       ".create() returns a list of sync stages in the correct order",
       () {
-        final inProgressBuildsStageMatcher = isA<InProgressBuildsSyncStage>();
-        final newBuildsStageMatcher = isA<NewBuildsSyncStage>();
-
         final expectedStages = [
-          inProgressBuildsStageMatcher,
-          newBuildsStageMatcher,
+          isA<InProgressBuildsSyncStage>(),
+          isA<NewBuildsSyncStage>(),
         ];
 
-        final stages = stagesFactory.create();
+        final stages = stagesFactory.create(
+          sourceClient: sourceClient,
+          destinationClient: destinationClient,
+        );
 
         expect(stages, hasLength(expectedStages.length));
         expect(stages, containsAllInOrder(expectedStages));

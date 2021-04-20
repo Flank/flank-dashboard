@@ -10,32 +10,26 @@ import 'package:ci_integration/integration/interface/destination/client/destinat
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:meta/meta.dart';
 
-/// A factory class that provides a method for creating [SyncStage]s.
-class SyncStageFactory {
-  /// A [SourceClient] of this factory used to create the [SyncStage]s.
-  final SourceClient sourceClient;
+/// A factory class that creates a list of [SyncStage]s to perform
+/// the synchronization algorithm.
+class SyncStagesFactory {
+  /// Creates a new instance of the [SyncStagesFactory].
+  const SyncStagesFactory();
 
-  /// A [DestinationClient] of this factory used to create the [SyncStage]s.
-  final DestinationClient destinationClient;
-
-  /// Creates a new instance of the [SyncStageFactory] with the given
-  /// [sourceClient] and [destinationClient].
+  /// Creates a [List] of [SyncStage]s with the given [sourceClient] and the
+  /// [destinationClient].
   ///
   /// Throws an [ArgumentError] if the given [sourceClient] or
   /// [destinationClient] is `null`.
-  SyncStageFactory({
-    @required this.sourceClient,
-    @required this.destinationClient,
+  ///
+  /// The result is an [UnmodifiableListView].
+  List<SyncStage> create({
+    @required SourceClient sourceClient,
+    @required DestinationClient destinationClient,
   }) {
     ArgumentError.checkNotNull(sourceClient, 'sourceClient');
     ArgumentError.checkNotNull(destinationClient, 'destinationClient');
-  }
 
-  /// Creates a [List] of [SyncStage]s with the [sourceClient] and the
-  /// [destinationClient].
-  ///
-  /// The result is an [UnmodifiableListView].
-  List<SyncStage> create() {
     return UnmodifiableListView([
       InProgressBuildsSyncStage(sourceClient, destinationClient),
       NewBuildsSyncStage(sourceClient, destinationClient),
