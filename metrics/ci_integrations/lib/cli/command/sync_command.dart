@@ -15,6 +15,7 @@ import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:ci_integration/integration/ci/sync_stage/factory/sync_stages_factory.dart';
+import 'package:ci_integration/integration/ci/sync_stage/sync_stage.dart';
 import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
@@ -230,18 +231,19 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     return client;
   }
 
-  /// Creates a [CiIntegration] instance with the given
-  /// [sourceClient] and [destinationClient].
+  /// Creates a [List] of [SyncStage]s using the [SyncStagesFactory.create]
+  /// and returns a new instance of the [CiIntegration] with the
+  /// created [SyncStage]s.
   CiIntegration createCiIntegration(
     SourceClient sourceClient,
     DestinationClient destinationClient,
   ) {
-    final syncStagesFactory = SyncStageFactory(
+    const syncStagesFactory = SyncStagesFactory();
+
+    final syncStages = syncStagesFactory.create(
       sourceClient: sourceClient,
       destinationClient: destinationClient,
     );
-
-    final syncStages = syncStagesFactory.create();
 
     return CiIntegration(stages: syncStages);
   }

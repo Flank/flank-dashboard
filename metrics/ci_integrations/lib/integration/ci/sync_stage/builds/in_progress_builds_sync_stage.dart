@@ -19,7 +19,7 @@ class InProgressBuildsSyncStage extends BuildsSyncStage {
   final SourceClient sourceClient;
 
   /// Creates a new instance of the [InProgressBuildsSyncStage] with the
-  /// given [sourceClient] and [destinationClient]
+  /// given [sourceClient] and [destinationClient].
   ///
   /// Throws an [ArgumentError] if the given [sourceClient] or
   /// [destinationClient] is `null`.
