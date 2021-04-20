@@ -4,7 +4,7 @@
 
 At this time, for the `builds per week`/`performance` metrics, we download all the builds of the project for the last 7 days using Firebase advanced query, process calculations, and display the information on the `Metrics` dashboard. But we might have cases when there are more than 1000 builds per week. This increases the number of reads from the database and leads to heavy load/price implications.
 
-There are Firestore collection and Cloud Functions, which [provides builds aggregations](#), so we need to use these calculations inside the Metrics Web Application. With that we do not need to calculate the metrics every time we load the dashboard, instead, we can take that information from the Firestore.
+There are Firestore collection and Cloud Functions, which [provides builds aggregations](#https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/features/builds_aggregation/01_firestore_builds_aggregation_design.md), so we need to use these calculations inside the Metrics Web Application. With that we do not need to calculate the metrics every time we load the dashboard, instead, we can take that information from the Firestore.
 
 ## References
 
@@ -12,7 +12,7 @@ There are Firestore collection and Cloud Functions, which [provides builds aggre
 
 - [Project Metrics Definitions](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md)
 - [Github epic: Reduce Firebase usage / document reads](https://github.com/platform-platform/monorepo/issues/1042)
-- link [Firebase builds aggregation design document](#)
+- [Firebase builds aggregation](#https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/features/builds_aggregation/01_firestore_builds_aggregation_design.md)
 
 ## Metrics application
 
@@ -26,7 +26,7 @@ The data layer provides the `FirestoreBuildDayRepository` implementation of `Bui
 
 ### Domain layer
 
-The domain layer should provide an interface for the `FirestoreBuildDayRepository` we need to interact with the `Firestore database`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+The domain layer should provide an interface for the `FirestoreBuildDayRepository` to interact with the `Firestore database`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
