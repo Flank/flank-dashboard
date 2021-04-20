@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 
 import '../../cli/test_util/test_data/config_test_data.dart';
 import '../../test_utils/extensions/interaction_result_answer.dart';
+import '../../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -26,7 +27,7 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given stages is null",
+      "throws an ArgumentError if the given stages list is null",
       () {
         expect(() => CiIntegration(stages: null), throwsArgumentError);
       },
@@ -49,16 +50,29 @@ void main() {
     );
 
     test(
-      ".sync() calls the given sync stages in the right order with the given sync config",
+      ".sync() calls each given sync stage only once",
       () async {
-        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
-        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
+
+        await ciIntegration.sync(syncConfig);
+
+        verify(firstSyncStage(syncConfig)).called(once);
+        verify(secondSyncStage(syncConfig)).called(once);
+      },
+    );
+
+    test(
+      ".sync() calls the given sync stages in the same order with the given sync config",
+      () async {
+        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
 
         await ciIntegration.sync(syncConfig);
 
         verifyInOrder([
-          firstSyncStage.call(syncConfig),
-          secondSyncStage.call(syncConfig),
+          firstSyncStage(syncConfig),
+          secondSyncStage(syncConfig),
         ]);
       },
     );
@@ -66,18 +80,29 @@ void main() {
     test(
       ".sync() does not continue the sync if one of the stages fails",
       () async {
-        when(firstSyncStage.call(syncConfig)).thenErrorWith();
+        when(firstSyncStage(syncConfig)).thenErrorWith();
 
         await ciIntegration.sync(syncConfig);
 
-        verifyNever(secondSyncStage.call(any));
+        verifyNever(secondSyncStage(any));
+      },
+    );
+
+    test(
+      ".sync() does not continue the sync if one of the stages returns null",
+      () async {
+        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+
+        await ciIntegration.sync(syncConfig);
+
+        verifyNever(secondSyncStage(any));
       },
     );
 
     test(
       ".sync() returns an error if one of the stages fails",
       () async {
-        when(firstSyncStage.call(syncConfig)).thenErrorWith();
+        when(firstSyncStage(syncConfig)).thenErrorWith();
 
         final result = await ciIntegration.sync(syncConfig);
 
@@ -86,11 +111,48 @@ void main() {
     );
 
     test(
-      ".sync() returns an error with the message from the failed sync stage",
+      ".sync() returns an error if one of the stages returns null",
       () async {
-        const expectedMessage = 'test';
+        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+
+        final result = await ciIntegration.sync(syncConfig);
+
+        expect(result.isError, isTrue);
+      },
+    );
+
+    test(
+      ".sync() returns an error with the message specifying which sync stage is failed",
+      () async {
+        final expectedStageType = '${firstSyncStage.runtimeType}';
         when(
-          firstSyncStage.call(syncConfig),
+          firstSyncStage(syncConfig),
+        ).thenErrorWith(null, null);
+
+        final result = await ciIntegration.sync(syncConfig);
+
+        expect(result.message, contains(expectedStageType));
+      },
+    );
+
+    test(
+      ".sync() returns an error with the message specifying which sync stage returned null",
+      () async {
+        final expectedStageType = '${firstSyncStage.runtimeType}';
+        when(firstSyncStage(syncConfig)).thenAnswer((_) => Future.value(null));
+
+        final result = await ciIntegration.sync(syncConfig);
+
+        expect(result.message, contains(expectedStageType));
+      },
+    );
+
+    test(
+      ".sync() returns an error with the message containing the failed sync stage error message if it is not null",
+      () async {
+        const expectedMessage = 'message';
+        when(
+          firstSyncStage(syncConfig),
         ).thenErrorWith(null, expectedMessage);
 
         final result = await ciIntegration.sync(syncConfig);
@@ -102,8 +164,8 @@ void main() {
     test(
       ".sync() returns a success if all stages pass successfully",
       () async {
-        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
-        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(firstSyncStage(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage(syncConfig)).thenSuccessWith(null);
 
         final result = await ciIntegration.sync(syncConfig);
 

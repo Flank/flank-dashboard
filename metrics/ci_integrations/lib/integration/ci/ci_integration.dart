@@ -15,7 +15,7 @@ class CiIntegration with LoggerMixin {
 
   /// Creates a [CiIntegration] instance with the given [stages].
   ///
-  /// Throws an [ArgumentError] if the given [stages] is `null`.
+  /// Throws an [ArgumentError] if the given [stages] list is `null`.
   CiIntegration({
     @required this.stages,
   }) {
@@ -31,11 +31,11 @@ class CiIntegration with LoggerMixin {
     ArgumentError.checkNotNull(syncConfig);
 
     for (final stage in stages) {
-      final stageResult = await stage.call(syncConfig);
+      final stageResult = await stage(syncConfig);
 
-      if (stageResult.isError) {
+      if (stageResult == null || stageResult.isError) {
         return InteractionResult.error(
-          message: 'Failed to sync the data! Details: ${stageResult.message}',
+          message: _getStageErrorMessage(stage, stageResult),
         );
       }
     }
@@ -43,5 +43,20 @@ class CiIntegration with LoggerMixin {
     return const InteractionResult.success(
       message: 'The data has been synced successfully!',
     );
+  }
+
+  /// Returns a message that describes an error occurred during running
+  /// the given [stage] using the given [stageResult].
+  ///
+  /// Adds the [InteractionResult.message] to the returned message if both
+  /// given [stageResult] and it's [InteractionResult.message] is not `null`.
+  String _getStageErrorMessage(SyncStage stage, InteractionResult stageResult) {
+    String message = 'Failed to run the ${stage.runtimeType}';
+
+    if (stageResult != null && stageResult.message != null) {
+      message = '$message due to the following error: ${stageResult.message}';
+    }
+
+    return message;
   }
 }
