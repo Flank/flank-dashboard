@@ -245,7 +245,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
         verify(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).called(equals(builds.length));
       },
     );
@@ -255,7 +255,7 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -269,7 +269,7 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -283,7 +283,7 @@ void main() {
       () async {
         whenFetchBuilds().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -429,7 +429,7 @@ void main() {
         await newBuildsSyncStage.call(syncConfigWithCoverage);
 
         verify(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).called(equals(builds.length));
       },
     );
@@ -439,7 +439,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -453,7 +453,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.error(error));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -467,7 +467,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         await newBuildsSyncStage.call(syncConfigWithCoverage);
@@ -483,7 +483,7 @@ void main() {
       () async {
         whenFetchBuildsAfter().thenAnswer((_) => Future.value(builds));
         when(
-          sourceClient.fetchCoverage(argThat(anyOf(builds))),
+          sourceClient.fetchCoverage(argThat(isIn(builds))),
         ).thenAnswer((_) => Future.value(coverage));
 
         final result = await newBuildsSyncStage.call(syncConfigWithCoverage);
