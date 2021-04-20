@@ -54,31 +54,31 @@ class FirestoreDestinationClientAdapter
 
   /// Adds a new [build] using the given [documentReference].
   ///
-  /// If the given [build] is not in-progress, adds it using the
-  /// [DocumentReference.set] method. Otherwise, uses the
-  /// [DocumentReference.create] method.
+  /// If the given [build] is [BuildStatus.inProgress], adds it using the
+  /// [DocumentReference.create] method. Otherwise, uses the
+  /// [DocumentReference.set] method.
   Future<void> _addBuild(
     DocumentReference documentReference,
     BuildData build,
   ) {
     final buildJson = build.toJson();
 
-    if (build.buildStatus != BuildStatus.inProgress) {
-      return documentReference.set(buildJson);
+    if (build.buildStatus == BuildStatus.inProgress) {
+      return documentReference
+          .create(buildJson)
+          .catchError((error) => _handleCreateBuildError(error, buildJson));
     }
 
-    return documentReference
-        .create(buildJson)
-        .catchError((error) => _handleAddBuildError(error, buildJson));
+    return documentReference.set(buildJson);
   }
 
   /// Handles the given [error] occurred during creating a build with the
   /// given [buildJson].
   ///
   /// Ignores the given [error] if it is a [FirestoreException] with the
-  /// [FirestoreExceptionCode.alreadyExists]. Otherwise, throws
+  /// [FirestoreExceptionCode.alreadyExists] code. Otherwise, throws
   /// the given [error].
-  void _handleAddBuildError(
+  void _handleCreateBuildError(
     Object error,
     Map<String, dynamic> buildJson,
   ) {
