@@ -42,6 +42,28 @@ const builds = {
   },
 };
 
+/** A list of test build days */
+const buildDays = {
+  "build_days/1": {
+    projectId: "1",
+    successful: 1,
+    failed: 2,
+    unknown: 3,
+    inProgress: 4,
+    totalDuration: 1234,
+    day: new firestore.Timestamp.now(),
+  },
+  "build_days/2": {
+    projectId: "2",
+    successful: 1,
+    failed: 2,
+    unknown: 3,
+    inProgress: 4,
+    totalDuration: 1234,
+    day: new firestore.Timestamp.now(),
+  },
+};
+
 /** A list of test user profiles */
 const userProfiles = {
   "user_profiles/1": {
@@ -64,6 +86,26 @@ const featureConfig = {
 
 const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
+
+/** A list of test tasks */
+const tasks = {
+  "tasks/1": {
+    code: "code_1",
+    data: {
+      projectId: "1",
+    },
+    context: "context1",
+    createdAt: new firestore.Timestamp.now(),
+  },
+  "tasks/2": {
+    code: "code_2",
+    data: {
+      projectId: "2",
+    },
+    context: "context2",
+    createdAt: new firestore.Timestamp.now(),
+  },
+};
 
 /** Creates a firebase user with the given `email`, `signInProviderId`, `emailVerified` and `uid` */
 function getUser(email, signInProviderId, emailVerified, uid) {
@@ -94,9 +136,11 @@ exports.projects = {
 
 exports.projectGroups = projectGroups;
 exports.builds = builds;
+exports.buildDays = buildDays;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
-exports.featureConfig = featureConfig
+exports.featureConfig = featureConfig;
+exports.tasks = tasks;
 
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
@@ -124,7 +168,17 @@ exports.getBuild = function () {
   return cloneDeep(builds["build/1"]);
 };
 
+/** Get a test build day */
+exports.getBuildDay = function () {
+  return cloneDeep(buildDays["build_days/1"]);
+};
+
 /** Get a test user profile */
 exports.getUserProfile = function () {
   return cloneDeep(userProfiles["user_profiles/1"]);
+};
+
+/** Get a test task */
+exports.getTask = function () {
+  return cloneDeep(tasks["tasks/1"]);
 };
