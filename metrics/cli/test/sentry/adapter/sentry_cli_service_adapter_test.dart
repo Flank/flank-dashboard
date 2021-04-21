@@ -1,17 +1,15 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:cli/sentry/adapter/sentry_cli_service_adapter.dart';
 import 'package:cli/sentry/cli/sentry_cli.dart';
-import 'package:cli/sentry/constants/sentry_constants.dart';
 import 'package:cli/sentry/model/sentry_project.dart';
+import 'package:cli/sentry/model/sentry_release.dart';
+import 'package:cli/sentry/model/source_map.dart';
 import 'package:cli/sentry/strings/sentry_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/file_helper_mock.dart';
 import '../../test_utils/matchers.dart';
 import '../../test_utils/prompter_mock.dart';
 
@@ -19,73 +17,61 @@ import '../../test_utils/prompter_mock.dart';
 
 void main() {
   group('SentryCliServiceAdapter', () {
-    const appPath = 'appPath';
-    const buildPath = 'buildPath';
-    const configPath = 'configPath';
+    const path = 'path';
+    const extensions = ['js'];
     const releaseName = 'releaseName';
     const organizationSlug = 'organizationSlug';
     const projectSlug = 'projectSlug';
-    const dsn = 'dsn';
     const enterOrganizationSlug = SentryStrings.enterOrganizationSlug;
     const enterReleaseName = SentryStrings.enterReleaseName;
 
     final sentryCli = _SentryCliMock();
     final prompter = PrompterMock();
-    final fileHelper = FileHelperMock();
-    final file = _FileMock();
     final sentryService = SentryCliServiceAdapter(
       sentryCli: sentryCli,
       prompter: prompter,
-      fileHelper: fileHelper,
     );
     final sentryProject = SentryProject(
       organizationSlug: organizationSlug,
       projectSlug: projectSlug,
     );
+    final sentryRelease = SentryRelease(
+      name: releaseName,
+      project: sentryProject,
+    );
+    final sourceMap = SourceMap(path: path, extensions: extensions);
     final stateError = StateError('test');
-    final environment = <String, dynamic>{
-      SentryConstants.dsn: dsn,
-      SentryConstants.releaseName: releaseName,
-    };
 
     tearDown(() {
       reset(sentryCli);
       reset(prompter);
-      reset(fileHelper);
-      reset(file);
     });
 
     String enterProjectSlug() =>
         SentryStrings.enterProjectSlug(organizationSlug);
     String enterDsn() => SentryStrings.enterDsn(organizationSlug, projectSlug);
 
-    PostExpectation<String> whenAskOrganisationSlug() {
+    PostExpectation<String> whenPromptOrganisationSlug() {
       return when(prompter.prompt(enterOrganizationSlug));
     }
 
-    PostExpectation<String> whenAskProjectSlug() {
+    PostExpectation<String> whenPromptProjectSlug() {
       return when(prompter.prompt(enterProjectSlug()));
     }
 
-    PostExpectation<String> whenAskDsn() {
-      return when(prompter.prompt(enterDsn()));
-    }
-
-    PostExpectation<String> whenAskReleaseName() {
+    PostExpectation<String> whenPromptReleaseName() {
       return when(prompter.prompt(enterReleaseName));
     }
 
     void setupPrompts() {
-      whenAskOrganisationSlug().thenReturn(organizationSlug);
-      whenAskProjectSlug().thenReturn(projectSlug);
-      whenAskDsn().thenReturn(dsn);
-      whenAskReleaseName().thenReturn(releaseName);
+      whenPromptOrganisationSlug().thenReturn(organizationSlug);
+      whenPromptProjectSlug().thenReturn(projectSlug);
+      whenPromptReleaseName().thenReturn(releaseName);
     }
 
     void checkNoMoreInteractions() {
       verifyNoMoreInteractions(sentryCli);
       verifyNoMoreInteractions(prompter);
-      verifyNoMoreInteractions(fileHelper);
     }
 
     test(
@@ -95,7 +81,6 @@ void main() {
           () => SentryCliServiceAdapter(
             sentryCli: null,
             prompter: prompter,
-            fileHelper: fileHelper,
           ),
           throwsArgumentError,
         );
@@ -109,21 +94,6 @@ void main() {
           () => SentryCliServiceAdapter(
             sentryCli: sentryCli,
             prompter: null,
-            fileHelper: fileHelper,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given file helper is null",
-      () {
-        expect(
-          () => SentryCliServiceAdapter(
-            sentryCli: sentryCli,
-            prompter: prompter,
-            fileHelper: null,
           ),
           throwsArgumentError,
         );
@@ -153,7 +123,7 @@ void main() {
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
         verify(prompter.prompt(enterOrganizationSlug)).called(once);
       },
@@ -162,13 +132,12 @@ void main() {
     test(
       ".createRelease() throws if prompter throws during the organisation slug prompting",
       () {
-        whenAskOrganisationSlug().thenThrow(stateError);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskDsn().thenReturn(dsn);
-        whenAskReleaseName().thenReturn(releaseName);
+        whenPromptOrganisationSlug().thenThrow(stateError);
+        whenPromptProjectSlug().thenReturn(projectSlug);
+        whenPromptReleaseName().thenReturn(releaseName);
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -177,13 +146,12 @@ void main() {
     test(
       ".createRelease() stops the release creation process if prompter throws during the organisation slug prompting",
       () async {
-        whenAskOrganisationSlug().thenThrow(stateError);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskDsn().thenReturn(dsn);
-        whenAskReleaseName().thenReturn(releaseName);
+        whenPromptOrganisationSlug().thenThrow(stateError);
+        whenPromptProjectSlug().thenReturn(projectSlug);
+        whenPromptReleaseName().thenReturn(releaseName);
 
         await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
 
@@ -198,7 +166,7 @@ void main() {
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
         verify(prompter.prompt(enterProjectSlug())).called(once);
       },
@@ -207,13 +175,12 @@ void main() {
     test(
       ".createRelease() throws if prompter throws during the project slug prompting",
       () {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenThrow(stateError);
-        whenAskDsn().thenReturn(dsn);
-        whenAskReleaseName().thenReturn(releaseName);
+        whenPromptOrganisationSlug().thenReturn(organizationSlug);
+        whenPromptProjectSlug().thenThrow(stateError);
+        whenPromptReleaseName().thenReturn(releaseName);
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -222,13 +189,12 @@ void main() {
     test(
       ".createRelease() stops the release creation process if prompter throws during the project slug prompting",
       () async {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenThrow(stateError);
-        whenAskDsn().thenReturn(dsn);
-        whenAskReleaseName().thenReturn(releaseName);
+        whenPromptOrganisationSlug().thenReturn(organizationSlug);
+        whenPromptProjectSlug().thenThrow(stateError);
+        whenPromptReleaseName().thenReturn(releaseName);
 
         await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
 
@@ -244,7 +210,7 @@ void main() {
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
         verify(prompter.prompt(enterReleaseName)).called(once);
       },
@@ -253,13 +219,12 @@ void main() {
     test(
       ".createRelease() throws if prompter throws during the release name prompting",
       () {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskReleaseName().thenThrow(stateError);
-        whenAskDsn().thenReturn(dsn);
+        whenPromptOrganisationSlug().thenReturn(organizationSlug);
+        whenPromptProjectSlug().thenReturn(projectSlug);
+        whenPromptReleaseName().thenThrow(stateError);
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -268,13 +233,12 @@ void main() {
     test(
       ".createRelease() stops the release creation process if prompter throws during the release name prompting",
       () async {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskReleaseName().thenThrow(stateError);
-        whenAskDsn().thenReturn(dsn);
+        whenPromptOrganisationSlug().thenReturn(organizationSlug);
+        whenPromptProjectSlug().thenReturn(projectSlug);
+        whenPromptReleaseName().thenThrow(stateError);
 
         await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
 
@@ -287,14 +251,13 @@ void main() {
     );
 
     test(
-      ".createRelease() creates the release with the given release name within the given project",
+      ".createRelease() creates the Sentry release with the given release",
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
+        verify(sentryCli.createRelease(sentryRelease)).called(once);
       },
     );
 
@@ -302,11 +265,11 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the release creation",
       () {
         setupPrompts();
-        when(sentryCli.createRelease(any, any))
+        when(sentryCli.createRelease(any))
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -316,33 +279,32 @@ void main() {
       ".createRelease() stops the release creation process if Sentry CLI throws during the release creation",
       () async {
         setupPrompts();
-        when(sentryCli.createRelease(any, any))
+        when(sentryCli.createRelease(any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
 
         verify(prompter.prompt(enterOrganizationSlug)).called(once);
         verify(prompter.prompt(enterProjectSlug())).called(once);
         verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
+        verify(sentryCli.createRelease(sentryRelease)).called(once);
 
         checkNoMoreInteractions();
       },
     );
 
     test(
-      ".createRelease() uploads source maps",
+      ".createRelease() uploads the given source maps to the given release",
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
-            .called(equals(2));
+        verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
+            .called(once);
       },
     );
 
@@ -350,11 +312,11 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the source maps uploading",
       () {
         setupPrompts();
-        when(sentryCli.uploadSourceMaps(any, any, any, any))
+        when(sentryCli.uploadSourceMaps(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -364,20 +326,19 @@ void main() {
       ".createRelease() stops the release creation process if Sentry CLI throws during the source maps uploading",
       () async {
         setupPrompts();
-        when(sentryCli.uploadSourceMaps(any, any, any, any))
+        when(sentryCli.uploadSourceMaps(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
 
         verify(prompter.prompt(enterOrganizationSlug)).called(once);
         verify(prompter.prompt(enterProjectSlug())).called(once);
         verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
+        verify(sentryCli.createRelease(sentryRelease)).called(once);
+        verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
             .called(once);
 
         checkNoMoreInteractions();
@@ -385,14 +346,13 @@ void main() {
     );
 
     test(
-      ".createRelease() finalizes release",
+      ".createRelease() finalizes the given release",
       () async {
         setupPrompts();
 
-        await sentryService.createRelease(appPath, buildPath, configPath);
+        await sentryService.createRelease([sourceMap]);
 
-        verify(sentryCli.finalizeRelease(releaseName, sentryProject))
-            .called(once);
+        verify(sentryCli.finalizeRelease(sentryRelease)).called(once);
       },
     );
 
@@ -400,170 +360,11 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the release finalizing",
       () {
         setupPrompts();
-        when(sentryCli.finalizeRelease(any, any))
+        when(sentryCli.finalizeRelease(any))
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-      },
-    );
-
-    test(
-      ".createRelease() stops the release creation process if Sentry CLI throws during the release finalizing",
-      () async {
-        setupPrompts();
-        when(sentryCli.finalizeRelease(any, any))
-            .thenAnswer((_) => Future.error(stateError));
-
-        await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug())).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
-            .called(equals(2));
-        verify(sentryCli.finalizeRelease(releaseName, sentryProject))
-            .called(once);
-
-        checkNoMoreInteractions();
-      },
-    );
-
-    test(
-      ".createRelease() prompts the user to enter the DSN",
-      () async {
-        setupPrompts();
-
-        await sentryService.createRelease(appPath, buildPath, configPath);
-
-        verify(prompter.prompt(enterDsn())).called(once);
-      },
-    );
-
-    test(
-      ".createRelease() throws if Sentry CLI throws during the DSN prompting",
-      () {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskReleaseName().thenReturn(releaseName);
-        whenAskDsn().thenThrow(stateError);
-
-        expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-      },
-    );
-
-    test(
-      ".createRelease() stops the release creation process if Sentry CLI throws during the DSN prompting",
-      () async {
-        whenAskOrganisationSlug().thenReturn(organizationSlug);
-        whenAskProjectSlug().thenReturn(projectSlug);
-        whenAskReleaseName().thenReturn(releaseName);
-        whenAskDsn().thenThrow(stateError);
-
-        await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug())).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
-            .called(equals(2));
-        verify(sentryCli.finalizeRelease(releaseName, sentryProject))
-            .called(once);
-        verify(prompter.prompt(enterDsn())).called(once);
-
-        checkNoMoreInteractions();
-      },
-    );
-
-    test(
-      ".createRelease() gets the Web project config",
-      () async {
-        setupPrompts();
-        when(fileHelper.getFile(any)).thenReturn(file);
-
-        await sentryService.createRelease(appPath, buildPath, configPath);
-
-        verify(fileHelper.getFile(configPath)).called(once);
-      },
-    );
-
-    test(
-      ".createRelease() throws if file helper throws during the web project config getting",
-      () {
-        setupPrompts();
-        when(fileHelper.getFile(any)).thenThrow(stateError);
-
-        expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-      },
-    );
-
-    test(
-      ".createRelease() stops the release creation process if Sentry CLI throws during the web project config getting",
-      () async {
-        setupPrompts();
-        when(fileHelper.getFile(any)).thenThrow(stateError);
-
-        await expectLater(
-          sentryService.createRelease(appPath, buildPath, configPath),
-          throwsStateError,
-        );
-
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug())).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
-        verify(sentryCli.createRelease(releaseName, sentryProject))
-            .called(once);
-        verify(sentryCli.uploadSourceMaps(any, any, sentryProject, releaseName))
-            .called(equals(2));
-        verify(sentryCli.finalizeRelease(releaseName, sentryProject))
-            .called(once);
-        verify(prompter.prompt(enterDsn())).called(once);
-        verify(fileHelper.getFile(configPath)).called(once);
-
-        checkNoMoreInteractions();
-      },
-    );
-
-    test(
-      ".createRelease() updates the Web project config",
-      () async {
-        setupPrompts();
-        when(fileHelper.getFile(any)).thenReturn(file);
-
-        await sentryService.createRelease(appPath, buildPath, configPath);
-
-        verify(fileHelper.replaceEnvironmentVariables(file, environment))
-            .called(once);
-      },
-    );
-
-    test(
-      ".createRelease() throws if file helper throws during the web project config updating",
-      () {
-        setupPrompts();
-        when(fileHelper.replaceEnvironmentVariables(any, any))
-            .thenThrow(stateError);
-
-        expect(
-          sentryService.createRelease(appPath, buildPath, configPath),
+          sentryService.createRelease([sourceMap]),
           throwsStateError,
         );
       },
@@ -586,9 +387,28 @@ void main() {
         expect(sentryService.version(), throwsStateError);
       },
     );
+
+    test(
+      ".getSentryDsn() prompts the user to enter the DSN",
+      () {
+        sentryService.getDsn(sentryProject);
+
+        verify(prompter.prompt(enterDsn())).called(once);
+      },
+    );
+
+    test(
+      ".getSentryDsn() throws throws if prompter throws during the DSN prompting",
+      () {
+        when(prompter.prompt(enterDsn())).thenThrow(stateError);
+
+        expect(
+          () => sentryService.getDsn(sentryProject),
+          throwsStateError,
+        );
+      },
+    );
   });
 }
 
 class _SentryCliMock extends Mock implements SentryCli {}
-
-class _FileMock extends Mock implements File {}

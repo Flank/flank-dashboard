@@ -6,11 +6,11 @@ import 'dart:io';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
+import 'package:cli/helper/file_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/directory_mock.dart';
-import '../test_utils/file_helper_mock.dart';
 import '../test_utils/firebase_service_mock.dart';
 import '../test_utils/flutter_service_mock.dart';
 import '../test_utils/gcloud_service_mock.dart';
@@ -36,7 +36,7 @@ void main() {
     final npmService = NpmServiceMock();
     final gitService = GitServiceMock();
     final firebaseService = FirebaseServiceMock();
-    final fileHelper = FileHelperMock();
+    final fileHelper = _FileHelperMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
     final services = Services(
@@ -544,3 +544,5 @@ void main() {
     );
   });
 }
+
+class _FileHelperMock extends Mock implements FileHelper {}

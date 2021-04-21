@@ -2,7 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/interfaces/cli/cli.dart';
-import 'package:cli/sentry/model/sentry_project.dart';
+import 'package:cli/sentry/model/sentry_release.dart';
+import 'package:cli/sentry/model/source_map.dart';
 
 /// A class that represents the Sentry [Cli].
 class SentryCli extends Cli {
@@ -16,13 +17,15 @@ class SentryCli extends Cli {
 
   /// Creates a Sentry release with the given [releaseName]
   /// within the given [project].
-  Future<void> createRelease(String releaseName, SentryProject project) {
+  Future<void> createRelease(SentryRelease release) {
+    final project = release.project;
+
     return run([
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'new',
-      releaseName,
+      release.name,
     ]);
   }
 
@@ -33,19 +36,19 @@ class SentryCli extends Cli {
   /// If the [extensions] are not specified, source maps of all files
   /// are uploaded.
   Future<void> uploadSourceMaps(
-    String sourcePath,
-    List<String> extensions,
-    SentryProject project,
-    String releaseName,
+    SentryRelease release,
+    SourceMap sourceMap,
   ) {
+    final project = release.project;
+    final extensions = sourceMap.extensions;
     final parameters = [
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'files',
-      releaseName,
+      release.name,
       'upload-sourcemaps',
-      sourcePath,
+      sourceMap.path,
       '--rewrite',
     ];
 
@@ -60,13 +63,15 @@ class SentryCli extends Cli {
 
   /// Finalizes the release with the given [releaseName]
   /// within the given [project].
-  Future<void> finalizeRelease(String releaseName, SentryProject project) {
+  Future<void> finalizeRelease(SentryRelease release) {
+    final project = release.project;
+
     return run([
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'finalize',
-      releaseName,
+      release.name,
     ]);
   }
 

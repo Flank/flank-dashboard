@@ -11,6 +11,9 @@ class SentryProject extends Equatable {
   /// An identifier of this Sentry project.
   final String projectSlug;
 
+  @override
+  List<Object> get props => [organizationSlug, projectSlug];
+
   /// Creates a new instance of the [SentryProject]
   /// with the given [organizationSlug] and [projectSlug].
   ///
@@ -23,7 +26,4 @@ class SentryProject extends Equatable {
     ArgumentError.checkNotNull(organizationSlug, 'organizationSlug');
     ArgumentError.checkNotNull(projectSlug, 'projectSlug');
   }
-
-  @override
-  List<Object> get props => [organizationSlug, projectSlug];
 }
