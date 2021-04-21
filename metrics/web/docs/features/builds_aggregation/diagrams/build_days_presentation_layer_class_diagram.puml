@@ -21,7 +21,7 @@
 
             package usecases {
                 class ReceiveBuildDayProjectMetricsUpdates {
-                    + call(ProjectBuildDayParam params) : Stream<BuildDayProjectMetrics>
+                    + call(ProjectIdParam params) : Stream<BuildDayProjectMetrics>
                 }
             }
         }
@@ -31,7 +31,7 @@
                 - _receiveBuildDayProjectMetricsUpdates : ReceiveBuildDayProjectMetricsUpdates
                 - _buildDaySubscriptions : Map<String, StreamSubscription>
                 - _subscribeToBuildDayMetrics(String projectId) : void
-                - _createDashboardBuildDayProjectMetrics(BuildDayProjectMetrics metrics, String projectId) : void
+                - _createBuildDayMetrics(BuildDayProjectMetrics metrics, String projectId) : void
             }
         }
     }
