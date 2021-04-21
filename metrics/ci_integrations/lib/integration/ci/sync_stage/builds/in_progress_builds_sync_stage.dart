@@ -62,12 +62,10 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
 
       await destinationClient.updateBuilds(destinationProjectId, updatedBuilds);
 
-      return const InteractionResult.success(
-        message: 'The data has been synced successfully!',
-      );
+      return const InteractionResult.success();
     } catch (error) {
       return InteractionResult.error(
-        message: 'Failed to sync the data! Details: $error',
+        message: '$error',
       );
     }
   }
