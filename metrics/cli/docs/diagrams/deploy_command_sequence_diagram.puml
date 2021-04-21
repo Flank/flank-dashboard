@@ -81,7 +81,7 @@ Deployer -> SentryService ++ : createRelease(sourceMaps)
 SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, and releaseName
 Bob -> SentryService : enters Sentry params
 SentryService -> Deployer -- : sentryRelease
-Deployer -> SentryService ++ : getDsn(sentryProject)
+Deployer -> SentryService ++ : getProjectDsn(sentryProject)
 SentryService -> Deployer -- : Sentry DSN
 Deployer -> FileHelper ++ : getFile(metricsConfigPath)
 FileHelper -> Deployer -- : config file

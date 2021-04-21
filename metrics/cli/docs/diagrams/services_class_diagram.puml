@@ -132,7 +132,7 @@ package sentry {
         interface SentryService {
             + login() : Future<void>
             + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
-            + getDsn(SentryProject release) : String
+            + getProjectDsn(SentryProject project) : String
         }
     }
 
