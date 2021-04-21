@@ -24,12 +24,6 @@ package common.domain {
             + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
         } 
     }
-
-    package usecases.parameters {
-        class ProjectIdParam {
-            + id : String
-        }
-    }
 }
 
 package dashboard.domain {
@@ -55,6 +49,12 @@ package dashboard.domain {
         class ReceiveBuildDayProjectMetricsUpdates {
             - _repository : BuildDayRepository
             + call(ProjectIdParam params) : Stream<BuildDayProjectMetrics>
+        }
+
+        package parameters {
+            class ProjectIdParam {
+                + id : String
+            }
         }
     }  
 }

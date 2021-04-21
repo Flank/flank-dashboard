@@ -24,7 +24,7 @@ The domain layer should provide an interface for data fetching. Also, the layer 
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
-- Add the `ReceiveBuildDayProjectMetricsUpdates` usecase with the `ProjectIdParam`.
+- Add the `ReceiveBuildDayProjectMetricsUpdates` usecase.
 
 The following class diagram demonstrates the domain layer structure:
 
@@ -32,7 +32,7 @@ The following class diagram demonstrates the domain layer structure:
 
 ### Data layer
 
-The data layer provides the `FirestoreBuildDayRepository` implementation of `BuildDayRepository` and `BuildDayData` that represents a `DataModel` implementation for the `BuildDay` entity.
+The data layer provides the FirestoreBuildDayRepository implementation of the BuildDayRepository. Also, it provides a BuildDayData class that represents a DataModel implementation for the BuildDay entity.
 
 ![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
 
