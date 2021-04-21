@@ -1,0 +1,48 @@
+@startuml build_days_presentation_layer_class_diagram
+    package dashboard {
+        package domain {
+            package entities.metrics {
+                class BuildNumberMetric {
+                    + numberOfBuilds : int
+                }
+                class BuildPerformance {
+                        + date : DateTime
+                        + duration: Duration
+                }
+                class PerformanceMetric {
+                    + buildsPerformance : DateTimeSet<BuildPerformance>
+                    + averageBuildDuration : Duration
+                }
+                class BuildDayProjectMetrics {
+                    + projectId : String
+                    + buildNumberMetric : BuildNumberMetric
+                    + performanceMetric : PerformanceMetric
+                }
+            }
+
+            package usecases {
+                class ReceiveBuildDayProjectMetricsUpdates {
+                    + call(ProjectIdParam params) : Stream<BuildDayProjectMetrics>
+                }
+            }
+        }
+
+        package presentation.state {
+            class ProjectMetricsNotifier {
+                - _receiveBuildDayProjectMetricsUpdates : ReceiveBuildDayProjectMetricsUpdates
+                - _buildDaySubscriptions : Map<String, StreamSubscription>
+                - _subscribeToBuildDayMetrics(String projectId) : void
+                - _createBuildDayMetrics(BuildDayProjectMetrics metrics, String projectId) : void
+            }
+        }
+    }
+
+    ProjectMetricsNotifier -right-> ReceiveBuildDayProjectMetricsUpdates : uses
+    ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides
+    ProjectMetricsNotifier --> BuildDayProjectMetrics : uses
+
+    BuildDayProjectMetrics --> BuildNumberMetric : uses
+    BuildDayProjectMetrics --> PerformanceMetric : uses
+    PerformanceMetric --> BuildPerformance : uses
+    
+@enduml

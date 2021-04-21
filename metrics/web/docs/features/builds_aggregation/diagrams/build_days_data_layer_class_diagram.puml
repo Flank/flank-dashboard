@@ -1,0 +1,54 @@
+@startuml build_days_data_layer_class_diagram
+
+package core.data.model {
+    abstract class DataModel {
+        + toJson() : Map<String, dynamic>
+    }
+}
+
+package common {
+    package domain {
+        package repositories {
+            interface BuildDayRepository {
+                + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
+            }
+        }
+
+        package entities {
+            class BuildDay {
+                + projectId : String
+                + successful: int
+                + failed: int
+                + unknown: int
+                + inProgress: int
+                + totalDuration : Duration
+                + day : DateTime
+            }
+        }
+    }
+
+    package data {
+        package repositories as data_repositories {
+            class FirestoreBuildDayRepository {
+                - _firestore : Firestore
+                + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
+            }
+        }
+
+        package model {
+            class BuildDayData {
+                + factory fromJson(Map<String, dynamic> json) : BuildDayData
+                + toJson() : Map<String, dynamic>
+            }
+        }
+    }
+}
+
+FirestoreBuildDayRepository ..|> BuildDayRepository
+FirestoreBuildDayRepository --> BuildDayData : uses
+
+BuildDayData --|> BuildDay
+BuildDayData -left-..|> DataModel
+BuildDayRepository --> BuildDay : provides
+
+@enduml
