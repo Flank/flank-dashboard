@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/util/url/url_utils.dart';
@@ -52,6 +52,23 @@ void main() {
         final actual = Uri.parse(result).hasQuery;
 
         expect(actual, isTrue);
+      },
+    );
+
+    test(
+      ".buildUrl() adds list query parameters",
+      () {
+        const parameterKey = 'test';
+        final expectedListParameter = ['a', 'b'];
+        final url = UrlUtils.buildUrl(
+          localhostUrl,
+          queryParameters: {parameterKey: expectedListParameter},
+        );
+
+        final actualUrl = Uri.parse(url);
+        final actualParameter = actualUrl.queryParametersAll[parameterKey];
+
+        expect(actualParameter, equals(expectedListParameter));
       },
     );
 
