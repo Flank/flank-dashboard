@@ -20,4 +20,19 @@ abstract class FirebaseService extends InfoService {
   /// Deploys Firebase rules, indexes, and functions to the project
   /// with the given [projectId] from the given [firebasePath].
   Future<void> deployFirebase(String projectId, String firebasePath);
+
+  /// Upgrades the Firebase account billing plan.
+  void upgradeBillingPlan(String projectId);
+
+  /// Initializes the firestore data.
+  void initializeFirestoreData(String projectId);
+
+  /// Enables Firestore Analytics service for the Firebase project.
+  void enableAnalytics(String projectId);
+
+  /// Configures Firebase auth providers.
+  String configureAuth(String projectId);
+
+  /// Accepts the terms of the service.
+  void acceptTerms() {}
 }

@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/model/services.dart';
+import 'package:cli/common/constants/config_constants.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
@@ -72,6 +73,16 @@ class Deployer {
       );
       await _installNpmDependencies();
       await _flutterService.build(DeployConstants.webPath);
+      _firebaseService.upgradeBillingPlan(projectId);
+      _firebaseService.enableAnalytics(projectId);
+      _firebaseService.initializeFirestoreData(projectId);
+
+      final googleClientId = _firebaseService.configureAuth(projectId);
+      final configEnvironment = <String, dynamic>{
+        ConfigConstants.googleSignInClientId: googleClientId,
+      };
+
+      _updateConfig(configEnvironment);
       await _deployToFirebase(projectId);
     } finally {
       _cleanup();
@@ -81,7 +92,9 @@ class Deployer {
   /// Logins to the necessary services.
   Future<void> _loginToServices() async {
     await _gcloudService.login();
+    _gcloudService.acceptTerms();
     await _firebaseService.login();
+    _firebaseService.acceptTerms();
   }
 
   /// Installs npm dependencies.
@@ -104,6 +117,13 @@ class Deployer {
       DeployConstants.firebaseTarget,
       DeployConstants.webPath,
     );
+  }
+
+  /// Updates the Web project config.
+  void _updateConfig(Map<String, dynamic> environment) {
+    final config = _fileHelper.getFile(DeployConstants.configPath);
+
+    _fileHelper.replaceEnvironmentVariables(config, environment);
   }
 
   /// Cleans temporary resources created during the deployment process.

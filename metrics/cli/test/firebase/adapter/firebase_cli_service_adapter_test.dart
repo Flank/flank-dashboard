@@ -3,11 +3,14 @@
 
 import 'package:cli/firebase/adapter/firebase_cli_service_adapter.dart';
 import 'package:cli/firebase/cli/firebase_cli.dart';
+import 'package:cli/firebase/strings/firebase_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
 import '../../test_utils/prompter_mock.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group('FirebaseCliServiceAdapter', () {
@@ -402,6 +405,120 @@ void main() {
         when(firebaseCli.version()).thenAnswer((_) => Future.error(stateError));
 
         expect(firebaseService.version(), throwsStateError);
+      },
+    );
+
+    test(
+      ".configureAuth() prompts the user to configure the authentication providers",
+      () async {
+        firebaseService.configureAuth(projectId);
+
+        verify(prompter.prompt(FirebaseStrings.configureAuth(projectId)))
+            .called(once);
+      },
+    );
+
+    test(
+      ".configureAuth() throws if prompter throws during the authentication providers configuring",
+      () {
+        when(prompter.prompt(FirebaseStrings.configureAuth(projectId)))
+            .thenThrow(stateError);
+
+        expect(
+          () => firebaseService.configureAuth(projectId),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".enableAnalytics() prompts the user to configure the Analytics service and enter the client ID",
+      () async {
+        firebaseService.enableAnalytics(projectId);
+
+        verify(prompter.prompt(FirebaseStrings.enableAnalytics(projectId)))
+            .called(once);
+      },
+    );
+
+    test(
+      ".enableAnalytics() throws if prompter throws during the Analytics service config prompting",
+      () {
+        when(prompter.prompt(FirebaseStrings.enableAnalytics(projectId)))
+            .thenThrow(stateError);
+
+        expect(
+          () => firebaseService.enableAnalytics(projectId),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".initializeFirestoreData() prompts the user to configure the initial Firestore data",
+      () async {
+        firebaseService.initializeFirestoreData(projectId);
+
+        verify(prompter.prompt(FirebaseStrings.initializeData(projectId)))
+            .called(once);
+      },
+    );
+
+    test(
+      ".initializeFirestoreData() throws if prompter throws during the initial Firestore data prompting",
+      () {
+        when(prompter.prompt(FirebaseStrings.initializeData(projectId)))
+            .thenThrow(stateError);
+
+        expect(
+          () => firebaseService.initializeFirestoreData(projectId),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".upgradeBillingPlan() prompts the user to upgrade the billing plan",
+      () async {
+        firebaseService.upgradeBillingPlan(projectId);
+
+        verify(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
+            .called(once);
+      },
+    );
+
+    test(
+      ".initializeFirestoreData() throws if prompter throws during the billing plan prompting",
+      () {
+        when(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
+            .thenThrow(stateError);
+
+        expect(
+          () => firebaseService.upgradeBillingPlan(projectId),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".acceptTerms() prompts the user to accept the terms of the Firebase service",
+      () async {
+        firebaseService.acceptTerms();
+
+        verify(prompter.prompt(FirebaseStrings.acceptTerms)).called(once);
+      },
+    );
+
+    test(
+      ".acceptTerms() throws if prompter throws during the terms prompting",
+      () {
+        when(prompter.prompt(FirebaseStrings.acceptTerms))
+            .thenThrow(stateError);
+
+        expect(
+          () => firebaseService.acceptTerms(),
+          throwsStateError,
+        );
       },
     );
   });

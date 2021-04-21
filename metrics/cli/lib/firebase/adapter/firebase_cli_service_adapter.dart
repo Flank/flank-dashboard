@@ -3,6 +3,7 @@
 
 import 'package:cli/firebase/cli/firebase_cli.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
+import 'package:cli/firebase/strings/firebase_strings.dart';
 import 'package:cli/prompt/prompter.dart';
 
 /// An adapter for the [FirebaseCli] to implement
@@ -58,5 +59,30 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   @override
   Future<void> version() {
     return _firebaseCli.version();
+  }
+
+  @override
+  String configureAuth(String projectId) {
+    return _prompter.prompt(FirebaseStrings.configureAuth(projectId));
+  }
+
+  @override
+  void enableAnalytics(String projectId) {
+    _prompter.prompt(FirebaseStrings.enableAnalytics(projectId));
+  }
+
+  @override
+  void initializeFirestoreData(String projectId) {
+    _prompter.prompt(FirebaseStrings.initializeData(projectId));
+  }
+
+  @override
+  void upgradeBillingPlan(String projectId) {
+    _prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId));
+  }
+
+  @override
+  void acceptTerms() {
+    _prompter.prompt(FirebaseStrings.acceptTerms);
   }
 }

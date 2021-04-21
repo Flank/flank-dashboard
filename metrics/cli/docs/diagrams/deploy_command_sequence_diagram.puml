@@ -31,17 +31,27 @@ GCloudService --> Bob : start interactive login
 Bob -> GCloudService : signs in
 GCloudService --> Deployer -- : sign in finished
 
+Deployer -> GCloudService ++ : acceptTerms()
+GCloudService --> Bob : asks to accept terms of GCloud service
+Bob -> GCloudService : accepts terms
+GCloudService -> Deployer  -- : terms accepted
+
+Deployer -> FirebaseService ++ : login()
+FirebaseService --> Bob : starts interactive login
+Bob -> FirebaseService : signs in
+FirebaseService --> Deployer -- : sign in finished
+
+Deployer -> FirebaseService ++ : acceptTerms()
+FirebaseService --> Bob : asks to accept terms of Firebase service
+Bob -> FirebaseService : accepts terms
+FirebaseService -> Deployer  -- : terms accepted
+
 Deployer -> GCloudService ++ : createProject()
 
 GCloudService --> Bob : asks to enter the regionId
 Bob -> GCloudService : enters the regionId
 
 GCloudService --> Deployer -- : gcloud project has been created
-
-Deployer -> FirebaseService ++ : login()
-FirebaseService --> Bob : starts interactive login
-Bob -> FirebaseService : signs in
-FirebaseService --> Deployer -- : sign in finished
 
 Deployer -> FirebaseService ++ : createWebApp(projectId)
 
@@ -57,19 +67,28 @@ NpmService --> Deployer -- : dependencies have been installed
 Deployer -> NpmService ++ : installDependencies(firebaseFunctionsPath)
 NpmService --> Deployer --: dependencies have been installed
 
-Deployer -> FirebaseService ++ : deployFirestore(firestorePath)
-
-FirebaseService --> Bob : Blaze billing account warning
-Bob -> FirebaseService : enters any key
-
-FirebaseService --> Bob : firebase analytics warning
-Bob -> FirebaseService : enters any key
-
-FirebaseService --> Deployer -- : firestore has been deployed
-
-
 Deployer -> FlutterService ++ : build(appPath)
 FlutterService -> Deployer -- : build finished
+
+Deployer -> FirebaseService ++ : upgradeBillingPlan(projectId)
+FirebaseService --> Bob : asks to upgrade billing plan
+Bob -> FirebaseService : upgrades billing plan
+FirebaseService -> Deployer  -- : billing plan upgraded
+
+Deployer -> FirebaseService ++ : enableAnalytics(projectId)
+FirebaseService --> Bob : asks to enable Analytics
+Bob -> FirebaseService : enables Analytics
+FirebaseService -> Deployer  -- : Analytics enabled
+
+Deployer -> FirebaseService ++ : initializeFirestoreData(projectId)
+FirebaseService --> Bob : asks to initialize Firestore data
+Bob -> FirebaseService : initializes Firestore data
+FirebaseService -> Deployer  -- : Firestore data initialized
+
+Deployer -> FirebaseService ++ : configureAuth(projectId)
+FirebaseService --> Bob : asks to configure Auth providers
+Bob -> FirebaseService : enters Google sign in client Id
+FirebaseService -> Deployer  -- : googleClientId
 
 Deployer -> SentryService ++ : login()
 SentryService --> Bob : starts interactive login
@@ -84,6 +103,9 @@ FileHelper -> SentryService -- : config file
 SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> SentryService -- : config has been updated
 SentryService -> Deployer -- : release created
+
+Deployer -> FirebaseService ++ : deployFirestore(firestorePath)
+FirebaseService --> Deployer -- : firestore has been deployed
 
 Deployer -> FirebaseService ++ : deployHosting(projectId, target, appPath)
 FirebaseService -> Deployer -- : deploy finished

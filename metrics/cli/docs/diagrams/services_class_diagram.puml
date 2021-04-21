@@ -7,6 +7,11 @@ package firebase {
             + createWebApp(String projectId): Future<void>
             + deployHosting(String projectId, String target, String appPath): Future<void>
             + deployFirebase(String projectId, String firebasePath): Future<void>
+            + configureAuth(String projectId) : String
+            + enableAnalytics(String projectId) : void
+            + initializeFirestoreData(String projectId) : void
+            + upgradeBillingPlan(String projectId) : void
+            + acceptTerms() : void
         }
     }
 
@@ -38,6 +43,7 @@ package gcloud {
         interface GCloudService {
             + login() : Future<void>
             + createProject() : Future<String>
+            + acceptTerms() : void
         }
 
     }
