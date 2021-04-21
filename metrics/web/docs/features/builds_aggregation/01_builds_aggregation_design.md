@@ -24,7 +24,7 @@ The domain layer should provide an interface for data fetching. Also, the layer 
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
-- Add the `ReceiveBuildDayProjectMetricsUpdates` usecase with the `BuildDayParam`.
+- Add the `ReceiveBuildDayProjectMetricsUpdates` usecase with the `ProjectBuildDayParam`.
 
 The following class diagram demonstrates the domain layer structure:
 
