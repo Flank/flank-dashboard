@@ -64,9 +64,9 @@ class FirestoreDestinationClientAdapter
     final buildJson = build.toJson();
 
     if (build.buildStatus == BuildStatus.inProgress) {
-      return documentReference
-          .create(buildJson)
-          .catchError((error) => _handleCreateBuildError(error, buildJson));
+      return documentReference.create(buildJson).catchError((error) {
+        _handleCreateBuildError(error, buildJson);
+      });
     }
 
     return documentReference.set(buildJson);
@@ -75,9 +75,8 @@ class FirestoreDestinationClientAdapter
   /// Handles the given [error] occurred during creating a build with the
   /// given [buildJson].
   ///
-  /// Ignores the given [error] if it is a [FirestoreException] with the
-  /// [FirestoreExceptionCode.alreadyExists] code. Otherwise, throws
-  /// the given [error].
+  /// Ignores the given [error] if it satisfies the [_isAlreadyExistsError]
+  /// method. Otherwise, throws the given [error].
   void _handleCreateBuildError(
     Object error,
     Map<String, dynamic> buildJson,
