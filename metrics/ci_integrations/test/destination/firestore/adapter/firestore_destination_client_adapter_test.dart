@@ -15,21 +15,19 @@ import '../test_utils/test_data/document_mock.dart';
 import '../test_utils/test_data/document_reference_mock.dart';
 import '../test_utils/test_data/firestore_mock.dart';
 
-// ignore_for_file: avoid_implementing_value_types
+// ignore_for_file: avoid_implementing_value_types, avoid_redundant_argument_values
 
 void main() {
   group("FirestoreDestinationClientAdapter", () {
     const testProjectId = 'projectId';
     const testDocumentId = 'documentId';
-    const testProjectIds = [
-      '${testProjectId}_1',
-      '${testProjectId}_2',
-    ];
     const builds = [
       BuildData(buildNumber: 1),
       BuildData(buildNumber: 2),
     ];
     const firestoreException = FirestoreException(null, [], null);
+    const alreadyExistsFirestoreException =
+        FirestoreException(FirestoreExceptionCode.alreadyExists, [], '');
 
     final currentDate = DateTime.now();
     final buildData = BuildData(
@@ -99,6 +97,32 @@ void main() {
       return when(_collectionReferenceMock.getDocuments());
     }
 
+    PostExpectation<Future<Document>> whenCreateBuild({
+      Map<String, dynamic> withBuildJson,
+    }) {
+      when(
+        _firestoreMock.collection('build'),
+      ).thenReturn(_collectionReferenceMock);
+      when(
+        _collectionReferenceMock.document(argThat(startsWith(testProjectId))),
+      ).thenReturn(_documentReferenceMock);
+
+      return when(_documentReferenceMock.create(withBuildJson ?? any));
+    }
+
+    PostExpectation<Future<void>> whenSetBuild({
+      Map<String, dynamic> withBuildJson,
+    }) {
+      when(
+        _firestoreMock.collection('build'),
+      ).thenReturn(_collectionReferenceMock);
+      when(
+        _collectionReferenceMock.document(argThat(startsWith(testProjectId))),
+      ).thenReturn(_documentReferenceMock);
+
+      return when(_documentReferenceMock.set(withBuildJson ?? any));
+    }
+
     PostExpectation<Future<List<Document>>> whenFetchBuildsWithStatus({
       String withProjectId = testProjectId,
       BuildStatus withBuildStatus = BuildStatus.successful,
@@ -165,7 +189,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() does not add builds if fetching the project throws",
+      ".addBuilds() does not add builds if fetching a project throws",
       () async {
         whenFetchProject().thenAnswer((_) => Future.error(firestoreException));
 
@@ -189,47 +213,117 @@ void main() {
     );
 
     test(
-      ".addBuilds() throws a DestinationError if creating a build throws",
+      ".addBuilds() adds the given builds using the .set() method for finished builds",
+      () async {
+        whenCheckProjectExists().thenReturn(true);
+        whenSetBuild().thenAnswer((_) => Future.value());
+        whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
+
+        const builds = [
+          BuildData(buildNumber: 1, buildStatus: BuildStatus.successful),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.failed),
+          BuildData(buildNumber: 3, buildStatus: BuildStatus.inProgress),
+        ];
+        final buildJsons = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
+
+        await adapter.addBuilds(testProjectId, builds);
+
+        verify(
+          _documentReferenceMock.set(buildJsons[0]),
+        ).called(once);
+        verify(
+          _documentReferenceMock.set(buildJsons[1]),
+        ).called(once);
+        verifyNever(_documentReferenceMock.set(buildJsons[2]));
+      },
+    );
+
+    test(
+      ".addBuilds() adds the given builds using the .create() method for in-progress builds",
+      () async {
+        whenCheckProjectExists().thenReturn(true);
+        whenCreateBuild().thenAnswer((_) => Future.value());
+
+        const builds = [
+          BuildData(buildNumber: 1, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 3, buildStatus: BuildStatus.successful),
+        ];
+        final buildJsons = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
+
+        await adapter.addBuilds(testProjectId, builds);
+
+        verify(
+          _documentReferenceMock.create(buildJsons[0]),
+        ).called(once);
+        verify(
+          _documentReferenceMock.create(buildJsons[1]),
+        ).called(once);
+        verifyNever(_documentReferenceMock.create(buildJsons[2]));
+      },
+    );
+
+    test(
+      ".addBuilds() adds builds in the given order",
+      () async {
+        whenCheckProjectExists().thenReturn(true);
+        whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
+        whenSetBuild().thenAnswer((_) => Future.value());
+        const builds = [
+          BuildData(buildNumber: 1),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
+        ];
+        final buildsData = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
+
+        await adapter.addBuilds(testProjectId, builds);
+
+        verifyInOrder([
+          _documentReferenceMock.set(buildsData[0]),
+          _documentReferenceMock.create(buildsData[1]),
+        ]);
+      },
+    );
+
+    test(
+      ".addBuilds() throws a DestinationError if adding a finished build fails",
       () {
-        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
-        when(_documentMock.exists).thenReturn(true);
-        when(_documentMock.id).thenReturn(testProjectId);
-        when(_firestoreMock.collection('build'))
-            .thenReturn(_collectionReferenceMock);
-        when(_collectionReferenceMock.document(
-          argThat(anyOf(testProjectIds)),
-        )).thenReturn(_documentReferenceMock);
-        when(_documentReferenceMock.create(argThat(anything)))
-            .thenAnswer((_) => Future.error(firestoreException));
+        whenCheckProjectExists().thenReturn(true);
+        whenSetBuild().thenAnswer((_) => Future.error(firestoreException));
+        const builds = [BuildData(buildNumber: 1)];
 
         final result = adapter.addBuilds(testProjectId, builds);
+
         expect(result, throwsDestinationError);
       },
     );
 
     test(
-      ".addBuilds() adds given builds for the given project",
-      () async {
-        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
-        when(_documentMock.exists).thenReturn(true);
-        when(_documentMock.id).thenReturn(testProjectId);
-        when(_firestoreMock.collection('build'))
-            .thenReturn(_collectionReferenceMock);
-        when(_collectionReferenceMock.document(
-          argThat(anyOf(testProjectIds)),
-        )).thenReturn(_documentReferenceMock);
-        when(_documentReferenceMock.create(argThat(anything)))
-            .thenAnswer((_) => Future.value(_documentMock));
+      ".addBuilds() throws a DestinationError if adding an in-progress build fails",
+      () {
+        whenCheckProjectExists().thenReturn(true);
+        whenCreateBuild().thenAnswer((_) => Future.error(firestoreException));
+        const builds = [
+          BuildData(buildNumber: 1, buildStatus: BuildStatus.inProgress),
+        ];
 
-        await adapter.addBuilds(testProjectId, builds);
+        final result = adapter.addBuilds(testProjectId, builds);
 
-        verify(_documentReferenceMock.create(any)).called(builds.length);
+        expect(result, throwsDestinationError);
       },
     );
 
     test(
-      ".addBuilds() stops adding builds if adding one of them is failed",
+      ".addBuilds() stops adding builds if adding a finished build fails",
       () async {
+        whenCheckProjectExists().thenReturn(true);
+        whenSetBuild().thenAnswer((_) => Future.value());
+
         const builds = [
           BuildData(buildNumber: 1),
           BuildData(buildNumber: 2),
@@ -239,57 +333,70 @@ void main() {
             .map((build) => build.copyWith(projectId: testProjectId).toJson())
             .toList();
 
-        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
-        when(_documentMock.exists).thenReturn(true);
-        when(_documentMock.id).thenReturn(testProjectId);
-        when(_firestoreMock.collection('build'))
-            .thenReturn(_collectionReferenceMock);
-
-        when(_collectionReferenceMock.document(any))
-            .thenReturn(_documentReferenceMock);
-
-        when(_documentReferenceMock.create(argThat(anyOf(
-          buildsData[0],
-          buildsData[2],
-        )))).thenAnswer((_) => Future.value(_documentMock));
-        when(_documentReferenceMock.create(buildsData[1]))
-            .thenAnswer((_) => Future.error(firestoreException));
+        whenSetBuild(
+          withBuildJson: buildsData[1],
+        ).thenAnswer((_) => Future.error(firestoreException));
 
         final result = adapter.addBuilds(testProjectId, builds);
-        await expectLater(result, throwsDestinationError);
 
-        verify(_documentReferenceMock.create(any)).called(2);
+        await expectLater(result, throwsDestinationError);
+        verify(_documentReferenceMock.set(buildsData[0])).called(once);
+        verify(_documentReferenceMock.set(buildsData[1])).called(once);
+        verifyNever(_documentReferenceMock.set(buildsData[2]));
+      },
+    );
+
+    test(
+      ".addBuilds() stops adding builds if adding an in-progress build fails",
+      () async {
+        whenCheckProjectExists().thenReturn(true);
+        whenCreateBuild().thenAnswer((_) => Future.value(_documentMock));
+
+        const builds = [
+          BuildData(buildNumber: 1, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 3, buildStatus: BuildStatus.inProgress),
+        ];
+        final buildsData = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
+
+        whenCreateBuild(
+          withBuildJson: buildsData[1],
+        ).thenAnswer((_) => Future.error(firestoreException));
+
+        final result = adapter.addBuilds(testProjectId, builds);
+
+        await expectLater(result, throwsDestinationError);
+        verify(_documentReferenceMock.create(buildsData[0])).called(once);
+        verify(_documentReferenceMock.create(buildsData[1])).called(once);
         verifyNever(_documentReferenceMock.create(buildsData[2]));
       },
     );
 
-    test(".addBuilds() adds builds in the given order", () async {
-      const builds = [
-        BuildData(buildNumber: 1),
-        BuildData(buildNumber: 2),
-      ];
-      final buildsData = builds
-          .map((build) => build.copyWith(projectId: testProjectId).toJson())
-          .toList();
+    test(
+      ".addBuilds() continues adding builds if adding an in-progress build fails with the already exists exception",
+      () async {
+        const builds = [
+          BuildData(buildNumber: 1),
+          BuildData(buildNumber: 2, buildStatus: BuildStatus.inProgress),
+          BuildData(buildNumber: 3),
+        ];
+        final buildsData = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
 
-      whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
-      when(_documentMock.exists).thenReturn(true);
-      when(_documentMock.id).thenReturn(testProjectId);
-      when(_firestoreMock.collection('build'))
-          .thenReturn(_collectionReferenceMock);
+        whenCheckProjectExists().thenReturn(true);
+        whenSetBuild().thenAnswer((_) => Future.value());
+        whenCreateBuild(
+          withBuildJson: buildsData[1],
+        ).thenAnswer((_) => Future.error(alreadyExistsFirestoreException));
 
-      when(_collectionReferenceMock.document(any))
-          .thenReturn(_documentReferenceMock);
-      when(_documentReferenceMock.create(any))
-          .thenAnswer((_) => Future.value(_documentMock));
+        await adapter.addBuilds(testProjectId, builds);
 
-      await adapter.addBuilds(testProjectId, builds);
-
-      verifyInOrder([
-        _documentReferenceMock.create(buildsData[0]),
-        _documentReferenceMock.create(buildsData[1]),
-      ]);
-    });
+        verify(_documentReferenceMock.set(buildsData[2])).called(once);
+      },
+    );
 
     test(
       ".fetchLastBuild() throws an DestinationError if fetching a project with the given id fails",
