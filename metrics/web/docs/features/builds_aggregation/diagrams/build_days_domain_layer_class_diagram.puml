@@ -33,12 +33,6 @@ package dashboard.domain {
             + buildsPerformance : DateTimeSet<BuildPerformance>
             + averageBuildDuration : Duration
         }
-        class ProjectBuildStatusMetric {
-            + status : BuildStatus
-        }
-        class BuildResultMetric {
-            + buildResults : List<BuildResult>
-        }
         class BuildDayProjectMetrics {
             + buildNumberMetric : BuildNumberMetric
             + performanceMetric : PerformanceMetric
@@ -82,14 +76,12 @@ ReceiveBuildDayProjectMetricsUpdates --> BuildDayRepository : uses
 ReceiveBuildDayProjectMetricsUpdates -up-> ProjectIdParam : uses
 ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides
 
+ReceiveProjectMetricsUpdates -right-..|> UseCase
 ReceiveProjectMetricsUpdates -up-> ProjectIdParam : uses
 ReceiveProjectMetricsUpdates -down--> DashboardProjectMetrics : provides
 
 BuildDayProjectMetrics --> BuildNumberMetric : uses
 BuildDayProjectMetrics --> PerformanceMetric : uses
 PerformanceMetric --> BuildPerformance : uses
-
-DashboardProjectMetrics --> ProjectBuildStatusMetric : uses
-DashboardProjectMetrics --> BuildResultMetric : uses
 
 @enduml
