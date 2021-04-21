@@ -117,13 +117,16 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() fetches builds which are not building",
+      ".fetchBuilds() fetches both finished and building builds",
       () {
         final jenkinsBuilds = [
           createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: true),
         ];
-        final expected = [createBuildData(buildNumber: 1)];
+        final expected = [
+          createBuildData(buildNumber: 1),
+          createBuildData(buildNumber: 2),
+        ];
 
         responses.addBuilds(jenkinsBuilds);
 
@@ -304,7 +307,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() fetches builds which are not building",
+      ".fetchBuildsAfter() fetches both finished and building builds",
       () {
         const build = BuildData(buildNumber: 1);
         final jenkinsBuilds = [
@@ -312,7 +315,10 @@ void main() {
           createJenkinsBuild(buildNumber: 2, building: false),
           createJenkinsBuild(buildNumber: 3, building: true),
         ];
-        final expected = [createBuildData(buildNumber: 2)];
+        final expected = [
+          createBuildData(buildNumber: 2),
+          createBuildData(buildNumber: 3),
+        ];
 
         responses.addBuilds(jenkinsBuilds);
 

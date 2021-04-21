@@ -173,21 +173,19 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     int startAfterBuildNumber,
   }) {
     final buildData = builds.where((build) {
-      return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
+      return _checkBuildInRange(build, startAfterBuildNumber);
     }).map((build) => _mapJenkinsBuild(jobName, build));
 
     return buildData.toList();
   }
 
-  /// Checks a [build] to be not [JenkinsBuild.building] and
-  /// satisfy a [minBuildNumber] parameter.
+  /// Checks a [build] to satisfy a [minBuildNumber] parameter.
   ///
   /// The [minBuildNumber] is ignored if `null` or [num.isNegative].
-  bool _checkBuildFinishedAndInRange(JenkinsBuild build, int minBuildNumber) {
-    final buildNumberValid = minBuildNumber == null ||
+  bool _checkBuildInRange(JenkinsBuild build, int minBuildNumber) {
+    return minBuildNumber == null ||
         minBuildNumber.isNegative ||
         build.number > minBuildNumber;
-    return !build.building && buildNumberValid;
   }
 
   /// Maps the given [jenkinsBuild] to the [BuildData] instance.
