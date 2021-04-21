@@ -50,17 +50,16 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         );
       }
 
-      List<BuildData> updatedBuilds;
-      updatedBuilds = await _fetchUpdatedBuilds(
+      List<BuildData> buildUpdates = await _fetchBuildUpdates(
         inProgressBuilds,
         syncConfig,
       );
 
       if (syncConfig.coverage) {
-        updatedBuilds = await addCoverageData(updatedBuilds);
+        buildUpdates = await addCoverageData(buildUpdates);
       }
 
-      await destinationClient.updateBuilds(destinationProjectId, updatedBuilds);
+      await destinationClient.updateBuilds(destinationProjectId, buildUpdates);
 
       return const InteractionResult.success();
     } catch (error) {
@@ -70,54 +69,55 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
     }
   }
 
-  /// Fetches the updated [BuildData] using the given [inProgressBuilds] and
-  /// [syncConfig].
-  Future<List<BuildData>> _fetchUpdatedBuilds(
+  /// Resynchronizes each [BuildData] of the given [inProgressBuilds] list
+  /// and returns a [List] of [BuildData] needed to be updated in the
+  /// destination.
+  Future<List<BuildData>> _fetchBuildUpdates(
     List<BuildData> inProgressBuilds,
     SyncConfig syncConfig,
   ) async {
-    final updatedBuilds = <BuildData>[];
+    final buildUpdates = <BuildData>[];
 
     for (final build in inProgressBuilds) {
-      final refreshedBuild = await _syncInProgressBuild(syncConfig, build);
+      final resyncedBuild = await _resyncBuild(syncConfig, build);
 
-      if (refreshedBuild != null) updatedBuilds.add(refreshedBuild);
+      if (resyncedBuild != null) buildUpdates.add(resyncedBuild);
     }
 
-    return updatedBuilds;
+    return buildUpdates;
   }
 
-  /// Synchronizes the given in-progress [build].
+  /// Resynchronizes the given [build].
   ///
-  /// First, fetches the refreshed [BuildData] using the given
+  /// First, fetches the [BuildData] for the given [build] using the
   /// [SyncConfig.sourceProjectId] and [BuildData.buildNumber] using the
   /// [sourceClient].
   ///
-  /// Timeouts the build if the refreshed [BuildData] is `null` or has the
+  /// Timeouts the updated build if it is `null` or has the
   /// [BuildData.buildStatus] equal to the [BuildStatus.inProgress] and the
-  /// given [SyncConfig.inProgressTimeout] is reached. Returns `null` if the
-  /// [SyncConfig.inProgressTimeout] is not reached.
+  /// given [SyncConfig.inProgressTimeout] is exceeded. Returns `null` if the
+  /// [SyncConfig.inProgressTimeout] is not exceeded.
   ///
-  /// Otherwise, returns the refreshed [BuildData] with the updated
-  /// [BuildData.id] and the [BuildData.projectId].
-  Future<BuildData> _syncInProgressBuild(
+  /// Otherwise, returns the [BuildData] with the updated [BuildData.id] and the
+  /// [BuildData.projectId].
+  Future<BuildData> _resyncBuild(
     SyncConfig syncConfig,
     BuildData build,
   ) async {
-    final refreshedBuild = await _fetchBuild(
+    final updatedBuild = await _fetchBuild(
       syncConfig.sourceProjectId,
       build.buildNumber,
     );
 
-    if (refreshedBuild == null ||
-        refreshedBuild.buildStatus == BuildStatus.inProgress) {
-      return _processInProgressBuild(build, syncConfig.inProgressTimeout);
+    if (updatedBuild == null ||
+        updatedBuild.buildStatus == BuildStatus.inProgress) {
+      return _processUpdatedBuild(build, syncConfig.inProgressTimeout);
     }
 
-    return refreshedBuild.copyWith(id: build.id, projectId: build.projectId);
+    return updatedBuild.copyWith(id: build.id, projectId: build.projectId);
   }
 
-  /// Fetches a build with the given [buildNumber] of the project identified
+  /// Fetches a build with the given [buildNumber] of a project identified
   /// by the given [sourceProjectId].
   ///
   /// Returns `null` if fetching a build fails.
@@ -127,13 +127,11 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         .catchError((_) => null);
   }
 
-  /// Processes the given in-progress [build].
+  /// Processes the given updated [build].
   ///
-  /// Delegates to [_timeoutBuild] if the given [build] reaches the given
-  /// [timeout].
-  ///
-  /// Otherwise, returns `null`.
-  BuildData _processInProgressBuild(BuildData build, Duration timeout) {
+  /// Timeouts the given [build] using the [_timeoutBuild] if the given
+  /// [build] exceeds the given [timeout]. Otherwise, returns `null`.
+  BuildData _processUpdatedBuild(BuildData build, Duration timeout) {
     if (_shouldTimeoutBuild(build.startedAt, timeout)) {
       return _timeoutBuild(build, timeout);
     }
@@ -141,10 +139,10 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
     return null;
   }
 
-  /// Determines whether a build with the given [startedAt] date reaches
+  /// Determines whether a build with the given [startedAt] date exceeds
   /// the given [timeout].
   ///
-  /// Returns `true` if the difference between the current date and
+  /// Returns `true` if the difference between the [DateTime.now] and
   /// the [startedAt] is greater than or equal to the given [timeout].
   /// Otherwise, returns `false`.
   bool _shouldTimeoutBuild(DateTime startedAt, Duration timeout) {
