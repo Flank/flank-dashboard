@@ -27,7 +27,7 @@ package common.domain {
 
     package usecases.parameters {
         class ProjectIdParam {
-            + projectId : String
+            + id : String
         }
     }
 }
