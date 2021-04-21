@@ -14,6 +14,7 @@ void main() {
     const buildStatus = BuildStatus.successful;
     const duration = Duration(minutes: 10);
     const workflowName = 'workflow';
+    const apiUrl = 'url';
     const url = 'url';
     final coverage = Percent(1.0);
 
@@ -23,6 +24,7 @@ void main() {
       'buildStatus': buildStatus.toString(),
       'duration': duration.inMilliseconds,
       'workflowName': workflowName,
+      'apiUrl': apiUrl,
       'url': url,
       'coverage': coverage.value,
     };
@@ -36,6 +38,7 @@ void main() {
       expect(buildData.startedAt, equals(startedAt));
       expect(buildData.duration, equals(duration));
       expect(buildData.workflowName, equals(workflowName));
+      expect(buildData.apiUrl, equals(apiUrl));
       expect(buildData.url, equals(url));
       expect(buildData.coverage, equals(coverage));
     });
