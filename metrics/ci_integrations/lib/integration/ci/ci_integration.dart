@@ -53,7 +53,7 @@ class CiIntegration with LoggerMixin {
   String _getStageErrorMessage(SyncStage stage, InteractionResult stageResult) {
     String message = 'Failed to run the ${stage.runtimeType}';
 
-    if (stageResult != null && stageResult.message != null) {
+    if (stageResult?.message != null) {
       message = '$message due to the following error: ${stageResult.message}';
     }
 
