@@ -21,6 +21,9 @@ class BuildkiteMockServer extends ApiMockServer {
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
 
+  /// A [Random] instance this mock server uses to generate random data.
+  static final Random _random = Random();
+
   /// Returns a base path of the Buildkite API.
   String get basePath => '/organizations/organization_slug';
 
@@ -121,19 +124,19 @@ class BuildkiteMockServer extends ApiMockServer {
         AuthCredentials(token: 'token'),
       ];
 
-  /// Responses with a list of [BuildkiteBuild]s having the build state
+  /// Responses with a list of [BuildkiteBuild]s having the build states
   /// and the finished at specified in the [request] parameters.
   ///
   /// Takes the per page and the page number parameters from the [request]
   /// and returns the per page number of [BuildkiteBuild]s from the page with
   /// the page number.
   Future<void> _pipelineBuildsResponse(HttpRequest request) async {
-    final state = _extractBuildState(request);
+    final states = _extractBuildStates(request);
     final perPage = _getValidPerPage(_extractPerPage(request));
     final pageNumber = _extractPage(request);
     final finishedFrom = _extractFinishedFrom(request);
 
-    List<BuildkiteBuild> builds = _generateBuilds(state, finishedFrom);
+    List<BuildkiteBuild> builds = _generateBuilds(states, finishedFrom);
 
     _setNextPageUrlHeader(request, builds.length, perPage, pageNumber);
 
@@ -231,35 +234,54 @@ class BuildkiteMockServer extends ApiMockServer {
     return int.tryParse(buildNumber);
   }
 
-  /// Returns the [BuildkiteBuildState], based on the `state` query parameter
-  /// of the given [request].
-  BuildkiteBuildState _extractBuildState(HttpRequest request) {
-    final state = request.uri.queryParameters['state'];
+  /// Returns a [List] of [BuildkiteBuildState]s, based on the `state` query
+  /// parameter of the given [request].
+  List<BuildkiteBuildState> _extractBuildStates(HttpRequest request) {
+    final requestedStates = request.uri.queryParametersAll['state'];
 
-    return const BuildkiteBuildStateMapper().map(state);
+    if (requestedStates == null) return null;
+
+    const buildkiteStateMapper = BuildkiteBuildStateMapper();
+
+    return requestedStates
+        .map((state) => buildkiteStateMapper.map(state))
+        .toList();
   }
 
-  /// Generates a list of [BuildkiteBuild]s with the given [state]
-  /// and [finishedFrom].
+  /// Generates a list of [BuildkiteBuild]s with the [BuildkiteBuildState]s
+  /// from the given [states] and [finishedFrom].
   ///
-  /// If the given [state] is `null`, the [BuildkiteBuildState.finished] is used.
   /// If the given [finishedFrom] is `null`, the [DateTime.now] is used.
+  /// Delegates selecting a random [BuildkiteBuildState]s from the given [states]
+  /// to the [_selectRandomState] method.
   List<BuildkiteBuild> _generateBuilds([
-    BuildkiteBuildState state,
+    List<BuildkiteBuildState> states,
     DateTime finishedFrom,
   ]) {
-    return List.generate(
-      100,
-      (index) => BuildkiteBuild(
+    return List.generate(100, (index) {
+      return BuildkiteBuild(
         id: 'id',
         number: index,
         blocked: false,
-        state: state ?? BuildkiteBuildState.finished,
+        state: _selectRandomState(states),
         webUrl: 'url',
         startedAt: DateTime(2020),
         finishedAt: finishedFrom ?? DateTime.now(),
-      ),
-    );
+      );
+    });
+  }
+
+  /// Selects a random [BuildkiteBuildState] from the given [states].
+  ///
+  /// Returns a [BuildkiteBuildState.passed] if the given [states] is `null` or
+  /// [List.isEmpty]. Otherwise, returns a random [BuildkiteBuildState] selected
+  /// from the given [states].
+  BuildkiteBuildState _selectRandomState([List<BuildkiteBuildState> states]) {
+    if (states == null || states.isEmpty) return BuildkiteBuildState.passed;
+
+    final randomStateIndex = _random.nextInt(states.length);
+
+    return states[randomStateIndex];
   }
 
   /// Generates a list of [BuildkiteArtifact]s.
