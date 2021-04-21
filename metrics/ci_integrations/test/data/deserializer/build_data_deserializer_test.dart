@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
@@ -10,6 +10,7 @@ void main() {
     const id = 'id';
     const duration = Duration(milliseconds: 100000);
     const url = 'testUrl';
+    const apiUrl = 'testApiUrl';
     const buildNumber = 1;
     const buildStatus = BuildStatus.failed;
     const workflowName = 'testWorkflowName';
@@ -20,6 +21,7 @@ void main() {
       'duration': duration.inMilliseconds,
       'startedAt': startedAt,
       'url': url,
+      'apiUrl': apiUrl,
       'buildNumber': buildNumber,
       'buildStatus': buildStatus.toString(),
       'workflowName': workflowName,
@@ -41,6 +43,7 @@ void main() {
         duration: duration,
         startedAt: startedAt,
         url: url,
+        apiUrl: apiUrl,
         buildNumber: buildNumber,
         buildStatus: buildStatus,
         workflowName: workflowName,
