@@ -34,6 +34,7 @@ package dashboard.domain {
             + averageBuildDuration : Duration
         }
         class BuildDayProjectMetrics {
+            + projectId : String
             + buildNumberMetric : BuildNumberMetric
             + performanceMetric : PerformanceMetric
         }
