@@ -126,26 +126,12 @@ void main() {
     );
 
     test(
-      ".sync() returns an error with the message specifying which sync stage is failed",
+      ".sync() returns an error with the message specifying the failed sync stage",
       () async {
         final expectedStageType = '${firstSyncStage.runtimeType}';
         when(
           firstSyncStage.call(syncConfig),
-        ).thenErrorWith(null, null);
-
-        final result = await ciIntegration.sync(syncConfig);
-
-        expect(result.message, contains(expectedStageType));
-      },
-    );
-
-    test(
-      ".sync() returns an error with the message specifying which sync stage returned null",
-      () async {
-        final expectedStageType = '${firstSyncStage.runtimeType}';
-        when(
-          firstSyncStage.call(syncConfig),
-        ).thenAnswer((_) => Future.value(null));
+        ).thenErrorWith();
 
         final result = await ciIntegration.sync(syncConfig);
 

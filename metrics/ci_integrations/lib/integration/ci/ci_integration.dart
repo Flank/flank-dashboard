@@ -45,11 +45,11 @@ class CiIntegration with LoggerMixin {
     );
   }
 
-  /// Returns a message that describes an error occurred during running
-  /// the given [stage] using the given [stageResult].
+  /// Returns a message that describes an error occurred during
+  /// the given [stage], finished with the given [stageResult].
   ///
-  /// Adds the [InteractionResult.message] to the returned message if both
-  /// given [stageResult] and it's [InteractionResult.message] is not `null`.
+  /// Adds the [InteractionResult.message] of the given [stageResult], if this
+  /// result is not `null`.
   String _getStageErrorMessage(SyncStage stage, InteractionResult stageResult) {
     String message = 'Failed to run the ${stage.runtimeType}';
 

@@ -21,8 +21,6 @@ class SyncStagesFactory {
   ///
   /// Throws an [ArgumentError] if the given [sourceClient] or
   /// [destinationClient] is `null`.
-  ///
-  /// The result is an [UnmodifiableListView].
   List<SyncStage> create({
     @required SourceClient sourceClient,
     @required DestinationClient destinationClient,

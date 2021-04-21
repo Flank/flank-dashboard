@@ -231,9 +231,8 @@ class SyncCommand extends CiIntegrationCommand<void> with LoggerMixin {
     return client;
   }
 
-  /// Creates a [List] of [SyncStage]s using the [SyncStagesFactory.create]
-  /// and returns a new instance of the [CiIntegration] with the
-  /// created [SyncStage]s.
+  /// Creates a new instance of the [CiIntegration] with a [List] of
+  /// [SyncStage]s using the [SyncStagesFactory.create] method.
   CiIntegration createCiIntegration(
     SourceClient sourceClient,
     DestinationClient destinationClient,
