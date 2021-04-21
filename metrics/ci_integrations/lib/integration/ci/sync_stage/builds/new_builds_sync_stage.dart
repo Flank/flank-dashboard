@@ -60,12 +60,10 @@ class NewBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
         newBuilds,
       );
 
-      return const InteractionResult.success(
-        message: 'The data has been synced successfully!',
-      );
+      return const InteractionResult.success();
     } catch (error) {
       return InteractionResult.error(
-        message: 'Failed to sync the data! Details: $error',
+        message: '$error',
       );
     }
   }

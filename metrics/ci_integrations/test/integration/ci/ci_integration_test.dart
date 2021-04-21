@@ -2,72 +2,110 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/ci/ci_integration.dart';
-import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
-import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
-import 'package:ci_integration/integration/interface/source/client/source_client.dart';
-import 'package:metrics_core/metrics_core.dart';
+import 'package:ci_integration/integration/ci/sync_stage/sync_stage.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../cli/test_util/test_data/config_test_data.dart';
-import 'test_utils/stub/destination_client_stub.dart';
-import 'test_utils/stub/source_client_stub.dart';
-import 'test_utils/test_data/builds_test_data.dart';
+import '../../test_utils/extensions/interaction_result_answer.dart';
+import '../../test_utils/matchers.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("CiIntegration", () {
     final syncConfig = ConfigTestData.syncConfig;
 
+    final firstSyncStage = _SyncStageMock();
+    final secondSyncStage = _SyncStageMock();
+    final syncStages = [firstSyncStage, secondSyncStage];
+    final ciIntegration = CiIntegration(stages: syncStages);
+
+    tearDown(() {
+      reset(firstSyncStage);
+      reset(secondSyncStage);
+    });
+
     test(
-      "throws an ArgumentError if the given source client is null",
+      "throws an ArgumentError if the given stages list is null",
       () {
-        expect(
-          () => CiIntegration(
-            sourceClient: null,
-            destinationClient: DestinationClientStub(),
-          ),
-          throwsArgumentError,
-        );
+        expect(() => CiIntegration(stages: null), throwsArgumentError);
       },
     );
 
     test(
-      "throws an ArgumentError if the given destination client is null",
+      "creates an instance with the given sync stages",
       () {
-        expect(
-          () => CiIntegration(
-            sourceClient: SourceClientStub(),
-            destinationClient: null,
-          ),
-          throwsArgumentError,
-        );
+        final ciIntegration = CiIntegration(stages: syncStages);
+
+        expect(ciIntegration.stages, equals(syncStages));
       },
     );
 
     test(
       ".sync() throws an ArgumentError if the given config is null",
       () {
-        final ciIntegration = CiIntegration(
-          sourceClient: SourceClientStub(),
-          destinationClient: DestinationClientStub(),
-        );
-
         expect(() => ciIntegration.sync(null), throwsArgumentError);
       },
     );
 
     test(
-      ".sync() returns an error if a source client throws fetching all builds",
+      ".sync() calls each given sync stage only once",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsCallback: (_) => throw UnimplementedError(),
-        );
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
-        final ciIntegration = CiIntegration(
-          sourceClient: sourceClient,
-          destinationClient: destinationClient,
-        );
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
+
+        await ciIntegration.sync(syncConfig);
+
+        verify(firstSyncStage.call(syncConfig)).called(once);
+        verify(secondSyncStage.call(syncConfig)).called(once);
+      },
+    );
+
+    test(
+      ".sync() calls the given sync stages in the same order with the given sync config",
+      () async {
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
+
+        await ciIntegration.sync(syncConfig);
+
+        verifyInOrder([
+          firstSyncStage.call(syncConfig),
+          secondSyncStage.call(syncConfig),
+        ]);
+      },
+    );
+
+    test(
+      ".sync() does not continue the sync if one of the stages fails",
+      () async {
+        when(firstSyncStage.call(syncConfig)).thenErrorWith();
+
+        await ciIntegration.sync(syncConfig);
+
+        verifyNever(secondSyncStage.call(any));
+      },
+    );
+
+    test(
+      ".sync() does not continue the sync if one of the stages returns null",
+      () async {
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenAnswer((_) => Future.value(null));
+
+        await ciIntegration.sync(syncConfig);
+
+        verifyNever(secondSyncStage.call(any));
+      },
+    );
+
+    test(
+      ".sync() returns an error if one of the stages fails",
+      () async {
+        when(firstSyncStage.call(syncConfig)).thenErrorWith();
+
         final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
@@ -75,12 +113,12 @@ void main() {
     );
 
     test(
-      ".sync() returns an error if a source client throws fetching the builds after the given one",
+      ".sync() returns an error if one of the stages returns null",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
-        );
-        final ciIntegration = CiIntegrationStub(sourceClient: sourceClient);
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenAnswer((_) => Future.value(null));
+
         final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isError, isTrue);
@@ -88,156 +126,45 @@ void main() {
     );
 
     test(
-      ".sync() returns an error if a destination client throws fetching the last build",
+      ".sync() returns an error with the message specifying the failed sync stage",
       () async {
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => throw UnimplementedError(),
-        );
-        final ciIntegration = CiIntegrationStub(
-          destinationClient: destinationClient,
-        );
+        final expectedStageType = '${firstSyncStage.runtimeType}';
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenErrorWith();
+
         final result = await ciIntegration.sync(syncConfig);
 
-        expect(result.isError, isTrue);
+        expect(result.message, contains(expectedStageType));
       },
     );
 
     test(
-      ".sync() returns an error if a destination client throws adding new builds",
+      ".sync() returns an error with the message containing the failed sync stage error message if it is not null",
       () async {
-        final destinationClient = DestinationClientStub(
-          addBuildsCallback: (_, __) => throw UnimplementedError(),
-        );
-        final ciIntegration = CiIntegrationStub(
-          destinationClient: destinationClient,
-        );
+        const expectedMessage = 'message';
+        when(
+          firstSyncStage.call(syncConfig),
+        ).thenErrorWith(null, expectedMessage);
+
         final result = await ciIntegration.sync(syncConfig);
 
-        expect(result.isError, isTrue);
+        expect(result.message, contains(expectedMessage));
       },
     );
 
     test(
-      ".sync() ignores empty list of new builds and not call adding builds",
+      ".sync() returns a success if all stages pass successfully",
       () async {
-        final sourceClient = SourceClientStub(
-          fetchBuildsAfterCallback: (_, __) => Future.value([]),
-        );
-        final destinationClient = DestinationClientStub(
-          addBuildsCallback: (_, __) => throw UnimplementedError(),
-        );
-        final ciIntegration = CiIntegration(
-          sourceClient: sourceClient,
-          destinationClient: destinationClient,
-        );
+        when(firstSyncStage.call(syncConfig)).thenSuccessWith(null);
+        when(secondSyncStage.call(syncConfig)).thenSuccessWith(null);
+
         final result = await ciIntegration.sync(syncConfig);
 
         expect(result.isSuccess, isTrue);
-      },
-    );
-
-    test(
-      ".sync() synchronizes builds",
-      () async {
-        final ciIntegration = CiIntegrationStub();
-        final result = await ciIntegration.sync(syncConfig);
-
-        expect(result.isSuccess, isTrue);
-      },
-    );
-
-    test(
-      ".sync() does not fetch coverage for builds if the coverage value is false in the given config",
-      () async {
-        bool isCalled = false;
-
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
-
-        final sourceClientStub = SourceClientStub(
-          fetchCoverageCallback: (_) {
-            isCalled = true;
-
-            return Future.value(Percent(0.7));
-          },
-        );
-
-        final ciIntegration = CiIntegrationStub(
-          sourceClient: sourceClientStub,
-          destinationClient: destinationClient,
-        );
-
-        final result = await ciIntegration
-            .sync(syncConfig)
-            .then((result) => result.isSuccess);
-
-        expect(result, isTrue);
-        expect(isCalled, isFalse);
-      },
-    );
-
-    test(
-      ".sync() fetches coverage for each build if the coverage value is true in the given config",
-      () async {
-        final syncConfig = SyncConfig(
-          sourceProjectId: 'test',
-          destinationProjectId: 'test',
-          coverage: true,
-          initialSyncLimit: 10,
-          inProgressTimeout: const Duration(minutes: 1),
-        );
-
-        int calledTimes = 0;
-
-        final destinationClient = DestinationClientStub(
-          fetchLastBuildCallback: (_) => null,
-        );
-
-        final sourceClientStub = SourceClientStub(
-          fetchCoverageCallback: (_) {
-            calledTimes += 1;
-
-            return Future.value(Percent(0.7));
-          },
-        );
-
-        final ciIntegration = CiIntegrationStub(
-          sourceClient: sourceClientStub,
-          destinationClient: destinationClient,
-        );
-
-        final result = await ciIntegration
-            .sync(syncConfig)
-            .then((result) => result.isSuccess);
-
-        expect(result, isTrue);
-        expect(calledTimes, equals(BuildsTestData.builds.length));
       },
     );
   });
 }
 
-/// A stub class for a [CiConfig] abstract class providing required
-/// implementations.
-class CiIntegrationStub extends CiIntegration {
-  final DestinationClientStub _destinationClientTestbed;
-  final SourceClientStub _sourceClientTestbed;
-
-  @override
-  DestinationClient get destinationClient => _destinationClientTestbed;
-
-  @override
-  SourceClient get sourceClient => _sourceClientTestbed;
-
-  /// Creates this stub class instance.
-  ///
-  /// If [destinationClient] is not given, the [DestinationClientStub] is created.
-  /// If [sourceClient] is not given, the [SourceClientStub] is created.
-  CiIntegrationStub({
-    DestinationClientStub destinationClient,
-    SourceClientStub sourceClient,
-  })  : _destinationClientTestbed =
-            destinationClient ?? DestinationClientStub(),
-        _sourceClientTestbed = sourceClient ?? SourceClientStub();
-}
+class _SyncStageMock extends Mock implements SyncStage {}

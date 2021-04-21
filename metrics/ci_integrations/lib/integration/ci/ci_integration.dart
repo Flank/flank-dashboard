@@ -1,101 +1,62 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
-import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
-import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:ci_integration/integration/ci/sync_stage/sync_stage.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:meta/meta.dart';
-import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
 /// performed on a CI tool and stored in a builds storage.
 class CiIntegration with LoggerMixin {
-  /// Used to interact with a source API.
-  final SourceClient sourceClient;
+  /// A [List] of [SyncStage]s this CI integration performs.
+  final List<SyncStage> stages;
 
-  /// Used to interact with a builds storage.
-  final DestinationClient destinationClient;
-
-  /// Creates a [CiIntegration] instance with the given [sourceClient]
-  /// and [destinationClient].
+  /// Creates a [CiIntegration] instance with the given [stages].
   ///
-  /// Both clients are required. Throws [ArgumentError] if either
-  /// [sourceClient] or [destinationClient] is `null`.
+  /// Throws an [ArgumentError] if the given [stages] list is `null`.
   CiIntegration({
-    @required this.sourceClient,
-    @required this.destinationClient,
+    @required this.stages,
   }) {
-    ArgumentError.checkNotNull(sourceClient, 'sourceClient');
-    ArgumentError.checkNotNull(destinationClient, 'destinationClient');
+    ArgumentError.checkNotNull(stages, 'stages');
   }
 
-  /// Synchronizes builds for a project specified in the given [config].
+  /// Synchronizes builds for a project specified in the given [syncConfig].
   ///
-  /// Throws an [ArgumentError] if the given [config] is `null`.
+  /// Throws an [ArgumentError] if the given [syncConfig] is `null`.
   Future<InteractionResult> sync(
-    SyncConfig config,
+    SyncConfig syncConfig,
   ) async {
-    ArgumentError.checkNotNull(config);
+    ArgumentError.checkNotNull(syncConfig);
 
-    try {
-      final sourceProjectId = config.sourceProjectId;
-      final destinationProjectId = config.destinationProjectId;
+    for (final stage in stages) {
+      final stageResult = await stage(syncConfig);
 
-      final lastBuild = await destinationClient.fetchLastBuild(
-        destinationProjectId,
-      );
-
-      List<BuildData> newBuilds;
-      if (lastBuild == null) {
-        logger.info('There are no builds in the destination...');
-        final initialSyncLimit = config.initialSyncLimit;
-        newBuilds = await sourceClient.fetchBuilds(
-          sourceProjectId,
-          initialSyncLimit,
-        );
-      } else {
-        newBuilds = await sourceClient.fetchBuildsAfter(
-          sourceProjectId,
-          lastBuild,
+      if (stageResult == null || stageResult.isError) {
+        return InteractionResult.error(
+          message: _getStageErrorMessage(stage, stageResult),
         );
       }
-
-      if (newBuilds == null || newBuilds.isEmpty) {
-        return const InteractionResult.success(
-          message: 'The project data is up-to-date!',
-        );
-      }
-
-      if (config.coverage) {
-        newBuilds = await _fetchCoverage(newBuilds);
-      }
-
-      await destinationClient.addBuilds(
-        destinationProjectId,
-        newBuilds,
-      );
-
-      return const InteractionResult.success(
-        message: 'The data has been synced successfully!',
-      );
-    } catch (error) {
-      return InteractionResult.error(
-        message: 'Failed to sync the data! Details: $error',
-      );
     }
+
+    return const InteractionResult.success(
+      message: 'The data has been synced successfully!',
+    );
   }
 
-  /// Fetches coverage data for each build in the given [builds] list.
-  Future<List<BuildData>> _fetchCoverage(List<BuildData> builds) async {
-    logger.info('Fetching coverage data for builds...');
-    final fetchCoverageFutures = builds.map((build) async {
-      final coverage = await sourceClient.fetchCoverage(build);
+  /// Returns a message that describes an error occurred during
+  /// the given [stage], finished with the given [stageResult].
+  ///
+  /// Adds the [InteractionResult.message] of the given [stageResult], if this
+  /// result is not `null`.
+  String _getStageErrorMessage(SyncStage stage, InteractionResult stageResult) {
+    String message = 'Failed to run the ${stage.runtimeType}';
 
-      return build.copyWith(coverage: coverage);
-    });
+    if (stageResult?.message != null) {
+      message = '$message due to the following error: ${stageResult.message}';
+    }
 
-    return Future.wait(fetchCoverageFutures);
+    return message;
   }
 }
