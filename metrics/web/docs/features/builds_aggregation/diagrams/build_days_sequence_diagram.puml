@@ -24,23 +24,23 @@ Bob -> UI : enters the application
 UI -> ProjectMetricsNotifier : loads and sets a list of projects
 activate ProjectMetricsNotifier
 
-ProjectMetricsNotifier -> ReceiveBuildDayProjectMetricsUpdates : call(BuildDayParam params)
+ProjectMetricsNotifier -> ReceiveBuildDayProjectMetricsUpdates : call(ProjectBuildDayParam params)
 activate ReceiveBuildDayProjectMetricsUpdates
 
-ReceiveBuildDayProjectMetricsUpdates -> FirestoreBuildDayRepository : projectBuildDaysFromDateStream(String projectId, DateTime from)
+ReceiveBuildDayProjectMetricsUpdates -> FirestoreBuildDayRepository : projectBuildDaysInDateRangeStream(String projectId, DateTime from)
 activate FirestoreBuildDayRepository
 
-FirestoreBuildDayRepository -> Firestore : gets a build days request
+FirestoreBuildDayRepository -> Firestore : requests build days
 activate Firestore
 
-Firestore -> FirestoreBuildDayRepository : returns a list of build days response
+Firestore -> FirestoreBuildDayRepository : returns a list of build days
 deactivate Firestore
 
 loop for json in list
     FirestoreBuildDayRepository -> BuildDayData : .fromJson(json)
     activate BuildDayData
 
-    BuildDayData -> FirestoreBuildDayRepository : returns a BuildDay instance
+    BuildDayData -> FirestoreBuildDayRepository : returns a BuildDayData instance
     deactivate BuildDayData
 end
 

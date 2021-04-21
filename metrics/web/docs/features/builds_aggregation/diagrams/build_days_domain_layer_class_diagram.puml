@@ -6,13 +6,7 @@ package base.domain.usecases {
     }
 }
 
-package common.domain.repositories {
-    interface BuildDayRepository {
-        + projectBuildDaysByDateRangeStream(String projectId, [DateTime from, DateTime to]) : Stream<List<BuildDay>>
-    } 
-}
-
-package dashboard.domain {
+package common.domain {
     package entities {
         class BuildDay {
             + projectId : String
@@ -23,34 +17,42 @@ package dashboard.domain {
             + totalDuration : Duration
             + day : DateTime
         }
+    }
 
-        package metrics {
-            class BuildNumberMetric {
-                + numberOfBuilds : int
-            }
-            class BuildPerformance {
-                    + date : DateTime
-                    + duration: Duration
-            }
-            class PerformanceMetric {
-                + buildsPerformance : DateTimeSet<BuildPerformance>
-                + averageBuildDuration : Duration
-            }
-            class BuildDayProjectMetrics {
-                + buildNumberMetric : BuildNumberMetric
-                + performanceMetric : PerformanceMetric
-            }
+    package repositories {
+        interface BuildDayRepository {
+            + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
+        } 
+    }    
+}
+
+package dashboard.domain {
+    package entities.metrics {
+        class BuildNumberMetric {
+            + numberOfBuilds : int
+        }
+        class BuildPerformance {
+                + date : DateTime
+                + duration: Duration
+        }
+        class PerformanceMetric {
+            + buildsPerformance : DateTimeSet<BuildPerformance>
+            + averageBuildDuration : Duration
+        }
+        class BuildDayProjectMetrics {
+            + buildNumberMetric : BuildNumberMetric
+            + performanceMetric : PerformanceMetric
         }
     }
 
     package usecases {
         class ReceiveBuildDayProjectMetricsUpdates {
             - _repository : BuildDayRepository
-            + call(BuildDayParam params) : Stream<BuildDayProjectMetrics>
+            + call(ProjectBuildDayParam params) : Stream<BuildDayProjectMetrics>
         }
 
         package parameters {
-            class BuildDayParam {
+            class ProjectBuildDayParam {
                 + projectId : String
                 + day : DateTime
             }
@@ -58,11 +60,11 @@ package dashboard.domain {
     }  
 }
 
-BuildDayRepository --> BuildDay : uses
-ReceiveBuildDayProjectMetricsUpdates ..|> UseCase
+BuildDayRepository --> BuildDay : provides
+ReceiveBuildDayProjectMetricsUpdates -left-..|> UseCase
 ReceiveBuildDayProjectMetricsUpdates --> BuildDayRepository : uses
-ReceiveBuildDayProjectMetricsUpdates --> BuildDayParam : uses
-ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : uses
+ReceiveBuildDayProjectMetricsUpdates --> ProjectBuildDayParam : uses
+ReceiveBuildDayProjectMetricsUpdates --> BuildDayProjectMetrics : provides
 
 BuildDayProjectMetrics --> BuildNumberMetric : uses
 BuildDayProjectMetrics --> PerformanceMetric : uses

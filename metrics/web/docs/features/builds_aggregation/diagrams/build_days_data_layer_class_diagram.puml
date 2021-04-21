@@ -7,9 +7,23 @@ package core.data.model {
 }
 
 package common {
-    package domain.repositories {
-        interface BuildDayRepository {
-            + projectBuildDaysByDateRangeStream(String projectId, [DateTime from, DateTime to]) : Stream<List<BuildDay>>
+    package domain {
+        package repositories {
+            interface BuildDayRepository {
+                + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
+            }
+        }
+
+        package entities {
+            class BuildDay {
+                + projectId : String
+                + successful: int
+                + failed: int
+                + unknown: int
+                + inProgress: int
+                + totalDuration : Duration
+                + day : DateTime
+            }
         }
     }
 
@@ -17,27 +31,16 @@ package common {
         package repositories as data_repositories {
             class FirestoreBuildDayRepository {
                 - _firestore : Firestore
+                + projectBuildDaysInDateRangeStream(String projectId, {DateTime from, DateTime to}) : Stream<List<BuildDay>>
             }
         }
 
         package model {
             class BuildDayData {
-                + factory fromJson(Map<String, dynamic> json) : BuildDay
+                + factory fromJson(Map<String, dynamic> json) : BuildDayData
                 + toJson() : Map<String, dynamic>
             }
         }
-    }
-}
-
-package dashboard.domain.entities {
-    class BuildDay {
-        + projectId : String
-        + successful: int
-        + failed: int
-        + unknown: int
-        + inProgress: int
-        + totalDuration : Duration
-        + day : DateTime
     }
 }
 
@@ -45,6 +48,7 @@ FirestoreBuildDayRepository ..|> BuildDayRepository
 FirestoreBuildDayRepository --> BuildDayData : uses
 
 BuildDayData --|> BuildDay
-BuildDayData ..|> DataModel
+BuildDayData -left-..|> DataModel
+BuildDayRepository --> BuildDay : provides
 
 @enduml

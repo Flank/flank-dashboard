@@ -20,7 +20,7 @@ The following sub-sections provide an implementation of Build aggregation integr
 
 ### Domain layer
 
-The domain layer should provide an interface for the `FirestoreBuildDayRepository`. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+The domain layer should provide an interface for data fetching. Also, the layer provides a usecase required to interact with the repository, and entity for the `Builds Aggregation` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
 - Implement the `BuildDayRepository` interface with appropriate methods.
 - Add the `BuildDay` entity with fields that come from a remote API.
@@ -40,7 +40,7 @@ The data layer provides the `FirestoreBuildDayRepository` implementation of `Bui
 
 Once we've added both the domain and data layers, it's time to add the feature to the presentation.
 
-The `ProjectMetricsNotifier` should have one more argument - `ReceiveBuildDayProjectMetricsUpdates` usecase. It provides a `BuildDayProjectMetrics` to display on the dashboard.
+The `ProjectMetricsNotifier` should have one more argument - `ReceiveBuildDayProjectMetricsUpdates` usecase. It provides a `BuildDayProjectMetrics` to display on the dashboard. When a new list of projects is fetched, we should subscribe to a `BuildDayProjectMetrics` for each project in the list, using the created usecase. Once we've got the metrics, we can use them to provide `BuildNumberScorecardViewModel` and `PerformanceSparklineViewModel` that is actually used on the dashboard. 
 
 The following class diagram demonstrates the presentation layer structure:
 
