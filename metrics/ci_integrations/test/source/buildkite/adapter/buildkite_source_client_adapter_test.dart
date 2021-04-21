@@ -71,7 +71,11 @@ void main() {
       return when(
         buildkiteClientMock.fetchBuilds(
           pipelineSlug,
-          state: BuildkiteBuildState.finished,
+          states: [
+            BuildkiteBuildState.finished,
+            BuildkiteBuildState.running,
+            BuildkiteBuildState.canceling,
+          ],
           perPage: anyNamed('perPage'),
           page: anyNamed('page'),
         ),
@@ -242,13 +246,14 @@ void main() {
         const states = [
           BuildkiteBuildState.passed,
           BuildkiteBuildState.failed,
+          BuildkiteBuildState.running,
+          BuildkiteBuildState.canceling,
           BuildkiteBuildState.canceled,
           BuildkiteBuildState.notRun,
           BuildkiteBuildState.scheduled,
           BuildkiteBuildState.blocked,
           BuildkiteBuildState.notRun,
           BuildkiteBuildState.finished,
-          BuildkiteBuildState.running,
           BuildkiteBuildState.skipped,
           null,
         ];
@@ -256,7 +261,8 @@ void main() {
         const expectedStates = [
           BuildStatus.successful,
           BuildStatus.failed,
-          BuildStatus.unknown,
+          BuildStatus.inProgress,
+          BuildStatus.inProgress,
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,
@@ -342,6 +348,37 @@ void main() {
         final duration = result.first.duration;
 
         expect(duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps in-progress buildkite builds to build data with null duration",
+      () async {
+        final cancelingBuild = BuildkiteBuild(
+          state: BuildkiteBuildState.canceling,
+          startedAt: startedAt,
+          finishedAt: null,
+          blocked: false,
+        );
+        final runningBuild = BuildkiteBuild(
+          state: BuildkiteBuildState.running,
+          startedAt: startedAt,
+          finishedAt: null,
+          blocked: false,
+        );
+
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(
+          values: [cancelingBuild, runningBuild],
+        ));
+
+        final builds = await adapter.fetchBuilds(
+          pipelineSlug,
+          fetchLimit,
+        );
+
+        final buildDurations = builds.map((build) => build.duration);
+
+        expect(buildDurations, everyElement(isNull));
       },
     );
 
@@ -534,7 +571,7 @@ void main() {
 
         when(buildkiteClientMock.fetchBuilds(
           any,
-          state: anyNamed('state'),
+          states: anyNamed('states'),
           perPage: anyNamed('perPage'),
           page: anyNamed('page'),
         )).thenErrorWith();
@@ -574,13 +611,14 @@ void main() {
         const states = [
           BuildkiteBuildState.passed,
           BuildkiteBuildState.failed,
+          BuildkiteBuildState.running,
+          BuildkiteBuildState.canceling,
           BuildkiteBuildState.canceled,
           BuildkiteBuildState.notRun,
           BuildkiteBuildState.scheduled,
           BuildkiteBuildState.blocked,
           BuildkiteBuildState.notRun,
           BuildkiteBuildState.finished,
-          BuildkiteBuildState.running,
           BuildkiteBuildState.skipped,
           null,
         ];
@@ -588,7 +626,8 @@ void main() {
         const expectedStates = [
           BuildStatus.successful,
           BuildStatus.failed,
-          BuildStatus.unknown,
+          BuildStatus.inProgress,
+          BuildStatus.inProgress,
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,
@@ -692,6 +731,40 @@ void main() {
         final startedAt = result.first.startedAt;
 
         expect(startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps in-progress buildkite builds to build data with null duration",
+      () async {
+        final cancelingBuild = BuildkiteBuild(
+          number: 2,
+          state: BuildkiteBuildState.canceling,
+          startedAt: startedAt,
+          finishedAt: null,
+          blocked: false,
+        );
+        final runningBuild = BuildkiteBuild(
+          number: 3,
+          state: BuildkiteBuildState.running,
+          startedAt: startedAt,
+          finishedAt: null,
+          blocked: false,
+        );
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        whenFetchBuilds().thenSuccessWith(BuildkiteBuildsPage(
+          values: [cancelingBuild, runningBuild],
+        ));
+
+        final builds = await adapter.fetchBuildsAfter(
+          pipelineSlug,
+          firstBuild,
+        );
+
+        final buildDurations = builds.map((build) => build.duration);
+
+        expect(buildDurations, everyElement(isNull));
       },
     );
 
@@ -844,12 +917,14 @@ void main() {
         const states = [
           BuildkiteBuildState.passed,
           BuildkiteBuildState.failed,
+          BuildkiteBuildState.running,
+          BuildkiteBuildState.canceling,
           BuildkiteBuildState.canceled,
           BuildkiteBuildState.notRun,
           BuildkiteBuildState.scheduled,
           BuildkiteBuildState.blocked,
           BuildkiteBuildState.notRun,
-          BuildkiteBuildState.running,
+          BuildkiteBuildState.finished,
           BuildkiteBuildState.skipped,
           null,
         ];
@@ -857,6 +932,8 @@ void main() {
         const expectedStatuses = [
           BuildStatus.successful,
           BuildStatus.failed,
+          BuildStatus.inProgress,
+          BuildStatus.inProgress,
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,
@@ -958,6 +1035,36 @@ void main() {
         final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
 
         expect(result.duration, equals(expectedDuration));
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps in-progress buildkite build to build data with null duration",
+      () async {
+        final inProgressBuilds = [
+          BuildkiteBuild(
+            state: BuildkiteBuildState.canceling,
+            startedAt: startedAt,
+            finishedAt: null,
+            blocked: false,
+          ),
+          BuildkiteBuild(
+            state: BuildkiteBuildState.running,
+            startedAt: startedAt,
+            finishedAt: null,
+            blocked: false,
+          ),
+        ];
+
+        for (final build in inProgressBuilds) {
+          when(
+            buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+          ).thenSuccessWith(build);
+
+          final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+          expect(result.duration, isNull);
+        }
       },
     );
 
