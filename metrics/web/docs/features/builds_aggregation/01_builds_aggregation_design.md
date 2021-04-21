@@ -28,13 +28,13 @@ The domain layer should provide an interface for data fetching. Also, the layer 
 
 The following class diagram demonstrates the domain layer structure:
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_domain_layer_class_diagram.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/builds_aggregation/diagrams/build_days_domain_layer_class_diagram.puml)
 
 ### Data layer
 
 The data layer provides the `FirestoreBuildDayRepository` implementation of the `BuildDayRepository`. Also, it provides a `BuildDayData` class that represents a `DataModel` implementation for the `BuildDay` entity.
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/builds_aggregation/diagrams/build_days_data_layer_class_diagram.puml)
 
 ### Presentation layer
 
@@ -44,10 +44,10 @@ The `ProjectMetricsNotifier` should have one more argument - `ReceiveBuildDayPro
 
 The following class diagram demonstrates the presentation layer structure:
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_presentation_layer_class_diagram.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/builds_aggregation/diagrams/build_days_presentation_layer_class_diagram.puml)
 
 So, as we have the `PerformanceMetric` and `BuildNumberMetric` in the `BuildDayProjectMetrics`, we don't need them inside the existing `DashboardProjectMetrics`.
 
 The following sequence diagram describes how the application loads and shows aggregation metrics:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/metrics_app_builds_aggregation_doc/metrics/web/docs/features/builds_aggregation/diagrams/build_days_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/builds_aggregation/diagrams/build_days_sequence_diagram.puml)
