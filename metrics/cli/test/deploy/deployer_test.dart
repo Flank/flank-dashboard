@@ -569,7 +569,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.configureAuth(projectId)).called(once);
+        verify(firebaseService.configureAuthProviders(projectId)).called(once);
       },
     );
 
@@ -578,7 +578,7 @@ void main() {
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
-        when(firebaseService.configureAuth(any)).thenThrow(stateError);
+        when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -595,7 +595,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          firebaseService.configureAuth(any),
+          firebaseService.configureAuthProviders(any),
           fileHelper.replaceEnvironmentVariables(any, any),
         ]);
       },
@@ -610,7 +610,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          firebaseService.configureAuth(any),
+          firebaseService.configureAuthProviders(any),
           firebaseService.deployHosting(any, any, any),
         ]);
       },
@@ -663,7 +663,8 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
-        when(firebaseService.configureAuth(projectId)).thenReturn(clientId);
+        when(firebaseService.configureAuthProviders(projectId))
+            .thenReturn(clientId);
         when(fileHelper.getFile(configPath)).thenReturn(file);
 
         await deployer.deploy();
@@ -680,7 +681,8 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         when(fileHelper.replaceEnvironmentVariables(any, any))
             .thenThrow(stateError);
-        when(firebaseService.configureAuth(projectId)).thenReturn(clientId);
+        when(firebaseService.configureAuthProviders(projectId))
+            .thenReturn(clientId);
         when(fileHelper.getFile(configPath)).thenReturn(file);
 
         await expectLater(deployer.deploy(), throwsStateError);

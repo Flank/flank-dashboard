@@ -7,7 +7,7 @@
 class FirebaseStrings {
   static const String target = 'metrics';
   static const String acceptTerms = '''
-If you have already accepted the terms of Firebase service, skip this step, otherwise please accept them, consider the following:
+If you have already accepted the terms of the Firebase service, skip this step, otherwise please accept them, consider the following:
   
 1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
 2. Enter any project name.
@@ -49,7 +49,7 @@ https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit
 
 Press any key to continue when you finish with the Firestore database initialization:''';
 
-  static String configureAuth(String projectId) => '''
+  static String configureAuthProviders(String projectId) => '''
 To enable the Firebase Auth for the Metrics Web application, consider the following steps:
 
 1. Follow the link and click a 'Get started' button: https://console.firebase.google.com/project/$projectId/authentication.

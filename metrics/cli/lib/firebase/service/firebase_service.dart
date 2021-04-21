@@ -31,7 +31,7 @@ abstract class FirebaseService extends InfoService {
   void enableAnalytics(String projectId);
 
   /// Configures Firebase auth providers.
-  String configureAuth(String projectId);
+  String configureAuthProviders(String projectId);
 
   /// Accepts the terms of the service.
   void acceptTerms() {}

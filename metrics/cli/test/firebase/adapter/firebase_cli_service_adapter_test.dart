@@ -409,30 +409,31 @@ void main() {
     );
 
     test(
-      ".configureAuth() prompts the user to configure the authentication providers",
+      ".configureAuthProviders() prompts the user to configure the authentication providers",
       () async {
-        firebaseService.configureAuth(projectId);
+        firebaseService.configureAuthProviders(projectId);
 
-        verify(prompter.prompt(FirebaseStrings.configureAuth(projectId)))
-            .called(once);
+        verify(prompter.prompt(FirebaseStrings.configureAuthProviders(
+          projectId,
+        ))).called(once);
       },
     );
 
     test(
-      ".configureAuth() throws if prompter throws during the authentication providers configuring",
+      ".configureAuthProviders() throws if prompter throws during the authentication providers configuring",
       () {
-        when(prompter.prompt(FirebaseStrings.configureAuth(projectId)))
+        when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
             .thenThrow(stateError);
 
         expect(
-          () => firebaseService.configureAuth(projectId),
+          () => firebaseService.configureAuthProviders(projectId),
           throwsStateError,
         );
       },
     );
 
     test(
-      ".enableAnalytics() prompts the user to configure the Analytics service and enter the client ID",
+      ".enableAnalytics() prompts the user to configure the Analytics service",
       () async {
         firebaseService.enableAnalytics(projectId);
 

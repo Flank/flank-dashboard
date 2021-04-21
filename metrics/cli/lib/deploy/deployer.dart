@@ -77,7 +77,7 @@ class Deployer {
       _firebaseService.enableAnalytics(projectId);
       _firebaseService.initializeFirestoreData(projectId);
 
-      final googleClientId = _firebaseService.configureAuth(projectId);
+      final googleClientId = _firebaseService.configureAuthProviders(projectId);
       final configEnvironment = <String, dynamic>{
         ConfigConstants.googleSignInClientId: googleClientId,
       };

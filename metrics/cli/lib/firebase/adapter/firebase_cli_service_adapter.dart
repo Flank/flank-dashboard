@@ -62,8 +62,8 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  String configureAuth(String projectId) {
-    return _prompter.prompt(FirebaseStrings.configureAuth(projectId));
+  String configureAuthProviders(String projectId) {
+    return _prompter.prompt(FirebaseStrings.configureAuthProviders(projectId));
   }
 
   @override

@@ -85,7 +85,7 @@ FirebaseService --> Bob : asks to initialize Firestore data
 Bob -> FirebaseService : initializes Firestore data
 FirebaseService -> Deployer  -- : Firestore data initialized
 
-Deployer -> FirebaseService ++ : configureAuth(projectId)
+Deployer -> FirebaseService ++ : configureAuthProviders(projectId)
 FirebaseService --> Bob : asks to configure Auth providers
 Bob -> FirebaseService : enters Google sign in client Id
 FirebaseService -> Deployer  -- : googleClientId
