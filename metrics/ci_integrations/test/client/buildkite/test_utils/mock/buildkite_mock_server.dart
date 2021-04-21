@@ -237,7 +237,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Returns a [List] of [BuildkiteBuildState]s, based on the `state` query
   /// parameter of the given [request].
   List<BuildkiteBuildState> _extractBuildStates(HttpRequest request) {
-    final requestedStates = request.uri.queryParametersAll['state'];
+    final requestedStates = request.uri.queryParametersAll['state[]'];
 
     if (requestedStates == null) return null;
 

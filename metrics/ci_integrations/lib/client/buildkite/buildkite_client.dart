@@ -140,7 +140,7 @@ class BuildkiteClient with LoggerMixin {
 
     final queryParameters = {
       if (finishedFrom != null) 'finished_from': finishedFrom.toIso8601String(),
-      if (requestStates != null) 'state': requestStates,
+      if (requestStates != null) 'state[]': requestStates,
       if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };

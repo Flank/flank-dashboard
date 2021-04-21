@@ -326,7 +326,10 @@ void main() {
     test(
       ".fetchBuilds() returns a builds page containing builds with the requested states",
       () async {
-        const expectedStates = [BuildkiteBuildState.failed];
+        const expectedStates = [
+          BuildkiteBuildState.failed,
+          BuildkiteBuildState.scheduled,
+        ];
 
         final result = await client.fetchBuilds(
           pipelineSlug,
