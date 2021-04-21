@@ -40,5 +40,15 @@ void main() {
         expect(sourceMap.extensions, equals(extensions));
       },
     );
+
+    test(
+      "equals to another SourceMap with the same parameters",
+      () {
+        final expected = SourceMap(path: path, extensions: extensions);
+        final sourceMap = SourceMap(path: path, extensions: extensions);
+
+        expect(sourceMap, equals(expected));
+      },
+    );
   });
 }

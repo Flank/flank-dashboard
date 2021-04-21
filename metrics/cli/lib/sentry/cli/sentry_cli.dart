@@ -15,40 +15,38 @@ class SentryCli extends Cli {
     return run(['login']);
   }
 
-  /// Creates a Sentry release with the given [releaseName]
-  /// within the given [project].
+  /// Creates a Sentry release with the given [release].
   Future<void> createRelease(SentryRelease release) {
-    final project = release.project;
+    final project = release?.project;
 
     return run([
       'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
+      '--org=${project?.organizationSlug}',
+      '--project=${project?.projectSlug}',
       'new',
-      release.name,
+      release?.name,
     ]);
   }
 
-  /// Uploads source maps of the files with the given [extensions] located
-  /// in the [sourcePath] to the release with the given [releaseName] within
-  /// the given [project].
+  /// Uploads source maps of the files with the given [sourceMap]
+  /// to the given [release].
   ///
-  /// If the [extensions] are not specified, source maps of all files
+  /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.
   Future<void> uploadSourceMaps(
     SentryRelease release,
     SourceMap sourceMap,
   ) {
-    final project = release.project;
-    final extensions = sourceMap.extensions;
+    final project = release?.project;
+    final extensions = sourceMap?.extensions;
     final parameters = [
       'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
+      '--org=${project?.organizationSlug}',
+      '--project=${project?.projectSlug}',
       'files',
-      release.name,
+      release?.name,
       'upload-sourcemaps',
-      sourceMap.path,
+      sourceMap?.path,
       '--rewrite',
     ];
 
@@ -61,17 +59,16 @@ class SentryCli extends Cli {
     return run(parameters);
   }
 
-  /// Finalizes the release with the given [releaseName]
-  /// within the given [project].
+  /// Finalizes the given [release].
   Future<void> finalizeRelease(SentryRelease release) {
-    final project = release.project;
+    final project = release?.project;
 
     return run([
       'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
+      '--org=${project?.organizationSlug}',
+      '--project=${project?.projectSlug}',
       'finalize',
-      release.name,
+      release?.name,
     ]);
   }
 

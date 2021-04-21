@@ -112,7 +112,7 @@ Since we have interfaces for each service and `CLI`s implemented, we should adap
 
 Let's review the class diagram representing the `Metrics CLI` services and `CLI`s with relationships between them: 
 
-![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
+![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_service/metrics/cli/docs/diagrams/services_class_diagram.puml)
 
 ### Prompt
 
@@ -141,7 +141,7 @@ The `Doctor` is a class used to check whether all required third-party `CLI`s ar
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
+![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_service/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
 
 ### Deployer
 
@@ -149,7 +149,7 @@ The `Deployer` class is needed to separate the deployment logic from the [`Deplo
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
+![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_service/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
 As we can see, the `Deployer` and `Doctor` classes requires the same services, so we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
 
@@ -167,7 +167,7 @@ Consider the following sequence diagram that illustrates the process of the `Doc
 
 Consider the following sequence diagram that illustrates the process of the `DeployCommand`:
 
-![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_service/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
 
 ## Usage
 

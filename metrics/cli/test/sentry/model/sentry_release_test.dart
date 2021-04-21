@@ -47,5 +47,15 @@ void main() {
         expect(release.project, equals(project));
       },
     );
+
+    test(
+      "equals to another SentryRelease with the same parameters",
+      () {
+        final expected = SentryRelease(name: name, project: project);
+        final sentryRelease = SentryRelease(name: name, project: project);
+
+        expect(sentryRelease, equals(expected));
+      },
+    );
   });
 }

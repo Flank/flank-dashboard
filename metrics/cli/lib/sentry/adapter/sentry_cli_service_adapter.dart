@@ -19,7 +19,7 @@ class SentryCliServiceAdapter implements SentryService {
   final Prompter _prompter;
 
   /// Creates a new instance of the [SentryCliServiceAdapter]
-  /// with the given [sentryCli], [prompter], and [fileHelper].
+  /// with the given [sentryCli] and [prompter].
   ///
   /// Throws an [ArgumentError] if the given [sentryCli] is `null`.
   /// Throws an [ArgumentError] if the given [prompter] is `null`.
@@ -41,12 +41,7 @@ class SentryCliServiceAdapter implements SentryService {
   Future<SentryRelease> createRelease(
     List<SourceMap> sourceMaps,
   ) async {
-    final sentryProject = _getSentryProject();
-    final releaseName = _prompter.prompt(SentryStrings.enterReleaseName);
-    final sentryRelease = SentryRelease(
-      name: releaseName,
-      project: sentryProject,
-    );
+    final sentryRelease = _promptSentryRelease();
 
     await _sentryCli.createRelease(sentryRelease);
     await _uploadSourceMaps(sentryRelease, sourceMaps);
@@ -61,15 +56,23 @@ class SentryCliServiceAdapter implements SentryService {
   }
 
   @override
-  String getDsn(SentryProject project) {
+  String getProjectDsn(SentryProject project) {
     return _prompter.prompt(SentryStrings.enterDsn(
       project.organizationSlug,
       project.projectSlug,
     ));
   }
 
+  /// Prompts the [SentryRelease] from the user.
+  SentryRelease _promptSentryRelease() {
+    final sentryProject = _promptSentryProject();
+    final releaseName = _prompter.prompt(SentryStrings.enterReleaseName);
+
+    return SentryRelease(name: releaseName, project: sentryProject);
+  }
+
   /// Prompts the [SentryProject] from the user.
-  SentryProject _getSentryProject() {
+  SentryProject _promptSentryProject() {
     final organizationSlug = _prompter.prompt(
       SentryStrings.enterOrganizationSlug,
     );
