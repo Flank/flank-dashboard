@@ -31,11 +31,6 @@ GCloudService --> Bob : start interactive login
 Bob -> GCloudService : signs in
 GCloudService --> Deployer -- : sign in finished
 
-Deployer -> GCloudService ++ : acceptTerms()
-GCloudService --> Bob : asks to accept terms of GCloud service
-Bob -> GCloudService : accepts terms
-GCloudService -> Deployer  -- : terms accepted
-
 Deployer -> FirebaseService ++ : login()
 FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in

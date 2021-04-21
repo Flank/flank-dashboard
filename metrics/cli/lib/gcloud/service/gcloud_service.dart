@@ -11,7 +11,4 @@ abstract class GCloudService extends InfoService {
 
   /// Creates a new GCloud project.
   Future<String> createProject();
-
-  /// Accepts the terms of the service.
-  void acceptTerms() {}
 }

@@ -92,7 +92,6 @@ class Deployer {
   /// Logins to the necessary services.
   Future<void> _loginToServices() async {
     await _gcloudService.login();
-    _gcloudService.acceptTerms();
     await _firebaseService.login();
     _firebaseService.acceptTerms();
   }

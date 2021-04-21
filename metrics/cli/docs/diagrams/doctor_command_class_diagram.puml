@@ -18,7 +18,6 @@ package gcould.service {
     interface GCloudService {
         + login() : Future<void>
         + createProject() : Future<String>
-        + acceptTerms() : void
     }
 }
 

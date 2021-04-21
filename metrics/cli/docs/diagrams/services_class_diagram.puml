@@ -43,9 +43,7 @@ package gcloud {
         interface GCloudService {
             + login() : Future<void>
             + createProject() : Future<String>
-            + acceptTerms() : void
         }
-
     }
 
     package adapter as gcloud.adapter {

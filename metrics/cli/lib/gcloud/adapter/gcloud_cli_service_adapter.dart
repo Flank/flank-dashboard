@@ -52,11 +52,6 @@ class GCloudCliServiceAdapter implements GCloudService {
     return _gcloudCli.version();
   }
 
-  @override
-  void acceptTerms() {
-    _prompter.prompt(GcloudStrings.acceptTerms);
-  }
-
   /// Generates the project identifier.
   String _generateProjectId() {
     final randomString = randomAlphaNumeric(5).toLowerCase();

@@ -215,18 +215,6 @@ void main() {
     );
 
     test(
-      ".deploy() creates the GCloud project",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenReturn(true);
-
-        await deployer.deploy();
-
-        verify(gcloudService.createProject()).called(once);
-      },
-    );
-
-    test(
       ".deploy() logs in to the Firebase",
       () async {
         whenGetDirectory().thenReturn(directory);
@@ -234,7 +222,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gcloudService.createProject()).called(once);
+        verify(firebaseService.login()).called(once);
       },
     );
 
@@ -248,6 +236,60 @@ void main() {
 
         verifyInOrder([
           firebaseService.login(),
+          firebaseService.createWebApp(any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() logs in to the Firebase before accepting the terms of the Firebase service",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          firebaseService.login(),
+          firebaseService.acceptTerms(),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() accepts the terms of the Firebase service",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(firebaseService.acceptTerms()).called(once);
+      },
+    );
+
+    test(
+      ".deploy() creates the GCloud project",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(gcloudService.createProject()).called(once);
+      },
+    );
+
+    test(
+      ".deploy() creates the GCloud project before creating the Firebase web app",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.createProject(),
           firebaseService.createWebApp(any),
         ]);
       },
