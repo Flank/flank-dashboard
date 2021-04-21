@@ -8,7 +8,7 @@ package base.domain.usecases {
 
 package common.domain.repositories {
     interface BuildDayRepository {
-        + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+        + projectBuildDaysByDateRangeStream(String projectId, [DateTime from, DateTime to]) : Stream<List<BuildDay>>
     } 
 }
 

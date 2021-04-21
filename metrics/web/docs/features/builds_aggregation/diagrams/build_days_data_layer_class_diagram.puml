@@ -9,7 +9,7 @@ package core.data.model {
 package common {
     package domain.repositories {
         interface BuildDayRepository {
-            + projectBuildDaysFromDateStream(String projectId, DateTime from) : Stream<List<BuildDay>>
+            + projectBuildDaysByDateRangeStream(String projectId, [DateTime from, DateTime to]) : Stream<List<BuildDay>>
         }
     }
 
@@ -44,7 +44,7 @@ package dashboard.domain.entities {
 FirestoreBuildDayRepository ..|> BuildDayRepository
 FirestoreBuildDayRepository --> BuildDayData : uses
 
-BuildDayData --> BuildDay : uses
+BuildDayData --|> BuildDay
 BuildDayData ..|> DataModel
 
 @enduml
