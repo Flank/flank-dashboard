@@ -9,7 +9,7 @@ class SentryRelease extends Equatable {
   /// A name of this Sentry release.
   final String name;
 
-  /// A Sentry project this release belongs to.
+  /// A [SentryProject] this release belongs to.
   final SentryProject project;
 
   @override

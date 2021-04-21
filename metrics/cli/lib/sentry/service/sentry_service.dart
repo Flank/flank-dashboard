@@ -13,9 +13,7 @@ abstract class SentryService extends InfoService {
   Future<void> login();
 
   /// Creates a new Sentry release.
-  Future<SentryRelease> createRelease(
-    List<SourceMap> sourceMaps,
-  );
+  Future<SentryRelease> createRelease(List<SourceMap> sourceMaps);
 
   /// Returns a Sentry DSN.
   String getDsn(SentryProject release);
