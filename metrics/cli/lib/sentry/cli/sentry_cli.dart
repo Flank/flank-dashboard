@@ -25,8 +25,8 @@ class SentryCli extends Cli {
 
     return run([
       'releases',
-      '--org=${project?.organizationSlug}',
-      '--project=${project?.projectSlug}',
+      '--org=${project.organizationSlug}',
+      '--project=${project.projectSlug}',
       'new',
       release.name,
     ]);
@@ -50,8 +50,8 @@ class SentryCli extends Cli {
     final extensions = sourceMap.extensions;
     final parameters = [
       'releases',
-      '--org=${project?.organizationSlug}',
-      '--project=${project?.projectSlug}',
+      '--org=${project.organizationSlug}',
+      '--project=${project.projectSlug}',
       'files',
       release.name,
       'upload-sourcemaps',
@@ -77,8 +77,8 @@ class SentryCli extends Cli {
 
     return run([
       'releases',
-      '--org=${project?.organizationSlug}',
-      '--project=${project?.projectSlug}',
+      '--org=${project.organizationSlug}',
+      '--project=${project.projectSlug}',
       'finalize',
       release.name,
     ]);
