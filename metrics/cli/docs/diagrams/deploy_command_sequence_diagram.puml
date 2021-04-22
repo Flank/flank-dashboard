@@ -71,19 +71,31 @@ FirebaseService --> Deployer -- : firestore has been deployed
 Deployer -> FlutterService ++ : build(appPath)
 FlutterService -> Deployer -- : build finished
 
+Deployer --> Bob : setup Sentry request
+alt configure Sentry
 Deployer -> SentryService ++ : login()
 SentryService --> Bob : starts interactive login
 Bob -> SentryService : signs in
 SentryService --> Deployer -- : sign in finished
 
-Deployer -> SentryService ++ : createRelease(appPath)
-SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, DSN, and releaseName
+Deployer -> SentryService ++ : createRelease(sourceMaps)
+SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, and releaseName
 Bob -> SentryService : enters Sentry params
-SentryService -> FileHelper ++ : getFile(metricsConfigPath)
-FileHelper -> SentryService -- : config file
-SentryService -> FileHelper ++ : replaceEnvironmentVariables(config, options)
-FileHelper -> SentryService -- : config has been updated
-SentryService -> Deployer -- : release created
+SentryService -> Deployer -- : sentryRelease
+
+Deployer -> SentryService ++ : getProjectDsn(sentryProject)
+SentryService -> Bob : asks to enter the Sentry project DSN
+Bob -> SentryService : enters Sentry project DSN
+SentryService -> Deployer -- : Sentry DSN
+
+else don't configure Sentry
+Deployer --> Deployer : Skip Sentry setup
+end
+
+Deployer -> FileHelper ++ : getFile(metricsConfigPath)
+FileHelper -> Deployer -- : config file
+Deployer -> FileHelper ++ : replaceEnvironmentVariables(config, options)
+FileHelper -> Deployer -- : config has been updated
 
 Deployer -> FirebaseService ++ : deployHosting(projectId, target, appPath)
 FirebaseService -> Deployer -- : deploy finished
