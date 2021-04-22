@@ -44,9 +44,10 @@ void main() {
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
-    final isInProgressBuild = predicate<BuildData>(
-      (build) => build.buildStatus == BuildStatus.inProgress,
-    );
+    final isInProgressBuild = predicate<BuildData>((build) {
+      return build.buildStatus == BuildStatus.inProgress &&
+          build.duration == null;
+    });
 
     PostExpectation<Future<InteractionResult<JenkinsBuildingJob>>>
         whenFetchBuilds({
@@ -257,6 +258,28 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps builds that are building to build data with null duration",
+      () async {
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
+        final buildDurations = result.map((build) => build.duration);
+
+        expect(buildDurations, everyElement(isNull));
+      },
+    );
+
+    test(
       ".fetchBuilds() maps fetched builds startedAt date to the DateTime.now() if the timestamp is null",
       () async {
         const jenkinsBuild = JenkinsBuild(
@@ -418,6 +441,30 @@ void main() {
         );
 
         expect(result, everyElement(isInProgressBuild));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps builds that are building to build data with null duration",
+      () async {
+        const build = BuildData(buildNumber: 1);
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+          createJenkinsBuild(buildNumber: 3, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          build,
+        );
+        final buildDurations = result.map((build) => build.duration);
+
+        expect(buildDurations, everyElement(isNull));
       },
     );
 
@@ -878,6 +925,24 @@ void main() {
         );
 
         expect(result, isInProgressBuild);
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps builds that are building to build data with null duration",
+      () async {
+        final jenkinsBuild = createJenkinsBuild(buildNumber: 1, building: true);
+
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result.duration, isNull);
       },
     );
 

@@ -195,11 +195,17 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   ) {
     logger.info('Mapping build to build data...');
 
+    final buildStatus = _mapJenkinsBuildToBuildStatus(jenkinsBuild);
+    final duration = _mapJenkinsBuildDuration(
+      buildStatus,
+      jenkinsBuild.duration,
+    );
+
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
-      buildStatus: _mapJenkinsBuildResult(jenkinsBuild),
-      duration: jenkinsBuild.duration ?? Duration.zero,
+      buildStatus: buildStatus,
+      duration: duration,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
       apiUrl: jenkinsBuild.apiUrl,
@@ -231,7 +237,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
 
   /// Maps the given [JenkinsBuild.building] and [JenkinsBuild.result] of the
   /// given [build] to a [BuildStatus].
-  BuildStatus _mapJenkinsBuildResult(JenkinsBuild build) {
+  ///
+  /// Returns the [BuildStatus.inProgress] if the given [JenkinsBuild.building]
+  /// is `true`. Otherwise, maps the given [JenkinsBuild.result] to a
+  /// corresponding [BuildStatus].
+  BuildStatus _mapJenkinsBuildToBuildStatus(JenkinsBuild build) {
     if (build.building ?? false) return BuildStatus.inProgress;
 
     switch (build.result) {
@@ -242,6 +252,21 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Returns a [Duration] of a [JenkinsBuild] depending on the given
+  /// [buildStatus] and [duration].
+  ///
+  /// Returns `null` if the given [buildStatus] is [BuildStatus.inProgress].
+  /// Otherwise, returns the given [duration] if it is not `null` or
+  /// [Duration.zero] if the given [duration] is `null`.
+  Duration _mapJenkinsBuildDuration(
+    BuildStatus buildStatus,
+    Duration duration,
+  ) {
+    if (buildStatus == BuildStatus.inProgress) return null;
+
+    return duration ?? Duration.zero;
   }
 
   /// Processes the given [interaction].
