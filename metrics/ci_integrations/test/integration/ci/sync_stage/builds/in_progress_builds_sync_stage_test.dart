@@ -18,26 +18,25 @@ void main() {
     const sourceProjectId = 'sourceId';
     const projectId = 'projectId';
     const destinationProjectId = 'destinationId';
-    const initialSyncLimit = 28;
 
     final currentDate = DateTime.now();
-    final startedAtNotExceedingTimeout = currentDate.subtract(
+    final startedAt = currentDate.subtract(
       inProgressTimeout * 0.5,
     );
-    final startedAtExceedingTimeout = currentDate.subtract(
+    final timedOutStartedAt = currentDate.subtract(
       inProgressTimeout * 2,
     );
     final inProgressBuilds = [
       BuildData(
         buildNumber: 1,
         buildStatus: BuildStatus.inProgress,
-        startedAt: startedAtNotExceedingTimeout,
+        startedAt: startedAt,
         projectId: projectId,
       ),
       BuildData(
         buildNumber: 2,
         buildStatus: BuildStatus.inProgress,
-        startedAt: startedAtNotExceedingTimeout,
+        startedAt: startedAt,
         projectId: projectId,
       ),
     ];
@@ -54,7 +53,7 @@ void main() {
       return SyncConfig(
         sourceProjectId: sourceProjectId,
         destinationProjectId: destinationProjectId,
-        initialSyncLimit: initialSyncLimit,
+        initialSyncLimit: 28,
         inProgressTimeout: inProgressTimeout,
         coverage: coverage,
       );
@@ -70,7 +69,7 @@ void main() {
       ));
     }
 
-    PostExpectation<Future<BuildData>> whenRefreshBuild(BuildData build) {
+    PostExpectation<Future<BuildData>> whenFetchBuild(BuildData build) {
       return when(sourceClient.fetchOneBuild(
         sourceProjectId,
         build.buildNumber,
@@ -110,7 +109,7 @@ void main() {
     );
 
     test(
-      ".call() fetches the in-progress builds from the destination",
+      ".call() fetches in-progress builds from the destination",
       () async {
         whenFetchInProgressBuilds().thenAnswer((_) => Future.value([]));
 
@@ -124,20 +123,19 @@ void main() {
     );
 
     test(
-      ".call() does not continue the sync if the fetched in-progress builds are empty",
+      ".call() does not continue syncing if the fetched in-progress builds list is empty",
       () async {
         whenFetchInProgressBuilds().thenAnswer((_) => Future.value([]));
 
         await syncStage.call(syncConfig);
 
-        verifyNever(sourceClient.fetchOneBuild(sourceProjectId, any));
-        verifyNever(sourceClient.fetchCoverage(any));
+        verifyZeroInteractions(sourceClient);
         verifyNever(destinationClient.updateBuilds(destinationProjectId, any));
       },
     );
 
     test(
-      ".call() returns a success if the fetched in-progress builds are empty",
+      ".call() returns a success if the fetched in-progress builds list is empty",
       () async {
         whenFetchInProgressBuilds().thenAnswer((_) => Future.value([]));
 
@@ -148,17 +146,13 @@ void main() {
     );
 
     test(
-      ".call() does not continue the sync if an error occurs while fetching in-progress builds",
+      ".call() does not continue syncing if an error occurs while fetching in-progress builds",
       () async {
-        when(destinationClient.fetchBuildsWithStatus(
-          destinationProjectId,
-          BuildStatus.inProgress,
-        )).thenAnswer((_) => Future.error(error));
+        whenFetchInProgressBuilds().thenAnswer((_) => Future.error(error));
 
         await syncStage.call(syncConfig);
 
-        verifyNever(sourceClient.fetchOneBuild(sourceProjectId, any));
-        verifyNever(sourceClient.fetchCoverage(any));
+        verifyZeroInteractions(sourceClient);
         verifyNever(destinationClient.updateBuilds(destinationProjectId, any));
       },
     );
@@ -166,10 +160,7 @@ void main() {
     test(
       ".call() returns an error if an error occurs while fetching in-progress builds",
       () async {
-        when(destinationClient.fetchBuildsWithStatus(
-          destinationProjectId,
-          BuildStatus.inProgress,
-        )).thenAnswer((_) => Future.error(error));
+        whenFetchInProgressBuilds().thenAnswer((_) => Future.error(error));
 
         final result = await syncStage.call(syncConfig);
 
@@ -199,111 +190,90 @@ void main() {
     );
 
     test(
-      ".call() does not update a build if it is in-progress after refresh and does not exceed a timeout",
+      ".call() does not update a build if the corresponding build is in progress and the current one is not timed out",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtNotExceedingTimeout,
+          startedAt: startedAt,
         );
         final inProgressBuilds = [inProgressBuild];
 
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(inProgressBuild),
         );
 
         await syncStage.call(syncConfig);
 
-        final containsInProgressBuildMatcher = contains(
-          predicate<BuildData>((build) {
-            return build is BuildData &&
-                build.buildNumber == inProgressBuild.buildNumber;
-          }),
-        );
-
         verifyNever(destinationClient.updateBuilds(
           destinationProjectId,
-          argThat(containsInProgressBuildMatcher),
+          argThat(isNotEmpty),
         ));
       },
     );
 
     test(
-      ".call() does not update a build if it is null after refresh and does not exceed a timeout",
+      ".call() does not update a build if the corresponding build is null after refresh and the current one is not timed out",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtNotExceedingTimeout,
+          startedAt: startedAt,
         );
         final inProgressBuilds = [inProgressBuild];
 
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(null),
         );
 
         await syncStage.call(syncConfig);
 
-        final containsInProgressBuildMatcher = contains(
-          predicate<BuildData>((build) {
-            return build is BuildData &&
-                build.buildNumber == inProgressBuild.buildNumber;
-          }),
-        );
-
         verifyNever(destinationClient.updateBuilds(
           destinationProjectId,
-          argThat(containsInProgressBuildMatcher),
+          argThat(isNotEmpty),
         ));
       },
     );
 
     test(
-      ".call() does not update a build if it does not exceed a timeout and refreshing this build fails",
+      ".call() does not update a build if fetching the corresponding build fails and the build is not timed out",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtNotExceedingTimeout,
+          startedAt: startedAt,
         );
         final inProgressBuilds = [inProgressBuild];
 
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.error(error),
         );
 
         await syncStage.call(syncConfig);
 
-        final containsInProgressBuildMatcher = contains(
-          predicate<BuildData>((build) {
-            return build is BuildData &&
-                build.buildNumber == inProgressBuild.buildNumber;
-          }),
-        );
-
         verifyNever(destinationClient.updateBuilds(
           destinationProjectId,
-          argThat(containsInProgressBuildMatcher),
+          argThat(isNotEmpty),
         ));
       },
     );
 
     test(
-      ".call() times out a build if it is in-progress after refresh and exceeds a timeout",
+      ".call() updates a build as timed out if the corresponding build is in progress and the build exceeds a timeout duration",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final expectedTimedOutBuild = inProgressBuild.copyWith(
@@ -314,7 +284,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(inProgressBuild),
         );
 
@@ -328,12 +298,12 @@ void main() {
     );
 
     test(
-      ".call() times out a build if it is null after refresh and exceeds a timeout",
+      ".call() updates a build as timed out if the corresponding build is null and the build exceeds a timeout duration",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final expectedTimedOutBuild = inProgressBuild.copyWith(
@@ -344,7 +314,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(null),
         );
 
@@ -358,12 +328,12 @@ void main() {
     );
 
     test(
-      ".call() times out a build if it exceeds a timeout and refreshing this build fails",
+      ".call() updates a build as timed out if it exceeds a timeout duration and fetching the corresponding build fails",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final expectedTimedOutBuild = inProgressBuild.copyWith(
@@ -374,7 +344,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.error(error),
         );
 
@@ -388,12 +358,12 @@ void main() {
     );
 
     test(
-      ".call() updates a build if it is finished after refresh",
+      ".call() updates a build if the corresponding build is finished",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final finishedBuild = inProgressBuild.copyWith(
@@ -403,7 +373,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(finishedBuild),
         );
 
@@ -422,14 +392,14 @@ void main() {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
 
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(null),
         );
         when(
@@ -448,12 +418,12 @@ void main() {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final anotherInProgressBuild = BuildData(
           buildNumber: 2,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild, anotherInProgressBuild];
         final updatedBuilds = inProgressBuilds
@@ -463,10 +433,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenRefreshBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
 
@@ -479,17 +449,17 @@ void main() {
     );
 
     test(
-      ".call() does not fetch coverage for the builds to update if the coverage option is not enabled in the sync config",
+      ".call() does not fetch coverage for builds to update if the coverage option is not enabled in the sync config",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final anotherInProgressBuild = BuildData(
           buildNumber: 2,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild, anotherInProgressBuild];
         final updatedBuilds = inProgressBuilds
@@ -499,10 +469,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenRefreshBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
 
@@ -513,12 +483,12 @@ void main() {
     );
 
     test(
-      ".call() does not continue the sync if fetching coverage for a build fails with an error",
+      ".call() does not continue syncing if fetching coverage for a build fails with an error",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final updatedBuilds = inProgressBuilds
@@ -528,7 +498,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
         when(
@@ -547,7 +517,7 @@ void main() {
         final inProgressBuild = BuildData(
           buildNumber: 1,
           buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
+          startedAt: timedOutStartedAt,
         );
         final inProgressBuilds = [inProgressBuild];
         final updatedBuilds = inProgressBuilds
@@ -557,7 +527,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuild).thenAnswer(
+        whenFetchBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
         when(
@@ -573,18 +543,6 @@ void main() {
     test(
       ".call() updates builds with the fetched coverage if the coverage option is enabled in the sync config",
       () async {
-        final inProgressBuild = BuildData(
-          buildNumber: 1,
-          buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
-        );
-        final anotherInProgressBuild = BuildData(
-          buildNumber: 2,
-          buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
-        );
-        final inProgressBuilds = [inProgressBuild, anotherInProgressBuild];
-
         final updatedBuilds = inProgressBuilds
             .map((build) => build.copyWith(buildStatus: BuildStatus.successful))
             .toList();
@@ -597,10 +555,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenRefreshBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
         when(
@@ -619,12 +577,6 @@ void main() {
     test(
       ".call() returns a success if updating builds succeeds",
       () async {
-        final inProgressBuild = BuildData(
-          buildNumber: 1,
-          buildStatus: BuildStatus.inProgress,
-          startedAt: startedAtExceedingTimeout,
-        );
-        final inProgressBuilds = [inProgressBuild];
         final updatedBuilds = inProgressBuilds
             .map((build) => build.copyWith(buildStatus: BuildStatus.successful))
             .toList();
@@ -632,8 +584,11 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenRefreshBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
+        );
+        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
+          (_) => Future.value(updatedBuilds[1]),
         );
         when(
           destinationClient.updateBuilds(projectId, updatedBuilds),
