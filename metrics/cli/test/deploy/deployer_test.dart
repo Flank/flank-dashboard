@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-import 'package:cli/common/constants/config_constants.dart';
+import 'package:cli/common/model/metrics_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
@@ -30,10 +30,9 @@ void main() {
     const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
     const firebaseTarget = DeployConstants.firebaseTarget;
     const webPath = DeployConstants.webPath;
-    const configPath = DeployConstants.configPath;
+    const configPath = DeployConstants.metricsConfigPath;
     const repoURL = DeployConstants.repoURL;
     const tempDir = DeployConstants.tempDir;
-    const environment = {ConfigConstants.googleSignInClientId: clientId};
 
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -61,8 +60,10 @@ void main() {
       return when(fileHelper.getDirectory(any));
     }
 
-    PostExpectation<bool> whenDirectoryExist() {
-      return when(directory.existsSync());
+    PostExpectation<bool> whenDirectoryExist({Directory withDirectory}) {
+      final currentDirectory = withDirectory ?? directory;
+      whenGetDirectory().thenReturn(currentDirectory);
+      return when(currentDirectory.existsSync());
     }
 
     PostExpectation<Future<String>> whenCreateGCloudProject() {
@@ -190,7 +191,6 @@ void main() {
     test(
       ".deploy() logs in to the GCloud",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -202,7 +202,6 @@ void main() {
     test(
       ".deploy() logs in to the GCloud before creating the GCloud project",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -217,7 +216,6 @@ void main() {
     test(
       ".deploy() logs in to the Firebase",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -229,7 +227,6 @@ void main() {
     test(
       ".deploy() logs in to the Firebase before creating the Firebase web app",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -244,14 +241,13 @@ void main() {
     test(
       ".deploy() logs in to the Firebase before accepting the terms of the Firebase service",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
         verifyInOrder([
           firebaseService.login(),
-          firebaseService.acceptTerms(),
+          firebaseService.acceptTermsOfService(),
         ]);
       },
     );
@@ -259,19 +255,17 @@ void main() {
     test(
       ".deploy() accepts the terms of the Firebase service",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(firebaseService.acceptTerms()).called(once);
+        verify(firebaseService.acceptTermsOfService()).called(once);
       },
     );
 
     test(
       ".deploy() creates the GCloud project",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -283,7 +277,6 @@ void main() {
     test(
       ".deploy() creates the GCloud project before creating the Firebase web app",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -298,9 +291,8 @@ void main() {
     test(
       ".deploy() creates the Firebase web app for the created GCloud project",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -311,7 +303,6 @@ void main() {
     test(
       ".deploy() clones the Git repository",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -323,7 +314,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Git service throws during the checkout process",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -337,7 +327,6 @@ void main() {
     test(
       ".deploy() clones the Git repository before building the Flutter application",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -352,7 +341,6 @@ void main() {
     test(
       ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase folder",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -367,7 +355,6 @@ void main() {
     test(
       ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase functions folder",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -382,7 +369,6 @@ void main() {
     test(
       ".deploy() installs the npm dependencies",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -396,7 +382,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(npmService.installDependencies(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -410,7 +395,6 @@ void main() {
     test(
       ".deploy() installs the npm dependencies in the Firebase folder before deploying to the Firebase",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -425,7 +409,6 @@ void main() {
     test(
       ".deploy() installs the npm dependencies to the functions folder before deploying to the Firebase",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -440,7 +423,6 @@ void main() {
     test(
       ".deploy() builds the Flutter application",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -452,7 +434,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -466,7 +447,6 @@ void main() {
     test(
       ".deploy() builds the Flutter application before deploying to the hosting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -481,9 +461,8 @@ void main() {
     test(
       ".deploy() upgrades the Firebase billing plan",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -494,7 +473,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase billing plan upgrading",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
 
@@ -507,7 +485,6 @@ void main() {
     test(
       ".deploy() upgrades the Firebase billing plan before deploying the Firebase components",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -522,9 +499,8 @@ void main() {
     test(
       ".deploy() enables the Firebase Analytics",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -535,7 +511,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase Analytics enabling",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
 
@@ -548,7 +523,6 @@ void main() {
     test(
       ".deploy() enables the Firebase Analytics before deploying to the hosting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -563,9 +537,8 @@ void main() {
     test(
       ".deploy() initializes the Firestore data",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -576,7 +549,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase Analytics enabling",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.initializeFirestoreData(any))
             .thenThrow(stateError);
@@ -590,7 +562,6 @@ void main() {
     test(
       ".deploy() initializes the Firestore data before deploying to the hosting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -605,9 +576,8 @@ void main() {
     test(
       ".deploy() configures the Firebase auth providers",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -618,7 +588,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase auth providers configuration",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
 
@@ -629,24 +598,8 @@ void main() {
     );
 
     test(
-      ".deploy() configures the Firebase auth providers before updating the Web config file",
-      () async {
-        whenGetDirectory().thenReturn(directory);
-        whenDirectoryExist().thenReturn(true);
-
-        await deployer.deploy();
-
-        verifyInOrder([
-          firebaseService.configureAuthProviders(any),
-          fileHelper.replaceEnvironmentVariables(any, any),
-        ]);
-      },
-    );
-
-    test(
       ".deploy() configures the Firebase auth providers before deploying to the hosting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -659,11 +612,10 @@ void main() {
     );
 
     test(
-      ".deploy() gets the Web config file",
+      ".deploy() gets the Metrics config file",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -672,9 +624,8 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the temporary directory if Firebase service throws during the Web config file getting",
+      ".deploy() deletes the temporary directory if FileHelper throws during the Metrics config file getting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(fileHelper.getFile(any)).thenThrow(stateError);
 
@@ -685,9 +636,8 @@ void main() {
     );
 
     test(
-      ".deploy() gets the Web config file before updating it",
+      ".deploy() gets the Metrics config file before updating it",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -700,24 +650,23 @@ void main() {
     );
 
     test(
-      ".deploy() updates the Web config file",
+      ".deploy() replaces the given environment variables in the Metrics config file returned by FileHelper",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
-        when(firebaseService.configureAuthProviders(projectId))
-            .thenReturn(clientId);
+        when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
         when(fileHelper.getFile(configPath)).thenReturn(file);
+
+        final config = MetricsConfig(googleSignInClientId: clientId);
 
         await deployer.deploy();
 
-        verify(fileHelper.replaceEnvironmentVariables(file, environment))
+        verify(fileHelper.replaceEnvironmentVariables(file, config.toMap()))
             .called(once);
       },
     );
 
     test(
-      ".deploy() deletes the temporary directory if Firebase service throws during the Web config file updating",
+      ".deploy() deletes the temporary directory if Firebase service throws during the Metrics config file updating",
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
@@ -734,7 +683,7 @@ void main() {
     );
 
     test(
-      ".deploy() updates the Web config file before deploying to the hosting",
+      ".deploy() updates the Metrics config file before deploying to the hosting",
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
@@ -765,7 +714,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.deployFirebase(any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -779,7 +727,6 @@ void main() {
     test(
       ".deploy() deploys Firebase components before deploying to the hosting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -794,9 +741,8 @@ void main() {
     test(
       ".deploy() deploys the target to the hosting",
       () async {
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
 
@@ -811,7 +757,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.deployHosting(any, any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -825,7 +770,6 @@ void main() {
     test(
       ".deploy() deploys a target to the hosting before deleting the temporary directory",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -840,7 +784,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if it exists",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
@@ -852,7 +795,6 @@ void main() {
     test(
       ".deploy() does not delete the temporary directory if it does not exist",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(false);
 
         await deployer.deploy();

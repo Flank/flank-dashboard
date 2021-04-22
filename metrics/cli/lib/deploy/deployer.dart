@@ -1,8 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:cli/common/model/metrics_config.dart';
 import 'package:cli/common/model/services.dart';
-import 'package:cli/common/constants/config_constants.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
@@ -73,16 +73,16 @@ class Deployer {
       );
       await _installNpmDependencies();
       await _flutterService.build(DeployConstants.webPath);
-      _firebaseService.upgradeBillingPlan(projectId);
-      _firebaseService.enableAnalytics(projectId);
-      _firebaseService.initializeFirestoreData(projectId);
+      await _firebaseService.upgradeBillingPlan(projectId);
+      await _firebaseService.enableAnalytics(projectId);
+      await _firebaseService.initializeFirestoreData(projectId);
 
-      final googleClientId = _firebaseService.configureAuthProviders(projectId);
-      final configEnvironment = <String, dynamic>{
-        ConfigConstants.googleSignInClientId: googleClientId,
-      };
+      final googleClientId = await _firebaseService.configureAuthProviders(
+        projectId,
+      );
+      final metricsConfig = MetricsConfig(googleSignInClientId: googleClientId);
 
-      _updateConfig(configEnvironment);
+      _updateConfig(metricsConfig);
       await _deployToFirebase(projectId);
     } finally {
       _cleanup();
@@ -93,7 +93,7 @@ class Deployer {
   Future<void> _loginToServices() async {
     await _gcloudService.login();
     await _firebaseService.login();
-    _firebaseService.acceptTerms();
+    _firebaseService.acceptTermsOfService();
   }
 
   /// Installs npm dependencies.
@@ -119,10 +119,10 @@ class Deployer {
   }
 
   /// Updates the Web project config.
-  void _updateConfig(Map<String, dynamic> environment) {
-    final config = _fileHelper.getFile(DeployConstants.configPath);
+  void _updateConfig(MetricsConfig config) {
+    final configFile = _fileHelper.getFile(DeployConstants.metricsConfigPath);
 
-    _fileHelper.replaceEnvironmentVariables(config, environment);
+    _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
   }
 
   /// Cleans temporary resources created during the deployment process.

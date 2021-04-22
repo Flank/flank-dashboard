@@ -17,6 +17,7 @@ void main() {
     const projectId = 'projectId';
     const workingDirectory = 'workingDirectory';
     const target = 'target';
+    const clientId = 'clientId';
 
     final firebaseCli = _FirebaseCliMock();
     final prompter = PrompterMock();
@@ -420,6 +421,18 @@ void main() {
     );
 
     test(
+      ".configureAuthProviders() returns the Google sign client id entered by the user",
+      () async {
+        when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
+            .thenReturn(clientId);
+
+        final result = firebaseService.configureAuthProviders(projectId);
+
+        expect(result, equals(clientId));
+      },
+    );
+
+    test(
       ".configureAuthProviders() throws if prompter throws during the authentication providers configuring",
       () {
         when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
@@ -489,7 +502,7 @@ void main() {
     );
 
     test(
-      ".initializeFirestoreData() throws if prompter throws during the billing plan prompting",
+      ".upgradeBillingPlan() throws if prompter throws during the billing plan prompting",
       () {
         when(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
             .thenThrow(stateError);
@@ -502,22 +515,22 @@ void main() {
     );
 
     test(
-      ".acceptTerms() prompts the user to accept the terms of the Firebase service",
+      ".acceptTermsOfService() prompts the user to accept the terms of the Firebase service",
       () async {
-        firebaseService.acceptTerms();
+        firebaseService.acceptTermsOfService();
 
         verify(prompter.prompt(FirebaseStrings.acceptTerms)).called(once);
       },
     );
 
     test(
-      ".acceptTerms() throws if prompter throws during the terms prompting",
+      ".acceptTermsOfService() throws if prompter throws during the terms prompting",
       () {
         when(prompter.prompt(FirebaseStrings.acceptTerms))
             .thenThrow(stateError);
 
         expect(
-          () => firebaseService.acceptTerms(),
+          () => firebaseService.acceptTermsOfService(),
           throwsStateError,
         );
       },

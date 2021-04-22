@@ -36,7 +36,7 @@ FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in
 FirebaseService --> Deployer -- : sign in finished
 
-Deployer -> FirebaseService ++ : acceptTerms()
+Deployer -> FirebaseService ++ : acceptTermsOfService()
 FirebaseService --> Bob : asks to accept terms of Firebase service
 Bob -> FirebaseService : accepts terms
 FirebaseService -> Deployer  -- : terms accepted

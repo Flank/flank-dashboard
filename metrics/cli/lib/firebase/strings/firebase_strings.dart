@@ -5,7 +5,6 @@
 
 /// A class that holds the strings for the Firebase prompts.
 class FirebaseStrings {
-  static const String target = 'metrics';
   static const String acceptTerms = '''
 If you have already accepted the terms of the Firebase service, skip this step, otherwise please accept them, consider the following:
   
@@ -19,6 +18,9 @@ If you have already accepted the terms of the Firebase service, skip this step, 
 Once you are done, press any key to continue:''';
 
   static String upgradeBillingPlan(String projectId) => '''
+The Metrics app uses Firebase features not available in the Spark plan, such as Firebase Functions. 
+Thus, a Blaze plan is required for the Metrics app to function properly.
+
 To configure the Blaze billing plan for the Firebase project, consider the following steps:
 
 1. Follow the link and press continue in the open modal window: https://console.firebase.google.com/project/$projectId/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow.
@@ -34,7 +36,7 @@ To initialize Firestore data for the currently deploying project, consider the f
 
 1. Follow the link to open the Firestore database: https://console.firebase.google.com/project/$projectId/firestore.
 2. Create a collection with the 'allowed_email_domains' identifier.
-3. Create document(s) with the 'domain' identifier without any fields.
+3. Create document(s) with the 'domain' identifier you want to allow access to the Metrics application without any fields.
 4. Create a collection with the 'feature_config' identifier.
 5. Create a document with the 'feature_config' identifier.
 6. Add the following boolean fields to the 'feature_config' document:

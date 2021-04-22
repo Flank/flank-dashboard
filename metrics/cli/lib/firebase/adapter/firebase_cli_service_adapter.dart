@@ -82,7 +82,7 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  void acceptTerms() {
+  void acceptTermsOfService() {
     _prompter.prompt(FirebaseStrings.acceptTerms);
   }
 }
