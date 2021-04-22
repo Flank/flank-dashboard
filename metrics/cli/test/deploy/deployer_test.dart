@@ -176,7 +176,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given file helper is null",
+      "throws an ArgumentError if the given FileHelper is null",
       () {
         expect(
           () => Deployer(
@@ -225,20 +225,6 @@ void main() {
     );
 
     test(
-      ".deploy() logs in to the Firebase before creating the Firebase web app",
-      () async {
-        whenDirectoryExist().thenReturn(true);
-
-        await deployer.deploy();
-
-        verifyInOrder([
-          firebaseService.login(),
-          firebaseService.createWebApp(any),
-        ]);
-      },
-    );
-
-    test(
       ".deploy() logs in to the Firebase before accepting the terms of the Firebase service",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -260,6 +246,20 @@ void main() {
         await deployer.deploy();
 
         verify(firebaseService.acceptTermsOfService()).called(once);
+      },
+    );
+
+    test(
+      ".deploy() accepts the terms of the Firebase service before creating the Firebase web app",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          firebaseService.acceptTermsOfService(),
+          firebaseService.createWebApp(any),
+        ]);
       },
     );
 
@@ -339,7 +339,7 @@ void main() {
     );
 
     test(
-      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase folder",
+      ".deploy() clones the Git repository before installing the npm dependencies in the Firebase folder",
       () async {
         whenDirectoryExist().thenReturn(true);
 
@@ -353,7 +353,7 @@ void main() {
     );
 
     test(
-      ".deploy() clones the Git repository before installing the Npm dependencies to the Firebase functions folder",
+      ".deploy() clones the Git repository before installing the npm dependencies in the Firebase functions folder",
       () async {
         whenDirectoryExist().thenReturn(true);
 
@@ -367,13 +367,23 @@ void main() {
     );
 
     test(
-      ".deploy() installs the npm dependencies",
+      ".deploy() installs the npm dependencies in the Firebase folder",
       () async {
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
         verify(npmService.installDependencies(firebasePath)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() installs the npm dependencies in the functions folder",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
         verify(npmService.installDependencies(firebaseFunctionsPath))
             .called(once);
       },
@@ -407,7 +417,7 @@ void main() {
     );
 
     test(
-      ".deploy() installs the npm dependencies to the functions folder before deploying to the Firebase",
+      ".deploy() installs the npm dependencies in the functions folder before deploying to the Firebase",
       () async {
         whenDirectoryExist().thenReturn(true);
 
@@ -636,21 +646,7 @@ void main() {
     );
 
     test(
-      ".deploy() gets the Metrics config file before updating it",
-      () async {
-        whenDirectoryExist().thenReturn(true);
-
-        await deployer.deploy();
-
-        verifyInOrder([
-          fileHelper.getFile(any),
-          fileHelper.replaceEnvironmentVariables(any, any),
-        ]);
-      },
-    );
-
-    test(
-      ".deploy() replaces the given environment variables in the Metrics config file returned by FileHelper",
+      ".deploy() replaces the  environment variables in the Metrics config file returned by FileHelper with the user-specified values",
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);

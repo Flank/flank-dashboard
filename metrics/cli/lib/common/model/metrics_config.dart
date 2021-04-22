@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// A class that represents a Metrics config.
+/// A class that represents a Metrics configuration.
 class MetricsConfig {
   /// A Google sign in client id variable name.
   static const String googleSignInClientIdName = 'GOOGLE_SIGN_IN_CLIENT_ID';

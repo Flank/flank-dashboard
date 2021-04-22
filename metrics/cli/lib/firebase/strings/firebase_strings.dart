@@ -6,8 +6,8 @@
 /// A class that holds the strings for the Firebase prompts.
 class FirebaseStrings {
   static const String acceptTerms = '''
-If you have already accepted the terms of the Firebase service, skip this step, otherwise please accept them, consider the following:
-  
+If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:  
+
 1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
 2. Enter any project name.
 3. Accept the Firebase terms of service.
@@ -58,8 +58,7 @@ To enable the Firebase Auth for the Metrics Web application, consider the follow
 2. Navigate to the 'Sign-in method' tab on the Firebase auth page or use the following link: https://console.firebase.google.com/project/$projectId/authentication/providers.
 3. Enable an Email/Password provider by clicking on provider name and toggling the 'Enable' switch.
 4. Enable a Google provider by clicking on provider name and toggling the 'Enable' switch.
-5. On the 'Google' provider popup, open the 'Web SDK configuration' tab, copy the Web client ID and paste it to the console.
-
+5. On the 'Google' provider popup, open the 'Web SDK configuration' tab, copy the 'Web client ID' and paste it to the console.
 Paste your Web client Id here:''';
 
   static String enableAnalytics(String projectId) => '''

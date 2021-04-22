@@ -82,7 +82,7 @@ class Deployer {
       );
       final metricsConfig = MetricsConfig(googleSignInClientId: googleClientId);
 
-      _updateConfig(metricsConfig);
+      _applyMetricsConfig(metricsConfig);
       await _deployToFirebase(projectId);
     } finally {
       _cleanup();
@@ -118,8 +118,8 @@ class Deployer {
     );
   }
 
-  /// Updates the Web project config.
-  void _updateConfig(MetricsConfig config) {
+  /// Applies the given [config] to the Metrics configuration file.
+  void _applyMetricsConfig(MetricsConfig config) {
     final configFile = _fileHelper.getFile(DeployConstants.metricsConfigPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
