@@ -937,6 +937,79 @@ void main() {
     );
 
     test(
+      ".fetchBuildsAfter() does not map fetched builds of the queued workflow run",
+      () async {
+        final completedAt = DateTime.now();
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: null,
+          completedAt: completedAt,
+        );
+
+        final defaultRunsPage = WorkflowRunsPage(
+          values: [
+            testData.generateWorkflowRun(status: GithubActionStatus.queued)
+          ],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: defaultJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() does not map fetched builds of the queued job",
+      () async {
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.queued,
+        );
+
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: workflowRunJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() maps fetched run jobs' startedAt date to the completedAt date if the startedAt date is null",
       () async {
         final completedAt = DateTime.now();
@@ -1098,6 +1171,70 @@ void main() {
         final url = result.first.url;
 
         expect(url, equals(''));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched run in-progress jobs' status to build data with in progress build statuses",
+      () async {
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.inProgress,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(workflowRunJobsPage);
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+        final buildStatuses = result.map((build) => build.buildStatus);
+
+        expect(buildStatuses, everyElement(equals(BuildStatus.inProgress)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched run in-progress jobs' status to build data with null duration",
+      () async {
+        const workflowRun = WorkflowRun(number: 2);
+        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.inProgress,
+        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(workflowRunJobsPage);
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+        final durations = result.map((build) => build.duration);
+
+        expect(durations, everyElement(isNull));
       },
     );
 
