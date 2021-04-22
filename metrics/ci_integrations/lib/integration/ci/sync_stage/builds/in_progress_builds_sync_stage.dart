@@ -51,8 +51,8 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
       }
 
       List<BuildData> buildUpdates = await _resyncBuilds(
-        inProgressBuilds,
         syncConfig,
+        inProgressBuilds,
       );
 
       if (syncConfig.coverage) {
@@ -72,8 +72,8 @@ class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   /// Re-synchronizes each [BuildData] of the given [inProgressBuilds] list
   /// and returns a list of updated [BuildData].
   Future<List<BuildData>> _resyncBuilds(
-    List<BuildData> inProgressBuilds,
     SyncConfig syncConfig,
+    List<BuildData> inProgressBuilds,
   ) async {
     final buildUpdates = <BuildData>[];
 
