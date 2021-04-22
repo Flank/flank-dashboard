@@ -403,7 +403,7 @@ void main() {
     );
 
     test(
-      ".deploy() installs the npm dependencies in the Firebase folder before deploying to the Firebase",
+      ".deploy() installs the npm dependencies in the Firebase folder before deploying Firebase components",
       () async {
         whenDirectoryExist().thenReturn(true);
 
@@ -417,7 +417,7 @@ void main() {
     );
 
     test(
-      ".deploy() installs the npm dependencies in the functions folder before deploying to the Firebase",
+      ".deploy() installs the npm dependencies in the functions folder before deploying Firebase components",
       () async {
         whenDirectoryExist().thenReturn(true);
 
@@ -622,7 +622,7 @@ void main() {
     );
 
     test(
-      ".deploy() gets the Metrics config file",
+      ".deploy() gets the Metrics config file using the given FileHelper",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
@@ -646,7 +646,7 @@ void main() {
     );
 
     test(
-      ".deploy() replaces the  environment variables in the Metrics config file returned by FileHelper with the user-specified values",
+      ".deploy() replaces the environment variables in the Metrics config file returned by FileHelper with the user-specified values",
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
@@ -662,7 +662,7 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the temporary directory if Firebase service throws during the Metrics config file updating",
+      ".deploy() deletes the temporary directory if FileHelper throws during replacing variables in the Metrics config file",
       () async {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
