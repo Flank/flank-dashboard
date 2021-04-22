@@ -95,7 +95,6 @@ class GithubActionsSourceClientAdapter
     final firstRunsPage = await _fetchRunsPage(
       page: 1,
       perPage: 1,
-      status: GithubActionStatus.completed,
     );
 
     final runs = firstRunsPage.values ?? [];
@@ -142,11 +141,11 @@ class GithubActionsSourceClientAdapter
 
     final job = await _fetchJob(run, jobName);
 
-    if (job == null || !_isConclusionValid(job.conclusion)) {
-      return null;
+    if (_isJobValid(job)) {
+      return _mapJobToBuildData(job, run);
     }
 
-    return _mapJobToBuildData(job, run);
+    return null;
   }
 
   /// Fetches the [WorkflowRun] with the given [runNumber].
@@ -198,7 +197,6 @@ class GithubActionsSourceClientAdapter
     WorkflowRunsPage runsPage = await _fetchRunsPage(
       page: 1,
       perPage: defaultPerPage,
-      status: GithubActionStatus.completed,
     );
 
     do {
@@ -211,12 +209,15 @@ class GithubActionsSourceClientAdapter
           break;
         }
 
+        if (run.status == GithubActionStatus.queued) continue;
+
         final job = await _fetchJob(run, jobName);
 
-        if (job == null || !_isConclusionValid(job.conclusion)) {
+        if (!_isJobValid(job)) {
           continue;
         } else {
-          final build = await _mapJobToBuildData(job, run);
+          final build = _mapJobToBuildData(job, run);
+
           result.add(build);
 
           if (latestBuildNumber == null && result.length == fetchLimit) {
@@ -252,15 +253,20 @@ class GithubActionsSourceClientAdapter
   }
 
   /// Maps the given [job] and [run] to the [BuildData] instance.
-  Future<BuildData> _mapJobToBuildData(
+  BuildData _mapJobToBuildData(
     WorkflowRunJob job,
     WorkflowRun run,
-  ) async {
+  ) {
+    final buildStatus = _mapJobToBuildStatus(job);
+    final duration = buildStatus == BuildStatus.inProgress
+        ? null
+        : _calculateJobDuration(job);
+
     return BuildData(
       buildNumber: run.number,
       startedAt: job.startedAt ?? job.completedAt ?? DateTime.now(),
-      buildStatus: _mapConclusionToBuildStatus(job.conclusion),
-      duration: _calculateJobDuration(job),
+      buildStatus: buildStatus,
+      duration: duration,
       workflowName: job.name,
       url: job.url ?? '',
       apiUrl: run.apiUrl,
@@ -306,6 +312,16 @@ class GithubActionsSourceClientAdapter
     );
 
     return _processInteraction(interaction);
+  }
+
+  /// Returns `true` if the given [job] is not `null`, has the
+  /// [WorkflowRunJob.status] not equal to the [GithubActionStatus.queued],
+  /// and the [WorkflowRunJob.conclusion] satisfying the [_isConclusionValid].
+  /// Otherwise, returns `false`.
+  bool _isJobValid(WorkflowRunJob job) {
+    return job != null &&
+        job.status != GithubActionStatus.queued &&
+        _isConclusionValid(job.conclusion);
   }
 
   /// Determines whether the given [conclusion] is valid.
@@ -431,9 +447,17 @@ class GithubActionsSourceClientAdapter
     return job.completedAt.difference(job.startedAt);
   }
 
-  /// Maps the given [conclusion] to the [BuildStatus].
-  BuildStatus _mapConclusionToBuildStatus(GithubActionConclusion conclusion) {
-    switch (conclusion) {
+  /// Maps the given [job] to a [BuildStatus].
+  ///
+  /// Returns the [BuildStatus.inProgress] if the given [job]'s
+  /// [WorkflowRunJob.status] is [GithubActionStatus.inProgress]. Otherwise,
+  /// maps the [WorkflowRunJob.conclusion] to a corresponding [BuildStatus].
+  BuildStatus _mapJobToBuildStatus(WorkflowRunJob job) {
+    if (job.status == GithubActionStatus.inProgress) {
+      return BuildStatus.inProgress;
+    }
+
+    switch (job.conclusion) {
       case GithubActionConclusion.success:
         return BuildStatus.successful;
       case GithubActionConclusion.timedOut:

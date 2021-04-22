@@ -7,6 +7,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
@@ -274,6 +275,25 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() does not fetch builds of the queued workflow runs",
+      () async {
+        final defaultRunsPage = WorkflowRunsPage(
+          values: [
+            testData.generateWorkflowRun(status: GithubActionStatus.queued)
+          ],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: defaultJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+
+        final result = await adapter.fetchBuilds(jobName, fetchLimit);
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
       ".fetchBuilds() does not fetch builds of the skipped jobs",
       () {
         final workflowRunJob = testData.generateWorkflowRunJob(
@@ -290,6 +310,27 @@ void main() {
         final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(isEmpty));
+      },
+    );
+
+    test(
+      ".fetchBuilds() does not fetch builds of the queued jobs",
+      () async {
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.queued,
+        );
+
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: workflowRunJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+
+        final result = await adapter.fetchBuilds(jobName, fetchLimit);
+
+        expect(result, isEmpty);
       },
     );
 
@@ -406,6 +447,50 @@ void main() {
         final result = adapter.fetchBuilds(jobName, fetchLimit);
 
         expect(result, completion(equals(expectedBuilds)));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched in-progress jobs to build data with in progress build statuses",
+      () async {
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.inProgress,
+        );
+
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: workflowRunJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+
+        final result = await adapter.fetchBuilds(jobName, fetchLimit);
+        final buildStatuses = result.map((build) => build.buildStatus);
+
+        expect(buildStatuses, everyElement(equals(BuildStatus.inProgress)));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched in-progress jobs to build data with null duration",
+      () async {
+        final workflowRunJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.inProgress,
+        );
+
+        final workflowRunJobsPage = WorkflowRunJobsPage(
+          values: [workflowRunJob],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: workflowRunJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+
+        final result = await adapter.fetchBuilds(jobName, fetchLimit);
+        final durations = result.map((build) => build.duration);
+
+        expect(durations, everyElement(isNull));
       },
     );
 
