@@ -10,7 +10,7 @@ class GCloudCli extends Cli {
 
   /// Logins into the GCloud CLI.
   Future<void> login() {
-    return run(['auth', 'login']);
+    return run(['auth', 'login', '--force']);
   }
 
   /// Creates a new GCloud project with the given [projectId].
