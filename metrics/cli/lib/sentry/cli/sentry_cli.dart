@@ -34,23 +34,28 @@ class SentryCli extends Cli {
 
   /// Uploads source maps of the files located in the [SourceMap.path] with
   /// the specified [SourceMap.extensions] to the given Sentry [release].
-  ///
   /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
+  /// Throws an [ArgumentError] if the given [sourceMap] is `null`.
   Future<void> uploadSourceMaps(
     SentryRelease release,
     SourceMap sourceMap,
   ) {
-    final project = release?.project;
-    final extensions = sourceMap?.extensions;
+    ArgumentError.checkNotNull(release);
+    ArgumentError.checkNotNull(sourceMap);
+
+    final project = release.project;
+    final extensions = sourceMap.extensions;
     final parameters = [
       'releases',
       '--org=${project?.organizationSlug}',
       '--project=${project?.projectSlug}',
       'files',
-      release?.name,
+      release.name,
       'upload-sourcemaps',
-      sourceMap?.path,
+      sourceMap.path,
       '--rewrite',
     ];
 
@@ -64,15 +69,18 @@ class SentryCli extends Cli {
   }
 
   /// Finalizes the given [release].
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> finalizeRelease(SentryRelease release) {
-    final project = release?.project;
+    ArgumentError.checkNotNull(release);
+    final project = release.project;
 
     return run([
       'releases',
       '--org=${project?.organizationSlug}',
       '--project=${project?.projectSlug}',
       'finalize',
-      release?.name,
+      release.name,
     ]);
   }
 
