@@ -216,7 +216,7 @@ void main() {
     );
 
     test(
-      ".call() does not update a build if the corresponding build is null after refresh and the current one is not timed out",
+      ".call() does not update a build if the corresponding build is null and the current one is not timed out",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
