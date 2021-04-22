@@ -42,12 +42,6 @@ void main() {
     );
     final sourceMap = SourceMap(path: path, extensions: extensions);
     final stateError = StateError('test');
-
-    tearDown(() {
-      reset(sentryCli);
-      reset(prompter);
-    });
-
     final enterProjectSlug = SentryStrings.enterProjectSlug(organizationSlug);
     final enterDsn = SentryStrings.enterDsn(organizationSlug, projectSlug);
 
@@ -75,6 +69,11 @@ void main() {
       verifyNoMoreInteractions(sentryCli);
       verifyNoMoreInteractions(prompter);
     }
+
+    tearDown(() {
+      reset(sentryCli);
+      reset(prompter);
+    });
 
     test(
       "throws an ArgumentError if the given Sentry CLI is null",
@@ -379,7 +378,7 @@ void main() {
     );
 
     test(
-      ".getSentryDsn() prompts the user to enter the DSN",
+      ".getProjectDsn() prompts the user to enter the sentry project DSN",
       () {
         sentryService.getProjectDsn(sentryProject);
 
@@ -388,7 +387,7 @@ void main() {
     );
 
     test(
-      ".createProject() returns the DSN entered by the user.",
+      ".createProject() returns the DSN entered by the user",
       () async {
         when(prompter.prompt(enterDsn)).thenReturn(dsn);
 
@@ -399,7 +398,7 @@ void main() {
     );
 
     test(
-      ".getSentryDsn() throws throws if prompter throws during the DSN prompting",
+      ".getSentryDsn() throws if prompter throws during the DSN prompting",
       () {
         when(prompter.prompt(enterDsn)).thenThrow(stateError);
 

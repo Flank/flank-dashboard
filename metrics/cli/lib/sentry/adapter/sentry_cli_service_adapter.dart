@@ -86,7 +86,7 @@ class SentryCliServiceAdapter implements SentryService {
     );
   }
 
-  /// Uploads the source maps to the Sentry project.
+  /// Uploads the given [sourceMaps] to the given Sentry [release].
   Future<void> _uploadSourceMaps(
     SentryRelease release,
     List<SourceMap> sourceMaps,

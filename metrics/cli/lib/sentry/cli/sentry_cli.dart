@@ -15,21 +15,25 @@ class SentryCli extends Cli {
     return run(['login']);
   }
 
-  /// Creates a Sentry release with the given [release].
+  /// Creates a Sentry release using the given [release].
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> createRelease(SentryRelease release) {
-    final project = release?.project;
+    ArgumentError.checkNotNull(release);
+
+    final project = release.project;
 
     return run([
       'releases',
       '--org=${project?.organizationSlug}',
       '--project=${project?.projectSlug}',
       'new',
-      release?.name,
+      release.name,
     ]);
   }
 
-  /// Uploads source maps of the files with the given [sourceMap]
-  /// to the given [release].
+  /// Uploads source maps of the files located in the [SourceMap.path] with
+  /// the specified [SourceMap.extensions] to the given Sentry [release].
   ///
   /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.

@@ -72,7 +72,7 @@ Deployer -> FlutterService ++ : build(appPath)
 FlutterService -> Deployer -- : build finished
 
 Deployer --> Bob : setup Sentry request
-alt yes
+alt configure Sentry
 Deployer -> SentryService ++ : login()
 SentryService --> Bob : starts interactive login
 Bob -> SentryService : signs in
@@ -88,7 +88,7 @@ FileHelper -> Deployer -- : config file
 Deployer -> FileHelper ++ : replaceEnvironmentVariables(config, options)
 FileHelper -> Deployer -- : config has been updated
 
-else no
+else don't configure Sentry
 Deployer --> Deployer : Skip Sentry setup
 end
 
