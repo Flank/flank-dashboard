@@ -31,20 +31,25 @@ void main() {
       fileName: 'coverage-summary.json',
       relativePath: 'coverage/coverage-summary.json',
     );
+    const fetchLimit = 20;
+    const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
+
     final defaultDateTime = DateTime(2020);
     final defaultArtifactContent = <String, dynamic>{
       'pct': 0.6,
     };
     final defaultBuild = BuildData(coverage: defaultCoverage);
-    const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
 
     final jenkinsClientMock = JenkinsClientMock();
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
-    const fetchLimit = 20;
+    final isInProgressBuild = predicate<BuildData>(
+      (build) => build.buildStatus == BuildStatus.inProgress,
+    );
 
-    PostExpectation<Future<InteractionResult>> whenFetchBuilds({
+    PostExpectation<Future<InteractionResult<JenkinsBuildingJob>>>
+        whenFetchBuilds({
       String jobName = jobName,
       JenkinsQueryLimits limits,
     }) {
@@ -123,10 +128,6 @@ void main() {
           createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: true),
         ];
-        final expected = [
-          createBuildData(buildNumber: 1),
-          createBuildData(buildNumber: 2),
-        ];
 
         responses.addBuilds(jenkinsBuilds);
 
@@ -137,7 +138,7 @@ void main() {
           fetchLimit,
         );
 
-        expect(result, completion(equals(expected)));
+        expect(result, completion(hasLength(jenkinsBuilds.length)));
       },
     );
 
@@ -235,6 +236,27 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps builds that are building to in-progress builds",
+      () async {
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
+
+        expect(result, everyElement(isInProgressBuild));
+      },
+    );
+
+    test(
       ".fetchBuilds() maps fetched builds startedAt date to the DateTime.now() if the timestamp is null",
       () async {
         const jenkinsBuild = JenkinsBuild(
@@ -308,25 +330,24 @@ void main() {
 
     test(
       ".fetchBuildsAfter() fetches both finished and building builds",
-      () {
+      () async {
         const build = BuildData(buildNumber: 1);
         final jenkinsBuilds = [
           createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: false),
           createJenkinsBuild(buildNumber: 3, building: true),
         ];
-        final expected = [
-          createBuildData(buildNumber: 2),
-          createBuildData(buildNumber: 3),
-        ];
+        const expectedBuildNumbers = [2, 3];
 
         responses.addBuilds(jenkinsBuilds);
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+        final actualBuildNumbers =
+            result.map((build) => build.buildNumber).toList();
 
-        expect(result, completion(equals(expected)));
+        expect(actualBuildNumbers, equals(expectedBuildNumbers));
       },
     );
 
@@ -374,6 +395,29 @@ void main() {
         final result = adapter.fetchBuildsAfter(jobName, build);
 
         expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps builds that are building to in-progress builds",
+      () async {
+        const build = BuildData(buildNumber: 1);
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+          createJenkinsBuild(buildNumber: 3, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          build,
+        );
+
+        expect(result, everyElement(isInProgressBuild));
       },
     );
 
@@ -816,6 +860,24 @@ void main() {
 
           expect(result.buildStatus, equals(expectedStatus));
         }
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps builds that are building to in-progress builds",
+      () async {
+        final jenkinsBuild = createJenkinsBuild(buildNumber: 1, building: true);
+
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result, isInProgressBuild);
       },
     );
 

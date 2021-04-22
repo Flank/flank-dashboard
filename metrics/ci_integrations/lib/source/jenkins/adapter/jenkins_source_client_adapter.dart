@@ -198,7 +198,7 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
-      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
+      buildStatus: _mapJenkinsBuildResult(jenkinsBuild),
       duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
@@ -229,9 +229,12 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return _processInteraction(interaction);
   }
 
-  /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
-  BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
-    switch (result) {
+  /// Maps the given [JenkinsBuild.building] and [JenkinsBuild.result] of the
+  /// given [build] to a [BuildStatus].
+  BuildStatus _mapJenkinsBuildResult(JenkinsBuild build) {
+    if (build.building ?? false) return BuildStatus.inProgress;
+
+    switch (build.result) {
       case JenkinsBuildResult.success:
         return BuildStatus.successful;
       case JenkinsBuildResult.failure:
