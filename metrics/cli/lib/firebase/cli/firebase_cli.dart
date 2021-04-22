@@ -10,7 +10,7 @@ class FirebaseCli extends Cli {
 
   /// Logins into the Firebase CLI.
   Future<void> login() {
-    return run(['login', '--interactive']);
+    return run(['login', '--interactive', '--reauth']);
   }
 
   /// Adds the Firebase capabilities to the project with the given [projectId].

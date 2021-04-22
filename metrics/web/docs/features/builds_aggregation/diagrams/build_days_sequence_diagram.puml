@@ -1,0 +1,59 @@
+@startuml build_days_sequence_diagram
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+    participant "Dashboard Page" as UI << (C,#ADD1B2) >>
+    participant ProjectMetricsNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+    participant ReceiveBuildDayProjectMetricsUpdates << (C,#ADD1B2) >>
+end box
+
+box "data"
+    participant FirestoreBuildDayRepository << (C,#ADD1B2) >>
+    participant BuildDayData << (C,#ADD1B2) >>
+end box    
+
+database Firestore
+
+Bob -> UI : enters the application
+
+UI -> ProjectMetricsNotifier : loads and sets a list of projects
+activate ProjectMetricsNotifier
+
+ProjectMetricsNotifier -> ReceiveBuildDayProjectMetricsUpdates : call(ProjectBuildDayParam params)
+activate ReceiveBuildDayProjectMetricsUpdates
+
+ReceiveBuildDayProjectMetricsUpdates -> FirestoreBuildDayRepository : projectBuildDaysInDateRangeStream(String projectId, DateTime from)
+activate FirestoreBuildDayRepository
+
+FirestoreBuildDayRepository -> Firestore : requests build days
+activate Firestore
+
+Firestore -> FirestoreBuildDayRepository : returns a list of build days
+deactivate Firestore
+
+loop for json in list
+    FirestoreBuildDayRepository -> BuildDayData : .fromJson(json)
+    activate BuildDayData
+
+    BuildDayData -> FirestoreBuildDayRepository : returns a BuildDayData instance
+    deactivate BuildDayData
+end
+
+FirestoreBuildDayRepository -> ReceiveBuildDayProjectMetricsUpdates : returns a list of BuildDay instances
+deactivate FirestoreBuildDayRepository
+
+ReceiveBuildDayProjectMetricsUpdates -> ReceiveBuildDayProjectMetricsUpdates : creates a BuildDayProjectMetrics instance
+ReceiveBuildDayProjectMetricsUpdates -> ProjectMetricsNotifier : provides a BuildDayProjectMetrics
+deactivate ReceiveBuildDayProjectMetricsUpdates
+
+ProjectMetricsNotifier -> UI : sets a build performance and number of builds metrics
+deactivate ProjectMetricsNotifier
+
+UI -> Bob : shows dashboard with the metrics
+
+@enduml
