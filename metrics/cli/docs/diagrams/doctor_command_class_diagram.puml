@@ -6,6 +6,11 @@ package firebase.service {
         + createWebApp(String projectId): Future<void>
         + deployHosting(String projectId, String target, String appPath): Future<void>
         + deployFirebase(String projectId, String firebasePath): Future<void>
+        + configureAuthProviders(String projectId) : FutureOr<String>
+        + enableAnalytics(String projectId) : FutureOr<void>
+        + initializeFirestoreData(String projectId) : FutureOr<void>
+        + upgradeBillingPlan(String projectId) : FutureOr<void>
+        + acceptTermsOfService() : FutureOr<void>
     }
 }
 
