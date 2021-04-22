@@ -42,7 +42,8 @@ package npm.service {
 package sentry.service{
     interface SentryService  {
         + login() : Future<void>
-        + createRelease(String appPath) : Future<void>
+        + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
+        + getProjectDsn(SentryProject project) : String
     }
 }
 

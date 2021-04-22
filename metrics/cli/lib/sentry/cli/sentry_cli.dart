@@ -2,7 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/interfaces/cli/cli.dart';
-import 'package:cli/sentry/model/sentry_project.dart';
+import 'package:cli/sentry/model/sentry_release.dart';
+import 'package:cli/sentry/model/source_map.dart';
 
 /// A class that represents the Sentry [Cli].
 class SentryCli extends Cli {
@@ -14,38 +15,47 @@ class SentryCli extends Cli {
     return run(['login']);
   }
 
-  /// Creates a Sentry release with the given [releaseName]
-  /// within the given [project].
-  Future<void> createRelease(String releaseName, SentryProject project) {
+  /// Creates a Sentry release using the given [release].
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
+  Future<void> createRelease(SentryRelease release) {
+    ArgumentError.checkNotNull(release);
+
+    final project = release.project;
+
     return run([
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'new',
-      releaseName,
+      release.name,
     ]);
   }
 
-  /// Uploads source maps of the files with the given [extensions] located
-  /// in the [sourcePath] to the release with the given [releaseName] within
-  /// the given [project].
-  ///
-  /// If the [extensions] are not specified, source maps of all files
+  /// Uploads source maps of the files located in the [SourceMap.path] with
+  /// the specified [SourceMap.extensions] to the given Sentry [release].
+  /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
+  /// Throws an [ArgumentError] if the given [sourceMap] is `null`.
   Future<void> uploadSourceMaps(
-    String sourcePath,
-    List<String> extensions,
-    SentryProject project,
-    String releaseName,
+    SentryRelease release,
+    SourceMap sourceMap,
   ) {
+    ArgumentError.checkNotNull(release);
+    ArgumentError.checkNotNull(sourceMap);
+
+    final project = release.project;
+    final extensions = sourceMap.extensions;
     final parameters = [
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'files',
-      releaseName,
+      release.name,
       'upload-sourcemaps',
-      sourcePath,
+      sourceMap.path,
       '--rewrite',
     ];
 
@@ -58,15 +68,19 @@ class SentryCli extends Cli {
     return run(parameters);
   }
 
-  /// Finalizes the release with the given [releaseName]
-  /// within the given [project].
-  Future<void> finalizeRelease(String releaseName, SentryProject project) {
+  /// Finalizes the given [release].
+  ///
+  /// Throws an [ArgumentError] if the given [release] is `null`.
+  Future<void> finalizeRelease(SentryRelease release) {
+    ArgumentError.checkNotNull(release);
+    final project = release.project;
+
     return run([
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'finalize',
-      releaseName,
+      release.name,
     ]);
   }
 

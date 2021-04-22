@@ -42,5 +42,21 @@ void main() {
         expect(project.projectSlug, equals(projectSlug));
       },
     );
+
+    test(
+      "equals to another SentryProject with the same parameters",
+      () {
+        final expected = SentryProject(
+          organizationSlug: orgSlug,
+          projectSlug: projectSlug,
+        );
+        final sentryProject = SentryProject(
+          organizationSlug: orgSlug,
+          projectSlug: projectSlug,
+        );
+
+        expect(sentryProject, equals(expected));
+      },
+    );
   });
 }
