@@ -135,7 +135,9 @@ class GithubActionsSourceClientAdapter
 
     final run = await _fetchWorkflowRun(buildNumber);
 
-    if (run == null || !_isConclusionValid(run.conclusion)) {
+    if (run == null ||
+        run.status == GithubActionStatus.queued ||
+        !_isConclusionValid(run.conclusion)) {
       return null;
     }
 
