@@ -12,6 +12,7 @@ import 'package:cli/git/service/git_service.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/npm/service/npm_service.dart';
 import 'package:cli/prompt/prompter.dart';
+import 'package:cli/sentry/model/sentry_project.dart';
 import 'package:cli/sentry/model/sentry_release.dart';
 import 'package:cli/sentry/model/source_map.dart';
 import 'package:cli/sentry/service/sentry_service.dart';
@@ -39,7 +40,7 @@ class Deployer {
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
 
-  /// A [Prompter] class this adapter uses to interact with a user.
+  /// A [Prompter] class this deployer uses to interact with a user.
   final Prompter _prompter;
 
   /// Creates a new instance of the [Deployer] with the given services.
@@ -71,6 +72,7 @@ class Deployer {
     ArgumentError.checkNotNull(_npmService, 'npmService');
     ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
+    ArgumentError.checkNotNull(_sentryService, 'sentryService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
     ArgumentError.checkNotNull(_prompter, 'prompter');
   }
@@ -97,8 +99,8 @@ class Deployer {
       final googleClientId = await _firebaseService.configureAuthProviders(
         projectId,
       );
-      final sentryRelease = await _setupSentry();
-      final sentryDsn = _getSentryDsn(sentryRelease);
+      final sentryRelease = await _createSentryRelease();
+      final sentryDsn = _getSentryDsn(sentryRelease?.project);
 
       final metricsConfig = MetricsConfig(
         googleSignInClientId: googleClientId,
@@ -128,8 +130,8 @@ class Deployer {
     );
   }
 
-  /// Configures the Sentry environment.
-  Future<SentryRelease> _setupSentry() async {
+  /// Creates a new Sentry release.
+  Future<SentryRelease> _createSentryRelease() async {
     final sentryRequired = _prompter.promptConfirm(DeployStrings.setupSentry);
 
     if (!sentryRequired) return null;
@@ -140,8 +142,8 @@ class Deployer {
     );
 
     final buildSourceMap = SourceMap(
-      path: DeployConstants.buildPath,
-      extensions: const ['dart'],
+      path: DeployConstants.buildWebPath,
+      extensions: const ['map', 'js'],
     );
 
     await _sentryService.login();
@@ -149,11 +151,13 @@ class Deployer {
     return _sentryService.createRelease([webSourceMap, buildSourceMap]);
   }
 
-  /// Returns the Sentry DSN based on the given [release].
-  String _getSentryDsn(SentryRelease release) {
-    if (release == null) return null;
+  /// Requests a DSN of the Sentry [project].
+  ///
+  /// Returns `null` if the given [project] is `null`.
+  String _getSentryDsn(SentryProject project) {
+    if (project == null) return null;
 
-    return _sentryService.getProjectDsn(release.project);
+    return _sentryService.getProjectDsn(project);
   }
 
   /// Deploys Firebase components and application to the Firebase project

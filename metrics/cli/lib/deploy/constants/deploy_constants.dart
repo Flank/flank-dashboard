@@ -12,11 +12,11 @@ class DeployConstants {
   /// A path to the Web project sources.
   static const String webPath = '$tempDir/metrics/web';
 
-  /// A path to the build folder.
-  static const String buildPath = '$webPath/build/web';
+  /// A path to the built Web project.
+  static const String buildWebPath = '$webPath/build/web';
 
   /// A path to the Metrics configuration file.
-  static const String metricsConfigPath = '$buildPath/metrics_config.js';
+  static const String metricsConfigPath = '$buildWebPath/metrics_config.js';
 
   /// A path to the Firebase sources.
   static const String firebasePath = '$tempDir/metrics/firebase';

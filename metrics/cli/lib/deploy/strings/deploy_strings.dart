@@ -6,5 +6,5 @@
 /// A class that holds the strings for the Sentry prompts.
 class DeployStrings {
   static const String setupSentry =
-      'Would you like to set up a Sentry for the Metrics project?';
+      'Would you like to set up a Sentry for the Metrics project?(y/n): ';
 }

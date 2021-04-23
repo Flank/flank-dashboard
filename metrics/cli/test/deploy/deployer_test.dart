@@ -31,6 +31,10 @@ void main() {
   group("Deployer", () {
     const projectId = 'testId';
     const clientId = 'clientId';
+    const sentryReleaseName = 'sentryReleaseName';
+    const sentryDsn = 'sentryDsn';
+    const sentryProjectSlug = 'sentryProjectSlug';
+    const sentryOrgSlug = 'sentryOrgSlug';
     const firebasePath = DeployConstants.firebasePath;
     const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
     const firebaseTarget = DeployConstants.firebaseTarget;
@@ -49,8 +53,14 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
-    final sentryRelease = _SentryReleaseMock();
-    final sentryProject = _SentryProjectMock();
+    final sentryProject = SentryProject(
+      projectSlug: sentryProjectSlug,
+      organizationSlug: sentryOrgSlug,
+    );
+    final sentryRelease = SentryRelease(
+      name: sentryReleaseName,
+      project: sentryProject,
+    );
     final file = _FileMock();
     final services = Services(
       flutterService: flutterService,
@@ -128,7 +138,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -145,7 +159,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -162,7 +180,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -179,7 +201,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -196,7 +222,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -213,7 +243,11 @@ void main() {
         when(servicesMock.sentryService).thenReturn(null);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            prompter: prompter,
+          ),
           throwsArgumentError,
         );
       },
@@ -747,7 +781,7 @@ void main() {
     );
 
     test(
-      ".deploy() logs in to the Sentry if the user's prompt returns true",
+      ".deploy() logs in to the Sentry if the user agrees with the Sentry setup",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
@@ -759,7 +793,7 @@ void main() {
     );
 
     test(
-      ".deploy() does not log in to the Sentry if the user's prompt returns false",
+      ".deploy() does not log in to the Sentry if the user does not agree with the Sentry setup",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -842,17 +876,16 @@ void main() {
     );
 
     test(
-      ".deploy() requests the Sentry DSN using the Sentry project from the created Sentry release",
+      ".deploy() requests the Sentry DSN using the Sentry project within the created Sentry release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(sentryRelease.project).thenReturn(sentryProject);
 
         await deployer.deploy();
 
-        verify(sentryService.getProjectDsn(sentryProject)).called(once);
+        verify(sentryService.getProjectDsn(sentryRelease.project)).called(once);
       },
     );
 
@@ -898,22 +931,18 @@ void main() {
     test(
       ".deploy() replaces the environment variables in the Metrics config file returned by FileHelper with the user-specified values",
       () async {
-        const sentryReleaseName = 'sentryReleaseName';
-        const sentryDsn = 'sentryDsn';
-
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(sentryRelease.name).thenReturn(sentryReleaseName);
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(configPath)).thenReturn(file);
 
         final config = MetricsConfig(
           googleSignInClientId: clientId,
           sentryDsn: sentryDsn,
-          sentryRelease: sentryReleaseName,
+          sentryRelease: sentryRelease.name,
         );
 
         await deployer.deploy();
@@ -1073,7 +1102,3 @@ void main() {
 class _FileHelperMock extends Mock implements FileHelper {}
 
 class _FileMock extends Mock implements File {}
-
-class _SentryReleaseMock extends Mock implements SentryRelease {}
-
-class _SentryProjectMock extends Mock implements SentryProject {}
