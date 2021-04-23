@@ -337,7 +337,7 @@ void main() {
     );
 
     test(
-      ".call() updates a build as timed out if it exceeds a timeout duration and fetching the corresponding build fails",
+      ".call() updates a build as timed out if fetching the corresponding build fails and the build exceeds a timeout duration",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
