@@ -90,6 +90,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | Name | Source | License |
 | :---: | :---: | :---: |
 | args  | [pub.dev](https://pub.dev/packages/args) | [BSD](https://github.com/dart-lang/args/blob/master/LICENSE) |
+| equatable | [pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
 | process_run | [pub.dev](https://pub.dev/packages/process_run) | [BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE) |
 | random_string | [pub.dev](https://pub.dev/packages/random_string) | [BSD](https://github.com/damondouglas/random_string.dart/blob/master/LICENSE) |
 ### Dev dependencies
