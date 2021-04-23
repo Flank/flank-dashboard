@@ -41,7 +41,6 @@ void main() {
       ),
     ];
     final error = Error();
-
     final sourceClient = SourceClientMock();
     final destinationClient = DestinationClientMock();
     final syncStage = InProgressBuildsSyncStage(
@@ -69,7 +68,7 @@ void main() {
       ));
     }
 
-    PostExpectation<Future<BuildData>> whenFetchBuild(BuildData build) {
+    PostExpectation<Future<BuildData>> whenFetchOneBuild(BuildData build) {
       return when(sourceClient.fetchOneBuild(
         sourceProjectId,
         build.buildNumber,
@@ -129,8 +128,13 @@ void main() {
 
         await syncStage.call(syncConfig);
 
+        verify(destinationClient.fetchBuildsWithStatus(
+          destinationProjectId,
+          BuildStatus.inProgress,
+        )).called(once);
+
         verifyZeroInteractions(sourceClient);
-        verifyNever(destinationClient.updateBuilds(destinationProjectId, any));
+        verifyNoMoreInteractions(destinationClient);
       },
     );
 
@@ -146,19 +150,24 @@ void main() {
     );
 
     test(
-      ".call() does not continue syncing if an error occurs while fetching in-progress builds",
+      ".call() does not continue syncing if fetching in-progress builds fails",
       () async {
         whenFetchInProgressBuilds().thenAnswer((_) => Future.error(error));
 
         await syncStage.call(syncConfig);
 
+        verify(destinationClient.fetchBuildsWithStatus(
+          destinationProjectId,
+          BuildStatus.inProgress,
+        )).called(once);
+
         verifyZeroInteractions(sourceClient);
-        verifyNever(destinationClient.updateBuilds(destinationProjectId, any));
+        verifyNoMoreInteractions(destinationClient);
       },
     );
 
     test(
-      ".call() returns an error if an error occurs while fetching in-progress builds",
+      ".call() returns an error if fetching in-progress builds fails",
       () async {
         whenFetchInProgressBuilds().thenAnswer((_) => Future.error(error));
 
@@ -169,7 +178,7 @@ void main() {
     );
 
     test(
-      ".call() fetches build data for each build of the fetched in-progress builds",
+      ".call() re-fetches each fetched in-progress build from the given destination client",
       () async {
         final buildNumbers = inProgressBuilds.map((build) => build.buildNumber);
         whenFetchInProgressBuilds().thenAnswer(
@@ -202,7 +211,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(inProgressBuild),
         );
 
@@ -228,8 +237,8 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
-          (_) => Future.value(null),
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
+          (_) => Future.value(),
         );
 
         await syncStage.call(syncConfig);
@@ -254,7 +263,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.error(error),
         );
 
@@ -284,7 +293,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(inProgressBuild),
         );
 
@@ -314,8 +323,8 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
-          (_) => Future.value(null),
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
+          (_) => Future.value(),
         );
 
         await syncStage.call(syncConfig);
@@ -344,7 +353,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.error(error),
         );
 
@@ -373,7 +382,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(finishedBuild),
         );
 
@@ -387,7 +396,7 @@ void main() {
     );
 
     test(
-      ".call() returns an error if updating builds fails with an error",
+      ".call() returns an error if updating builds fails",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
@@ -399,8 +408,8 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
-          (_) => Future.value(null),
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
+          (_) => Future.value(),
         );
         when(
           destinationClient.updateBuilds(destinationProjectId, any),
@@ -433,10 +442,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
 
@@ -469,10 +478,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
 
@@ -483,7 +492,7 @@ void main() {
     );
 
     test(
-      ".call() does not continue syncing if fetching coverage for a build fails with an error",
+      ".call() does not continue syncing if fetching coverage for a build fails",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
@@ -498,7 +507,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
         when(
@@ -507,12 +516,23 @@ void main() {
 
         await syncStage.call(syncConfigWithCoverage);
 
-        verifyNever(destinationClient.updateBuilds(destinationProjectId, any));
+        verify(destinationClient.fetchBuildsWithStatus(
+          destinationProjectId,
+          BuildStatus.inProgress,
+        )).called(once);
+        verify(sourceClient.fetchOneBuild(
+          sourceProjectId,
+          inProgressBuild.buildNumber,
+        )).called(once);
+        verify(sourceClient.fetchCoverage(updatedBuilds[0])).called(once);
+
+        verifyNoMoreInteractions(sourceClient);
+        verifyNoMoreInteractions(destinationClient);
       },
     );
 
     test(
-      ".call() returns an error if fetching coverage for a build fails with an error",
+      ".call() returns an error if fetching coverage for a build fails",
       () async {
         final inProgressBuild = BuildData(
           buildNumber: 1,
@@ -527,7 +547,7 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuild).thenAnswer(
+        whenFetchOneBuild(inProgressBuild).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
         when(
@@ -555,10 +575,10 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
         when(
@@ -584,15 +604,15 @@ void main() {
         whenFetchInProgressBuilds().thenAnswer(
           (_) => Future.value(inProgressBuilds),
         );
-        whenFetchBuild(inProgressBuilds[0]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[0]).thenAnswer(
           (_) => Future.value(updatedBuilds[0]),
         );
-        whenFetchBuild(inProgressBuilds[1]).thenAnswer(
+        whenFetchOneBuild(inProgressBuilds[1]).thenAnswer(
           (_) => Future.value(updatedBuilds[1]),
         );
         when(
           destinationClient.updateBuilds(projectId, updatedBuilds),
-        ).thenAnswer((_) => Future.value(null));
+        ).thenAnswer((_) => Future.value());
 
         final result = await syncStage.call(syncConfig);
 
