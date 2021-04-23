@@ -211,7 +211,8 @@ class GithubActionsSourceClientAdapter
           break;
         }
 
-        if (run.status == GithubActionStatus.queued) continue;
+        if (run.status == GithubActionStatus.queued ||
+            !_isConclusionValid(run.conclusion)) continue;
 
         final job = await _fetchJob(run, jobName);
 
