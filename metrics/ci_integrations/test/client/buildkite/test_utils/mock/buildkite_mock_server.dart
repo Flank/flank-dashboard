@@ -21,9 +21,6 @@ class BuildkiteMockServer extends ApiMockServer {
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
 
-  /// A [Random] instance this mock server uses to generate random data.
-  static final Random _random = Random();
-
   /// Returns a base path of the Buildkite API.
   String get basePath => '/organizations/organization_slug';
 
@@ -252,8 +249,8 @@ class BuildkiteMockServer extends ApiMockServer {
   /// from the given [states] and [finishedFrom].
   ///
   /// If the given [finishedFrom] is `null`, the [DateTime.now] is used.
-  /// Delegates selecting a random [BuildkiteBuildState]s from the given [states]
-  /// to the [_selectRandomState] method.
+  /// Selects a [BuildkiteBuildState]s from the given [states] using the
+  /// [_selectState] method.
   List<BuildkiteBuild> _generateBuilds([
     List<BuildkiteBuildState> states,
     DateTime finishedFrom,
@@ -263,7 +260,7 @@ class BuildkiteMockServer extends ApiMockServer {
         id: 'id',
         number: index,
         blocked: false,
-        state: _selectRandomState(states),
+        state: _selectState(index, states),
         webUrl: 'url',
         startedAt: DateTime(2020),
         finishedAt: finishedFrom ?? DateTime.now(),
@@ -271,17 +268,20 @@ class BuildkiteMockServer extends ApiMockServer {
     });
   }
 
-  /// Selects a random [BuildkiteBuildState] from the given [states].
+  /// Selects a [BuildkiteBuildState] from the given [states].
   ///
   /// Returns a [BuildkiteBuildState.passed] if the given [states] is `null` or
-  /// [List.isEmpty]. Otherwise, returns a random [BuildkiteBuildState] selected
-  /// from the given [states].
-  BuildkiteBuildState _selectRandomState([List<BuildkiteBuildState> states]) {
+  /// [List.isEmpty]. Otherwise, returns a [BuildkiteBuildState] selected
+  /// from the given [states] list.
+  BuildkiteBuildState _selectState(
+    int buildNumber, [
+    List<BuildkiteBuildState> states,
+  ]) {
     if (states == null || states.isEmpty) return BuildkiteBuildState.passed;
 
-    final randomStateIndex = _random.nextInt(states.length);
+    final stateIndex = buildNumber % states.length;
 
-    return states[randomStateIndex];
+    return states[stateIndex];
   }
 
   /// Generates a list of [BuildkiteArtifact]s.
