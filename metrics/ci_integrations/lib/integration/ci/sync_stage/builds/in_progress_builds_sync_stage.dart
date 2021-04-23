@@ -19,10 +19,10 @@ import 'package:metrics_core/metrics_core.dart';
 /// [DestinationClient] and resynchronizes them using the [SourceClient].
 /// Then updates the corresponding builds using the [DestinationClient].
 ///
-/// If the updated build is still [BuildStatus.inProgress] or updating a build
-/// fails, and the difference between the [DateTime.now] and
-/// [BuildData.startedAt] exceeds the in-progress timeout, sets the
-/// [BuildStatus.unknown] to the corresponding build.
+/// If the build loaded from the [SourceClient] is still
+/// [BuildStatus.inProgress] or updating a build fails, and the difference
+/// between the [DateTime.now] and [BuildData.startedAt] exceeds the in-progress
+/// timeout, sets the [BuildStatus.unknown] to the corresponding build.
 class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   @override
   final DestinationClient destinationClient;
