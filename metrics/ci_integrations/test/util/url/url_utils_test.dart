@@ -56,7 +56,7 @@ void main() {
     );
 
     test(
-      ".buildUrl() adds list query parameters",
+      ".buildUrl() adds list query parameter",
       () {
         const parameterKey = 'test';
         final expectedListParameter = ['a', 'b'];

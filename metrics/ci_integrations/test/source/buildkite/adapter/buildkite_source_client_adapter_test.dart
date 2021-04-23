@@ -1039,17 +1039,35 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() maps in-progress buildkite build to build data with null duration",
+      ".fetchOneBuild() maps running buildkite build to build data with null duration",
       () async {
         final inProgressBuilds = [
           BuildkiteBuild(
-            state: BuildkiteBuildState.canceling,
+            state: BuildkiteBuildState.running,
             startedAt: startedAt,
             finishedAt: null,
             blocked: false,
           ),
+        ];
+
+        for (final build in inProgressBuilds) {
+          when(
+            buildkiteClientMock.fetchBuild(pipelineSlug, buildNumber),
+          ).thenSuccessWith(build);
+
+          final result = await adapter.fetchOneBuild(pipelineSlug, buildNumber);
+
+          expect(result.duration, isNull);
+        }
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps canceling buildkite build to build data with null duration",
+      () async {
+        final inProgressBuilds = [
           BuildkiteBuild(
-            state: BuildkiteBuildState.running,
+            state: BuildkiteBuildState.canceling,
             startedAt: startedAt,
             finishedAt: null,
             blocked: false,
