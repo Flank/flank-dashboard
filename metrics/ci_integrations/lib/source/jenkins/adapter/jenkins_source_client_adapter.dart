@@ -195,8 +195,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   ) {
     logger.info('Mapping build to build data...');
 
-    final buildStatus = _mapJenkinsBuildToBuildStatus(jenkinsBuild);
-    final duration = _mapJenkinsBuildDuration(
+    final buildStatus = _mapJenkinsResult(
+      jenkinsBuild.building,
+      jenkinsBuild.result,
+    );
+    final duration = _processBuildDuration(
       buildStatus,
       jenkinsBuild.duration,
     );
@@ -235,16 +238,16 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return _processInteraction(interaction);
   }
 
-  /// Maps the given [JenkinsBuild.building] and [JenkinsBuild.result] of the
-  /// given [build] to a [BuildStatus].
+  /// Maps the [JenkinsBuild] result to a corresponding [BuildStatus] using
+  /// the given [building] and [result] parameters.
   ///
-  /// Returns the [BuildStatus.inProgress] if the given [JenkinsBuild.building]
-  /// is `true`. Otherwise, maps the given [JenkinsBuild.result] to a
+  /// Returns the [BuildStatus.inProgress] if the given [building]
+  /// is `true`. Otherwise, maps the given [result] to the
   /// corresponding [BuildStatus].
-  BuildStatus _mapJenkinsBuildToBuildStatus(JenkinsBuild build) {
-    if (build.building ?? false) return BuildStatus.inProgress;
+  BuildStatus _mapJenkinsResult(bool building, JenkinsBuildResult result) {
+    if (building ?? false) return BuildStatus.inProgress;
 
-    switch (build.result) {
+    switch (result) {
       case JenkinsBuildResult.success:
         return BuildStatus.successful;
       case JenkinsBuildResult.failure:
@@ -254,17 +257,17 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     }
   }
 
-  /// Returns a [Duration] of a [JenkinsBuild] depending on the given
-  /// [buildStatus] and [duration].
+  /// Processes the given [duration] of a build depending on the [status] of
+  /// this build.
   ///
-  /// Returns `null` if the given [buildStatus] is [BuildStatus.inProgress].
-  /// Otherwise, returns the given [duration] if it is not `null` or
-  /// [Duration.zero] if the given [duration] is `null`.
-  Duration _mapJenkinsBuildDuration(
-    BuildStatus buildStatus,
+  /// Returns `null` if the given [status] is [BuildStatus.inProgress].
+  /// Otherwise, returns either the given [duration] or [Duration.zero]
+  /// (if the given [duration] is `null`).
+  Duration _processBuildDuration(
+    BuildStatus status,
     Duration duration,
   ) {
-    if (buildStatus == BuildStatus.inProgress) return null;
+    if (status == BuildStatus.inProgress) return null;
 
     return duration ?? Duration.zero;
   }
