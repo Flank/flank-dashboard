@@ -12,7 +12,7 @@ import 'package:cli/git/service/git_service.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/npm/service/npm_service.dart';
 import 'package:cli/prompt/prompter.dart';
-import 'package:cli/sentry/model/sentry_project.dart';
+import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:cli/sentry/model/sentry_release.dart';
 import 'package:cli/sentry/model/source_map.dart';
 import 'package:cli/sentry/service/sentry_service.dart';
@@ -99,13 +99,11 @@ class Deployer {
       final googleClientId = await _firebaseService.configureAuthProviders(
         projectId,
       );
-      final sentryRelease = await _createSentryRelease();
-      final sentryDsn = _getSentryDsn(sentryRelease?.project);
+      final sentryConfig = await _setupSentry();
 
       final metricsConfig = MetricsConfig(
         googleSignInClientId: googleClientId,
-        sentryRelease: sentryRelease?.name,
-        sentryDsn: sentryDsn,
+        sentryConfig: sentryConfig,
       );
 
       _applyMetricsConfig(metricsConfig);
@@ -131,11 +129,22 @@ class Deployer {
   }
 
   /// Creates a new Sentry release.
-  Future<SentryRelease> _createSentryRelease() async {
-    final sentryRequired = _prompter.promptConfirm(DeployStrings.setupSentry);
+  Future<SentryConfig> _setupSentry() async {
+    final shouldSetupSentry =
+        _prompter.promptConfirm(DeployStrings.setupSentry);
 
-    if (!sentryRequired) return null;
+    if (!shouldSetupSentry) return null;
 
+    await _sentryService.login();
+
+    final release = await _createSentryRelease();
+    final dsn = _sentryService.getProjectDsn(release.project);
+
+    return SentryConfig(release: release.name, dsn: dsn);
+  }
+
+  /// Creates a new Sentry release.
+  Future<SentryRelease> _createSentryRelease() {
     final webSourceMap = SourceMap(
       path: DeployConstants.webPath,
       extensions: const ['dart'],
@@ -146,18 +155,7 @@ class Deployer {
       extensions: const ['map', 'js'],
     );
 
-    await _sentryService.login();
-
     return _sentryService.createRelease([webSourceMap, buildSourceMap]);
-  }
-
-  /// Requests a DSN of the Sentry [project].
-  ///
-  /// Returns `null` if the given [project] is `null`.
-  String _getSentryDsn(SentryProject project) {
-    if (project == null) return null;
-
-    return _sentryService.getProjectDsn(project);
   }
 
   /// Deploys Firebase components and application to the Firebase project

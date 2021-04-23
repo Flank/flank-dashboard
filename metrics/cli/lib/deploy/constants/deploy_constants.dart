@@ -12,7 +12,7 @@ class DeployConstants {
   /// A path to the Web project sources.
   static const String webPath = '$tempDir/metrics/web';
 
-  /// A path to the built Web project.
+  /// A path to the built directory of the Metrics Web project.
   static const String buildWebPath = '$webPath/build/web';
 
   /// A path to the Metrics configuration file.

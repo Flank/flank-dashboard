@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/common/model/metrics_config.dart';
+import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -10,33 +11,30 @@ void main() {
     const sentryDsn = 'sentryDsn';
     const sentryEnvironment = 'sentryEnvironment';
     const sentryRelease = 'sentryRelease';
+    const sentryConfig = SentryConfig(
+      dsn: sentryDsn,
+      environment: sentryEnvironment,
+      release: sentryRelease,
+    );
 
     test("creates an instance with the given values", () {
       final config = MetricsConfig(
         googleSignInClientId: clientId,
-        sentryDsn: sentryDsn,
-        sentryEnvironment: sentryEnvironment,
-        sentryRelease: sentryRelease,
+        sentryConfig: sentryConfig,
       );
 
       expect(config.googleSignInClientId, equals(clientId));
-      expect(config.sentryDsn, equals(sentryDsn));
-      expect(config.sentryEnvironment, equals(sentryEnvironment));
-      expect(config.sentryRelease, equals(sentryRelease));
+      expect(config.sentryConfig, equals(sentryConfig));
     });
 
     test(".toMap() converts an instance to the map", () {
       final config = MetricsConfig(
         googleSignInClientId: clientId,
-        sentryDsn: sentryDsn,
-        sentryEnvironment: sentryEnvironment,
-        sentryRelease: sentryRelease,
+        sentryConfig: sentryConfig,
       );
-      const expectedMap = {
+      final expectedMap = {
         MetricsConfig.googleSignInClientIdName: clientId,
-        MetricsConfig.sentryDsnName: sentryDsn,
-        MetricsConfig.sentryEnvironmentName: sentryEnvironment,
-        MetricsConfig.sentryReleaseName: sentryRelease,
+        ...sentryConfig.toMap(),
       };
 
       expect(config.toMap(), equals(expectedMap));

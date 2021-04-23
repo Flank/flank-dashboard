@@ -9,6 +9,7 @@ import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/helper/file_helper.dart';
+import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:cli/sentry/model/sentry_project.dart';
 import 'package:cli/sentry/model/sentry_release.dart';
 import 'package:mockito/mockito.dart';
@@ -745,7 +746,7 @@ void main() {
       ".deploy() prompts the user to configure the Sentry",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptToSetupSentry().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
 
@@ -770,6 +771,8 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease()
+            .thenAnswer((_) => Future.value(sentryRelease));
 
         await deployer.deploy();
 
@@ -785,6 +788,8 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease()
+            .thenAnswer((_) => Future.value(sentryRelease));
 
         await deployer.deploy();
 
@@ -822,6 +827,8 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease()
+            .thenAnswer((_) => Future.value(sentryRelease));
 
         await deployer.deploy();
 
@@ -837,6 +844,8 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease()
+            .thenAnswer((_) => Future.value(sentryRelease));
 
         await deployer.deploy();
 
@@ -890,19 +899,6 @@ void main() {
     );
 
     test(
-      ".deploy() does not request the Sentry DSN if the created Sentry release is null",
-      () async {
-        whenDirectoryExist().thenReturn(true);
-        whenPromptToSetupSentry().thenReturn(true);
-        whenCreateSentryRelease().thenAnswer((_) => Future.value(null));
-
-        await deployer.deploy();
-
-        verifyNever(sentryService.getProjectDsn(any));
-      },
-    );
-
-    test(
       ".deploy() gets the Metrics config file using the given FileHelper",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -939,10 +935,13 @@ void main() {
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(configPath)).thenReturn(file);
 
+        final sentryConfig = SentryConfig(
+          release: sentryRelease.name,
+          dsn: sentryDsn,
+        );
         final config = MetricsConfig(
           googleSignInClientId: clientId,
-          sentryDsn: sentryDsn,
-          sentryRelease: sentryRelease.name,
+          sentryConfig: sentryConfig,
         );
 
         await deployer.deploy();
