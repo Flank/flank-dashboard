@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/in_progress_project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
@@ -15,12 +16,16 @@ import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectBuildStatus", () {
     const successfulBuildStatus = ProjectBuildStatusViewModel(
       value: BuildStatus.successful,
     );
+    final valueNetworkImageFinder = find.byWidgetPredicate((widget) {
+      return widget is ValueNetworkImage<BuildStatus>;
+    });
 
     testWidgets(
       "throws an AssertionError if the given build status is null",
@@ -70,6 +75,40 @@ void main() {
     );
 
     testWidgets(
+      "displays an in progress build status widget if the given build status is in-progress",
+      (tester) async {
+        const buildStatus = ProjectBuildStatusViewModel(
+          value: BuildStatus.inProgress,
+        );
+
+        await tester.pumpWidget(
+          const _ProjectBuildStatusTestbed(buildStatus: buildStatus),
+        );
+
+        expect(find.byType(InProgressProjectBuildStatus), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "does not display a value image widget if the given build status is in-progress",
+      (tester) async {
+        const buildStatus = ProjectBuildStatusViewModel(
+          value: BuildStatus.inProgress,
+        );
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _ProjectBuildStatusTestbed(
+              buildStatus: buildStatus,
+            ),
+          ),
+        );
+
+        expect(valueNetworkImageFinder, findsNothing);
+      },
+    );
+
+    testWidgets(
       "displays the ValueImage with the build status from the given view model",
       (tester) async {
         await mockNetworkImagesFor(
@@ -81,8 +120,7 @@ void main() {
         );
 
         final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          find.byWidgetPredicate(
-              (widget) => widget is ValueNetworkImage<BuildStatus>),
+          valueNetworkImageFinder,
         );
 
         expect(valueImage.value, equals(successfulBuildStatus.value));
@@ -101,9 +139,7 @@ void main() {
         );
 
         final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          find.byWidgetPredicate(
-            (widget) => widget is ValueNetworkImage<BuildStatus>,
-          ),
+          valueNetworkImageFinder,
         );
 
         expect(valueImage.strategy, isA<ProjectBuildStatusImageStrategy>());
@@ -134,9 +170,11 @@ class _ProjectBuildStatusTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      body: ProjectBuildStatus(
-        buildStatusStyleStrategy: strategy,
-        buildStatus: buildStatus,
+      body: TestInjectionContainer(
+        child: ProjectBuildStatus(
+          buildStatusStyleStrategy: strategy,
+          buildStatus: buildStatus,
+        ),
       ),
     );
   }
