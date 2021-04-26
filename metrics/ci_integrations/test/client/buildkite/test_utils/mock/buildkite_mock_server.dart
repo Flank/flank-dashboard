@@ -250,7 +250,7 @@ class BuildkiteMockServer extends ApiMockServer {
   ///
   /// If the given [finishedFrom] is `null`, the [DateTime.now] is used.
   /// Selects a [BuildkiteBuildState]s from the given [states] using the
-  /// [_selectState] method.
+  /// [_selectRandomState] method.
   List<BuildkiteBuild> _generateBuilds([
     List<BuildkiteBuildState> states,
     DateTime finishedFrom,
@@ -260,7 +260,7 @@ class BuildkiteMockServer extends ApiMockServer {
         id: 'id',
         number: index,
         blocked: false,
-        state: _selectState(index, states),
+        state: _selectRandomState(index, states),
         webUrl: 'url',
         startedAt: DateTime(2020),
         finishedAt: finishedFrom ?? DateTime.now(),
@@ -273,7 +273,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Returns a [BuildkiteBuildState.passed] if the given [states] is `null` or
   /// [List.isEmpty]. Otherwise, returns a [BuildkiteBuildState] selected
   /// from the given [states] list.
-  BuildkiteBuildState _selectState(
+  BuildkiteBuildState _selectRandomState(
     int buildNumber, [
     List<BuildkiteBuildState> states,
   ]) {
