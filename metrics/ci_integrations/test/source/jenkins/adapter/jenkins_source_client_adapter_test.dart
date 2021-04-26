@@ -45,8 +45,7 @@ void main() {
     final responses = _JenkinsClientResponse(jobName);
 
     final isInProgressBuild = predicate<BuildData>((build) {
-      return build.buildStatus == BuildStatus.inProgress &&
-          build.duration == null;
+      return build.buildStatus == BuildStatus.inProgress;
     });
 
     PostExpectation<Future<InteractionResult<JenkinsBuildingJob>>>

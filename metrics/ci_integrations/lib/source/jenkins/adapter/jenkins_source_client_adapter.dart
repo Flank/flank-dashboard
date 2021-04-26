@@ -238,11 +238,11 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return _processInteraction(interaction);
   }
 
-  /// Maps the given [JenkinsBuild.building] and a [JenkinsBuild.result] to a
+  /// Maps the given [building] and [result] of the [JenkinsBuild] to the
   /// corresponding [BuildStatus].
   ///
   /// Returns the [BuildStatus.inProgress] if the given [building]
-  /// is `true`. Otherwise, maps the given [result] to a
+  /// is `true`. Otherwise, maps the given [result] to the
   /// corresponding [BuildStatus].
   BuildStatus _mapJenkinsResult(bool building, JenkinsBuildResult result) {
     if (building ?? false) return BuildStatus.inProgress;
