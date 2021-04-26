@@ -314,7 +314,7 @@ class GithubActionsSourceClientAdapter
 
   /// Determines whether the given [run] is valid.
   ///
-  /// The [run] if it is not `null`, has the
+  /// The [run] is valid if it is not `null`, has the
   /// [WorkflowRun.status] satisfying the [_isStatusValid],
   /// and the [WorkflowRun.conclusion] satisfying the [_isConclusionValid].
   bool _isWorkflowRunValid(WorkflowRun run) {
@@ -325,7 +325,7 @@ class GithubActionsSourceClientAdapter
 
   /// Determines whether the given [job] is valid.
   ///
-  /// The [job] if it is not `null`, has the
+  /// The [job] is valid if it is not `null`, has the
   /// [WorkflowRunJob.status] satisfying the [_isStatusValid],
   /// and the [WorkflowRunJob.conclusion] satisfying the [_isConclusionValid].
   bool _isJobValid(WorkflowRunJob job) {
@@ -465,7 +465,7 @@ class GithubActionsSourceClientAdapter
     return job.completedAt.difference(job.startedAt);
   }
 
-  /// Maps the given [job] to a [BuildStatus].
+  /// Returns the [BuildStatus] of the given [job].
   ///
   /// Returns the [BuildStatus.inProgress] if the given [job]'s
   /// [WorkflowRunJob.status] is [GithubActionStatus.inProgress]. Otherwise,
