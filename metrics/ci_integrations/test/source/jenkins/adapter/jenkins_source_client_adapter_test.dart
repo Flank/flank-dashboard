@@ -45,7 +45,8 @@ void main() {
     final responses = _JenkinsClientResponse(jobName);
 
     final isInProgressBuild = predicate<BuildData>((build) {
-      return build.buildStatus == BuildStatus.inProgress;
+      return build.buildStatus == BuildStatus.inProgress &&
+          build.duration == null;
     });
 
     PostExpectation<Future<InteractionResult<JenkinsBuildingJob>>>
@@ -235,7 +236,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() maps running builds to in-progress builds",
+      ".fetchBuilds() maps running builds to in-progress builds with null duration",
       () async {
         final jenkinsBuilds = [
           createJenkinsBuild(buildNumber: 1, building: true),
@@ -252,28 +253,6 @@ void main() {
         );
 
         expect(result, everyElement(isInProgressBuild));
-      },
-    );
-
-    test(
-      ".fetchBuilds() maps running builds to build data with null duration",
-      () async {
-        final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 1, building: true),
-          createJenkinsBuild(buildNumber: 2, building: true),
-        ];
-
-        responses.addBuilds(jenkinsBuilds);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuilds(
-          jobName,
-          fetchLimit,
-        );
-        final buildDurations = result.map((build) => build.duration);
-
-        expect(buildDurations, everyElement(isNull));
       },
     );
 
@@ -420,7 +399,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() maps running builds to in-progress builds",
+      ".fetchBuildsAfter() maps running builds to in-progress builds with null duration",
       () async {
         const build = BuildData(buildNumber: 1);
         final jenkinsBuilds = [
@@ -439,30 +418,6 @@ void main() {
         );
 
         expect(result, everyElement(isInProgressBuild));
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps running builds to build data with null duration",
-      () async {
-        const build = BuildData(buildNumber: 1);
-        final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 1, building: true),
-          createJenkinsBuild(buildNumber: 2, building: true),
-          createJenkinsBuild(buildNumber: 3, building: true),
-        ];
-
-        responses.addBuilds(jenkinsBuilds);
-
-        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
-
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          build,
-        );
-        final buildDurations = result.map((build) => build.duration);
-
-        expect(buildDurations, everyElement(isNull));
       },
     );
 
@@ -909,7 +864,7 @@ void main() {
     );
 
     test(
-      ".fetchOneBuild() maps running build to in-progress build",
+      ".fetchOneBuild() maps running build to in-progress build with null duration",
       () async {
         final jenkinsBuild = createJenkinsBuild(buildNumber: 1, building: true);
 
@@ -923,24 +878,6 @@ void main() {
         );
 
         expect(result, isInProgressBuild);
-      },
-    );
-
-    test(
-      ".fetchOneBuild() maps running build to build data with null duration",
-      () async {
-        final jenkinsBuild = createJenkinsBuild(buildNumber: 1, building: true);
-
-        when(
-          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
-        ).thenSuccessWith(jenkinsBuild);
-
-        final result = await adapter.fetchOneBuild(
-          jobName,
-          defaultBuildNumber,
-        );
-
-        expect(result.duration, isNull);
       },
     );
 
