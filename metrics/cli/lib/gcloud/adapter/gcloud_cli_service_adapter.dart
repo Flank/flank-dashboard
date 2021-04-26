@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/gcloud/strings/gcloud_strings.dart';
@@ -38,7 +40,7 @@ class GCloudCliServiceAdapter implements GCloudService {
     await _gcloudCli.createProject(projectId);
 
     await _gcloudCli.listRegions(projectId);
-    final region = _prompter.prompt(GcloudStrings.enterRegionName);
+    final region = _prompter.prompt(GCloudStrings.enterRegionName);
 
     await _gcloudCli.createProjectApp(region, projectId);
     await _gcloudCli.enableFirestoreApi(projectId);
@@ -50,6 +52,11 @@ class GCloudCliServiceAdapter implements GCloudService {
   @override
   Future<void> version() {
     return _gcloudCli.version();
+  }
+
+  @override
+  void acceptTermsOfService() {
+    _prompter.prompt(GCloudStrings.acceptTerms);
   }
 
   /// Generates the project identifier.
