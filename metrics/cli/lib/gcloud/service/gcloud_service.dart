@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:cli/interfaces/service/info_service.dart';
 
 /// An abstract class for GCloud service that provides methods
@@ -11,4 +13,7 @@ abstract class GCloudService extends InfoService {
 
   /// Creates a new GCloud project.
   Future<String> createProject();
+
+  /// Accepts the terms of the service.
+  FutureOr<void> acceptTermsOfService() {}
 }
