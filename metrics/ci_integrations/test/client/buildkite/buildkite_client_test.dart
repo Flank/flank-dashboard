@@ -324,13 +324,16 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns a builds page containing builds with the given state",
+      ".fetchBuilds() returns a builds page containing builds with the requested states",
       () async {
-        const expectedState = BuildkiteBuildState.finished;
+        const expectedStates = [
+          BuildkiteBuildState.failed,
+          BuildkiteBuildState.scheduled,
+        ];
 
         final result = await client.fetchBuilds(
           pipelineSlug,
-          state: expectedState,
+          states: expectedStates,
         );
 
         final builds = result.result.values;
@@ -341,7 +344,7 @@ void main() {
             isA<BuildkiteBuild>().having(
               (run) => run.state,
               'state',
-              equals(expectedState),
+              isIn(expectedStates),
             ),
           ),
         );

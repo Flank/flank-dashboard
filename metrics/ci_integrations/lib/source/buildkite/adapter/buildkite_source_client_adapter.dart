@@ -169,7 +169,11 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
   }) async {
     final interaction = await buildkiteClient.fetchBuilds(
       pipelineSlug,
-      state: BuildkiteBuildState.finished,
+      states: [
+        BuildkiteBuildState.finished,
+        BuildkiteBuildState.running,
+        BuildkiteBuildState.canceling,
+      ],
       page: page,
       perPage: perPage,
     );
@@ -182,11 +186,16 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
     String pipelineSlug,
     BuildkiteBuild build,
   ) {
+    final buildStatus = _mapStateToBuildStatus(build.state);
+    final duration = buildStatus == BuildStatus.inProgress
+        ? null
+        : _calculateJobDuration(build);
+
     return BuildData(
       buildNumber: build.number,
       startedAt: build.startedAt ?? build.finishedAt ?? DateTime.now(),
-      buildStatus: _mapStateToBuildStatus(build.state),
-      duration: _calculateJobDuration(build),
+      buildStatus: buildStatus,
+      duration: duration,
       workflowName: pipelineSlug,
       url: build.webUrl ?? '',
       apiUrl: build.apiUrl,
@@ -278,6 +287,10 @@ class BuildkiteSourceClientAdapter with LoggerMixin implements SourceClient {
         return BuildStatus.successful;
       case BuildkiteBuildState.failed:
         return BuildStatus.failed;
+      case BuildkiteBuildState.running:
+        return BuildStatus.inProgress;
+      case BuildkiteBuildState.canceling:
+        return BuildStatus.inProgress;
       default:
         return BuildStatus.unknown;
     }
