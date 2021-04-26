@@ -1483,7 +1483,7 @@ void main() {
     test(
       ".fetchOneBuild() returns null if the workflow run with the given build number has the queued status",
       () async {
-        final  workflowRun = testData.generateWorkflowRun(
+        final workflowRun = testData.generateWorkflowRun(
           runNumber: buildNumber,
           status: GithubActionStatus.queued,
         );
