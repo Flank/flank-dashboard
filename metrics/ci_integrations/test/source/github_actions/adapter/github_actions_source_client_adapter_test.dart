@@ -297,13 +297,11 @@ void main() {
     test(
       ".fetchBuilds() returns an empty list if the client returns workflow run jobs with the skipped conclusion",
       () {
-        final workflowRunJob = testData.generateWorkflowRunJob(
+        final skippedJob = testData.generateWorkflowRunJob(
           conclusion: GithubActionConclusion.skipped,
         );
 
-        final workflowRunJobsPage = WorkflowRunJobsPage(
-          values: [workflowRunJob],
-        );
+        final workflowRunJobsPage = WorkflowRunJobsPage(values: [skippedJob]);
 
         whenFetchWorkflowRuns(withJobsPage: workflowRunJobsPage)
             .thenSuccessWith(defaultRunsPage);
@@ -315,14 +313,14 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns an empty list if the client returns workflow run jobs with the queued status",
+      ".fetchBuilds() returns an empty list if the client returns workflow runs with the queued status",
       () async {
-        final workflowRunJob = testData.generateWorkflowRunJob(
+        final queuedJob = testData.generateWorkflowRunJob(
           status: GithubActionStatus.queued,
         );
 
         final workflowRunJobsPage = WorkflowRunJobsPage(
-          values: [workflowRunJob],
+          values: [queuedJob],
         );
 
         whenFetchWorkflowRuns(
@@ -452,7 +450,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() maps fetched in-progress jobs to build data with in progress build statuses",
+      ".fetchBuilds() maps fetched in-progress jobs to build data with in-progress build statuses",
       () async {
         final workflowRunJob = testData.generateWorkflowRunJob(
           status: GithubActionStatus.inProgress,
@@ -720,11 +718,37 @@ void main() {
     );
 
     test(
+      ".fetchBuildsAfter() returns an empty list if the client returns workflow runs with the queued status",
+      () async {
+        const queuedRun = WorkflowRun(
+          number: 2,
+          status: GithubActionStatus.queued,
+        );
+
+        const workflowRunsPage = WorkflowRunsPage(values: [queuedRun]);
+
+        whenFetchWorkflowRuns(
+          withJobsPage: defaultJobsPage,
+        ).thenSuccessWith(workflowRunsPage);
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() returns an empty list if the client returns workflow run jobs with the skipped conclusion",
       () {
-        const workflowRunJobsPage = WorkflowRunJobsPage(values: [
-          WorkflowRunJob(conclusion: GithubActionConclusion.skipped)
-        ]);
+        const skippedJob = WorkflowRunJob(
+          conclusion: GithubActionConclusion.skipped,
+        );
+        const workflowRunJobsPage = WorkflowRunJobsPage(values: [skippedJob]);
 
         final lastBuild = testData.generateBuildData(buildNumber: 1);
 
@@ -734,6 +758,30 @@ void main() {
         final result = adapter.fetchBuildsAfter(jobName, lastBuild);
 
         expect(result, completion(isEmpty));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() returns an empty list if the client returns workflow run jobs with the queued status",
+      () async {
+        final queuedJob = testData.generateWorkflowRunJob(
+          status: GithubActionStatus.queued,
+        );
+
+        final workflowRunJobsPage = WorkflowRunJobsPage(values: [queuedJob]);
+
+        whenFetchWorkflowRuns(
+          withJobsPage: workflowRunJobsPage,
+        ).thenSuccessWith(defaultRunsPage);
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+
+        expect(result, isEmpty);
       },
     );
 
@@ -938,60 +986,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() returns an empty list if the client returns workflow runs with the queued status",
-      () async {
-        final defaultRunsPage = WorkflowRunsPage(
-          values: [
-            testData.generateWorkflowRun(
-              runNumber: 2,
-              status: GithubActionStatus.queued,
-            )
-          ],
-        );
-
-        whenFetchWorkflowRuns(
-          withJobsPage: defaultJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          firstBuild,
-        );
-
-        expect(result, isEmpty);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() returns an empty list if the client returns workflow run jobs with the queued status",
-      () async {
-        final workflowRunJob = testData.generateWorkflowRunJob(
-          status: GithubActionStatus.queued,
-        );
-
-        final workflowRunJobsPage = WorkflowRunJobsPage(
-          values: [workflowRunJob],
-        );
-
-        whenFetchWorkflowRuns(
-          withJobsPage: workflowRunJobsPage,
-        ).thenSuccessWith(defaultRunsPage);
-
-        final firstBuild = testData.generateBuildData(buildNumber: 1);
-
-        final result = await adapter.fetchBuildsAfter(
-          jobName,
-          firstBuild,
-        );
-
-        expect(result, isEmpty);
-      },
-    );
-
-    test(
-      ".fetchBuildsAfter() maps fetched in-progress jobs to build data with in progress build statuses",
+      ".fetchBuildsAfter() maps fetched in-progress jobs to build data with in-progress build statuses",
       () async {
         const workflowRunsPage = WorkflowRunsPage(
           values: [WorkflowRun(number: 2)],
@@ -1629,9 +1624,7 @@ void main() {
       ".fetchOneBuild() returns null if a job with the given name has the queued status",
       () async {
         final workflowRunsPage = WorkflowRunsPage(values: [
-          testData.generateWorkflowRun(
-            runNumber: buildNumber,
-          ),
+          testData.generateWorkflowRun(runNumber: buildNumber),
         ]);
         const queuedJob = WorkflowRunJob(
           name: jobName,

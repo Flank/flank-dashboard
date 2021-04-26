@@ -141,7 +141,9 @@ class GithubActionsSourceClientAdapter
 
     final job = await _fetchJob(run, jobName);
 
-    return job == null ? null : _mapJobToBuildData(job, run);
+    if (job == null) return null;
+
+    return _mapJobToBuildData(job, run);
   }
 
   /// Fetches the [WorkflowRun] with the given [runNumber].
@@ -205,16 +207,13 @@ class GithubActionsSourceClientAdapter
           break;
         }
 
-        if (!_isStatusValid(run.status) ||
-            !_isConclusionValid(run.conclusion)) {
+        if (!_isWorkflowRunValid(run)) {
           continue;
         }
 
         final job = await _fetchJob(run, jobName);
 
-        if (job == null) {
-          continue;
-        } else {
+        if (job != null) {
           final build = _mapJobToBuildData(job, run);
 
           result.add(build);
@@ -346,7 +345,7 @@ class GithubActionsSourceClientAdapter
   /// Determines whether the given [status] is valid.
   ///
   /// The [status] is valid if and only if it is not equal
-  /// to the [GithubActionStatus.queued]
+  /// to the [GithubActionStatus.queued].
   bool _isStatusValid(GithubActionStatus status) {
     return status != GithubActionStatus.queued;
   }
