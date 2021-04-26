@@ -13,6 +13,8 @@ import '../../test_utils/prompter_mock.dart';
 void main() {
   group('GCloudCliServiceAdapter', () {
     const region = 'testRegion';
+    const enterRegion = GCloudStrings.enterRegionName;
+    const acceptTerms = GCloudStrings.acceptTerms;
 
     final gcloudCli = _GCloudCliMock();
     final prompter = PrompterMock();
@@ -25,7 +27,7 @@ void main() {
     });
 
     PostExpectation<String> whenEnterRegionPrompt() {
-      return when(prompter.prompt(GcloudStrings.enterRegionName));
+      return when(prompter.prompt(enterRegion));
     }
 
     test(
@@ -58,88 +60,20 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project with the generated project id",
-      () async {
-        final projectId = await gcloudService.createProject();
-
-        verify(gcloudCli.createProject(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() shows available regions for the created project",
-      () async {
-        final projectId = await gcloudService.createProject();
-
-        verify(gcloudCli.listRegions(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() requests the region from the user",
-      () async {
-        await gcloudService.createProject();
-
-        verify(prompter.prompt(GcloudStrings.enterRegionName)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() creates the project app with the given region and the generated project id",
-      () async {
-        whenEnterRegionPrompt().thenReturn(region);
-
-        final projectId = await gcloudService.createProject();
-
-        verify(gcloudCli.createProjectApp(region, projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() enables Firestore API for the project with the generated project id",
-      () async {
-        final projectId = await gcloudService.createProject();
-
-        verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() creates database with the generated id and the given region",
-      () async {
-        whenEnterRegionPrompt().thenReturn(region);
-
-        final projectId = await gcloudService.createProject();
-
-        verify(gcloudCli.createDatabase(region, projectId)).called(once);
-      },
-    );
-
-    test(
-      ".createProject() returns the identifier of the created project",
-      () async {
-        final projectId = await gcloudService.createProject();
-
-        expect(projectId, isNotNull);
-        verify(gcloudCli.createProject(projectId)).called(once);
-      },
-    );
-
-    test(
-      ".version() shows the version information",
-      () async {
-        await gcloudService.version();
-
-        verify(gcloudCli.version()).called(once);
-      },
-    );
-
-    test(
       ".login() throws if GCloud CLI throws during the logging",
       () {
         when(gcloudCli.login()).thenAnswer((_) => Future.error(stateError));
 
         expect(gcloudService.login(), throwsStateError);
+      },
+    );
+
+    test(
+      ".createProject() creates the project with the generated project id",
+      () async {
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.createProject(projectId)).called(once);
       },
     );
 
@@ -172,6 +106,15 @@ void main() {
     );
 
     test(
+      ".createProject() shows available regions for the created project",
+      () async {
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.listRegions(projectId)).called(once);
+      },
+    );
+
+    test(
       ".createProject() throws if GCloud CLI throws during the available regions showing",
       () async {
         when(gcloudCli.listRegions(any))
@@ -198,10 +141,18 @@ void main() {
     );
 
     test(
+      ".createProject() requests the region from the user",
+      () async {
+        await gcloudService.createProject();
+
+        verify(prompter.prompt(enterRegion)).called(once);
+      },
+    );
+
+    test(
       ".createProject() throws if GCloud CLI throws during the requesting the region from the user",
       () {
-        when(prompter.prompt(GcloudStrings.enterRegionName))
-            .thenThrow(stateError);
+        when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
         expect(gcloudService.createProject(), throwsStateError);
       },
@@ -210,8 +161,7 @@ void main() {
     test(
       ".createProject() stops the project creation process if there is an error during the requesting the region from the user",
       () async {
-        when(prompter.prompt(GcloudStrings.enterRegionName))
-            .thenThrow(stateError);
+        when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
@@ -221,6 +171,17 @@ void main() {
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() creates the project app with the given region and the generated project id",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.createProjectApp(region, projectId)).called(once);
       },
     );
 
@@ -249,6 +210,15 @@ void main() {
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() enables Firestore API for the project with the generated project id",
+      () async {
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
       },
     );
 
@@ -282,6 +252,17 @@ void main() {
     );
 
     test(
+      ".createProject() creates database with the generated id and the given region",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.createDatabase(region, projectId)).called(once);
+      },
+    );
+
+    test(
       ".createProject() throws if GCloud CLI throws during the database creation",
       () {
         when(gcloudCli.createDatabase(any, any))
@@ -292,11 +273,51 @@ void main() {
     );
 
     test(
+      ".createProject() returns the identifier of the created project",
+      () async {
+        final projectId = await gcloudService.createProject();
+
+        expect(projectId, isNotNull);
+        verify(gcloudCli.createProject(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".version() shows the version information",
+      () async {
+        await gcloudService.version();
+
+        verify(gcloudCli.version()).called(once);
+      },
+    );
+
+    test(
       ".version() throws if GCloud CLI throws during the version showing",
       () {
         when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
 
         expect(gcloudService.version(), throwsStateError);
+      },
+    );
+
+    test(
+      ".acceptTermsOfService() prompts the user to accept the terms of the GCloud service",
+      () async {
+        gcloudService.acceptTermsOfService();
+
+        verify(prompter.prompt(acceptTerms)).called(once);
+      },
+    );
+
+    test(
+      ".acceptTermsOfService() throws if prompter throws during the terms prompting",
+      () {
+        when(prompter.prompt(acceptTerms)).thenThrow(stateError);
+
+        expect(
+          () => gcloudService.acceptTermsOfService(),
+          throwsStateError,
+        );
       },
     );
   });
