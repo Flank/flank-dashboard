@@ -1483,11 +1483,11 @@ void main() {
     test(
       ".fetchOneBuild() returns null if the workflow run with the given build number has the queued status",
       () async {
-        const workflowRun = WorkflowRun(
-          number: buildNumber,
+        final  workflowRun = testData.generateWorkflowRun(
+          runNumber: buildNumber,
           status: GithubActionStatus.queued,
         );
-        const workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
         whenFetchWorkflowRuns().thenSuccessWith(workflowRunsPage);
 
         final buildFuture = await adapter.fetchOneBuild(jobName, buildNumber);
