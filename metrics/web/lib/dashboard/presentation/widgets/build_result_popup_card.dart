@@ -6,10 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
-import 'package:metrics_core/metrics_core.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card_build_status.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class BuildResultPopupCard extends StatelessWidget {
@@ -62,11 +60,8 @@ class BuildResultPopupCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ValueNetworkImage<BuildStatus>(
-                width: 24.0,
-                height: 24.0,
-                value: buildResultPopupViewModel.buildStatus,
-                strategy: const BuildResultPopupImageStrategy(),
+              BuildResultPopupCardBuildStatus(
+                projectBuildStatus: buildResultPopupViewModel.buildStatus,
               ),
               Flexible(
                 child: Padding(

@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card_build_status.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -34,7 +34,9 @@ void main() {
     );
 
     const duration = Duration(seconds: 30000);
-    const buildStatus = BuildStatus.unknown;
+    const buildStatus = ProjectBuildStatusViewModel(
+      value: BuildStatus.unknown,
+    );
 
     final date = DateTime.now();
 
@@ -51,6 +53,10 @@ void main() {
     final subtitleFinder = find.text(CommonStrings.duration(
       duration,
     ));
+
+    final buildStatusWidgetFinder = find.byType(
+      BuildResultPopupCardBuildStatus,
+    );
 
     testWidgets(
       "throws an AssertionError if the given build result popup view model is null",
@@ -95,7 +101,7 @@ void main() {
       (tester) async {
         final buildResultPopupViewModel = BuildResultPopupViewModel(
           date: DateTime.now(),
-          buildStatus: BuildStatus.unknown,
+          buildStatus: buildStatus,
           duration: null,
         );
 
@@ -182,41 +188,38 @@ void main() {
     );
 
     testWidgets(
-      "displays the ValueImage with the build status from the given view model",
+      "displays the BuildResultPopupCardBuildStatus widget",
       (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
-        });
-
-        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          find.byWidgetPredicate(
-              (widget) => widget is ValueNetworkImage<BuildStatus>),
+        await mockNetworkImagesFor(
+          () {
+            return tester.pumpWidget(_BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ));
+          },
         );
 
-        expect(valueImage.value, equals(buildResultPopupViewModel.buildStatus));
+        expect(buildStatusWidgetFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the ValueImage with the BuildResultPopupImageStrategy",
+      "applies the project build status view model to the BuildResultPopupCardBuildStatus widget",
       (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
-        });
-
-        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          find.byWidgetPredicate(
-            (widget) => widget is ValueNetworkImage<BuildStatus>,
-          ),
+        final expectedStatus = buildResultPopupViewModel.buildStatus;
+        await mockNetworkImagesFor(
+          () {
+            return tester.pumpWidget(_BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ));
+          },
         );
 
-        expect(valueImage.strategy, isA<BuildResultPopupImageStrategy>());
+        final buildStatusWidget =
+            tester.widget<BuildResultPopupCardBuildStatus>(
+          buildStatusWidgetFinder,
+        );
+
+        expect(buildStatusWidget.projectBuildStatus, equals(expectedStatus));
       },
     );
   });
