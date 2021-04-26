@@ -295,6 +295,26 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() returns an empty list if the client returns workflow runs with the skipped conclusion",
+      () async {
+        final queuedWorkflowRun = testData.generateWorkflowRun(
+          conclusion: GithubActionConclusion.skipped,
+        );
+        final workflowRunsPage = WorkflowRunsPage(
+          values: [queuedWorkflowRun],
+        );
+
+        whenFetchWorkflowRuns(
+          withJobsPage: defaultJobsPage,
+        ).thenSuccessWith(workflowRunsPage);
+
+        final result = await adapter.fetchBuilds(jobName, fetchLimit);
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
       ".fetchBuilds() returns an empty list if the client returns workflow run jobs with the skipped conclusion",
       () {
         final skippedJob = testData.generateWorkflowRunJob(
@@ -313,7 +333,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() returns an empty list if the client returns workflow runs with the queued status",
+      ".fetchBuilds() returns an empty list if the client returns workflow run jobs with the queued status",
       () async {
         final queuedJob = testData.generateWorkflowRunJob(
           status: GithubActionStatus.queued,
@@ -723,6 +743,31 @@ void main() {
         const queuedRun = WorkflowRun(
           number: 2,
           status: GithubActionStatus.queued,
+        );
+
+        const workflowRunsPage = WorkflowRunsPage(values: [queuedRun]);
+
+        whenFetchWorkflowRuns(
+          withJobsPage: defaultJobsPage,
+        ).thenSuccessWith(workflowRunsPage);
+
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          firstBuild,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() returns an empty list if the client returns workflow runs with the skipped conclusion",
+      () async {
+        const queuedRun = WorkflowRun(
+          number: 2,
+          conclusion: GithubActionConclusion.skipped,
         );
 
         const workflowRunsPage = WorkflowRunsPage(values: [queuedRun]);

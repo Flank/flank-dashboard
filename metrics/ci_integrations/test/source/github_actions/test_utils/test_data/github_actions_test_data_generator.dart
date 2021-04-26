@@ -55,16 +55,19 @@ class GithubActionsTestDataGenerator {
   /// The [id] defaults to `1`.
   /// The [runNumber] defaults to `1`.
   /// The [status] defaults to [GithubActionStatus.completed].
+  /// The [conclusion] defaults to [GithubActionConclusion.success].
   WorkflowRun generateWorkflowRun({
     int id = 1,
     int runNumber = 1,
     GithubActionStatus status = GithubActionStatus.completed,
+    GithubActionConclusion conclusion = GithubActionConclusion.success,
   }) {
     return WorkflowRun(
       id: id,
       number: runNumber,
       url: url,
       status: status,
+      conclusion: conclusion,
       createdAt: startDateTime,
     );
   }
