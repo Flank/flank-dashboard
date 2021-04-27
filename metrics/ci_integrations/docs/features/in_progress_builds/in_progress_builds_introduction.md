@@ -165,7 +165,7 @@ In the context of GitHub, the `status` means the execution status of an entity m
 - the `status` depends on the progress of the process - **what is happening now**;
 - the `conclusion` describes the result of the process - **what happened**.
 
-While the process is running, the `conclusion` is always `null`. On the other hand, if the `conclusion` is not `null`, the `state` is always `completed`. Thus, the current GitHub Actions integration queries workflow runs that have only `completed` status to ensure that all jobs within that run are finished and provide their results. However, the in-progress builds introduction requires querying running jobs (and therefore runs) as well. The following table describes possible statuses and conclusions for jobs and how are they mapped to the Metrics `BuildStatus` (note that the `queued` status is ignored):
+While the process is running, the `conclusion` is always `null`. On the other hand, if the `conclusion` is not `null`, the `state` is always `completed`. Thus, the current GitHub Actions integration queries workflow runs that have only `completed` status to ensure that all jobs within that run are finished and provide their results. However, the in-progress builds introduction requires querying running jobs (and therefore runs) as well. The following table describes possible statuses and conclusions for jobs and how are they mapped to the Metrics `BuildStatus` (note that the `queued` status or `skipped` conclusion are ignored):
 
 |Status|Conclusion|BuildStatus|
 |---|---|---|
@@ -177,7 +177,7 @@ While the process is running, the `conclusion` is always `null`. On the other ha
 |`completed`|`action_required`|`unknown`|
 |`completed`|`cancelled`|`unknown`|
 |`completed`|`neutral`|`unknown`|
-|`completed`|`skipped`|`unknown`|
+|`completed`|`skipped`|**ignored**|
 |`completed`|`stale`|`unknown`|
 
 According to the table above, the `GithubActionsSourceClientAdapter` should fetch running builds as well as finished ones. To archive that, the `_fetchRunsPage` should be modified to not request only `completed` runs as follows: 
@@ -198,7 +198,7 @@ According to the table above, the `GithubActionsSourceClientAdapter` should fetc
   }
 ```
 
-Then, runs and jobs having the status `queued` should be filtered out manually. Consider [List workflow runs for a repository](https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository) and [List jobs for a workflow run](https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run) sections of the [GitHub Actions API](https://docs.github.com/en/rest/reference/actions) documentation for more information.
+Then, runs and jobs having the status `queued` or conclusion `skipped` should be filtered out manually. Consider [List workflow runs for a repository](https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository) and [List jobs for a workflow run](https://docs.github.com/en/rest/reference/actions#list-jobs-for-a-workflow-run) sections of the [GitHub Actions API](https://docs.github.com/en/rest/reference/actions) documentation for more information.
 
 Also, the `GithubActionsSourceClientAdapter` should now implement the new `fetchOneBuild` method to match the `SourceClient` interface. The adapter should use the specified `GithubActionsClient` instance to fetch the build with the given number.
 
