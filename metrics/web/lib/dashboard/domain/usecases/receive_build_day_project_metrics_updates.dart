@@ -1,6 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
-//
+
 import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/common/domain/entities/build_day.dart';
 import 'package:metrics/common/domain/repositories/build_day_repository.dart';
@@ -17,14 +17,14 @@ class ReceiveBuildDayProjectMetricsUpdates
   /// A [Duration] of a loading period for builds.
   static const Duration metricsLoadingPeriod = Duration(days: 6);
 
-  /// A [BuildDayRepository] this [UseCase] uses to load the data from
+  /// A [BuildDayRepository] this use case uses to load the data from
   /// the remote.
   final BuildDayRepository _repository;
 
-  /// Creates the [ReceiveBuildDayProjectMetricsUpdates] use case
+  /// Creates a new instance of the [ReceiveBuildDayProjectMetricsUpdates]
   /// with given [BuildDayRepository].
   ///
-  /// Throws an [ArgumentError] if the given [BuildDayRepository] is null.
+  /// Throws an [ArgumentError] if the given [BuildDayRepository] is `null`.
   ReceiveBuildDayProjectMetricsUpdates(this._repository) {
     ArgumentError.checkNotNull(_repository, '_repository');
   }
@@ -32,9 +32,12 @@ class ReceiveBuildDayProjectMetricsUpdates
   @override
   Stream<BuildDayProjectMetrics> call(ProjectIdParam params) {
     final projectId = params.projectId;
+    final dateFrom = DateTime.now().subtract(metricsLoadingPeriod);
+
     final buildDayStream = _repository.projectBuildDaysInDateRangeStream(
-        projectId,
-        from: DateTime.now().subtract(metricsLoadingPeriod));
+      projectId,
+      from: dateFrom,
+    );
 
     return buildDayStream.map(
       (buildDays) => _mapBuildDaysToMetrics(buildDays, projectId),
@@ -59,10 +62,7 @@ class ReceiveBuildDayProjectMetricsUpdates
 
   /// Creates a [BuildNumberMetric] based on the given [buildDays].
   BuildNumberMetric _createBuildNumberMetric(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = buildDays.fold<int>(
-      0,
-      (value, buildDay) => value + _getTotalNumberOfBuilds(buildDay),
-    );
+    final numberOfBuildsInPeriod = _getNumberOfBuildsInPeriod(buildDays);
 
     return BuildNumberMetric(numberOfBuilds: numberOfBuildsInPeriod);
   }
@@ -79,20 +79,32 @@ class ReceiveBuildDayProjectMetricsUpdates
   }
 
   /// Calculates the average [BuildDay.totalDuration] of the given [buildDays].
+  ///
+  /// Returns a [Duration.zero] if the total number of builds performed during
+  /// the given [buildDays] is `null`.
   Duration _calculateAverageDuration(List<BuildDay> buildDays) {
-    int numberOfBuildsInPeriod = 0;
-    Duration totalDurationInPeriod = const Duration();
+    final numberOfBuildsInPeriod = _getNumberOfBuildsInPeriod(buildDays);
 
-    for (final buildDay in buildDays) {
-      numberOfBuildsInPeriod += _getTotalNumberOfBuilds(buildDay);
-      totalDurationInPeriod += buildDay.totalDuration;
-    }
+    if (numberOfBuildsInPeriod == 0) return Duration.zero;
+
+    final totalDurationInPeriod = buildDays.fold<Duration>(
+      Duration.zero,
+      (value, buildDay) => value + buildDay.totalDuration,
+    );
 
     return totalDurationInPeriod ~/ numberOfBuildsInPeriod;
   }
 
-  /// Returns the total number of builds performed during the given [buildDay].
-  int _getTotalNumberOfBuilds(BuildDay buildDay) {
+  /// Returns the number of builds performed during the given [buildDays].
+  int _getNumberOfBuildsInPeriod(List<BuildDay> buildDays) {
+    return buildDays.fold<int>(
+      0,
+      (value, buildDay) => value + _getNumberOfBuildsInDay(buildDay),
+    );
+  }
+
+  /// Returns the number of builds performed during the given [buildDay].
+  int _getNumberOfBuildsInDay(BuildDay buildDay) {
     return buildDay.successful +
         buildDay.failed +
         buildDay.unknown +
