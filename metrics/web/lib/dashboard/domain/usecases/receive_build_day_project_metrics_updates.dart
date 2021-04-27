@@ -62,7 +62,9 @@ class ReceiveBuildDayProjectMetricsUpdates
 
   /// Creates a [BuildNumberMetric] based on the given [buildDays].
   BuildNumberMetric _createBuildNumberMetric(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = _getTotalNumberOfBuildsInPeriod(buildDays);
+    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuildsInPeriod(
+      buildDays,
+    );
 
     return BuildNumberMetric(numberOfBuilds: numberOfBuildsInPeriod);
   }
@@ -83,25 +85,28 @@ class ReceiveBuildDayProjectMetricsUpdates
   /// Returns a [Duration.zero] if the total number of builds performed during
   /// the given [buildDays] is `null`.
   Duration _calculateAverageDuration(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = _getTotalNumberOfBuildsInPeriod(buildDays);
+    final numberOfBuildsInPeriod =
+        _calculateTotalNumberOfBuildsInPeriod(buildDays);
 
     if (numberOfBuildsInPeriod == 0) return Duration.zero;
 
-    final totalDurationInPeriod = _getTotalDurationOfBuildsInPeriod(buildDays);
+    final totalDurationInPeriod = _calculateTotalDurationOfBuildsInPeriod(
+      buildDays,
+    );
 
     return totalDurationInPeriod ~/ numberOfBuildsInPeriod;
   }
 
   /// Returns the total number of builds performed during the given [buildDays].
-  int _getTotalNumberOfBuildsInPeriod(List<BuildDay> buildDays) {
+  int _calculateTotalNumberOfBuildsInPeriod(List<BuildDay> buildDays) {
     return buildDays.fold<int>(
       0,
-      (value, buildDay) => value + _getNumberOfBuildsInDay(buildDay),
+      (value, buildDay) => value + _calculateNumberOfBuildsInDay(buildDay),
     );
   }
 
   /// Returns the sum of build [Duration]s performed during the given [buildDays].
-  Duration _getTotalDurationOfBuildsInPeriod(List<BuildDay> buildDays) {
+  Duration _calculateTotalDurationOfBuildsInPeriod(List<BuildDay> buildDays) {
     return buildDays.fold<Duration>(
       Duration.zero,
       (value, buildDay) => value + buildDay.totalDuration,
@@ -109,7 +114,7 @@ class ReceiveBuildDayProjectMetricsUpdates
   }
 
   /// Returns the number of builds performed during the given [buildDay].
-  int _getNumberOfBuildsInDay(BuildDay buildDay) {
+  int _calculateNumberOfBuildsInDay(BuildDay buildDay) {
     return buildDay.successful +
         buildDay.failed +
         buildDay.unknown +

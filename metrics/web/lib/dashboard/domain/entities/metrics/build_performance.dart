@@ -9,7 +9,7 @@ class BuildPerformance with EquatableMixin implements DateTimeSetEntry {
   @override
   final DateTime date;
 
-  /// A [Duration] of this build.
+  /// A [Duration] of the build.
   final Duration duration;
 
   @override
