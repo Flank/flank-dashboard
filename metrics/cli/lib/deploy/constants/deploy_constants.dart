@@ -6,22 +6,24 @@ class DeployConstants {
   /// A URL to the Metrics repository.
   static const String repoURL = 'git@github.com:platform-platform/monorepo.git';
 
-  /// A name of a temporary directory.
-  static const String tempDir = 'tempDir';
-
-  /// A path to the Web project sources.
-  static const String webPath = '$tempDir/metrics/web';
-
-  /// A path to the Firebase sources.
-  static const String firebasePath = '$tempDir/metrics/firebase';
-
-  /// A path to the Firebase functions sources.
-  static const String firebaseFunctionsPath = '$firebasePath/functions';
-
-  /// A path to the Metrics configuration file.
-  static const String metricsConfigPath =
-      '$webPath/build/web/metrics_config.js';
-
   /// A Firebase Hosting target name.
   static const String firebaseTarget = 'metrics';
+
+  /// A name of a temporary directory.
+  static String tempDir([String suffix]) =>
+      suffix == null ? 'tempDir' : 'tempDir_$suffix';
+
+  /// A path to the Web project sources.
+  static String webPath(String tempDir) => '$tempDir/metrics/web';
+
+  /// A path to the Firebase sources.
+  static String firebasePath(String tempDir) => '$tempDir/metrics/firebase';
+
+  /// A path to the Firebase functions sources.
+  static String firebaseFunctionsPath(String tempDir) =>
+      '${firebasePath(tempDir)}/functions';
+
+  /// A path to the Metrics configuration file.
+  static String metricsConfigPath(String tempDir) =>
+      '${webPath(tempDir)}/build/web/metrics_config.js';
 }

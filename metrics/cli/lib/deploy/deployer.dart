@@ -10,6 +10,7 @@ import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/git/service/git_service.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/npm/service/npm_service.dart';
+import 'package:clock/clock.dart';
 
 /// A class providing method for deploying the Metrics Web Application.
 class Deployer {
@@ -31,6 +32,9 @@ class Deployer {
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
 
+  /// A class that provides methods for working with the [DateTime].
+  final Clock _clock;
+
   /// Creates a new instance of the [Deployer] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
@@ -40,15 +44,18 @@ class Deployer {
   /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.firebaseService] is `null`.
   /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
+  /// Throws an [ArgumentError] if the given [clock] is `null`.
   Deployer({
     Services services,
     FileHelper fileHelper,
+    Clock clock,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _gitService = services?.gitService,
         _firebaseService = services?.firebaseService,
-        _fileHelper = fileHelper {
+        _fileHelper = fileHelper,
+        _clock = clock {
     ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
@@ -56,6 +63,7 @@ class Deployer {
     ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
+    ArgumentError.checkNotNull(_clock, 'clock');
   }
 
   /// Deploys the Metrics Web Application.
@@ -66,13 +74,12 @@ class Deployer {
 
     await _firebaseService.createWebApp(projectId);
 
+    final tempDirName = getTempDirectoryName();
+
     try {
-      await _gitService.checkout(
-        DeployConstants.repoURL,
-        DeployConstants.tempDir,
-      );
-      await _installNpmDependencies();
-      await _flutterService.build(DeployConstants.webPath);
+      await _gitService.checkout(DeployConstants.repoURL, tempDirName);
+      await _installNpmDependencies(tempDirName);
+      await _flutterService.build(DeployConstants.webPath(tempDirName));
       await _firebaseService.upgradeBillingPlan(projectId);
       await _firebaseService.enableAnalytics(projectId);
       await _firebaseService.initializeFirestoreData(projectId);
@@ -82,11 +89,18 @@ class Deployer {
       );
       final metricsConfig = MetricsConfig(googleSignInClientId: googleClientId);
 
-      _applyMetricsConfig(metricsConfig);
-      await _deployToFirebase(projectId);
+      _applyMetricsConfig(metricsConfig, tempDirName);
+      await _deployToFirebase(projectId, tempDirName);
     } finally {
-      _cleanup();
+      _cleanup(tempDirName);
     }
+  }
+
+  /// Generates a name of the temporary directory.
+  String getTempDirectoryName() {
+    final tempDirSuffix = _clock.now().millisecondsSinceEpoch.toString();
+
+    return DeployConstants.tempDir(tempDirSuffix);
   }
 
   /// Logins to the necessary services.
@@ -98,38 +112,41 @@ class Deployer {
     _firebaseService.acceptTermsOfService();
   }
 
-  /// Installs npm dependencies.
-  Future<void> _installNpmDependencies() async {
-    await _npmService.installDependencies(DeployConstants.firebasePath);
-    await _npmService.installDependencies(
-      DeployConstants.firebaseFunctionsPath,
+  /// Installs npm dependencies within the given [tempDirName].
+  Future<void> _installNpmDependencies(String tempDirName) async {
+    final firebasePath = DeployConstants.firebasePath(tempDirName);
+    final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
+      tempDirName,
     );
+
+    await _npmService.installDependencies(firebasePath);
+    await _npmService.installDependencies(firebaseFunctionsPath);
   }
 
   /// Deploys Firebase components and application to the Firebase project
-  /// with the given [projectId].
-  Future<void> _deployToFirebase(String projectId) async {
-    await _firebaseService.deployFirebase(
-      projectId,
-      DeployConstants.firebasePath,
-    );
-    await _firebaseService.deployHosting(
-      projectId,
-      DeployConstants.firebaseTarget,
-      DeployConstants.webPath,
-    );
+  /// with the given [projectId] from the given [tempDirName].
+  Future<void> _deployToFirebase(String projectId, String tempDirName) async {
+    const target = DeployConstants.firebaseTarget;
+
+    final firebasePath = DeployConstants.firebasePath(tempDirName);
+    final webPath = DeployConstants.webPath(tempDirName);
+
+    await _firebaseService.deployFirebase(projectId, firebasePath);
+    await _firebaseService.deployHosting(projectId, target, webPath);
   }
 
-  /// Applies the given [config] to the Metrics configuration file.
-  void _applyMetricsConfig(MetricsConfig config) {
-    final configFile = _fileHelper.getFile(DeployConstants.metricsConfigPath);
+  /// Applies the given [config] to the Metrics configuration file
+  /// within the given [tempDirName].
+  void _applyMetricsConfig(MetricsConfig config, String tempDirName) {
+    final configPath = DeployConstants.metricsConfigPath(tempDirName);
+    final configFile = _fileHelper.getFile(configPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
   }
 
   /// Cleans temporary resources created during the deployment process.
-  void _cleanup() {
-    final tempDirectory = _fileHelper.getDirectory(DeployConstants.tempDir);
+  void _cleanup(String tempDirName) {
+    final tempDirectory = _fileHelper.getDirectory(tempDirName);
     final directoryExist = tempDirectory.existsSync();
 
     if (!directoryExist) return;

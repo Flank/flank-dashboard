@@ -4,6 +4,7 @@
 import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
+import 'package:clock/clock.dart' as cl;
 
 /// A class providing method for creating a [Deployer] instance.
 class DeployerFactory {
@@ -24,10 +25,8 @@ class DeployerFactory {
   Deployer create() {
     final services = _servicesFactory.create();
     final fileHelper = FileHelper();
+    final clock = cl.clock;
 
-    return Deployer(
-      services: services,
-      fileHelper: fileHelper,
-    );
+    return Deployer(services: services, fileHelper: fileHelper, clock: clock);
   }
 }

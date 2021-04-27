@@ -8,6 +8,7 @@ import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
+import 'package:clock/clock.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -26,14 +27,20 @@ void main() {
   group("Deployer", () {
     const projectId = 'testId';
     const clientId = 'clientId';
-    const firebasePath = DeployConstants.firebasePath;
-    const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
     const firebaseTarget = DeployConstants.firebaseTarget;
-    const webPath = DeployConstants.webPath;
-    const configPath = DeployConstants.metricsConfigPath;
     const repoURL = DeployConstants.repoURL;
-    const tempDir = DeployConstants.tempDir;
 
+    final dateTimeNow = DateTime.now();
+    final clock = Clock.fixed(dateTimeNow);
+    final tempDirName = DeployConstants.tempDir(
+      dateTimeNow.millisecondsSinceEpoch.toString(),
+    );
+    final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
+      tempDirName,
+    );
+    final firebasePath = DeployConstants.firebasePath(tempDirName);
+    final webPath = DeployConstants.webPath(tempDirName);
+    final configPath = DeployConstants.metricsConfigPath(tempDirName);
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -53,6 +60,7 @@ void main() {
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
+      clock: clock,
     );
     final stateError = StateError('test');
 
@@ -105,7 +113,11 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            clock: clock,
+          ),
           throwsArgumentError,
         );
       },
@@ -121,7 +133,11 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            clock: clock,
+          ),
           throwsArgumentError,
         );
       },
@@ -137,7 +153,11 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            clock: clock,
+          ),
           throwsArgumentError,
         );
       },
@@ -153,7 +173,11 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(firebaseService);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            clock: clock,
+          ),
           throwsArgumentError,
         );
       },
@@ -169,7 +193,11 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(null);
 
         expect(
-          () => Deployer(services: servicesMock, fileHelper: fileHelper),
+          () => Deployer(
+            services: servicesMock,
+            fileHelper: fileHelper,
+            clock: clock,
+          ),
           throwsArgumentError,
         );
       },
@@ -179,9 +207,20 @@ void main() {
       "throws an ArgumentError if the given FileHelper is null",
       () {
         expect(
+          () => Deployer(services: services, fileHelper: null, clock: clock),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given Clock is null",
+      () {
+        expect(
           () => Deployer(
             services: services,
-            fileHelper: null,
+            fileHelper: fileHelper,
+            clock: null,
           ),
           throwsArgumentError,
         );
@@ -326,13 +365,13 @@ void main() {
     );
 
     test(
-      ".deploy() clones the Git repository",
+      ".deploy() clones the Git repository to the temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
 
         await deployer.deploy();
 
-        verify(gitService.checkout(repoURL, tempDir)).called(once);
+        verify(gitService.checkout(repoURL, tempDirName)).called(once);
       },
     );
 
@@ -357,7 +396,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
+          gitService.checkout(repoURL, tempDirName),
           flutterService.build(webPath),
         ]);
       },
@@ -371,8 +410,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(DeployConstants.firebasePath),
+          gitService.checkout(repoURL, tempDirName),
+          npmService.installDependencies(firebasePath),
         ]);
       },
     );
@@ -385,8 +424,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+          gitService.checkout(repoURL, tempDirName),
+          npmService.installDependencies(firebaseFunctionsPath),
         ]);
       },
     );
