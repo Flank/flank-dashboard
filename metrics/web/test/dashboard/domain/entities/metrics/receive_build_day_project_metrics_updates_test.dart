@@ -15,7 +15,6 @@ import '../../../../test_utils/matchers.dart';
 void main() {
   group("ReceiveBuildDayProjectMetricsUpdates", () {
     const projectId = 'id';
-
     const projectIdParam = ProjectIdParam(projectId);
 
     final buildDayRepository = _BuildDayRepositoryMock();
