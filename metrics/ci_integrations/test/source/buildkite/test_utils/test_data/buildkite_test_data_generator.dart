@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
@@ -106,11 +106,14 @@ class BuildkiteTestDataGenerator {
     int buildNumber,
     BuildStatus buildStatus = BuildStatus.successful,
   }) {
+    final buildDuration =
+        buildStatus == BuildStatus.inProgress ? null : duration;
+
     return BuildData(
       buildNumber: buildNumber,
       startedAt: startedAt,
       buildStatus: buildStatus,
-      duration: duration,
+      duration: buildDuration,
       workflowName: pipelineSlug,
       url: webUrl,
       apiUrl: apiUrl,

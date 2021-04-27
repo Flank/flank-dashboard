@@ -295,7 +295,7 @@ void main() {
     );
 
     test(
-      ".deploy() logs in to the GCloud before creating the GCloud project",
+      ".deploy() logs in to the GCloud before accepting the terms of the GCloud service",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -304,6 +304,31 @@ void main() {
 
         verifyInOrder([
           gcloudService.login(),
+          gcloudService.acceptTermsOfService(),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() accepts the terms of the GCloud service",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verify(gcloudService.acceptTermsOfService()).called(once);
+      },
+    );
+
+    test(
+      ".deploy() accepts the terms of the GCloud service before creating the GCloud project",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.acceptTermsOfService(),
           gcloudService.createProject(),
         ]);
       },

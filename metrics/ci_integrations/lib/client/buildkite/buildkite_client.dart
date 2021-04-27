@@ -113,8 +113,8 @@ class BuildkiteClient with LoggerMixin {
   /// A [finishedFrom] is used as a filter query parameter to define builds
   /// finished on or after the given [DateTime].
   ///
-  /// A [state] is used as a filter query parameter to define the
-  /// [BuildkiteBuild.state] of builds to fetch.
+  /// A [states] parameter is used as a filter query parameter to define the
+  /// [BuildkiteBuildState]s of builds to fetch.
   ///
   /// A [perPage] is used for limiting the number of builds and pagination
   /// in pair with the [page] parameter. It defaults to `10` and is limited
@@ -128,7 +128,7 @@ class BuildkiteClient with LoggerMixin {
   Future<InteractionResult<BuildkiteBuildsPage>> fetchBuilds(
     String pipelineSlug, {
     DateTime finishedFrom,
-    BuildkiteBuildState state,
+    List<BuildkiteBuildState> states,
     int perPage = 10,
     int page,
   }) async {
@@ -136,9 +136,11 @@ class BuildkiteClient with LoggerMixin {
     const stateMapper = BuildkiteBuildStateMapper();
     final _page = _getValidPageNumber(page);
 
+    final requestStates = states?.map((state) => stateMapper.unmap(state));
+
     final queryParameters = {
       if (finishedFrom != null) 'finished_from': finishedFrom.toIso8601String(),
-      if (state != null) 'state': stateMapper.unmap(state),
+      if (requestStates != null) 'state[]': requestStates,
       if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };

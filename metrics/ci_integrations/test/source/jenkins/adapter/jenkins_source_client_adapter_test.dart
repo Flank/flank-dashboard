@@ -31,20 +31,26 @@ void main() {
       fileName: 'coverage-summary.json',
       relativePath: 'coverage/coverage-summary.json',
     );
+    const fetchLimit = 20;
+    const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
+
     final defaultDateTime = DateTime(2020);
     final defaultArtifactContent = <String, dynamic>{
       'pct': 0.6,
     };
     final defaultBuild = BuildData(coverage: defaultCoverage);
-    const defaultJenkinsBuild = JenkinsBuild(artifacts: [defaultArtifact]);
 
     final jenkinsClientMock = JenkinsClientMock();
     final adapter = JenkinsSourceClientAdapter(jenkinsClientMock);
     final responses = _JenkinsClientResponse(jobName);
 
-    const fetchLimit = 20;
+    final isInProgressBuild = predicate<BuildData>((build) {
+      return build.buildStatus == BuildStatus.inProgress &&
+          build.duration == null;
+    });
 
-    PostExpectation<Future<InteractionResult>> whenFetchBuilds({
+    PostExpectation<Future<InteractionResult<JenkinsBuildingJob>>>
+        whenFetchBuilds({
       String jobName = jobName,
       JenkinsQueryLimits limits,
     }) {
@@ -117,24 +123,25 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() fetches builds which are not building",
-      () {
+      ".fetchBuilds() fetches both finished and running builds",
+      () async {
         final jenkinsBuilds = [
           createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: true),
         ];
-        final expected = [createBuildData(buildNumber: 1)];
 
         responses.addBuilds(jenkinsBuilds);
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(
+        final result = await adapter.fetchBuilds(
           jobName,
           fetchLimit,
         );
 
-        expect(result, completion(equals(expected)));
+        expect(result, hasLength(jenkinsBuilds.length));
+        expect(result, contains(isNot(isInProgressBuild)));
+        expect(result, contains(isInProgressBuild));
       },
     );
 
@@ -163,7 +170,7 @@ void main() {
 
     test(
       ".fetchBuilds() fetches no more than the given fetch limit number of builds",
-      () {
+      () async {
         final builds = createJenkinsBuilds(
           buildNumbers: List.generate(30, (index) => index),
         );
@@ -171,15 +178,12 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(
+        final result = await adapter.fetchBuilds(
           jobName,
           fetchLimit,
         );
 
-        expect(
-          result,
-          completion(hasLength(lessThanOrEqualTo(fetchLimit))),
-        );
+        expect(result, hasLength(lessThanOrEqualTo(fetchLimit)));
       },
     );
 
@@ -222,12 +226,33 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuilds(
+        final result = await adapter.fetchBuilds(
           jobName,
           fetchLimit,
         );
 
-        expect(result, completion(equals(expected)));
+        expect(result, equals(expected));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps running builds to in-progress builds with null duration",
+      () async {
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(
+          jobName,
+          fetchLimit,
+        );
+
+        expect(result, everyElement(isInProgressBuild));
       },
     );
 
@@ -304,23 +329,25 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() fetches builds which are not building",
-      () {
+      ".fetchBuildsAfter() fetches both finished and running builds",
+      () async {
         const build = BuildData(buildNumber: 1);
         final jenkinsBuilds = [
           createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: false),
           createJenkinsBuild(buildNumber: 3, building: true),
         ];
-        final expected = [createBuildData(buildNumber: 2)];
+        const expectedBuildNumbers = [2, 3];
 
         responses.addBuilds(jenkinsBuilds);
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+        final actualBuildNumbers =
+            result.map((build) => build.buildNumber).toList();
 
-        expect(result, completion(equals(expected)));
+        expect(actualBuildNumbers, equals(expectedBuildNumbers));
       },
     );
 
@@ -365,9 +392,32 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(equals(expected)));
+        expect(result, equals(expected));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps running builds to in-progress builds with null duration",
+      () async {
+        const build = BuildData(buildNumber: 1);
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1, building: true),
+          createJenkinsBuild(buildNumber: 2, building: true),
+          createJenkinsBuild(buildNumber: 3, building: true),
+        ];
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(
+          jobName,
+          build,
+        );
+
+        expect(result, everyElement(isInProgressBuild));
       },
     );
 
@@ -388,9 +438,9 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(equals(expected)));
+        expect(result, equals(expected));
       },
     );
 
@@ -420,21 +470,21 @@ void main() {
 
     test(
       ".fetchBuildsAfter() returns an empty list if there are no new builds",
-      () {
+      () async {
         const build = BuildData(buildNumber: 1);
         responses.addBuilds(createJenkinsBuilds(buildNumbers: [1]));
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(isEmpty));
+        expect(result, isEmpty);
       },
     );
 
     test(
       ".fetchBuildsAfter() fetches new builds added during synchronization",
-      () {
+      () async {
         const build = BuildData(buildNumber: 1);
         responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 2, 3]));
         bool additionalBuildsAdded = false;
@@ -452,15 +502,15 @@ void main() {
           ),
         );
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(hasLength(4)));
+        expect(result, hasLength(4));
       },
     );
 
     test(
       ".fetchBuildsAfter() returns builds if the given build has been deleted",
-      () {
+      () async {
         const build = BuildData(buildNumber: 8);
         responses.addBuilds(createJenkinsBuilds(
           buildNumbers: [1, 3, 5, 7, 9, 11],
@@ -468,15 +518,15 @@ void main() {
 
         whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(hasLength(2)));
+        expect(result, hasLength(2));
       },
     );
 
     test(
       ".fetchBuildsAfter() returns builds when new builds added during synchronization if the given build has been deleted",
-      () {
+      () async {
         const build = BuildData(buildNumber: 2);
         responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 3, 5]));
         bool additionalBuildsAdded = false;
@@ -495,9 +545,9 @@ void main() {
           ),
         );
 
-        final result = adapter.fetchBuildsAfter(jobName, build);
+        final result = await adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(hasLength(4)));
+        expect(result, hasLength(4));
       },
     );
 
@@ -810,6 +860,24 @@ void main() {
 
           expect(result.buildStatus, equals(expectedStatus));
         }
+      },
+    );
+
+    test(
+      ".fetchOneBuild() maps running build to in-progress build with null duration",
+      () async {
+        final jenkinsBuild = createJenkinsBuild(buildNumber: 1, building: true);
+
+        when(
+          jenkinsClientMock.fetchBuildByNumber(jobName, defaultBuildNumber),
+        ).thenSuccessWith(jenkinsBuild);
+
+        final result = await adapter.fetchOneBuild(
+          jobName,
+          defaultBuildNumber,
+        );
+
+        expect(result, isInProgressBuild);
       },
     );
 
