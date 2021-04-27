@@ -32,9 +32,6 @@ class Deployer {
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
 
-  /// A class that provides methods for working with the [DateTime].
-  final Clock _clock;
-
   /// Creates a new instance of the [Deployer] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
@@ -48,14 +45,12 @@ class Deployer {
   Deployer({
     Services services,
     FileHelper fileHelper,
-    Clock clock,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _gitService = services?.gitService,
         _firebaseService = services?.firebaseService,
-        _fileHelper = fileHelper,
-        _clock = clock {
+        _fileHelper = fileHelper {
     ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
@@ -63,7 +58,6 @@ class Deployer {
     ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
-    ArgumentError.checkNotNull(_clock, 'clock');
   }
 
   /// Deploys the Metrics Web Application.
@@ -98,7 +92,7 @@ class Deployer {
 
   /// Generates a name of the temporary directory.
   String getTempDirectoryName() {
-    final tempDirSuffix = _clock.now().millisecondsSinceEpoch.toString();
+    final tempDirSuffix = clock.now().millisecondsSinceEpoch.toString();
 
     return DeployConstants.tempDir(tempDirSuffix);
   }

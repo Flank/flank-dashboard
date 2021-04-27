@@ -8,7 +8,7 @@ import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
-import 'package:clock/clock.dart' as cl;
+import 'package:clock/clock.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -30,9 +30,8 @@ void main() {
     const firebaseTarget = DeployConstants.firebaseTarget;
     const repoURL = DeployConstants.repoURL;
 
-    final dateTime = cl.clock.now();
-    final clock = cl.Clock.fixed(dateTime);
-    final suffix = dateTime.millisecondsSinceEpoch.toString();
+    final currentDateTime = clock.now();
+    final suffix = currentDateTime.millisecondsSinceEpoch.toString();
     final tempDir = DeployConstants.tempDir(suffix);
     final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
       tempDir,
@@ -59,7 +58,6 @@ void main() {
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
-      clock: clock,
     );
     final stateError = StateError('test');
 
@@ -115,7 +113,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             fileHelper: fileHelper,
-            clock: clock,
           ),
           throwsArgumentError,
         );
@@ -135,7 +132,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             fileHelper: fileHelper,
-            clock: clock,
           ),
           throwsArgumentError,
         );
@@ -155,7 +151,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             fileHelper: fileHelper,
-            clock: clock,
           ),
           throwsArgumentError,
         );
@@ -175,7 +170,6 @@ void main() {
           () => Deployer(
             services: servicesMock,
             fileHelper: fileHelper,
-            clock: clock,
           ),
           throwsArgumentError,
         );
@@ -192,11 +186,7 @@ void main() {
         when(servicesMock.firebaseService).thenReturn(null);
 
         expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            clock: clock,
-          ),
+          () => Deployer(services: servicesMock, fileHelper: fileHelper),
           throwsArgumentError,
         );
       },
@@ -206,21 +196,7 @@ void main() {
       "throws an ArgumentError if the given FileHelper is null",
       () {
         expect(
-          () => Deployer(services: services, fileHelper: null, clock: clock),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given Clock is null",
-      () {
-        expect(
-          () => Deployer(
-            services: services,
-            fileHelper: fileHelper,
-            clock: null,
-          ),
+          () => Deployer(services: services, fileHelper: null),
           throwsArgumentError,
         );
       },
@@ -368,9 +344,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(gitService.checkout(repoURL, tempDir)).called(once);
+          verify(gitService.checkout(repoURL, tempDir)).called(once);
+        });
       },
     );
 
@@ -392,12 +370,14 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          flutterService.build(webPath),
-        ]);
+          verifyInOrder([
+            gitService.checkout(repoURL, tempDir),
+            flutterService.build(webPath),
+          ]);
+        });
       },
     );
 
@@ -406,12 +386,14 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(firebasePath),
-        ]);
+          verifyInOrder([
+            gitService.checkout(repoURL, tempDir),
+            npmService.installDependencies(firebasePath),
+          ]);
+        });
       },
     );
 
@@ -420,12 +402,14 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(firebaseFunctionsPath),
-        ]);
+          verifyInOrder([
+            gitService.checkout(repoURL, tempDir),
+            npmService.installDependencies(firebaseFunctionsPath),
+          ]);
+        });
       },
     );
 
@@ -434,9 +418,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(npmService.installDependencies(firebasePath)).called(once);
+          verify(npmService.installDependencies(firebasePath)).called(once);
+        });
       },
     );
 
@@ -445,10 +431,12 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(npmService.installDependencies(firebaseFunctionsPath))
-            .called(once);
+          verify(npmService.installDependencies(firebaseFunctionsPath))
+              .called(once);
+        });
       },
     );
 
@@ -469,13 +457,14 @@ void main() {
       ".deploy() installs the npm dependencies in the Firebase folder before deploying Firebase components",
       () async {
         whenDirectoryExist().thenReturn(true);
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        await deployer.deploy();
-
-        verifyInOrder([
-          npmService.installDependencies(firebasePath),
-          firebaseService.deployFirebase(any, any),
-        ]);
+          verifyInOrder([
+            npmService.installDependencies(firebasePath),
+            firebaseService.deployFirebase(any, firebasePath),
+          ]);
+        });
       },
     );
 
@@ -484,12 +473,14 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verifyInOrder([
-          npmService.installDependencies(firebaseFunctionsPath),
-          firebaseService.deployFirebase(any, any),
-        ]);
+          verifyInOrder([
+            npmService.installDependencies(firebaseFunctionsPath),
+            firebaseService.deployFirebase(any, firebasePath),
+          ]);
+        });
       },
     );
 
@@ -498,9 +489,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(flutterService.build(webPath)).called(once);
+          verify(flutterService.build(webPath)).called(once);
+        });
       },
     );
 
@@ -688,11 +681,12 @@ void main() {
       ".deploy() gets the Metrics config file using the given FileHelper",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(fileHelper.getFile(configPath)).called(once);
+          verify(fileHelper.getFile(configPath)).called(once);
+        });
       },
     );
 
@@ -713,7 +707,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
-        when(fileHelper.getFile(configPath)).thenReturn(file);
+        when(fileHelper.getFile(any)).thenReturn(file);
 
         final config = MetricsConfig(googleSignInClientId: clientId);
 
@@ -763,10 +757,12 @@ void main() {
         whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
 
-        await deployer.deploy();
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        verify(firebaseService.deployFirebase(projectId, firebasePath))
-            .called(once);
+          verify(firebaseService.deployFirebase(projectId, firebasePath))
+              .called(once);
+        });
       },
     );
 
@@ -802,14 +798,15 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await deployer.deploy();
 
-        await deployer.deploy();
-
-        verify(firebaseService.deployHosting(
-          projectId,
-          firebaseTarget,
-          webPath,
-        )).called(once);
+          verify(firebaseService.deployHosting(
+            projectId,
+            firebaseTarget,
+            webPath,
+          )).called(once);
+        });
       },
     );
 
