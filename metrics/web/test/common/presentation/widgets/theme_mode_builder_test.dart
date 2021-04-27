@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/widgets/theme_type_builder.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/test_injection_container.dart';
@@ -13,15 +13,15 @@ import '../../../test_utils/theme_notifier_mock.dart';
 // ignore_for_file: avoid_redundant_argument_values, avoid_positional_boolean_parameters
 
 void main() {
-  group("ThemeTypeBuilder", () {
+  group("ThemeModeBuilder", () {
     const lightThemeChild = Text('light');
     const darkThemeChild = Text('dark');
 
     ThemeNotifierMock themeNotifier;
 
-    final themeTypeBuilderFinder = find.byType(ThemeTypeBuilder);
+    final themeTypeBuilderFinder = find.byType(ThemeModeBuilder);
 
-    Widget builder(BuildContext context, bool isDark) {
+    Widget builder(BuildContext context, bool isDark, Widget child) {
       return isDark ? darkThemeChild : lightThemeChild;
     }
 
@@ -33,7 +33,7 @@ void main() {
       "throws an AssertionError if the given builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _ThemeTypeBuilderTestbed(
+          const _ThemeModeBuilderTestbed(
             builder: null,
           ),
         );
@@ -46,12 +46,12 @@ void main() {
       "creates an instance with the given builder",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          _ThemeTypeBuilderTestbed(
+          _ThemeModeBuilderTestbed(
             builder: builder,
           ),
         );
 
-        final themeTypeBuilder = tester.widget<ThemeTypeBuilder>(
+        final themeTypeBuilder = tester.widget<ThemeModeBuilder>(
           themeTypeBuilderFinder,
         );
 
@@ -60,12 +60,27 @@ void main() {
     );
 
     testWidgets(
-      "provides an '.isDark' value of a ThemeNotifier to the given builder",
+      "calls the given builder with the given child",
+      (WidgetTester tester) async {
+        const child = Text('test');
+        await tester.pumpWidget(
+          _ThemeModeBuilderTestbed(
+            builder: (_, __, child) => child,
+            child: child,
+          ),
+        );
+
+        expect(find.byWidget(child), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "calls the given builder with the current theme mode",
       (WidgetTester tester) async {
         when(themeNotifier.isDark).thenReturn(true);
 
         await tester.pumpWidget(
-          _ThemeTypeBuilderTestbed(
+          _ThemeModeBuilderTestbed(
             builder: builder,
             themeNotifier: themeNotifier,
           ),
@@ -76,12 +91,12 @@ void main() {
     );
 
     testWidgets(
-      "rebuilds a child on a theme type change",
+      "rebuilds a child on a theme mode change",
       (WidgetTester tester) async {
         when(themeNotifier.isDark).thenReturn(true);
 
         await tester.pumpWidget(
-          _ThemeTypeBuilderTestbed(
+          _ThemeModeBuilderTestbed(
             builder: builder,
             themeNotifier: themeNotifier,
           ),
@@ -97,19 +112,24 @@ void main() {
   });
 }
 
-/// A testbed class needed to test the [ThemeTypeBuilder] widget.
-class _ThemeTypeBuilderTestbed extends StatelessWidget {
-  /// A [ThemeNotifier] used in tests.
+/// A testbed class that is used to test the [ThemeModeBuilder] widget.
+class _ThemeModeBuilderTestbed extends StatelessWidget {
+  /// A [ThemeNotifier] to use in tests.
   final ThemeNotifier themeNotifier;
 
-  /// A [ThemeTypeWidgetBuilder] used in tests.
-  final ThemeTypeWidgetBuilder builder;
+  /// A [ThemeModeWidgetBuilder] callback to apply to the widget under tests.
+  final ThemeModeWidgetBuilder builder;
 
-  /// Creates a new instance of this testbed with the given [builder]
-  /// and the [themeNotifier].
-  const _ThemeTypeBuilderTestbed({
+  /// A child [Widget] of the [ThemeModeBuilder] to to apply to the widget under
+  /// test.
+  final Widget child;
+
+  /// Creates a new instance of the [_ThemeModeBuilderTestbed] with the given
+  /// [builder], [child], and [themeNotifier].
+  const _ThemeModeBuilderTestbed({
     Key key,
     this.builder,
+    this.child,
     this.themeNotifier,
   }) : super(key: key);
 
@@ -118,8 +138,9 @@ class _ThemeTypeBuilderTestbed extends StatelessWidget {
     return MaterialApp(
       home: TestInjectionContainer(
         themeNotifier: themeNotifier,
-        child: ThemeTypeBuilder(
+        child: ThemeModeBuilder(
           builder: builder,
+          child: child,
         ),
       ),
     );

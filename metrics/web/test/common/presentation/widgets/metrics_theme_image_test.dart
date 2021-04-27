@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
-import 'package:metrics/common/presentation/widgets/theme_type_builder.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -45,23 +45,26 @@ void main() {
       },
     );
 
-    testWidgets("applies the given width to the image", (tester) async {
-      const expectedWidth = 20.0;
+    testWidgets(
+      "applies the given width to the image",
+      (tester) async {
+        const expectedWidth = 20.0;
 
-      await mockNetworkImagesFor(
-        () {
-          return tester.pumpWidget(const _MetricsThemeImageTestbed(
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-            width: expectedWidth,
-          ));
-        },
-      );
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsThemeImageTestbed(
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+              width: expectedWidth,
+            ),
+          );
+        });
 
-      final image = FinderUtil.findSvgImage(tester);
+        final image = FinderUtil.findSvgImage(tester);
 
-      expect(image.width, equals(expectedWidth));
-    });
+        expect(image.width, equals(expectedWidth));
+      },
+    );
 
     testWidgets(
       "applies the given height to the image",
@@ -69,11 +72,13 @@ void main() {
         const expectedHeight = 20.0;
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsThemeImageTestbed(
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-            height: expectedHeight,
-          ));
+          return tester.pumpWidget(
+            const _MetricsThemeImageTestbed(
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+              height: expectedHeight,
+            ),
+          );
         });
 
         final image = FinderUtil.findSvgImage(tester);
@@ -88,11 +93,13 @@ void main() {
         const expectedFit = BoxFit.contain;
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsThemeImageTestbed(
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-            fit: expectedFit,
-          ));
+          return tester.pumpWidget(
+            const _MetricsThemeImageTestbed(
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+              fit: expectedFit,
+            ),
+          );
         });
 
         final image = FinderUtil.findSvgImage(tester);
@@ -102,18 +109,20 @@ void main() {
     );
 
     testWidgets(
-      "applies a theme type builder to the svg image widget",
+      "displays a theme mode builder to build the image widget",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsThemeImageTestbed(
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-          ));
+          return tester.pumpWidget(
+            const _MetricsThemeImageTestbed(
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+            ),
+          );
         });
 
         final themeTypeBuilderFinder = find.ancestor(
           of: find.byType(SvgImage),
-          matching: find.byType(ThemeTypeBuilder),
+          matching: find.byType(ThemeModeBuilder),
         );
 
         expect(themeTypeBuilderFinder, findsOneWidget);
@@ -128,11 +137,13 @@ void main() {
         when(notifierMock.isDark).thenReturn(true);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsThemeImageTestbed(
-            themeNotifier: notifierMock,
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-          ));
+          return tester.pumpWidget(
+            _MetricsThemeImageTestbed(
+              themeNotifier: notifierMock,
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+            ),
+          );
         });
 
         final image = FinderUtil.findSvgImage(tester);
@@ -150,11 +161,13 @@ void main() {
         when(notifierMock.isDark).thenReturn(false);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsThemeImageTestbed(
-            themeNotifier: notifierMock,
-            darkAsset: darkAsset,
-            lightAsset: lightAsset,
-          ));
+          return tester.pumpWidget(
+            _MetricsThemeImageTestbed(
+              themeNotifier: notifierMock,
+              darkAsset: darkAsset,
+              lightAsset: lightAsset,
+            ),
+          );
         });
 
         final image = FinderUtil.findSvgImage(tester);

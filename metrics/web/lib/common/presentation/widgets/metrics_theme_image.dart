@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
-import 'package:metrics/common/presentation/widgets/theme_type_builder.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 
 /// A class that displays appropriate asset depending on the current theme mode.
 class MetricsThemeImage extends StatelessWidget {
@@ -39,8 +39,8 @@ class MetricsThemeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ThemeTypeBuilder(
-      builder: (_, isDark) {
+    return ThemeModeBuilder(
+      builder: (_, isDark, __) {
         return SvgImage(
           isDark ? darkAsset : lightAsset,
           width: width,
