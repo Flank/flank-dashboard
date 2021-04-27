@@ -10,16 +10,17 @@ class BuildDayProjectMetrics extends Equatable {
   /// A unique identifier of the project these metrics belong to.
   final String projectId;
 
-  /// A [BuildNumberMetric] of project with [projectId].
+  /// A [BuildNumberMetric] of a project with [projectId].
   final BuildNumberMetric buildNumberMetric;
 
-  /// A [PerformanceMetric] of project with [projectId].
+  /// A [PerformanceMetric] of a project with [projectId].
   final PerformanceMetric performanceMetric;
 
   @override
   List<Object> get props => [projectId, buildNumberMetric, performanceMetric];
 
-  /// Creates a new instance of the [BuildDayProjectMetrics].
+  /// Creates a new instance of the [BuildDayProjectMetrics] with the given
+  /// [projectId], [buildNumberMetric] and [performanceMetric].
   const BuildDayProjectMetrics({
     this.projectId,
     this.buildNumberMetric,
