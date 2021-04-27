@@ -34,7 +34,7 @@ class BuildDayData {
       'projectId': projectId,
       'day': day,
       'totalDuration': totalDuration,
-      'statusField': statusField
+      statusField.name: statusField.value,
     };
   }
 }

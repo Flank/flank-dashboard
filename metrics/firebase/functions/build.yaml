@@ -2,6 +2,7 @@ targets:
   $default:
     sources:
       - lib/**
+      - $package$
     builders:
       build_node_compilers|entrypoint:
         generate_for:

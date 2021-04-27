@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
+
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 
 /// A class that represents a single status field of the build day.
