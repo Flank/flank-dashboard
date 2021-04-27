@@ -14,13 +14,13 @@ class BuildDay extends Equatable {
   /// day.
   final int successful;
 
-  /// A number of failed builds performed during this build day.
+  /// A number of [BuildStatus.failed] builds performed during this build day.
   final int failed;
 
   /// A number of [BuildStatus.unknown] builds performed during this build day.
   final int unknown;
 
-  /// A number of in-progress builds ran during this build day.
+  /// A number of [BuildStatus.inProgress] builds ran during this build day.
   final int inProgress;
 
   /// A total [Duration] taken for builds during this build day.
@@ -29,7 +29,20 @@ class BuildDay extends Equatable {
   /// A [DateTime] that represents the date of this build day.
   final DateTime day;
 
-  /// Creates a new instance of the [BuildDay].
+  @override
+  List<Object> get props => [
+        projectId,
+        successful,
+        failed,
+        unknown,
+        inProgress,
+        totalDuration,
+        day,
+      ];
+
+  /// Creates a new instance of the [BuildDay] with the given parameters.
+  ///
+  /// Throws an [ArgumentError] if any of the given parameters is `null`.
   BuildDay({
     @required this.projectId,
     @required this.successful,
