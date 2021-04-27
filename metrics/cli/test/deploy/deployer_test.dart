@@ -8,7 +8,7 @@ import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/helper/file_helper.dart';
-import 'package:clock/clock.dart';
+import 'package:clock/clock.dart' as cl;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -30,17 +30,16 @@ void main() {
     const firebaseTarget = DeployConstants.firebaseTarget;
     const repoURL = DeployConstants.repoURL;
 
-    final dateTimeNow = DateTime.now();
-    final clock = Clock.fixed(dateTimeNow);
-    final tempDirName = DeployConstants.tempDir(
-      dateTimeNow.millisecondsSinceEpoch.toString(),
-    );
+    final dateTime = cl.clock.now();
+    final clock = cl.Clock.fixed(dateTime);
+    final suffix = dateTime.millisecondsSinceEpoch.toString();
+    final tempDir = DeployConstants.tempDir(suffix);
     final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
-      tempDirName,
+      tempDir,
     );
-    final firebasePath = DeployConstants.firebasePath(tempDirName);
-    final webPath = DeployConstants.webPath(tempDirName);
-    final configPath = DeployConstants.metricsConfigPath(tempDirName);
+    final firebasePath = DeployConstants.firebasePath(tempDir);
+    final webPath = DeployConstants.webPath(tempDir);
+    final configPath = DeployConstants.metricsConfigPath(tempDir);
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -371,7 +370,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gitService.checkout(repoURL, tempDirName)).called(once);
+        verify(gitService.checkout(repoURL, tempDir)).called(once);
       },
     );
 
@@ -396,7 +395,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirName),
+          gitService.checkout(repoURL, tempDir),
           flutterService.build(webPath),
         ]);
       },
@@ -410,7 +409,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirName),
+          gitService.checkout(repoURL, tempDir),
           npmService.installDependencies(firebasePath),
         ]);
       },
@@ -424,7 +423,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirName),
+          gitService.checkout(repoURL, tempDir),
           npmService.installDependencies(firebaseFunctionsPath),
         ]);
       },
