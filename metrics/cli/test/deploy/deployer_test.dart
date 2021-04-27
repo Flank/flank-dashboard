@@ -313,6 +313,7 @@ void main() {
       ".deploy() accepts the terms of the GCloud service",
       () async {
         whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
 
@@ -324,6 +325,7 @@ void main() {
       ".deploy() accepts the terms of the GCloud service before creating the GCloud project",
       () async {
         whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
 
