@@ -15,14 +15,14 @@ class TaskData {
   final String context;
 
   /// A [Timestamp], determine when this task is created.
-  final Timestamp day;
+  final Timestamp createdAt;
 
   /// Creates a new instance of the [TaskData] with the given parameters.
   TaskData({
     this.code,
     this.data,
     this.context,
-    this.day,
+    this.createdAt,
   });
 
   /// Converts this [TaskData] into the [Map].
@@ -31,7 +31,7 @@ class TaskData {
       'code': code,
       'data': data,
       'context': context,
-      'day': day,
+      'createdAt': createdAt,
     };
   }
 }

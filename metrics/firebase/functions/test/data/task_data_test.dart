@@ -10,17 +10,10 @@ void main() {
     const projectId = 'projectId';
     const code = 'code';
     const context = 'context';
-    final day = Timestamp.fromDateTime(DateTime.now());
+    final createdAt = Timestamp.fromDateTime(DateTime.now());
     final data = {
       'projectId': projectId,
     };
-
-    final taskData = TaskData(
-      code: code,
-      data: data,
-      context: context,
-      day: day,
-    );
 
     test(
       "creates an instance with the given parameters",
@@ -29,25 +22,31 @@ void main() {
           code: code,
           data: data,
           context: context,
-          day: day,
+          createdAt: createdAt,
         );
 
         expect(taskData.code, equals(code));
         expect(taskData.data, equals(data));
         expect(taskData.context, equals(context));
-        expect(taskData.day, equals(day));
+        expect(taskData.createdAt, equals(createdAt));
       },
     );
 
     test(
       ".toMap() converts an instance to the map",
       () {
+        final taskData = TaskData(
+          code: code,
+          data: data,
+          context: context,
+          createdAt: createdAt,
+        );
         final map = taskData.toMap();
         final expectedMap = {
           'code': code,
           'data': data,
           'context': context,
-          'day': day
+          'createdAt': createdAt
         };
 
         expect(map, equals(expectedMap));

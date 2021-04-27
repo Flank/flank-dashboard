@@ -3,10 +3,12 @@
 
 import 'package:collection/collection.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../lib/main.dart';
+import '../lib/mappers/build_day_status_field_name_mapper.dart';
 
 void main() {
   group(("onBuildAddedHandler"), () {
@@ -14,24 +16,27 @@ void main() {
     const tasksCollectionName = 'tasks';
     const projectId = 'projectId';
     const durationInMilliseconds = 123;
-    final buildStartedAt = Timestamp.fromDateTime(DateTime.now());
-    final dateInUTC = _getDateInUTC(buildStartedAt);
+    final utcDate = _getDateInUTC(DateTime.now());
+    final buildStatus = BuildStatus.successful;
 
     final build = {
       'duration': durationInMilliseconds,
       'projectId': projectId,
-      'buildStatus': 'BuildStatus.successful',
-      'startedAt': buildStartedAt,
+      'buildStatus': buildStatus.toString(),
+      'startedAt': Timestamp.fromDateTime(utcDate),
       'coverage': 100,
       'url': 'url',
       'workflowName': 'workflowName',
     };
 
+    final mapper = BuildDayStatusFieldNameMapper();
+    final buildDayStatusFieldName = mapper.map(buildStatus);
+
     final expectedBuildDayData = {
       'projectId': projectId,
-      'successful': 1,
+      buildDayStatusFieldName: 1,
       'totalDuration': durationInMilliseconds,
-      'day': Timestamp.fromDateTime(dateInUTC)
+      'day': Timestamp.fromDateTime(utcDate),
     };
 
     final exception = Exception('test');
@@ -39,7 +44,7 @@ void main() {
       'code': 'build_days_created',
       'data': build,
       'context': exception.toString(),
-      'createdAt': buildStartedAt,
+      'createdAt': Timestamp.fromDateTime(utcDate),
     };
 
     final _firestoreMock = FirestoreMock();
@@ -126,7 +131,7 @@ void main() {
 
         await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
 
-        final documentId = '${projectId}_${dateInUTC.millisecondsSinceEpoch}';
+        final documentId = '${projectId}_${utcDate.millisecondsSinceEpoch}';
 
         verify(_collectionReferenceMock.document(documentId)).called(1);
       },
@@ -142,13 +147,15 @@ void main() {
         await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
 
         final documentDataMatcher = predicate<DocumentData>((data) {
-          final count = data.getNestedData('successful').getInt('operand');
+          final count =
+              data.getNestedData(buildDayStatusFieldName).getInt('operand');
           final totalDuration =
               data.getNestedData('totalDuration').getInt('operand');
 
           final projectIdsAreEqual =
               data.getString('projectId') == expectedBuildDayData['projectId'];
-          final countsAreEqual = count == expectedBuildDayData['successful'];
+          final countsAreEqual =
+              count == expectedBuildDayData[buildDayStatusFieldName];
           final totalDurationAreEqual =
               totalDuration == expectedBuildDayData['totalDuration'];
           final daysAreEqual =
@@ -207,8 +214,8 @@ void main() {
           );
           final contextsAreEqual =
               data.getString('context') == expectedCreatedTask['context'];
-          final daysAreEqual =
-              data.getTimestamp('day') == expectedCreatedTask['day'];
+          final daysAreEqual = data.getTimestamp('createdAt') ==
+              expectedCreatedTask['createdAt'];
 
           return codesAreEqual &&
               dataAreEqual &&
@@ -223,11 +230,13 @@ void main() {
   });
 }
 
-/// Returns a [DateTime] in UTC from the given [timestamp].
-DateTime _getDateInUTC(Timestamp timestamp) {
-  final dateTime = timestamp.toDateTime().toUtc();
+/// Returns a [DateTime] in UTC from the given [dateTime].
+///
+/// The return [DateTime] has a default time.
+DateTime _getDateInUTC(DateTime dateTime) {
+  final utcDate = dateTime.toUtc();
 
-  return DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
+  return DateTime.utc(utcDate.year, utcDate.month, utcDate.day);
 }
 
 class FirestoreMock extends Mock implements Firestore {}

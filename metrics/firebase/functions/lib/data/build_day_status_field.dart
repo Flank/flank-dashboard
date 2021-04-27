@@ -16,4 +16,11 @@ class BuildDayStatusField {
     this.name,
     this.value,
   });
+
+  /// Converts this [BuildDayStatusField] into the [Map].
+  Map<String, FieldValue> toMap() {
+    return {
+      name: value,
+    };
+  }
 }

@@ -15,12 +15,6 @@ void main() {
       name: 'successful',
       value: Firestore.fieldValues.increment(1),
     );
-    final buildDayData = BuildDayData(
-      projectId: projectId,
-      day: day,
-      totalDuration: totalDuration,
-      statusField: statusField,
-    );
 
     test(
       "creates an instance with the given parameters",
@@ -42,12 +36,19 @@ void main() {
     test(
       ".toMap() converts an instance to the map",
       () {
+        final buildDayData = BuildDayData(
+          projectId: projectId,
+          day: day,
+          totalDuration: totalDuration,
+          statusField: statusField,
+        );
         final map = buildDayData.toMap();
+        final statusFieldMap = statusField.toMap();
         final expectedMap = {
           'projectId': projectId,
           'day': day,
           'totalDuration': totalDuration,
-          statusField.name: statusField.value
+          ...statusFieldMap,
         };
 
         expect(map, equals(expectedMap));

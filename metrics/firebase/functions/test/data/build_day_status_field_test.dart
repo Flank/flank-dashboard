@@ -22,5 +22,21 @@ void main() {
         expect(buildDayStatusField.value, equals(value));
       },
     );
+
+    test(
+      ".toMap() converts an instance to the map",
+      () {
+        final buildDayStatusField = BuildDayStatusField(
+          name: name,
+          value: value,
+        );
+
+        final expectedMap = {
+          name: value,
+        };
+
+        expect(buildDayStatusField.toMap(), equals(expectedMap));
+      },
+    );
   });
 }

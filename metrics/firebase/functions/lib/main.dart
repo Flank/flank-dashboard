@@ -45,7 +45,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
     final taskData = TaskData(
       code: 'build_days_created',
       context: error.toString(),
-      day: Timestamp.fromDateTime(utcDate),
+      createdAt: Timestamp.fromDateTime(utcDate),
       data: snapshot.data.toMap(),
     );
 

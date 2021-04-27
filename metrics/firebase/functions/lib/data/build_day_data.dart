@@ -30,11 +30,13 @@ class BuildDayData {
 
   /// Converts this [BuildDayData] into the [Map].
   Map<String, dynamic> toMap() {
+    final statusFieldMap = statusField.toMap();
+
     return {
       'projectId': projectId,
       'day': day,
       'totalDuration': totalDuration,
-      statusField.name: statusField.value,
+      ...statusFieldMap,
     };
   }
 }
