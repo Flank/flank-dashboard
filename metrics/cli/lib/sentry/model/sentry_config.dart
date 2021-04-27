@@ -17,7 +17,7 @@ class SentryConfig extends Equatable {
   /// A Sentry project DSN.
   final String dsn;
 
-  /// A Sentry environment.
+  /// A Sentry environment indicates the environment or the release stage.
   final String environment;
 
   /// A Sentry release name.
