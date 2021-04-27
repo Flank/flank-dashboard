@@ -27,18 +27,5 @@ class SentryConfig extends Equatable {
   List<Object> get props => [dsn, environment, release];
 
   /// Creates a new instance of the [SentryConfig] with the given parameters.
-  const SentryConfig({
-    this.dsn,
-    this.environment,
-    this.release,
-  });
-
-  /// Maps the [SentryConfig] to the [Map].
-  Map<String, String> toMap() {
-    return {
-      dsnName: dsn,
-      environmentName: environment,
-      releaseName: release,
-    };
-  }
+  const SentryConfig({this.dsn, this.environment, this.release});
 }

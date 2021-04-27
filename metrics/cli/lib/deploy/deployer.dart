@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/common/model/metrics_config.dart';
+import 'package:cli/common/model/metrics_web_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
@@ -101,7 +101,7 @@ class Deployer {
       );
       final sentryConfig = await _setupSentry();
 
-      final metricsConfig = MetricsConfig(
+      final metricsConfig = MetricsWebConfig(
         googleSignInClientId: googleClientId,
         sentryConfig: sentryConfig,
       );
@@ -128,19 +128,30 @@ class Deployer {
     );
   }
 
-  /// Creates a new Sentry release.
+  /// Sets up a Sentry for the application under deployment.
   Future<SentryConfig> _setupSentry() async {
-    final shouldSetupSentry =
-        _prompter.promptConfirm(DeployStrings.setupSentry);
+    final shouldSetupSentry = _prompter.promptConfirm(
+      DeployStrings.setupSentry,
+    );
 
     if (!shouldSetupSentry) return null;
 
     await _sentryService.login();
 
+    return _getSentryConfig();
+  }
+
+  /// Returns a new instance of the [SentryConfig].
+  Future<SentryConfig> _getSentryConfig() async {
     final release = await _createSentryRelease();
     final dsn = _sentryService.getProjectDsn(release.project);
+    const environment = DeployConstants.sentryEnvironment;
 
-    return SentryConfig(release: release.name, dsn: dsn);
+    return SentryConfig(
+      release: release.name,
+      dsn: dsn,
+      environment: environment,
+    );
   }
 
   /// Creates a new Sentry release.
@@ -173,7 +184,7 @@ class Deployer {
   }
 
   /// Applies the given [config] to the Metrics configuration file.
-  void _applyMetricsConfig(MetricsConfig config) {
+  void _applyMetricsConfig(MetricsWebConfig config) {
     final configFile = _fileHelper.getFile(DeployConstants.metricsConfigPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());

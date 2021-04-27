@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-import 'package:cli/common/model/metrics_config.dart';
+import 'package:cli/common/model/metrics_web_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
@@ -743,7 +743,7 @@ void main() {
     );
 
     test(
-      ".deploy() prompts the user to configure the Sentry",
+      ".deploy() prompts the user whether to configure Sentry",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -885,7 +885,7 @@ void main() {
     );
 
     test(
-      ".deploy() requests the Sentry DSN using the Sentry project within the created Sentry release",
+      ".deploy() requests the Sentry DSN of the created project",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
@@ -895,6 +895,22 @@ void main() {
         await deployer.deploy();
 
         verify(sentryService.getProjectDsn(sentryRelease.project)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if prompter throws during the Sentry DSN requesting",
+      () async {
+        whenGetDirectory().thenReturn(directory);
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease()
+            .thenAnswer((_) => Future.value(sentryRelease));
+        when(sentryService.getProjectDsn(any)).thenThrow(stateError);
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -938,8 +954,9 @@ void main() {
         final sentryConfig = SentryConfig(
           release: sentryRelease.name,
           dsn: sentryDsn,
+          environment: DeployConstants.sentryEnvironment,
         );
-        final config = MetricsConfig(
+        final config = MetricsWebConfig(
           googleSignInClientId: clientId,
           sentryConfig: sentryConfig,
         );

@@ -26,4 +26,7 @@ class DeployConstants {
 
   /// A Firebase Hosting target name.
   static const String firebaseTarget = 'metrics';
+
+  /// A Sentry environment name.
+  static const String sentryEnvironment = 'metrics';
 }

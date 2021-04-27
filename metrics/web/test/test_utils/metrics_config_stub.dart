@@ -1,7 +1,7 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics/common/domain/entities/metrics_config.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A stub implementation of the [MetricsConfig] to use in tests.
 class MetricsConfigStub implements MetricsConfig {

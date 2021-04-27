@@ -22,21 +22,6 @@ void main() {
       expect(config.release, equals(release));
     });
 
-    test(".toMap() converts an instance to the map", () {
-      const config = SentryConfig(
-        dsn: dsn,
-        environment: environment,
-        release: release,
-      );
-      const expectedMap = {
-        SentryConfig.dsnName: dsn,
-        SentryConfig.environmentName: environment,
-        SentryConfig.releaseName: release,
-      };
-
-      expect(config.toMap(), equals(expectedMap));
-    });
-
     test("equals to another SentryConfig with the same parameters", () {
       const expected = SentryConfig(
         dsn: dsn,
