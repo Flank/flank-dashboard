@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/in_progress_project_build_status.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_asset_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -56,7 +56,7 @@ class ProjectBuildStatus extends StatelessWidget {
       ),
       child: ValueNetworkImage<BuildStatus>(
         value: projectBuildStatus,
-        strategy: const ProjectBuildStatusImageStrategy(),
+        strategy: const ProjectBuildStatusAssetStrategy(),
       ),
     );
   }
