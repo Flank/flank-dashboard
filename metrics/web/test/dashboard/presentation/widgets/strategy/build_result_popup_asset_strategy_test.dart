@@ -18,45 +18,45 @@ void main() {
     test(
       ".getAsset() returns the successful image if the given build status is successful",
       () {
-        final actualImage = strategy.getAsset(BuildStatus.successful);
+        final asset = strategy.getAsset(BuildStatus.successful);
 
-        expect(actualImage, equals(successfulImage));
+        expect(asset, equals(successfulImage));
       },
     );
 
     test(
       ".getAsset() returns the failed image if the given build status is failed",
       () {
-        final actualImage = strategy.getAsset(BuildStatus.failed);
+        final asset = strategy.getAsset(BuildStatus.failed);
 
-        expect(actualImage, equals(failedImage));
+        expect(asset, equals(failedImage));
       },
     );
 
     test(
       ".getAsset() returns the unknown image if the given build status is unknown",
       () {
-        final actualImage = strategy.getAsset(BuildStatus.unknown);
+        final asset = strategy.getAsset(BuildStatus.unknown);
 
-        expect(actualImage, equals(unknownImage));
+        expect(asset, equals(unknownImage));
       },
     );
 
     test(
       ".getAsset() returns the in progress animation if the given build status is in progress",
       () {
-        final actualImage = strategy.getAsset(BuildStatus.inProgress);
+        final asset = strategy.getAsset(BuildStatus.inProgress);
 
-        expect(actualImage, equals(inProgressAnimation));
+        expect(asset, equals(inProgressAnimation));
       },
     );
 
     test(
       ".getAsset() returns null if the given build status is null",
       () {
-        final actualImage = strategy.getAsset(null);
+        final asset = strategy.getAsset(null);
 
-        expect(actualImage, isNull);
+        expect(asset, isNull);
       },
     );
   });
