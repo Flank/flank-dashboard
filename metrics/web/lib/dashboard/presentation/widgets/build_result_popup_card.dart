@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
-import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/build_status_view.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_asset_strategy.dart';
 

@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:metrics/common/presentation/asset/strategy/value_based_asset_strategy.dart';
-import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
+import 'package:metrics/common/presentation/widgets/build_status_view.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:rive/rive.dart';
 
-import '../../../../test_utils/finder_util.dart';
-import '../../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
+import '../../../test_utils/finder_util.dart';
+import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_asset_strategy.dart';
