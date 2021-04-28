@@ -27,7 +27,7 @@ class ProjectBuildStatusAttentionLevel {
 
   /// Creates a new instance of [ProjectBuildStatusAttentionLevel].
   ///
-  /// If [positive], [negative] or [unknown] is null,
+  /// If [positive], [negative], [unknown], or [inactive] is null,
   /// an empty [ProjectBuildStatusStyle] used.
   const ProjectBuildStatusAttentionLevel({
     ProjectBuildStatusStyle positive,

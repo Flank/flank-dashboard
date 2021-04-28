@@ -71,16 +71,16 @@ void main() {
     );
 
     test(
-      ".getAsset() returns the light in progress animation asset if the given build status is in progress and the current theme mode is light",
+      ".getAsset() returns the light in progress animation if the given build status is in progress and the current theme mode is light",
       () {
         final asset = lightStrategy.getAsset(BuildStatus.inProgress);
 
-        expect(actualImage, equals(inProgressImage));
+        expect(asset, equals(lightInProgressAnimation));
       },
     );
 
     test(
-      ".getAsset() returns the dark in progress animation asset if the given build status is in progress and the current theme mode is dark",
+      ".getAsset() returns the dark in progress animation if the given build status is in progress and the current theme mode is dark",
       () {
         final asset = darkStrategy.getAsset(BuildStatus.inProgress);
 
