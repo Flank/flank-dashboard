@@ -8,6 +8,7 @@ import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 
 /// A utility class needed to find widgets in the widget tree under tests.
 class FinderUtil {
@@ -55,5 +56,10 @@ class FinderUtil {
   /// Finds the [RiveAnimation] in the widget tree under tests using the given [tester].
   static RiveAnimation findRiveAnimation(WidgetTester tester) {
     return tester.widget<RiveAnimation>(find.byType(RiveAnimation));
+  }
+
+  /// Finds the [BuildStatusView] in the widget tree under tests using the given [tester].
+  static BuildStatusView findBuildStatusView(WidgetTester tester) {
+    return tester.widget<BuildStatusView>(find.byType(BuildStatusView));
   }
 }

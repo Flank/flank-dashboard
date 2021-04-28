@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
@@ -13,7 +12,7 @@ import '../../../test_utils/matchers.dart';
 void main() {
   group("BuildResultPopupViewModel", () {
     const duration = Duration.zero;
-    const buildStatus = ProjectBuildStatusViewModel(value: BuildStatus.unknown);
+    const buildStatus = BuildStatus.unknown;
     final date = DateTime.now();
 
     test("throws an AssertionError if the given date is null", () {

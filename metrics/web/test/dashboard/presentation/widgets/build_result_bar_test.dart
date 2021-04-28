@@ -12,7 +12,6 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_popup_vi
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/in_progress_build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -30,9 +29,7 @@ void main() {
     final popupViewModel = BuildResultPopupViewModel(
       date: DateTime.now(),
       duration: Duration.zero,
-      buildStatus: const ProjectBuildStatusViewModel(
-        value: BuildStatus.unknown,
-      ),
+      buildStatus: BuildStatus.unknown,
     );
     final successfulBuildResult = FinishedBuildResultViewModel(
       buildResultPopupViewModel: popupViewModel,

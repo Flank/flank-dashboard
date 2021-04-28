@@ -455,7 +455,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final popupViewModel = BuildResultPopupViewModel(
       date: result.date,
       duration: result.duration,
-      buildStatus: ProjectBuildStatusViewModel(value: result.buildStatus),
+      buildStatus: result.buildStatus,
     );
 
     if (result.buildStatus == BuildStatus.inProgress) {

@@ -4,10 +4,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
+import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card_build_status.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_asset_strategy.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class BuildResultPopupCard extends StatelessWidget {
@@ -60,8 +61,11 @@ class BuildResultPopupCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BuildResultPopupCardBuildStatus(
-                projectBuildStatus: buildResultPopupViewModel.buildStatus,
+              BuildStatusView(
+                strategy: const BuildResultPopupAssetStrategy(),
+                buildStatus: buildResultPopupViewModel.buildStatus,
+                height: 24.0,
+                width: 24.0,
               ),
               Flexible(
                 child: Padding(

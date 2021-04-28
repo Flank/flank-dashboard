@@ -4,16 +4,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
+import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card_build_status.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_asset_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -34,9 +35,7 @@ void main() {
     );
 
     const duration = Duration(seconds: 30000);
-    const buildStatus = ProjectBuildStatusViewModel(
-      value: BuildStatus.unknown,
-    );
+    const buildStatus = BuildStatus.unknown;
 
     final date = DateTime.now();
 
@@ -54,9 +53,7 @@ void main() {
       duration,
     ));
 
-    final buildStatusWidgetFinder = find.byType(
-      BuildResultPopupCardBuildStatus,
-    );
+    final buildStatusViewFinder = find.byType(BuildStatusView);
 
     testWidgets(
       "throws an AssertionError if the given build result popup view model is null",
@@ -75,9 +72,11 @@ void main() {
       "displays the title with the date from the given view model",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
         });
 
         expect(titleFinder, findsOneWidget);
@@ -88,9 +87,11 @@ void main() {
       "displays the subtitle with the duration from the given view model",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
         });
         expect(subtitleFinder, findsOneWidget);
       },
@@ -106,9 +107,11 @@ void main() {
         );
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
         });
 
         expect(find.byType(Text), findsOneWidget);
@@ -120,10 +123,12 @@ void main() {
       "applies the color to the card from the metrics theme to the card",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+              themeData: themeData,
+            ),
+          );
         });
 
         final card = tester.widget<Card>(find.byType(Card));
@@ -136,10 +141,12 @@ void main() {
       "applies the shadow color from the metrics theme to the build result popup card",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+              themeData: themeData,
+            ),
+          );
         });
 
         final container = tester.widget<Container>(
@@ -159,10 +166,12 @@ void main() {
       "applies the title text style from the metrics theme to the title",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+              themeData: themeData,
+            ),
+          );
         });
 
         final textWidget = tester.widget<Text>(titleFinder);
@@ -175,10 +184,12 @@ void main() {
       "applies the subtitle text style from the metrics theme to the subtitle",
       (tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_BuildResultPopupCardTestbed(
-            buildResultPopupViewModel: buildResultPopupViewModel,
-            themeData: themeData,
-          ));
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+              themeData: themeData,
+            ),
+          );
         });
 
         final textWidget = tester.widget<Text>(subtitleFinder);
@@ -188,38 +199,88 @@ void main() {
     );
 
     testWidgets(
-      "displays the BuildResultPopupCardBuildStatus widget",
+      "displays the BuildStatusView widget",
       (tester) async {
-        await mockNetworkImagesFor(
-          () {
-            return tester.pumpWidget(_BuildResultPopupCardTestbed(
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
               buildResultPopupViewModel: buildResultPopupViewModel,
-            ));
-          },
-        );
+            ),
+          );
+        });
 
-        expect(buildStatusWidgetFinder, findsOneWidget);
+        expect(buildStatusViewFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies the project build status view model to the BuildResultPopupCardBuildStatus widget",
+      "applies the build status from the build result popup view model to the build status view widget",
       (tester) async {
         final expectedStatus = buildResultPopupViewModel.buildStatus;
-        await mockNetworkImagesFor(
-          () {
-            return tester.pumpWidget(_BuildResultPopupCardTestbed(
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
               buildResultPopupViewModel: buildResultPopupViewModel,
-            ));
-          },
-        );
+            ),
+          );
+        });
 
-        final buildStatusWidget =
-            tester.widget<BuildResultPopupCardBuildStatus>(
-          buildStatusWidgetFinder,
-        );
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
 
-        expect(buildStatusWidget.projectBuildStatus, equals(expectedStatus));
+        expect(buildStatusView.buildStatus, equals(expectedStatus));
+      },
+    );
+
+    testWidgets(
+      "applies the build result popup asset strategy to the build status view widget",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.strategy, isA<BuildResultPopupAssetStrategy>());
+      },
+    );
+
+    testWidgets(
+      "applies the correct height to the build status view widget",
+      (tester) async {
+        const expectedHeight = 24.0;
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.height, equals(expectedHeight));
+      },
+    );
+
+    testWidgets(
+      "applies the correct width to the build status view widget",
+      (tester) async {
+        const expectedWidth = 24.0;
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.width, equals(expectedWidth));
       },
     );
   });
