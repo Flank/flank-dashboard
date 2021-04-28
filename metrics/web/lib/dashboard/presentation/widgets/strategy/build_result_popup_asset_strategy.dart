@@ -21,7 +21,7 @@ class BuildResultPopupAssetStrategy
       case BuildStatus.unknown:
         return "icons/unknown.svg";
       case BuildStatus.inProgress:
-        return "icons/in_progress.svg";
+        return "web/animation/in_progress_popup_build_status.riv";
     }
 
     return null;

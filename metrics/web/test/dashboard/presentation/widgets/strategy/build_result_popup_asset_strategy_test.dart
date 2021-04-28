@@ -10,7 +10,9 @@ void main() {
     const successfulImage = "icons/successful.svg";
     const failedImage = "icons/failed.svg";
     const unknownImage = "icons/unknown.svg";
-    const inProgressImage = "icons/in_progress.svg";
+    const inProgressAnimation =
+        "web/animation/in_progress_popup_build_status.riv";
+
     const strategy = BuildResultPopupAssetStrategy();
 
     test(
@@ -41,11 +43,11 @@ void main() {
     );
 
     test(
-      ".getAsset() returns the in progress image if the given build status is in progress",
+      ".getAsset() returns the in progress animation if the given build status is in progress",
       () {
         final actualImage = strategy.getAsset(BuildStatus.inProgress);
 
-        expect(actualImage, equals(inProgressImage));
+        expect(actualImage, equals(inProgressAnimation));
       },
     );
 
