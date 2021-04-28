@@ -1,18 +1,18 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
+import 'package:metrics/common/presentation/asset/strategy/value_based_asset_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents the [ValueBasedImageAssetStrategy] of applying
-/// the image based on the [BuildStatus] value.
-class BuildResultPopupImageStrategy
-    implements ValueBasedImageAssetStrategy<BuildStatus> {
-  /// Creates a new instance of the [BuildResultPopupImageStrategy].
-  const BuildResultPopupImageStrategy();
+/// A class that represents the [ValueBasedAssetStrategy] of applying
+/// the assets based on the [BuildStatus] value.
+class BuildResultPopupAssetStrategy
+    implements ValueBasedAssetStrategy<BuildStatus> {
+  /// Creates a new instance of the [BuildResultPopupAssetStrategy].
+  const BuildResultPopupAssetStrategy();
 
   @override
-  String getImageAsset(BuildStatus value) {
+  String getAsset(BuildStatus value) {
     switch (value) {
       case BuildStatus.successful:
         return "icons/successful.svg";
