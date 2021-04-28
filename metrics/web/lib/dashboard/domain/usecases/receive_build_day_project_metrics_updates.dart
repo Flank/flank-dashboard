@@ -14,7 +14,7 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 /// A [UseCase] that stands for loading the [BuildDayProjectMetrics].
 class ReceiveBuildDayProjectMetricsUpdates
     implements UseCase<Stream<BuildDayProjectMetrics>, ProjectIdParam> {
-  /// A [Duration] of a loading period for builds.
+  /// A [Duration] of a loading period for build days.
   static const Duration metricsLoadingPeriod = Duration(days: 6);
 
   /// A [BuildDayRepository] this use case uses to load the data from
@@ -26,7 +26,7 @@ class ReceiveBuildDayProjectMetricsUpdates
   ///
   /// Throws an [ArgumentError] if the given [BuildDayRepository] is `null`.
   ReceiveBuildDayProjectMetricsUpdates(this._repository) {
-    ArgumentError.checkNotNull(_repository, '_repository');
+    ArgumentError.checkNotNull(_repository, 'repository');
   }
 
   @override
@@ -62,7 +62,7 @@ class ReceiveBuildDayProjectMetricsUpdates
 
   /// Creates a [BuildNumberMetric] based on the given [buildDays].
   BuildNumberMetric _createBuildNumberMetric(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuildsInPeriod(
+    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuilds(
       buildDays,
     );
 
@@ -80,25 +80,23 @@ class ReceiveBuildDayProjectMetricsUpdates
     );
   }
 
-  /// Calculates the average [BuildDay.totalDuration] of the given [buildDays].
+  /// Calculates the average [Duration] of [buildDays] using the
+  /// [BuildDay.totalDuration].
   ///
-  /// Returns a [Duration.zero] if the total number of builds performed during
-  /// the given [buildDays] is `null`.
+  /// Returns a [Duration.zero] if there are no builds performed during the
+  /// given [buildDays].
   Duration _calculateAverageDuration(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod =
-        _calculateTotalNumberOfBuildsInPeriod(buildDays);
+    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuilds(buildDays);
 
     if (numberOfBuildsInPeriod == 0) return Duration.zero;
 
-    final totalDurationInPeriod = _calculateTotalDurationOfBuildsInPeriod(
-      buildDays,
-    );
+    final totalDurationInPeriod = _calculateTotalDurationOfBuilds(buildDays);
 
     return totalDurationInPeriod ~/ numberOfBuildsInPeriod;
   }
 
   /// Returns the total number of builds performed during the given [buildDays].
-  int _calculateTotalNumberOfBuildsInPeriod(List<BuildDay> buildDays) {
+  int _calculateTotalNumberOfBuilds(List<BuildDay> buildDays) {
     return buildDays.fold<int>(
       0,
       (value, buildDay) => value + _calculateNumberOfBuildsInDay(buildDay),
@@ -106,7 +104,7 @@ class ReceiveBuildDayProjectMetricsUpdates
   }
 
   /// Returns the sum of build [Duration]s performed during the given [buildDays].
-  Duration _calculateTotalDurationOfBuildsInPeriod(List<BuildDay> buildDays) {
+  Duration _calculateTotalDurationOfBuilds(List<BuildDay> buildDays) {
     return buildDays.fold<Duration>(
       Duration.zero,
       (value, buildDay) => value + buildDay.totalDuration,
