@@ -6,8 +6,8 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing deserialization methods for a [BuildData] model.
 class BuildDataDeserializer {
-  /// Creates the [BuildData] instance from the [json].
-  static BuildData fromJson(Map<String, dynamic> json) {
+  /// Creates the [BuildData] instance from the [json] and it's [id].
+  static BuildData fromJson(Map<String, dynamic> json, {String id}) {
     final projectId = json['projectId'] as String;
     final buildResultValue = json['buildStatus'] as String;
     final durationMilliseconds = json['duration'] as int;
@@ -20,6 +20,7 @@ class BuildDataDeserializer {
     );
 
     return BuildData(
+      id: id,
       projectId: projectId,
       startedAt: (json['startedAt'] as Timestamp).toDateTime(),
       buildStatus: buildStatus,
