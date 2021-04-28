@@ -44,8 +44,6 @@ class ProjectBuildStatus extends StatelessWidget {
     );
 
     return DecoratedContainer(
-      height: 40.0,
-      width: 40.0,
       decoration: BoxDecoration(
         color: theme.backgroundColor,
         shape: BoxShape.circle,

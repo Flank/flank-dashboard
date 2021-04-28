@@ -3,36 +3,43 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/build_status/widgets/build_status_view.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/in_progress_project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_asset_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
   group("ProjectBuildStatus", () {
-    const successfulBuildStatus = ProjectBuildStatusViewModel(
-      value: BuildStatus.successful,
+    const backgroundColor = Colors.red;
+    const widgetStyle = ProjectBuildStatusStyle(
+      backgroundColor: backgroundColor,
     );
-    final valueNetworkImageFinder = find.byWidgetPredicate((widget) {
-      return widget is ValueNetworkImage<BuildStatus>;
-    });
+
+    final strategy = _BuildResultThemeStrategyStub(style: widgetStyle);
+
+    final buildStatusViewFinder = find.byType(BuildStatusView);
 
     testWidgets(
       "throws an AssertionError if the given build status is null",
       (tester) async {
-        await tester.pumpWidget(const _ProjectBuildStatusTestbed(
-          buildStatus: null,
-        ));
+        await tester.pumpWidget(
+          const _ProjectBuildStatusTestbed(
+            buildStatus: null,
+          ),
+        );
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -41,9 +48,11 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given strategy is null",
       (tester) async {
-        await tester.pumpWidget(const _ProjectBuildStatusTestbed(
-          strategy: null,
-        ));
+        await tester.pumpWidget(
+          const _ProjectBuildStatusTestbed(
+            strategy: null,
+          ),
+        );
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -52,21 +61,13 @@ void main() {
     testWidgets(
       "applies the background color from the theme provided by strategy",
       (tester) async {
-        const backgroundColor = Colors.red;
-        const widgetStyle = ProjectBuildStatusStyle(
-          backgroundColor: backgroundColor,
-        );
-
-        final strategy = _BuildResultThemeStrategyStub(style: widgetStyle);
-
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
             _ProjectBuildStatusTestbed(
               strategy: strategy,
-              buildStatus: successfulBuildStatus,
             ),
-          ),
-        );
+          );
+        });
 
         final boxDecoration = FinderUtil.findBoxDecoration(tester);
 
@@ -75,74 +76,122 @@ void main() {
     );
 
     testWidgets(
-      "displays an in progress build status widget if the given build status is in-progress",
+      "displays a build status view widget",
       (tester) async {
-        const buildStatus = ProjectBuildStatusViewModel(
-          value: BuildStatus.inProgress,
-        );
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
+            ),
+          );
+        });
 
-        await tester.pumpWidget(
-          const _ProjectBuildStatusTestbed(buildStatus: buildStatus),
-        );
-
-        expect(find.byType(InProgressProjectBuildStatus), findsOneWidget);
+        expect(buildStatusViewFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "does not display a value image widget if the given build status is in-progress",
+      "displays a theme mode builder to build the build status view widget",
       (tester) async {
-        const buildStatus = ProjectBuildStatusViewModel(
-          value: BuildStatus.inProgress,
-        );
-
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _ProjectBuildStatusTestbed(
-              buildStatus: buildStatus,
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
             ),
-          ),
+          );
+        });
+
+        final themeModeBuilderFinder = find.ancestor(
+          of: find.byType(BuildStatusView),
+          matching: find.byType(ThemeModeBuilder),
         );
 
-        expect(valueNetworkImageFinder, findsNothing);
+        expect(themeModeBuilderFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the ValueImage with the build status from the given view model",
+      "applies a project build status asset strategy with the correct is dark theme mode value to the build status view",
       (tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _ProjectBuildStatusTestbed(
-              buildStatus: successfulBuildStatus,
+        const expectedIsDarkMode = true;
+        final themeNotifier = ThemeNotifierMock();
+        when(themeNotifier.isDark).thenReturn(expectedIsDarkMode);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
+              themeNotifier: themeNotifier,
             ),
-          ),
-        );
+          );
+        });
 
-        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          valueNetworkImageFinder,
-        );
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+        final buildStatusAssetStrategy =
+            buildStatusView.strategy as ProjectBuildStatusAssetStrategy;
 
-        expect(valueImage.value, equals(successfulBuildStatus.value));
+        expect(buildStatusAssetStrategy.isDarkMode, equals(expectedIsDarkMode));
       },
     );
 
     testWidgets(
-      "displays the ValueImage with the ProjectBuildStatusImageStrategy",
+      "displays a build status view widget with the build status from the given project build status view model",
       (tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _ProjectBuildStatusTestbed(
-              buildStatus: successfulBuildStatus,
+        const expectedBuildStatus = BuildStatus.failed;
+        const projectBuildStatusViewModel = ProjectBuildStatusViewModel(
+          value: expectedBuildStatus,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
+              buildStatus: projectBuildStatusViewModel,
             ),
-          ),
-        );
+          );
+        });
 
-        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
-          valueNetworkImageFinder,
-        );
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
 
-        expect(valueImage.strategy, isA<ProjectBuildStatusImageStrategy>());
+        expect(buildStatusView.buildStatus, equals(expectedBuildStatus));
+      },
+    );
+
+    testWidgets(
+      "displays a correct height to the build status view widget",
+      (tester) async {
+        const expectedHeight = 40.0;
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.height, equals(expectedHeight));
+      },
+    );
+
+    testWidgets(
+      "displays a correct width to the build status view widget",
+      (tester) async {
+        const expectedWidth = 40.0;
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectBuildStatusTestbed(
+              strategy: strategy,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.width, equals(expectedWidth));
       },
     );
   });
@@ -150,27 +199,32 @@ void main() {
 
 /// A testbed class required to test the [ProjectBuildStatus] widget.
 class _ProjectBuildStatusTestbed extends StatelessWidget {
-  /// A [ProjectBuildStatusViewModel] to display.
+  /// A [ProjectBuildStatusViewModel] to use in tests.
   final ProjectBuildStatusViewModel buildStatus;
 
-  /// A class that represents the strategy of applying the [MetricsThemeData]
-  /// based on the [BuildStatus] value.
+  /// A [ProjectBuildStatusStyleStrategy] to use in tests.
   final ProjectBuildStatusStyleStrategy strategy;
 
-  /// Creates an instance of this testbed.
+  /// A [ThemeNotifier] to use in tests.
+  final ThemeNotifier themeNotifier;
+
+  /// Creates an instance of the [_ProjectBuildStatusTestbed] with the
+  /// given parameters.
   ///
   /// The [buildStatus] defaults to an empty [ProjectBuildStatusViewModel].
-  /// The [strategy] defaults to [ProjectBuildStatusStyleStrategy].
+  /// The [strategy] defaults to a [ProjectBuildStatusStyleStrategy].
   const _ProjectBuildStatusTestbed({
     Key key,
     this.buildStatus = const ProjectBuildStatusViewModel(),
     this.strategy = const ProjectBuildStatusStyleStrategy(),
+    this.themeNotifier,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: TestInjectionContainer(
+        themeNotifier: themeNotifier,
         child: ProjectBuildStatus(
           buildStatusStyleStrategy: strategy,
           buildStatus: buildStatus,
@@ -185,7 +239,7 @@ class _BuildResultThemeStrategyStub implements ProjectBuildStatusStyleStrategy {
   /// A [ProjectBuildStatusStyle] used in stub implementation.
   final ProjectBuildStatusStyle _style;
 
-  /// Creates a new instance of this stub.
+  /// Creates a new instance of the [_BuildResultThemeStrategyStub].
   ///
   /// If the [style] is null, the [ProjectBuildStatusStyle] used.
   _BuildResultThemeStrategyStub({
