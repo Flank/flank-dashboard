@@ -5,7 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents a build day.
+/// A class that represents a build day containing the aggregated builds data
+/// for a single day.
 class BuildDay extends Equatable {
   /// An identifier of the project this build day belongs to.
   final String projectId;
@@ -23,7 +24,7 @@ class BuildDay extends Equatable {
   /// A number of [BuildStatus.inProgress] builds ran during this build day.
   final int inProgress;
 
-  /// A total [Duration] taken for builds during this build day.
+  /// A total [Duration] of builds performed during this build day.
   final Duration totalDuration;
 
   /// A [DateTime] that represents the date of this build day.
