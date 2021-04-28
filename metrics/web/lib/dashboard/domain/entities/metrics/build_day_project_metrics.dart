@@ -5,22 +5,22 @@ import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 
-/// A class that represents a project metrics based on the build day.
+/// A class that represents project metrics based on a build day.
 class BuildDayProjectMetrics extends Equatable {
-  /// A unique identifier of the project these metrics belong to.
+  /// A unique identifier of a project these metrics are related to.
   final String projectId;
 
-  /// A [BuildNumberMetric] of a project with [projectId].
+  /// A [BuildNumberMetric] of a project with the specified [projectId].
   final BuildNumberMetric buildNumberMetric;
 
-  /// A [PerformanceMetric] of a project with [projectId].
+  /// A [PerformanceMetric] of a project with the specified [projectId].
   final PerformanceMetric performanceMetric;
 
   @override
   List<Object> get props => [projectId, buildNumberMetric, performanceMetric];
 
   /// Creates a new instance of the [BuildDayProjectMetrics] with the given
-  /// [projectId], [buildNumberMetric] and [performanceMetric].
+  /// parameters.
   const BuildDayProjectMetrics({
     this.projectId,
     this.buildNumberMetric,
