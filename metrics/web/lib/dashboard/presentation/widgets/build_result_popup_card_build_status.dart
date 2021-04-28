@@ -10,10 +10,10 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_pop
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rive/rive.dart';
 
-/// A widget that displays a [BuildStatus] of a [BuildResultPopupCard].
+/// A widget that displays a [BuildStatus] of a build for the
+/// [BuildResultPopupCard] widget.
 class BuildResultPopupCardBuildStatus extends StatelessWidget {
-  /// A [ProjectBuildStatusViewModel] with the [BuildStatus] this widget
-  /// displays.
+  /// A [ProjectBuildStatusViewModel] with a [BuildStatus] to display.
   final ProjectBuildStatusViewModel projectBuildStatus;
 
   /// Creates a new instance of the [BuildResultPopupCardBuildStatus]
