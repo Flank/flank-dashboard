@@ -21,7 +21,7 @@ void main() {
       'buildStatus': buildStatus.toString(),
     };
 
-    test(".fromJson() returns BuildData from a JSON map", () {
+    test(".fromJson() returns a BuildData from a JSON map", () {
       final expectedBuildData = BuildData(
         id: id,
         projectId: projectId,
@@ -36,7 +36,7 @@ void main() {
     });
 
     test(
-      ".fromJson() returns BuildData with a null id from a JSON map if the id is not passed",
+      ".fromJson() returns a BuildData with a null id from a JSON map if the id is not passed",
       () {
         final expectedBuildData = BuildData(
           id: null,

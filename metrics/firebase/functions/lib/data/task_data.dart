@@ -14,7 +14,7 @@ class TaskData {
   /// A [String], containing the additional context for this task.
   final String context;
 
-  /// A [Timestamp], determine when this task is created.
+  /// A [Timestamp], determines when this task is created.
   final Timestamp createdAt;
 
   /// Creates a new instance of the [TaskData] with the given parameters.

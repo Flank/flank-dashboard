@@ -94,7 +94,7 @@ void main() {
     }
 
     test(
-      "sets a build day document with the 0 duration if the build document snapshot's duration is a null",
+      "sets a build day document with the zero duration if the build document snapshot's duration is a null",
       () async {
         whenDocumentData(withCollectionName: buildDaysCollectionName)
             .thenAnswer((_) => Future.value());
@@ -123,7 +123,7 @@ void main() {
     );
 
     test(
-      "uses a composite document id for build days collection",
+      "uses a composite document id for the build days collection",
       () async {
         whenDocument(withCollectionName: buildDaysCollectionName)
             .thenReturn(_documentReferenceMock);
