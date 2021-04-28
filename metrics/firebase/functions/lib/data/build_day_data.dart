@@ -16,27 +16,30 @@ class BuildDayData {
   /// A total builds duration.
   final FieldValue totalDuration;
 
-  /// A [BuildDayStatusField] that represents a build day status field name
-  /// with a field value.
-  final BuildDayStatusField statusField;
+  /// A [List] of [BuildDayStatusField]s, a [Firestore] increment applies to.
+  final List<BuildDayStatusField> statusIncrements;
 
   /// Creates a new instance of the [BuildDayData] with the given parameters.
   BuildDayData({
     this.projectId,
     this.day,
     this.totalDuration,
-    this.statusField,
+    this.statusIncrements,
   });
 
   /// Converts this [BuildDayData] into the [Map].
   Map<String, dynamic> toMap() {
-    final statusFieldMap = statusField.toMap();
+    final statusIncrementsMap = {};
+
+    statusIncrements.forEach((status) {
+      statusIncrementsMap.addAll(status.toMap());
+    });
 
     return {
       'projectId': projectId,
       'day': day,
       'totalDuration': totalDuration,
-      ...statusFieldMap,
+      ...statusIncrementsMap,
     };
   }
 }

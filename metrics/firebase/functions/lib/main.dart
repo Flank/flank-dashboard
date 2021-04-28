@@ -25,7 +25,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
 
   final documentId = '${buildData.projectId}_${utcDate.millisecondsSinceEpoch}';
 
-  final statusField = BuildDayStatusField(
+  final statusFieldIncrement = BuildDayStatusField(
     name: buildDayStatusFieldName,
     value: Firestore.fieldValues.increment(1),
   );
@@ -36,7 +36,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
       buildData.duration.inMilliseconds,
     ),
     day: Timestamp.fromDateTime(utcDate),
-    statusField: statusField,
+    statusIncrements: [statusFieldIncrement],
   );
 
   try {

@@ -178,7 +178,7 @@ void main() {
       },
     );
 
-    test("does not create task document after created a build day", () async {
+    test("does not create a task document after created a build day", () async {
       whenDocumentData(withCollectionName: buildDaysCollectionName)
           .thenAnswer((_) => Future.value());
       whenSnapshotData().thenReturn(DocumentData.fromMap(build));
@@ -189,7 +189,7 @@ void main() {
     });
 
     test(
-      "creates a task document if setting build day's document data fails",
+      "creates a task document if setting the build day's document data fails",
       () async {
         final _taskCollectionReferenceMock = CollectionReferenceMock();
 

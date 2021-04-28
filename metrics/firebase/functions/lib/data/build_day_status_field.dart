@@ -8,7 +8,7 @@ class BuildDayStatusField {
   /// A name of this field.
   final String name;
 
-  /// A [value] of this field.
+  /// A value of this field.
   final FieldValue value;
 
   /// Creates a new instance of the [BuildDayStatusField].

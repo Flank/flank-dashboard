@@ -11,10 +11,12 @@ void main() {
     const projectId = 'projectId';
     final day = Timestamp.fromDateTime(DateTime.now());
     final totalDuration = Firestore.fieldValues.increment(10);
-    final statusField = BuildDayStatusField(
-      name: 'successful',
-      value: Firestore.fieldValues.increment(1),
-    );
+    final statusIncrements = [
+      BuildDayStatusField(
+        name: 'successful',
+        value: Firestore.fieldValues.increment(1),
+      ),
+    ];
 
     test(
       "creates an instance with the given parameters",
@@ -23,13 +25,13 @@ void main() {
           projectId: projectId,
           day: day,
           totalDuration: totalDuration,
-          statusField: statusField,
+          statusIncrements: statusIncrements,
         );
 
         expect(buildDayData.projectId, equals(projectId));
         expect(buildDayData.day, equals(day));
         expect(buildDayData.totalDuration, equals(totalDuration));
-        expect(buildDayData.statusField, equals(statusField));
+        expect(buildDayData.statusIncrements, equals(statusIncrements));
       },
     );
 
@@ -40,10 +42,11 @@ void main() {
           projectId: projectId,
           day: day,
           totalDuration: totalDuration,
-          statusField: statusField,
+          statusIncrements: statusIncrements,
         );
         final map = buildDayData.toMap();
-        final statusFieldMap = statusField.toMap();
+        final statusFieldMap = statusIncrements.first.toMap();
+
         final expectedMap = {
           'projectId': projectId,
           'day': day,
