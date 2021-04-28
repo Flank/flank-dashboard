@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/rive_animation.dart';
-import 'package:metrics/common/presentation/widgets/theme_type_builder.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rive/rive.dart';
 
@@ -17,8 +17,8 @@ class InProgressProjectBuildStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ThemeTypeBuilder(
-      builder: (_, isDark) {
+    return ThemeModeBuilder(
+      builder: (_, isDark, __) {
         final asset = _getAssetPath(isDark);
 
         return RiveAnimation(
