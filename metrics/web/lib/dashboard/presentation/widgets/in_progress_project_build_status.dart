@@ -33,12 +33,8 @@ class InProgressProjectBuildStatus extends StatelessWidget {
   /// Selects a proper animation asset depending on the current [isDark] theme
   /// state.
   String _getAssetPath(bool isDark) {
-    const animationAssetsPath = 'web/animation';
+    final prefix = isDark ? 'dark' : 'light';
 
-    if (isDark) {
-      return '$animationAssetsPath/in_progress_project_build_status.riv';
-    }
-
-    return '$animationAssetsPath/in_progress_project_build_status_light.riv';
+    return 'web/animation/in_progress_project_build_status_$prefix.riv';
   }
 }
