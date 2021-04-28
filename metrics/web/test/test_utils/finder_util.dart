@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/rive_animation.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
 
 /// A utility class needed to find widgets in the widget tree under tests.
@@ -49,5 +50,10 @@ class FinderUtil {
   /// Finds the [InfoDialog] in the widget tree under tests using the given [tester].
   static InfoDialog findInfoDialog(WidgetTester tester) {
     return tester.widget<InfoDialog>(find.byType(InfoDialog));
+  }
+
+  /// Finds the [RiveAnimation] in the widget tree under tests using the given [tester].
+  static RiveAnimation findRiveAnimation(WidgetTester tester) {
+    return tester.widget<RiveAnimation>(find.byType(RiveAnimation));
   }
 }

@@ -9,6 +9,7 @@ import 'package:metrics/dashboard/presentation/widgets/in_progress_project_build
 import 'package:mockito/mockito.dart';
 import 'package:rive/rive.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 import '../../../test_utils/theme_notifier_mock.dart';
@@ -38,7 +39,7 @@ void main() {
       "displays a dark asset if the current theme is dark",
       (WidgetTester tester) async {
         const expectedAsset =
-            'web/animation/in_progress_project_build_status.riv';
+            'web/animation/in_progress_project_build_status_dark.riv';
         when(themeNotifier.isDark).thenReturn(true);
 
         await tester.pumpWidget(
@@ -47,7 +48,7 @@ void main() {
           ),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(riveAnimationFinder);
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         expect(riveAnimation.assetName, equals(expectedAsset));
       },
@@ -66,41 +67,41 @@ void main() {
           ),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(riveAnimationFinder);
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         expect(riveAnimation.assetName, equals(expectedAsset));
       },
     );
 
     testWidgets(
-      "displays a rive animation widget with the true use artboard size parameter",
+      "displays a rive animation widget with the artboard size parameter set as true",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InProgressProjectBuildStatusTestbed(),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(riveAnimationFinder);
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         expect(riveAnimation.useArtboardSize, isTrue);
       },
     );
 
     testWidgets(
-      "displays an animation controller with the correct animation name to the rive animation widget",
+      "displays the rive animation with the correct animation name",
       (WidgetTester tester) async {
         const expectedAnimationName = 'Animation 1';
         await tester.pumpWidget(
           const _InProgressProjectBuildStatusTestbed(),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(riveAnimationFinder);
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         final animationControllerMatcher = predicate((controller) {
           return controller is SimpleAnimation &&
               controller.animationName == expectedAnimationName;
         });
 
-        expect(riveAnimation.controller, equals(animationControllerMatcher));
+        expect(riveAnimation.controller, animationControllerMatcher);
       },
     );
   });

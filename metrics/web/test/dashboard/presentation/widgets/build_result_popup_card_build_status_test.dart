@@ -13,6 +13,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:rive/rive.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/presentation/widgets/rive_animation_testbed.dart';
 
 void main() {
@@ -67,9 +68,7 @@ void main() {
           ),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(
-          riveAnimationFinder,
-        );
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         expect(riveAnimation.assetName, equals(expectedAsset));
       },
@@ -84,9 +83,7 @@ void main() {
           ),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(
-          riveAnimationFinder,
-        );
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         expect(riveAnimation.useArtboardSize, isTrue);
       },
@@ -103,16 +100,14 @@ void main() {
           ),
         );
 
-        final riveAnimation = tester.widget<RiveAnimation>(
-          riveAnimationFinder,
-        );
+        final riveAnimation = FinderUtil.findRiveAnimation(tester);
 
         final animationControllerMatcher = predicate((controller) {
           return controller is SimpleAnimation &&
               controller.animationName == expectedAnimationName;
         });
 
-        expect(riveAnimation.controller, equals(animationControllerMatcher));
+        expect(riveAnimation.controller, animationControllerMatcher);
       },
     );
 
