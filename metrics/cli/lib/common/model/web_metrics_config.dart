@@ -4,7 +4,7 @@
 import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An implementation of the [WebMetricsConfig] for Metrics Web application.
+/// An implementation of the [MetricsConfig] for Metrics Web application.
 class WebMetricsConfig implements MetricsConfig {
   /// A Google sign in client id variable name.
   static const String googleSignInClientIdName = 'GOOGLE_SIGN_IN_CLIENT_ID';

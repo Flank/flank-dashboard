@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/common/model/metrics_web_config.dart';
+import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:test/test.dart';
 

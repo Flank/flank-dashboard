@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-import 'package:cli/common/model/metrics_web_config.dart';
+import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
