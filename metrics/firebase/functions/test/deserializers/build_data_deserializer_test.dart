@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildDataDeserializer", () {
+    const id = 'id';
     const projectId = 'projectId';
     const duration = Duration(milliseconds: 100000);
     const buildStatus = BuildStatus.failed;
@@ -22,15 +23,33 @@ void main() {
 
     test(".fromJson() returns BuildData from a JSON map", () {
       final expectedBuildData = BuildData(
+        id: id,
         projectId: projectId,
         duration: duration,
         startedAt: startedAtDateTime,
         buildStatus: buildStatus,
       );
 
-      final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+      final buildData = BuildDataDeserializer.fromJson(buildDataJson, id: id);
 
       expect(buildData, equals(expectedBuildData));
     });
+
+    test(
+      ".fromJson() returns BuildData with a null id from a JSON map if the id is not passed",
+      () {
+        final expectedBuildData = BuildData(
+          id: null,
+          projectId: projectId,
+          duration: duration,
+          startedAt: startedAtDateTime,
+          buildStatus: buildStatus,
+        );
+
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData, equals(expectedBuildData));
+      },
+    );
   });
 }
