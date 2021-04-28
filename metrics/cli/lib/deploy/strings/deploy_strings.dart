@@ -3,7 +3,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-/// A class that holds the strings for the Deployment.
+/// A class that holds the strings used within the deployment process.
 class DeployStrings {
   static const String setupSentry =
       'Would you like to set up a Sentry for the Metrics project?(y/n): ';

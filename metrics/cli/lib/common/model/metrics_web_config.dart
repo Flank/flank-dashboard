@@ -4,10 +4,19 @@
 import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [MetricsConfig] implementation.
-class MetricsWebConfig implements MetricsConfig {
+/// An implementation of the [WebMetricsConfig] for Metrics Web application.
+class WebMetricsConfig implements MetricsConfig {
   /// A Google sign in client id variable name.
   static const String googleSignInClientIdName = 'GOOGLE_SIGN_IN_CLIENT_ID';
+
+  /// A Sentry project DSN variable name.
+  static const String sentryDsnName = 'SENTRY_DSN';
+
+  /// A Sentry environment variable name.
+  static const String sentryEnvironmentName = "SENTRY_ENVIRONMENT";
+
+  /// A Sentry release variable name.
+  static const String sentryReleaseName = "SENTRY_RELEASE";
 
   /// A Sentry configuration.
   final SentryConfig sentryConfig;
@@ -24,19 +33,19 @@ class MetricsWebConfig implements MetricsConfig {
   @override
   String get sentryRelease => sentryConfig?.release;
 
-  /// Creates a new instance of the [MetricsConfig] with the given parameters.
-  MetricsWebConfig({
+  /// Creates a new instance of the [WebMetricsConfig] with the given parameters.
+  WebMetricsConfig({
     this.googleSignInClientId,
     this.sentryConfig,
   });
 
-  /// Maps the [MetricsConfig] to the [Map].
+  /// Converts this [WebMetricsConfig] to the [Map].
   Map<String, String> toMap() {
     return {
       googleSignInClientIdName: googleSignInClientId,
-      SentryConfig.dsnName: sentryDsn,
-      SentryConfig.environmentName: sentryEnvironment,
-      SentryConfig.releaseName: sentryRelease,
+      sentryDsnName: sentryDsn,
+      sentryEnvironmentName: sentryEnvironment,
+      sentryReleaseName: sentryRelease,
     };
   }
 }

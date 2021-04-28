@@ -983,7 +983,7 @@ void main() {
           dsn: sentryDsn,
           environment: DeployConstants.sentryEnvironment,
         );
-        final config = MetricsWebConfig(
+        final config = WebMetricsConfig(
           googleSignInClientId: clientId,
           sentryConfig: sentryConfig,
         );

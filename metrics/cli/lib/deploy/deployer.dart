@@ -101,7 +101,7 @@ class Deployer {
       );
       final sentryConfig = await _setupSentry();
 
-      final metricsConfig = MetricsWebConfig(
+      final metricsConfig = WebMetricsConfig(
         googleSignInClientId: googleClientId,
         sentryConfig: sentryConfig,
       );
@@ -140,19 +140,13 @@ class Deployer {
 
     await _sentryService.login();
 
-    return _getSentryConfig();
-  }
-
-  /// Returns a new instance of the [SentryConfig].
-  Future<SentryConfig> _getSentryConfig() async {
     final release = await _createSentryRelease();
     final dsn = _sentryService.getProjectDsn(release.project);
-    const environment = DeployConstants.sentryEnvironment;
 
     return SentryConfig(
       release: release.name,
       dsn: dsn,
-      environment: environment,
+      environment: DeployConstants.sentryEnvironment,
     );
   }
 
@@ -186,7 +180,7 @@ class Deployer {
   }
 
   /// Applies the given [config] to the Metrics configuration file.
-  void _applyMetricsConfig(MetricsWebConfig config) {
+  void _applyMetricsConfig(WebMetricsConfig config) {
     final configFile = _fileHelper.getFile(DeployConstants.metricsConfigPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());

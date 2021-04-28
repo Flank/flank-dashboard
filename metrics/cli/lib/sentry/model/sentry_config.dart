@@ -5,15 +5,6 @@ import 'package:equatable/equatable.dart';
 
 /// A class that represents a Sentry configuration.
 class SentryConfig extends Equatable {
-  /// A Sentry project DSN variable name.
-  static const String dsnName = 'SENTRY_DSN';
-
-  /// A Sentry environment variable name.
-  static const String environmentName = "SENTRY_ENVIRONMENT";
-
-  /// A Sentry release variable name.
-  static const String releaseName = "SENTRY_RELEASE";
-
   /// A Sentry project DSN.
   final String dsn;
 
