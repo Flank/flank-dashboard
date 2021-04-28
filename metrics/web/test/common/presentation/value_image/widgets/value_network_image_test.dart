@@ -1,9 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
+import 'package:metrics/common/presentation/asset/strategy/value_based_asset_strategy.dart';
 import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -67,33 +67,32 @@ void main() {
 
         expect(
           image.src,
-          equals(_ValueImageAppearanceStrategyStub.testAsset),
+          equals(_ValueBasedAssetStrategyStub.testAsset),
         );
       },
     );
   });
 }
 
-/// A stub implementation for the [ValueBasedImageAssetStrategy] to use
+/// A stub implementation for the [ValueBasedAssetStrategy] to use
 /// in tests. This always returns the [testAsset].
-class _ValueImageAppearanceStrategyStub
-    extends ValueBasedImageAssetStrategy<int> {
+class _ValueBasedAssetStrategyStub extends ValueBasedAssetStrategy<int> {
   /// An image asset to use in tests.
   static const String testAsset = "testImage";
 
-  /// Creates a new instance of the [_ValueImageAppearanceStrategyStub].
-  const _ValueImageAppearanceStrategyStub();
+  /// Creates a new instance of the [_ValueBasedAssetStrategyStub].
+  const _ValueBasedAssetStrategyStub();
 
   @override
-  String getImageAsset(int value) {
+  String getAsset(int value) {
     return testAsset;
   }
 }
 
 /// A testbed widget used to test the [ValueNetworkImage] widget.
 class _ValueImageTestbed extends StatelessWidget {
-  /// An image asset strategy to apply to the widget under tests.
-  final ValueBasedImageAssetStrategy<int> strategy;
+  /// An asset strategy to apply to the widget under tests.
+  final ValueBasedAssetStrategy<int> strategy;
 
   /// A width to apply to the widget under tests.
   final double width;
@@ -107,7 +106,7 @@ class _ValueImageTestbed extends StatelessWidget {
   /// Creates a new instance of the [_ValueImageTestbed].
   const _ValueImageTestbed({
     Key key,
-    this.strategy = const _ValueImageAppearanceStrategyStub(),
+    this.strategy = const _ValueBasedAssetStrategyStub(),
     this.value,
     this.width,
     this.height,
