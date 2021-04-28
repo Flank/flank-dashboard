@@ -10,13 +10,6 @@ void main() {
     const tempDir = 'tempDir';
 
     test(
-      ".tempDir() returns a name if the given suffix is null",
-      () {
-        expect(DeployConstants.tempDir(), isNotNull);
-      },
-    );
-
-    test(
       ".tempDir() returns a name that contains the given suffix",
       () {
         expect(DeployConstants.tempDir(suffix), contains(suffix));

@@ -68,7 +68,7 @@ class Deployer {
 
     await _firebaseService.createWebApp(projectId);
 
-    final tempDirName = getTempDirectoryName();
+    final tempDirName = _getTempDirectoryName();
 
     try {
       await _gitService.checkout(DeployConstants.repoURL, tempDirName);
@@ -90,8 +90,8 @@ class Deployer {
     }
   }
 
-  /// Generates a name of the temporary directory.
-  String getTempDirectoryName() {
+  /// Returns the name of the temporary directory.
+  String _getTempDirectoryName() {
     final tempDirSuffix = clock.now().millisecondsSinceEpoch.toString();
 
     return DeployConstants.tempDir(tempDirSuffix);

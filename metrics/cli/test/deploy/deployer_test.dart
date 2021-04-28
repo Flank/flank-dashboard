@@ -32,13 +32,13 @@ void main() {
 
     final currentDateTime = clock.now();
     final suffix = currentDateTime.millisecondsSinceEpoch.toString();
-    final tempDir = DeployConstants.tempDir(suffix);
+    final tempDirName = DeployConstants.tempDir(suffix);
     final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
-      tempDir,
+      tempDirName,
     );
-    final firebasePath = DeployConstants.firebasePath(tempDir);
-    final webPath = DeployConstants.webPath(tempDir);
-    final configPath = DeployConstants.metricsConfigPath(tempDir);
+    final firebasePath = DeployConstants.firebasePath(tempDirName);
+    final webPath = DeployConstants.webPath(tempDirName);
+    final configPath = DeployConstants.metricsConfigPath(tempDirName);
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -347,7 +347,7 @@ void main() {
         await withClock(Clock.fixed(currentDateTime), () async {
           await deployer.deploy();
 
-          verify(gitService.checkout(repoURL, tempDir)).called(once);
+          verify(gitService.checkout(repoURL, tempDirName)).called(once);
         });
       },
     );
@@ -374,7 +374,7 @@ void main() {
           await deployer.deploy();
 
           verifyInOrder([
-            gitService.checkout(repoURL, tempDir),
+            gitService.checkout(repoURL, tempDirName),
             flutterService.build(webPath),
           ]);
         });
@@ -390,7 +390,7 @@ void main() {
           await deployer.deploy();
 
           verifyInOrder([
-            gitService.checkout(repoURL, tempDir),
+            gitService.checkout(repoURL, tempDirName),
             npmService.installDependencies(firebasePath),
           ]);
         });
@@ -406,7 +406,7 @@ void main() {
           await deployer.deploy();
 
           verifyInOrder([
-            gitService.checkout(repoURL, tempDir),
+            gitService.checkout(repoURL, tempDirName),
             npmService.installDependencies(firebaseFunctionsPath),
           ]);
         });
