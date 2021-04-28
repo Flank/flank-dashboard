@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ void main() {
         expect(attentionLevel.positive, isNotNull);
         expect(attentionLevel.negative, isNotNull);
         expect(attentionLevel.unknown, isNotNull);
+        expect(attentionLevel.inactive, isNotNull);
       },
     );
 
@@ -23,16 +24,19 @@ void main() {
       const positive = ProjectBuildStatusStyle(backgroundColor: Colors.green);
       const negative = ProjectBuildStatusStyle(backgroundColor: Colors.blue);
       const unknown = ProjectBuildStatusStyle(backgroundColor: Colors.red);
+      const inactive = ProjectBuildStatusStyle(backgroundColor: Colors.yellow);
 
       const attentionLevel = ProjectBuildStatusAttentionLevel(
         positive: positive,
         negative: negative,
         unknown: unknown,
+        inactive: inactive,
       );
 
       expect(attentionLevel.positive, equals(positive));
       expect(attentionLevel.negative, equals(negative));
       expect(attentionLevel.unknown, equals(unknown));
+      expect(attentionLevel.inactive, equals(inactive));
     });
   });
 }

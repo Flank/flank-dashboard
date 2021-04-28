@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:meta/meta.dart';
@@ -22,6 +22,9 @@ class ProjectBuildStatusAttentionLevel {
   /// A [ProjectBuildStatusStyle] for unknown project build status widget.
   final ProjectBuildStatusStyle unknown;
 
+  /// A [ProjectBuildStatusStyle] for inactive project build status widget.
+  final ProjectBuildStatusStyle inactive;
+
   /// Creates a new instance of [ProjectBuildStatusAttentionLevel].
   ///
   /// If [positive], [negative] or [unknown] is null,
@@ -30,7 +33,9 @@ class ProjectBuildStatusAttentionLevel {
     ProjectBuildStatusStyle positive,
     ProjectBuildStatusStyle negative,
     ProjectBuildStatusStyle unknown,
+    ProjectBuildStatusStyle inactive,
   })  : positive = positive ?? _defaultProjectBuildStatusStyle,
         negative = negative ?? _defaultProjectBuildStatusStyle,
-        unknown = unknown ?? _defaultProjectBuildStatusStyle;
+        unknown = unknown ?? _defaultProjectBuildStatusStyle,
+        inactive = inactive ?? _defaultProjectBuildStatusStyle;
 }
