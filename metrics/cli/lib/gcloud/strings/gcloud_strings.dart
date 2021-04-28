@@ -17,4 +17,7 @@ If you have already accepted the terms of the GCloud service, skip this step oth
 4. Accept the GCloud terms of service.
 5. Press a 'AGREE AND CONTINUE' button.
 Once you are done, press any key to continue:''';
+
+  static String configureOauth(String projectId) =>
+      '''Use the following link to access your hosting: $projectId.firebaseapp.com. ''';
 }
