@@ -38,7 +38,7 @@ class TimerNotifierBuilder extends StatelessWidget {
     if (!shouldSubscribe) return builder(context);
 
     return Consumer<TimerNotifier>(
-      builder: (_, __, child) {
+      builder: (context, _, __) {
         return builder(context);
       },
     );
