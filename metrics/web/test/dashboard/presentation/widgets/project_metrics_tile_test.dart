@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
@@ -28,6 +28,7 @@ import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -386,10 +387,12 @@ class _ProjectMetricsTileTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      metricsThemeData: themeData,
-      body: ProjectMetricsTile(
-        projectMetricsViewModel: projectMetrics,
+    return TestInjectionContainer(
+      child: MetricsThemedTestbed(
+        metricsThemeData: themeData,
+        body: ProjectMetricsTile(
+          projectMetricsViewModel: projectMetrics,
+        ),
       ),
     );
   }
