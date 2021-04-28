@@ -173,21 +173,19 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     int startAfterBuildNumber,
   }) {
     final buildData = builds.where((build) {
-      return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
+      return _checkBuildInRange(build, startAfterBuildNumber);
     }).map((build) => _mapJenkinsBuild(jobName, build));
 
     return buildData.toList();
   }
 
-  /// Checks a [build] to be not [JenkinsBuild.building] and
-  /// satisfy a [minBuildNumber] parameter.
+  /// Checks a [build] to satisfy a [minBuildNumber] parameter.
   ///
   /// The [minBuildNumber] is ignored if `null` or [num.isNegative].
-  bool _checkBuildFinishedAndInRange(JenkinsBuild build, int minBuildNumber) {
-    final buildNumberValid = minBuildNumber == null ||
+  bool _checkBuildInRange(JenkinsBuild build, int minBuildNumber) {
+    return minBuildNumber == null ||
         minBuildNumber.isNegative ||
         build.number > minBuildNumber;
-    return !build.building && buildNumberValid;
   }
 
   /// Maps the given [jenkinsBuild] to the [BuildData] instance.
@@ -197,11 +195,20 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
   ) {
     logger.info('Mapping build to build data...');
 
+    final buildStatus = _mapJenkinsResult(
+      jenkinsBuild.building,
+      jenkinsBuild.result,
+    );
+    final duration = _processBuildDuration(
+      buildStatus,
+      jenkinsBuild.duration,
+    );
+
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
-      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
-      duration: jenkinsBuild.duration ?? Duration.zero,
+      buildStatus: buildStatus,
+      duration: duration,
       workflowName: jobName,
       url: jenkinsBuild.url ?? '',
       apiUrl: jenkinsBuild.apiUrl,
@@ -231,8 +238,15 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
     return _processInteraction(interaction);
   }
 
-  /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
-  BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
+  /// Maps the given [building] and [result] of the [JenkinsBuild] to the
+  /// corresponding [BuildStatus].
+  ///
+  /// Returns the [BuildStatus.inProgress] if the given [building]
+  /// is `true`. Otherwise, maps the given [result] to the
+  /// corresponding [BuildStatus].
+  BuildStatus _mapJenkinsResult(bool building, JenkinsBuildResult result) {
+    if (building ?? false) return BuildStatus.inProgress;
+
     switch (result) {
       case JenkinsBuildResult.success:
         return BuildStatus.successful;
@@ -241,6 +255,21 @@ class JenkinsSourceClientAdapter with LoggerMixin implements SourceClient {
       default:
         return BuildStatus.unknown;
     }
+  }
+
+  /// Processes the given [duration] of a build depending on the [status] of
+  /// this build.
+  ///
+  /// Returns `null` if the given [status] is [BuildStatus.inProgress].
+  /// Otherwise, returns either the given [duration] or [Duration.zero]
+  /// (if the given [duration] is `null`).
+  Duration _processBuildDuration(
+    BuildStatus status,
+    Duration duration,
+  ) {
+    if (status == BuildStatus.inProgress) return null;
+
+    return duration ?? Duration.zero;
   }
 
   /// Processes the given [interaction].
