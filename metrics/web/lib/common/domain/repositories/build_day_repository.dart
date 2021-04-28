@@ -7,7 +7,16 @@ import 'package:metrics/common/domain/entities/build_day.dart';
 ///
 /// Provides an ability to get the build day data.
 abstract class BuildDayRepository {
-  /// Provides the stream of [BuildDay]s.
+  /// Provides a stream of [BuildDay]s related to a project with the
+  /// given [projectId].
+  ///
+  /// Throws an [ArgumentError] if the given [projectId] is `null`.
+  ///
+  /// Requests build days within the specified date range using given
+  /// [from] and [to] timestamps.
+  ///
+  /// Does not apply the given [from] timestamp if it is `null`.
+  /// Does not apply the given [to] timestamp if it is `null`.
   Stream<List<BuildDay>> projectBuildDaysInDateRangeStream(
     String projectId, {
     DateTime from,
