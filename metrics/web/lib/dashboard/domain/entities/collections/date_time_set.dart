@@ -19,8 +19,8 @@ class DateTimeSet<T extends DateTimeSetEntry> extends DelegatingSet<T> {
           hashCode: (entry) => entry?.date.hashCode,
         ));
 
-  /// Creates the [DateTimeSet] that contains all elements from [iterable] with
-  /// unique date.
+  /// Creates a new instance of the [DateTimeSet] that contains all elements
+  /// from the given [iterable] with unique date.
   factory DateTimeSet.from(Iterable<T> iterable) {
     final set = DateTimeSet<T>();
 

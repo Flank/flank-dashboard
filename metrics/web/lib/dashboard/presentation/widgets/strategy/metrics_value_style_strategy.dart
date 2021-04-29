@@ -21,15 +21,15 @@ import 'package:metrics/dashboard/presentation/widgets/styled_circle_percentage.
 /// the [CirclePercentageAttentionLevel.positive].
 class MetricsValueStyleStrategy
     implements ValueBasedAppearanceStrategy<CirclePercentageStyle, double> {
-  /// Is the lower bound of the given value to return the
+  /// A lower bound of the given value to return the
   /// [CirclePercentageAttentionLevel.positive].
   static const double highPercentBound = 0.8;
 
-  /// Is the lower bound of the given value to return the
+  /// A lower bound of the given value to return the
   /// [CirclePercentageAttentionLevel.neutral].
   static const double mediumPercentBound = 0.51;
 
-  /// Is the lower bound of the given value to return the
+  /// A lower bound of the given value to return the
   /// [CirclePercentageAttentionLevel.negative].
   static const double lowPercentBound = 0.0;
 

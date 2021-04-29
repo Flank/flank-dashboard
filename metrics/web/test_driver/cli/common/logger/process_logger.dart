@@ -8,7 +8,7 @@ import '../process/process_wrapper.dart';
 /// Writes the [ProcessWrapper] logs using the [Logger].
 class ProcessLogger extends Logger {
   /// Starts listening the [ProcessWrapper.stdoutBroadcast] and the
-  /// [ProcessWrapper.stderrBroadcast] and saving the outputs to [logFileName]
+  /// [ProcessWrapper.stderrBroadcast] saving the outputs to [logFileName]
   /// file.
   static void startLogging(ProcessWrapper process, String logFileName) {
     final outputStream = process.stdoutBroadcast;

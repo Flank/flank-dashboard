@@ -87,7 +87,7 @@ class JenkinsClient with LoggerMixin {
   ///
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to
-  /// [HttpStatus.ok] this method will result with [InteractionResult.error].
+  /// [HttpStatus.ok], this method results with [InteractionResult.error].
   /// Otherwise, delegates processing the [Response] to the
   /// [responseProcessor] callback.
   Future<InteractionResult<T>> _handleResponse<T>(
