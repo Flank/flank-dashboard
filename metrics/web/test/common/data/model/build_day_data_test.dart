@@ -309,15 +309,6 @@ void main() {
     );
 
     test(
-      ".fromJson() returns null if the given json is null",
-      () {
-        final buildDayData = BuildDayData.fromJson(null);
-
-        expect(buildDayData, isNull);
-      },
-    );
-
-    test(
       ".toJson() converts an instance to the json encodable map",
       () {
         final expectedJson = createBuildDayDataJson(
