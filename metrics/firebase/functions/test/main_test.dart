@@ -16,14 +16,15 @@ void main() {
     const tasksCollectionName = 'tasks';
     const projectId = 'projectId';
     const durationInMilliseconds = 123;
-    final startedAtUtc = _getUtcDate(DateTime.now());
+    final startedAt = DateTime.now();
+    final startedAtUtc = _getUtcDate(startedAt);
     final buildStatus = BuildStatus.successful;
 
     final build = {
       'duration': durationInMilliseconds,
       'projectId': projectId,
       'buildStatus': buildStatus.toString(),
-      'startedAt': Timestamp.fromDateTime(startedAtUtc),
+      'startedAt': Timestamp.fromDateTime(startedAt),
       'url': 'url',
       'workflowName': 'workflowName',
     };
