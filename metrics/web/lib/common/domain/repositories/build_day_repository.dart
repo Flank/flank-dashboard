@@ -10,13 +10,10 @@ abstract class BuildDayRepository {
   /// Provides a stream of [BuildDay]s related to a project with the
   /// given [projectId].
   ///
-  /// Throws an [ArgumentError] if the given [projectId] is `null`.
-  ///
   /// Requests build days within the specified date range using given
-  /// [from] and [to] timestamps.
+  /// [from] and [to] timestamps. Applies only non-`null` [from] or [to] limits.
   ///
-  /// Does not apply the given [from] timestamp if it is `null`.
-  /// Does not apply the given [to] timestamp if it is `null`.
+  /// Throws an [ArgumentError] if the given [projectId] is `null`.
   Stream<List<BuildDay>> projectBuildDaysInDateRangeStream(
     String projectId, {
     DateTime from,

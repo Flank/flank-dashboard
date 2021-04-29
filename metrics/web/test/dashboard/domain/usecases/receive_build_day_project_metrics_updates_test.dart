@@ -1,24 +1,24 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/domain/entities/build_day.dart';
 import 'package:metrics/common/domain/repositories/build_day_repository.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../test_utils/matchers.dart';
+import '../../../test_utils/matchers.dart';
 
 void main() {
   group("ReceiveBuildDayProjectMetricsUpdates", () {
     const projectId = 'id';
     const projectIdParam = ProjectIdParam(projectId);
-    const collectionEquality = DeepCollectionEquality();
 
     final buildDayRepository = _BuildDayRepositoryMock();
     final useCase = ReceiveBuildDayProjectMetricsUpdates(buildDayRepository);
@@ -54,11 +54,25 @@ void main() {
       Matcher buildNumberMetricMatcher = anything,
       Matcher performanceMetricMatcher = anything,
     }) {
-      return allOf(
-        projectIdMatcher,
-        buildNumberMetricMatcher,
-        performanceMetricMatcher,
-      );
+      final metricsMatcher = isA<BuildDayProjectMetrics>();
+
+      return allOf([
+        metricsMatcher.having(
+          (metrics) => metrics.projectId,
+          'projectId',
+          projectIdMatcher,
+        ),
+        metricsMatcher.having(
+          (metrics) => metrics.buildNumberMetric,
+          'buildNumberMetric',
+          buildNumberMetricMatcher,
+        ),
+        metricsMatcher.having(
+          (metrics) => metrics.performanceMetric,
+          'performanceMetric',
+          performanceMetricMatcher,
+        ),
+      ]);
     }
 
     tearDown(() {
@@ -108,14 +122,11 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final projectIdMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) => metrics.projectId == expectedProjectId,
+        final metricsMatcher = buildDayMetricsMatcher(
+          projectIdMatcher: equals(expectedProjectId),
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(projectIdMatcher: projectIdMatcher)),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
@@ -126,21 +137,16 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final buildNumberMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) => metrics.buildNumberMetric != null,
+        final metricsMatcher = buildDayMetricsMatcher(
+          buildNumberMetricMatcher: isNotNull,
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            buildNumberMetricMatcher: buildNumberMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
     test(
-      ".call() returns a build day project metrics with the build number metric equal to the total number of builds performed during the returned build days",
+      ".call() returns a build day project metrics with the build number metric with the total number of builds",
       () async {
         final firstBuildDay = createBuildDay(successful: 1, failed: 1);
         final secondBuildDay = createBuildDay(unknown: 2, inProgress: 2);
@@ -151,19 +157,15 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final buildNumberMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) {
-            final buildNumberMetric = metrics.buildNumberMetric;
-            return buildNumberMetric.numberOfBuilds == expectedNumberOfBuilds;
-          },
+        final metricsMatcher = buildDayMetricsMatcher(
+          buildNumberMetricMatcher: isA<BuildNumberMetric>().having(
+            (metric) => metric.numberOfBuilds,
+            'numberOfBuilds',
+            equals(expectedNumberOfBuilds),
+          ),
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            buildNumberMetricMatcher: buildNumberMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
@@ -174,21 +176,16 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final performanceMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) => metrics.performanceMetric != null,
+        final metricsMatcher = buildDayMetricsMatcher(
+          performanceMetricMatcher: isNotNull,
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            performanceMetricMatcher: performanceMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
     test(
-      ".call() returns a build day project metrics with the performance metric having zero average build duration if the returned build days have no builds",
+      ".call() returns a build day project metrics with the performance metric with the zero average build duration if the total number of builds is 0",
       () async {
         final buildDay = createBuildDay();
         final buildDays = [buildDay];
@@ -198,26 +195,20 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final performanceMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) {
-            final performanceMetric = metrics.performanceMetric;
-            final averageDuration = performanceMetric.averageBuildDuration;
-
-            return averageDuration == expectedAverageDuration;
-          },
+        final metricsMatcher = buildDayMetricsMatcher(
+          performanceMetricMatcher: isA<PerformanceMetric>().having(
+            (metric) => metric.averageBuildDuration,
+            'averageBuildDuration',
+            equals(expectedAverageDuration),
+          ),
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            performanceMetricMatcher: performanceMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
     test(
-      ".call() returns a build day project metrics with the performance metric having the average build duration equal to the total builds' duration divided by the total number of builds performed during the returned build days",
+      ".call() returns a build day project metrics with the performance metric with the correct average build duration",
       () async {
         const firstDayDuration = Duration(seconds: 2);
         const secondDayDuration = Duration(seconds: 3);
@@ -230,34 +221,26 @@ void main() {
           failed: 3,
         );
         final buildDays = [firstBuildDay, secondBuildDay];
-        final totalDuration = firstDayDuration + secondDayDuration;
-        const totalNumberOfBuilds = 2 + 3;
-        final expectedAverageDuration = totalDuration ~/ totalNumberOfBuilds;
+        const expectedAverageDuration = Duration(seconds: 1);
 
         whenStreamBuildDays().thenAnswer((_) => Stream.value(buildDays));
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final performanceMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) {
-            final performanceMetric = metrics.performanceMetric;
-            final averageDuration = performanceMetric.averageBuildDuration;
-
-            return averageDuration == expectedAverageDuration;
-          },
+        final metricsMatcher = buildDayMetricsMatcher(
+          performanceMetricMatcher: isA<PerformanceMetric>().having(
+            (metric) => metric.averageBuildDuration,
+            'averageBuildDuration',
+            equals(expectedAverageDuration),
+          ),
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            performanceMetricMatcher: performanceMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
 
     test(
-      ".call() returns a build day project metrics with the performance metric having the builds performance created from the returned build days",
+      ".call() returns a build day project metrics with the performance metric with the correct builds performance",
       () async {
         final firstBuildDay = createBuildDay(
           totalDuration: const Duration(seconds: 2),
@@ -282,24 +265,15 @@ void main() {
 
         final metricsStream = useCase.call(projectIdParam);
 
-        final performanceMetricMatcher = predicate<BuildDayProjectMetrics>(
-          (metrics) {
-            final performanceMetric = metrics.performanceMetric;
-            final buildsPerformance = performanceMetric.buildsPerformance;
-
-            return collectionEquality.equals(
-              buildsPerformance,
-              expectedBuildsPerformance,
-            );
-          },
+        final metricsMatcher = buildDayMetricsMatcher(
+          performanceMetricMatcher: isA<PerformanceMetric>().having(
+            (metric) => metric.buildsPerformance,
+            'averageBuildDuration',
+            equals(expectedBuildsPerformance),
+          ),
         );
 
-        expect(
-          metricsStream,
-          emits(buildDayMetricsMatcher(
-            performanceMetricMatcher: performanceMetricMatcher,
-          )),
-        );
+        expect(metricsStream, emits(metricsMatcher));
       },
     );
   });
