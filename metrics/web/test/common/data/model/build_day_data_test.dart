@@ -188,7 +188,7 @@ void main() {
     );
 
     test(
-      "equals to another BuildDay instance with the same parameters",
+      "equals to another BuildDayData instance with the same parameters",
       () {
         final buildDayData = BuildDayData(
           projectId: projectId,
@@ -244,7 +244,7 @@ void main() {
     );
 
     test(
-      ".fromJson() maps null number of successful builds in the given json to zero",
+      ".fromJson() maps the null number of successful builds in the given json to zero",
       () {
         const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(successful: null);
@@ -256,7 +256,7 @@ void main() {
     );
 
     test(
-      ".fromJson() maps null number of failed builds in the given json to zero",
+      ".fromJson() maps the null number of failed builds in the given json to zero",
       () {
         const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(failed: null);
@@ -268,7 +268,7 @@ void main() {
     );
 
     test(
-      ".fromJson() maps null number of unknown builds in the given json to zero",
+      ".fromJson() maps the null number of unknown builds in the given json to zero",
       () {
         const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(unknown: null);
@@ -280,7 +280,7 @@ void main() {
     );
 
     test(
-      ".fromJson() maps null number of in progress builds in the given json to zero",
+      ".fromJson() maps the null number of in progress builds in the given json to zero",
       () {
         const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(inProgress: null);
@@ -292,7 +292,7 @@ void main() {
     );
 
     test(
-      ".fromJson() maps null total duration in the given json to zero duration",
+      ".fromJson() maps the null total duration in the given json to zero duration",
       () {
         const expectedTotalDuration = Duration.zero;
         final json = createBuildDayDataJson(totalDuration: null);

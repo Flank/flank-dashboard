@@ -20,6 +20,8 @@ class FirestoreBuildDayRepository implements BuildDayRepository {
     DateTime from,
     DateTime to,
   }) {
+    ArgumentError.checkNotNull(projectId, 'projectId');
+
     final collection = _firestore.collection('build');
 
     Query query = collection.where('projectId', isEqualTo: projectId);
@@ -46,7 +48,7 @@ class FirestoreBuildDayRepository implements BuildDayRepository {
         .toList();
   }
 
-  /// Handles the given [error] occurred while fetching the build days.
+  /// Handles the given [error] occurred while fetching the [BuildDay]s.
   ///
   /// Throws a [PersistentStoreException] with the
   /// [PersistentStoreErrorCode.unknown].
