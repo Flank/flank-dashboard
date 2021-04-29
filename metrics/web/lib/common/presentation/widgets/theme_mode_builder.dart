@@ -6,7 +6,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:provider/provider.dart';
 
 /// A callback for building a widget depending on the given [context],
-/// [isDark] and [child] values.
+/// [isDark], and [child] values.
 typedef ThemeModeWidgetBuilder = Widget Function(
   BuildContext context,
   bool isDark,

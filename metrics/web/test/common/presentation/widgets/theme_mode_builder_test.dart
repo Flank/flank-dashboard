@@ -120,8 +120,8 @@ class _ThemeModeBuilderTestbed extends StatelessWidget {
   /// A [ThemeModeWidgetBuilder] callback to apply to the widget under tests.
   final ThemeModeWidgetBuilder builder;
 
-  /// A child [Widget] of the [ThemeModeBuilder] to to apply to the widget under
-  /// test.
+  /// A child [Widget] of the [ThemeModeBuilder] to apply to the widget under
+  /// tests.
   final Widget child;
 
   /// Creates a new instance of the [_ThemeModeBuilderTestbed] with the given
