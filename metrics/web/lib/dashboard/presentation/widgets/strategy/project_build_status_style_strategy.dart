@@ -30,7 +30,7 @@ class ProjectBuildStatusStyleStrategy
       case BuildStatus.unknown:
         return attentionLevelTheme.unknown;
       case BuildStatus.inProgress:
-        return attentionLevelTheme.unknown;
+        return attentionLevelTheme.inactive;
     }
 
     return null;
