@@ -37,9 +37,7 @@ class ThemeModeBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<ThemeNotifier, bool>(
       selector: (_, notifier) => notifier.isDark,
-      builder: (context, isDark, child) {
-        return builder(context, isDark, child);
-      },
+      builder: builder,
       child: child,
     );
   }
