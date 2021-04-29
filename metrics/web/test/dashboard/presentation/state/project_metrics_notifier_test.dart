@@ -15,6 +15,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -44,6 +45,7 @@ void main() {
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
     final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
+    final receiveBuildDayUpdates = _ReceiveBuildDayProjectMetricsUpdatesMock();
 
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
@@ -89,6 +91,7 @@ void main() {
     setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
         receiveProjectMetricsUpdates,
+        receiveBuildDayUpdates,
       );
 
       expectedProjectMetrics = await receiveProjectMetricsUpdates(
@@ -103,6 +106,7 @@ void main() {
 
     tearDown(() async {
       reset(receiveProjectMetricsMock);
+      reset(receiveBuildDayUpdates);
       await projectMetricsNotifier.dispose();
     });
 
@@ -110,7 +114,17 @@ void main() {
       "throws an AssertionError if receive project metric updates use case is null",
       () {
         expect(
-          () => ProjectMetricsNotifier(null),
+          () => ProjectMetricsNotifier(null, receiveBuildDayUpdates),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws an AssertionError if receive build day project metric updates use case is null",
+      () {
+        expect(
+          () => ProjectMetricsNotifier(receiveProjectMetricsUpdates, null),
           throwsAssertionError,
         );
       },
@@ -130,6 +144,7 @@ void main() {
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
           receiveEmptyMetrics,
+          receiveBuildDayUpdates,
         );
 
         bool hasNullMetrics;
@@ -165,6 +180,7 @@ void main() {
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
           receiveProjectMetricsUpdates,
+          receiveBuildDayUpdates,
         );
 
         bool hasNullMetrics;
@@ -277,7 +293,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -303,7 +322,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -334,7 +356,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -373,7 +398,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -396,7 +424,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -430,7 +461,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -466,7 +500,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdates,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -518,6 +555,7 @@ void main() {
       () async {
         final metricsNotifier = ProjectMetricsNotifier(
           receiveProjectMetricsUpdates,
+          receiveBuildDayUpdates,
         );
 
         await metricsNotifier.setProjects(projects, errorMessage);
@@ -545,6 +583,7 @@ void main() {
       () async {
         final metricsNotifier = ProjectMetricsNotifier(
           receiveProjectMetricsUpdates,
+          receiveBuildDayUpdates,
         );
 
         bool hasEmptyProjectMetrics;
@@ -645,7 +684,10 @@ void main() {
       ".dispose() unsubscribes from all streams and removes project metrics",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          receiveBuildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
@@ -662,7 +704,10 @@ void main() {
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          receiveBuildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
@@ -681,7 +726,10 @@ void main() {
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          receiveBuildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
@@ -1021,3 +1069,6 @@ class _ReceiveProjectMetricsUpdatesStub
 
 class _ReceiveProjectMetricsUpdatesMock extends Mock
     implements ReceiveProjectMetricsUpdates {}
+
+class _ReceiveBuildDayProjectMetricsUpdatesMock extends Mock
+    implements ReceiveBuildDayProjectMetricsUpdates {}
