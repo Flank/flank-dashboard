@@ -102,8 +102,8 @@ Cons:
 
 ## Decision
 
-As we possibly have a concurrent updates, we can't use the transaction method, because some of counter increments may fail.
+Using the "transaction approach", reads are required - thus producing more load/billing than [FieldValue.increment](#FieldValue.increment). 
 
-The [Distributed counter](#distributed-counter) is too complicated for our purposes. Also, document writes is not so frequent.
+The [Distributed counter](#distributed-counter) is designed for the heavier load than we currently estimate and could be a good scaling approach if something changes.
 
-So, after the analysis of possible approaches of data aggregation, theirs pros and cons, we should use the [FieldValue.increment](#FieldValue.increment) approach.
+Considering all pros and cons [FieldValue.increment](#FieldValue.increment) seems to be a great approach to start with aggregations due to the absence of reads for increments and providing sufficient limits for writes.
