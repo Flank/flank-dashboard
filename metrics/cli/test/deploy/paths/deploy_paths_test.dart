@@ -1,32 +1,32 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/deploy/constants/deploy_constants.dart';
+import 'package:cli/deploy/paths/deploy_paths.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('DeployConstants', () {
+  group('DeployPaths', () {
     const suffix = 'suffix';
     const tempDir = 'tempDir';
 
     test(
       ".tempDir() returns a name that contains the given suffix",
       () {
-        expect(DeployConstants.tempDir(suffix), contains(suffix));
+        expect(DeployPaths.tempDir(suffix), contains(suffix));
       },
     );
 
     test(
       ".webPath() returns a path to the Web project sources that contains the temporary directory",
       () {
-        expect(DeployConstants.webPath(tempDir), contains(tempDir));
+        expect(DeployPaths.web(tempDir), contains(tempDir));
       },
     );
 
     test(
       ".firebasePath() returns a path to the Firebase sources that contains the temporary directory",
       () {
-        expect(DeployConstants.firebasePath(tempDir), contains(tempDir));
+        expect(DeployPaths.firebase(tempDir), contains(tempDir));
       },
     );
 
@@ -34,7 +34,7 @@ void main() {
       ".firebaseFunctionsPath() returns a path to the Firebase functions sources that contains the temporary directory",
       () {
         expect(
-          DeployConstants.firebaseFunctionsPath(tempDir),
+          DeployPaths.firebaseFunctions(tempDir),
           contains(tempDir),
         );
       },
@@ -43,7 +43,7 @@ void main() {
     test(
       ".metricsConfigPath() returns a path to the Metrics configuration that contains the temporary directory",
       () {
-        expect(DeployConstants.metricsConfigPath(tempDir), contains(tempDir));
+        expect(DeployPaths.metricsConfig(tempDir), contains(tempDir));
       },
     );
   });

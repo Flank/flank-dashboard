@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
+import 'package:cli/deploy/paths/deploy_paths.dart';
 import 'package:cli/deploy/deployer.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/helper/file_helper.dart';
@@ -37,20 +38,18 @@ void main() {
     const sentryDsn = 'sentryDsn';
     const sentryProjectSlug = 'sentryProjectSlug';
     const sentryOrgSlug = 'sentryOrgSlug';
-    const firebasePath = DeployConstants.firebasePath;
-    const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
     const firebaseTarget = DeployConstants.firebaseTarget;
     const repoURL = DeployConstants.repoURL;
 
     final currentDateTime = clock.now();
     final suffix = currentDateTime.millisecondsSinceEpoch.toString();
-    final tempDirName = DeployConstants.tempDir(suffix);
-    final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
+    final tempDirName = DeployPaths.tempDir(suffix);
+    final firebaseFunctionsPath = DeployPaths.firebaseFunctions(
       tempDirName,
     );
-    final firebasePath = DeployConstants.firebasePath(tempDirName);
-    final webPath = DeployConstants.webPath(tempDirName);
-    final configPath = DeployConstants.metricsConfigPath(tempDirName);
+    final firebasePath = DeployPaths.firebase(tempDirName);
+    final webPath = DeployPaths.web(tempDirName);
+    final configPath = DeployPaths.metricsConfig(tempDirName);
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();

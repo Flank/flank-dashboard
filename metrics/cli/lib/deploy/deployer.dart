@@ -4,6 +4,7 @@
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
+import 'package:cli/deploy/paths/deploy_paths.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/firebase/service/firebase_service.dart';
 import 'package:cli/flutter/service/flutter_service.dart';
@@ -92,7 +93,7 @@ class Deployer {
     try {
       await _gitService.checkout(DeployConstants.repoURL, tempDirName);
       await _installNpmDependencies(tempDirName);
-      await _flutterService.build(DeployConstants.webPath(tempDirName));
+      await _flutterService.build(DeployPaths.web(tempDirName));
       await _firebaseService.upgradeBillingPlan(projectId);
       await _firebaseService.enableAnalytics(projectId);
       await _firebaseService.initializeFirestoreData(projectId);
@@ -100,7 +101,7 @@ class Deployer {
       final googleClientId = await _firebaseService.configureAuthProviders(
         projectId,
       );
-      final sentryConfig = await _setupSentry();
+      final sentryConfig = await _setupSentry(tempDirName);
 
       final metricsConfig = WebMetricsConfig(
         googleSignInClientId: googleClientId,
@@ -118,7 +119,7 @@ class Deployer {
   String _getTempDirectoryName() {
     final tempDirSuffix = clock.now().millisecondsSinceEpoch.toString();
 
-    return DeployConstants.tempDir(tempDirSuffix);
+    return DeployPaths.tempDir(tempDirSuffix);
   }
 
   /// Logins to the necessary services.
@@ -132,8 +133,8 @@ class Deployer {
 
   /// Installs npm dependencies within the given [tempDirName].
   Future<void> _installNpmDependencies(String tempDirName) async {
-    final firebasePath = DeployConstants.firebasePath(tempDirName);
-    final firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath(
+    final firebasePath = DeployPaths.firebase(tempDirName);
+    final firebaseFunctionsPath = DeployPaths.firebaseFunctions(
       tempDirName,
     );
 
@@ -141,8 +142,9 @@ class Deployer {
     await _npmService.installDependencies(firebaseFunctionsPath);
   }
 
-  /// Sets up a Sentry for the application under deployment.
-  Future<SentryConfig> _setupSentry() async {
+  /// Sets up a Sentry for the application under deployment
+  /// using the given [tempDirName].
+  Future<SentryConfig> _setupSentry(String tempDirName) async {
     final shouldSetupSentry = _prompter.promptConfirm(
       DeployStrings.setupSentry,
     );
@@ -151,7 +153,7 @@ class Deployer {
 
     await _sentryService.login();
 
-    final release = await _createSentryRelease();
+    final release = await _createSentryRelease(tempDirName);
     final dsn = _sentryService.getProjectDsn(release.project);
 
     return SentryConfig(
@@ -161,15 +163,15 @@ class Deployer {
     );
   }
 
-  /// Creates a new Sentry release.
-  Future<SentryRelease> _createSentryRelease() {
+  /// Creates a new Sentry release using the given [tempDirName].
+  Future<SentryRelease> _createSentryRelease(String tempDirName) {
     final webSourceMap = SourceMap(
-      path: DeployConstants.webPath,
+      path: DeployPaths.web(tempDirName),
       extensions: const ['dart'],
     );
 
     final buildSourceMap = SourceMap(
-      path: DeployConstants.buildWebPath,
+      path: DeployPaths.buildWeb(tempDirName),
       extensions: const ['map', 'js'],
     );
 
@@ -181,8 +183,8 @@ class Deployer {
   Future<void> _deployToFirebase(String projectId, String tempDirName) async {
     const target = DeployConstants.firebaseTarget;
 
-    final firebasePath = DeployConstants.firebasePath(tempDirName);
-    final webPath = DeployConstants.webPath(tempDirName);
+    final firebasePath = DeployPaths.firebase(tempDirName);
+    final webPath = DeployPaths.web(tempDirName);
 
     await _firebaseService.deployFirebase(projectId, firebasePath);
     await _firebaseService.deployHosting(projectId, target, webPath);
@@ -191,7 +193,7 @@ class Deployer {
   /// Applies the given [config] to the Metrics configuration file
   /// within the given [tempDirName].
   void _applyMetricsConfig(WebMetricsConfig config, String tempDirName) {
-    final configPath = DeployConstants.metricsConfigPath(tempDirName);
+    final configPath = DeployPaths.metricsConfig(tempDirName);
     final configFile = _fileHelper.getFile(configPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
