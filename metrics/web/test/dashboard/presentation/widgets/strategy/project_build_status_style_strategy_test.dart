@@ -17,6 +17,9 @@ void main() {
     );
     const negativeStyle = ProjectBuildStatusStyle(backgroundColor: Colors.red);
     const unknownStyle = ProjectBuildStatusStyle(backgroundColor: Colors.grey);
+    const inactiveStyle = ProjectBuildStatusStyle(
+      backgroundColor: Colors.black,
+    );
 
     const theme = MetricsThemeData(
       projectBuildStatusTheme: ProjectBuildStatusThemeData(
@@ -24,6 +27,7 @@ void main() {
           positive: positiveStyle,
           negative: negativeStyle,
           unknown: unknownStyle,
+          inactive: inactiveStyle,
         ),
       ),
     );
@@ -74,7 +78,7 @@ void main() {
           BuildStatus.inProgress,
         );
 
-        expect(actualStyle, equals(unknownStyle));
+        expect(actualStyle, equals(inactiveStyle));
       },
     );
 

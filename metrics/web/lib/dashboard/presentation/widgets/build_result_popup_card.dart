@@ -9,6 +9,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/build_status_view.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_asset_strategy.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class BuildResultPopupCard extends StatelessWidget {
@@ -33,6 +34,8 @@ class BuildResultPopupCard extends StatelessWidget {
       buildResultPopupViewModel.date,
     );
     final buildDuration = buildResultPopupViewModel.duration;
+    final buildStatus =
+        buildResultPopupViewModel.buildStatus ?? BuildStatus.unknown;
 
     return Container(
       decoration: BoxDecoration(
@@ -63,7 +66,7 @@ class BuildResultPopupCard extends StatelessWidget {
             children: [
               BuildStatusView(
                 strategy: const BuildResultPopupAssetStrategy(),
-                buildStatus: buildResultPopupViewModel.buildStatus,
+                buildStatus: buildStatus,
                 height: 24.0,
                 width: 24.0,
               ),

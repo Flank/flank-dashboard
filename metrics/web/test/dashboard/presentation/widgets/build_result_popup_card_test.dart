@@ -232,6 +232,29 @@ void main() {
     );
 
     testWidgets(
+      "applies the unknown build status if the given build result popup view model has a null build status",
+      (tester) async {
+        const expectedStatus = BuildStatus.unknown;
+        final buildResultPopupViewModel = BuildResultPopupViewModel(
+          date: date,
+          buildStatus: null,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _BuildResultPopupCardTestbed(
+              buildResultPopupViewModel: buildResultPopupViewModel,
+            ),
+          );
+        });
+
+        final buildStatusView = FinderUtil.findBuildStatusView(tester);
+
+        expect(buildStatusView.buildStatus, equals(expectedStatus));
+      },
+    );
+
+    testWidgets(
       "applies the build result popup asset strategy to the build status view widget",
       (tester) async {
         await mockNetworkImagesFor(() {
@@ -245,42 +268,6 @@ void main() {
         final buildStatusView = FinderUtil.findBuildStatusView(tester);
 
         expect(buildStatusView.strategy, isA<BuildResultPopupAssetStrategy>());
-      },
-    );
-
-    testWidgets(
-      "applies the correct height to the build status view widget",
-      (tester) async {
-        const expectedHeight = 24.0;
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _BuildResultPopupCardTestbed(
-              buildResultPopupViewModel: buildResultPopupViewModel,
-            ),
-          );
-        });
-
-        final buildStatusView = FinderUtil.findBuildStatusView(tester);
-
-        expect(buildStatusView.height, equals(expectedHeight));
-      },
-    );
-
-    testWidgets(
-      "applies the correct width to the build status view widget",
-      (tester) async {
-        const expectedWidth = 24.0;
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _BuildResultPopupCardTestbed(
-              buildResultPopupViewModel: buildResultPopupViewModel,
-            ),
-          );
-        });
-
-        final buildStatusView = FinderUtil.findBuildStatusView(tester);
-
-        expect(buildStatusView.width, equals(expectedWidth));
       },
     );
   });
