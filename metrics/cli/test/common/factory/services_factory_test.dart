@@ -7,6 +7,7 @@ import 'package:cli/flutter/adapter/flutter_cli_service_adapter.dart';
 import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/git/adapter/git_cli_service_adapter.dart';
 import 'package:cli/npm/adapter/npm_cli_service_adapter.dart';
+import 'package:cli/sentry/adapter/sentry_cli_service_adapter.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -55,6 +56,15 @@ void main() {
         final services = servicesFactory.create();
 
         expect(services.firebaseService, isA<FirebaseCliServiceAdapter>());
+      },
+    );
+
+    test(
+      ".create() creates a Services instance with the Sentry service adapter",
+      () {
+        final services = servicesFactory.create();
+
+        expect(services.sentryService, isA<SentryCliServiceAdapter>());
       },
     );
   });

@@ -7,6 +7,7 @@ import 'package:cli/gcloud/service/gcloud_service.dart';
 import 'package:cli/git/service/git_service.dart';
 import 'package:cli/interfaces/service/info_service.dart';
 import 'package:cli/npm/service/npm_service.dart';
+import 'package:cli/sentry/service/sentry_service.dart';
 
 /// A class that provides an ability to check whether all required third-party
 /// services are available and get their versions.
@@ -26,6 +27,9 @@ class Doctor {
   /// A class that provides methods for working with the Firebase.
   final FirebaseService _firebaseService;
 
+  /// A class that provides methods for working with the Sentry.
+  final SentryService _sentryService;
+
   /// Creates a new instance of the [Doctor] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
@@ -34,19 +38,22 @@ class Doctor {
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.firebaseService] is `null`.
+  /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
   Doctor({
     Services services,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _gitService = services?.gitService,
-        _firebaseService = services?.firebaseService {
+        _firebaseService = services?.firebaseService,
+        _sentryService = services?.sentryService {
     ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(_npmService, 'npmService');
     ArgumentError.checkNotNull(_gitService, 'gitService');
     ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
+    ArgumentError.checkNotNull(_sentryService, 'sentryService');
   }
 
   /// Checks versions of the required third-party services.
@@ -56,6 +63,7 @@ class Doctor {
     await _checkVersion(_npmService);
     await _checkVersion(_gitService);
     await _checkVersion(_firebaseService);
+    await _checkVersion(_sentryService);
   }
 
   /// Checks version of the third-party [service].

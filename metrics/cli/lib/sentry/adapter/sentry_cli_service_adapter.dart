@@ -21,13 +21,12 @@ class SentryCliServiceAdapter implements SentryService {
   /// Creates a new instance of the [SentryCliServiceAdapter]
   /// with the given [sentryCli] and [prompter].
   ///
-  /// Throws an [ArgumentError] if the given [sentryCli] is `null`.
-  /// Throws an [ArgumentError] if the given [prompter] is `null`.
-  SentryCliServiceAdapter({
-    SentryCli sentryCli,
-    Prompter prompter,
-  })  : _sentryCli = sentryCli,
-        _prompter = prompter {
+  /// Throws an [ArgumentError] if the given [SentryCli] is `null`.
+  /// Throws an [ArgumentError] if the given [Prompter] is `null`.
+  SentryCliServiceAdapter(
+    this._sentryCli,
+    this._prompter,
+  ) {
     ArgumentError.checkNotNull(_sentryCli, 'sentryCli');
     ArgumentError.checkNotNull(_prompter, 'prompter');
   }
