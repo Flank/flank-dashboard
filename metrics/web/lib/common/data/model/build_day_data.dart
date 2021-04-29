@@ -60,7 +60,7 @@ class BuildDayData extends BuildDay implements DataModel {
       'failed': failed,
       'unknown': unknown,
       'inProgress': inProgress,
-      'totalDuration': totalDuration,
+      'totalDuration': totalDuration.inMilliseconds,
       'day': Timestamp.fromDate(day),
     };
   }
