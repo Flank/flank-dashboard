@@ -5,7 +5,7 @@
 library metrics_config;
 
 import 'package:js/js.dart';
-import 'package:metrics/common/domain/entities/metrics_config.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A [MetricsConfig] implementation for web.
 @JS('MetricsConfig')

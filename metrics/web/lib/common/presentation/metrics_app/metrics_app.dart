@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
-import 'package:metrics/common/domain/entities/metrics_config.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
@@ -22,6 +21,7 @@ import 'package:metrics/common/presentation/routes/observers/toast_route_observe
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:provider/provider.dart';
 
 /// The root widget of the application.

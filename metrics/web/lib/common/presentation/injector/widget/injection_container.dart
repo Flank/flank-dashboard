@@ -19,7 +19,6 @@ import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
-import 'package:metrics/common/domain/entities/metrics_config.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
@@ -45,6 +44,7 @@ import 'package:metrics/project_groups/domain/usecases/delete_project_group_usec
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart';
 
