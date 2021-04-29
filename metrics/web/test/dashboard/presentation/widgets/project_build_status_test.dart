@@ -21,6 +21,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 import '../../../test_utils/theme_notifier_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectBuildStatus", () {
     const backgroundColor = Colors.red;
@@ -158,40 +160,25 @@ void main() {
     );
 
     testWidgets(
-      "applies a correct height to the build status view widget",
+      "displays a build status view widget with the unknown build status if the given project build status view model has a null build status",
       (tester) async {
-        const expectedHeight = 40.0;
+        const expectedBuildStatus = BuildStatus.unknown;
+        const projectBuildStatusViewModel = ProjectBuildStatusViewModel(
+          value: null,
+        );
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _ProjectBuildStatusTestbed(
               strategy: strategy,
+              buildStatus: projectBuildStatusViewModel,
             ),
           );
         });
 
         final buildStatusView = FinderUtil.findBuildStatusView(tester);
 
-        expect(buildStatusView.height, equals(expectedHeight));
-      },
-    );
-
-    testWidgets(
-      "applies a correct width to the build status view widget",
-      (tester) async {
-        const expectedWidth = 40.0;
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectBuildStatusTestbed(
-              strategy: strategy,
-            ),
-          );
-        });
-
-        final buildStatusView = FinderUtil.findBuildStatusView(tester);
-
-        expect(buildStatusView.width, equals(expectedWidth));
+        expect(buildStatusView.buildStatus, equals(expectedBuildStatus));
       },
     );
   });

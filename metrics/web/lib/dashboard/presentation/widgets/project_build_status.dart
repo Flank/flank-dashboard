@@ -36,7 +36,7 @@ class ProjectBuildStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final projectBuildStatus = buildStatus?.value ?? BuildStatus.unknown;
+    final projectBuildStatus = buildStatus.value ?? BuildStatus.unknown;
 
     final theme = buildStatusStyleStrategy.getWidgetAppearance(
       MetricsTheme.of(context),
@@ -44,6 +44,8 @@ class ProjectBuildStatus extends StatelessWidget {
     );
 
     return DecoratedContainer(
+      height: 40.0,
+      width: 40.0,
       decoration: BoxDecoration(
         color: theme.backgroundColor,
         shape: BoxShape.circle,
@@ -53,8 +55,6 @@ class ProjectBuildStatus extends StatelessWidget {
           return BuildStatusView(
             strategy: ProjectBuildStatusAssetStrategy(isDarkMode: isDarkMode),
             buildStatus: projectBuildStatus,
-            height: 40,
-            width: 40,
           );
         },
       ),
