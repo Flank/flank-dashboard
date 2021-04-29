@@ -18,6 +18,15 @@ If you have already accepted the terms of the GCloud service, skip this step oth
 5. Press a 'AGREE AND CONTINUE' button.
 Once you are done, press any key to continue:''';
 
-  static String configureOauth(String projectId) =>
-      '''Use the following link to access your hosting: $projectId.firebaseapp.com. ''';
+  static String configureOauth(String projectId) => '''
+Use the following link for correct work of the Metrics project: https://$projectId.firebaseapp.com. 
+
+If you are going to use the "https://$projectId.web.app" reference, you need to configure OAuth 2.0 following the steps below:
+
+1. Follow the link https://console.cloud.google.com/apis/credentials?project=$projectId/
+2. Open the 'Web client (auto created by Google Service)' OAuth 2.0 Client ID.
+3.Press a 'ADD URI' button under the Authorized JavaScript origins section.
+4. Paste the 'https://$projectId.web.app' to the URI.
+5. Press a 'SAVE' button.
+''';
 }
