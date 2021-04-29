@@ -22,3 +22,4 @@ export 'src/domain/value_objects/exceptions/validation_exception.dart';
 export 'src/domain/value_objects/password.dart';
 export 'src/domain/value_objects/percent.dart';
 export 'src/domain/value_objects/value_object.dart';
+export 'src/util/date.dart';

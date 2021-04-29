@@ -16,15 +16,14 @@ void main() {
     const tasksCollectionName = 'tasks';
     const projectId = 'projectId';
     const durationInMilliseconds = 123;
-    final utcDate = _getDateInUTC(DateTime.now());
+    final startedAtUtc = _getUtcDate(DateTime.now());
     final buildStatus = BuildStatus.successful;
 
     final build = {
       'duration': durationInMilliseconds,
       'projectId': projectId,
       'buildStatus': buildStatus.toString(),
-      'startedAt': Timestamp.fromDateTime(utcDate),
-      'coverage': 100,
+      'startedAt': Timestamp.fromDateTime(startedAtUtc),
       'url': 'url',
       'workflowName': 'workflowName',
     };
@@ -36,7 +35,7 @@ void main() {
       'projectId': projectId,
       buildDayStatusFieldName: 1,
       'totalDuration': durationInMilliseconds,
-      'day': Timestamp.fromDateTime(utcDate),
+      'day': Timestamp.fromDateTime(startedAtUtc),
     };
 
     final exception = Exception('test');
@@ -44,60 +43,58 @@ void main() {
       'code': 'build_days_created',
       'data': build,
       'context': exception.toString(),
-      'createdAt': Timestamp.fromDateTime(utcDate),
+      'createdAt': Timestamp.fromDateTime(startedAtUtc),
     };
 
-    final _firestoreMock = FirestoreMock();
-    final _collectionReferenceMock = CollectionReferenceMock();
-    final _documentReferenceMock = DocumentReferenceMock();
-    final _documentSnapshotMock = DocumentSnapshotMock();
-    final _eventContextMock = EventContextMock();
-
-    tearDown(() {
-      reset(_documentSnapshotMock);
-      reset(_eventContextMock);
-      reset(_firestoreMock);
-      reset(_collectionReferenceMock);
-      reset(_documentReferenceMock);
-    });
+    final firestoreMock = FirestoreMock();
+    final collectionReferenceMock = CollectionReferenceMock();
+    final documentReferenceMock = DocumentReferenceMock();
+    final documentSnapshotMock = DocumentSnapshotMock();
 
     PostExpectation<Firestore> whenFirestore() {
-      return when(_documentSnapshotMock.firestore);
+      return when(documentSnapshotMock.firestore);
     }
 
     PostExpectation<CollectionReference> whenCollection(String withName) {
-      whenFirestore().thenReturn(_firestoreMock);
+      whenFirestore().thenReturn(firestoreMock);
 
-      return when(_firestoreMock.collection(withName));
+      return when(firestoreMock.collection(withName));
     }
 
     PostExpectation<DocumentReference> whenDocument({
       String withCollectionName,
     }) {
-      whenCollection(withCollectionName).thenReturn(_collectionReferenceMock);
+      whenCollection(withCollectionName).thenReturn(collectionReferenceMock);
 
-      return when(_collectionReferenceMock.document(any));
+      return when(collectionReferenceMock.document(any));
     }
 
-    PostExpectation<Future<void>> whenDocumentData({
+    PostExpectation<Future<void>> whenSetDocumentData({
       String withCollectionName,
     }) {
       whenDocument(
         withCollectionName: withCollectionName,
-      ).thenReturn(_documentReferenceMock);
+      ).thenReturn(documentReferenceMock);
 
-      return when(_documentReferenceMock.setData(any, any));
+      return when(documentReferenceMock.setData(any, any));
     }
 
     PostExpectation whenSnapshotData() {
-      return when(_documentSnapshotMock.data);
+      return when(documentSnapshotMock.data);
     }
 
+    tearDown(() {
+      reset(documentSnapshotMock);
+      reset(firestoreMock);
+      reset(collectionReferenceMock);
+      reset(documentReferenceMock);
+    });
+
     test(
-      "sets a build day document with the zero duration if the build document snapshot's duration is a null",
+      "does not increment the total duration if the build document snapshot's duration is null",
       () async {
-        whenDocumentData(withCollectionName: buildDaysCollectionName)
-            .thenAnswer((_) => Future.value());
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
 
         final Map<String, dynamic> buildWithoutDuration = Map.from(build);
         buildWithoutDuration.remove('duration');
@@ -105,19 +102,14 @@ void main() {
         whenSnapshotData()
             .thenReturn(DocumentData.fromMap(buildWithoutDuration));
 
-        await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
+        await onBuildAddedHandler(documentSnapshotMock, null);
 
         final documentDataMatcher = predicate<DocumentData>((data) {
           return data.getNestedData('totalDuration').getInt('operand') == 0;
         });
 
-        final optionMatcher = predicate<SetOptions>((option) => option.merge);
-
         verify(
-          _documentReferenceMock.setData(
-            argThat(documentDataMatcher),
-            argThat(optionMatcher),
-          ),
+          documentReferenceMock.setData(argThat(documentDataMatcher), any),
         ).called(1);
       },
     );
@@ -126,25 +118,26 @@ void main() {
       "uses a composite document id for the build days collection",
       () async {
         whenDocument(withCollectionName: buildDaysCollectionName)
-            .thenReturn(_documentReferenceMock);
+            .thenReturn(documentReferenceMock);
         whenSnapshotData().thenReturn(DocumentData.fromMap(build));
 
-        await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
+        await onBuildAddedHandler(documentSnapshotMock, null);
 
-        final documentId = '${projectId}_${utcDate.millisecondsSinceEpoch}';
+        final documentId =
+            '${projectId}_${startedAtUtc.millisecondsSinceEpoch}';
 
-        verify(_collectionReferenceMock.document(documentId)).called(1);
+        verify(collectionReferenceMock.document(documentId)).called(1);
       },
     );
 
     test(
       "creates a build days document from the build document snapshot's data",
       () async {
-        whenDocumentData(withCollectionName: buildDaysCollectionName)
-            .thenAnswer((_) => Future.value());
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
         whenSnapshotData().thenReturn(DocumentData.fromMap(build));
 
-        await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
+        await onBuildAddedHandler(documentSnapshotMock, null);
 
         final documentDataMatcher = predicate<DocumentData>((data) {
           final count =
@@ -167,43 +160,41 @@ void main() {
               daysAreEqual;
         });
 
-        final optionMatcher = predicate<SetOptions>((option) => option.merge);
-
         verify(
-          _documentReferenceMock.setData(
-            argThat(documentDataMatcher),
-            argThat(optionMatcher),
-          ),
+          documentReferenceMock.setData(argThat(documentDataMatcher), any),
         ).called(1);
       },
     );
 
-    test("does not create a task document after created a build day", () async {
-      whenDocumentData(withCollectionName: buildDaysCollectionName)
-          .thenAnswer((_) => Future.value());
-      whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+    test(
+      "does not create a task document if the build day data set successfully",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
 
-      await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
+        await onBuildAddedHandler(documentSnapshotMock, null);
 
-      verifyNever(_firestoreMock.collection(tasksCollectionName));
-    });
+        verifyNever(firestoreMock.collection(tasksCollectionName));
+      },
+    );
 
     test(
       "creates a task document if setting the build day's document data fails",
       () async {
         final _taskCollectionReferenceMock = CollectionReferenceMock();
 
-        whenDocumentData(withCollectionName: buildDaysCollectionName)
+        whenSetDocumentData(withCollectionName: buildDaysCollectionName)
             .thenAnswer((_) => Future.error(Exception('test')));
 
-        when(_firestoreMock.collection(tasksCollectionName))
+        when(firestoreMock.collection(tasksCollectionName))
             .thenReturn(_taskCollectionReferenceMock);
         when(_taskCollectionReferenceMock.add(any))
             .thenAnswer((_) => Future.value());
 
         whenSnapshotData().thenReturn(DocumentData.fromMap(build));
 
-        await onBuildAddedHandler(_documentSnapshotMock, _eventContextMock);
+        await onBuildAddedHandler(documentSnapshotMock, null);
 
         final documentDataMatcher = predicate<DocumentData>((data) {
           final codesAreEqual =
@@ -230,14 +221,9 @@ void main() {
   });
 }
 
-/// Returns a [DateTime] in UTC from the given [dateTime].
-///
-/// The return [DateTime] has a default time.
-DateTime _getDateInUTC(DateTime dateTime) {
-  final utcDate = dateTime.toUtc();
-
-  return DateTime.utc(utcDate.year, utcDate.month, utcDate.day);
-}
+//// Returns a [DateTime] representing the date in the UTC timezone created
+/// from the given [dateTime].
+DateTime _getUtcDate(DateTime dateTime) => dateTime.toUtc().date;
 
 class FirestoreMock extends Mock implements Firestore {}
 
@@ -246,5 +232,3 @@ class CollectionReferenceMock extends Mock implements CollectionReference {}
 class DocumentReferenceMock extends Mock implements DocumentReference {}
 
 class DocumentSnapshotMock extends Mock implements DocumentSnapshot {}
-
-class EventContextMock extends Mock implements EventContext {}

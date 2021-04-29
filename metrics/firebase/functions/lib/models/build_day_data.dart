@@ -2,16 +2,17 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/data/build_day_status_field.dart';
+import 'package:functions/models/build_day_status_field.dart';
+import 'package:meta/meta.dart';
 
 /// A class that represents a build day to save in the [Firestore].
 class BuildDayData {
-  /// An identifier of the project, a build day relates to.
+  /// An identifier of the project this build day relates to.
   final String projectId;
 
-  /// A [Timestamp] that represents the day start a build day aggregation
+  /// A [DateTime] that represents the day start this build day aggregation
   /// belongs to.
-  final Timestamp day;
+  final DateTime day;
 
   /// A total builds duration.
   final FieldValue totalDuration;
@@ -20,12 +21,17 @@ class BuildDayData {
   final List<BuildDayStatusField> statusIncrements;
 
   /// Creates a new instance of the [BuildDayData] with the given parameters.
+  ///
+  /// Throws an [ArgumentError] if either [projectId] or [day] is `null`.
   BuildDayData({
-    this.projectId,
-    this.day,
+    @required this.projectId,
+    @required this.day,
     this.totalDuration,
     this.statusIncrements,
-  });
+  }) {
+    ArgumentError.checkNotNull(projectId, 'projectId');
+    ArgumentError.checkNotNull(day, 'day');
+  }
 
   /// Converts this [BuildDayData] into the [Map].
   Map<String, dynamic> toMap() {
@@ -37,7 +43,7 @@ class BuildDayData {
 
     return {
       'projectId': projectId,
-      'day': day,
+      'day': Timestamp.fromDateTime(day),
       'totalDuration': totalDuration,
       ...statusIncrementsMap,
     };

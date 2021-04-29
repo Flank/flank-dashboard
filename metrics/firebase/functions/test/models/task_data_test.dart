@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/data/task_data.dart';
+import 'package:functions/models/task_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -14,6 +14,36 @@ void main() {
     final data = {
       'projectId': projectId,
     };
+
+    test(
+      "throws an ArgumentError if the given code is null",
+      () {
+        expect(
+          () => TaskData(
+            code: null,
+            data: data,
+            context: context,
+            createdAt: createdAt,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given created at parameter is null",
+      () {
+        expect(
+          () => TaskData(
+            code: code,
+            data: data,
+            context: context,
+            createdAt: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test(
       "creates an instance with the given parameters",
@@ -35,20 +65,21 @@ void main() {
     test(
       ".toMap() converts an instance to the map",
       () {
-        final taskData = TaskData(
-          code: code,
-          data: data,
-          context: context,
-          createdAt: createdAt,
-        );
-        final map = taskData.toMap();
-
         final expectedMap = {
           'code': code,
           'data': data,
           'context': context,
           'createdAt': createdAt
         };
+
+        final taskData = TaskData(
+          code: code,
+          data: data,
+          context: context,
+          createdAt: createdAt,
+        );
+
+        final map = taskData.toMap();
 
         expect(map, equals(expectedMap));
       },

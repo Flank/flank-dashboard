@@ -18,11 +18,13 @@ class BuildDataDeserializer {
       (element) => '$element' == buildResultValue,
       orElse: () => BuildStatus.unknown,
     );
+    final startedAtValue = json['startedAt'] as Timestamp;
+    final startedAt = startedAtValue.toDateTime();
 
     return BuildData(
       id: id,
       projectId: projectId,
-      startedAt: (json['startedAt'] as Timestamp).toDateTime(),
+      startedAt: startedAt,
       buildStatus: buildStatus,
       duration: duration,
     );

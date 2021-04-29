@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/data/build_day_status_field.dart';
+import 'package:functions/models/build_day_status_field.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -26,16 +26,18 @@ void main() {
     test(
       ".toMap() converts an instance to the map",
       () {
+        final expectedMap = {
+          name: value,
+        };
+
         final buildDayStatusField = BuildDayStatusField(
           name: name,
           value: value,
         );
 
-        final expectedMap = {
-          name: value,
-        };
+        final buildDayStatusFieldMap = buildDayStatusField.toMap();
 
-        expect(buildDayStatusField.toMap(), equals(expectedMap));
+        expect(buildDayStatusFieldMap, equals(expectedMap));
       },
     );
   });

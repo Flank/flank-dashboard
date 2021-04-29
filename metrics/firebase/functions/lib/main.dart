@@ -2,11 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/data/build_day_data.dart';
-import 'package:functions/data/build_day_status_field.dart';
-import 'package:functions/data/task_data.dart';
-import 'package:functions/deserializers/build_data_deserializer.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
+import 'package:functions/models/build_day_data.dart';
+import 'package:functions/models/build_day_status_field.dart';
+import 'package:functions/models/task_data.dart';
+import 'package:functions/models/task_data_code.dart';
+
+import 'deserializers/build_data_deserializer.dart';
 
 void main() {
   functions['onBuildAdded'] = functions.firestore
@@ -18,12 +21,10 @@ void main() {
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
-  final utcDate = _getDateInUTC(buildData.startedAt);
+  final startedAtUtc = _getUtcDate(buildData.startedAt);
 
   final mapper = BuildDayStatusFieldNameMapper();
   final buildDayStatusFieldName = mapper.map(buildData.buildStatus);
-
-  final documentId = '${buildData.projectId}_${utcDate.millisecondsSinceEpoch}';
 
   final statusFieldIncrement = BuildDayStatusField(
     name: buildDayStatusFieldName,
@@ -35,17 +36,28 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
     totalDuration: Firestore.fieldValues.increment(
       buildData.duration.inMilliseconds,
     ),
-    day: Timestamp.fromDateTime(utcDate),
+    day: startedAtUtc,
     statusIncrements: [statusFieldIncrement],
   );
 
+  await _updateBuildDay(snapshot, buildDayData);
+}
+
+//// Returns a [DateTime] representing the date in the UTC timezone created
+/// from the given [dateTime].
+DateTime _getUtcDate(DateTime dateTime) => dateTime.toUtc().date;
+
+Future<void> _updateBuildDay(
+  DocumentSnapshot snapshot,
+  BuildDayData data,
+) async {
   try {
-    await _setBuildDay(snapshot, documentId, buildDayData);
+    await _setBuildDayData(snapshot, data);
   } catch (error) {
     final taskData = TaskData(
-      code: 'build_days_created',
+      code: TaskDataCode.buildDaysCreated.value,
       context: error.toString(),
-      createdAt: Timestamp.fromDateTime(utcDate),
+      createdAt: Timestamp.fromDateTime(data.day),
       data: snapshot.data.toMap(),
     );
 
@@ -53,21 +65,15 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   }
 }
 
-/// Returns a [DateTime] in UTC from the given [dateTime].
+/// Sets the given [data] to the build day document.
 ///
-/// The return [DateTime] has a default time.
-DateTime _getDateInUTC(DateTime dateTime) {
-  final utcDate = dateTime.toUtc();
-
-  return DateTime.utc(utcDate.year, utcDate.month, utcDate.day);
-}
-
-/// Writes a new document in the build days collection with the given parameters.
-Future<void> _setBuildDay(
+/// If the document already exists, merges the existing data with the given one.
+Future<void> _setBuildDayData(
   DocumentSnapshot snapshot,
-  String documentId,
   BuildDayData data,
 ) async {
+  final documentId = '${data.projectId}_${data.day.millisecondsSinceEpoch}';
+
   await snapshot.firestore
       .collection('build_days')
       .document(documentId)
@@ -77,7 +83,7 @@ Future<void> _setBuildDay(
       );
 }
 
-/// Creates a new document in the tasks collection with the given parameters.
+/// Adds a new document with the given [data] to the tasks collection.
 Future<void> _addTask(DocumentSnapshot snapshot, TaskData data) async {
   await snapshot.firestore
       .collection('tasks')

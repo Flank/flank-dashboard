@@ -21,22 +21,25 @@ void main() {
       'buildStatus': buildStatus.toString(),
     };
 
-    test(".fromJson() returns a BuildData from a JSON map", () {
-      final expectedBuildData = BuildData(
-        id: id,
-        projectId: projectId,
-        duration: duration,
-        startedAt: startedAtDateTime,
-        buildStatus: buildStatus,
-      );
+    test(
+      ".fromJson() creates a BuildData from the JSON-encodable map",
+      () {
+        final expectedBuildData = BuildData(
+          id: id,
+          projectId: projectId,
+          duration: duration,
+          startedAt: startedAtDateTime,
+          buildStatus: buildStatus,
+        );
 
-      final buildData = BuildDataDeserializer.fromJson(buildDataJson, id: id);
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson, id: id);
 
-      expect(buildData, equals(expectedBuildData));
-    });
+        expect(buildData, equals(expectedBuildData));
+      },
+    );
 
     test(
-      ".fromJson() returns a BuildData with a null id from a JSON map if the id is not passed",
+      ".fromJson() creates a BuildData with a null id from the JSON-encodable map if the id is not passed",
       () {
         final expectedBuildData = BuildData(
           id: null,

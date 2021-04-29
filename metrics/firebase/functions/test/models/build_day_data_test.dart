@@ -2,14 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/data/build_day_data.dart';
-import 'package:functions/data/build_day_status_field.dart';
+import 'package:functions/models/build_day_data.dart';
+import 'package:functions/models/build_day_status_field.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("BuildDayData", () {
     const projectId = 'projectId';
-    final day = Timestamp.fromDateTime(DateTime.now());
+    final day = DateTime.now();
     final totalDuration = Firestore.fieldValues.increment(10);
     final statusIncrements = [
       BuildDayStatusField(
@@ -17,6 +17,36 @@ void main() {
         value: Firestore.fieldValues.increment(1),
       ),
     ];
+
+    test(
+      "throws an ArgumentError if the given project id is null",
+      () {
+        expect(
+          () => BuildDayData(
+            projectId: null,
+            day: day,
+            totalDuration: totalDuration,
+            statusIncrements: statusIncrements,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given day is null",
+      () {
+        expect(
+          () => BuildDayData(
+            projectId: projectId,
+            day: null,
+            totalDuration: totalDuration,
+            statusIncrements: statusIncrements,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test(
       "creates an instance with the given parameters",
@@ -38,21 +68,22 @@ void main() {
     test(
       ".toMap() converts an instance to the map",
       () {
+        final statusFieldMap = statusIncrements.first.toMap();
+        final expectedMap = {
+          'projectId': projectId,
+          'day': Timestamp.fromDateTime(day),
+          'totalDuration': totalDuration,
+          ...statusFieldMap,
+        };
+
         final buildDayData = BuildDayData(
           projectId: projectId,
           day: day,
           totalDuration: totalDuration,
           statusIncrements: statusIncrements,
         );
-        final map = buildDayData.toMap();
-        final statusFieldMap = statusIncrements.first.toMap();
 
-        final expectedMap = {
-          'projectId': projectId,
-          'day': day,
-          'totalDuration': totalDuration,
-          ...statusFieldMap,
-        };
+        final map = buildDayData.toMap();
 
         expect(map, equals(expectedMap));
       },

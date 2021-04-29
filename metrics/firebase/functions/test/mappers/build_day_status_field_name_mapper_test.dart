@@ -21,6 +21,7 @@ void main() {
         expect(fieldName, equals(expectedFieldName));
       },
     );
+
     test(
       ".map() maps the BuildStatus.failed to the failed field name value",
       () {
@@ -31,6 +32,7 @@ void main() {
         expect(fieldName, equals(expectedFieldName));
       },
     );
+
     test(
       ".map() maps the BuildStatus.unknown to the unknown field name value",
       () {
@@ -41,6 +43,7 @@ void main() {
         expect(fieldName, equals(expectedFieldName));
       },
     );
+
     test(
       ".map() maps the BuildStatus.inProgress to the inProgress field name value",
       () {
