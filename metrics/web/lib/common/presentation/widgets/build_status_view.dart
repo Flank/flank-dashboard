@@ -8,11 +8,7 @@ import 'package:metrics/common/presentation/value_image/widgets/value_network_im
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rive/rive.dart';
 
-/// A widget that that displays a [BuildStatus] of build.
-///
-/// Displays a [RiveAnimation] with the in-progress asset if the given
-/// [buildStatus] is [BuildStatus.inProgress]. Otherwise, displays a
-/// [ValueNetworkImage] with a static asset.
+/// A widget that displays the specified [BuildStatus] of the build.
 class BuildStatusView extends StatelessWidget {
   /// A [BuildStatus] this widget displays.
   final BuildStatus buildStatus;
@@ -30,14 +26,16 @@ class BuildStatusView extends StatelessWidget {
   /// Creates a new instance of the [BuildStatusView] with the given
   /// parameters.
   ///
-  /// Throws an [AssertionError] if the given [strategy] is `null`.
+  /// Throws an [AssertionError] if the given [strategy] or [buildStatus]
+  /// is `null`.
   const BuildStatusView({
     Key key,
     @required this.strategy,
-    this.buildStatus,
+    @required this.buildStatus,
     this.height,
     this.width,
   })  : assert(strategy != null),
+        assert(buildStatus != null),
         super(key: key);
 
   @override

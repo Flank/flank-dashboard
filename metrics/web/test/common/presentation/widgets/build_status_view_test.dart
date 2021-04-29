@@ -24,7 +24,7 @@ void main() {
     const finishedBuildStatus = BuildStatus.successful;
     const inProgressBuildStatus = BuildStatus.inProgress;
 
-    final strategy = _ValueBasedAssetStrategyMock<BuildStatus>();
+    final strategy = _ValueBasedAssetStrategyMock();
 
     final valueNetworkImageFinder = find.byWidgetPredicate((widget) {
       return widget is ValueNetworkImage<BuildStatus>;
@@ -40,6 +40,21 @@ void main() {
         await tester.pumpWidget(
           const _BuildStatusViewTestbed(
             strategy: null,
+            buildStatus: finishedBuildStatus,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given build status is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _BuildStatusViewTestbed(
+            strategy: strategy,
+            buildStatus: null,
           ),
         );
 
@@ -275,5 +290,5 @@ class _BuildStatusViewTestbed extends StatelessWidget {
   }
 }
 
-class _ValueBasedAssetStrategyMock<T> extends Mock
-    implements ValueBasedAssetStrategy<T> {}
+class _ValueBasedAssetStrategyMock extends Mock
+    implements ValueBasedAssetStrategy<BuildStatus> {}
