@@ -82,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the rive animation widget with the use artboard size parameter set as true",
+      "displays the rive animation widget with the use artboard size parameter set to true",
       (WidgetTester tester) async {
         when(strategy.getAsset(inProgressBuildStatus)).thenReturn(asset);
 
