@@ -1,19 +1,22 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set_entry.dart';
 
-/// Represents the [duration] of the build, started at [date].
-@immutable
-class BuildPerformance implements DateTimeSetEntry {
+/// A class that represents the performance of builds by day.
+class BuildPerformance with EquatableMixin implements DateTimeSetEntry {
   @override
   final DateTime date;
 
-  /// A [Duration] of the build.
+  /// A [Duration] of builds by day.
   final Duration duration;
 
-  /// Creates a new instance of the [BuildPerformance].
+  @override
+  List<Object> get props => [date, duration];
+
+  /// Creates a new instance of the [BuildPerformance] with the given
+  /// parameters.
   const BuildPerformance({
     this.date,
     this.duration,
