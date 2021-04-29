@@ -120,8 +120,7 @@ class _RiveAnimationState extends State<RiveAnimation> {
     _setArtboard(artboard);
   }
 
-  /// Sets the [_artboard] value to given [artboard] depending on the current
-  /// [mounted] value.
+  /// Sets the [_artboard] value to given [artboard] if the widget is [mounted].
   void _setArtboard(Artboard artboard) {
     if (!mounted) return;
 

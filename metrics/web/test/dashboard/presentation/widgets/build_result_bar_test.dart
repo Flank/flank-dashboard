@@ -29,7 +29,7 @@ void main() {
     final popupViewModel = BuildResultPopupViewModel(
       date: DateTime.now(),
       duration: Duration.zero,
-      buildStatus: BuildStatus.unknown,
+      buildStatus: BuildStatus.successful,
     );
     final successfulBuildResult = FinishedBuildResultViewModel(
       buildResultPopupViewModel: popupViewModel,

@@ -158,7 +158,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a correct height to the build status view widget",
+      "applies a correct height to the build status view widget",
       (tester) async {
         const expectedHeight = 40.0;
 
@@ -177,7 +177,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a correct width to the build status view widget",
+      "applies a correct width to the build status view widget",
       (tester) async {
         const expectedWidth = 40.0;
 
