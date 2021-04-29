@@ -18,6 +18,7 @@ import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/data/repositories/firestore_build_day_repository.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
@@ -25,6 +26,7 @@ import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
@@ -136,6 +138,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to close the local config storage.
   CloseLocalConfigStorageUseCase _closeLocalConfigStorageUseCase;
 
+  /// A use case needed to be able to receive the build day project metrics.
+  ReceiveBuildDayProjectMetricsUpdates _receiveBuildDayProjectMetricsUpdates;
+
   /// Returns the current system's theme brightness.
   Brightness get platformBrightness {
     return WidgetsBinding.instance.window.platformBrightness;
@@ -165,6 +170,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _featureConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
     final _hiveLocalConfigRepository = HiveLocalConfigRepository();
+    final _buildDayRepository = FirestoreBuildDayRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
@@ -209,6 +215,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
     _closeLocalConfigStorageUseCase = CloseLocalConfigStorageUseCase(
       _hiveLocalConfigRepository,
+    );
+    _receiveBuildDayProjectMetricsUpdates =
+        ReceiveBuildDayProjectMetricsUpdates(
+      _buildDayRepository,
     );
 
     _authNotifier = AuthNotifier(
@@ -303,7 +313,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ),
         ChangeNotifierProxyProvider2<ProjectsNotifier, ProjectGroupsNotifier,
             ProjectMetricsNotifier>(
-          create: (_) => ProjectMetricsNotifier(_receiveProjectMetricsUpdates),
+          create: (_) => ProjectMetricsNotifier(
+            _receiveProjectMetricsUpdates,
+            _receiveBuildDayProjectMetricsUpdates,
+          ),
           update: (_, projectsNotifier, projectGroupsNotifier,
               projectMetricsNotifier) {
             projectMetricsNotifier.setProjects(

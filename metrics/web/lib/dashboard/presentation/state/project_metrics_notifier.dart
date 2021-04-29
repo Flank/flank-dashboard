@@ -16,6 +16,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.da
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -42,8 +43,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   static const _allProjectsGroupDropdownItemViewModel =
       ProjectGroupDropdownItemViewModel(name: "All projects");
 
-  /// Provides an ability to receive project metrics updates.
+  /// A [ReceiveProjectMetricsUpdates] that provides an ability to receive
+  /// project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
+
+  /// A [ReceiveBuildDayProjectMetricsUpdates] that provides an ability to
+  /// receive build day updates.
+  final ReceiveBuildDayProjectMetricsUpdates _receiveBuildDayUpdates;
 
   /// A [Map] that holds all created [StreamSubscription].
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
@@ -146,14 +152,21 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Provides the currently applied project name filter.
   String get projectNameFilter => _projectNameFilter;
 
-  /// Creates a new instance of the [ProjectMetricsNotifier].
+  /// Creates a new instance of the [ProjectMetricsNotifier] with the given
+  /// parameters.
   ///
-  /// The given [ReceiveProjectMetricsUpdates] must not be null.
+  /// Throws an [AssertionError] if the given [ReceiveProjectMetricsUpdates]
+  ///  or [ReceiveBuildDayProjectMetricsUpdates] is `null`.
   ProjectMetricsNotifier(
     this._receiveProjectMetricsUpdates,
-  ) : assert(
+    this._receiveBuildDayUpdates,
+  )   : assert(
           _receiveProjectMetricsUpdates != null,
-          'The use case must not be null',
+          'The ReceiveProjectMetricsUpdates must not be null',
+        ),
+        assert(
+          _receiveBuildDayUpdates != null,
+          'The ReceiveBuildDayProjectMetricsUpdates must not be null',
         ) {
     _subscribeToProjectsNameFilter();
   }
