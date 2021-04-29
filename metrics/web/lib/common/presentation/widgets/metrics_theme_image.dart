@@ -1,10 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
-import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:provider/provider.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 
 /// A class that displays appropriate asset depending on the current theme mode.
 class MetricsThemeImage extends StatelessWidget {
@@ -40,8 +39,7 @@ class MetricsThemeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ThemeNotifier, bool>(
-      selector: (_, notifier) => notifier.isDark,
+    return ThemeModeBuilder(
       builder: (_, isDark, __) {
         return SvgImage(
           isDark ? darkAsset : lightAsset,

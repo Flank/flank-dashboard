@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
+import 'package:metrics/common/presentation/widgets/build_status_view.dart';
+import 'package:metrics/common/presentation/widgets/theme_mode_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_asset_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -35,7 +36,8 @@ class ProjectBuildStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final projectBuildStatus = buildStatus?.value ?? BuildStatus.unknown;
+    final projectBuildStatus = buildStatus.value ?? BuildStatus.unknown;
+
     final theme = buildStatusStyleStrategy.getWidgetAppearance(
       MetricsTheme.of(context),
       projectBuildStatus,
@@ -48,9 +50,13 @@ class ProjectBuildStatus extends StatelessWidget {
         color: theme.backgroundColor,
         shape: BoxShape.circle,
       ),
-      child: ValueNetworkImage<BuildStatus>(
-        value: projectBuildStatus,
-        strategy: const ProjectBuildStatusImageStrategy(),
+      child: ThemeModeBuilder(
+        builder: (_, isDarkMode, __) {
+          return BuildStatusView(
+            strategy: ProjectBuildStatusAssetStrategy(isDarkMode: isDarkMode),
+            buildStatus: projectBuildStatus,
+          );
+        },
       ),
     );
   }
