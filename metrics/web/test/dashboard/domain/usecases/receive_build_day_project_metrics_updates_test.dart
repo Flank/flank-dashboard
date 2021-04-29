@@ -268,7 +268,7 @@ void main() {
         final metricsMatcher = buildDayMetricsMatcher(
           performanceMetricMatcher: isA<PerformanceMetric>().having(
             (metric) => metric.buildsPerformance,
-            'averageBuildDuration',
+            'buildsPerformance',
             equals(expectedBuildsPerformance),
           ),
         );
