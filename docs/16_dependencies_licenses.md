@@ -100,6 +100,22 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
+## [Firebase](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase)
+
+| Name | Source | License |
+| :---: | :---: | :---: |
+| collection | [pub.dev](https://pub.dev/packages/collection) | [BSD](https://pub.dev/packages/collection/license) |
+| firebase_functions_interop | [pub.dev](https://pub.dev/packages/firebase_functions_interop) | [BSD](https://pub.dev/packages/firebase_functions_interop/license) |
+| firebase_admin_interop | [pub.dev](https://pub.dev/packages/firebase_admin_interop) | [BSD](https://pub.dev/packages/firebase_admin_interop/license) |
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |
+| build_runner | [pub.dev](https://pub.dev/packages/build_runner) | [BSD](https://pub.dev/packages/build_runner/license) |
+| build_node_compilers | [pub.dev](https://pub.dev/packages/build_node_compilers) | [BSD](https://pub.dev/packages/build_node_compilers/license) |
+| mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://pub.dev/packages/mockito/license) |
+| test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://pub.dev/packages/test/license) |
+
 ## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)
 
 | Name | Source | License |
