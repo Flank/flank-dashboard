@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart'
 /// Applies the text styles from the [MetricsThemeData.buildNumberScorecardTheme].
 /// If the [buildNumberMetric] is either `null` or equal to 0, displays the [NoDataPlaceholder].
 class BuildNumberScorecard extends StatelessWidget {
-  /// The [BuildNumberMetricsViewModel] with data to display.
+  /// The [BuildNumberScorecardViewModel] with data to display.
   final BuildNumberScorecardViewModel buildNumberMetric;
 
   /// Creates the [BuildNumberScorecard] with the given [buildNumberMetric].

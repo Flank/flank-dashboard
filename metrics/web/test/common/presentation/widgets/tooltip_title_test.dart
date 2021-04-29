@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
@@ -142,7 +142,7 @@ class _TooltipTitleTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
 
-  /// Creates a new instance of the [_TooltipIconTestbed].
+  /// Creates a new instance of the [_TooltipTitleTestbed].
   ///
   /// The [themeData] defaults to an empty [MetricsThemeData] instance.
   /// The [title] defaults to `title`.

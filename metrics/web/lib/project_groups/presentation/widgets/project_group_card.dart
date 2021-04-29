@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -143,7 +143,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     return isHovered ? hoverColor : color;
   }
 
-  /// Provides a project groups count for the given [projectGroupViewModel].
+  /// Returns the number of the projects related to the given
+  /// [ProjectGroupCard.projectGroupCardViewModel]
   String get _projectGroupsCount {
     final projectsCount = widget.projectGroupCardViewModel.projectsCount;
 

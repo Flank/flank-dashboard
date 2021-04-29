@@ -3,10 +3,12 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A view model that represents the data of the bar to display on the [BarGraph].
+/// A view model that represents the data of the bar to display on the
+/// [BarGraph].
 abstract class BuildResultViewModel extends Equatable {
   /// A view model with data to display on the build result popup.
   final BuildResultPopupViewModel buildResultPopupViewModel;

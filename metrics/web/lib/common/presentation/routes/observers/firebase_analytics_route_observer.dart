@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
@@ -17,7 +17,7 @@ class FirebaseAnalyticsRouteObserver extends RouteObserver<PageRoute> {
     @required this.analyticsNotifier,
   }) : assert(analyticsNotifier != null);
 
-  /// Logs the page name extracted from the [PageRoute.settings]
+  /// Logs the page name extracted from the [Route.settings]
   /// of the given [route].
   void _logPageView(PageRoute route) {
     final routeName = route?.settings?.name;

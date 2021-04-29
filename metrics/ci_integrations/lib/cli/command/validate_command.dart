@@ -3,6 +3,8 @@
 
 import 'package:ci_integration/cli/command/ci_integration_command.dart';
 import 'package:ci_integration/cli/config/factory/raw_integration_config_factory.dart';
+import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
+import 'package:ci_integration/cli/configured_parties/configured_parties.dart';
 import 'package:ci_integration/cli/configured_parties/configured_party.dart';
 import 'package:ci_integration/cli/configured_parties/factory/configured_parties_factory.dart';
 import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
@@ -12,7 +14,7 @@ import 'package:ci_integration/integration/interface/base/config/validator/confi
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
 
-/// A class representing a [Command] for [Config] file validation.
+/// A class representing a [CiIntegrationCommand] for [Config] file validation.
 class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
   /// A name of the option that holds a path to the YAML configuration file.
   static const _configFileOptionName = 'config-file';

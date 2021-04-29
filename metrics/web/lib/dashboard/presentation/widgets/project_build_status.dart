@@ -23,9 +23,9 @@ class ProjectBuildStatus extends StatelessWidget {
   final ProjectBuildStatusStyleStrategy buildStatusStyleStrategy;
 
   /// Creates an instance of the [ProjectBuildStatus]
-  /// with the given [buildStatus] and [strategy].
+  /// with the given [buildStatus] and [buildStatusStyleStrategy].
   ///
-  /// Both [buildStatus] and [strategy] must not be null.
+  /// Both [buildStatus] and [buildStatusStyleStrategy] must not be null.
   const ProjectBuildStatus({
     Key key,
     @required this.buildStatus,

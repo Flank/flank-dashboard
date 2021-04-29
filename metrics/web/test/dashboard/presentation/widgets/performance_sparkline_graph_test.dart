@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:math';
@@ -211,7 +211,7 @@ void main() {
 
 /// A testbed class needed to test the [PerformanceSparklineGraph] widget.
 class _PerformanceSparklineGraphTestbed extends StatelessWidget {
-  /// A [PerformanceMetricViewModel] to display.
+  /// A [PerformanceSparklineViewModel] to display.
   final PerformanceSparklineViewModel performanceSparkline;
 
   /// A [MetricsThemeData] used in tests.

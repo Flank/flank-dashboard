@@ -995,7 +995,7 @@ void main() {
   });
 }
 
-/// A class that provides methods for building [_JenkinsClientMock] responses.
+/// A class that provides methods for building [JenkinsClientMock] responses.
 class _JenkinsClientResponse {
   final String jobName;
   final List<JenkinsBuild> _builds = [];

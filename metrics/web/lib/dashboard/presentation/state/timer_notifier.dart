@@ -5,7 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-/// A [ChangeNotifier] that provides an ability to subscribe to fixed [Duration] 
+/// A [ChangeNotifier] that provides an ability to subscribe to fixed [Duration]
 /// periodic ticks.
 class TimerNotifier extends ChangeNotifier {
   /// A [Timer] this notifier uses to perform periodic ticks.
@@ -13,14 +13,14 @@ class TimerNotifier extends ChangeNotifier {
 
   /// Starts ticking with the given [duration] periodicity.
   ///
-  /// Creates a new [Timer.periodic] with the given [duration] that notifies the 
-  /// listeners of this notifier on each [Timer]’s tick. Cancels the previously 
+  /// Creates a new [Timer.periodic] with the given [duration] that notifies the
+  /// listeners of this notifier on each [Timer]’s tick. Cancels the previously
   /// created [Timer.periodic] if any.
   ///
   /// The [duration] must be a non-negative [Duration].
   ///
   /// Throws an [ArgumentError] if the given [duration] is `null`
-  /// or the [duration.isNegative].
+  /// or the [Duration.isNegative].
   void start(Duration duration) {
     ArgumentError.checkNotNull(duration, 'duration');
     if (duration.isNegative) {

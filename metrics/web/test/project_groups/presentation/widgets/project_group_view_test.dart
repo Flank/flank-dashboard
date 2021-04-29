@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -168,7 +168,7 @@ class _ProjectGroupViewTestbed extends StatelessWidget {
   /// A [ProjectGroupsNotifier] used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
-  /// Creates the [_AddProjectGroupCardTestbed] with
+  /// Creates a new instance of the [_ProjectGroupViewTestbed] with
   /// the given [projectGroupsNotifier].
   const _ProjectGroupViewTestbed({
     Key key,
