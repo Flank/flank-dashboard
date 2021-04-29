@@ -8,7 +8,9 @@ environment:
 
 dependencies:
   args: ^2.0.0
-  equatable: ^2.0.0
+  equatable: ^1.1.1
+  metrics_core:
+    path: ../core
   process_run: ^0.12.1
   random_string: ^2.1.0
 

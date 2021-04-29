@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 library metrics_core;
@@ -11,6 +11,7 @@ export 'src/domain/entities/build.dart';
 export 'src/domain/entities/build_status.dart';
 export 'src/domain/entities/coverage.dart';
 export 'src/domain/entities/enum.dart';
+export 'src/domain/entities/metrics_config.dart';
 export 'src/domain/entities/project.dart';
 export 'src/domain/value_objects/email.dart';
 export 'src/domain/value_objects/exceptions/email_validation_error_code.dart';

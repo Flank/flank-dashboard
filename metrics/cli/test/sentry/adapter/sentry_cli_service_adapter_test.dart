@@ -28,10 +28,7 @@ void main() {
 
     final sentryCli = _SentryCliMock();
     final prompter = PrompterMock();
-    final sentryService = SentryCliServiceAdapter(
-      sentryCli: sentryCli,
-      prompter: prompter,
-    );
+    final sentryService = SentryCliServiceAdapter(sentryCli, prompter);
     final sentryProject = SentryProject(
       organizationSlug: organizationSlug,
       projectSlug: projectSlug,
@@ -79,10 +76,7 @@ void main() {
       "throws an ArgumentError if the given Sentry CLI is null",
       () {
         expect(
-          () => SentryCliServiceAdapter(
-            sentryCli: null,
-            prompter: prompter,
-          ),
+          () => SentryCliServiceAdapter(null, prompter),
           throwsArgumentError,
         );
       },
@@ -92,10 +86,7 @@ void main() {
       "throws an ArgumentError if the given prompter is null",
       () {
         expect(
-          () => SentryCliServiceAdapter(
-            sentryCli: sentryCli,
-            prompter: null,
-          ),
+          () => SentryCliServiceAdapter(sentryCli, null),
           throwsArgumentError,
         );
       },
