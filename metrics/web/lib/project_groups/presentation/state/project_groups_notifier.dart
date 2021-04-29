@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -50,11 +50,11 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
 
-  /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
+  /// Holds the [PersistentStoreErrorMessage] that occurred
   /// during loading project groups data.
   PersistentStoreErrorMessage _projectGroupsErrorMessage;
 
-  /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
+  /// Holds the [PersistentStoreErrorMessage] that occurred
   /// during the project group saving.
   PersistentStoreErrorMessage _projectGroupSavingError;
 
@@ -335,7 +335,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     }
   }
 
-  /// Resets the [projectGroupSavingErrorMessage].
+  /// Resets the [_projectGroupSavingError].
   void _resetProjectGroupSavingErrorMessage() {
     _projectGroupSavingError = null;
     notifyListeners();

@@ -1,9 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 
-/// A base class for a [ProjectGroupDialog] strategy that provides the
+/// A base class for a strategy that provides the
 /// text to display and action to perform on the dialog of
 /// the project group.
 abstract class ProjectGroupDialogStrategy {

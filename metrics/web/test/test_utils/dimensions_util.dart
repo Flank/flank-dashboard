@@ -1,9 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:universal_html/prefer_universal/html.dart';
 
 /// A utility class provides an ability to configure dimension constraints
 /// for testing widgets.

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +7,7 @@ import 'package:metrics/analytics/domain/usecases/log_login_use_case.dart';
 import 'package:metrics/analytics/domain/usecases/log_page_view_use_case.dart';
 import 'package:metrics/analytics/domain/usecases/parameters/page_name_param.dart';
 import 'package:metrics/analytics/domain/usecases/reset_user_use_case.dart';
+import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 
 /// The [ChangeNotifier] that provides an ability to log user activities.

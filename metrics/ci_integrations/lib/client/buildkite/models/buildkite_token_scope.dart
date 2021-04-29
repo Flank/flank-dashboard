@@ -1,9 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 
-/// An [Enum] that represents a scope of the [BuildkiteToken].
+/// An enum that represents a scope of the [BuildkiteToken].
 enum BuildkiteTokenScope {
   /// A token scope that allows to list and retrieve agent details.
   readAgents,

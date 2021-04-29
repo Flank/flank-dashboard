@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -366,8 +366,6 @@ class _InfoDialogTestbed extends StatelessWidget {
   /// default value is [EdgeInsets.zero].
   ///
   /// The [actionsAlignment] default value is [MainAxisAlignment.start].
-  /// The [maxWidth] default value is 480.0.
-  /// The [maxHeight] default value is 726.0.
   /// If the [closeIcon] is null, the [Icon] with [Icons.close] is used.
   ///
   /// The [title] and the [actions] must not be null.

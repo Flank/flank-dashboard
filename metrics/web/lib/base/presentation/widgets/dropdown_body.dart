@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ typedef AnimatedWidgetBuilder = Widget Function(
 /// A widget that used with [DropdownMenu] to display open dropdown body.
 ///
 /// Animates the child using the given [builder], [animationCurve] and
-/// [animationDuration] depending on the [menuState].
+/// [animationDuration] depending on the [state].
 class DropdownBody extends StatefulWidget {
   /// A current state of the [DropdownMenu].
   final MenuState state;

@@ -250,7 +250,8 @@ class _BuildResultsMetricGraphTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
+  /// Creates a new instance of the [_BuildResultsMetricGraphTestbed] with the
+  /// given [buildResultMetric].
   ///
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
   const _BuildResultsMetricGraphTestbed({

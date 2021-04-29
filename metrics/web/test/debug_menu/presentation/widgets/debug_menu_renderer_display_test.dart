@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class _DebugMenuRendererDisplayTestbed extends StatelessWidget {
   /// A [MetricsThemeData] to use under tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates a new instance of this testbed with the given [renderer].
+  /// Creates a new instance of the [_DebugMenuRendererDisplayTestbed].
   ///
   /// A [metricsThemeData] defaults to the [MetricsThemeData] instance.
   const _DebugMenuRendererDisplayTestbed({

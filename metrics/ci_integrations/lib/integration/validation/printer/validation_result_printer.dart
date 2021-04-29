@@ -59,10 +59,10 @@ class ValidationResultPrinter {
 
   /// Converts the given [validationResult] to its [String] representation.
   ///
-  /// Converts the [validationResult.conclusion] to the [String] representation
+  /// Converts the [FieldValidationResult.conclusion] to the [String] representation
   /// using the [FieldValidationConclusionMapper].
   ///
-  /// Specifies the [validationResult.additionalContext] if it is not `null`.
+  /// Specifies the [FieldValidationResult.additionalContext] if it is not `null`.
   String _getFieldValidationResultMessage(
     FieldValidationResult validationResult,
   ) {

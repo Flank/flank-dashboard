@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -157,11 +157,11 @@ class _MetricsColoredBarTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Creates an instance of the [_GraphIndicatorTestbed].
+  /// Creates an instance of the [_MetricsColoredBarTestbed].
   ///
   /// The [theme] defaults to an empty [MetricsThemeData] instance.
   /// The [strategy] defaults to the
-  /// [_FakeMetricsColoredBarAppearanceStrategy] instance.
+  /// [_MetricsColoredBarAppearanceStrategyStub] instance.
   /// The [isHovered] defaults to a `false`.
   /// The [value] defaults to `1`.
   const _MetricsColoredBarTestbed({

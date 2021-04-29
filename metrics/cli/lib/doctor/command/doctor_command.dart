@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
+import 'package:cli/doctor/doctor.dart';
 import 'package:cli/doctor/factory/doctor_factory.dart';
 
 /// A [Command] that shows version information of the third-party dependencies.

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class MetricsPageRoute<T> extends MaterialPageRoute<T> {
   /// The [maintainState] default value is `true`.
   /// The [fullscreenDialog] default value is `false`.
   ///
-  /// The values of [builder], [maintainState], and [fullScreenDialog] must not
+  /// The values of [builder], [maintainState], and [fullscreenDialog] must not
   /// be null.
   MetricsPageRoute({
     @required WidgetBuilder builder,

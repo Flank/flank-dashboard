@@ -7,6 +7,7 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/destination/error/destination_error.dart';
+import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
 import 'package:firedart/firedart.dart' hide Firestore;
 import 'package:metrics_core/metrics_core.dart';

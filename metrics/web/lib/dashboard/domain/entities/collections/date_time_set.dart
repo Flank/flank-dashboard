@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:collection';
@@ -19,7 +19,8 @@ class DateTimeSet<T extends DateTimeSetEntry> extends DelegatingSet<T> {
           hashCode: (entry) => entry?.date.hashCode,
         ));
 
-  /// Creates the [BuildsOnDateSet] that contains all elements from [iterable] with unique date.
+  /// Creates the [DateTimeSet] that contains all elements from [iterable] with
+  /// unique date.
   factory DateTimeSet.from(Iterable<T> iterable) {
     final set = DateTimeSet<T>();
 

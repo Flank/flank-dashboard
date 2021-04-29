@@ -223,7 +223,7 @@ class BuildkiteClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [BuildkiteArtifactPage] by the given [pipelineSlug] and
+  /// Fetches a [BuildkiteArtifactsPage] by the given [pipelineSlug] and
   /// [buildNumber].
   ///
   /// A [perPage] is used for limiting the number of artifacts and pagination
@@ -389,7 +389,7 @@ class BuildkiteClient with LoggerMixin {
     );
   }
 
-  /// Fetches a [BuildkitePipeline] by the given [organizationName].
+  /// Fetches a [BuildkitePipeline] by the given [pipelineSlug].
   Future<InteractionResult<BuildkitePipeline>> fetchPipeline(
     String pipelineSlug,
   ) {

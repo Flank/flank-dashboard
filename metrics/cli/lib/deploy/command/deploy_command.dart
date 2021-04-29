@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
+import 'package:cli/deploy/deployer.dart';
 import 'package:cli/deploy/factory/deployer_factory.dart';
 
 /// A [Command] that deploys the Metrics Web application.

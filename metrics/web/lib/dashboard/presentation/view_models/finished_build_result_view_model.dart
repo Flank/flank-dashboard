@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:meta/meta.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';

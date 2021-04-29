@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dar
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
+import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_view.dart';
 import 'package:provider/provider.dart';

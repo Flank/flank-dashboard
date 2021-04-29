@@ -271,8 +271,8 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Selects a [BuildkiteBuildState] from the given [states].
   ///
   /// Returns a [BuildkiteBuildState.passed] if the given [states] is `null` or
-  /// [List.isEmpty]. Otherwise, returns a [BuildkiteBuildState] selected
-  /// from the given [states] list.
+  /// empty. Otherwise, returns a [BuildkiteBuildState] selected from the given
+  /// [states] list.
   BuildkiteBuildState _selectState(
     int buildNumber, [
     List<BuildkiteBuildState> states,

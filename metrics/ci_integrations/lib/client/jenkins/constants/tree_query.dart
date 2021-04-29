@@ -1,5 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
+
+import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 
 /// A class that contains a `tree` query parameter's parts each standing for
 /// the properties of data to fetch.

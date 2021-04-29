@@ -5,7 +5,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 
 /// A class that represents the strategy of applying the [GraphIndicatorStyle]
-/// to the [MetricsGraphIndicator] based on the given [Value].
+/// to the [GraphIndicatorStyle] based on the given [Value].
 abstract class MetricsGraphIndicatorAppearanceStrategy<Value> {
   /// Creates a new instance of the [MetricsGraphIndicatorAppearanceStrategy].
   const MetricsGraphIndicatorAppearanceStrategy();

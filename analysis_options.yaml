@@ -5,6 +5,7 @@ linter:
   rules:
     - unawaited_futures # https://dart-lang.github.io/linter/lints/unawaited_futures.html
     - public_member_api_docs # https://dart-lang.github.io/linter/lints/public_member_api_docs.html
+    - comment_references # https://dart-lang.github.io/linter/lints/comment_references.html
 
 # https://github.com/passsy/dart-lint/blob/master/lib/analysis_options.yaml
 analyzer:
@@ -13,3 +14,4 @@ analyzer:
     avoid_classes_with_only_static_members: ignore
     unawaited_futures: error
     public_member_api_docs: warning
+    comment_references: error
