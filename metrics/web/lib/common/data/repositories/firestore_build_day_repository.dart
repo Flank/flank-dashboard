@@ -26,13 +26,8 @@ class FirestoreBuildDayRepository implements BuildDayRepository {
 
     Query query = collection.where('projectId', isEqualTo: projectId);
 
-    if (from != null) {
-      query = query.where('day', isGreaterThanOrEqualTo: from);
-    }
-
-    if (to != null) {
-      query = query.where('day', isLessThanOrEqualTo: to);
-    }
+    if (from != null) query = query.where('day', isGreaterThanOrEqualTo: from);
+    if (to != null) query = query.where('day', isLessThanOrEqualTo: to);
 
     return query
         .orderBy('day')
@@ -48,10 +43,10 @@ class FirestoreBuildDayRepository implements BuildDayRepository {
         .toList();
   }
 
-  /// Handles the given [error] occurred while fetching the [BuildDay]s.
+  /// Handles the given [error] occurred while fetching [BuildDay]s.
   ///
   /// Throws a [PersistentStoreException] with the
-  /// [PersistentStoreErrorCode.unknown].
+  /// [PersistentStoreErrorCode.unknown] code.
   void _handleError(Object error) {
     throw const PersistentStoreException(
       code: PersistentStoreErrorCode.unknown,

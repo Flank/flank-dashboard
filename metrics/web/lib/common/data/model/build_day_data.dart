@@ -30,8 +30,12 @@ class BuildDayData extends BuildDay implements DataModel {
           day: day,
         );
 
-  /// Creates a new instance of [BuildDateData] from the given [json].
+  /// Creates a new instance of the [BuildDateData] from the given [json].
+  ///
+  /// Returns `null` if the given [json] is null.
   factory BuildDayData.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
     final numberOfSuccessfulBuilds = json['successful'] as int;
     final numberOfFailedBuilds = json['failed'] as int;
     final numberOfUnknownBuilds = json['unknown'] as int;

@@ -215,6 +215,15 @@ void main() {
     );
 
     test(
+      ".fromJson() returns null if the given json is null",
+      () {
+        final buildDayData = BuildDayData.fromJson(null);
+
+        expect(buildDayData, isNull);
+      },
+    );
+
+    test(
       ".fromJson() creates an instance from the given json",
       () {
         final expectedBuildDayData = BuildDayData(
@@ -246,48 +255,44 @@ void main() {
     test(
       ".fromJson() maps the null number of successful builds in the given json to zero",
       () {
-        const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(successful: null);
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.successful, equals(expectedNumberOfBuilds));
+        expect(buildDayData.successful, isZero);
       },
     );
 
     test(
       ".fromJson() maps the null number of failed builds in the given json to zero",
       () {
-        const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(failed: null);
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.failed, equals(expectedNumberOfBuilds));
+        expect(buildDayData.failed, isZero);
       },
     );
 
     test(
       ".fromJson() maps the null number of unknown builds in the given json to zero",
       () {
-        const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(unknown: null);
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.unknown, equals(expectedNumberOfBuilds));
+        expect(buildDayData.unknown, isZero);
       },
     );
 
     test(
       ".fromJson() maps the null number of in progress builds in the given json to zero",
       () {
-        const expectedNumberOfBuilds = 0;
         final json = createBuildDayDataJson(inProgress: null);
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.inProgress, equals(expectedNumberOfBuilds));
+        expect(buildDayData.inProgress, isZero);
       },
     );
 
@@ -300,6 +305,15 @@ void main() {
         final buildDayData = BuildDayData.fromJson(json);
 
         expect(buildDayData.totalDuration, equals(expectedTotalDuration));
+      },
+    );
+
+    test(
+      ".fromJson() returns null if the given json is null",
+      () {
+        final buildDayData = BuildDayData.fromJson(null);
+
+        expect(buildDayData, isNull);
       },
     );
 
