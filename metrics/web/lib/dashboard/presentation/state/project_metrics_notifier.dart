@@ -51,8 +51,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// receive build day updates.
   final ReceiveBuildDayProjectMetricsUpdates _receiveBuildDayUpdates;
 
-  /// A [Map] that holds all created [StreamSubscription].
+  /// A [Map] that holds all created project metrics [StreamSubscription]s.
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
+
+  /// A [Map] that holds all created build day project metrics
+  /// [StreamSubscription]s.
+  final Map<String, StreamSubscription> _buildDaySubscriptions = {};
 
   /// A [PublishSubject] that provides an ability to filter projects by the name.
   final _projectNameFilterSubject = PublishSubject<String>();
@@ -121,29 +125,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     if (_projectGroupModels != null) {
-      projectsMetricsTileViewModels =
-          _filterByProjectGroup(projectsMetricsTileViewModels);
+      projectsMetricsTileViewModels = _filterByProjectGroup(
+        projectsMetricsTileViewModels,
+      );
     }
 
     return projectsMetricsTileViewModels;
-  }
-
-  /// Filters the [ProjectMetricsTileViewModel]s using the [selectedProjectGroup].
-  List<ProjectMetricsTileViewModel> _filterByProjectGroup(
-    List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels,
-  ) {
-    final projectGroupModel = _projectGroupModels.firstWhere(
-      (model) => model.id == _selectedProjectGroup?.id,
-      orElse: () => null,
-    );
-
-    if (projectGroupModel == null) return projectsMetricsTileViewModels;
-
-    return projectsMetricsTileViewModels
-        .where((project) => projectGroupModel.projectIds.contains(
-              project.projectId,
-            ))
-        .toList();
   }
 
   /// Provides an error description that occurred during loading metrics data.
@@ -179,6 +166,24 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       _projectNameFilter = value;
       notifyListeners();
     });
+  }
+
+  /// Filters the [ProjectMetricsTileViewModel]s using the [selectedProjectGroup].
+  List<ProjectMetricsTileViewModel> _filterByProjectGroup(
+    List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels,
+  ) {
+    final projectGroupModel = _projectGroupModels.firstWhere(
+      (model) => model.id == _selectedProjectGroup?.id,
+      orElse: () => null,
+    );
+
+    if (projectGroupModel == null) return projectsMetricsTileViewModels;
+
+    return projectsMetricsTileViewModels
+        .where((project) => projectGroupModel.projectIds.contains(
+              project.projectId,
+            ))
+        .toList();
   }
 
   /// Adds project metrics filter using the given [value].
@@ -288,6 +293,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
       if (!projectsMetrics.containsKey(projectId)) {
         _subscribeToBuildMetrics(projectId);
+        _subscribeToBuildDayMetrics(projectId);
       }
       projectsMetrics[projectId] = projectMetrics;
     }
@@ -303,20 +309,34 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Subscribes to project metrics.
+  void _subscribeToBuildDayMetrics(String projectId) {
+    final buildDayMetricsStream = _receiveBuildDayUpdates(
+      ProjectIdParam(projectId),
+    );
+
+    _buildDaySubscriptions[projectId] = buildDayMetricsStream.listen(
+      (metrics) => null, //TODO _createProjectMetrics(metrics, projectId),
+      onError: _projectsErrorHandler,
+    );
+  }
+
+  /// Subscribes to project metrics.
   void _subscribeToBuildMetrics(String projectId) {
     final dashboardMetricsStream = _receiveProjectMetricsUpdates(
       ProjectIdParam(projectId),
     );
 
-    _buildMetricsSubscriptions[projectId] =
-        dashboardMetricsStream.listen((metrics) {
-      _createProjectMetrics(metrics, projectId);
-    }, onError: _projectsErrorHandler);
+    _buildMetricsSubscriptions[projectId] = dashboardMetricsStream.listen(
+      (metrics) => _createProjectMetrics(metrics, projectId),
+      onError: _projectsErrorHandler,
+    );
   }
 
   /// Creates project metrics from the [DashboardProjectMetrics].
   void _createProjectMetrics(
-      DashboardProjectMetrics dashboardMetrics, String projectId) {
+    DashboardProjectMetrics dashboardMetrics,
+    String projectId,
+  ) {
     final projectsMetrics = _projectMetrics ?? {};
 
     final projectMetrics = projectsMetrics[projectId];
