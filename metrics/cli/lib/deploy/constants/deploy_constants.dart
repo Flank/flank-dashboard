@@ -11,4 +11,7 @@ class DeployConstants {
 
   /// A Sentry environment name.
   static const String sentryEnvironment = 'metrics';
+
+  /// A temporary directory prefix.
+  static const String tempDirectoryPrefix = 'metrics';
 }

@@ -3,17 +3,16 @@
 
 import 'dart:io';
 
-import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/common/model/services.dart';
+import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
-import 'package:cli/deploy/paths/deploy_paths.dart';
 import 'package:cli/deploy/deployer.dart';
+import 'package:cli/deploy/paths/deploy_paths.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/sentry/model/sentry_config.dart';
 import 'package:cli/sentry/model/sentry_project.dart';
 import 'package:cli/sentry/model/sentry_release.dart';
-import 'package:clock/clock.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -38,18 +37,11 @@ void main() {
     const sentryDsn = 'sentryDsn';
     const sentryProjectSlug = 'sentryProjectSlug';
     const sentryOrgSlug = 'sentryOrgSlug';
+    const tempDirectoryPath = 'tempDirectoryPath';
     const firebaseTarget = DeployConstants.firebaseTarget;
     const repoURL = DeployConstants.repoURL;
+    const testPath = 'testPath';
 
-    final currentDateTime = clock.now();
-    final suffix = currentDateTime.millisecondsSinceEpoch.toString();
-    final tempDirName = DeployPaths.tempDir(suffix);
-    final firebaseFunctionsPath = DeployPaths.firebaseFunctions(
-      tempDirName,
-    );
-    final firebasePath = DeployPaths.firebase(tempDirName);
-    final webPath = DeployPaths.web(tempDirName);
-    final configPath = DeployPaths.metricsConfig(tempDirName);
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
     final npmService = NpmServiceMock();
@@ -60,6 +52,7 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
+    final deployPaths = _DeployPathsMock();
     final sentryProject = SentryProject(
       projectSlug: sentryProjectSlug,
       organizationSlug: sentryOrgSlug,
@@ -68,6 +61,7 @@ void main() {
       name: sentryReleaseName,
       project: sentryProject,
     );
+
     final file = _FileMock();
     final services = Services(
       flutterService: flutterService,
@@ -80,17 +74,25 @@ void main() {
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
+      deployPaths: deployPaths,
       prompter: prompter,
     );
     final stateError = StateError('test');
 
-    PostExpectation<Directory> whenGetDirectory() {
-      return when(fileHelper.getDirectory(any));
+    PostExpectation<Directory> whenCreateTempDirectory() {
+      return when(fileHelper.createTempDirectory(any, any));
     }
 
-    PostExpectation<bool> whenDirectoryExist({Directory withDirectory}) {
+    PostExpectation<bool> whenDirectoryExist({
+      Directory withDirectory,
+      String withPath,
+    }) {
       final currentDirectory = withDirectory ?? directory;
-      whenGetDirectory().thenReturn(currentDirectory);
+      whenCreateTempDirectory().thenReturn(currentDirectory);
+
+      final currentPath = withPath ?? tempDirectoryPath;
+      when(currentDirectory.path).thenReturn(currentPath);
+
       return when(currentDirectory.existsSync());
     }
 
@@ -118,6 +120,7 @@ void main() {
       reset(servicesMock);
       reset(prompter);
       reset(file);
+      reset(deployPaths);
     });
 
     test(
@@ -128,6 +131,7 @@ void main() {
             services: null,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -149,6 +153,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -170,6 +175,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -191,6 +197,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -212,6 +219,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -233,6 +241,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -254,6 +263,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -268,6 +278,7 @@ void main() {
             services: services,
             fileHelper: null,
             prompter: prompter,
+            deployPaths: deployPaths,
           ),
           throwsArgumentError,
         );
@@ -275,13 +286,29 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given prompter is null",
+      "throws an ArgumentError if the given Prompter is null",
       () {
         expect(
           () => Deployer(
             services: services,
             fileHelper: fileHelper,
             prompter: null,
+            deployPaths: deployPaths,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given DeployPaths is null",
+      () {
+        expect(
+          () => Deployer(
+            services: services,
+            fileHelper: fileHelper,
+            prompter: prompter,
+            deployPaths: null,
           ),
           throwsArgumentError,
         );
@@ -437,16 +464,44 @@ void main() {
     );
 
     test(
+      ".deploy() creates a temporary directory",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verify(fileHelper.createTempDirectory(
+          any,
+          DeployConstants.tempDirectoryPrefix,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() creates a temporary directory before initializing the deploy paths",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          fileHelper.createTempDirectory(any, any),
+          deployPaths.initTempDirectoryPath(any),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() clones the Git repository to the temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(gitService.checkout(repoURL, tempDirName)).called(once);
-        });
+        verify(gitService.checkout(repoURL, tempDirectoryPath)).called(once);
       },
     );
 
@@ -469,14 +524,12 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verifyInOrder([
-            gitService.checkout(repoURL, tempDirName),
-            flutterService.build(webPath),
-          ]);
-        });
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDirectoryPath),
+          flutterService.build(any),
+        ]);
       },
     );
 
@@ -486,14 +539,12 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verifyInOrder([
-            gitService.checkout(repoURL, tempDirName),
-            npmService.installDependencies(firebasePath),
-          ]);
-        });
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDirectoryPath),
+          npmService.installDependencies(any),
+        ]);
       },
     );
 
@@ -503,14 +554,12 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verifyInOrder([
-            gitService.checkout(repoURL, tempDirName),
-            npmService.installDependencies(firebaseFunctionsPath),
-          ]);
-        });
+        verifyInOrder([
+          gitService.checkout(repoURL, tempDirectoryPath),
+          npmService.installDependencies(any),
+        ]);
       },
     );
 
@@ -519,12 +568,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        when(deployPaths.firebase).thenReturn(testPath);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(npmService.installDependencies(firebasePath)).called(once);
-        });
+        verify(npmService.installDependencies(testPath)).called(once);
       },
     );
 
@@ -533,13 +581,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        when(deployPaths.firebaseFunctions).thenReturn(testPath);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(npmService.installDependencies(firebaseFunctionsPath))
-              .called(once);
-        });
+        verify(npmService.installDependencies(testPath)).called(once);
       },
     );
 
@@ -563,14 +609,11 @@ void main() {
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
 
-          verifyInOrder([
-            npmService.installDependencies(firebasePath),
-            firebaseService.deployFirebase(any, firebasePath),
-          ]);
-        });
+        verifyInOrder([
+          npmService.installDependencies(any),
+          firebaseService.deployFirebase(any, any),
+        ]);
       },
     );
 
@@ -580,14 +623,12 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verifyInOrder([
-            npmService.installDependencies(firebaseFunctionsPath),
-            firebaseService.deployFirebase(any, firebasePath),
-          ]);
-        });
+        verifyInOrder([
+          npmService.installDependencies(any),
+          firebaseService.deployFirebase(any, any),
+        ]);
       },
     );
 
@@ -596,12 +637,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        when(deployPaths.web).thenReturn(testPath);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(flutterService.build(webPath)).called(once);
-        });
+        verify(flutterService.build(testPath)).called(once);
       },
     );
 
@@ -825,6 +865,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -842,6 +884,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -881,6 +925,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -898,6 +944,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -908,10 +956,11 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -926,6 +975,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -943,6 +994,8 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -953,12 +1006,13 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if prompter throws during the Sentry DSN requesting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -972,12 +1026,11 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(deployPaths.metricsConfig).thenReturn(testPath);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(fileHelper.getFile(configPath)).called(once);
-        });
+        verify(fileHelper.getFile(testPath)).called(once);
       },
     );
 
@@ -1004,6 +1057,8 @@ void main() {
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(any)).thenReturn(file);
+        when(deployPaths.web).thenReturn(testPath);
+        when(deployPaths.buildWeb).thenReturn(testPath);
 
         final sentryConfig = SentryConfig(
           release: sentryRelease.name,
@@ -1031,7 +1086,6 @@ void main() {
             .thenThrow(stateError);
         when(firebaseService.configureAuthProviders(projectId))
             .thenReturn(clientId);
-        when(fileHelper.getFile(configPath)).thenReturn(file);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -1060,13 +1114,12 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        when(deployPaths.firebase).thenReturn(testPath);
 
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        await deployer.deploy();
 
-          verify(firebaseService.deployFirebase(projectId, firebasePath))
-              .called(once);
-        });
+        verify(firebaseService.deployFirebase(projectId, testPath))
+            .called(once);
       },
     );
 
@@ -1105,15 +1158,15 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        await withClock(Clock.fixed(currentDateTime), () async {
-          await deployer.deploy();
+        when(deployPaths.web).thenReturn(testPath);
 
-          verify(firebaseService.deployHosting(
-            projectId,
-            firebaseTarget,
-            webPath,
-          )).called(once);
-        });
+        await deployer.deploy();
+
+        verify(firebaseService.deployHosting(
+          projectId,
+          firebaseTarget,
+          testPath,
+        )).called(once);
       },
     );
 
@@ -1175,3 +1228,5 @@ void main() {
 class _FileHelperMock extends Mock implements FileHelper {}
 
 class _FileMock extends Mock implements File {}
+
+class _DeployPathsMock extends Mock implements DeployPaths {}

@@ -1,27 +1,33 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// A class that holds the paths for the deployment process.
+/// A class that holds deploy paths based on the current temporary
+/// directory path.
 class DeployPaths {
-  /// Returns the name of a temporary directory with the given [suffix].
-  static String tempDir(String suffix) => 'tempDir_$suffix';
+  /// The path to the current temporary directory;
+  String _currentTempDirectoryPath;
 
-  /// Returns the path to the Web project sources based on the given [tempDir].
-  static String web(String tempDir) => '$tempDir/metrics/web';
+  /// Initializes this temporary directory path with the given [path].
+  ///
+  /// Throws an [ArgumentError] if the given [path] is `null`.
+  void initTempDirectoryPath(String path) {
+    ArgumentError.checkNotNull(path, 'path');
 
-  /// Returns the path to the built directory of the Metrics Web project.
-  static String buildWeb(String tempDir) => '$tempDir/build/web';
+    _currentTempDirectoryPath = path;
+  }
 
-  /// Returns the path to the Firebase sources based on the given [tempDir].
-  static String firebase(String tempDir) => '$tempDir/metrics/firebase';
+  /// A path to the Web project sources.
+  String get web => '$_currentTempDirectoryPath/metrics/web';
 
-  /// Returns the path to the Firebase functions sources based on
-  /// the given [tempDir].
-  static String firebaseFunctions(String tempDir) =>
-      '${firebase(tempDir)}/functions';
+  /// A path to the built directory of the Metrics Web project.
+  String get buildWeb => '$_currentTempDirectoryPath/build/web';
 
-  /// Returns the path to the Metrics configuration file based on
-  /// the given [tempDir].
-  static String metricsConfig(String tempDir) =>
-      '${web(tempDir)}/build/web/metrics_config.js';
+  /// A path to the Firebase sources.
+  String get firebase => '$_currentTempDirectoryPath/metrics/firebase';
+
+  /// A path to the Firebase functions sources.
+  String get firebaseFunctions => '$firebase/functions';
+
+  /// A path to the Metrics configuration file.
+  String get metricsConfig => '$web/build/web/metrics_config.js';
 }

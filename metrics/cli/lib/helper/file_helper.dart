@@ -10,9 +10,10 @@ class FileHelper {
     return File(path);
   }
 
-  /// Returns a [Directory] by the given [path].
-  Directory getDirectory(String path) {
-    return Directory(path);
+  /// Creates a temporary directory in the given [directory]
+  /// with the given [prefix].
+  Directory createTempDirectory(Directory directory, String prefix) {
+    return directory.createTempSync(prefix);
   }
 
   /// Replaces variables defined in the [environment] it's values

@@ -6,44 +6,65 @@ import 'package:test/test.dart';
 
 void main() {
   group('DeployPaths', () {
-    const suffix = 'suffix';
-    const tempDir = 'tempDir';
+    const path = 'tempDirPath';
+
+    final deployPaths = DeployPaths();
 
     test(
-      ".tempDir() returns a name that contains the given suffix",
-      () {
-        expect(DeployPaths.tempDir(suffix), contains(suffix));
-      },
-    );
-
-    test(
-      ".webPath() returns a path to the Web project sources that contains the temporary directory",
-      () {
-        expect(DeployPaths.web(tempDir), contains(tempDir));
-      },
-    );
-
-    test(
-      ".firebasePath() returns a path to the Firebase sources that contains the temporary directory",
-      () {
-        expect(DeployPaths.firebase(tempDir), contains(tempDir));
-      },
-    );
-
-    test(
-      ".firebaseFunctionsPath() returns a path to the Firebase functions sources that contains the temporary directory",
+      ".initTempDirectoryPath() throws an ArgumentError if the given path is null",
       () {
         expect(
-          DeployPaths.firebaseFunctions(tempDir),
-          contains(tempDir),
+          () => deployPaths.initTempDirectoryPath(null),
+          throwsArgumentError,
         );
       },
     );
 
     test(
-      ".metricsConfigPath() returns a path to the Metrics configuration that contains the temporary directory",
+      ".web returns a name that contains the initialized temporary path",
       () {
-        expect(DeployPaths.metricsConfig(tempDir), contains(tempDir));
+        deployPaths.initTempDirectoryPath(path);
+
+        expect(deployPaths.web, contains(path));
+      },
+    );
+
+    test(
+      ".buildWeb returns a path to the Web project sources that contains the initialized temporary path",
+      () {
+        deployPaths.initTempDirectoryPath(path);
+
+        expect(deployPaths.buildWeb, contains(path));
+      },
+    );
+
+    test(
+      ".firebase returns a path to the Firebase sources that contains the initialized temporary path",
+      () {
+        deployPaths.initTempDirectoryPath(path);
+
+        expect(deployPaths.firebase, contains(path));
+      },
+    );
+
+    test(
+      ".firebaseFunctions returns a path to the Firebase functions sources that contains the initialized temporary path",
+      () {
+        deployPaths.initTempDirectoryPath(path);
+
+        expect(
+          deployPaths.firebaseFunctions,
+          contains(path),
+        );
+      },
+    );
+
+    test(
+      ".metricsConfig returns a path to the Metrics configuration that contains the initialized temporary path",
+      () {
+        deployPaths.initTempDirectoryPath(path);
+
+        expect(deployPaths.metricsConfig, contains(path));
       },
     );
   });
