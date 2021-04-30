@@ -27,6 +27,7 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates_stub.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
@@ -217,7 +218,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _hiveLocalConfigRepository,
     );
     _receiveBuildDayProjectMetricsUpdates =
-        ReceiveBuildDayProjectMetricsUpdates(
+        ReceiveBuildDayProjectMetricsUpdatesStub(
       _buildDayRepository,
     );
 
