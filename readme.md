@@ -8,11 +8,13 @@ A CLI application that integrates with popular CI tools to collect software proj
 
 ### Core
 
-Provides a common classes to use within Metrics applications.
+A Dart package that provides a common classes to use within Metrics applications.
 
 ### Firebase
 
-Stores configurations for Firestore, Firebase Cloud Functions and deployment on Firebase Hosting.
+A Firestore instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
+
+Firebase Analytics is optional and may not be configured during deployment.
 
 ### Flutter Web
 
@@ -25,6 +27,12 @@ A `Deploy CLI` is a command-line tool that simplifies the deployment of Metrics 
 ### Dart Cloud Functions 
 
 A `Dart Cloud Functions` is a serverless backend code deployed on Firebase that simplifies data managing for other Metrics components.
+
+### Sentry
+
+A `Sentry` service helps to store any logs and monitor runtime errors.
+
+Sentry is optional and may not be configured during deployment.
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
 

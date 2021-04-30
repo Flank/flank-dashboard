@@ -46,7 +46,8 @@ rectangle "Deploy CLI" as CLI
 
 Jenkins -[hidden]right-> GA
 GA -[hidden]right-> Buildkite
-Analytics -[hidden]left-> Firestore  
+Analytics -[hidden]left-> Hosting  
+Analytics -[hidden]right-> Firestore  
 
 Jenkins -down-> CI : data
 GA -down-> CI : data
@@ -55,18 +56,21 @@ Buildkite -down-> CI : data
 CI -down-> Firestore : sync data
 CI -down-> Authentication : authenticates
 
-Hosting -[hidden]right-> Authentication
-Authentication -[hidden]right-> Firestore
+Hosting -[hidden]left-> Authentication
+Hosting -[hidden]right-> Firestore
+Firestore -[hidden]right-> Authentication
 
 Web -up-> Firestore : reads metrics and \l stores app config
 Web -up-> Authentication : authenticates
 Web -up-> Hosting : deployed on
-Web .up.> Analytics : reports analytics data \l (optional)
+Web .up.> Analytics : reports analytics  \l (optional)
 Web .down.> Sentry : logging \l (optional)
 
 CLI -up-> Core : uses
 
 DartCloudFunctions -right-> Core : uses
+DartCloudFunctions -[hidden]left-> Authentication : uses
+
 Web -right-> Core : uses
 CI -right-> Core  : uses
 
