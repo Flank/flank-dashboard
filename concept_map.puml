@@ -26,21 +26,28 @@ cloud "GitHub Actions" as GA
 cloud Buildkite
 
 rectangle "CI integrations" as CI
+rectangle "Dart Cloud Functions" as DartCloudFunctions
 
 together {
     node Firebase {
         cloud Hosting
         database Firestore
         cloud Authentication
+        cloud "Cloud Functions" as CloudFunctions
+        cloud Analytics
     }
 
     rectangle Core
 }
-
 rectangle Web
+rectangle "CLI"
+
+cloud Sentry
 
 Jenkins -[hidden]right-> GA
 GA -[hidden]right-> Buildkite
+
+Core -[hidden]left-> Analytics  
 
 Jenkins -down-> CI : data
 GA -down-> CI : data
@@ -53,12 +60,20 @@ CI -[hidden]down-> Hosting
 Hosting -[hidden]right-> Authentication
 Authentication -[hidden]right-> Firestore
 
-Firebase -[hidden]right-> Core
+Web --up--> Firestore : reads metrics and \l stores app config
+Web --up--> Authentication : authenticates
+Web --up--> Hosting : deployed on
+Web --up--> Analytics : reports analytics data
+Web -down-> Sentry : reports about errors
 
-Web -up-> Firestore : reads metrics and \l stores app config
-Web -up-> Authentication : authenticates
-Web -up-> Hosting : deployed on
+DartCloudFunctions -up-> CloudFunctions : deployed on
+DartCloudFunctions -[hidden]-> Core : uses
+DartCloudFunctions -up-> Firestore : creates aggregation \l documents
 
+CLI -up-> Web : deploys
+CLI -up-> Core : uses
+
+DartCloudFunctions -down-> Core : uses
 Web --right--> Core : uses
 CI --right--> Core  : uses
 

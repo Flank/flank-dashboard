@@ -1,6 +1,6 @@
 # Metrics :bar_chart:
 
-Metrics is a set of applications to collect and review software project metrics like performance, build stability, and codebase quality.
+Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 
 ### CI integrations
 
@@ -16,7 +16,15 @@ Stores configurations for Firestore, Firebase Cloud Functions and deployment on 
 
 ### Web
 
-A web application that displays project metrics on easy to navigate Dashboard.
+A Web application that displays project metrics on easy to navigate Dashboard.
+
+### CLI
+
+A `CLI` is a command line tool used to simplifies the deployment process of the Metrics Web application. 
+
+### Dart Cloud Functions 
+
+A `Dart Cloud Functions` is a set of server-side lambda functions used to aggregate data.
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
 
