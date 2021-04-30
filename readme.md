@@ -2,6 +2,13 @@
 
 Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 
+The following diagram demonstrates the main Metrics components and the relationships between them:
+
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/update_concept_map/concept_map.puml)
+
+<details>
+  <summary>Metrics Components</summary>
+
 ### CI integrations
 
 A CLI application that integrates with popular CI tools to collect software project metrics.
@@ -34,9 +41,7 @@ A `Sentry` service helps to store any logs and monitor runtime errors.
 
 Sentry is optional and may not be configured during deployment.
 
-The following diagram demonstrates the relationships between the above constitutes of Metrics:
-
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/update_concept_map/concept_map.puml)
+</details>
 
 # Getting started with Metrics :beginner:
 
