@@ -21,28 +21,27 @@ skinparam rectangle {
 
 skinparam ArrowColor #4f4f56
 
-cloud Jenkins
-cloud "GitHub Actions" as GA
-cloud Buildkite
+node Jenkins
+node "GitHub Actions" as GA
+node Buildkite
+node Sentry
 
 rectangle "CI integrations" as CI
-rectangle "Dart Cloud Functions" as DartCloudFunctions
 
 together {
     node Firebase {
         cloud Hosting
         database Firestore
         cloud Authentication
-        cloud "Cloud Functions" as CloudFunctions
         cloud Analytics
+
+        cloud #20ce9a "Dart Cloud Functions" as DartCloudFunctions
     }
 
     rectangle Core
 }
 rectangle Web
-rectangle "CLI"
-
-cloud Sentry
+rectangle "Deploy CLI" as CLI
 
 Jenkins -[hidden]right-> GA
 GA -[hidden]right-> Buildkite
@@ -64,14 +63,11 @@ Web --up--> Firestore : reads metrics and \l stores app config
 Web --up--> Authentication : authenticates
 Web --up--> Hosting : deployed on
 Web --up--> Analytics : reports analytics data
-Web -down-> Sentry : reports about errors
+Web -down-> Sentry : logging
 
-DartCloudFunctions -up-> CloudFunctions : deployed on
 DartCloudFunctions -[hidden]-> Core : uses
-DartCloudFunctions -up-> Firestore : creates aggregation \l documents
 
-CLI --> Web : deploys
-CLI --> Core : uses
+CLI -up-> Core : uses
 
 DartCloudFunctions -down-> Core : uses
 Web --right--> Core : uses

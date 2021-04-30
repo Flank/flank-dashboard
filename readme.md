@@ -20,11 +20,11 @@ A Web application that displays project metrics on easy to navigate Dashboard.
 
 ### CLI
 
-A `CLI` is a command-line tool used to simplify the deployment process of the Metrics Web application. 
+A `CLI` is a command-line tool that simplifies the deployment of Metrics components (web application, cloud functions, etc.) 
 
 ### Dart Cloud Functions 
 
-A `Dart Cloud Functions` is a backend part of the Metrics that run automatically in response to events triggered by Firebase features or HTTPS requests.
+A `Dart Cloud Functions` is a serverless backend code deployed on Firebase that simplifies data managing for other Metrics components.
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
 
