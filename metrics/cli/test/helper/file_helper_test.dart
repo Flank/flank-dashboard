@@ -65,6 +65,16 @@ void main() {
     );
 
     test(
+      ".createTempDirectory() throws an ArgumentError if the given directory is null",
+      () {
+        expect(
+          () => helper.createTempDirectory(null, prefix),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
       ".replaceEnvironmentVariables() throws an ArgumentError if the given file is null",
       () {
         expect(

@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   args: ^2.0.0
-  clock: ^1.1.0
   equatable: ^1.1.1
   metrics_core:
     path: ../core

@@ -7,7 +7,8 @@ import 'package:cli/common/model/services.dart';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
-import 'package:cli/deploy/paths/deploy_paths.dart';
+import 'package:cli/deploy/factory/deploy_paths_factory.dart';
+import 'package:cli/deploy/model/deploy_paths.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/sentry/model/sentry_config.dart';
@@ -40,7 +41,6 @@ void main() {
     const tempDirectoryPath = 'tempDirectoryPath';
     const firebaseTarget = DeployConstants.firebaseTarget;
     const repoURL = DeployConstants.repoURL;
-    const testPath = 'testPath';
 
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -52,7 +52,9 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
-    final deployPaths = _DeployPathsMock();
+    final deployPathsFactoryMock = _DeployPathsFactoryMock();
+    final deployPathsFactory = DeployPathsFactory();
+    final deployPaths = DeployPaths(tempDirectoryPath);
     final sentryProject = SentryProject(
       projectSlug: sentryProjectSlug,
       organizationSlug: sentryOrgSlug,
@@ -74,7 +76,7 @@ void main() {
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
-      deployPaths: deployPaths,
+      deployPathsFactory: deployPathsFactory,
       prompter: prompter,
     );
     final stateError = StateError('test');
@@ -120,7 +122,7 @@ void main() {
       reset(servicesMock);
       reset(prompter);
       reset(file);
-      reset(deployPaths);
+      reset(deployPathsFactoryMock);
     });
 
     test(
@@ -131,7 +133,7 @@ void main() {
             services: null,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -153,7 +155,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -175,7 +177,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -197,7 +199,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -219,7 +221,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -241,7 +243,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -263,7 +265,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -278,7 +280,7 @@ void main() {
             services: services,
             fileHelper: null,
             prompter: prompter,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -293,7 +295,7 @@ void main() {
             services: services,
             fileHelper: fileHelper,
             prompter: null,
-            deployPaths: deployPaths,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -301,14 +303,14 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given DeployPaths is null",
+      "throws an ArgumentError if the given DeployPathsFactory is null",
       () {
         expect(
           () => Deployer(
             services: services,
             fileHelper: fileHelper,
             prompter: prompter,
-            deployPaths: null,
+            deployPathsFactory: null,
           ),
           throwsArgumentError,
         );
@@ -479,16 +481,25 @@ void main() {
     );
 
     test(
-      ".deploy() creates a temporary directory before initializing the deploy paths",
+      ".deploy() creates a temporary directory before creating the DeployPaths instance",
       () async {
+        final deployer = Deployer(
+          fileHelper: fileHelper,
+          deployPathsFactory: deployPathsFactoryMock,
+          prompter: prompter,
+          services: services,
+        );
+
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        when(deployPathsFactoryMock.create(tempDirectoryPath))
+            .thenReturn(deployPaths);
 
         await deployer.deploy();
 
         verifyInOrder([
           fileHelper.createTempDirectory(any, any),
-          deployPaths.initTempDirectoryPath(any),
+          deployPathsFactoryMock.create(tempDirectoryPath),
         ]);
       },
     );
@@ -568,11 +579,11 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPaths.firebase).thenReturn(testPath);
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(testPath)).called(once);
+        verify(npmService.installDependencies(deployPaths.firebasePath))
+            .called(once);
       },
     );
 
@@ -581,11 +592,12 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPaths.firebaseFunctions).thenReturn(testPath);
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(testPath)).called(once);
+        verify(
+          npmService.installDependencies(deployPaths.firebaseFunctionsPath),
+        ).called(once);
       },
     );
 
@@ -637,11 +649,10 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPaths.web).thenReturn(testPath);
 
         await deployer.deploy();
 
-        verify(flutterService.build(testPath)).called(once);
+        verify(flutterService.build(deployPaths.webAppPath)).called(once);
       },
     );
 
@@ -865,8 +876,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -884,8 +893,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -925,8 +932,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -944,8 +949,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -959,8 +962,6 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -975,8 +976,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -994,8 +993,6 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await deployer.deploy();
 
@@ -1011,8 +1008,6 @@ void main() {
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -1026,11 +1021,10 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        when(deployPaths.metricsConfig).thenReturn(testPath);
 
         await deployer.deploy();
 
-        verify(fileHelper.getFile(testPath)).called(once);
+        verify(fileHelper.getFile(deployPaths.metricsConfigPath)).called(once);
       },
     );
 
@@ -1057,8 +1051,6 @@ void main() {
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(any)).thenReturn(file);
-        when(deployPaths.web).thenReturn(testPath);
-        when(deployPaths.buildWeb).thenReturn(testPath);
 
         final sentryConfig = SentryConfig(
           release: sentryRelease.name,
@@ -1114,12 +1106,13 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPaths.firebase).thenReturn(testPath);
 
         await deployer.deploy();
 
-        verify(firebaseService.deployFirebase(projectId, testPath))
-            .called(once);
+        verify(firebaseService.deployFirebase(
+          projectId,
+          deployPaths.firebasePath,
+        )).called(once);
       },
     );
 
@@ -1158,14 +1151,13 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        when(deployPaths.web).thenReturn(testPath);
 
         await deployer.deploy();
 
         verify(firebaseService.deployHosting(
           projectId,
           firebaseTarget,
-          testPath,
+          deployPaths.webAppPath,
         )).called(once);
       },
     );
@@ -1229,4 +1221,4 @@ class _FileHelperMock extends Mock implements FileHelper {}
 
 class _FileMock extends Mock implements File {}
 
-class _DeployPathsMock extends Mock implements DeployPaths {}
+class _DeployPathsFactoryMock extends Mock implements DeployPathsFactory {}

@@ -12,7 +12,11 @@ class FileHelper {
 
   /// Creates a temporary directory in the given [directory]
   /// with the given [prefix].
+  ///
+  /// Throws an [ArgumentError] if the given [directory] is `null`.
   Directory createTempDirectory(Directory directory, String prefix) {
+    ArgumentError.checkNotNull(directory, 'directory');
+
     return directory.createTempSync(prefix);
   }
 
