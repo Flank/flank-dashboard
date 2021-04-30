@@ -4,7 +4,7 @@ Metrics is a set of software components to collect and review software project m
 
 The following diagram demonstrates the main Metrics components and the relationships between them:
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/update_concept_map/concept_map.puml)
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
 
 <details>
   <summary>Metrics Components</summary>
