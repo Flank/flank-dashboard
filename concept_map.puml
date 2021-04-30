@@ -40,13 +40,13 @@ together {
 
     rectangle Core
 }
-rectangle Web
+
+rectangle "Flutter Web" as Web
 rectangle "Deploy CLI" as CLI
 
 Jenkins -[hidden]right-> GA
 GA -[hidden]right-> Buildkite
-
-Core -[hidden]left-> Analytics  
+Analytics -[hidden]left-> Firestore  
 
 Jenkins -down-> CI : data
 GA -down-> CI : data
@@ -54,23 +54,20 @@ Buildkite -down-> CI : data
 
 CI -down-> Firestore : sync data
 CI -down-> Authentication : authenticates
-CI -[hidden]down-> Hosting
 
 Hosting -[hidden]right-> Authentication
 Authentication -[hidden]right-> Firestore
 
-Web --up--> Firestore : reads metrics and \l stores app config
-Web --up--> Authentication : authenticates
-Web --up--> Hosting : deployed on
-Web --up--> Analytics : reports analytics data
-Web -down-> Sentry : logging
-
-DartCloudFunctions -[hidden]-> Core : uses
+Web -up-> Firestore : reads metrics and \l stores app config
+Web -up-> Authentication : authenticates
+Web -up-> Hosting : deployed on
+Web .up.> Analytics : reports analytics data \l (optional)
+Web .down.> Sentry : logging \l (optional)
 
 CLI -up-> Core : uses
 
-DartCloudFunctions -down-> Core : uses
-Web --right--> Core : uses
-CI --right--> Core  : uses
+DartCloudFunctions -right-> Core : uses
+Web -right-> Core : uses
+CI -right-> Core  : uses
 
 @enduml
