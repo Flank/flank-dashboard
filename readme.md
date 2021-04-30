@@ -20,7 +20,7 @@ A Web application that displays project metrics on easy to navigate Dashboard.
 
 ### CLI
 
-A `CLI` is a command-line tool that simplifies the deployment of Metrics components (web application, cloud functions, etc.) 
+A `CLI` is a command-line tool that simplifies the deployment of Metrics components (Web application, Cloud Functions, etc.) 
 
 ### Dart Cloud Functions 
 
