@@ -13,6 +13,7 @@ import '../../test_utils/prompter_mock.dart';
 void main() {
   group('GCloudCliServiceAdapter', () {
     const region = 'testRegion';
+    const projectId = 'projectId';
     const enterRegion = GCloudStrings.enterRegionName;
     const acceptTerms = GCloudStrings.acceptTerms;
 
@@ -20,6 +21,7 @@ void main() {
     final prompter = PrompterMock();
     final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
     final stateError = StateError('test');
+    final configureOAuth = GCloudStrings.configureOAuth(projectId);
 
     tearDown(() {
       reset(gcloudCli);
@@ -314,8 +316,26 @@ void main() {
       () {
         when(prompter.prompt(acceptTerms)).thenThrow(stateError);
 
+        expect(() => gcloudService.acceptTermsOfService(), throwsStateError);
+      },
+    );
+
+    test(
+      ".configureOAuthOrigins() prompts the user to configure OAuth origins",
+      () {
+        gcloudService.configureOAuthOrigins(projectId);
+
+        verify(prompter.prompt(configureOAuth)).called(once);
+      },
+    );
+
+    test(
+      ".configureOAuthOrigins() throws if prompter throws during the configuring OAuth origins",
+      () {
+        when(prompter.prompt(configureOAuth)).thenThrow(stateError);
+
         expect(
-          () => gcloudService.acceptTermsOfService(),
+          () => gcloudService.configureOAuthOrigins(projectId),
           throwsStateError,
         );
       },

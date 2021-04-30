@@ -1208,7 +1208,7 @@ void main() {
 
         verifyInOrder([
           firebaseService.deployHosting(any, any, any),
-          gcloudService.configureOauthOrigins(any),
+          gcloudService.configureOAuthOrigins(any),
         ]);
       },
     );
@@ -1221,7 +1221,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gcloudService.configureOauthOrigins(projectId)).called(once);
+        verify(gcloudService.configureOAuthOrigins(projectId)).called(once);
       },
     );
 
@@ -1229,7 +1229,7 @@ void main() {
       ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(gcloudService.configureOauthOrigins(any)).thenThrow(stateError);
+        when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -1246,7 +1246,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gcloudService.configureOauthOrigins(any),
+          gcloudService.configureOAuthOrigins(any),
           directory.deleteSync(recursive: true),
         ]);
       },
