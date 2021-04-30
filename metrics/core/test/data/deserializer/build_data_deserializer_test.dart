@@ -1,13 +1,13 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("BuildDataDeserializer", () {
     const id = 'id';
+    const projectId = 'projectId';
     const duration = Duration(milliseconds: 100000);
     const url = 'testUrl';
     const apiUrl = 'testApiUrl';
@@ -18,6 +18,7 @@ void main() {
     final startedAt = DateTime.now();
     final buildDataJson = {
       'id': id,
+      'projectId': projectId,
       'duration': duration.inMilliseconds,
       'startedAt': startedAt,
       'url': url,
@@ -40,6 +41,7 @@ void main() {
     test(".fromJson() returns BuildData from a JSON map", () {
       final expectedBuildData = BuildData(
         id: id,
+        projectId: projectId,
         duration: duration,
         startedAt: startedAt,
         url: url,

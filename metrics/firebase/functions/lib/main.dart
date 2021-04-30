@@ -9,8 +9,6 @@ import 'package:functions/models/build_day_status_field.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:functions/models/task_data_code.dart';
 
-import 'deserializers/build_data_deserializer.dart';
-
 void main() {
   functions['onBuildAdded'] = functions.firestore
       .document('build/{buildId}')
@@ -20,7 +18,9 @@ void main() {
 /// Process incrementing logic for the build days collection document,
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
-  final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
+  final json = _prepareBuildJson(snapshot.data.toMap());
+
+  final buildData = BuildDataDeserializer.fromJson(json, null);
   final startedAtUtc = _getUtcDate(buildData.startedAt);
 
   final mapper = BuildDayStatusFieldNameMapper();
@@ -41,6 +41,15 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   );
 
   await _updateBuildDay(snapshot, buildDayData);
+}
+
+///
+Map<String, dynamic> _prepareBuildJson(Map json) {
+  final Map<String, dynamic> normalizedJson = {...json};
+  normalizedJson['startedAt'] = (json['startedAt'] as Timestamp).toDateTime();
+  normalizedJson['duration'] = json['duration'] == null ? 0 : json['duration'];
+
+  return normalizedJson;
 }
 
 //// Returns a [DateTime] representing the date in the UTC timezone created

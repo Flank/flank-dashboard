@@ -22,6 +22,7 @@ class BuildDataDeserializer {
 
     return BuildData(
       id: id,
+      projectId: json['projectId'] as String,
       duration: duration,
       coverage: coveragePercent == null ? null : Percent(coveragePercent),
       startedAt: json['startedAt'] as DateTime,

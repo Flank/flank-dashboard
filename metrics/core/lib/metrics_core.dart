@@ -3,6 +3,7 @@
 
 library metrics_core;
 
+export 'src/data/deserializer/build_data_deserializer.dart';
 export 'src/data/model/build_data.dart';
 export 'src/data/model/coverage_data.dart';
 export 'src/data/model/data_model.dart';
