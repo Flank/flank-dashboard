@@ -1,6 +1,13 @@
 # Metrics :bar_chart:
 
-Metrics is a set of applications to collect and review software project metrics like performance, build stability, and codebase quality.
+Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
+
+The following diagram demonstrates the main Metrics components and the relationships between them:
+
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+
+<details>
+  <summary>Metrics Components</summary>
 
 ### CI integrations
 
@@ -8,19 +15,33 @@ A CLI application that integrates with popular CI tools to collect software proj
 
 ### Core
 
-Provides a common classes to use within Metrics applications.
+A Dart package that provides a common classes to use within Metrics applications.
 
 ### Firebase
 
-Stores configurations for Firestore, Firebase Cloud Functions and deployment on Firebase Hosting.
+A `Firebase` instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
 
-### Web
+Firebase Analytics is optional and may not be configured during deployment.
 
-A web application that displays project metrics on easy to navigate Dashboard.
+### Flutter Web
 
-The following diagram demonstrates the relationships between the above constitutes of Metrics:
+A `Flutter Web` application that displays project metrics on easy to navigate Dashboard.
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+### Deploy CLI
+
+A `Deploy CLI` is a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, etc.) 
+
+### Dart Cloud Functions 
+
+A `Dart Cloud Functions` is a serverless backend code deployed on Firebase that simplifies data managing for other Metrics components.
+
+### Sentry
+
+A `Sentry` service helps to store any logs and monitor runtime errors.
+
+Sentry is optional and may not be configured during deployment.
+
+</details>
 
 # Getting started with Metrics :beginner:
 
@@ -38,7 +59,7 @@ Furthermore, every Metrics component requires component-specific documentation. 
 Similarly, here is a list for the `Firebase` component:
 1. [Metrics firebase deployment :boat:](docs/09_firebase_deployment.md)
 
-In contrast with the above components, `Web` requires more steps to follow: 
+In contrast with the above components, `Flutter Web` requires more steps to follow: 
 1. [Project metrics definitions :book:](docs/05_project_metrics.md)
 2. [Metrics dashboard :nerd_face:](docs/06_metrics_dashboard.md)
 3. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
@@ -59,4 +80,4 @@ Follow the next links to get acquainted with the Metrics project design:
 You can find complete Metrics documentation using the following links:
 - [general documentation](docs/)
 - [CI integrations documentation](metrics/ci_integrations/docs/)
-- [web documentation](metrics/web/docs/)
+- [Web documentation](metrics/web/docs/)
