@@ -28,7 +28,7 @@ A `Dart Cloud Functions` is a set of server-side lambda functions used to aggreg
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/update_concept_map/concept_map.puml)
 
 # Getting started with Metrics :beginner:
 
