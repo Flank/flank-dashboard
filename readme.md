@@ -12,7 +12,7 @@ A Dart package that provides a common classes to use within Metrics applications
 
 ### Firebase
 
-A Firestore instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
+A `Firebase` instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
 
 Firebase Analytics is optional and may not be configured during deployment.
 
