@@ -35,7 +35,7 @@ together {
         cloud Authentication
         cloud Analytics
 
-        cloud #20ce9a "Dart Cloud Functions" as DartCloudFunctions
+        cloud #20ce9a "<color:black>Dart Cloud Functions</color>" as DartCloudFunctions
     }
 
     rectangle Core
