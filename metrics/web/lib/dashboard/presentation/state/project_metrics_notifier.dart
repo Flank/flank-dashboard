@@ -323,7 +323,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     );
   }
 
-  /// Processes the given [buildDayProjectMetrics].
+  /// Creates project metrics from [BuildDayProjectMetrics].
   void _processBuildDayProjectMetrics(
     BuildDayProjectMetrics buildDayProjectMetrics,
     String projectId,
