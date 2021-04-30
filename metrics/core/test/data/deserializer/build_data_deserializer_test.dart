@@ -38,7 +38,7 @@ void main() {
       },
     );
 
-    test(".fromJson() returns BuildData from a JSON map", () {
+    test(".fromJson() creates a BuildData from the JSON-encodable map", () {
       final expectedBuildData = BuildData(
         id: id,
         projectId: projectId,
