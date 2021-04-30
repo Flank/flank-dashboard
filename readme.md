@@ -14,13 +14,13 @@ Provides a common classes to use within Metrics applications.
 
 Stores configurations for Firestore, Firebase Cloud Functions and deployment on Firebase Hosting.
 
-### Web
+### Flutter Web
 
-A Web application that displays project metrics on easy to navigate Dashboard.
+A `Flutter Web` application that displays project metrics on easy to navigate Dashboard.
 
-### CLI
+### Deploy CLI
 
-A `CLI` is a command-line tool that simplifies the deployment of Metrics components (Web application, Cloud Functions, etc.) 
+A `Deploy CLI` is a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, etc.) 
 
 ### Dart Cloud Functions 
 
@@ -46,7 +46,7 @@ Furthermore, every Metrics component requires component-specific documentation. 
 Similarly, here is a list for the `Firebase` component:
 1. [Metrics firebase deployment :boat:](docs/09_firebase_deployment.md)
 
-In contrast with the above components, `Web` requires more steps to follow: 
+In contrast with the above components, `Flutter Web` requires more steps to follow: 
 1. [Project metrics definitions :book:](docs/05_project_metrics.md)
 2. [Metrics dashboard :nerd_face:](docs/06_metrics_dashboard.md)
 3. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
@@ -67,4 +67,4 @@ Follow the next links to get acquainted with the Metrics project design:
 You can find complete Metrics documentation using the following links:
 - [general documentation](docs/)
 - [CI integrations documentation](metrics/ci_integrations/docs/)
-- [web documentation](metrics/web/docs/)
+- [Web documentation](metrics/web/docs/)
