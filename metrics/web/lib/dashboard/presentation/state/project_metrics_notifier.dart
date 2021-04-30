@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
@@ -274,6 +275,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       final remove = !projectIds.contains(projectId);
       if (remove) {
         _buildMetricsSubscriptions.remove(projectId)?.cancel();
+        _buildDaySubscriptions.remove(projectId)?.cancel();
       }
 
       return remove;
@@ -295,6 +297,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
         _subscribeToBuildMetrics(projectId);
         _subscribeToBuildDayMetrics(projectId);
       }
+
       projectsMetrics[projectId] = projectMetrics;
     }
 
@@ -315,9 +318,38 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     );
 
     _buildDaySubscriptions[projectId] = buildDayMetricsStream.listen(
-      (metrics) => null, //TODO _createProjectMetrics(metrics, projectId),
+      (metrics) => _processBuildDayProjectMetrics(metrics, projectId),
       onError: _projectsErrorHandler,
     );
+  }
+
+  /// Processes the given [buildDayProjectMetrics].
+  void _processBuildDayProjectMetrics(
+    BuildDayProjectMetrics buildDayProjectMetrics,
+    String projectId,
+  ) {
+    final projectsMetrics = _projectMetrics ?? {};
+
+    final projectMetrics = projectsMetrics[projectId];
+
+    if (projectMetrics == null || buildDayProjectMetrics == null) return;
+
+    final performanceMetrics = _getPerformanceMetrics(
+      buildDayProjectMetrics.performanceMetric,
+    );
+
+    final buildNumberMetric = buildDayProjectMetrics.buildNumberMetric;
+    final buildNumber = BuildNumberScorecardViewModel(
+      numberOfBuilds: buildNumberMetric?.numberOfBuilds,
+    );
+
+    projectsMetrics[projectId] = projectMetrics.copyWith(
+      performanceSparkline: performanceMetrics,
+      buildNumberMetric: buildNumber,
+    );
+
+    _projectMetrics = projectsMetrics;
+    notifyListeners();
   }
 
   /// Subscribes to project metrics.
@@ -513,8 +545,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (final subscription in _buildMetricsSubscriptions.values) {
       await subscription?.cancel();
     }
+    for (final subscription in _buildDaySubscriptions.values) {
+      await subscription?.cancel();
+    }
+
     _projectMetrics = null;
     _buildMetricsSubscriptions.clear();
+    _buildDaySubscriptions.clear();
   }
 
   /// Saves the error [String] representation to the [_projectsErrorMessage].
