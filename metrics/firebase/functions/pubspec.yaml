@@ -9,6 +9,7 @@ dependencies:
   metrics_core:
     path: ../../core
   collection: ^1.14.13
+  meta: ^1.1.8
   firebase_functions_interop:    
     git:
       url: https://github.com/pulyaevskiy/firebase-functions-interop
