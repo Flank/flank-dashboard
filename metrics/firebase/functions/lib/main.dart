@@ -43,7 +43,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   await _updateBuildDay(snapshot, buildDayData);
 }
 
-///
+/// Prepares a build json to pass to the [BuildDataDeserializer.fromJson] method.
 Map<String, dynamic> _prepareBuildJson(Map json) {
   final Map<String, dynamic> normalizedJson = {...json};
   normalizedJson['startedAt'] = (json['startedAt'] as Timestamp).toDateTime();
@@ -56,6 +56,10 @@ Map<String, dynamic> _prepareBuildJson(Map json) {
 /// from the given [dateTime].
 DateTime _getUtcDate(DateTime dateTime) => dateTime.toUtc().date;
 
+/// Updates the build day's document data with the given [data].
+///
+/// Adds a new document to the tasks collection if updating
+/// the build day's document data fails.
 Future<void> _updateBuildDay(
   DocumentSnapshot snapshot,
   BuildDayData data,

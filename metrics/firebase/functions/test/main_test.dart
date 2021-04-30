@@ -97,11 +97,16 @@ void main() {
         whenDocument(withCollectionName: buildDaysCollectionName)
             .thenReturn(documentReferenceMock);
 
-        final Map<String, dynamic> buildWithoutDuration = Map.from(build);
-        buildWithoutDuration.remove('duration');
+        final buildWithoutDuration = BuildData(
+          projectId: projectId,
+          startedAt: startedAtUtc,
+          buildStatus: buildStatus,
+        );
 
-        whenSnapshotData()
-            .thenReturn(DocumentData.fromMap(buildWithoutDuration));
+        final buildJson = buildWithoutDuration.toJson();
+        buildJson['startedAt'] = Timestamp.fromDateTime(buildJson['startedAt']);
+
+        whenSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -132,7 +137,24 @@ void main() {
     );
 
     test(
-      "creates a build days document from the build document snapshot's data",
+      "trims the time part of the build's started at parameter and converts it to UTC",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+        final expectedDate = startedAtUtc.millisecondsSinceEpoch;
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        expect(
+          verify(collectionReferenceMock.document(captureAny)).captured.single,
+          contains(expectedDate.toString()),
+        );
+      },
+    );
+
+    test(
+      "creates a build days document with project id equals to the build document snapshot's project id",
       () async {
         whenDocument(withCollectionName: buildDaysCollectionName)
             .thenReturn(documentReferenceMock);
@@ -140,29 +162,84 @@ void main() {
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
-        final documentDataMatcher = predicate<DocumentData>((data) {
+        final projectIdMatcher = predicate<DocumentData>((data) =>
+            data.getString('projectId') == expectedBuildDayData['projectId']);
+
+        verify(
+          documentReferenceMock.setData(
+            argThat(projectIdMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "creates a build days document with build day status field count equals to the build document snapshot's status field count",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final countMatcher = predicate<DocumentData>((data) {
           final count =
               data.getNestedData(buildDayStatusFieldName).getInt('operand');
-          final totalDuration =
-              data.getNestedData('totalDuration').getInt('operand');
-
-          final projectIdsAreEqual =
-              data.getString('projectId') == expectedBuildDayData['projectId'];
-          final countsAreEqual =
-              count == expectedBuildDayData[buildDayStatusFieldName];
-          final totalDurationAreEqual =
-              totalDuration == expectedBuildDayData['totalDuration'];
-          final daysAreEqual =
-              data.getTimestamp('day') == expectedBuildDayData['day'];
-
-          return projectIdsAreEqual &&
-              countsAreEqual &&
-              totalDurationAreEqual &&
-              daysAreEqual;
+          return count == expectedBuildDayData[buildDayStatusFieldName];
         });
 
         verify(
-          documentReferenceMock.setData(argThat(documentDataMatcher), any),
+          documentReferenceMock.setData(
+            argThat(countMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "creates a build days document with total duration equals to the build document snapshot's total duration",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final durationMatcher = predicate<DocumentData>((data) {
+          final duration =
+              data.getNestedData('totalDuration').getInt('operand');
+          return duration == expectedBuildDayData['totalDuration'];
+        });
+
+        verify(
+          documentReferenceMock.setData(
+            argThat(durationMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "creates a build days document with day equals to the build document snapshot's day",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final dayMatcher = predicate<DocumentData>((data) {
+          return data.getTimestamp('day') == expectedBuildDayData['day'];
+        });
+
+        verify(
+          documentReferenceMock.setData(
+            argThat(dayMatcher),
+            any,
+          ),
         ).called(1);
       },
     );
@@ -181,7 +258,7 @@ void main() {
     );
 
     test(
-      "creates a task document if setting the build day's document data fails",
+      "creates a task document with code equals to the given one if setting the build day's document data fails",
       () async {
         final _taskCollectionReferenceMock = CollectionReferenceMock();
 
@@ -197,26 +274,96 @@ void main() {
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
-        final documentDataMatcher = predicate<DocumentData>((data) {
-          final codesAreEqual =
-              data.getString('code') == expectedCreatedTask['code'];
-          final dataAreEqual = MapEquality().equals(
+        final codeMatcher = predicate<DocumentData>(
+          (data) => data.getString('code') == expectedCreatedTask['code'],
+        );
+
+        verify(_taskCollectionReferenceMock.add(argThat(codeMatcher)))
+            .called(1);
+      },
+    );
+
+    test(
+      "creates a task document with data equals to the build data if setting the build day's document data fails",
+      () async {
+        final _taskCollectionReferenceMock = CollectionReferenceMock();
+
+        whenSetDocumentData(withCollectionName: buildDaysCollectionName)
+            .thenAnswer((_) => Future.error(Exception('test')));
+
+        when(firestoreMock.collection(tasksCollectionName))
+            .thenReturn(_taskCollectionReferenceMock);
+        when(_taskCollectionReferenceMock.add(any))
+            .thenAnswer((_) => Future.value());
+
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final dataMatcher = predicate<DocumentData>((data) {
+          return MapEquality().equals(
             data.getNestedData('data').toMap(),
             expectedCreatedTask['data'],
           );
-          final contextsAreEqual =
-              data.getString('context') == expectedCreatedTask['context'];
-          final daysAreEqual = data.getTimestamp('createdAt') ==
-              expectedCreatedTask['createdAt'];
-
-          return codesAreEqual &&
-              dataAreEqual &&
-              contextsAreEqual &&
-              daysAreEqual;
         });
 
-        verify(_taskCollectionReferenceMock.add(argThat(documentDataMatcher)))
+        verify(_taskCollectionReferenceMock.add(argThat(dataMatcher)))
             .called(1);
+      },
+    );
+
+    test(
+      "creates a task document with context equals to the error if setting the build day's document data fails",
+      () async {
+        final _taskCollectionReferenceMock = CollectionReferenceMock();
+
+        whenSetDocumentData(withCollectionName: buildDaysCollectionName)
+            .thenAnswer((_) => Future.error(Exception('test')));
+
+        when(firestoreMock.collection(tasksCollectionName))
+            .thenReturn(_taskCollectionReferenceMock);
+        when(_taskCollectionReferenceMock.add(any))
+            .thenAnswer((_) => Future.value());
+
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final contextMatcher = predicate<DocumentData>(
+          (data) => data.getString('context') == expectedCreatedTask['context'],
+        );
+
+        verify(_taskCollectionReferenceMock.add(
+          argThat(contextMatcher),
+        )).called(1);
+      },
+    );
+
+    test(
+      "creates a task document with created at equals to the build's startedAt if setting the build day's document data fails",
+      () async {
+        final _taskCollectionReferenceMock = CollectionReferenceMock();
+
+        whenSetDocumentData(withCollectionName: buildDaysCollectionName)
+            .thenAnswer((_) => Future.error(Exception('test')));
+
+        when(firestoreMock.collection(tasksCollectionName))
+            .thenReturn(_taskCollectionReferenceMock);
+        when(_taskCollectionReferenceMock.add(any))
+            .thenAnswer((_) => Future.value());
+
+        whenSnapshotData().thenReturn(DocumentData.fromMap(build));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final createdAtMatcher = predicate<DocumentData>((data) {
+          return data.getTimestamp('createdAt') ==
+              expectedCreatedTask['createdAt'];
+        });
+
+        verify(_taskCollectionReferenceMock.add(
+          argThat(createdAtMatcher),
+        )).called(1);
       },
     );
   });
