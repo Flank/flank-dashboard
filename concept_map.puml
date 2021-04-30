@@ -70,8 +70,8 @@ DartCloudFunctions -up-> CloudFunctions : deployed on
 DartCloudFunctions -[hidden]-> Core : uses
 DartCloudFunctions -up-> Firestore : creates aggregation \l documents
 
-CLI -up-> Web : deploys
-CLI -up-> Core : uses
+CLI --> Web : deploys
+CLI --> Core : uses
 
 DartCloudFunctions -down-> Core : uses
 Web --right--> Core : uses
