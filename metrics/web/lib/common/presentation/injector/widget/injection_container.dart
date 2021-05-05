@@ -18,7 +18,6 @@ import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/common/data/repositories/firestore_build_day_repository.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
@@ -171,7 +170,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _featureConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
     final _hiveLocalConfigRepository = HiveLocalConfigRepository();
-    final _buildDayRepository = FirestoreBuildDayRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
@@ -218,9 +216,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _hiveLocalConfigRepository,
     );
     _receiveBuildDayProjectMetricsUpdates =
-        ReceiveBuildDayProjectMetricsUpdatesStub(
-      _buildDayRepository,
-    );
+        ReceiveBuildDayProjectMetricsUpdatesStub();
 
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,

@@ -144,7 +144,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// parameters.
   ///
   /// Throws an [AssertionError] if the given [ReceiveProjectMetricsUpdates]
-  ///  or [ReceiveBuildDayProjectMetricsUpdates] is `null`.
+  /// or [ReceiveBuildDayProjectMetricsUpdates] is `null`.
   ProjectMetricsNotifier(
     this._receiveProjectMetricsUpdates,
     this._receiveBuildDayUpdates,
@@ -311,7 +311,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Subscribes to project metrics.
+  /// Subscribes to [BuildDayProjectMetrics] updates.
   void _subscribeToBuildDayMetrics(String projectId) {
     final buildDayMetricsStream = _receiveBuildDayUpdates(
       ProjectIdParam(projectId),
@@ -323,16 +323,16 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     );
   }
 
-  /// Creates project metrics from [BuildDayProjectMetrics].
+  /// Creates project metrics for project with the given [projectId] using the
+  /// given [buildDayProjectMetrics].
   void _processBuildDayProjectMetrics(
     BuildDayProjectMetrics buildDayProjectMetrics,
     String projectId,
   ) {
-    final projectsMetrics = _projectMetrics ?? {};
+    final projectMetrics = _projectMetrics ?? {};
+    final currentProjectMetrics = projectMetrics[projectId];
 
-    final projectMetrics = projectsMetrics[projectId];
-
-    if (projectMetrics == null || buildDayProjectMetrics == null) return;
+    if (currentProjectMetrics == null || buildDayProjectMetrics == null) return;
 
     final performanceMetrics = _getPerformanceMetrics(
       buildDayProjectMetrics.performanceMetric,
@@ -343,12 +343,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       numberOfBuilds: buildNumberMetric?.numberOfBuilds,
     );
 
-    projectsMetrics[projectId] = projectMetrics.copyWith(
+    projectMetrics[projectId] = currentProjectMetrics.copyWith(
       performanceSparkline: performanceMetrics,
       buildNumberMetric: buildNumber,
     );
 
-    _projectMetrics = projectsMetrics;
+    _projectMetrics = projectMetrics;
     notifyListeners();
   }
 
