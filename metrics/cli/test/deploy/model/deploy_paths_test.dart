@@ -11,38 +11,28 @@ void main() {
     final deployPaths = DeployPaths(rootPath);
 
     test(
-      "throws an ArgumentError if the given root path is null",
-      () {
-        expect(
-          () => DeployPaths(null),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      ".web returns a path that contains the root path",
+      ".webAppPath returns a path that contains the root path",
       () {
         expect(deployPaths.webAppPath, contains(rootPath));
       },
     );
 
     test(
-      ".buildWeb returns a path to the Web project sources that contains the root path",
+      ".webAppBuildPath returns a path to the Web project sources that contains the root path",
       () {
         expect(deployPaths.webAppBuildPath, contains(rootPath));
       },
     );
 
     test(
-      ".firebase returns a path to the Firebase sources that contains the root path",
+      ".firebasePath returns a path to the Firebase sources that contains the root path",
       () {
         expect(deployPaths.firebasePath, contains(rootPath));
       },
     );
 
     test(
-      ".firebaseFunctions returns a path to the Firebase functions sources that contains the root path",
+      ".firebaseFunctionsPath returns a path to the Firebase functions sources that contains the root path",
       () {
         expect(
           deployPaths.firebaseFunctionsPath,
@@ -52,7 +42,7 @@ void main() {
     );
 
     test(
-      ".metricsConfig returns a path to the Metrics configuration that contains the root path",
+      ".metricsConfigPath returns a path to the Metrics configuration that contains the root path",
       () {
         expect(deployPaths.metricsConfigPath, contains(rootPath));
       },

@@ -4,7 +4,7 @@
 /// A class that holds deploy paths based on the current root
 /// directory path.
 class DeployPaths {
-  /// A path of the root directory.
+  /// A path to the root directory.
   final String rootPath;
 
   /// Creates a new instance of the [DeployPaths] with
@@ -15,7 +15,7 @@ class DeployPaths {
     ArgumentError.checkNotNull(rootPath, 'rootPath');
   }
 
-  /// A path to the Web project sources.
+  /// A path to the Mertrics Web project sources.
   String get webAppPath => '$rootPath/metrics/web';
 
   /// A path to the built directory of the Metrics Web project.

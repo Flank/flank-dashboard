@@ -130,7 +130,7 @@ class Deployer {
         deployPaths.webAppPath,
       );
     } finally {
-      _deleteTempDirectory(tempDirectory);
+      _deleteDirectory(tempDirectory);
     }
   }
 
@@ -229,12 +229,12 @@ class Deployer {
     );
   }
 
-  /// Deletes the [tempDirectory].
-  void _deleteTempDirectory(Directory tempDirectory) {
-    final directoryExist = tempDirectory.existsSync();
+  /// Deletes the given [directory].
+  void _deleteDirectory(Directory directory) {
+    final directoryExist = directory.existsSync();
 
     if (!directoryExist) return;
 
-    tempDirectory.deleteSync(recursive: true);
+    directory.deleteSync(recursive: true);
   }
 }

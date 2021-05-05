@@ -8,8 +8,6 @@ import 'package:cli/deploy/model/deploy_paths.dart';
 class DeployPathsFactory {
   /// Creates a new instance of the [Deployer] with the given [rootPath].
   DeployPaths create(String rootPath) {
-    ArgumentError.checkNotNull(rootPath, 'rootPath');
-
     return DeployPaths(rootPath);
   }
 }

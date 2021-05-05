@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      ".createTempDirectory() creates the temporary directory in the given working directory",
+      ".createTempDirectory() creates the temporary directory in the given directory",
       () {
         helper.createTempDirectory(directory, prefix);
 

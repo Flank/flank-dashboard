@@ -505,6 +505,27 @@ void main() {
     );
 
     test(
+      ".deploy() creates a DeployPaths instance using the given factory",
+      () async {
+        final deployer = Deployer(
+          fileHelper: fileHelper,
+          deployPathsFactory: deployPathsFactoryMock,
+          prompter: prompter,
+          services: services,
+        );
+
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(deployPathsFactoryMock.create(tempDirectoryPath))
+            .thenReturn(deployPaths);
+
+        await deployer.deploy();
+
+        verify(deployPathsFactoryMock.create(tempDirectoryPath)).called(once);
+      },
+    );
+
+    test(
       ".deploy() clones the Git repository to the temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
