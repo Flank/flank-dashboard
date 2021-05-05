@@ -1,8 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-// import 'package:ci_integration/client/github_actions/mappers/github_token_scope_mapper.dart';
-// import 'package:ci_integration/client/github_actions/models/github_token_scope.dart';
 import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
