@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
@@ -35,7 +35,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
     selectedProjectIds: UnmodifiableListView([]),
   );
 
-  /// A test [ProjectGroupDeleteDialogViewModel] used in tests.
+  /// A test [DeleteProjectGroupDialogViewModel] used in tests.
   final _deleteProjectGroupDialogViewModel =
       const DeleteProjectGroupDialogViewModel(
     id: '1',

@@ -7,7 +7,7 @@ import 'dart:typed_data';
 
 /// A class that holds methods for processing requests in mock servers.
 class MockServerUtils {
-  /// Writes the given [body] and [headers] to the given [request.response].
+  /// Writes the given [body] and [headers] to the given [HttpRequest.response].
   static Future<void> writeResponse(
     HttpRequest request, {
     dynamic body,

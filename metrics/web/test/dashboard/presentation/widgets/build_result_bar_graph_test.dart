@@ -6,7 +6,6 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/timer_notifier_builder.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -363,9 +362,8 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// calculate the build durations.
   final BuildResultDurationStrategy durationStrategy;
 
-  /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
-  ///
-  /// If the [theme] is not specified, an empty [MetricsThemeData] used.
+  /// Creates the [_BuildResultBarGraphTestbed] with the given
+  /// [buildResultMetric].
   const _BuildResultBarGraphTestbed({
     Key key,
     this.buildResultMetric,

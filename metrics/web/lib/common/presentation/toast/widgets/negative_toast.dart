@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 ///
 /// Applies the [ToastAttentionLevel.negative] toast style.
 class NegativeToast extends Toast {
-  /// Creates a new instance of the [PositiveToast].
+  /// Creates a new instance of the [NegativeToast].
   const NegativeToast({
     Key key,
     @required String message,

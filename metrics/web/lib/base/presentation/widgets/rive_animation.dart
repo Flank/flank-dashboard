@@ -117,6 +117,13 @@ class _RiveAnimationState extends State<RiveAnimation> {
       artboard.addController(controller);
     }
 
+    _setArtboard(artboard);
+  }
+
+  /// Sets the [_artboard] value to given [artboard] if the widget is [mounted].
+  void _setArtboard(Artboard artboard) {
+    if (!mounted) return;
+
     setState(() {
       _artboard = artboard;
     });

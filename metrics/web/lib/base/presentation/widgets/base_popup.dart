@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -77,7 +77,7 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   /// The [LayerLink] that allows a [BasePopup.popup] to follow the trigger.
   final _layerLink = LayerLink();
 
-  /// Indicates whether the [widget.popup] is opened.
+  /// Indicates whether the [BasePopup.popup] is opened.
   bool get _isPopupOpened => _overlayEntry != null;
 
   @override

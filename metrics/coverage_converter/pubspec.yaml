@@ -6,15 +6,15 @@ environment:
 
 dependencies:
   args: ^1.6.0
-  meta: ^1.2.3
   equatable: ^1.2.5
   lcov: ^5.3.0
+  meta: ^1.2.3
   metrics_core:
     path: ../core
 
 dev_dependencies:
   coverage: ^0.14.2
-  test_coverage: ^0.5.0
   lint: ^1.1.1
   mockito: ^4.1.3
   test: ^1.15.4
+  test_coverage: ^0.5.0

@@ -1,8 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 
 /// A [RouteObserver] that helps to dismiss [Toast]s as a [Route] changes.
 class ToastRouteObserver extends RouteObserver<PageRoute> {

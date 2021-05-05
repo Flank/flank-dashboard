@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:universal_html/html.dart';
@@ -17,7 +17,7 @@ class Favicon {
   final MediaQueryList _colorSchemeMedia =
       window?.matchMedia('(prefers-color-scheme:light)');
 
-  /// Adds a listener to the [MediaQueryListener] that will
+  /// Adds a listener to the [MediaQueryList] that will
   /// run a onUpdate function in response to the color scheme changing.
   void setup() {
     _colorSchemeMedia

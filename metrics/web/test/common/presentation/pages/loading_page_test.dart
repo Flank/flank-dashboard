@@ -497,9 +497,6 @@ class _LoadingPageTestbed extends StatelessWidget {
   final ThemeNotifier themeNotifier;
 
   /// Creates the loading page testbed with the given parameters.
-  ///
-  /// If the given [navigatorObserver] is `null`,
-  /// an instance of [NavigatorObserver] is used.
   const _LoadingPageTestbed({
     this.authNotifier,
     this.featureConfigNotifier,

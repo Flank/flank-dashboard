@@ -21,7 +21,7 @@ import 'package:metrics_core/metrics_core.dart';
 ///
 /// If the build loaded from the [SourceClient] is still
 /// [BuildStatus.inProgress] or updating a build fails, and the difference
-/// between the [DateTime.now] and [BuildData.startedAt] exceeds the in-progress
+/// between the [DateTime.now] and [Build.startedAt] exceeds the in-progress
 /// timeout, sets the [BuildStatus.unknown] to the corresponding build.
 class InProgressBuildsSyncStage extends BuildsSyncStage with LoggerMixin {
   @override

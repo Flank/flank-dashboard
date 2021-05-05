@@ -3,6 +3,7 @@
 
 import 'dart:collection';
 
+import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config_field.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:equatable/equatable.dart';

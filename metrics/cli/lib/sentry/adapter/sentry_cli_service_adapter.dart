@@ -19,7 +19,7 @@ class SentryCliServiceAdapter implements SentryService {
   final Prompter _prompter;
 
   /// Creates a new instance of the [SentryCliServiceAdapter]
-  /// with the given [sentryCli] and [prompter].
+  /// with the given [SentryCli] and [Prompter].
   ///
   /// Throws an [ArgumentError] if the given [SentryCli] is `null`.
   /// Throws an [ArgumentError] if the given [Prompter] is `null`.

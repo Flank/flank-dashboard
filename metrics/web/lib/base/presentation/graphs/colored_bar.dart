@@ -1,7 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 
 /// A widget that displays a rectangle bar of the [BarGraph] painted in [color].

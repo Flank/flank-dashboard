@@ -12,6 +12,7 @@ Future main(List<String> arguments) async {
     await runner.run(arguments);
     exit(0);
   } catch (error) {
+    stderr.writeln(error);
     exit(1);
   }
 }

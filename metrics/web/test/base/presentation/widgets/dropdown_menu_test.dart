@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
@@ -434,7 +434,7 @@ void main() {
 class _DropdownMenuTestbed extends StatelessWidget {
   /// A number of maximum visible items when the menu is open.
   ///
-  /// If the [items.length] is greater than this number,
+  /// If the length of the [items] is greater than this number,
   /// the [maxVisibleItems] and a half of the next item will be visible.
   /// Otherwise all items will be visible.
   final int maxVisibleItems;

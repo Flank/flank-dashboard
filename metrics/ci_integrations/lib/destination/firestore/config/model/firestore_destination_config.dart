@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
@@ -35,7 +35,7 @@ class FirestoreDestinationConfig extends Equatable
   @override
   String get destinationProjectId => metricsProjectId;
 
-  /// Creates the [FirestoreConfig] with the given [metricsProjectId].
+  /// Creates the [FirestoreDestinationConfig] with the given [metricsProjectId].
   ///
   /// All the arguments are required. Throws an [ArgumentError]
   /// if any of them is `null`.

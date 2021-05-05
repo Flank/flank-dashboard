@@ -235,8 +235,6 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
   final SignInOptionAppearanceStrategy strategy;
 
   /// Creates a new instance of the [_LoginOptionButtonTestbed].
-  ///
-  /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
   const _LoginOptionButtonTestbed({
     Key key,
     this.authNotifier,

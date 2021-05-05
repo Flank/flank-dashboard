@@ -1031,7 +1031,7 @@ void main() {
 
 /// A testbed class required to test the [ProjectGroupDialog] widget.
 ///
-/// Dismisses all shown [Toast]s on dispose.
+/// Dismisses all shown toasts on dispose.
 class _ProjectGroupDialogTestbed extends StatefulWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
