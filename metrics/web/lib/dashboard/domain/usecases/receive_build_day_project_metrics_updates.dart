@@ -89,8 +89,8 @@ class ReceiveBuildDayProjectMetricsUpdates
     );
   }
 
-  /// Calculates the average [Duration] of [buildDays] using the
-  /// [BuildDay.successfulBuildsDuration].
+  /// Calculates the [PerformanceMetric.averageBuildDuration] based on the
+  /// given [buildDays].
   ///
   /// Returns a [Duration.zero] if there are no successful builds performed
   /// during the given [buildDays].
@@ -110,7 +110,7 @@ class ReceiveBuildDayProjectMetricsUpdates
     return successfulBuildsDuration ~/ numberOfSuccessfulBuilds;
   }
 
-  /// Maps the given [buildDay] to [BuildPerformance].
+  /// Maps the given [buildDay] to a [BuildPerformance].
   BuildPerformance _mapBuildDayToPerformance(BuildDay buildDay) {
     final numberOfSuccessfulBuilds = buildDay.successful;
 

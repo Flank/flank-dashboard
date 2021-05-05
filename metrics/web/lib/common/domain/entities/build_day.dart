@@ -60,7 +60,9 @@ class BuildDay extends Equatable {
     ArgumentError.checkNotNull(unknown, 'unknown');
     ArgumentError.checkNotNull(inProgress, 'inProgress');
     ArgumentError.checkNotNull(
-        successfulBuildsDuration, 'successfulBuildsDuration');
+      successfulBuildsDuration,
+      'successfulBuildsDuration',
+    );
     ArgumentError.checkNotNull(day, 'day');
   }
 }
