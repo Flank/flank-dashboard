@@ -2,15 +2,16 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/models/task_code.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("TaskData", () {
     const projectId = 'projectId';
-    const code = 'code';
+    const code = TaskCode.buildDaysCreated;
     const context = 'context';
-    final createdAt = Timestamp.fromDateTime(DateTime.now());
+    final createdAt = DateTime.now();
     final data = {
       'projectId': projectId,
     };
@@ -66,10 +67,10 @@ void main() {
       ".toMap() converts an instance to the map",
       () {
         final expectedMap = {
-          'code': code,
+          'code': code.value,
           'data': data,
           'context': context,
-          'createdAt': createdAt
+          'createdAt': Timestamp.fromDateTime(createdAt)
         };
 
         final taskData = TaskData(

@@ -11,12 +11,10 @@ void main() {
     const projectId = 'projectId';
     final day = DateTime.now();
     final successfulBuildsDuration = Firestore.fieldValues.increment(10);
-    final statusIncrements = [
-      BuildDayStatusField(
-        name: 'successful',
-        value: Firestore.fieldValues.increment(1),
-      ),
-    ];
+    final buildDayStatusField = BuildDayStatusField(
+      name: 'successful',
+      value: Firestore.fieldValues.increment(1),
+    );
 
     test(
       "throws an ArgumentError if the given project id is null",
@@ -26,7 +24,7 @@ void main() {
             projectId: null,
             day: day,
             successfulBuildsDuration: successfulBuildsDuration,
-            statusIncrements: statusIncrements,
+            statusIncrements: [buildDayStatusField],
           ),
           throwsArgumentError,
         );
@@ -41,7 +39,7 @@ void main() {
             projectId: projectId,
             day: null,
             successfulBuildsDuration: successfulBuildsDuration,
-            statusIncrements: statusIncrements,
+            statusIncrements: [buildDayStatusField],
           ),
           throwsArgumentError,
         );
@@ -55,7 +53,7 @@ void main() {
           projectId: projectId,
           day: day,
           successfulBuildsDuration: successfulBuildsDuration,
-          statusIncrements: statusIncrements,
+          statusIncrements: [buildDayStatusField],
         );
 
         expect(buildDayData.projectId, equals(projectId));
@@ -64,26 +62,25 @@ void main() {
           buildDayData.successfulBuildsDuration,
           equals(successfulBuildsDuration),
         );
-        expect(buildDayData.statusIncrements, equals(statusIncrements));
+        expect(buildDayData.statusIncrements, equals([buildDayStatusField]));
       },
     );
 
     test(
       ".toMap() converts an instance to the map",
       () {
-        final statusFieldMap = statusIncrements.first.toMap();
         final expectedMap = {
           'projectId': projectId,
           'day': Timestamp.fromDateTime(day),
           'successfulBuildsDuration': successfulBuildsDuration,
-          ...statusFieldMap,
+          ...buildDayStatusField.toMap(),
         };
 
         final buildDayData = BuildDayData(
           projectId: projectId,
           day: day,
           successfulBuildsDuration: successfulBuildsDuration,
-          statusIncrements: statusIncrements,
+          statusIncrements: [buildDayStatusField],
         );
 
         final map = buildDayData.toMap();

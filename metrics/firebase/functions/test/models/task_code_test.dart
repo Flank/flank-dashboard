@@ -1,18 +1,18 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:functions/models/task_data_code.dart';
+import 'package:functions/models/task_code.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("TaskDataCode", () {
+  group("TaskCode", () {
     test(".values contains all available task data codes", () {
       const expectedValues = {
-        TaskDataCode.buildDaysCreated,
-        TaskDataCode.buildDaysUpdated
+        TaskCode.buildDaysCreated,
+        TaskCode.buildDaysUpdated
       };
 
-      final values = TaskDataCode.values;
+      final values = TaskCode.values;
 
       expect(values, containsAll(expectedValues));
     });

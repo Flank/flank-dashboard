@@ -7,14 +7,14 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildDayStatusFieldNameMapper", () {
-    const mapper = BuildDayStatusFieldNameMapper();
+    const statusFieldMapper = BuildDayStatusFieldNameMapper();
 
     test(
       ".map() maps the BuildStatus.successful to the successful field name value",
       () {
-        const expectedFieldName = 'successful';
+        const expectedFieldName = BuildDayStatusFieldNameMapper.successful;
 
-        final fieldName = mapper.map(BuildStatus.successful);
+        final fieldName = statusFieldMapper.map(BuildStatus.successful);
 
         expect(fieldName, equals(expectedFieldName));
       },
@@ -23,9 +23,9 @@ void main() {
     test(
       ".map() maps the BuildStatus.failed to the failed field name value",
       () {
-        const expectedFieldName = 'failed';
+        const expectedFieldName = BuildDayStatusFieldNameMapper.failed;
 
-        final fieldName = mapper.map(BuildStatus.failed);
+        final fieldName = statusFieldMapper.map(BuildStatus.failed);
 
         expect(fieldName, equals(expectedFieldName));
       },
@@ -34,9 +34,9 @@ void main() {
     test(
       ".map() maps the BuildStatus.unknown to the unknown field name value",
       () {
-        const expectedFieldName = 'unknown';
+        const expectedFieldName = BuildDayStatusFieldNameMapper.unknown;
 
-        final fieldName = mapper.map(BuildStatus.unknown);
+        final fieldName = statusFieldMapper.map(BuildStatus.unknown);
 
         expect(fieldName, equals(expectedFieldName));
       },
@@ -45,9 +45,9 @@ void main() {
     test(
       ".map() maps the BuildStatus.inProgress to the inProgress field name value",
       () {
-        const expectedFieldName = 'inProgress';
+        const expectedFieldName = BuildDayStatusFieldNameMapper.inProgress;
 
-        final fieldName = mapper.map(BuildStatus.inProgress);
+        final fieldName = statusFieldMapper.map(BuildStatus.inProgress);
 
         expect(fieldName, equals(expectedFieldName));
       },

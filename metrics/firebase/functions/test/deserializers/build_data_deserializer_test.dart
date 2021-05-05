@@ -10,16 +10,33 @@ void main() {
   group("BuildDataDeserializer", () {
     const id = 'id';
     const projectId = 'projectId';
-    const duration = Duration(milliseconds: 100000);
-    const buildStatus = BuildStatus.failed;
+    const buildNumber = 1;
     final startedAtDateTime = DateTime.now();
     final startedAt = Timestamp.fromDateTime(startedAtDateTime);
+    const buildStatus = BuildStatus.failed;
+    const duration = Duration(milliseconds: 100000);
+    const workflowName = 'testWorkflowName';
+    const url = 'testUrl';
+    const apiUrl = 'testApiUrl';
+    final coverage = Percent(1.0);
+
     final buildDataJson = {
       'projectId': projectId,
-      'duration': duration.inMilliseconds,
+      'buildNumber': buildNumber,
       'startedAt': startedAt,
       'buildStatus': buildStatus.toString(),
+      'duration': duration.inMilliseconds,
+      'workflowName': workflowName,
+      'url': url,
+      'apiUrl': apiUrl,
+      'coverage': coverage.value,
     };
+
+    test(".fromJson() returns null if the given json is null", () {
+      final buildData = BuildDataDeserializer.fromJson(null);
+
+      expect(buildData, isNull);
+    });
 
     test(
       ".fromJson() creates a BuildData from the JSON-encodable map",
@@ -27,9 +44,14 @@ void main() {
         final expectedBuildData = BuildData(
           id: id,
           projectId: projectId,
-          duration: duration,
+          buildNumber: buildNumber,
           startedAt: startedAtDateTime,
           buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          apiUrl: apiUrl,
+          coverage: coverage,
         );
 
         final buildData = BuildDataDeserializer.fromJson(buildDataJson, id: id);
@@ -44,9 +66,14 @@ void main() {
         final expectedBuildData = BuildData(
           id: null,
           projectId: projectId,
-          duration: duration,
+          buildNumber: buildNumber,
           startedAt: startedAtDateTime,
           buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          apiUrl: apiUrl,
+          coverage: coverage,
         );
 
         final buildData = BuildDataDeserializer.fromJson(buildDataJson);

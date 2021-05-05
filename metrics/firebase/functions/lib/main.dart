@@ -8,7 +8,7 @@ import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
 import 'package:functions/models/build_day_data.dart';
 import 'package:functions/models/build_day_status_field.dart';
 import 'package:functions/models/task_data.dart';
-import 'package:functions/models/task_data_code.dart';
+import 'package:functions/models/task_code.dart';
 
 void main() {
   functions['onBuildAdded'] = functions.firestore
@@ -22,19 +22,21 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
   final startedAtUtc = _getUtcDate(buildData.startedAt);
 
-  final mapper = BuildDayStatusFieldNameMapper();
-  final buildDayStatusFieldName = mapper.map(buildData.buildStatus);
+  final statusFieldMapper = BuildDayStatusFieldNameMapper();
+  final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
 
   final statusFieldIncrement = BuildDayStatusField(
     name: buildDayStatusFieldName,
     value: Firestore.fieldValues.increment(1),
   );
 
+  final successfulBuildsDurationIncrement = Firestore.fieldValues.increment(
+    _getSuccessfulBuildDuration(buildData),
+  );
+
   final buildDayData = BuildDayData(
     projectId: buildData.projectId,
-    successfulBuildsDuration: Firestore.fieldValues.increment(
-      _getBuildDuration(buildData),
-    ),
+    successfulBuildsDuration: successfulBuildsDurationIncrement,
     day: startedAtUtc,
     statusIncrements: [statusFieldIncrement],
   );
@@ -46,7 +48,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
 ///
 /// If the [buildData.buildStatus] is `successful`, returns a build's duration.
 /// Otherwise, returns `0`.
-int _getBuildDuration(BuildData buildData) {
+int _getSuccessfulBuildDuration(BuildData buildData) {
   if (buildData.buildStatus == BuildStatus.successful) {
     return buildData.duration.inMilliseconds;
   }
@@ -54,25 +56,25 @@ int _getBuildDuration(BuildData buildData) {
   return 0;
 }
 
-//// Returns a [DateTime] representing the date in the UTC timezone created
+/// Returns a [DateTime] representing the date in the UTC timezone created
 /// from the given [dateTime].
 DateTime _getUtcDate(DateTime dateTime) => dateTime.toUtc().date;
 
-/// Updates the build day's document data with the given [data].
+/// Updates the build day's document data with the given [buildDayData].
 ///
 /// Adds a new document to the tasks collection if updating
 /// the build day's document data fails.
 Future<void> _updateBuildDay(
   DocumentSnapshot snapshot,
-  BuildDayData data,
+  BuildDayData buildDayData,
 ) async {
   try {
-    await _setBuildDayData(snapshot, data);
+    await _setBuildDayData(snapshot, buildDayData);
   } catch (error) {
     final taskData = TaskData(
-      code: TaskDataCode.buildDaysCreated.value,
+      code: TaskCode.buildDaysCreated,
       context: error.toString(),
-      createdAt: Timestamp.fromDateTime(data.day),
+      createdAt: DateTime.now(),
       data: snapshot.data.toMap(),
     );
 
@@ -80,27 +82,25 @@ Future<void> _updateBuildDay(
   }
 }
 
-/// Sets the given [data] to the build day document.
+/// Sets the given [buildDayData] to the build day document.
 ///
 /// If the document already exists, merges the existing data with the given one.
 Future<void> _setBuildDayData(
   DocumentSnapshot snapshot,
-  BuildDayData data,
+  BuildDayData buildDayData,
 ) async {
-  final documentId = '${data.projectId}_${data.day.millisecondsSinceEpoch}';
+  final documentId =
+      '${buildDayData.projectId}_${buildDayData.day.millisecondsSinceEpoch}';
 
-  await snapshot.firestore
-      .collection('build_days')
-      .document(documentId)
-      .setData(
-        DocumentData.fromMap(data.toMap()),
+  await snapshot.firestore.document('build_days/$documentId').setData(
+        DocumentData.fromMap(buildDayData.toMap()),
         SetOptions(merge: true),
       );
 }
 
-/// Adds a new document with the given [data] to the tasks collection.
-Future<void> _addTask(DocumentSnapshot snapshot, TaskData data) async {
+/// Adds a new document with the given [taskData] to the tasks collection.
+Future<void> _addTask(DocumentSnapshot snapshot, TaskData taskData) async {
   await snapshot.firestore
       .collection('tasks')
-      .add(DocumentData.fromMap(data.toMap()));
+      .add(DocumentData.fromMap(taskData.toMap()));
 }
