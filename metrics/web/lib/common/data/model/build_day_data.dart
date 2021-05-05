@@ -26,7 +26,7 @@ class BuildDayData extends BuildDay implements DataModel {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: totalDuration,
           day: day,
         );
 
@@ -64,7 +64,7 @@ class BuildDayData extends BuildDay implements DataModel {
       'failed': failed,
       'unknown': unknown,
       'inProgress': inProgress,
-      'totalDuration': totalDuration.inMilliseconds,
+      'totalDuration': successfulBuildsDuration.inMilliseconds,
       'day': Timestamp.fromDate(day),
     };
   }

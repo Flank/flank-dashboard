@@ -182,7 +182,7 @@ void main() {
         expect(buildDay.failed, equals(failed));
         expect(buildDay.unknown, equals(unknown));
         expect(buildDay.inProgress, equals(inProgress));
-        expect(buildDay.totalDuration, equals(totalDuration));
+        expect(buildDay.successfulBuildsDuration, equals(totalDuration));
         expect(buildDay.day, equals(day));
       },
     );
@@ -304,7 +304,8 @@ void main() {
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.totalDuration, equals(expectedTotalDuration));
+        expect(buildDayData.successfulBuildsDuration,
+            equals(expectedTotalDuration));
       },
     );
 

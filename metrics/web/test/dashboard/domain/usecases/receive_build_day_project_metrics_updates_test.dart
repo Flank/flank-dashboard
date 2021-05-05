@@ -46,7 +46,7 @@ void main() {
         failed: failed,
         unknown: unknown,
         inProgress: inProgress,
-        totalDuration: totalDuration,
+        successfulBuildsDuration: totalDuration,
         day: day ?? DateTime.now(),
       );
     }
