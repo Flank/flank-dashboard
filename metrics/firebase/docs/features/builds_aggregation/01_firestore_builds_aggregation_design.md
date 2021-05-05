@@ -146,7 +146,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, EventContext context
 
 The trigger's `onBuildAddedHandler` handler should process incrementing logic for the `build_days` collection document, based on the created build's status and started date.
 
-_**Note**: A `successfulBuildsDuration` value should be incremented only if status of created build is `successful`.
+_**Note**: A `successfulBuildsDuration` value should be incremented only if status of created build is `successful`._
 
 The following sequence diagram shows the overall process of how the `onBuildAdded` triggers works:
 
