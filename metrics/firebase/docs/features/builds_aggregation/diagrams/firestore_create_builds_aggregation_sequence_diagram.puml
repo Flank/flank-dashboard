@@ -17,6 +17,12 @@
     FCF -> FCF : triggers an onCreate event handler
     
     FCF -> Firestore : increases a counter inside the 'build_days' collection
+    FCF -> Firestore : increases a successful builds duration inside the 'build_days' collection
+
+    alt status of created Build is not successful
+        FCF -> FCF : triggers an onCreate event handler
+        FCF -> Firestore : increases a counter inside the 'build_days' collection
+    end
 
     alt Firestore Cloud Functions onCreate handler fails
         FCF -> FCF : function fails
