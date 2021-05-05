@@ -29,4 +29,10 @@ If you are going to use any other domains to access the Metrics Web application,
 4. Enter the domain you want to use to access the Metrics Web application.
 5. Press the 'SAVE' button at the bottom of the web page.
 ''';
+
+  static String configureProjectOrganization(String projectId) => '''
+The GCloud project with the following $projectId has been created successfully! 
+If you are want to configure the organization for the $projectId project, you should follow the next guide https://cloud.google.com/resource-manager/docs/project-migration.
+
+Once you are done, press any key to continue:''';
 }
