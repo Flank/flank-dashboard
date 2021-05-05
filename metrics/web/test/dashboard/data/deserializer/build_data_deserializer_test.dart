@@ -3,7 +3,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrics/dashboard/data/deserializer/build_data_deserializer.dart';
-import 'package:metrics_core/metrics_core.dart' hide BuildDataDeserializer;
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {

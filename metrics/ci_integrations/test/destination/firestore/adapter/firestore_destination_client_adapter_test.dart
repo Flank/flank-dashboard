@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/destination/error/destination_error.dart';
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:firedart/firedart.dart';
