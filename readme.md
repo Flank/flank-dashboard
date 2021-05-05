@@ -61,10 +61,9 @@ Similarly, here is a list for the `Firebase` component:
 
 In contrast with the above components, `Flutter Web` requires more steps to follow: 
 1. [Project metrics definitions :book:](docs/05_project_metrics.md)
-2. [Metrics dashboard :nerd_face:](docs/06_metrics_dashboard.md)
-3. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
-4. [Metrics Web presentation layer architecture :running:](metrics/web/docs/02_presentation_layer_architecture.md)
-5. [Widget structure organization :bicyclist:](metrics/web/docs/03_widget_structure_organization.md)
+2. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
+3. [Metrics Web presentation layer architecture :running:](metrics/web/docs/02_presentation_layer_architecture.md)
+4. [Widget structure organization :bicyclist:](metrics/web/docs/03_widget_structure_organization.md)
 
 # Guardian :shield:
 

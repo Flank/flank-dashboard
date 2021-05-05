@@ -20,7 +20,7 @@ The design should support different color themes.
 
 ![](../design/black_theme/design.png)
 
-See [metrics dashboard](06_metrics_dashboard.md) for details.
+See [project metrics](05_project_metrics.md) for details.
 
 Overall status
 
@@ -47,14 +47,14 @@ Overall status
 ![image](https://user-images.githubusercontent.com/1173057/72225104-593e9080-3536-11ea-89a4-9650cac25340.png)
 
 - Provider for state management
-  - [State management investigation document](https://github.com/platform-platform/monorepo/blob/master/docs/13_state_management_investigation.md)
+  - [State management investigation document](https://github.com/platform-platform/monorepo/blob/update_project_metrics_documentation/docs/12_state_management_investigation.md)
   - [Provider - Simple app state management](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple)
 
 [Provider](https://pub.dev/documentation/provider/latest/) is the simple state management for Flutter recommended by Google.
 
 The main reasons for choosing the Provider as state management: 
-1. Has good support of reactivity (see code samples and more wide explanation [here](https://github.com/platform-platform/monorepo/blob/master/docs/13_state_management_investigation.md#Reactivity-4)).
-2. Has perfect support of asynchronous programming style (mere [here](https://github.com/platform-platform/monorepo/blob/master/docs/13_state_management_investigation.md#Reactivity-4)).
+1. Has good support of reactivity (see code samples and more wide explanation [here](https://github.com/platform-platform/monorepo/blob/update_project_metrics_documentation/docs/12_state_management_investigation.md#Reactivity-4)).
+2. Has perfect support of asynchronous programming style (mere [here](https://github.com/platform-platform/monorepo/blob/update_project_metrics_documentation/docs/12_state_management_investigation.md#Reactivity-4)).
 3. Simple for beginners because has a simple concept, understandable namings, and great documentation.
 4. Well testable because the concept is based on simple method calls.  
 
