@@ -35,7 +35,7 @@ void main() {
     final expectedBuildDayData = {
       'projectId': projectId,
       buildDayStatusFieldName: 1,
-      'totalDuration': durationInMilliseconds,
+      'successfulBuildsDuration': durationInMilliseconds,
       'day': Timestamp.fromDateTime(startedAtUtc),
     };
 
@@ -92,7 +92,7 @@ void main() {
     });
 
     test(
-      "does not increment the total duration if the build document snapshot's duration is null",
+      "does not increment the successful builds duration if the build document snapshot's duration is null",
       () async {
         whenDocument(withCollectionName: buildDaysCollectionName)
             .thenReturn(documentReferenceMock);
@@ -111,7 +111,42 @@ void main() {
         await onBuildAddedHandler(documentSnapshotMock, null);
 
         final documentDataMatcher = predicate<DocumentData>((data) {
-          return data.getNestedData('totalDuration').getInt('operand') == 0;
+          final operand =
+              data.getNestedData('successfulBuildsDuration').getInt('operand');
+
+          return operand == 0;
+        });
+
+        verify(
+          documentReferenceMock.setData(argThat(documentDataMatcher), any),
+        ).called(1);
+      },
+    );
+
+    test(
+      "does not increment the successful builds duration if the build's status is not successful",
+      () async {
+        whenDocument(withCollectionName: buildDaysCollectionName)
+            .thenReturn(documentReferenceMock);
+
+        final unknownBuild = BuildData(
+          projectId: projectId,
+          startedAt: startedAtUtc,
+          buildStatus: BuildStatus.unknown,
+          duration: Duration(milliseconds: 100),
+        );
+
+        final buildJson = unknownBuild.toJson();
+        buildJson['startedAt'] = Timestamp.fromDateTime(buildJson['startedAt']);
+
+        whenSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+
+        await onBuildAddedHandler(documentSnapshotMock, null);
+
+        final documentDataMatcher = predicate<DocumentData>((data) {
+          final operand =
+              data.getNestedData('successfulBuildsDuration').getInt('operand');
+          return operand == 0;
         });
 
         verify(
@@ -199,7 +234,7 @@ void main() {
     );
 
     test(
-      "creates a build days document with total duration equals to the build document snapshot's total duration",
+      "creates a build days document with successful builds duration equals to the build document snapshot's duration if the build is successful",
       () async {
         whenDocument(withCollectionName: buildDaysCollectionName)
             .thenReturn(documentReferenceMock);
@@ -209,8 +244,8 @@ void main() {
 
         final durationMatcher = predicate<DocumentData>((data) {
           final duration =
-              data.getNestedData('totalDuration').getInt('operand');
-          return duration == expectedBuildDayData['totalDuration'];
+              data.getNestedData('successfulBuildsDuration').getInt('operand');
+          return duration == expectedBuildDayData['successfulBuildsDuration'];
         });
 
         verify(

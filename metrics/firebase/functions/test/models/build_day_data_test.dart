@@ -10,7 +10,7 @@ void main() {
   group("BuildDayData", () {
     const projectId = 'projectId';
     final day = DateTime.now();
-    final totalDuration = Firestore.fieldValues.increment(10);
+    final successfulBuildsDuration = Firestore.fieldValues.increment(10);
     final statusIncrements = [
       BuildDayStatusField(
         name: 'successful',
@@ -25,7 +25,7 @@ void main() {
           () => BuildDayData(
             projectId: null,
             day: day,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             statusIncrements: statusIncrements,
           ),
           throwsArgumentError,
@@ -40,7 +40,7 @@ void main() {
           () => BuildDayData(
             projectId: projectId,
             day: null,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             statusIncrements: statusIncrements,
           ),
           throwsArgumentError,
@@ -54,13 +54,16 @@ void main() {
         final buildDayData = BuildDayData(
           projectId: projectId,
           day: day,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           statusIncrements: statusIncrements,
         );
 
         expect(buildDayData.projectId, equals(projectId));
         expect(buildDayData.day, equals(day));
-        expect(buildDayData.totalDuration, equals(totalDuration));
+        expect(
+          buildDayData.successfulBuildsDuration,
+          equals(successfulBuildsDuration),
+        );
         expect(buildDayData.statusIncrements, equals(statusIncrements));
       },
     );
@@ -72,14 +75,14 @@ void main() {
         final expectedMap = {
           'projectId': projectId,
           'day': Timestamp.fromDateTime(day),
-          'totalDuration': totalDuration,
+          'successfulBuildsDuration': successfulBuildsDuration,
           ...statusFieldMap,
         };
 
         final buildDayData = BuildDayData(
           projectId: projectId,
           day: day,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           statusIncrements: statusIncrements,
         );
 

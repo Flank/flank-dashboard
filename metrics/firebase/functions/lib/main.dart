@@ -32,14 +32,26 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
 
   final buildDayData = BuildDayData(
     projectId: buildData.projectId,
-    totalDuration: Firestore.fieldValues.increment(
-      buildData.duration.inMilliseconds,
+    successfulBuildsDuration: Firestore.fieldValues.increment(
+      _getBuildDuration(buildData),
     ),
     day: startedAtUtc,
     statusIncrements: [statusFieldIncrement],
   );
 
   await _updateBuildDay(snapshot, buildDayData);
+}
+
+/// Returns a given [buildData]'s duration in milliseconds.
+///
+/// If the [buildData.buildStatus] is `successful`, returns a build's duration.
+/// Otherwise, returns `0`.
+int _getBuildDuration(BuildData buildData) {
+  if (buildData.buildStatus == BuildStatus.successful) {
+    return buildData.duration.inMilliseconds;
+  }
+
+  return 0;
 }
 
 //// Returns a [DateTime] representing the date in the UTC timezone created

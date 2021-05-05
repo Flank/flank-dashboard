@@ -14,8 +14,8 @@ class BuildDayData {
   /// belongs to.
   final DateTime day;
 
-  /// A total builds duration.
-  final FieldValue totalDuration;
+  /// A total successful builds duration.
+  final FieldValue successfulBuildsDuration;
 
   /// A [List] of [BuildDayStatusField]s, a [Firestore] increment applies to.
   final List<BuildDayStatusField> statusIncrements;
@@ -26,7 +26,7 @@ class BuildDayData {
   BuildDayData({
     @required this.projectId,
     @required this.day,
-    this.totalDuration,
+    this.successfulBuildsDuration,
     this.statusIncrements,
   }) {
     ArgumentError.checkNotNull(projectId, 'projectId');
@@ -44,7 +44,7 @@ class BuildDayData {
     return {
       'projectId': projectId,
       'day': Timestamp.fromDateTime(day),
-      'totalDuration': totalDuration,
+      'successfulBuildsDuration': successfulBuildsDuration,
       ...statusIncrementsMap,
     };
   }
