@@ -19,14 +19,14 @@ If you have already accepted the terms of the GCloud service, skip this step oth
 Once you are done, press any key to continue:''';
 
   static String configureOAuth(String projectId) => '''
-Use the following link for the correct work of the Metrics project: https://$projectId.firebaseapp.com. 
+The Metrics Web application deployed successfully! Use the following link for the correct work of the Metrics project: https://$projectId.firebaseapp.com. 
 
-If you are going to use any other domains to run the Metrics project, you should configure the OAuth 2.0 for them by following the steps listed below:
+If you are going to use any other domains to access the Metrics Web application, you should configure the OAuth 2.0 for these domains by following the steps listed below:
 
 1. Follow the link https://console.cloud.google.com/apis/credentials?project=$projectId/
 2. Press the 'Web client (auto created by Google Service)' name in the 'OAuth 2.0 Client IDs' section.
 3. Press the 'ADD URI' button at the end of the 'Authorized JavaScript origins' section.
-4. Enter the required domain.
+4. Enter the domain you want to use to access the Metrics Web application.
 5. Press the 'SAVE' button at the bottom of the web page.
 ''';
 }

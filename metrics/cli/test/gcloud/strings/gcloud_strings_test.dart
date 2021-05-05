@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group('GCloudStrings', () {
     test(
-      ".configureOauth() returns a message that contains the given project id",
+      ".configureOAuth() returns a message that contains the given project id",
       () {
         const projectId = 'projectId';
 
