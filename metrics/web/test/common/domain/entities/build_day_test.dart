@@ -159,7 +159,10 @@ void main() {
         expect(buildDay.failed, equals(failed));
         expect(buildDay.unknown, equals(unknown));
         expect(buildDay.inProgress, equals(inProgress));
-        expect(buildDay.successfulBuildsDuration, equals(successfulBuildsDuration));
+        expect(
+          buildDay.successfulBuildsDuration,
+          equals(successfulBuildsDuration),
+        );
         expect(buildDay.day, equals(day));
       },
     );
