@@ -15,7 +15,7 @@ If you have already accepted the terms of the Firebase service, skip this step o
 5. Disable Google Analytics for the project.
 6. Press a 'Create project' button.
 
-Once you are done, press any key to continue:''';
+Once you are done, press ENTER to continue:''';
 
   static String upgradeBillingPlan(String projectId) => '''
 The Metrics app uses Firebase features not available in the Spark plan, such as Firebase Functions. 
@@ -66,5 +66,5 @@ To enable Firebase analytics for the currently deploying project, follow the nex
 
 1. Follow the link and click an 'Enable Google Analytics' button: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
 
-Once you are done, press any key to continue:''';
+Once you are done, press ENTER to continue:''';
 }

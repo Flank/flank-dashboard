@@ -16,7 +16,8 @@ If you have already accepted the terms of the GCloud service, skip this step oth
 3. Select your country.
 4. Accept the GCloud terms of service.
 5. Press a 'AGREE AND CONTINUE' button.
-Once you are done, press any key to continue:''';
+
+Once you are done, press ENTER to continue:''';
 
   static String configureOAuth(String projectId) => '''
 The Metrics Web application deployed successfully! Use the following link for the correct work of the Metrics project: https://$projectId.firebaseapp.com. 
@@ -31,8 +32,8 @@ If you are going to use any other domains to access the Metrics Web application,
 ''';
 
   static String configureProjectOrganization(String projectId) => '''
-The GCloud project with the following $projectId has been created successfully! 
+The $projectId GCloud project has been created successfully! 
 If you are want to configure the organization for the $projectId project, you should follow the next guide https://cloud.google.com/resource-manager/docs/project-migration.
 
-Once you are done, press any key to continue:''';
+Once you are done, press ENTER to continue:''';
 }
