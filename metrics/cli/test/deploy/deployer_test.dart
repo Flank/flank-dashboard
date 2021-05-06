@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cli/common/model/services.dart';
@@ -1198,7 +1199,7 @@ void main() {
     );
 
     test(
-      ".deploy() deploys a target to the hosting before deleting the temporary directory",
+      ".deploy() deploys a target to the hosting before configuring GCloud OAuth origins",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -1207,6 +1208,48 @@ void main() {
 
         verifyInOrder([
           firebaseService.deployHosting(any, any, any),
+          gcloudService.configureOAuthOrigins(any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() configures GCloud OAuth Authorized JavaScript origins",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verify(gcloudService.configureOAuthOrigins(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() configures GCloud OAuth origins before deleting the temporary directory",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.configureOAuthOrigins(any),
           directory.deleteSync(recursive: true),
         ]);
       },
