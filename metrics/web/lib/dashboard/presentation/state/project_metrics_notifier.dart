@@ -334,7 +334,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     if (currentProjectMetrics == null || buildDayProjectMetrics == null) return;
 
-    final performanceMetrics = _getPerformanceMetrics(
+    final performanceMetrics = _getPerformanceSparklineViewModel(
       buildDayProjectMetrics.performanceMetric,
     );
 
@@ -402,6 +402,53 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     _projectMetrics = projectsMetrics;
     notifyListeners();
+  }
+
+  /// Creates a [PerformanceSparklineViewModel] from the given
+  /// [performanceMetric].
+  PerformanceSparklineViewModel _getPerformanceSparklineViewModel(
+    PerformanceMetric performanceMetric,
+  ) {
+    final performanceMetrics =
+        performanceMetric?.buildsPerformance ?? DateTimeSet();
+
+    if (performanceMetrics.isEmpty) {
+      return PerformanceSparklineViewModel(
+        performance: UnmodifiableListView([]),
+      );
+    }
+
+    final performancePoints = _getPerformancePoints(performanceMetrics);
+
+    return PerformanceSparklineViewModel(
+      value: performanceMetric.averageBuildDuration,
+      performance: performancePoints,
+    );
+  }
+
+  /// Returns a [PerformanceSparklineViewModel.performance] created from
+  /// the given [performance].
+  UnmodifiableListView<Point<int>> _getPerformancePoints(
+    DateTimeSet<BuildPerformance> performance,
+  ) {
+    final period =
+        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
+    final numberOfPoints = period + 1;
+    final numberOfMissingPoints = numberOfPoints - performance.length;
+
+    final missingPoints = List.generate(
+      numberOfMissingPoints,
+      (index) => Point<int>(index, 0),
+    );
+
+    final performancePoints = performance.mapIndexed((index, performance) {
+      final pointValue = performance.duration.inMilliseconds;
+      return Point<int>(index + numberOfMissingPoints, pointValue);
+    });
+
+    final result = missingPoints..addAll(performancePoints);
+
+    return UnmodifiableListView(result);
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].
