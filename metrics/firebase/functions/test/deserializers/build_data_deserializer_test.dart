@@ -6,6 +6,8 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
 import 'package:test/test.dart';
 
+import '../test_utils/test_data/build_test_data_generator.dart';
+
 void main() {
   group("BuildDataDeserializer", () {
     const id = 'id';
@@ -20,17 +22,9 @@ void main() {
     final startedAtDateTime = DateTime.now();
     final startedAt = Timestamp.fromDateTime(startedAtDateTime);
     final coverage = Percent(1.0);
-    final buildDataJson = {
-      'projectId': projectId,
-      'buildNumber': buildNumber,
-      'startedAt': startedAt,
-      'buildStatus': buildStatus.toString(),
-      'duration': duration.inMilliseconds,
-      'workflowName': workflowName,
-      'url': url,
-      'apiUrl': apiUrl,
-      'coverage': coverage.value,
-    };
+    final testDataGenerator = BuildTestDataGenerator(
+      projectId: projectId,
+    );
 
     test(".fromJson() returns null if the given json is null", () {
       final buildData = BuildDataDeserializer.fromJson(null);
@@ -53,8 +47,18 @@ void main() {
           apiUrl: apiUrl,
           coverage: coverage,
         );
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildNumber: buildNumber,
+          startedAt: startedAtDateTime,
+          buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          apiUrl: apiUrl,
+          coverage: coverage,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson, id: id);
+        final buildData = BuildDataDeserializer.fromJson(buildJson, id: id);
 
         expect(buildData, equals(expectedBuildData));
       },
@@ -75,8 +79,18 @@ void main() {
           apiUrl: apiUrl,
           coverage: coverage,
         );
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildNumber: buildNumber,
+          startedAt: startedAtDateTime,
+          buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          apiUrl: apiUrl,
+          coverage: coverage,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData, equals(expectedBuildData));
       },
@@ -86,12 +100,13 @@ void main() {
       ".fromJson() creates a BuildData with a succesful build status if the given json contains successful build status enum value",
       () {
         const expectedBuildStatus = BuildStatus.successful;
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = expectedBuildStatus.toString();
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: expectedBuildStatus,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.buildStatus, expectedBuildStatus);
+        expect(buildData.buildStatus, equals(expectedBuildStatus));
       },
     );
 
@@ -99,12 +114,13 @@ void main() {
       ".fromJson() creates a BuildData with a failed build status if the given json contains failed build status enum value",
       () {
         const expectedBuildStatus = BuildStatus.failed;
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = expectedBuildStatus.toString();
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: expectedBuildStatus,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.buildStatus, expectedBuildStatus);
+        expect(buildData.buildStatus, equals(expectedBuildStatus));
       },
     );
 
@@ -112,12 +128,13 @@ void main() {
       ".fromJson() creates a BuildData with an inProgress build status if the given json contains inProgress build status enum value",
       () {
         const expectedBuildStatus = BuildStatus.inProgress;
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = expectedBuildStatus.toString();
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: expectedBuildStatus,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.buildStatus, expectedBuildStatus);
+        expect(buildData.buildStatus, equals(expectedBuildStatus));
       },
     );
 
@@ -125,12 +142,13 @@ void main() {
       ".fromJson() creates a BuildData with an unknown build status if the given json contains unknown build status enum value",
       () {
         const expectedBuildStatus = BuildStatus.unknown;
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = expectedBuildStatus.toString();
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: expectedBuildStatus,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.buildStatus, BuildStatus.unknown);
+        expect(buildData.buildStatus, equals(expectedBuildStatus));
       },
     );
 
@@ -138,20 +156,25 @@ void main() {
       ".fromJson() creates a BuildData with an unknown build status if the given json contains invalid enum value",
       () {
         const expectedBuildStatus = BuildStatus.unknown;
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = 'invalid';
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: null,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.buildStatus, expectedBuildStatus);
+        expect(buildData.buildStatus, equals(expectedBuildStatus));
       },
     );
 
     test(
-      ".fromJson() converts the createdAt json value from a Timestamp to a DateTime while creating a BuildData",
+      ".fromJson() converts the startedAt json value from a Timestamp to a DateTime while creating a BuildData",
       () {
         final expectedDateTime = startedAt.toDateTime();
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+        final buildJson = testDataGenerator.generateBuildJson(
+          startedAt: expectedDateTime,
+        );
+
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.startedAt, equals(expectedDateTime));
       },
@@ -160,10 +183,11 @@ void main() {
     test(
       ".fromJson() creates a BuildData with a zero duration if the given json has null duration",
       () {
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json.remove('duration');
+        final buildJson = testDataGenerator.generateBuildJson(
+          duration: null,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.duration, Duration.zero);
       },
@@ -172,7 +196,11 @@ void main() {
     test(
       ".fromJson() parses a duration from the given json",
       () {
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+        final buildJson = testDataGenerator.generateBuildJson(
+          duration: duration,
+        );
+
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.duration, duration);
       },
@@ -181,10 +209,11 @@ void main() {
     test(
       ".fromJson() creates a BuildData with a null coverage if the given json has a null coverage",
       () {
-        final json = Map<String, dynamic>.from(buildDataJson);
-        json.remove('coverage');
+        final buildJson = testDataGenerator.generateBuildJson(
+          coverage: null,
+        );
 
-        final buildData = BuildDataDeserializer.fromJson(json);
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.coverage, isNull);
       },
@@ -193,7 +222,10 @@ void main() {
     test(
       ".fromJson() parses a coverage from the given json",
       () {
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+        final buildJson = testDataGenerator.generateBuildJson(
+          coverage: coverage,
+        );
+        final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.coverage, coverage);
       },

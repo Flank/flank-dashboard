@@ -4,6 +4,7 @@
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/models/build_day_status_field_name.dart';
 import 'package:functions/models/task_code.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
@@ -180,7 +181,8 @@ void main() {
     test(
       "increments a build day document's successful field value if the build document snapshot's status is successful",
       () async {
-        const buildDayStatusFieldName = 'successful';
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.successful.value;
         final buildJson = testDataGenerator.generateBuildJson();
 
         whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
@@ -206,7 +208,7 @@ void main() {
     test(
       "increments a build day document's failed field value if the build document snapshot's status is failed",
       () async {
-        const buildDayStatusFieldName = 'failed';
+        final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
         final buildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.failed,
         );
@@ -234,7 +236,7 @@ void main() {
     test(
       "increments a build day document's unknown field value if the build document snapshot's status is unknown",
       () async {
-        const buildDayStatusFieldName = 'unknown';
+        final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
         final buildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.unknown,
         );
@@ -262,7 +264,8 @@ void main() {
     test(
       "increments a build day document's inProgress field value if the build document snapshot's status is inProgress",
       () async {
-        const buildDayStatusFieldName = 'inProgress';
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.inProgress.value;
         final buildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.inProgress,
         );
@@ -315,7 +318,7 @@ void main() {
     );
 
     test(
-      "creates a build days document with day equals to the build document snapshot's day",
+      "creates a build days document with day equals to the build document snapshot's startedAt UTC day",
       () async {
         final buildJson = testDataGenerator.generateBuildJson(
           startedAt: startedAt,
@@ -413,19 +416,20 @@ void main() {
     );
 
     test(
-      "creates a task document with created at equals to the current date time if setting the build day's document data fails",
+      "creates a task document with createdAt equals to the current date time if setting the build day's document data fails",
       () async {
         final buildJson = testDataGenerator.generateBuildJson();
-        final expectedStartedAt = Timestamp.fromDateTime(startedAt);
+        final currentDateTime = DateTime.now();
+        final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
 
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
         whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
 
-        await withClock(Clock.fixed(startedAt), () async {
+        await withClock(Clock.fixed(currentDateTime), () async {
           await onBuildAddedHandler(documentSnapshotMock, null);
 
           final createdAtMatcher = predicate<DocumentData>((data) {
-            return data.getTimestamp('createdAt') == expectedStartedAt;
+            return data.getTimestamp('createdAt') == expectedCreatedAt;
           });
 
           verify(taskCollectionReferenceMock.add(

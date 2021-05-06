@@ -25,7 +25,7 @@ void main() {
             projectId: null,
             day: day,
             successfulBuildsDuration: successfulBuildsDuration,
-            statusIncrements: [buildDayStatusField],
+            statusFields: [buildDayStatusField],
           ),
           throwsArgumentError,
         );
@@ -40,7 +40,7 @@ void main() {
             projectId: projectId,
             day: null,
             successfulBuildsDuration: successfulBuildsDuration,
-            statusIncrements: [buildDayStatusField],
+            statusFields: [buildDayStatusField],
           ),
           throwsArgumentError,
         );
@@ -54,7 +54,7 @@ void main() {
           projectId: projectId,
           day: day,
           successfulBuildsDuration: successfulBuildsDuration,
-          statusIncrements: [buildDayStatusField],
+          statusFields: [buildDayStatusField],
         );
 
         expect(buildDayData.projectId, equals(projectId));
@@ -63,7 +63,7 @@ void main() {
           buildDayData.successfulBuildsDuration,
           equals(successfulBuildsDuration),
         );
-        expect(buildDayData.statusIncrements, equals([buildDayStatusField]));
+        expect(buildDayData.statusFields, equals([buildDayStatusField]));
       },
     );
 
@@ -81,7 +81,7 @@ void main() {
           projectId: projectId,
           day: day,
           successfulBuildsDuration: successfulBuildsDuration,
-          statusIncrements: [buildDayStatusField],
+          statusFields: [buildDayStatusField],
         );
 
         final map = buildDayData.toMap();

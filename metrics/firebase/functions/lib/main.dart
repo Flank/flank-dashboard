@@ -21,7 +21,7 @@ void main() {
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
-  final startedAtDayUtc = _getUtcDate(buildData.startedAt);
+  final startedAtDayUtc = _getUtcDay(buildData.startedAt);
 
   final statusFieldMapper = BuildDayStatusFieldNameMapper();
   final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
@@ -39,7 +39,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
     projectId: buildData.projectId,
     successfulBuildsDuration: successfulBuildsDurationIncrement,
     day: startedAtDayUtc,
-    statusIncrements: [statusFieldIncrement],
+    statusFields: [statusFieldIncrement],
   );
 
   await _updateBuildDay(snapshot, buildDayData);
@@ -57,9 +57,9 @@ int _getSuccessfulBuildDuration(BuildData buildData) {
   return 0;
 }
 
-/// Returns a [DateTime] representing the date in the UTC timezone created
+/// Returns a [DateTime] representing the day in the UTC timezone created
 /// from the given [dateTime].
-DateTime _getUtcDate(DateTime dateTime) => dateTime.toUtc().date;
+DateTime _getUtcDay(DateTime dateTime) => dateTime.toUtc().date;
 
 /// Updates the build day's document data with the given [buildDayData].
 ///

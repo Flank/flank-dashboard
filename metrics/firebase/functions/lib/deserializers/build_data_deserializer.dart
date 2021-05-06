@@ -12,15 +12,15 @@ class BuildDataDeserializer {
 
     final projectId = json['projectId'] as String;
     final buildNumber = json['buildNumber'] as int;
+    final startedAtTimestamp = json['startedAt'] as Timestamp;
+    final startedAt = startedAtTimestamp.toDateTime();
     final buildResultValue = json['buildStatus'] as String;
-    final durationMilliseconds = json['duration'] as int;
-    final duration = Duration(milliseconds: durationMilliseconds ?? 0);
     final buildStatus = BuildStatus.values.firstWhere(
       (element) => '$element' == buildResultValue,
       orElse: () => BuildStatus.unknown,
     );
-    final startedAtTimestamp = json['startedAt'] as Timestamp;
-    final startedAt = startedAtTimestamp.toDateTime();
+    final durationMilliseconds = json['duration'] as int;
+    final duration = Duration(milliseconds: durationMilliseconds ?? 0);
     final workflowName = json['workflowName'] as String;
     final url = json['url'] as String;
     final apiUrl = json['apiUrl'] as String;

@@ -14,11 +14,11 @@ class BuildDayData {
   /// belongs to.
   final DateTime day;
 
-  /// A total successful builds duration.
+  /// A [FieldValue] to apply to the total duration of the successful builds.
   final FieldValue successfulBuildsDuration;
 
-  /// A [List] of [BuildDayStatusField]s a [Firestore] increment applies to.
-  final List<BuildDayStatusField> statusIncrements;
+  /// A [List] of [BuildDayStatusField]s to save to [Firestore].
+  final List<BuildDayStatusField> statusFields;
 
   /// Creates a new instance of the [BuildDayData] with the given parameters.
   ///
@@ -27,7 +27,7 @@ class BuildDayData {
     @required this.projectId,
     @required this.day,
     this.successfulBuildsDuration,
-    this.statusIncrements,
+    this.statusFields,
   }) {
     ArgumentError.checkNotNull(projectId, 'projectId');
     ArgumentError.checkNotNull(day, 'day');
@@ -35,17 +35,17 @@ class BuildDayData {
 
   /// Converts this [BuildDayData] into the [Map].
   Map<String, dynamic> toMap() {
-    final statusIncrementsMap = {};
+    final statusFieldsMap = {};
 
-    statusIncrements.forEach((status) {
-      statusIncrementsMap.addAll(status.toMap());
+    statusFields.forEach((status) {
+      statusFieldsMap.addAll(status.toMap());
     });
 
     return {
       'projectId': projectId,
       'day': Timestamp.fromDateTime(day),
       'successfulBuildsDuration': successfulBuildsDuration,
-      ...statusIncrementsMap,
+      ...statusFieldsMap,
     };
   }
 }

@@ -17,17 +17,27 @@ class BuildTestDataGenerator {
 
   /// Generates a build [Map].
   Map<String, dynamic> generateBuildJson({
+    int buildNumber,
     DateTime startedAt,
     BuildStatus buildStatus = BuildStatus.successful,
     Duration duration = const Duration(milliseconds: 100),
+    String workflowName,
+    String url,
+    String apiUrl,
+    Percent coverage,
   }) {
     final startedAtDateTime = startedAt ?? DateTime.now();
 
     return {
       'projectId': projectId,
+      'buildNumber': buildNumber,
+      'startedAt': Timestamp.fromDateTime(startedAtDateTime),
       'buildStatus': buildStatus?.toString(),
       'duration': duration?.inMilliseconds,
-      'startedAt': Timestamp.fromDateTime(startedAtDateTime),
+      'workflowName': workflowName,
+      'url': url,
+      'apiUrl': apiUrl,
+      'coverage': coverage?.value,
     };
   }
 }
