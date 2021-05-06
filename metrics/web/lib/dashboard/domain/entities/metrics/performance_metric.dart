@@ -10,7 +10,7 @@ class PerformanceMetric extends Equatable {
   /// A set of successful builds performance.
   final DateTimeSet<BuildPerformance> buildsPerformance;
 
-  /// An average successful build [Duration] of builds in the
+  /// An average [Duration] of the [BuildPerformance]s in the
   /// [buildsPerformance].
   final Duration averageBuildDuration;
 

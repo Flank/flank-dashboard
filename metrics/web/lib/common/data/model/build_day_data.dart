@@ -43,6 +43,9 @@ class BuildDayData extends BuildDay implements DataModel {
 
     final successfulBuildsDurationMilliseconds =
         json['successfulBuildsDuration'] as int;
+    final successfulBuildsDuration = Duration(
+      milliseconds: successfulBuildsDurationMilliseconds ?? 0,
+    );
 
     final dayTimestamp = json['day'] as Timestamp;
 
@@ -52,9 +55,7 @@ class BuildDayData extends BuildDay implements DataModel {
       failed: numberOfFailedBuilds ?? 0,
       unknown: numberOfUnknownBuilds ?? 0,
       inProgress: numberOfInProgressBuilds ?? 0,
-      successfulBuildsDuration: Duration(
-        milliseconds: successfulBuildsDurationMilliseconds ?? 0,
-      ),
+      successfulBuildsDuration: successfulBuildsDuration,
       day: dayTimestamp.toDate(),
     );
   }

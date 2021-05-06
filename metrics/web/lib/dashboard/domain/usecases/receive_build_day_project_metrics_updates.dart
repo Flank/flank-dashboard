@@ -95,17 +95,15 @@ class ReceiveBuildDayProjectMetricsUpdates
   /// Returns a [Duration.zero] if there are no successful builds performed
   /// during the given [buildDays].
   Duration _calculateAverageDuration(List<BuildDay> buildDays) {
-    final numberOfSuccessfulBuilds = buildDays.fold<int>(
-      0,
-      (value, buildDay) => value + buildDay.successful,
-    );
+    int numberOfSuccessfulBuilds = 0;
+    Duration successfulBuildsDuration = Duration.zero;
+
+    for (final buildDay in buildDays) {
+      numberOfSuccessfulBuilds += buildDay.successful;
+      successfulBuildsDuration += buildDay.successfulBuildsDuration;
+    }
 
     if (numberOfSuccessfulBuilds == 0) return Duration.zero;
-
-    final successfulBuildsDuration = buildDays.fold<Duration>(
-      Duration.zero,
-      (value, buildDay) => value + buildDay.successfulBuildsDuration,
-    );
 
     return successfulBuildsDuration ~/ numberOfSuccessfulBuilds;
   }
