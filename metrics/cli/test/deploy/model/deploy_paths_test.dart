@@ -11,6 +11,13 @@ void main() {
     final deployPaths = DeployPaths(rootPath);
 
     test(
+      "throws an ArgumentError if the given root path is null",
+      () {
+        expect(() => DeployPaths(null), throwsArgumentError);
+      },
+    );
+
+    test(
       ".webAppPath returns a path that contains the root path",
       () {
         expect(deployPaths.webAppPath, contains(rootPath));
