@@ -1217,6 +1217,7 @@ void main() {
       ".deploy() configures GCloud OAuth Authorized JavaScript origins",
       () async {
         whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
@@ -1229,6 +1230,7 @@ void main() {
       ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
 
         await expectLater(deployer.deploy(), throwsStateError);
@@ -1241,6 +1243,7 @@ void main() {
       ".deploy() configures GCloud OAuth origins before deleting the temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
         await deployer.deploy();
