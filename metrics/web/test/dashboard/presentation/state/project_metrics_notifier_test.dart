@@ -183,7 +183,7 @@ void main() {
     );
 
     test(
-      "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics and BuildDayProjectMetrics is null",
+      "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics and BuildDayProjectMetrics are null",
       () async {
         final receiveNullProjectMetricsUpdates =
             _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
@@ -276,6 +276,35 @@ void main() {
     );
 
     test(
+      "loads the correct number number of performance points from the build day project metrics",
+      () async {
+        final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
+        final expectedNumberOfPoints = period + 1;
+
+        final firstProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceMetrics = firstProjectMetrics.performanceSparkline;
+        final performancePoints = performanceMetrics.performance;
+
+        expect(performancePoints, hasLength(expectedNumberOfPoints));
+      },
+    );
+
+    test(
+      "loads the performance metrics from the build day project metrics with the correct average duration",
+      () async {
+        final performance = expectedBuildDayProjectMetrics.performanceMetric;
+        final expectedDuration = performance.averageBuildDuration;
+
+        final firstProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceMetrics = firstProjectMetrics.performanceSparkline;
+
+        expect(performanceMetrics.value, equals(expectedDuration));
+      },
+    );
+
+    test(
       "loads the performance metrics from the build day project metrics",
       () async {
         final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
@@ -293,11 +322,6 @@ void main() {
         final performanceMetrics = firstProjectMetrics.performanceSparkline;
         final performancePoints = performanceMetrics.performance;
 
-        expect(performancePoints, hasLength(equals(period + 1)));
-        expect(
-          performanceMetrics.value,
-          equals(expectedPerformanceMetrics.averageBuildDuration),
-        );
         expect(performancePoints.map((p) => p.x), equals(expectedX));
         expect(performancePoints.map((p) => p.y), equals(expectedY));
       },

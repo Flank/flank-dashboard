@@ -431,24 +431,26 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   UnmodifiableListView<Point<int>> _getPerformancePoints(
     DateTimeSet<BuildPerformance> performance,
   ) {
-    final period =
-        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
-    final numberOfPoints = period + 1;
-    final numberOfMissingPoints = numberOfPoints - performance.length;
-
-    final missingPoints = List.generate(
-      numberOfMissingPoints,
-      (index) => Point<int>(index, 0),
+    final performanceMap = performance.groupFoldBy(
+      (buildPerformance) => buildPerformance.date.date,
+      (_, buildPerformance) => buildPerformance.duration.inMilliseconds,
     );
 
-    final performancePoints = performance.mapIndexed((index, performance) {
-      final pointValue = performance.duration.inMilliseconds;
-      return Point<int>(index + numberOfMissingPoints, pointValue);
-    });
+    final points = <Point<int>>[];
+    final currentDate = DateTime.now().date;
+    final metricsLoadingPeriod =
+        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
 
-    final result = missingPoints..addAll(performancePoints);
+    for (int i = 0; i <= metricsLoadingPeriod; i++) {
+      final subtractDuration = Duration(days: metricsLoadingPeriod - i);
+      final sliceDate = currentDate.subtract(subtractDuration);
 
-    return UnmodifiableListView(result);
+      final averageDuration = performanceMap[sliceDate] ?? 0;
+
+      points.add(Point(i, averageDuration));
+    }
+
+    return UnmodifiableListView(points);
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].
