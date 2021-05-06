@@ -188,9 +188,6 @@ void main() {
       () async {
         final receiveNullProjectMetricsUpdates =
             _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
-        final emptyBuildResultMetric = BuildResultMetricViewModel(
-          buildResults: UnmodifiableListView([]),
-        );
         final receiveEmptyBuildDaysMetrics = _ReceiveBuildDayUpdatesStub(
           metrics: const BuildDayProjectMetrics(),
         );
@@ -204,41 +201,6 @@ void main() {
         final metricsListener = expectAsyncUntil0(() async {
           final projectMetrics =
               projectMetricsNotifier.projectsMetricsTileViewModels;
-
-          if (projectMetrics == null || projectMetrics.isEmpty) return;
-
-          final projectMetric = projectMetrics.first;
-          final buildResultMetrics = projectMetric.buildResultMetrics;
-          final performanceMetrics = projectMetric.performanceSparkline;
-          final stabilityMetric = projectMetric.stability;
-
-          hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
-              performanceMetrics != null &&
-              performanceMetrics.performance.isEmpty &&
-              stabilityMetric != null;
-        }, () => hasNullMetrics);
-
-        projectMetricsNotifier.addListener(metricsListener);
-
-        await projectMetricsNotifier.setProjects(projects, errorMessage);
-      },
-    );
-
-    test(
-      "creates project metrics tile view models with null metrics if the emitted BuildDayProjectMetrics is null",
-      () async {
-        final receiveNullBuildDayUpdates =
-            _ReceiveBuildDayUpdatesStub.withNullMetrics();
-
-        final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveProjectMetricsUpdates,
-          receiveNullBuildDayUpdates,
-        );
-
-        bool hasNullMetrics;
-        final metricsListener = expectAsyncUntil0(() async {
-          final projectMetrics =
-              projectMetricsNotifier.projectsMetricsTileViewModels;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final buildResultMetrics = projectMetrics.first.buildResultMetrics;
@@ -246,13 +208,48 @@ void main() {
 
           hasNullMetrics =
               buildResultMetrics == null && performanceMetrics == null;
+        }, () => hasNullMetrics);
+        projectMetricsNotifier.addListener(metricsListener);
 
-          if (hasNullMetrics) await projectMetricsNotifier.dispose();
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        addTearDown(projectMetricsNotifier.dispose);
+      },
+    );
+
+    test(
+      "creates project metrics tile view models with null metrics if the emitted BuildDayProjectMetrics is null",
+      () async {
+        final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
+          metrics: const DashboardProjectMetrics(),
+        );
+        final receiveNullBuildDayUpdates =
+            _ReceiveBuildDayUpdatesStub.withNullMetrics();
+
+        final projectMetricsNotifier = ProjectMetricsNotifier(
+          receiveEmptyMetrics,
+          receiveNullBuildDayUpdates,
+        );
+
+        bool hasNullMetrics;
+        final metricsListener = expectAsyncUntil0(() async {
+          final projectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
+
+          if (projectMetrics == null || projectMetrics.isEmpty) return;
+
+          final buildResultMetrics = projectMetrics.first.buildResultMetrics;
+          final performanceMetrics = projectMetrics.first.performanceSparkline;
+
+          hasNullMetrics =
+              buildResultMetrics == null && performanceMetrics == null;
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
 
         await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        addTearDown(projectMetricsNotifier.dispose);
       },
     );
 

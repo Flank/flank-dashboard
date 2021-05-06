@@ -366,7 +366,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     return PerformanceSparklineViewModel(
-      value: performanceMetric.averageBuildDuration,
+      value: performanceMetric?.averageBuildDuration ?? Duration.zero,
       performance: performancePoints,
     );
   }
