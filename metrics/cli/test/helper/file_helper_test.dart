@@ -12,6 +12,7 @@ import '../test_utils/matchers.dart';
 
 void main() {
   group("FileHelper", () {
+    const prefix = 'prefix';
     const key1 = 'key1';
     const key2 = 'key2';
     const value1 = 'value1';
@@ -46,13 +47,30 @@ void main() {
     );
 
     test(
-      ".getDirectory() returns the directory with the given path",
+      ".createTempDirectory() creates the temporary directory in the given directory",
       () {
-        const path = 'testPath';
+        helper.createTempDirectory(directory, prefix);
 
-        final directory = helper.getDirectory(path);
+        verify(directory.createTempSync(any)).called(once);
+      },
+    );
 
-        expect(directory.path, path);
+    test(
+      ".createTempDirectory() creates the temporary directory with the given prefix",
+      () {
+        helper.createTempDirectory(directory, prefix);
+
+        verify(directory.createTempSync(prefix)).called(once);
+      },
+    );
+
+    test(
+      ".createTempDirectory() throws an ArgumentError if the given directory is null",
+      () {
+        expect(
+          () => helper.createTempDirectory(null, prefix),
+          throwsArgumentError,
+        );
       },
     );
 
