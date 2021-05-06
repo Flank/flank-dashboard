@@ -123,15 +123,11 @@ class ReceiveBuildDayProjectMetricsUpdates
   BuildPerformance _mapBuildDayToPerformance(BuildDay buildDay) {
     final numberOfSuccessfulBuilds = buildDay.successful;
 
-    if (numberOfSuccessfulBuilds == 0) {
-      return BuildPerformance(
-        date: buildDay.day,
-        duration: Duration.zero,
-      );
+    Duration averageBuildsDuration = Duration.zero;
+    if (numberOfSuccessfulBuilds != 0) {
+      averageBuildsDuration =
+          buildDay.totalDuration ~/ numberOfSuccessfulBuilds;
     }
-
-    final averageBuildsDuration =
-        buildDay.totalDuration ~/ numberOfSuccessfulBuilds;
 
     return BuildPerformance(
       date: buildDay.day,

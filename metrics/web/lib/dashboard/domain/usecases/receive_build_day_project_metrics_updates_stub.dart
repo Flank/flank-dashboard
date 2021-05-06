@@ -8,9 +8,6 @@ import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metr
 /// A stub implementation of the [ReceiveBuildDayProjectMetricsUpdates].
 class ReceiveBuildDayProjectMetricsUpdatesStub
     implements ReceiveBuildDayProjectMetricsUpdates {
-  /// Creates a new instance of the [ReceiveBuildDayProjectMetricsUpdatesStub].
-  ReceiveBuildDayProjectMetricsUpdatesStub();
-
   @override
   Stream<BuildDayProjectMetrics> call(ProjectIdParam params) {
     return const Stream.empty();

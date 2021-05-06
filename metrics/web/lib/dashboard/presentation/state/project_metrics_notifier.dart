@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
@@ -301,8 +302,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       projectsMetrics[projectId] = projectMetrics;
     }
 
-    _projectMetrics = projectsMetrics;
-    notifyListeners();
+    _updateProjectMetrics(projectsMetrics);
   }
 
   /// Unsubscribes from project metrics.
@@ -338,9 +338,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       buildDayProjectMetrics.performanceMetric,
     );
 
-    final buildNumberMetric = buildDayProjectMetrics.buildNumberMetric;
-    final buildNumber = BuildNumberScorecardViewModel(
-      numberOfBuilds: buildNumberMetric?.numberOfBuilds,
+    final buildNumber = _getBuildNumberScorecardViewModel(
+      buildDayProjectMetrics.buildNumberMetric,
     );
 
     projectMetrics[projectId] = currentProjectMetrics.copyWith(
@@ -348,8 +347,55 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       buildNumberMetric: buildNumber,
     );
 
-    _projectMetrics = projectMetrics;
-    notifyListeners();
+    _updateProjectMetrics(projectMetrics);
+  }
+
+  /// Creates a [PerformanceSparklineViewModel] from the given
+  /// [performanceMetric].
+  PerformanceSparklineViewModel _getPerformanceSparklineViewModel(
+    PerformanceMetric performanceMetric,
+  ) {
+    final performanceMetrics =
+        performanceMetric?.buildsPerformance ?? DateTimeSet();
+
+    UnmodifiableListView<Point<int>> performancePoints = UnmodifiableListView(
+      [],
+    );
+    if (performanceMetrics.isNotEmpty) {
+      performancePoints = _createPerformancePoints(performanceMetrics);
+    }
+
+    return PerformanceSparklineViewModel(
+      value: performanceMetric.averageBuildDuration,
+      performance: performancePoints,
+    );
+  }
+
+  /// Creates a [PerformanceSparklineViewModel.performance] from the given
+  /// [performance].
+  UnmodifiableListView<Point<int>> _createPerformancePoints(
+    DateTimeSet<BuildPerformance> performance,
+  ) {
+    final performanceMap = performance.groupFoldBy(
+      (buildPerformance) => buildPerformance.date.date,
+      (_, buildPerformance) => buildPerformance.duration.inMilliseconds,
+    );
+
+    final performancePoints = <Point<int>>[];
+    final currentDate = DateTime.now().date;
+    final loadingPeriod =
+        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
+
+    for (int i = 0; i <= loadingPeriod; i++) {
+      final subtractDuration = Duration(days: loadingPeriod - i);
+      final sliceDate = currentDate.subtract(subtractDuration);
+
+      final averageDuration = performanceMap[sliceDate] ?? 0;
+
+      performancePoints.add(Point(i, averageDuration));
+    }
+
+    return UnmodifiableListView(performancePoints);
   }
 
   /// Subscribes to project metrics.
@@ -400,57 +446,25 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );
 
+    _updateProjectMetrics(projectsMetrics);
+  }
+
+  /// Updates the [_projectMetrics] value with the given [projectsMetrics].
+  void _updateProjectMetrics(
+    Map<String, ProjectMetricsTileViewModel> projectsMetrics,
+  ) {
     _projectMetrics = projectsMetrics;
     notifyListeners();
   }
 
-  /// Creates a [PerformanceSparklineViewModel] from the given
-  /// [performanceMetric].
-  PerformanceSparklineViewModel _getPerformanceSparklineViewModel(
-    PerformanceMetric performanceMetric,
+  /// Creates a [BuildNumberScorecardViewModel] from the given
+  /// [buildNumberMetric].
+  BuildNumberScorecardViewModel _getBuildNumberScorecardViewModel(
+    BuildNumberMetric buildNumberMetric,
   ) {
-    final performanceMetrics =
-        performanceMetric?.buildsPerformance ?? DateTimeSet();
-
-    if (performanceMetrics.isEmpty) {
-      return PerformanceSparklineViewModel(
-        performance: UnmodifiableListView([]),
-      );
-    }
-
-    final performancePoints = _getPerformancePoints(performanceMetrics);
-
-    return PerformanceSparklineViewModel(
-      value: performanceMetric.averageBuildDuration,
-      performance: performancePoints,
+    return BuildNumberScorecardViewModel(
+      numberOfBuilds: buildNumberMetric?.numberOfBuilds,
     );
-  }
-
-  /// Returns a [PerformanceSparklineViewModel.performance] created from
-  /// the given [performance].
-  UnmodifiableListView<Point<int>> _getPerformancePoints(
-    DateTimeSet<BuildPerformance> performance,
-  ) {
-    final performanceMap = performance.groupFoldBy(
-      (buildPerformance) => buildPerformance.date.date,
-      (_, buildPerformance) => buildPerformance.duration.inMilliseconds,
-    );
-
-    final points = <Point<int>>[];
-    final currentDate = DateTime.now().date;
-    final metricsLoadingPeriod =
-        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
-
-    for (int i = 0; i <= metricsLoadingPeriod; i++) {
-      final subtractDuration = Duration(days: metricsLoadingPeriod - i);
-      final sliceDate = currentDate.subtract(subtractDuration);
-
-      final averageDuration = performanceMap[sliceDate] ?? 0;
-
-      points.add(Point(i, averageDuration));
-    }
-
-    return UnmodifiableListView(points);
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].

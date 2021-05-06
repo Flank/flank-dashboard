@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -183,16 +184,54 @@ void main() {
     );
 
     test(
-      "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics and BuildDayProjectMetrics are null",
+      "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics is null",
       () async {
         final receiveNullProjectMetricsUpdates =
             _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
+        final emptyBuildResultMetric = BuildResultMetricViewModel(
+          buildResults: UnmodifiableListView([]),
+        );
+        final receiveEmptyBuildDaysMetrics = _ReceiveBuildDayUpdatesStub(
+          metrics: const BuildDayProjectMetrics(),
+        );
 
+        final projectMetricsNotifier = ProjectMetricsNotifier(
+          receiveNullProjectMetricsUpdates,
+          receiveEmptyBuildDaysMetrics,
+        );
+
+        bool hasNullMetrics;
+        final metricsListener = expectAsyncUntil0(() async {
+          final projectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
+
+          if (projectMetrics == null || projectMetrics.isEmpty) return;
+
+          final projectMetric = projectMetrics.first;
+          final buildResultMetrics = projectMetric.buildResultMetrics;
+          final performanceMetrics = projectMetric.performanceSparkline;
+          final stabilityMetric = projectMetric.stability;
+
+          hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
+              performanceMetrics != null &&
+              performanceMetrics.performance.isEmpty &&
+              stabilityMetric != null;
+        }, () => hasNullMetrics);
+
+        projectMetricsNotifier.addListener(metricsListener);
+
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+      },
+    );
+
+    test(
+      "creates project metrics tile view models with null metrics if the emitted BuildDayProjectMetrics is null",
+      () async {
         final receiveNullBuildDayUpdates =
             _ReceiveBuildDayUpdatesStub.withNullMetrics();
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveNullProjectMetricsUpdates,
+          receiveProjectMetricsUpdates,
           receiveNullBuildDayUpdates,
         );
 
@@ -311,19 +350,22 @@ void main() {
         final expectedPerformanceMetrics =
             expectedBuildDayProjectMetrics.performanceMetric;
 
+        final expectedPoints = List.generate(
+          period,
+          (index) => Point(index, 0),
+        );
         final buildPerformance =
             expectedPerformanceMetrics.buildsPerformance.first;
-        final expectedX = List.generate(period + 1, (index) => index);
-        final expectedY = List.generate(period, (_) => 0);
-        expectedY.add(buildPerformance.duration.inMilliseconds);
+        expectedPoints.add(
+          Point(period, buildPerformance.duration.inMilliseconds),
+        );
 
         final firstProjectMetrics =
             projectMetricsNotifier.projectsMetricsTileViewModels.first;
         final performanceMetrics = firstProjectMetrics.performanceSparkline;
         final performancePoints = performanceMetrics.performance;
 
-        expect(performancePoints.map((p) => p.x), equals(expectedX));
-        expect(performancePoints.map((p) => p.y), equals(expectedY));
+        expect(performancePoints, equals(expectedPoints));
       },
     );
 

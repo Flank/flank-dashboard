@@ -246,6 +246,7 @@ void main() {
       () async {
         final firstBuildDay = createBuildDay(
           successful: 0,
+          totalDuration: const Duration(seconds: 1),
           day: DateTime(2020),
         );
         final buildDays = [firstBuildDay];
