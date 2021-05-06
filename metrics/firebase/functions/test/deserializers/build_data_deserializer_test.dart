@@ -170,20 +170,11 @@ void main() {
     );
 
     test(
-      ".fromJson() properly converts a duration from the given json",
+      ".fromJson() parses a duration from the given json",
       () {
         final buildData = BuildDataDeserializer.fromJson(buildDataJson);
 
         expect(buildData.duration, duration);
-      },
-    );
-
-    test(
-      ".fromJson() properly converts a coverage from the given json",
-      () {
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
-
-        expect(buildData.coverage, coverage);
       },
     );
 
@@ -196,6 +187,15 @@ void main() {
         final buildData = BuildDataDeserializer.fromJson(json);
 
         expect(buildData.coverage, isNull);
+      },
+    );
+
+    test(
+      ".fromJson() parses a coverage from the given json",
+      () {
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData.coverage, coverage);
       },
     );
   });
