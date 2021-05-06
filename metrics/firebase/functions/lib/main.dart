@@ -46,7 +46,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
 
 /// Returns a given [buildData]'s duration in milliseconds.
 ///
-/// If the [buildData.buildStatus] is `successful`, returns a build's duration.
+/// If the build status in the [BuildData] is `successful`, returns a build's duration.
 /// Otherwise, returns `0`.
 int _getSuccessfulBuildDuration(BuildData buildData) {
   if (buildData.buildStatus == BuildStatus.successful) {

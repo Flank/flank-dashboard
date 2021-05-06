@@ -4,6 +4,7 @@
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:functions/models/build_day_data.dart';
 import 'package:functions/models/build_day_status_field.dart';
+import 'package:functions/models/build_day_status_field_name.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +13,7 @@ void main() {
     final day = DateTime.now();
     final successfulBuildsDuration = Firestore.fieldValues.increment(10);
     final buildDayStatusField = BuildDayStatusField(
-      name: 'successful',
+      name: BuildDayStatusFieldName.successful,
       value: Firestore.fieldValues.increment(1),
     );
 

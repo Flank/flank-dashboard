@@ -81,5 +81,35 @@ void main() {
         expect(buildData, equals(expectedBuildData));
       },
     );
+
+    test(
+      ".fromJson() creates a BuildData with a failed build status if the given json contains failed build status enum value",
+      () {
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData.buildStatus, buildStatus);
+      },
+    );
+
+    test(
+      ".fromJson() creates a BuildData with an unknown build status if the given json contains invalid enum value",
+      () {
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json['buildStatus'] = 'invalid';
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.buildStatus, BuildStatus.unknown);
+      },
+    );
+
+    test(
+      ".fromJson() converts the createdAt json value from a Timestamp to a DateTime while creating a BuildData",
+      () {
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData.startedAt, isA<DateTime>());
+      },
+    );
   });
 }

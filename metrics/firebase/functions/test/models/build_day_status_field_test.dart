@@ -3,18 +3,39 @@
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:functions/models/build_day_status_field.dart';
+import 'package:functions/models/build_day_status_field_name.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("BuildDayStatusField", () {
-    const name = 'name';
+    const name = BuildDayStatusFieldName.successful;
     final value = Firestore.fieldValues.increment(1);
+
+    test(
+      "throws an ArgumentError if the given name is null",
+      () {
+        expect(
+          () => BuildDayStatusField(name: null, value: value),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given value is null",
+      () {
+        expect(
+          () => BuildDayStatusField(name: name, value: null),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test(
       "creates an instance with the given parameters",
       () {
         final buildDayStatusField = BuildDayStatusField(
-          name: name,
+          name: BuildDayStatusFieldName.successful,
           value: value,
         );
 
@@ -27,7 +48,7 @@ void main() {
       ".toMap() converts an instance to the map",
       () {
         final expectedMap = {
-          name: value,
+          name.value: value,
         };
 
         final buildDayStatusField = BuildDayStatusField(
