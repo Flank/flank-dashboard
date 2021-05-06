@@ -27,12 +27,5 @@ void main() {
         expect(deployPaths.rootPath, equals(rootPath));
       },
     );
-
-    test(
-      ".create() throws an ArgumentError if the given root path is null",
-      () {
-        expect(() => deployPathsFactory.create(null), throwsArgumentError);
-      },
-    );
   });
 }
