@@ -108,6 +108,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://pub.dev/packages/meta/license) |
 | firebase_functions_interop | [pub.dev](https://pub.dev/packages/firebase_functions_interop) | [BSD](https://pub.dev/packages/firebase_functions_interop/license) |
 | firebase_admin_interop | [pub.dev](https://pub.dev/packages/firebase_admin_interop) | [BSD](https://pub.dev/packages/firebase_admin_interop/license) |
+| clock | [pub.dev](https://pub.dev/packages/clock) | [Apache 2.0](https://pub.dev/packages/clock/license) |
 
 ### Dev dependencies
 | Name | Source | License |
