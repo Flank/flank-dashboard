@@ -17,7 +17,7 @@ class BuildDayData {
   /// A total successful builds duration.
   final FieldValue successfulBuildsDuration;
 
-  /// A [List] of [BuildDayStatusField]s, a [Firestore] increment applies to.
+  /// A [List] of [BuildDayStatusField]s a [Firestore] increment applies to.
   final List<BuildDayStatusField> statusIncrements;
 
   /// Creates a new instance of the [BuildDayData] with the given parameters.

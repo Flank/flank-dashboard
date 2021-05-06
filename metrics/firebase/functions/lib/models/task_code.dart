@@ -5,10 +5,10 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A [Enum] that holds the task codes.
 class TaskCode extends Enum<String> {
-  /// A [TaskCode] that represents a build days created code.
+  /// A [TaskCode] that represents a build days created task.
   static const TaskCode buildDaysCreated = TaskCode._('build_days_created');
 
-  /// A [TaskCode] that represents a build days updated code.
+  /// A [TaskCode] that represents a build days updated task.
   static const TaskCode buildDaysUpdated = TaskCode._('build_days_updated');
 
   /// A [Set] that contains all available [TaskCode]s.

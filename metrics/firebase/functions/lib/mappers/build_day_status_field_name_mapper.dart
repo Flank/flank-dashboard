@@ -10,7 +10,7 @@ class BuildDayStatusFieldNameMapper {
   /// Creates a new instance of the [BuildDayStatusFieldNameMapper].
   const BuildDayStatusFieldNameMapper();
 
-  /// Maps the given [BuildStatus] to the [BuildDayStatusFieldName].
+  /// Maps the given [buildStatus] to the [BuildDayStatusFieldName].
   BuildDayStatusFieldName map(BuildStatus buildStatus) {
     switch (buildStatus) {
       case BuildStatus.successful:
@@ -21,8 +21,8 @@ class BuildDayStatusFieldNameMapper {
         return BuildDayStatusFieldName.inProgress;
       case BuildStatus.unknown:
         return BuildDayStatusFieldName.unknown;
-      default:
-        return null;
     }
+
+    return BuildDayStatusFieldName.unknown;
   }
 }

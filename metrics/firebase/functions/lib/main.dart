@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:clock/clock.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
@@ -46,7 +47,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
 
 /// Returns a given [buildData]'s duration in milliseconds.
 ///
-/// If the build status in the [BuildData] is `successful`, returns a build's duration.
+/// If the given [buildData] is `successful`, returns it's duration.
 /// Otherwise, returns `0`.
 int _getSuccessfulBuildDuration(BuildData buildData) {
   if (buildData.buildStatus == BuildStatus.successful) {
@@ -74,7 +75,7 @@ Future<void> _updateBuildDay(
     final taskData = TaskData(
       code: TaskCode.buildDaysCreated,
       context: error.toString(),
-      createdAt: DateTime.now(),
+      createdAt: clock.now(),
       data: snapshot.data.toMap(),
     );
 

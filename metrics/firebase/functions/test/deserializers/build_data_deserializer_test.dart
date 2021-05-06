@@ -11,15 +11,15 @@ void main() {
     const id = 'id';
     const projectId = 'projectId';
     const buildNumber = 1;
-    final startedAtDateTime = DateTime.now();
-    final startedAt = Timestamp.fromDateTime(startedAtDateTime);
     const buildStatus = BuildStatus.failed;
     const duration = Duration(milliseconds: 100000);
     const workflowName = 'testWorkflowName';
     const url = 'testUrl';
     const apiUrl = 'testApiUrl';
-    final coverage = Percent(1.0);
 
+    final startedAtDateTime = DateTime.now();
+    final startedAt = Timestamp.fromDateTime(startedAtDateTime);
+    final coverage = Percent(1.0);
     final buildDataJson = {
       'projectId': projectId,
       'buildNumber': buildNumber,
@@ -83,19 +83,50 @@ void main() {
     );
 
     test(
-      ".fromJson() creates a BuildData with a failed build status if the given json contains failed build status enum value",
+      ".fromJson() creates a BuildData with a succesful build status if the given json contains successful build status enum value",
       () {
-        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+        const expectedBuildStatus = BuildStatus.successful;
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json['buildStatus'] = expectedBuildStatus.toString();
 
-        expect(buildData.buildStatus, buildStatus);
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.buildStatus, expectedBuildStatus);
       },
     );
 
     test(
-      ".fromJson() creates a BuildData with an unknown build status if the given json contains invalid enum value",
+      ".fromJson() creates a BuildData with a failed build status if the given json contains failed build status enum value",
       () {
+        const expectedBuildStatus = BuildStatus.failed;
         final json = Map<String, dynamic>.from(buildDataJson);
-        json['buildStatus'] = 'invalid';
+        json['buildStatus'] = expectedBuildStatus.toString();
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.buildStatus, expectedBuildStatus);
+      },
+    );
+
+    test(
+      ".fromJson() creates a BuildData with an inProgress build status if the given json contains inProgress build status enum value",
+      () {
+        const expectedBuildStatus = BuildStatus.inProgress;
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json['buildStatus'] = expectedBuildStatus.toString();
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.buildStatus, expectedBuildStatus);
+      },
+    );
+
+    test(
+      ".fromJson() creates a BuildData with an unknown build status if the given json contains unknown build status enum value",
+      () {
+        const expectedBuildStatus = BuildStatus.unknown;
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json['buildStatus'] = expectedBuildStatus.toString();
 
         final buildData = BuildDataDeserializer.fromJson(json);
 
@@ -104,11 +135,67 @@ void main() {
     );
 
     test(
+      ".fromJson() creates a BuildData with an unknown build status if the given json contains invalid enum value",
+      () {
+        const expectedBuildStatus = BuildStatus.unknown;
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json['buildStatus'] = 'invalid';
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.buildStatus, expectedBuildStatus);
+      },
+    );
+
+    test(
       ".fromJson() converts the createdAt json value from a Timestamp to a DateTime while creating a BuildData",
+      () {
+        final expectedDateTime = startedAt.toDateTime();
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData.startedAt, equals(expectedDateTime));
+      },
+    );
+
+    test(
+      ".fromJson() creates a BuildData with a zero duration if the given json has null duration",
+      () {
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json.remove('duration');
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.duration, Duration.zero);
+      },
+    );
+
+    test(
+      ".fromJson() properly converts a duration from the given json",
       () {
         final buildData = BuildDataDeserializer.fromJson(buildDataJson);
 
-        expect(buildData.startedAt, isA<DateTime>());
+        expect(buildData.duration, duration);
+      },
+    );
+
+    test(
+      ".fromJson() properly converts a coverage from the given json",
+      () {
+        final buildData = BuildDataDeserializer.fromJson(buildDataJson);
+
+        expect(buildData.coverage, coverage);
+      },
+    );
+
+    test(
+      ".fromJson() creates a BuildData with a null coverage if the given json has a null coverage",
+      () {
+        final json = Map<String, dynamic>.from(buildDataJson);
+        json.remove('coverage');
+
+        final buildData = BuildDataDeserializer.fromJson(json);
+
+        expect(buildData.coverage, isNull);
       },
     );
   });

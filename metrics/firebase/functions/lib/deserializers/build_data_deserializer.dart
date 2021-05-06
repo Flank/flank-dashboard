@@ -11,6 +11,7 @@ class BuildDataDeserializer {
     if (json == null) return null;
 
     final projectId = json['projectId'] as String;
+    final buildNumber = json['buildNumber'] as int;
     final buildResultValue = json['buildStatus'] as String;
     final durationMilliseconds = json['duration'] as int;
     final duration = Duration(milliseconds: durationMilliseconds ?? 0);
@@ -20,19 +21,23 @@ class BuildDataDeserializer {
     );
     final startedAtTimestamp = json['startedAt'] as Timestamp;
     final startedAt = startedAtTimestamp.toDateTime();
+    final workflowName = json['workflowName'] as String;
+    final url = json['url'] as String;
+    final apiUrl = json['apiUrl'] as String;
     final coveragePercent = json['coverage'] as double;
+    final coverage = coveragePercent == null ? null : Percent(coveragePercent);
 
     return BuildData(
       id: id,
       projectId: projectId,
-      buildNumber: json['buildNumber'] as int,
+      buildNumber: buildNumber,
       startedAt: startedAt,
       buildStatus: buildStatus,
       duration: duration,
-      workflowName: json['workflowName'] as String,
-      url: json['url'] as String,
-      apiUrl: json['apiUrl'] as String,
-      coverage: coveragePercent == null ? null : Percent(coveragePercent),
+      workflowName: workflowName,
+      url: url,
+      apiUrl: apiUrl,
+      coverage: coverage,
     );
   }
 }

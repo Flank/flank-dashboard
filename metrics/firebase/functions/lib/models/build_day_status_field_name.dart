@@ -3,7 +3,7 @@
 
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [Enum] thath holds status field names of the documents in the build days
+/// A [Enum] that holds status field names of the documents in the build days
 /// collection.
 class BuildDayStatusFieldName extends Enum<String> {
   /// A [BuildDayStatusFieldName] that represents a successful build day
@@ -34,7 +34,8 @@ class BuildDayStatusFieldName extends Enum<String> {
     inProgress,
   };
 
-  /// Creates a new instance of the [BuildDayStatusFieldName] with the given value.
+  /// Creates a new instance of the [BuildDayStatusFieldName] with the given
+  /// value.
   const BuildDayStatusFieldName._(String value) : super(value);
 
   @override

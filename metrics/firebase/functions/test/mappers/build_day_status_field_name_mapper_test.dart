@@ -53,5 +53,16 @@ void main() {
         expect(fieldName, equals(expectedFieldName));
       },
     );
+
+    test(
+      ".map() maps the null build status to the unknown field name value",
+      () {
+        const expectedFieldName = BuildDayStatusFieldName.unknown;
+
+        final fieldName = statusFieldMapper.map(null);
+
+        expect(fieldName, equals(expectedFieldName));
+      },
+    );
   });
 }

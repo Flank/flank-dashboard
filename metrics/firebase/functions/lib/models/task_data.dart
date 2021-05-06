@@ -10,13 +10,13 @@ class TaskData {
   /// A [TaskCode] that identifies the task to perform.
   final TaskCode code;
 
-  /// A [Map], containing the data needed to run this task.
+  /// A [Map] containing the data needed to run this task.
   final Map<String, dynamic> data;
 
-  /// A [String], containing the additional context for this task.
+  /// A [String] containing the additional context for this task.
   final String context;
 
-  /// A [DateTime], determines when this task is created.
+  /// A [DateTime] determines when this task is created.
   final DateTime createdAt;
 
   /// Creates a new instance of the [TaskData] with the given parameters.
