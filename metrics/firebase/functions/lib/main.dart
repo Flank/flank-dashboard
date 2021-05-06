@@ -20,7 +20,7 @@ void main() {
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
-  final startedAtUtc = _getUtcDate(buildData.startedAt);
+  final startedAtDayUtc = _getUtcDate(buildData.startedAt);
 
   final statusFieldMapper = BuildDayStatusFieldNameMapper();
   final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
@@ -37,7 +37,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildDayData = BuildDayData(
     projectId: buildData.projectId,
     successfulBuildsDuration: successfulBuildsDurationIncrement,
-    day: startedAtUtc,
+    day: startedAtDayUtc,
     statusIncrements: [statusFieldIncrement],
   );
 

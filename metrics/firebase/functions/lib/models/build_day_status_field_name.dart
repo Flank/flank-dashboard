@@ -3,25 +3,25 @@
 
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [Enum] thath holds status field names of the documents in the build days 
+/// A [Enum] thath holds status field names of the documents in the build days
 /// collection.
 class BuildDayStatusFieldName extends Enum<String> {
-  /// A [BuildDayStatusFieldName] that represents a successful build days
+  /// A [BuildDayStatusFieldName] that represents a successful build day
   /// status field name.
   static const BuildDayStatusFieldName successful =
       BuildDayStatusFieldName._('successful');
 
-  /// A [BuildDayStatusFieldName] that represents a failed build days status
+  /// A [BuildDayStatusFieldName] that represents a failed build day status
   /// field name.
   static const BuildDayStatusFieldName failed =
       BuildDayStatusFieldName._('failed');
 
-  /// A [BuildDayStatusFieldName] that represents an unknown build days status
+  /// A [BuildDayStatusFieldName] that represents an unknown build day status
   /// field name.
   static const BuildDayStatusFieldName unknown =
       BuildDayStatusFieldName._('unknown');
 
-  /// A [BuildDayStatusFieldName] that represents an inProgress build days
+  /// A [BuildDayStatusFieldName] that represents an inProgress build day
   /// status field name.
   static const BuildDayStatusFieldName inProgress =
       BuildDayStatusFieldName._('inProgress');

@@ -31,7 +31,7 @@ class BuildTestDataGenerator {
   });
 
   /// Generates a [Map] from the [BuildData] instance.
-  Map<String, dynamic> generateJson() {
+  Map<String, dynamic> generateBuildJson() {
     final buildData = BuildData(
       projectId: projectId,
       buildStatus: buildStatus,
