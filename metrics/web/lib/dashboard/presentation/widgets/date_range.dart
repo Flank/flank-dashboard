@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/date_range_view_model.dart';
-import 'package:metrics/util/date.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A widget that displays the given [dateRange].
 ///

@@ -31,7 +31,6 @@ import 'package:metrics/dashboard/presentation/view_models/project_group_dropdow
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
-import 'package:metrics/util/date.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
