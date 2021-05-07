@@ -138,7 +138,7 @@ If we want to provide builds aggregations, we need to process calculations in re
 ```dart
 functions['onBuildAdded'] = functions.firestore
     .document('build/{buildId}')
-    .onCreate(onBuildAddedHandler)
+    .onCreate(onBuildAddedHandler);
 
 
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, EventContext context) {...}
@@ -156,12 +156,12 @@ The following sequence diagram shows the overall process of how the `onBuildAdde
 
 > Explain the main purpose of the trigger.
 
-The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count and increment duration, related to changes in the build status. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, decrement the `inProgress` count and increment the `successfulBuildsDuration`. 
+The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. Also, it should increment the `successfulBuildsDuration` value if a new build status is `successful`. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, decrement the `inProgress` count and increment the `successfulBuildsDuration`. 
 
 ```dart
 functions['onBuildUpdated'] = functions.firestore
     .document('build/{buildId}')
-    .onUpdate(onBuildUpdatedHandler)
+    .onUpdate(onBuildUpdatedHandler);
 
 Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, EventContext context) {...}
 ```
