@@ -3,6 +3,7 @@
 
 import 'package:cli/common/factory/services_factory.dart';
 import 'package:cli/deploy/deployer.dart';
+import 'package:cli/deploy/factory/deploy_paths_factory.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/prompt/prompter.dart';
 import 'package:cli/prompt/writer/io_prompt_writer.dart';
@@ -28,11 +29,13 @@ class DeployerFactory {
     final fileHelper = FileHelper();
     final promptWriter = IOPromptWriter();
     final prompter = Prompter(promptWriter);
+    final deployPathsFactory = DeployPathsFactory();
 
     return Deployer(
       services: services,
       fileHelper: fileHelper,
       prompter: prompter,
+      deployPathsFactory: deployPathsFactory,
     );
   }
 }

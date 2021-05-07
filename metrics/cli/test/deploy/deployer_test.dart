@@ -1,12 +1,15 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
-import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/common/model/services.dart';
+import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/deploy/constants/deploy_constants.dart';
 import 'package:cli/deploy/deployer.dart';
+import 'package:cli/deploy/factory/deploy_paths_factory.dart';
+import 'package:cli/deploy/model/deploy_paths.dart';
 import 'package:cli/deploy/strings/deploy_strings.dart';
 import 'package:cli/helper/file_helper.dart';
 import 'package:cli/sentry/model/sentry_config.dart';
@@ -36,13 +39,9 @@ void main() {
     const sentryDsn = 'sentryDsn';
     const sentryProjectSlug = 'sentryProjectSlug';
     const sentryOrgSlug = 'sentryOrgSlug';
-    const firebasePath = DeployConstants.firebasePath;
-    const firebaseFunctionsPath = DeployConstants.firebaseFunctionsPath;
+    const tempDirectoryPath = 'tempDirectoryPath';
     const firebaseTarget = DeployConstants.firebaseTarget;
-    const webPath = DeployConstants.webPath;
-    const configPath = DeployConstants.metricsConfigPath;
     const repoURL = DeployConstants.repoURL;
-    const tempDir = DeployConstants.tempDir;
 
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -54,6 +53,9 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
+    final deployPathsFactoryMock = _DeployPathsFactoryMock();
+    final deployPathsFactory = DeployPathsFactory();
+    final deployPaths = DeployPaths(tempDirectoryPath);
     final sentryProject = SentryProject(
       projectSlug: sentryProjectSlug,
       organizationSlug: sentryOrgSlug,
@@ -62,6 +64,7 @@ void main() {
       name: sentryReleaseName,
       project: sentryProject,
     );
+
     final file = _FileMock();
     final services = Services(
       flutterService: flutterService,
@@ -74,17 +77,25 @@ void main() {
     final deployer = Deployer(
       services: services,
       fileHelper: fileHelper,
+      deployPathsFactory: deployPathsFactory,
       prompter: prompter,
     );
     final stateError = StateError('test');
 
-    PostExpectation<Directory> whenGetDirectory() {
-      return when(fileHelper.getDirectory(any));
+    PostExpectation<Directory> whenCreateTempDirectory() {
+      return when(fileHelper.createTempDirectory(any, any));
     }
 
-    PostExpectation<bool> whenDirectoryExist({Directory withDirectory}) {
+    PostExpectation<bool> whenDirectoryExist({
+      Directory withDirectory,
+      String withPath,
+    }) {
       final currentDirectory = withDirectory ?? directory;
-      whenGetDirectory().thenReturn(currentDirectory);
+      whenCreateTempDirectory().thenReturn(currentDirectory);
+
+      final currentPath = withPath ?? tempDirectoryPath;
+      when(currentDirectory.path).thenReturn(currentPath);
+
       return when(currentDirectory.existsSync());
     }
 
@@ -112,6 +123,7 @@ void main() {
       reset(servicesMock);
       reset(prompter);
       reset(file);
+      reset(deployPathsFactoryMock);
     });
 
     test(
@@ -122,6 +134,7 @@ void main() {
             services: null,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -143,6 +156,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -164,6 +178,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -185,6 +200,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -206,6 +222,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -227,6 +244,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -248,6 +266,7 @@ void main() {
             services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -262,6 +281,7 @@ void main() {
             services: services,
             fileHelper: null,
             prompter: prompter,
+            deployPathsFactory: deployPathsFactory,
           ),
           throwsArgumentError,
         );
@@ -269,13 +289,29 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given prompter is null",
+      "throws an ArgumentError if the given Prompter is null",
       () {
         expect(
           () => Deployer(
             services: services,
             fileHelper: fileHelper,
             prompter: null,
+            deployPathsFactory: deployPathsFactory,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given DeployPathsFactory is null",
+      () {
+        expect(
+          () => Deployer(
+            services: services,
+            fileHelper: fileHelper,
+            prompter: prompter,
+            deployPathsFactory: null,
           ),
           throwsArgumentError,
         );
@@ -431,14 +467,74 @@ void main() {
     );
 
     test(
-      ".deploy() clones the Git repository",
+      ".deploy() creates a temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(gitService.checkout(repoURL, tempDir)).called(once);
+        verify(fileHelper.createTempDirectory(
+          any,
+          DeployConstants.tempDirectoryPrefix,
+        )).called(once);
+      },
+    );
+
+    test(
+      ".deploy() creates a temporary directory before creating the DeployPaths instance",
+      () async {
+        final deployer = Deployer(
+          fileHelper: fileHelper,
+          deployPathsFactory: deployPathsFactoryMock,
+          prompter: prompter,
+          services: services,
+        );
+
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(deployPathsFactoryMock.create(tempDirectoryPath))
+            .thenReturn(deployPaths);
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          fileHelper.createTempDirectory(any, any),
+          deployPathsFactoryMock.create(tempDirectoryPath),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() creates a DeployPaths instance using the given factory",
+      () async {
+        final deployer = Deployer(
+          fileHelper: fileHelper,
+          deployPathsFactory: deployPathsFactoryMock,
+          prompter: prompter,
+          services: services,
+        );
+
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(deployPathsFactoryMock.create(tempDirectoryPath))
+            .thenReturn(deployPaths);
+
+        await deployer.deploy();
+
+        verify(deployPathsFactoryMock.create(tempDirectoryPath)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() clones the Git repository to the temporary directory",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verify(gitService.checkout(repoURL, tempDirectoryPath)).called(once);
       },
     );
 
@@ -464,8 +560,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          flutterService.build(webPath),
+          gitService.checkout(repoURL, tempDirectoryPath),
+          flutterService.build(any),
         ]);
       },
     );
@@ -479,8 +575,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(DeployConstants.firebasePath),
+          gitService.checkout(repoURL, tempDirectoryPath),
+          npmService.installDependencies(any),
         ]);
       },
     );
@@ -494,8 +590,8 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDir),
-          npmService.installDependencies(DeployConstants.firebaseFunctionsPath),
+          gitService.checkout(repoURL, tempDirectoryPath),
+          npmService.installDependencies(any),
         ]);
       },
     );
@@ -508,7 +604,8 @@ void main() {
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(firebasePath)).called(once);
+        verify(npmService.installDependencies(deployPaths.firebasePath))
+            .called(once);
       },
     );
 
@@ -520,8 +617,9 @@ void main() {
 
         await deployer.deploy();
 
-        verify(npmService.installDependencies(firebaseFunctionsPath))
-            .called(once);
+        verify(
+          npmService.installDependencies(deployPaths.firebaseFunctionsPath),
+        ).called(once);
       },
     );
 
@@ -547,7 +645,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          npmService.installDependencies(firebasePath),
+          npmService.installDependencies(any),
           firebaseService.deployFirebase(any, any),
         ]);
       },
@@ -562,7 +660,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          npmService.installDependencies(firebaseFunctionsPath),
+          npmService.installDependencies(any),
           firebaseService.deployFirebase(any, any),
         ]);
       },
@@ -576,7 +674,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(flutterService.build(webPath)).called(once);
+        verify(flutterService.build(deployPaths.webAppPath)).called(once);
       },
     );
 
@@ -883,7 +981,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
@@ -928,7 +1025,6 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if prompter throws during the Sentry DSN requesting",
       () async {
-        whenGetDirectory().thenReturn(directory);
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease()
@@ -950,7 +1046,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.getFile(configPath)).called(once);
+        verify(fileHelper.getFile(deployPaths.metricsConfigPath)).called(once);
       },
     );
 
@@ -976,7 +1072,7 @@ void main() {
         whenCreateSentryRelease()
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
-        when(fileHelper.getFile(configPath)).thenReturn(file);
+        when(fileHelper.getFile(any)).thenReturn(file);
 
         final sentryConfig = SentryConfig(
           release: sentryRelease.name,
@@ -1004,7 +1100,6 @@ void main() {
             .thenThrow(stateError);
         when(firebaseService.configureAuthProviders(projectId))
             .thenReturn(clientId);
-        when(fileHelper.getFile(configPath)).thenReturn(file);
 
         await expectLater(deployer.deploy(), throwsStateError);
 
@@ -1036,8 +1131,10 @@ void main() {
 
         await deployer.deploy();
 
-        verify(firebaseService.deployFirebase(projectId, firebasePath))
-            .called(once);
+        verify(firebaseService.deployFirebase(
+          projectId,
+          deployPaths.firebasePath,
+        )).called(once);
       },
     );
 
@@ -1082,7 +1179,7 @@ void main() {
         verify(firebaseService.deployHosting(
           projectId,
           firebaseTarget,
-          webPath,
+          deployPaths.webAppPath,
         )).called(once);
       },
     );
@@ -1102,7 +1199,7 @@ void main() {
     );
 
     test(
-      ".deploy() deploys a target to the hosting before deleting the temporary directory",
+      ".deploy() deploys a target to the hosting before configuring GCloud OAuth origins",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -1111,6 +1208,48 @@ void main() {
 
         verifyInOrder([
           firebaseService.deployHosting(any, any, any),
+          gcloudService.configureOAuthOrigins(any),
+        ]);
+      },
+    );
+
+    test(
+      ".deploy() configures GCloud OAuth Authorized JavaScript origins",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verify(gcloudService.configureOAuthOrigins(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() configures GCloud OAuth origins before deleting the temporary directory",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.configureOAuthOrigins(any),
           directory.deleteSync(recursive: true),
         ]);
       },
@@ -1145,3 +1284,5 @@ void main() {
 class _FileHelperMock extends Mock implements FileHelper {}
 
 class _FileMock extends Mock implements File {}
+
+class _DeployPathsFactoryMock extends Mock implements DeployPathsFactory {}
