@@ -14,9 +14,9 @@ class BuildDataDeserializer {
     final buildNumber = json['buildNumber'] as int;
     final startedAtTimestamp = json['startedAt'] as Timestamp;
     final startedAt = startedAtTimestamp.toDateTime();
-    final buildResultValue = json['buildStatus'] as String;
+    final buildStatusValue = json['buildStatus'] as String;
     final buildStatus = BuildStatus.values.firstWhere(
-      (element) => '$element' == buildResultValue,
+      (element) => '$element' == buildStatusValue,
       orElse: () => BuildStatus.unknown,
     );
     final durationMilliseconds = json['duration'] as int;

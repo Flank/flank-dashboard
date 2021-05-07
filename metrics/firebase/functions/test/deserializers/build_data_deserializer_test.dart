@@ -69,32 +69,11 @@ void main() {
     test(
       ".fromJson() creates a BuildData with a null id from the JSON-encodable map if the id is not passed",
       () {
-        final expectedBuildData = BuildData(
-          id: null,
-          projectId: projectId,
-          buildNumber: buildNumber,
-          startedAt: startedAtDateTime,
-          buildStatus: buildStatus,
-          duration: duration,
-          workflowName: workflowName,
-          url: url,
-          apiUrl: apiUrl,
-          coverage: coverage,
-        );
-        final buildJson = testDataGenerator.generateBuildJson(
-          buildNumber: buildNumber,
-          startedAt: startedAtDateTime,
-          buildStatus: buildStatus,
-          duration: duration,
-          workflowName: workflowName,
-          url: url,
-          apiUrl: apiUrl,
-          coverage: coverage,
-        );
+        final buildJson = testDataGenerator.generateBuildJson();
 
         final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData, equals(expectedBuildData));
+        expect(buildData.id, isNull);
       },
     );
 

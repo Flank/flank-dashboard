@@ -56,8 +56,10 @@ void main() {
       return when(documentSnapshotMock.data);
     }
 
-    PostExpectation<Future<DocumentReference>> whenCreateTaskDocument() {
-      whenSetDocumentData().thenAnswer((_) => Future.error(Exception('test')));
+    PostExpectation<Future<DocumentReference>> whenCreateTaskDocument({
+      Exception exception,
+    }) {
+      whenSetDocumentData().thenAnswer((_) => Future.error(exception));
 
       when(firestoreMock.collection(tasksCollectionName))
           .thenReturn(taskCollectionReferenceMock);
@@ -402,7 +404,8 @@ void main() {
         final exception = Exception('test');
         final buildJson = testDataGenerator.generateBuildJson();
 
-        whenCreateTaskDocument().thenAnswer((_) => Future.value());
+        whenCreateTaskDocument(exception: exception)
+            .thenAnswer((_) => Future.value());
         whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
 
         await onBuildAddedHandler(documentSnapshotMock, null);
