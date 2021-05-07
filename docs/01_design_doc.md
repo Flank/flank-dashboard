@@ -26,8 +26,8 @@ Overall status
 
 - [x] Wireframes
 - [x] UI Design
-- [ ] Database setup
-- [ ] UI development
+- [x] Database setup
+- [x] UI development
 - [ ] Unit & UI test development
 
 # How will the project be developed?
