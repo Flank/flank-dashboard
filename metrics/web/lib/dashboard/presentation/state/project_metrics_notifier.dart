@@ -10,12 +10,15 @@ import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -41,11 +44,20 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   static const _allProjectsGroupDropdownItemViewModel =
       ProjectGroupDropdownItemViewModel(name: "All projects");
 
-  /// Provides an ability to receive project metrics updates.
+  /// A [ReceiveProjectMetricsUpdates] that provides an ability to receive
+  /// project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
-  /// A [Map] that holds all created [StreamSubscription].
+  /// A [ReceiveBuildDayProjectMetricsUpdates] that provides an ability to
+  /// receive build day updates.
+  final ReceiveBuildDayProjectMetricsUpdates _receiveBuildDayUpdates;
+
+  /// A [Map] that holds all created project metrics [StreamSubscription]s.
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
+
+  /// A [Map] that holds all created build day project metrics
+  /// [StreamSubscription]s.
+  final Map<String, StreamSubscription> _buildDaySubscriptions = {};
 
   /// A [PublishSubject] that provides an ability to filter projects by the name.
   final _projectNameFilterSubject = PublishSubject<String>();
@@ -114,11 +126,47 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     if (_projectGroupModels != null) {
-      projectsMetricsTileViewModels =
-          _filterByProjectGroup(projectsMetricsTileViewModels);
+      projectsMetricsTileViewModels = _filterByProjectGroup(
+        projectsMetricsTileViewModels,
+      );
     }
 
     return projectsMetricsTileViewModels;
+  }
+
+  /// Provides an error description that occurred during loading metrics data.
+  String get projectsErrorMessage => _projectsErrorMessage;
+
+  /// Provides the currently applied project name filter.
+  String get projectNameFilter => _projectNameFilter;
+
+  /// Creates a new instance of the [ProjectMetricsNotifier] with the given
+  /// parameters.
+  ///
+  /// Throws an [AssertionError] if the given [ReceiveProjectMetricsUpdates]
+  /// or [ReceiveBuildDayProjectMetricsUpdates] is `null`.
+  ProjectMetricsNotifier(
+    this._receiveProjectMetricsUpdates,
+    this._receiveBuildDayUpdates,
+  )   : assert(
+          _receiveProjectMetricsUpdates != null,
+          'The ReceiveProjectMetricsUpdates must not be null',
+        ),
+        assert(
+          _receiveBuildDayUpdates != null,
+          'The ReceiveBuildDayProjectMetricsUpdates must not be null',
+        ) {
+    _subscribeToProjectsNameFilter();
+  }
+
+  /// Subscribes to a projects name filter.
+  void _subscribeToProjectsNameFilter() {
+    _projectNameFilterSubject
+        .debounceTime(DurationConstants.debounce)
+        .listen((value) {
+      _projectNameFilter = value;
+      notifyListeners();
+    });
   }
 
   /// Filters the [ProjectMetricsTileViewModel]s using the [selectedProjectGroup].
@@ -137,34 +185,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
               project.projectId,
             ))
         .toList();
-  }
-
-  /// Provides an error description that occurred during loading metrics data.
-  String get projectsErrorMessage => _projectsErrorMessage;
-
-  /// Provides the currently applied project name filter.
-  String get projectNameFilter => _projectNameFilter;
-
-  /// Creates a new instance of the [ProjectMetricsNotifier].
-  ///
-  /// The given [ReceiveProjectMetricsUpdates] must not be null.
-  ProjectMetricsNotifier(
-    this._receiveProjectMetricsUpdates,
-  ) : assert(
-          _receiveProjectMetricsUpdates != null,
-          'The use case must not be null',
-        ) {
-    _subscribeToProjectsNameFilter();
-  }
-
-  /// Subscribes to a projects name filter.
-  void _subscribeToProjectsNameFilter() {
-    _projectNameFilterSubject
-        .debounceTime(DurationConstants.debounce)
-        .listen((value) {
-      _projectNameFilter = value;
-      notifyListeners();
-    });
   }
 
   /// Adds project metrics filter using the given [value].
@@ -255,6 +275,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       final remove = !projectIds.contains(projectId);
       if (remove) {
         _buildMetricsSubscriptions.remove(projectId)?.cancel();
+        _buildDaySubscriptions.remove(projectId)?.cancel();
       }
 
       return remove;
@@ -274,12 +295,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
       if (!projectsMetrics.containsKey(projectId)) {
         _subscribeToBuildMetrics(projectId);
+        _subscribeToBuildDayMetrics(projectId);
       }
+
       projectsMetrics[projectId] = projectMetrics;
     }
 
-    _projectMetrics = projectsMetrics;
-    notifyListeners();
+    _updateProjectMetrics(projectsMetrics);
   }
 
   /// Unsubscribes from project metrics.
@@ -288,21 +310,111 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Subscribes to updates of the [BuildDayProjectMetrics] of the project with
+  /// the given [projectId].
+  void _subscribeToBuildDayMetrics(String projectId) {
+    final buildDayMetricsStream = _receiveBuildDayUpdates(
+      ProjectIdParam(projectId),
+    );
+
+    _buildDaySubscriptions[projectId] = buildDayMetricsStream.listen(
+      (metrics) => _processBuildDayProjectMetrics(metrics, projectId),
+      onError: _projectsErrorHandler,
+    );
+  }
+
+  /// Creates project metrics for project with the given [projectId] using the
+  /// given [buildDayProjectMetrics].
+  void _processBuildDayProjectMetrics(
+    BuildDayProjectMetrics buildDayProjectMetrics,
+    String projectId,
+  ) {
+    final projectMetrics = _projectMetrics ?? {};
+    final currentProjectMetrics = projectMetrics[projectId];
+
+    if (currentProjectMetrics == null || buildDayProjectMetrics == null) return;
+
+    final performanceMetrics = _getPerformanceSparklineViewModel(
+      buildDayProjectMetrics.performanceMetric,
+    );
+
+    final buildNumber = _getBuildNumberScorecardViewModel(
+      buildDayProjectMetrics.buildNumberMetric,
+    );
+
+    projectMetrics[projectId] = currentProjectMetrics.copyWith(
+      performanceSparkline: performanceMetrics,
+      buildNumberMetric: buildNumber,
+    );
+
+    _updateProjectMetrics(projectMetrics);
+  }
+
+  /// Creates a [PerformanceSparklineViewModel] from the given
+  /// [performanceMetric].
+  PerformanceSparklineViewModel _getPerformanceSparklineViewModel(
+    PerformanceMetric performanceMetric,
+  ) {
+    final performanceMetrics =
+        performanceMetric?.buildsPerformance ?? DateTimeSet();
+
+    UnmodifiableListView<Point<int>> performancePoints = UnmodifiableListView(
+      [],
+    );
+    if (performanceMetrics.isNotEmpty) {
+      performancePoints = _createPerformancePoints(performanceMetrics);
+    }
+
+    return PerformanceSparklineViewModel(
+      value: performanceMetric?.averageBuildDuration ?? Duration.zero,
+      performance: performancePoints,
+    );
+  }
+
+  /// Creates a [PerformanceSparklineViewModel.performance] from the given
+  /// [performance].
+  UnmodifiableListView<Point<int>> _createPerformancePoints(
+    DateTimeSet<BuildPerformance> performance,
+  ) {
+    final performanceMap = performance.groupFoldBy(
+      (buildPerformance) => buildPerformance.date.date,
+      (_, buildPerformance) => buildPerformance.duration.inMilliseconds,
+    );
+
+    final performancePoints = <Point<int>>[];
+    final currentDate = DateTime.now().date;
+    final loadingPeriod =
+        ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
+
+    for (int i = 0; i <= loadingPeriod; i++) {
+      final subtractDuration = Duration(days: loadingPeriod - i);
+      final sliceDate = currentDate.subtract(subtractDuration);
+
+      final averageDuration = performanceMap[sliceDate] ?? 0;
+
+      performancePoints.add(Point(i, averageDuration));
+    }
+
+    return UnmodifiableListView(performancePoints);
+  }
+
   /// Subscribes to project metrics.
   void _subscribeToBuildMetrics(String projectId) {
     final dashboardMetricsStream = _receiveProjectMetricsUpdates(
       ProjectIdParam(projectId),
     );
 
-    _buildMetricsSubscriptions[projectId] =
-        dashboardMetricsStream.listen((metrics) {
-      _createProjectMetrics(metrics, projectId);
-    }, onError: _projectsErrorHandler);
+    _buildMetricsSubscriptions[projectId] = dashboardMetricsStream.listen(
+      (metrics) => _createProjectMetrics(metrics, projectId),
+      onError: _projectsErrorHandler,
+    );
   }
 
   /// Creates project metrics from the [DashboardProjectMetrics].
   void _createProjectMetrics(
-      DashboardProjectMetrics dashboardMetrics, String projectId) {
+    DashboardProjectMetrics dashboardMetrics,
+    String projectId,
+  ) {
     final projectsMetrics = _projectMetrics ?? {};
 
     final projectMetrics = projectsMetrics[projectId];
@@ -334,8 +446,25 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );
 
+    _updateProjectMetrics(projectsMetrics);
+  }
+
+  /// Updates the [_projectMetrics] value with the given [projectsMetrics].
+  void _updateProjectMetrics(
+    Map<String, ProjectMetricsTileViewModel> projectsMetrics,
+  ) {
     _projectMetrics = projectsMetrics;
     notifyListeners();
+  }
+
+  /// Creates a [BuildNumberScorecardViewModel] from the given
+  /// [buildNumberMetric].
+  BuildNumberScorecardViewModel _getBuildNumberScorecardViewModel(
+    BuildNumberMetric buildNumberMetric,
+  ) {
+    return BuildNumberScorecardViewModel(
+      numberOfBuilds: buildNumberMetric?.numberOfBuilds,
+    );
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].
@@ -479,8 +608,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (final subscription in _buildMetricsSubscriptions.values) {
       await subscription?.cancel();
     }
+    for (final subscription in _buildDaySubscriptions.values) {
+      await subscription?.cancel();
+    }
+
     _projectMetrics = null;
     _buildMetricsSubscriptions.clear();
+    _buildDaySubscriptions.clear();
   }
 
   /// Saves the error [String] representation to the [_projectsErrorMessage].

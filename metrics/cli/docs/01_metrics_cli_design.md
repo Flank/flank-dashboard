@@ -7,8 +7,8 @@ Introducing the auto-deployment to Firebase  for the Metrics app allows users to
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Metrics firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md)
-- [Metrics firebase deployment with CLI](https://github.com/platform-platform/monorepo/blob/master/docs/14_firebase_deployment_cli.md)
+- [Metrics firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md)
+- [Metrics firebase deployment with CLI](https://github.com/platform-platform/monorepo/blob/master/docs/13_firebase_deployment_cli.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
