@@ -2,11 +2,13 @@
 // that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
@@ -15,6 +17,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -44,8 +47,22 @@ void main() {
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
     final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
+    final receiveEmptyProjectMetrics = _ReceiveProjectMetricsUpdatesStub(
+      metrics: const DashboardProjectMetrics(),
+    );
+    final receiveNullProjectMetrics =
+        _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
+
+    final receiveBuildDayUpdates = _ReceiveBuildDayProjectMetricsUpdatesMock();
+    final receiveBuildDayUpdatesStub = _ReceiveBuildDayUpdatesStub();
+    final receiveEmptyBuildDayUpdates = _ReceiveBuildDayUpdatesStub(
+      metrics: const BuildDayProjectMetrics(),
+    );
+    final receiveNullBuildDayUpdates =
+        _ReceiveBuildDayUpdatesStub.withNullMetrics();
 
     DashboardProjectMetrics expectedProjectMetrics;
+    BuildDayProjectMetrics expectedBuildDayProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
 
     BuildResult createBuildResult(
@@ -89,9 +106,13 @@ void main() {
     setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
         receiveProjectMetricsUpdates,
+        receiveBuildDayUpdatesStub,
       );
 
       expectedProjectMetrics = await receiveProjectMetricsUpdates(
+        projectIdParam,
+      ).first;
+      expectedBuildDayProjectMetrics = await receiveBuildDayUpdatesStub(
         projectIdParam,
       ).first;
 
@@ -103,6 +124,7 @@ void main() {
 
     tearDown(() async {
       reset(receiveProjectMetricsMock);
+      reset(receiveBuildDayUpdates);
       await projectMetricsNotifier.dispose();
     });
 
@@ -110,18 +132,25 @@ void main() {
       "throws an AssertionError if receive project metric updates use case is null",
       () {
         expect(
-          () => ProjectMetricsNotifier(null),
+          () => ProjectMetricsNotifier(null, receiveBuildDayUpdates),
           throwsAssertionError,
         );
       },
     );
 
     test(
-      "creates ProjectMetricsData with empty points from empty DashboardProjectMetrics",
-      () async {
-        final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
-          metrics: const DashboardProjectMetrics(),
+      "throws an AssertionError if receive build day project metric updates use case is null",
+      () {
+        expect(
+          () => ProjectMetricsNotifier(receiveProjectMetricsUpdates, null),
+          throwsAssertionError,
         );
+      },
+    );
+
+    test(
+      "creates project metrics tile view models with empty points from empty BuildDayProjectMetrics",
+      () async {
         const projects = [ProjectModel(id: 'id', name: 'name')];
 
         final emptyBuildResultMetric = BuildResultMetricViewModel(
@@ -129,13 +158,15 @@ void main() {
         );
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveEmptyMetrics,
+          receiveEmptyProjectMetrics,
+          receiveEmptyBuildDayUpdates,
         );
 
         bool hasNullMetrics;
         final metricsListener = expectAsyncUntil0(() async {
           final projectMetrics =
               projectMetricsNotifier.projectsMetricsTileViewModels;
+
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final projectMetric = projectMetrics.first;
@@ -158,13 +189,11 @@ void main() {
     );
 
     test(
-      "creates ProjectMetricsData with null metrics if the DashboardProjectMetrics is null",
+      "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics is null",
       () async {
-        final receiveProjectMetricsUpdates =
-            _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
-
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveProjectMetricsUpdates,
+          receiveNullProjectMetrics,
+          receiveEmptyBuildDayUpdates,
         );
 
         bool hasNullMetrics;
@@ -173,92 +202,219 @@ void main() {
               projectMetricsNotifier.projectsMetricsTileViewModels;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
-          final buildResultMetrics = projectMetrics.first.buildResultMetrics;
-          final performanceMetrics = projectMetrics.first.performanceSparkline;
+          final buildStatusMetric = projectMetrics.first.buildStatus;
+          final coverageMetric = projectMetrics.first.coverage;
+          final buildResultMetric = projectMetrics.first.buildResultMetrics;
+          final stabilityMetric = projectMetrics.first.stability;
+
+          hasNullMetrics = buildStatusMetric.value == null &&
+              coverageMetric.value == null &&
+              buildResultMetric == null &&
+              stabilityMetric.value == null;
+        }, () => hasNullMetrics);
+        projectMetricsNotifier.addListener(metricsListener);
+
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        addTearDown(projectMetricsNotifier.dispose);
+      },
+    );
+
+    test(
+      "creates project metrics tile view models with null performance and build number metrics if the emitted BuildDayProjectMetrics is null",
+      () async {
+        final projectMetricsNotifier = ProjectMetricsNotifier(
+          receiveEmptyProjectMetrics,
+          receiveNullBuildDayUpdates,
+        );
+
+        bool hasNullMetrics;
+        final metricsListener = expectAsyncUntil0(() async {
+          final projectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
+
+          if (projectMetrics == null || projectMetrics.isEmpty) return;
+
+          final buildNumberMetric = projectMetrics.first.buildNumberMetric;
+          final performanceMetric = projectMetrics.first.performanceSparkline;
 
           hasNullMetrics =
-              buildResultMetrics == null && performanceMetrics == null;
-
-          if (hasNullMetrics) await projectMetricsNotifier.dispose();
+              buildNumberMetric == null && performanceMetric == null;
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
 
         await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        addTearDown(projectMetricsNotifier.dispose);
       },
     );
 
-    test("loads the build status data", () async {
-      final expectedProjectBuildStatus =
-          expectedProjectMetrics.projectBuildStatusMetric;
+    test(
+      "loads the build status data from the dashboard metrics",
+      () async {
+        final expectedProjectBuildStatus =
+            expectedProjectMetrics.projectBuildStatusMetric;
 
-      final projectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels.first;
-      final projectBuildStatus = projectMetrics.buildStatus;
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final projectBuildStatus = projectMetrics.buildStatus;
 
-      expect(
-        projectBuildStatus.value,
-        equals(expectedProjectBuildStatus.status),
-      );
-    });
+        expect(
+          projectBuildStatus.value,
+          equals(expectedProjectBuildStatus.status),
+        );
+      },
+    );
 
-    test("loads the coverage data", () async {
-      final expectedProjectCoverage = expectedProjectMetrics.coverage;
+    test(
+      "loads the coverage data from the dashboard metrics",
+      () async {
+        final expectedProjectCoverage = expectedProjectMetrics.coverage;
 
-      final projectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels.first;
-      final projectCoverage = projectMetrics.coverage;
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final projectCoverage = projectMetrics.coverage;
 
-      expect(projectCoverage.value, equals(expectedProjectCoverage.value));
-    });
+        expect(projectCoverage.value, equals(expectedProjectCoverage.value));
+      },
+    );
 
-    test("loads the stability data", () async {
-      final expectedProjectStability = expectedProjectMetrics.stability;
+    test(
+      "loads the stability data from the dashboard metrics",
+      () async {
+        final expectedProjectStability = expectedProjectMetrics.stability;
 
-      final projectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels.first;
-      final projectStability = projectMetrics.stability;
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final projectStability = projectMetrics.stability;
 
-      expect(projectStability.value, equals(expectedProjectStability.value));
-    });
+        expect(projectStability.value, equals(expectedProjectStability.value));
+      },
+    );
 
-    test("loads the build number metrics", () async {
-      final expectedBuildNumberMetrics =
-          expectedProjectMetrics.buildNumberMetrics;
+    test(
+      "loads the build number metrics from the build day metrics",
+      () async {
+        final expectedNumberOfBuilds =
+            expectedBuildDayProjectMetrics.buildNumberMetric.numberOfBuilds;
 
-      final firstProjectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final buildNumberMetric = projectMetrics.buildNumberMetric;
+        final actualNumberOfBuilds = buildNumberMetric.numberOfBuilds;
 
-      expect(
-        firstProjectMetrics.buildNumberMetric.numberOfBuilds,
-        expectedBuildNumberMetrics.numberOfBuilds,
-      );
-    });
+        expect(actualNumberOfBuilds, equals(expectedNumberOfBuilds));
+      },
+    );
 
-    test("loads the performance metrics", () async {
-      final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
-      final expectedPerformanceMetrics =
-          expectedProjectMetrics.performanceMetrics;
+    test(
+      "loads the correct number number of performance points from the build day project metrics",
+      () async {
+        final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
+        final expectedNumberOfPoints = period + 1;
 
-      final buildPerformance =
-          expectedPerformanceMetrics.buildsPerformance.first;
-      final expectedX = List.generate(period + 1, (index) => index);
-      final expectedY = List.generate(period, (_) => 0);
-      expectedY.add(buildPerformance.duration.inMilliseconds);
+        final firstProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceMetrics = firstProjectMetrics.performanceSparkline;
+        final performancePoints = performanceMetrics.performance;
 
-      final firstProjectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels.first;
-      final performanceMetrics = firstProjectMetrics.performanceSparkline;
-      final performancePoints = performanceMetrics.performance;
+        expect(performancePoints, hasLength(expectedNumberOfPoints));
+      },
+    );
 
-      expect(performancePoints, hasLength(equals(period + 1)));
-      expect(
-        performanceMetrics.value,
-        equals(expectedPerformanceMetrics.averageBuildDuration),
-      );
-      expect(performancePoints.map((p) => p.x), equals(expectedX));
-      expect(performancePoints.map((p) => p.y), equals(expectedY));
-    });
+    test(
+      "loads the performance metrics from the build day project metrics with the correct average duration",
+      () async {
+        final performance = expectedBuildDayProjectMetrics.performanceMetric;
+        final expectedDuration = performance.averageBuildDuration;
+
+        final firstProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceMetrics = firstProjectMetrics.performanceSparkline;
+
+        expect(performanceMetrics.value, equals(expectedDuration));
+      },
+    );
+
+    test(
+      "loads the performance metrics from the build day project metrics",
+      () async {
+        final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
+        final expectedPerformanceMetrics =
+            expectedBuildDayProjectMetrics.performanceMetric;
+
+        final expectedPoints = List.generate(
+          period,
+          (index) => Point(index, 0),
+        );
+        final buildPerformance =
+            expectedPerformanceMetrics.buildsPerformance.first;
+        expectedPoints.add(
+          Point(period, buildPerformance.duration.inMilliseconds),
+        );
+
+        final firstProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceMetrics = firstProjectMetrics.performanceSparkline;
+        final performancePoints = performanceMetrics.performance;
+
+        expect(performancePoints, equals(expectedPoints));
+      },
+    );
+
+    test(
+      "create performance points with an Y axis equal to 0 if there are no builds performed during the day in the period",
+      () async {
+        final loadingPeriodInDays =
+            ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
+        final currentDate = DateTime.now().date;
+        const absentPerformanceDay = 4;
+        const expectedPoint = Point(absentPerformanceDay, 0);
+        final buildsPerformance = List.generate(
+          loadingPeriodInDays + 1,
+          (index) => BuildPerformance(
+            date: currentDate.subtract(
+              Duration(days: loadingPeriodInDays - index),
+            ),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+        buildsPerformance.removeAt(absentPerformanceDay);
+
+        final buildDayMetrics = BuildDayProjectMetrics(
+          projectId: 'id',
+          performanceMetric: PerformanceMetric(
+            buildsPerformance: DateTimeSet.from(buildsPerformance),
+            averageBuildDuration: const Duration(minutes: 3),
+          ),
+          buildNumberMetric: const BuildNumberMetric(
+            numberOfBuilds: 2,
+          ),
+        );
+
+        final receiveBuildDayUpdates = _ReceiveBuildDayUpdatesStub(
+          metrics: buildDayMetrics,
+        );
+        final projectMetricsNotifier = ProjectMetricsNotifier(
+          receiveEmptyProjectMetrics,
+          receiveBuildDayUpdates,
+        );
+        await setUpNotifier(
+          notifier: projectMetricsNotifier,
+          projects: projects,
+        );
+
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceSparklineViewModel =
+            projectMetrics.performanceSparkline;
+        final performancePoints = performanceSparklineViewModel.performance;
+        final actualPoint = performancePoints[absentPerformanceDay];
+
+        expect(actualPoint, equals(expectedPoint));
+      },
+    );
 
     test(
       "maps the finished build results to finished build result view models",
@@ -277,7 +433,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -303,7 +462,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -334,7 +496,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
 
         await setUpNotifier(notifier: notifier, projects: projects);
 
@@ -373,7 +538,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -396,7 +564,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -430,7 +601,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -466,7 +640,10 @@ void main() {
           (_) => Stream.value(dashboardMetrics),
         );
 
-        final notifier = ProjectMetricsNotifier(receiveProjectMetricsMock);
+        final notifier = ProjectMetricsNotifier(
+          receiveProjectMetricsMock,
+          receiveBuildDayUpdatesStub,
+        );
         await setUpNotifier(notifier: notifier, projects: projects);
 
         final projectMetrics = notifier.projectsMetricsTileViewModels.first;
@@ -518,6 +695,7 @@ void main() {
       () async {
         final metricsNotifier = ProjectMetricsNotifier(
           receiveProjectMetricsUpdates,
+          receiveBuildDayUpdatesStub,
         );
 
         await metricsNotifier.setProjects(projects, errorMessage);
@@ -545,6 +723,7 @@ void main() {
       () async {
         final metricsNotifier = ProjectMetricsNotifier(
           receiveProjectMetricsUpdates,
+          receiveBuildDayUpdatesStub,
         );
 
         bool hasEmptyProjectMetrics;
@@ -645,7 +824,12 @@ void main() {
       ".dispose() unsubscribes from all streams and removes project metrics",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final buildDayUpdates = _ReceiveBuildDayUpdatesStub();
+
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          buildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
@@ -654,6 +838,7 @@ void main() {
         await metricsNotifier.dispose();
 
         expect(metricsUpdates.hasListener, isFalse);
+        expect(buildDayUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetricsTileViewModels, isNull);
       },
     );
@@ -662,7 +847,11 @@ void main() {
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final buildDayUpdates = _ReceiveBuildDayUpdatesStub();
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          buildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
@@ -671,6 +860,7 @@ void main() {
         await metricsNotifier.setProjects(null, null);
 
         expect(metricsUpdates.hasListener, isFalse);
+        expect(buildDayUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetricsTileViewModels, isNull);
 
         await metricsNotifier.dispose();
@@ -681,15 +871,22 @@ void main() {
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+        final buildDayUpdates = _ReceiveBuildDayUpdatesStub();
+
+        final metricsNotifier = ProjectMetricsNotifier(
+          metricsUpdates,
+          buildDayUpdates,
+        );
 
         await metricsNotifier.setProjects(projects, errorMessage);
 
         expect(metricsUpdates.hasListener, isTrue);
+        expect(buildDayUpdates.hasListener, isTrue);
 
         await metricsNotifier.setProjects([], null);
 
         expect(metricsUpdates.hasListener, isFalse);
+        expect(buildDayUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetricsTileViewModels, isEmpty);
 
         await metricsNotifier.dispose();
@@ -951,24 +1148,64 @@ void main() {
   });
 }
 
+/// A stub implementation of the [ReceiveBuildDayProjectMetricsUpdates]
+/// to use in tests.
+class _ReceiveBuildDayUpdatesStub
+    implements ReceiveBuildDayProjectMetricsUpdates {
+  /// A test [BuildDayProjectMetrics] used in tests.
+  static final _buildDayProjectMetrics = BuildDayProjectMetrics(
+    projectId: 'id',
+    performanceMetric: PerformanceMetric(
+      buildsPerformance: DateTimeSet.from([
+        BuildPerformance(
+          date: DateTime.now(),
+          duration: const Duration(minutes: 14),
+        ),
+      ]),
+      averageBuildDuration: const Duration(minutes: 3),
+    ),
+    buildNumberMetric: const BuildNumberMetric(
+      numberOfBuilds: 2,
+    ),
+  );
+
+  /// A [BehaviorSubject] that holds the [BuildDayProjectMetrics] and provides
+  /// a stream of them.
+  ///
+  /// The [BehaviorSubject.stream] is returned from [call] method.
+  final BehaviorSubject<BuildDayProjectMetrics> _buildDaysMetricsSubject =
+      BehaviorSubject();
+
+  ///  Detects if the stream, returned from [call] method has any listeners.
+  bool get hasListener => _buildDaysMetricsSubject.hasListener;
+
+  /// Creates a new instance of the [_ReceiveBuildDayUpdatesStub] with the
+  /// given [metrics].
+  ///
+  /// If no [metrics] passed or the `null` passed, the [_buildDayProjectMetrics]
+  /// is used.
+  _ReceiveBuildDayUpdatesStub({BuildDayProjectMetrics metrics}) {
+    _buildDaysMetricsSubject.add(metrics ?? _buildDayProjectMetrics);
+  }
+
+  /// Creates a new [_ReceiveProjectMetricsUpdatesStub] instance that returns
+  /// that emits `null` from the [call] method.
+  _ReceiveBuildDayUpdatesStub.withNullMetrics() {
+    _buildDaysMetricsSubject.add(null);
+  }
+
+  @override
+  Stream<BuildDayProjectMetrics> call(ProjectIdParam params) {
+    return _buildDaysMetricsSubject.stream;
+  }
+}
+
 /// A stub implementation of the [ReceiveProjectMetricsUpdates].
 class _ReceiveProjectMetricsUpdatesStub
     implements ReceiveProjectMetricsUpdates {
   /// A test [DashboardProjectMetrics] used in tests.
   static final _projectMetrics = DashboardProjectMetrics(
     projectId: 'id',
-    performanceMetrics: PerformanceMetric(
-      buildsPerformance: DateTimeSet.from([
-        BuildPerformance(
-          date: DateTime.now(),
-          duration: const Duration(minutes: 14),
-        )
-      ]),
-      averageBuildDuration: const Duration(minutes: 3),
-    ),
-    buildNumberMetrics: const BuildNumberMetric(
-      numberOfBuilds: 2,
-    ),
     buildResultMetrics: BuildResultMetric(
       buildResults: [
         BuildResult(
@@ -1021,3 +1258,6 @@ class _ReceiveProjectMetricsUpdatesStub
 
 class _ReceiveProjectMetricsUpdatesMock extends Mock
     implements ReceiveProjectMetricsUpdates {}
+
+class _ReceiveBuildDayProjectMetricsUpdatesMock extends Mock
+    implements ReceiveBuildDayProjectMetricsUpdates {}
