@@ -18,6 +18,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
+import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates_stub.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -47,8 +48,19 @@ void main() {
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
     final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
+    final receiveEmptyProjectMetrics = _ReceiveProjectMetricsUpdatesStub(
+      metrics: const DashboardProjectMetrics(),
+    );
+    final receiveNullProjectMetrics =
+        _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
+
     final receiveBuildDayUpdates = _ReceiveBuildDayProjectMetricsUpdatesMock();
     final receiveBuildDayUpdatesStub = _ReceiveBuildDayUpdatesStub();
+    final receiveEmptyBuildDayUpdates = _ReceiveBuildDayUpdatesStub(
+      metrics: const BuildDayProjectMetrics(),
+    );
+    final receiveNullBuildDayUpdates =
+        _ReceiveBuildDayUpdatesStub.withNullMetrics();
 
     DashboardProjectMetrics expectedProjectMetrics;
     BuildDayProjectMetrics expectedBuildDayProjectMetrics;
@@ -140,12 +152,6 @@ void main() {
     test(
       "creates project metrics tile view models with empty points from empty BuildDayProjectMetrics",
       () async {
-        final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
-          metrics: const DashboardProjectMetrics(),
-        );
-        final receiveEmptyBuildDaysMetrics = _ReceiveBuildDayUpdatesStub(
-          metrics: const BuildDayProjectMetrics(),
-        );
         const projects = [ProjectModel(id: 'id', name: 'name')];
 
         final emptyBuildResultMetric = BuildResultMetricViewModel(
@@ -153,8 +159,8 @@ void main() {
         );
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveEmptyMetrics,
-          receiveEmptyBuildDaysMetrics,
+          receiveEmptyProjectMetrics,
+          receiveEmptyBuildDayUpdates,
         );
 
         bool hasNullMetrics;
@@ -186,15 +192,9 @@ void main() {
     test(
       "creates project metrics tile view models with null metrics if the emitted DashboardProjectMetrics is null",
       () async {
-        final receiveNullProjectMetricsUpdates =
-            _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
-        final receiveEmptyBuildDaysMetrics = _ReceiveBuildDayUpdatesStub(
-          metrics: const BuildDayProjectMetrics(),
-        );
-
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveNullProjectMetricsUpdates,
-          receiveEmptyBuildDaysMetrics,
+          receiveNullProjectMetrics,
+          receiveEmptyBuildDayUpdates,
         );
 
         bool hasNullMetrics;
@@ -357,6 +357,51 @@ void main() {
         final performancePoints = performanceMetrics.performance;
 
         expect(performancePoints, equals(expectedPoints));
+      },
+    );
+
+    test(
+      "loads the performance metrics from the build day project metrics",
+      () async {
+        final loadingPeriodInDays =
+            ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
+        final currentDate = DateTime.now();
+        final expectedPerformancePoints = List.generate(
+          loadingPeriodInDays + 1,
+          (index) => Point(index, 0),
+        );
+
+        final buildDayMetrics = BuildDayProjectMetrics(
+          projectId: 'id',
+          performanceMetric: PerformanceMetric(
+            buildsPerformance: DateTimeSet.from([]),
+            averageBuildDuration: const Duration(minutes: 3),
+          ),
+          buildNumberMetric: const BuildNumberMetric(
+            numberOfBuilds: 2,
+          ),
+        );
+
+        final receiveBuildDayUpdates = _ReceiveBuildDayUpdatesStub(
+          metrics: buildDayMetrics,
+        );
+        final projectMetricsNotifier = ProjectMetricsNotifier(
+          receiveEmptyProjectMetrics,
+          receiveBuildDayUpdates,
+        );
+        await setUpNotifier(
+          notifier: projectMetricsNotifier,
+          projects: projects,
+        );
+
+        final projectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels.first;
+        final performanceSparklineViewModel =
+            projectMetrics.performanceSparkline;
+        final actualPerformancePoints =
+            performanceSparklineViewModel.performance;
+
+        expect(actualPerformancePoints, equals(expectedPerformancePoints));
       },
     );
 
