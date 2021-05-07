@@ -244,7 +244,7 @@ void main() {
       () async {
         final firstBuildDay = createBuildDay(
           successful: 0,
-          totalDuration: const Duration(seconds: 1),
+          successfulBuildsDuration: const Duration(seconds: 1),
           day: DateTime(2020),
         );
         final buildDays = [firstBuildDay];
@@ -291,7 +291,7 @@ void main() {
         final expectedPerformances = buildDays.map((buildDay) {
           return BuildPerformance(
             date: buildDay.day,
-            duration: buildDay.totalDuration ~/ buildDay.successful,
+            duration: buildDay.successfulBuildsDuration ~/ buildDay.successful,
           );
         });
         final expectedBuildsPerformance = DateTimeSet<BuildPerformance>.from(
