@@ -361,7 +361,7 @@ void main() {
     );
 
     test(
-      "loads the performance metrics from the build day project metrics",
+      "create performance points with an Y axis equal to 0 if there are no builds performed during the day in the period",
       () async {
         final loadingPeriodInDays =
             ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
