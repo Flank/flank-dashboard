@@ -18,7 +18,6 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates_stub.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -27,6 +26,7 @@ import 'package:metrics/dashboard/presentation/view_models/in_progress_build_res
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
+import 'package:metrics/util/date.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -365,16 +365,24 @@ void main() {
       () async {
         final loadingPeriodInDays =
             ReceiveBuildDayProjectMetricsUpdates.metricsLoadingPeriod.inDays;
-        final currentDate = DateTime.now();
-        final expectedPerformancePoints = List.generate(
+        final currentDate = DateTime.now().date;
+        const absentPerformanceDay = 4;
+        const expectedPoint = Point(absentPerformanceDay, 0);
+        final buildsPerformance = List.generate(
           loadingPeriodInDays + 1,
-          (index) => Point(index, 0),
+          (index) => BuildPerformance(
+            date: currentDate.subtract(
+              Duration(days: loadingPeriodInDays - index),
+            ),
+            duration: const Duration(seconds: 1),
+          ),
         );
+        buildsPerformance.removeAt(absentPerformanceDay);
 
         final buildDayMetrics = BuildDayProjectMetrics(
           projectId: 'id',
           performanceMetric: PerformanceMetric(
-            buildsPerformance: DateTimeSet.from([]),
+            buildsPerformance: DateTimeSet.from(buildsPerformance),
             averageBuildDuration: const Duration(minutes: 3),
           ),
           buildNumberMetric: const BuildNumberMetric(
@@ -398,10 +406,10 @@ void main() {
             projectMetricsNotifier.projectsMetricsTileViewModels.first;
         final performanceSparklineViewModel =
             projectMetrics.performanceSparkline;
-        final actualPerformancePoints =
-            performanceSparklineViewModel.performance;
+        final performancePoints = performanceSparklineViewModel.performance;
+        final actualPoint = performancePoints[absentPerformanceDay];
 
-        expect(actualPerformancePoints, equals(expectedPerformancePoints));
+        expect(actualPoint, equals(expectedPoint));
       },
     );
 
