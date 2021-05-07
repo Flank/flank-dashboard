@@ -18,7 +18,7 @@ class BuildDayData extends BuildDay implements DataModel {
     @required int failed,
     @required int unknown,
     @required int inProgress,
-    @required Duration totalDuration,
+    @required Duration successfulBuildsDuration,
     @required DateTime day,
   }) : super(
           projectId: projectId,
@@ -26,7 +26,7 @@ class BuildDayData extends BuildDay implements DataModel {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -41,7 +41,11 @@ class BuildDayData extends BuildDay implements DataModel {
     final numberOfUnknownBuilds = json['unknown'] as int;
     final numberOfInProgressBuilds = json['inProgress'] as int;
 
-    final totalDurationInMilliseconds = json['totalDuration'] as int;
+    final successfulBuildsDurationMilliseconds =
+        json['successfulBuildsDuration'] as int;
+    final successfulBuildsDuration = Duration(
+      milliseconds: successfulBuildsDurationMilliseconds ?? 0,
+    );
 
     final dayTimestamp = json['day'] as Timestamp;
 
@@ -51,7 +55,7 @@ class BuildDayData extends BuildDay implements DataModel {
       failed: numberOfFailedBuilds ?? 0,
       unknown: numberOfUnknownBuilds ?? 0,
       inProgress: numberOfInProgressBuilds ?? 0,
-      totalDuration: Duration(milliseconds: totalDurationInMilliseconds ?? 0),
+      successfulBuildsDuration: successfulBuildsDuration,
       day: dayTimestamp.toDate(),
     );
   }
@@ -64,7 +68,7 @@ class BuildDayData extends BuildDay implements DataModel {
       'failed': failed,
       'unknown': unknown,
       'inProgress': inProgress,
-      'totalDuration': totalDuration.inMilliseconds,
+      'successfulBuildsDuration': successfulBuildsDuration.inMilliseconds,
       'day': Timestamp.fromDate(day),
     };
   }

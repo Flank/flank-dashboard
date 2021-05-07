@@ -7,10 +7,11 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart
 
 /// A class that represents the performance metric.
 class PerformanceMetric extends Equatable {
-  /// A set of builds performance.
+  /// A set of successful builds performance.
   final DateTimeSet<BuildPerformance> buildsPerformance;
 
-  /// An average build duration of all builds in the [buildsPerformance].
+  /// An average [Duration] of the [BuildPerformance]s in the
+  /// [buildsPerformance].
   final Duration averageBuildDuration;
 
   @override
