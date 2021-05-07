@@ -64,14 +64,14 @@ class ReceiveBuildDayProjectMetricsUpdates
   BuildNumberMetric _createBuildNumberMetric(List<BuildDay> buildDays) {
     final numberOfBuilds = buildDays.fold<int>(
       0,
-      (value, buildDay) => value + _calculateNumberOfBuildsInDay(buildDay),
+      (value, buildDay) => value + _getTotalNumberOfBuilds(buildDay),
     );
 
     return BuildNumberMetric(numberOfBuilds: numberOfBuilds);
   }
 
   /// Returns the number of builds performed during the given [buildDay].
-  int _calculateNumberOfBuildsInDay(BuildDay buildDay) {
+  int _getTotalNumberOfBuilds(BuildDay buildDay) {
     return buildDay.successful +
         buildDay.failed +
         buildDay.unknown +
@@ -89,8 +89,8 @@ class ReceiveBuildDayProjectMetricsUpdates
     );
   }
 
-  /// Calculates the [PerformanceMetric.averageBuildDuration] based on the
-  /// given [buildDays].
+  /// Calculates the average duration of the successful builds performed during
+  /// the given [buildDays].
   ///
   /// Returns a [Duration.zero] if there are no successful builds performed
   /// during the given [buildDays].
