@@ -104,20 +104,22 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 
 | Name | Source | License |
 | :---: | :---: | :---: |
+| clock | [pub.dev](https://pub.dev/packages/clock) | [Apache 2.0](https://pub.dev/packages/clock/license) |
 | collection | [pub.dev](https://pub.dev/packages/collection) | [BSD](https://pub.dev/packages/collection/license) |
-| meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://pub.dev/packages/meta/license) |
 | firebase_functions_interop | [pub.dev](https://pub.dev/packages/firebase_functions_interop) | [BSD](https://pub.dev/packages/firebase_functions_interop/license) |
 | firebase_admin_interop | [pub.dev](https://pub.dev/packages/firebase_admin_interop) | [BSD](https://pub.dev/packages/firebase_admin_interop/license) |
-| clock | [pub.dev](https://pub.dev/packages/clock) | [Apache 2.0](https://pub.dev/packages/clock/license) |
+| meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://pub.dev/packages/meta/license) |
+
+
 
 ### Dev dependencies
 | Name | Source | License |
 | :---: | :---: | :---: |
-| build_runner | [pub.dev](https://pub.dev/packages/build_runner) | [BSD](https://pub.dev/packages/build_runner/license) |
 | build_node_compilers | [pub.dev](https://pub.dev/packages/build_node_compilers) | [BSD](https://pub.dev/packages/build_node_compilers/license) |
+| build_runner | [pub.dev](https://pub.dev/packages/build_runner) | [BSD](https://pub.dev/packages/build_runner/license) |
+| lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://pub.dev/packages/lint/license) |
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://pub.dev/packages/mockito/license) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://pub.dev/packages/test/license) |
-| lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://pub.dev/packages/lint/license) |
 
 ## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)
 
