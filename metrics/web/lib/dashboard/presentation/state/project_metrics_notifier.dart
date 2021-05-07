@@ -311,7 +311,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Subscribes to [BuildDayProjectMetrics] updates.
+  /// Subscribes to updates of the [BuildDayProjectMetrics] of the project with
+  /// the given [projectId].
   void _subscribeToBuildDayMetrics(String projectId) {
     final buildDayMetricsStream = _receiveBuildDayUpdates(
       ProjectIdParam(projectId),

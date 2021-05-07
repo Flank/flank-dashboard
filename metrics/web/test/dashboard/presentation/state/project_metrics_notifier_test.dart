@@ -203,11 +203,15 @@ void main() {
               projectMetricsNotifier.projectsMetricsTileViewModels;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
-          final buildResultMetrics = projectMetrics.first.buildResultMetrics;
-          final performanceMetrics = projectMetrics.first.performanceSparkline;
+          final buildStatusMetric = projectMetrics.first.buildStatus;
+          final coverageMetric = projectMetrics.first.coverage;
+          final buildResultMetric = projectMetrics.first.buildResultMetrics;
+          final stabilityMetric = projectMetrics.first.stability;
 
-          hasNullMetrics =
-              buildResultMetrics == null && performanceMetrics == null;
+          hasNullMetrics = buildStatusMetric.value == null &&
+              coverageMetric.value == null &&
+              buildResultMetric == null &&
+              stabilityMetric.value == null;
         }, () => hasNullMetrics);
         projectMetricsNotifier.addListener(metricsListener);
 
@@ -218,7 +222,7 @@ void main() {
     );
 
     test(
-      "creates project metrics tile view models with null metrics if the emitted BuildDayProjectMetrics is null",
+      "creates project metrics tile view models with null performance and build number metrics if the emitted BuildDayProjectMetrics is null",
       () async {
         final projectMetricsNotifier = ProjectMetricsNotifier(
           receiveEmptyProjectMetrics,
@@ -232,11 +236,11 @@ void main() {
 
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
-          final buildResultMetrics = projectMetrics.first.buildResultMetrics;
-          final performanceMetrics = projectMetrics.first.performanceSparkline;
+          final buildNumberMetric = projectMetrics.first.buildNumberMetric;
+          final performanceMetric = projectMetrics.first.performanceSparkline;
 
           hasNullMetrics =
-              buildResultMetrics == null && performanceMetrics == null;
+              buildNumberMetric == null && performanceMetric == null;
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
