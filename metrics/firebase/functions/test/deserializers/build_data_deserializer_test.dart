@@ -8,6 +8,8 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/build_test_data_generator.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("BuildDataDeserializer", () {
     const id = 'id';
@@ -225,6 +227,7 @@ void main() {
         final buildJson = testDataGenerator.generateBuildJson(
           coverage: coverage,
         );
+
         final buildData = BuildDataDeserializer.fromJson(buildJson);
 
         expect(buildData.coverage, coverage);

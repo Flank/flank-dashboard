@@ -23,7 +23,7 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
   final startedAtDayUtc = _getUtcDay(buildData.startedAt);
 
-  final statusFieldMapper = BuildDayStatusFieldNameMapper();
+  const statusFieldMapper = BuildDayStatusFieldNameMapper();
   final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
 
   final statusFieldIncrement = BuildDayStatusField(

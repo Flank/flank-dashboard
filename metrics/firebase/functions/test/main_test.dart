@@ -10,18 +10,20 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../lib/main.dart';
+import 'package:functions/main.dart';
 import 'test_utils/test_data/build_test_data_generator.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
-  group(("onBuildAddedHandler"), () {
+  group("onBuildAddedHandler", () {
     const tasksCollectionName = 'tasks';
     const projectId = 'projectId';
     const durationInMilliseconds = 123;
+    const buildStatus = BuildStatus.successful;
+
     final startedAt = DateTime.now();
     final startedAtDayUtc = startedAt.toUtc().date;
-    final buildStatus = BuildStatus.successful;
-
     final testDataGenerator = BuildTestDataGenerator(
       projectId: projectId,
     );
@@ -294,7 +296,7 @@ void main() {
       "increments a build day document's successfulBuildsDuration field by the build document snapshot's duration if the build is successful",
       () async {
         final buildJson = testDataGenerator.generateBuildJson(
-          duration: Duration(milliseconds: durationInMilliseconds),
+          duration: const Duration(milliseconds: durationInMilliseconds),
         );
 
         whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
@@ -384,7 +386,7 @@ void main() {
         await onBuildAddedHandler(documentSnapshotMock, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
-          return MapEquality().equals(
+          return const MapEquality().equals(
             data.getNestedData('data').toMap(),
             buildJson,
           );
