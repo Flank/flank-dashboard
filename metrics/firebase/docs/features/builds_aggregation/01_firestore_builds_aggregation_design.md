@@ -49,7 +49,7 @@ The collection's document has the following structure:
   "failed": number,
   "unknown": number,
   "inProgress": number,
-  "totalDuration": number,
+  "successfulBuildsDuration": number,
   "day": timestamp,
 }
 ```
@@ -63,7 +63,7 @@ Let's take a closer look at the document's fields:
 | `failed` | A count of builds with a `failed` status. |
 | `unknown` | A count of builds with an `unknown` status. |
 | `inProgress` | A count of builds with an `inProgress` status. |
-| `totalDuration` | A total builds duration. |
+| `successfulBuildsDuration` | A total duration of successful builds. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
 #### Security Rules
@@ -138,13 +138,15 @@ If we want to provide builds aggregations, we need to process calculations in re
 ```dart
 functions['onBuildAdded'] = functions.firestore
     .document('build/{buildId}')
-    .onCreate(onBuildAddedHandler)
+    .onCreate(onBuildAddedHandler);
 
 
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, EventContext context) {...}
 ```
 
 The trigger's `onBuildAddedHandler` handler should process incrementing logic for the `build_days` collection document, based on the created build's status and started date.
+
+_**Note**: A `successfulBuildsDuration` value should be incremented only if status of created build is `successful`._
 
 The following sequence diagram shows the overall process of how the `onBuildAdded` triggers works:
 
@@ -154,12 +156,12 @@ The following sequence diagram shows the overall process of how the `onBuildAdde
 
 > Explain the main purpose of the trigger.
 
-The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, and decrement the `inProgress` count.
+The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. Also, it should increment the `successfulBuildsDuration` value if a new build status is `successful`. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, decrement the `inProgress` count and increment the `successfulBuildsDuration`. 
 
 ```dart
 functions['onBuildUpdated'] = functions.firestore
     .document('build/{buildId}')
-    .onUpdate(onBuildUpdatedHandler)
+    .onUpdate(onBuildUpdatedHandler);
 
 Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, EventContext context) {...}
 ```
@@ -180,4 +182,4 @@ The `onCreate` handler takes two arguments - `DocumentSnapshot` and `EventContex
 
 The `onUpdate` event handler, has a similar second argument, but the first one is a `Change`. As it has two states: after the update event and prior to the event, we should create an instance of `Change` class using the mocked `DocumentSnapshot`s and pass it as the first argument to the handler.
 
-As our functions process some actions(creating documents or updating existing ones) using the Firestore instance from the `DocumentSnapshot` through `documentSnapshot.firestore` we can use our mocked instance to override this call and replace it with our created mock. This gives us the ability to verify that the functions actually write or updates documents.
+As our functions process some actions (creating documents or updating existing ones) using the Firestore instance from the `DocumentSnapshot` through `documentSnapshot.firestore`, we can use our mocked instance to override this call and replace it with our created mock. This gives us the ability to verify that the functions actually write or updates documents.

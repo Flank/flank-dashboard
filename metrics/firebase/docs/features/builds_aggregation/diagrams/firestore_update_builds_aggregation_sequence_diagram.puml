@@ -15,7 +15,12 @@
     activate FCF
     
     FCF -> FCF : triggers an onUpdate event handler
-    FCF -> Firestore : increases and decreases counters inside the 'build_days' collection
+    FCF -> Firestore : increases and decreases counters inside the 'build_days' collection    
+    
+    alt status of updated Build is successful
+        FCF -> Firestore : increases a successful builds duration inside the 'build_days' collection
+    end
+
     alt Firestore Cloud Functions onUpdate handler fails
         FCF -> FCF : function fails
         FCF -> Firestore : creates a new 'task' to re-run this trigger later

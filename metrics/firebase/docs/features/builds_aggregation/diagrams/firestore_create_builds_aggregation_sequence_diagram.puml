@@ -18,6 +18,10 @@
     
     FCF -> Firestore : increases a counter inside the 'build_days' collection
 
+    alt status of created Build is successful
+        FCF -> Firestore : increases a successful builds duration inside the 'build_days' collection
+    end
+
     alt Firestore Cloud Functions onCreate handler fails
         FCF -> FCF : function fails
         FCF -> Firestore : creates a new 'task' to re-run this trigger later
