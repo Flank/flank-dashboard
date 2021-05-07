@@ -22,7 +22,7 @@ class FirestoreBuildDayRepository implements BuildDayRepository {
   }) {
     ArgumentError.checkNotNull(projectId, 'projectId');
 
-    final collection = _firestore.collection('build');
+    final collection = _firestore.collection('build_days');
 
     Query query = collection.where('projectId', isEqualTo: projectId);
 

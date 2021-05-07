@@ -212,7 +212,7 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 ### Firebase Key Protection
 
-Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
+Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
 
 Currently, the following APIs are enabled for the `browser key`:
 - `Identity Toolkit API`

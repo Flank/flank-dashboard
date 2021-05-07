@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0
+// Use of this source code is governed by the Apache License, Version 2.0 
 // that can be found in the LICENSE file.
 
 library metrics_core;
@@ -22,3 +22,4 @@ export 'src/domain/value_objects/exceptions/validation_exception.dart';
 export 'src/domain/value_objects/password.dart';
 export 'src/domain/value_objects/percent.dart';
 export 'src/domain/value_objects/value_object.dart';
+export 'src/util/date.dart';

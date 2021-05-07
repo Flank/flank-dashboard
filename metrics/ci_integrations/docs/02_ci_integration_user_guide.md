@@ -8,7 +8,7 @@ Importing builds data to the Metrics project requires using the [`CI Integration
 > Link to supporting documentation, GitHub tickets, etc.
 
 * [CI Integrations Tool Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
-* [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md)
+* [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/16_buildkite_ci_integration.md)
 
 ## Using The CI Integrations Tool
 
@@ -262,7 +262,7 @@ Obviously, it is not very handy to manually run the CI Integrations tool every t
 Moreover, storing a configuration file on your machine may be not as safe as it would like to be. 
 
 The solution is to automate builds data importing within the CI tool you are using. 
-The implementation of such automation is out of the scope for this user guide and can be tricky, but the result worth all the efforts. For more information, consider the [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md) document that provides an example of how to configure automatic builds importing for `Buildkite` CI.
+The implementation of such automation is out of the scope for this user guide and can be tricky, but the result worth all the efforts. For more information, consider the [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/16_buildkite_ci_integration.md) document that provides an example of how to configure automatic builds importing for `Buildkite` CI.
 
 ## Results
 > What was the outcome of the project?

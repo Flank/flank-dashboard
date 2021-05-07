@@ -129,6 +129,7 @@ class Deployer {
         deployPaths.firebasePath,
         deployPaths.webAppPath,
       );
+      await _gcloudService.configureOAuthOrigins(projectId);
     } finally {
       _deleteDirectory(tempDirectory);
     }
