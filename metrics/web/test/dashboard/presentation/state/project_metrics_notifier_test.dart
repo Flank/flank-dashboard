@@ -220,14 +220,8 @@ void main() {
     test(
       "creates project metrics tile view models with null metrics if the emitted BuildDayProjectMetrics is null",
       () async {
-        final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
-          metrics: const DashboardProjectMetrics(),
-        );
-        final receiveNullBuildDayUpdates =
-            _ReceiveBuildDayUpdatesStub.withNullMetrics();
-
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveEmptyMetrics,
+          receiveEmptyProjectMetrics,
           receiveNullBuildDayUpdates,
         );
 
