@@ -27,7 +27,6 @@ import 'package:metrics/dashboard/presentation/view_models/project_group_dropdow
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:metrics_core/src/util/date.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
