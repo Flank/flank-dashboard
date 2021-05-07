@@ -15,6 +15,8 @@ import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/matchers.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ReceiveBuildDayProjectMetricsUpdates", () {
     const projectId = 'id';
@@ -240,21 +242,58 @@ void main() {
     );
 
     test(
+      ".call() returns a build day project metrics with the performance metric having build performance with a zero average duration if a number of successful builds is 0",
+      () async {
+        final firstBuildDay = createBuildDay(
+          successful: 0,
+          totalDuration: const Duration(seconds: 1),
+          day: DateTime(2020),
+        );
+        final buildDays = [firstBuildDay];
+        final expectedPerformances = buildDays.map((buildDay) {
+          return BuildPerformance(
+            date: buildDay.day,
+            duration: Duration.zero,
+          );
+        });
+        final expectedBuildsPerformance = DateTimeSet<BuildPerformance>.from(
+          expectedPerformances,
+        );
+
+        whenStreamBuildDays().thenAnswer((_) => Stream.value(buildDays));
+
+        final metricsStream = useCase.call(projectIdParam);
+
+        final metricsMatcher = buildDayMetricsMatcher(
+          performanceMetricMatcher: isA<PerformanceMetric>().having(
+            (metric) => metric.buildsPerformance,
+            'buildsPerformance',
+            equals(expectedBuildsPerformance),
+          ),
+        );
+
+        expect(metricsStream, emits(metricsMatcher));
+      },
+    );
+
+    test(
       ".call() returns a build day project metrics with the performance metric with the correct builds performance",
       () async {
         final firstBuildDay = createBuildDay(
-          totalDuration: const Duration(seconds: 2),
+          totalDuration: const Duration(seconds: 4),
+          successful: 2,
           day: DateTime(2020),
         );
         final secondBuildDay = createBuildDay(
           totalDuration: const Duration(seconds: 3),
+          successful: 3,
           day: DateTime(2021),
         );
         final buildDays = [firstBuildDay, secondBuildDay];
         final expectedPerformances = buildDays.map((buildDay) {
           return BuildPerformance(
             date: buildDay.day,
-            duration: buildDay.totalDuration,
+            duration: buildDay.totalDuration ~/ buildDay.successful,
           );
         });
         final expectedBuildsPerformance = DateTimeSet<BuildPerformance>.from(
