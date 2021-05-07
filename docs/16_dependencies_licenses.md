@@ -117,6 +117,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | build_node_compilers | [pub.dev](https://pub.dev/packages/build_node_compilers) | [BSD](https://pub.dev/packages/build_node_compilers/license) |
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://pub.dev/packages/mockito/license) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://pub.dev/packages/test/license) |
+| lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://pub.dev/packages/lint/license) |
 
 ## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)
 
