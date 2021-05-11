@@ -6,9 +6,10 @@
 /// A class that holds the strings for the Firebase prompts.
 class FirebaseStrings {
   static const String acceptTerms = '''
-If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:  
+If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:
 
 1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
+   NOTE: Make sure you are using the same account used to authenticate with the Google Cloud SDK on the previous steps.
 2. Enter any project name.
 3. Accept the Firebase terms of service.
 4. Press a 'Continue' button.

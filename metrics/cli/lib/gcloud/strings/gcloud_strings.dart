@@ -12,6 +12,7 @@ class GCloudStrings {
 If you have already accepted the terms of the GCloud service, skip this step otherwise, follow the steps below to accept them:  
   
 1. Follow the link https://console.cloud.google.com/.
+   NOTE: Make sure you are using the same account used to authenticate with the Google Cloud SDK on the previous steps.
 2. A welcome popup should appear.
 3. Select your country.
 4. Accept the GCloud terms of service.
