@@ -12,10 +12,10 @@ class GCloudStrings {
 If you have already accepted the terms of the GCloud service, skip this step otherwise, follow the steps below to accept them:  
   
 1. Follow the link https://console.cloud.google.com/.
-2. A welcome popup should appears.
+2. A welcome popup should appear.
 3. Select your country.
 4. Accept the GCloud terms of service.
-5. Press a 'AGREE AND CONTINUE' button.
+5. Press an 'AGREE AND CONTINUE' button.
 
 Once you are done, press ENTER to continue:''';
 
