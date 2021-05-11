@@ -94,6 +94,7 @@ class Deployer {
 
     final projectId = await _gcloudService.createProject();
 
+    _gcloudService.configureProjectOrganization(projectId);
     await _firebaseService.createWebApp(projectId);
 
     final tempDirectory = _createTempDirectory();

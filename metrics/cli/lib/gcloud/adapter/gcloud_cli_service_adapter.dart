@@ -69,4 +69,9 @@ class GCloudCliServiceAdapter implements GCloudService {
     final randomString = randomAlphaNumeric(5).toLowerCase();
     return 'metrics-$randomString';
   }
+
+  @override
+  FutureOr<void> configureProjectOrganization(String projectId) {
+    _prompter.prompt(GCloudStrings.configureProjectOrganization(projectId));
+  }
 }

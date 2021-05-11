@@ -93,7 +93,7 @@ To enable Firebase analytics for the currently deploying project, follow the nex
 
 1. Follow the link and click an 'Enable Google Analytics' button: https://console.firebase.google.com/project/${project_id}/settings/integrations/analytics.
 
-Once you are done, press any key to continue:
+Once you are done, press ENTER to continue:
 ```
 
 ### Firebase auth configuration
