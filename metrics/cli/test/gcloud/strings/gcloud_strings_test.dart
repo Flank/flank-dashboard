@@ -10,7 +10,7 @@ void main() {
 
     test(
       ".configureOAuth() returns a message that contains the given project id",
-          () {
+      () {
         expect(
           GCloudStrings.configureOAuth(projectId),
           contains(projectId),
@@ -20,7 +20,7 @@ void main() {
 
     test(
       ".configureProjectOrganization() returns a message that contains the given project id",
-          () {
+      () {
         expect(
           GCloudStrings.configureProjectOrganization(projectId),
           contains(projectId),

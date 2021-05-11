@@ -33,7 +33,7 @@ If you are going to use any other domains to access the Metrics Web application,
 
   static String configureProjectOrganization(String projectId) => '''
 The $projectId GCloud project has been created successfully! 
-If you are want to configure the organization for the $projectId project, you should follow the next guide https://cloud.google.com/resource-manager/docs/project-migration.
+If you want to configure the organization for the $projectId project, use the following guide https://cloud.google.com/resource-manager/docs/project-migration.
 
 Once you are done, press ENTER to continue:''';
 }
