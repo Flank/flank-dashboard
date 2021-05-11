@@ -12,8 +12,8 @@ import '../../test_utils/prompter_mock.dart';
 
 void main() {
   group('GCloudCliServiceAdapter', () {
-    const region = 'testRegion';
     const projectId = 'projectId';
+    const region = 'testRegion';
     const enterRegion = GCloudStrings.enterRegionName;
     const acceptTerms = GCloudStrings.acceptTerms;
 
@@ -22,6 +22,9 @@ void main() {
     final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
     final stateError = StateError('test');
     final configureOAuth = GCloudStrings.configureOAuth(projectId);
+    final configureOrganization = GCloudStrings.configureProjectOrganization(
+      projectId,
+    );
 
     tearDown(() {
       reset(gcloudCli);
@@ -336,6 +339,27 @@ void main() {
 
         expect(
           () => gcloudService.configureOAuthOrigins(projectId),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".configureProjectOrganization() prompts the user to configure organization for the GCloud project",
+      () async {
+        gcloudService.configureProjectOrganization(projectId);
+
+        verify(prompter.prompt(configureOrganization)).called(once);
+      },
+    );
+
+    test(
+      ".configureProjectOrganization() throws if prompter throws during the configuring organization",
+      () {
+        when(prompter.prompt(configureOrganization)).thenThrow(stateError);
+
+        expect(
+          () => gcloudService.configureProjectOrganization(projectId),
           throwsStateError,
         );
       },

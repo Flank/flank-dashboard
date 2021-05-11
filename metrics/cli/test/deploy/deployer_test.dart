@@ -439,6 +439,22 @@ void main() {
     );
 
     test(
+      ".deploy() creates the GCloud project before configuring the organization for it",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.createProject(),
+          gcloudService.configureProjectOrganization(any),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() creates the GCloud project before creating the Firebase web app",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -450,6 +466,20 @@ void main() {
           gcloudService.createProject(),
           firebaseService.createWebApp(any),
         ]);
+      },
+    );
+
+    test(
+      ".deploy() configures organization for the GCloud project",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verify(gcloudService.configureProjectOrganization(projectId))
+            .called(once);
       },
     );
 

@@ -6,13 +6,23 @@ import 'package:test/test.dart';
 
 void main() {
   group('GCloudStrings', () {
+    const projectId = 'projectId';
+
     test(
       ".configureOAuth() returns a message that contains the given project id",
       () {
-        const projectId = 'projectId';
-
         expect(
           GCloudStrings.configureOAuth(projectId),
+          contains(projectId),
+        );
+      },
+    );
+
+    test(
+      ".configureProjectOrganization() returns a message that contains the given project id",
+      () {
+        expect(
+          GCloudStrings.configureProjectOrganization(projectId),
           contains(projectId),
         );
       },

@@ -15,9 +15,12 @@ abstract class GCloudService extends InfoService {
   Future<String> createProject();
 
   /// Accepts the terms of the service.
-  FutureOr<void> acceptTermsOfService() {}
+  FutureOr<void> acceptTermsOfService();
 
   /// Configures GCloud OAuth Authorized JavaScript origins for
   /// the GCloud project with the given [projectId].
   FutureOr<void> configureOAuthOrigins(String projectId);
+
+  /// Configures the organization for the project with the given [projectId].
+  FutureOr<void> configureProjectOrganization(String projectId);
 }
