@@ -1,12 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
@@ -21,8 +17,6 @@ void main() {
   group("ReceiveProjectMetricUpdates", () {
     const expectedBuildsToLoad =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
-    const expectedLoadingPeriod =
-        ReceiveProjectMetricsUpdates.buildsLoadingPeriod;
 
     const projectId = 'projectId';
     final emptyBuildsStream = Stream<List<Build>>.value([]);
@@ -55,32 +49,6 @@ void main() {
       );
     });
 
-    test("subscribes to builds for common builds loading periods", () {
-      final repository = _MetricsRepositoryMock();
-
-      when(
-        repository.latestProjectBuildsStream(any, any),
-      ).thenAnswer((_) => emptyBuildsStream);
-      when(
-        repository.lastSuccessfulBuildStream(any),
-      ).thenAnswer((_) => emptyBuildsStream);
-      when(
-        repository.projectBuildsFromDateStream(any, any),
-      ).thenAnswer((_) => emptyBuildsStream);
-
-      final receiveProjectMetricsUpdates =
-          ReceiveProjectMetricsUpdates(repository);
-
-      receiveProjectMetricsUpdates(const ProjectIdParam('projectId'));
-
-      verify(
-        repository.projectBuildsFromDateStream(
-          any,
-          DateTime.now().subtract(expectedLoadingPeriod).date,
-        ),
-      ).called(once);
-    });
-
     test("subscribes to number of builds to load for chart metrics", () {
       final repository = _MetricsRepositoryMock();
 
@@ -89,9 +57,6 @@ void main() {
       ).thenAnswer((_) => emptyBuildsStream);
       when(
         repository.lastSuccessfulBuildStream(any),
-      ).thenAnswer((_) => emptyBuildsStream);
-      when(
-        repository.projectBuildsFromDateStream(any, any),
       ).thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
@@ -112,9 +77,6 @@ void main() {
       ).thenAnswer((_) => emptyBuildsStream);
       when(
         repository.lastSuccessfulBuildStream(any),
-      ).thenAnswer((_) => emptyBuildsStream);
-      when(
-        repository.projectBuildsFromDateStream(any, any),
       ).thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates = ReceiveProjectMetricsUpdates(
@@ -218,104 +180,6 @@ void main() {
         expect(actualStabilityMetric, equals(expectedStabilityMetric));
       },
     );
-
-    test("loads the build number metric for common builds loading period", () {
-      final actualBuildNumberMetrics = projectMetrics.buildNumberMetrics;
-
-      final periodStartDate = DateTime.now().subtract(expectedLoadingPeriod);
-
-      final buildsInPeriod = builds
-          .where((element) => element.startedAt.isAfter(periodStartDate))
-          .toList();
-
-      final expectedBuildNumberMetric = BuildNumberMetric(
-        numberOfBuilds: buildsInPeriod.length,
-      );
-
-      expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetric));
-    });
-
-    test(
-        "loads the performance metric for the finished builds from builds loaded in the builds loading period",
-        () {
-      final actualPerformanceMetric = projectMetrics.performanceMetrics;
-
-      final periodStartDate = DateTime.now().subtract(expectedLoadingPeriod);
-
-      final finishedBuildsInPeriod = builds
-          .where((build) => build.buildStatus != BuildStatus.inProgress)
-          .where((build) => build.startedAt.isAfter(periodStartDate))
-          .toList();
-
-      final buildsPerformance = finishedBuildsInPeriod.map(
-        (build) => BuildPerformance(
-          date: build.startedAt,
-          duration: build.duration,
-        ),
-      );
-
-      final averageDuration = finishedBuildsInPeriod.fold<Duration>(
-            const Duration(),
-            (value, element) => value + element.duration,
-          ) ~/
-          finishedBuildsInPeriod.length;
-
-      final expectedPerformanceMetric = PerformanceMetric(
-        buildsPerformance: DateTimeSet.from(buildsPerformance),
-        averageBuildDuration: averageDuration,
-      );
-
-      expect(
-        actualPerformanceMetric.buildsPerformance.length,
-        equals(expectedPerformanceMetric.buildsPerformance.length),
-      );
-
-      expect(
-        actualPerformanceMetric.averageBuildDuration,
-        equals(expectedPerformanceMetric.averageBuildDuration),
-      );
-    });
-
-    test("loads all fields in the performance metrics", () {
-      final performanceMetrics = projectMetrics.performanceMetrics;
-      final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
-
-      final periodStartDate = DateTime.now().subtract(expectedLoadingPeriod);
-
-      final finishedBuildsInPeriod = builds
-          .where((build) => build.buildStatus != BuildStatus.inProgress)
-          .where((build) => build.startedAt.isAfter(periodStartDate))
-          .toList();
-
-      expect(
-        performanceMetrics.buildsPerformance.length,
-        equals(finishedBuildsInPeriod.length),
-      );
-
-      expect(
-        firstPerformanceMetric.date,
-        equals(finishedBuildsInPeriod.first.startedAt),
-      );
-
-      expect(
-        firstPerformanceMetric.duration,
-        equals(finishedBuildsInPeriod.first.duration),
-      );
-    });
-
-    test("loads build number metric", () {
-      final timestamp = DateTime.now();
-      final buildsLoadingStartDate =
-          timestamp.subtract(expectedLoadingPeriod).date;
-      final thisWeekBuilds = builds.where(
-        (build) => build.startedAt.isAfter(buildsLoadingStartDate),
-      );
-
-      final totalNumberOfBuilds = thisWeekBuilds.length;
-      final buildNumberMetrics = projectMetrics.buildNumberMetrics;
-
-      expect(buildNumberMetrics.numberOfBuilds, equals(totalNumberOfBuilds));
-    });
 
     test("loads all fields in the build result metrics", () {
       final buildResultMetrics = projectMetrics.buildResultMetrics;
@@ -484,18 +348,13 @@ class _MetricsRepositoryStub implements MetricsRepository {
   Stream<List<Build>> latestProjectBuildsStream(String projectId, int limit) {
     List<Build> latestBuilds = _builds;
 
-    if (latestBuilds.length > limit) {
-      latestBuilds = latestBuilds.sublist(0, limit);
+    final buildsLength = latestBuilds.length;
+    if (buildsLength > limit) {
+      final startIndex = buildsLength - limit;
+      latestBuilds = latestBuilds.sublist(startIndex);
     }
 
     return Stream.value(latestBuilds);
-  }
-
-  @override
-  Stream<List<Build>> projectBuildsFromDateStream(
-      String projectId, DateTime from) {
-    return Stream.value(
-        _builds.where((build) => build.startedAt.isAfter(from)).toList());
   }
 
   @override
