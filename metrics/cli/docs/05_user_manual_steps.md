@@ -9,8 +9,8 @@ The motivation for this document is to describe all user's manual steps to imple
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Sentry documentation](https://docs.sentry.io/)
-- [Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md)
-- [Security audit](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md)
+- [Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md)
+- [Security audit](https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
@@ -74,10 +74,10 @@ To initialize Firestore data for the currently deploying project, consider the f
    - 'isPasswordSignInOptionEnabled' - indicates whether the Email and Password sign-in option is enabled.
 
 To get more info about creating the 'allowed_email_domains' collection, see the following document: 
-https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#google-sign-in-allowed-domains-configuration.
+https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#google-sign-in-allowed-domains-configuration.
 
 Consider the following link for a detailed structure of the 'feature_config' collection:
-https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection.
+https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md#the-feature_config-collection.
 
 Press any key to continue when you finish with the Firestore database initialization:
 ```
@@ -101,8 +101,8 @@ Once you are done, press ENTER to continue:
 To simplify the Firebase auth configuration, we are going to provide instructions on how to configure it for the Metrics application during the deployment process. 
 
 These instructions will contain information on how to configure the following auth providers: 
-- [Google](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#firebase-google-sign-in-configuration)
-- [Email and Password](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#firebase-email-and-password-sign-in-configuration)
+- [Google](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#firebase-google-sign-in-configuration)
+- [Email and Password](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#firebase-email-and-password-sign-in-configuration)
 
 Consider the following prompt instructions helping to configure the Firebase Auth:
 

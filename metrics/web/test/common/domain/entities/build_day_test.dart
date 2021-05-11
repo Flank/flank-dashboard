@@ -11,7 +11,7 @@ void main() {
     const failed = 2;
     const unknown = 3;
     const inProgress = 4;
-    const totalDuration = Duration(seconds: 1);
+    const successfulBuildsDuration = Duration(seconds: 1);
 
     final day = DateTime(2020);
 
@@ -25,7 +25,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -43,7 +43,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -61,7 +61,7 @@ void main() {
             failed: null,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -79,7 +79,7 @@ void main() {
             failed: failed,
             unknown: null,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -97,7 +97,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: null,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -106,7 +106,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given total duration is null",
+      "throws an ArgumentError if the given successful builds duration is null",
       () {
         expect(
           () => BuildDay(
@@ -115,7 +115,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: null,
+            successfulBuildsDuration: null,
             day: day,
           ),
           throwsArgumentError,
@@ -133,7 +133,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: null,
           ),
           throwsArgumentError,
@@ -150,7 +150,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -159,7 +159,10 @@ void main() {
         expect(buildDay.failed, equals(failed));
         expect(buildDay.unknown, equals(unknown));
         expect(buildDay.inProgress, equals(inProgress));
-        expect(buildDay.totalDuration, equals(totalDuration));
+        expect(
+          buildDay.successfulBuildsDuration,
+          equals(successfulBuildsDuration),
+        );
         expect(buildDay.day, equals(day));
       },
     );
@@ -173,7 +176,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -183,7 +186,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 

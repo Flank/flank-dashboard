@@ -24,8 +24,9 @@ class BuildDay extends Equatable {
   /// A number of [BuildStatus.inProgress] builds ran during this build day.
   final int inProgress;
 
-  /// A total [Duration] of builds performed during this build day.
-  final Duration totalDuration;
+  /// A total [Duration] of [BuildStatus.successful] builds performed during
+  /// this build day.
+  final Duration successfulBuildsDuration;
 
   /// A [DateTime] that represents the date of this build day.
   final DateTime day;
@@ -37,7 +38,7 @@ class BuildDay extends Equatable {
         failed,
         unknown,
         inProgress,
-        totalDuration,
+        successfulBuildsDuration,
         day,
       ];
 
@@ -50,7 +51,7 @@ class BuildDay extends Equatable {
     @required this.failed,
     @required this.unknown,
     @required this.inProgress,
-    @required this.totalDuration,
+    @required this.successfulBuildsDuration,
     @required this.day,
   }) {
     ArgumentError.checkNotNull(projectId, 'projectId');
@@ -58,7 +59,10 @@ class BuildDay extends Equatable {
     ArgumentError.checkNotNull(failed, 'failed');
     ArgumentError.checkNotNull(unknown, 'unknown');
     ArgumentError.checkNotNull(inProgress, 'inProgress');
-    ArgumentError.checkNotNull(totalDuration, 'totalDuration');
+    ArgumentError.checkNotNull(
+      successfulBuildsDuration,
+      'successfulBuildsDuration',
+    );
     ArgumentError.checkNotNull(day, 'day');
   }
 }

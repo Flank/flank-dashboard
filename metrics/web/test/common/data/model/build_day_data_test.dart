@@ -14,7 +14,7 @@ void main() {
     const failed = 1;
     const unknown = 1;
     const inProgress = 1;
-    const totalDuration = Duration(seconds: 1);
+    const successfulBuildsDuration = Duration(seconds: 1);
 
     final day = DateTime(2021);
 
@@ -24,7 +24,7 @@ void main() {
       int failed = 1,
       int unknown = 1,
       int inProgress = 1,
-      int totalDuration,
+      int successfulBuildsDuration,
       Timestamp day,
     }) {
       return {
@@ -33,7 +33,7 @@ void main() {
         'failed': failed,
         'unknown': unknown,
         'inProgress': inProgress,
-        'totalDuration': totalDuration,
+        'successfulBuildsDuration': successfulBuildsDuration,
         'day': day ?? Timestamp.fromDate(DateTime(2021)),
       };
     }
@@ -48,7 +48,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -66,7 +66,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -84,7 +84,7 @@ void main() {
             failed: null,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -102,7 +102,7 @@ void main() {
             failed: failed,
             unknown: null,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -120,7 +120,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: null,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: day,
           ),
           throwsArgumentError,
@@ -129,7 +129,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given total duration is null",
+      "throws an ArgumentError if the given successful builds duration is null",
       () {
         expect(
           () => BuildDayData(
@@ -138,7 +138,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: null,
+            successfulBuildsDuration: null,
             day: day,
           ),
           throwsArgumentError,
@@ -156,7 +156,7 @@ void main() {
             failed: failed,
             unknown: unknown,
             inProgress: inProgress,
-            totalDuration: totalDuration,
+            successfulBuildsDuration: successfulBuildsDuration,
             day: null,
           ),
           throwsArgumentError,
@@ -173,7 +173,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -182,7 +182,10 @@ void main() {
         expect(buildDay.failed, equals(failed));
         expect(buildDay.unknown, equals(unknown));
         expect(buildDay.inProgress, equals(inProgress));
-        expect(buildDay.totalDuration, equals(totalDuration));
+        expect(
+          buildDay.successfulBuildsDuration,
+          equals(successfulBuildsDuration),
+        );
         expect(buildDay.day, equals(day));
       },
     );
@@ -196,7 +199,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -206,7 +209,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -232,7 +235,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 
@@ -242,7 +245,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration.inMilliseconds,
+          successfulBuildsDuration: successfulBuildsDuration.inMilliseconds,
           day: Timestamp.fromDate(day),
         );
 
@@ -297,14 +300,17 @@ void main() {
     );
 
     test(
-      ".fromJson() maps the null total duration in the given json to zero duration",
+      ".fromJson() maps the null successful builds duration in the given json to zero duration",
       () {
-        const expectedTotalDuration = Duration.zero;
-        final json = createBuildDayDataJson(totalDuration: null);
+        const expectedSuccessfulBuildsDuration = Duration.zero;
+        final json = createBuildDayDataJson(successfulBuildsDuration: null);
 
         final buildDayData = BuildDayData.fromJson(json);
 
-        expect(buildDayData.totalDuration, equals(expectedTotalDuration));
+        expect(
+          buildDayData.successfulBuildsDuration,
+          equals(expectedSuccessfulBuildsDuration),
+        );
       },
     );
 
@@ -317,7 +323,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration.inMilliseconds,
+          successfulBuildsDuration: successfulBuildsDuration.inMilliseconds,
           day: Timestamp.fromDate(day),
         );
 
@@ -327,7 +333,7 @@ void main() {
           failed: failed,
           unknown: unknown,
           inProgress: inProgress,
-          totalDuration: totalDuration,
+          successfulBuildsDuration: successfulBuildsDuration,
           day: day,
         );
 

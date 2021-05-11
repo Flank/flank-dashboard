@@ -62,11 +62,20 @@ class ReceiveBuildDayProjectMetricsUpdates
 
   /// Creates a [BuildNumberMetric] based on the given [buildDays].
   BuildNumberMetric _createBuildNumberMetric(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuilds(
-      buildDays,
+    final numberOfBuilds = buildDays.fold<int>(
+      0,
+      (value, buildDay) => value + _getTotalNumberOfBuilds(buildDay),
     );
 
-    return BuildNumberMetric(numberOfBuilds: numberOfBuildsInPeriod);
+    return BuildNumberMetric(numberOfBuilds: numberOfBuilds);
+  }
+
+  /// Returns the number of builds performed during the given [buildDay].
+  int _getTotalNumberOfBuilds(BuildDay buildDay) {
+    return buildDay.successful +
+        buildDay.failed +
+        buildDay.unknown +
+        buildDay.inProgress;
   }
 
   /// Creates a [PerformanceMetric] based on the given [buildDays].
@@ -80,50 +89,38 @@ class ReceiveBuildDayProjectMetricsUpdates
     );
   }
 
-  /// Calculates the average [Duration] of [buildDays] using the
-  /// [BuildDay.totalDuration].
+  /// Calculates the average duration of the successful builds performed during
+  /// the given [buildDays].
   ///
-  /// Returns a [Duration.zero] if there are no builds performed during the
-  /// given [buildDays].
+  /// Returns a [Duration.zero] if there are no successful builds performed
+  /// during the given [buildDays].
   Duration _calculateAverageDuration(List<BuildDay> buildDays) {
-    final numberOfBuildsInPeriod = _calculateTotalNumberOfBuilds(buildDays);
+    int numberOfSuccessfulBuilds = 0;
+    Duration successfulBuildsDuration = Duration.zero;
 
-    if (numberOfBuildsInPeriod == 0) return Duration.zero;
+    for (final buildDay in buildDays) {
+      numberOfSuccessfulBuilds += buildDay.successful;
+      successfulBuildsDuration += buildDay.successfulBuildsDuration;
+    }
 
-    final totalDurationInPeriod = _calculateTotalDurationOfBuilds(buildDays);
+    if (numberOfSuccessfulBuilds == 0) return Duration.zero;
 
-    return totalDurationInPeriod ~/ numberOfBuildsInPeriod;
+    return successfulBuildsDuration ~/ numberOfSuccessfulBuilds;
   }
 
-  /// Returns the total number of builds performed during the given [buildDays].
-  int _calculateTotalNumberOfBuilds(List<BuildDay> buildDays) {
-    return buildDays.fold<int>(
-      0,
-      (value, buildDay) => value + _calculateNumberOfBuildsInDay(buildDay),
-    );
-  }
-
-  /// Returns the sum of build [Duration]s performed during the given [buildDays].
-  Duration _calculateTotalDurationOfBuilds(List<BuildDay> buildDays) {
-    return buildDays.fold<Duration>(
-      Duration.zero,
-      (value, buildDay) => value + buildDay.totalDuration,
-    );
-  }
-
-  /// Returns the number of builds performed during the given [buildDay].
-  int _calculateNumberOfBuildsInDay(BuildDay buildDay) {
-    return buildDay.successful +
-        buildDay.failed +
-        buildDay.unknown +
-        buildDay.inProgress;
-  }
-
-  /// Maps the given [buildDay] to [BuildPerformance].
+  /// Maps the given [buildDay] to a [BuildPerformance].
   BuildPerformance _mapBuildDayToPerformance(BuildDay buildDay) {
+    final numberOfSuccessfulBuilds = buildDay.successful;
+
+    Duration averageBuildsDuration = Duration.zero;
+    if (numberOfSuccessfulBuilds != 0) {
+      averageBuildsDuration =
+          buildDay.successfulBuildsDuration ~/ numberOfSuccessfulBuilds;
+    }
+
     return BuildPerformance(
       date: buildDay.day,
-      duration: buildDay.totalDuration,
+      duration: averageBuildsDuration,
     );
   }
 }

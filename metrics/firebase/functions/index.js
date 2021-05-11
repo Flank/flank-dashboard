@@ -3,6 +3,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const dartFunctions = require('./build/packages/functions/main.dart.js');
 
 admin.initializeApp(functions.config().firebase);
 const settings = { timestampsInSnapshots: true };
@@ -121,3 +122,5 @@ function randomDate(start, end) {
 function randomInt(from, to) {
     return Math.floor(from + Math.random() * (to - from));
 }
+
+exports.onBuildAdded = dartFunctions.onBuildAdded;
