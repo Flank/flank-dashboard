@@ -29,6 +29,19 @@ jobs:
         run: npm install
         working-directory: metrics/firebase/
 
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.12.0-133.2.beta
+
+      - name: Get dependencies
+        run: pub get
+        working-directory: metrics/firebase/functions
+
+      - name: Run functions tests
+        run: pub run test
+        working-directory: metrics/firebase/functions
+
       - name: Run Firestore security rules tests
         run: firebase emulators:exec --only firestore "npm run test"
         working-directory: metrics/firebase/
