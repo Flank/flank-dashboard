@@ -33,8 +33,8 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: platform-platform/monorepo
-          event-type: ${{ github.repository }}
+          repository: ${{ github.repository }}
+          event-type: building_project
           client-payload: '{"building_metrics_web": "true"}'
 
       - name: Checkout
@@ -180,8 +180,8 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: platform-platform/monorepo
-          event-type: ${{ github.repository }}
+          repository: ${{ github.repository }}
+          event-type: building_project
           client-payload: '{"building_metrics_web": "true"}'
       - name: Send notification to Slack
         if: needs.metrics-actions.result == 'failure' || needs.metrics-actions.result == 'cancelled'
