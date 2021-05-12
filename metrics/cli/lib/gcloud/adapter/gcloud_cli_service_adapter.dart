@@ -40,7 +40,8 @@ class GCloudCliServiceAdapter implements GCloudService {
     await _gcloudCli.createProject(projectId);
 
     await _gcloudCli.listRegions(projectId);
-    final region = _prompter.prompt(GCloudStrings.enterRegionName);
+    final regionPrompt = _prompter.prompt(GCloudStrings.enterRegionName);
+    final region = _formatRegionName(regionPrompt);
 
     await _gcloudCli.createProjectApp(region, projectId);
     await _gcloudCli.enableFirestoreApi(projectId);
@@ -68,6 +69,13 @@ class GCloudCliServiceAdapter implements GCloudService {
   String _generateProjectId() {
     final randomString = randomAlphaNumeric(5).toLowerCase();
     return 'metrics-$randomString';
+  }
+
+  /// Formats the given [region].
+  ///
+  /// Returns an empty [String] if the given [region] is `null`.
+  String _formatRegionName(String region) {
+    return region?.split(' ')?.first ?? '';
   }
 
   @override

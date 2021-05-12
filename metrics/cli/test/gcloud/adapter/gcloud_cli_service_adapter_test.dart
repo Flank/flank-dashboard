@@ -268,6 +268,20 @@ void main() {
     );
 
     test(
+      ".createProject() correctly trims the region prompt",
+      () async {
+        const region = 'region-1 test';
+        const expectedRegion = 'region-1';
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.createDatabase(expectedRegion, projectId))
+            .called(once);
+      },
+    );
+
+    test(
       ".createProject() throws if GCloud CLI throws during the database creation",
       () {
         when(gcloudCli.createDatabase(any, any))
