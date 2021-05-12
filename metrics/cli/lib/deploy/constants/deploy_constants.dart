@@ -4,7 +4,7 @@
 /// A class that holds the constants for the deployment process.
 class DeployConstants {
   /// A URL to the Metrics repository.
-  static const String repoURL = 'git@github.com:platform-platform/monorepo.git';
+  static const String repoURL = 'https://github.com/platform-platform/monorepo';
 
   /// A Firebase Hosting target name.
   static const String firebaseTarget = 'metrics';
@@ -13,5 +13,5 @@ class DeployConstants {
   static const String sentryEnvironment = 'metrics';
 
   /// A temporary directory prefix.
-  static const String tempDirectoryPrefix = 'metrics';
+  static const String tempDirectoryPrefix = 'metrics_';
 }

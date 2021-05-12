@@ -40,7 +40,8 @@ class GCloudCliServiceAdapter implements GCloudService {
     await _gcloudCli.createProject(projectId);
 
     await _gcloudCli.listRegions(projectId);
-    final region = _prompter.prompt(GCloudStrings.enterRegionName);
+    final regionPrompt = _prompter.prompt(GCloudStrings.enterRegionName);
+    final region = regionPrompt.trim();
 
     await _gcloudCli.createProjectApp(region, projectId);
     await _gcloudCli.enableFirestoreApi(projectId);

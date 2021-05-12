@@ -76,6 +76,8 @@ void main() {
     test(
       ".createProject() creates the project with the generated project id",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
         final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.createProject(projectId)).called(once);
@@ -113,6 +115,8 @@ void main() {
     test(
       ".createProject() shows available regions for the created project",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
         final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.listRegions(projectId)).called(once);
@@ -148,6 +152,8 @@ void main() {
     test(
       ".createProject() requests the region from the user",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
         await gcloudService.createProject();
 
         verify(prompter.prompt(enterRegion)).called(once);
@@ -193,6 +199,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the project app creation",
       () {
+        whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createProjectApp(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -203,6 +210,7 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the project app creation",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createProjectApp(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -221,6 +229,8 @@ void main() {
     test(
       ".createProject() enables Firestore API for the project with the generated project id",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
         final projectId = await gcloudService.createProject();
 
         verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
@@ -230,6 +240,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the Firestore API enabling",
       () {
+        whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.enableFirestoreApi(any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -240,6 +251,7 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the Firestore API enabling",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.enableFirestoreApi(any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -268,8 +280,23 @@ void main() {
     );
 
     test(
+      ".createProject() correctly trims the region prompt",
+      () async {
+        const region = 'region-1   ';
+        const expectedRegion = 'region-1';
+        whenEnterRegionPrompt().thenReturn(region);
+
+        final projectId = await gcloudService.createProject();
+
+        verify(gcloudCli.createDatabase(expectedRegion, projectId))
+            .called(once);
+      },
+    );
+
+    test(
       ".createProject() throws if GCloud CLI throws during the database creation",
       () {
+        whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createDatabase(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -280,6 +307,8 @@ void main() {
     test(
       ".createProject() returns the identifier of the created project",
       () async {
+        whenEnterRegionPrompt().thenReturn(region);
+
         final projectId = await gcloudService.createProject();
 
         expect(projectId, isNotNull);

@@ -6,9 +6,10 @@
 /// A class that holds the strings for the Firebase prompts.
 class FirebaseStrings {
   static const String acceptTerms = '''
-If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:  
+If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:
 
 1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
+   NOTE: Make sure you are using the same account used to authenticate with the Firebase CLI on the previous steps.
 2. Enter any project name.
 3. Accept the Firebase terms of service.
 4. Press a 'Continue' button.
@@ -36,7 +37,7 @@ To initialize Firestore data for the currently deploying project, consider the f
 
 1. Follow the link to open the Firestore database: https://console.firebase.google.com/project/$projectId/firestore.
 2. Create a collection with the 'allowed_email_domains' identifier.
-3. Create document(s) with the 'domain' identifier you want to allow access to the Metrics application without any fields.
+3. Create document(s) with the domain identifier(s) as the document ID(s) you want to allow to be used for the Google Sign In.
 4. Create a collection with the 'feature_config' identifier.
 5. Create a document with the 'feature_config' identifier.
 6. Add the following boolean fields to the 'feature_config' document:
