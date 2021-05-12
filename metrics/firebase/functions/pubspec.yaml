@@ -6,8 +6,8 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  clock: ^1.0.0
-  collection: ^1.14.13
+  clock: 1.0.1
+  collection: 1.14.13
   firebase_functions_interop:    
     git:
       url: https://github.com/pulyaevskiy/firebase-functions-interop
@@ -27,3 +27,5 @@ dependency_overrides:
   firebase_admin_interop:
     git:
       url: https://github.com/platform-platform/firebase-admin-interop.git  
+  js: 0.6.2
+  path: 1.7.0
