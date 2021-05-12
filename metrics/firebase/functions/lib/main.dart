@@ -77,29 +77,21 @@ Future<void> onBuildUpdatedHandler(
   final buildId = '${newBuild.projectId}_${newBuild.buildNumber}';
 
   final firestore = change.after.firestore;
-
-  const statusFieldMapper = BuildDayStatusFieldNameMapper();
   final statusFields = <BuildDayStatusField>[];
 
   final task = await _getTaskByDataId(firestore, buildId);
 
   if (task == null) {
-    final oldBuildDayStatusFieldName =
-        statusFieldMapper.map(oldBuild.buildStatus);
-
-    final statusFieldDecrement = BuildDayStatusField(
-      name: oldBuildDayStatusFieldName,
-      value: Firestore.fieldValues.increment(-1),
+    final statusFieldDecrement = _createBuildDayStatusField(
+      buildStatus: oldBuild.buildStatus,
+      incrementCount: -1,
     );
     statusFields.add(statusFieldDecrement);
   }
 
-  final newBuildDayStatusFieldName =
-      statusFieldMapper.map(newBuild.buildStatus);
-
-  final statusFieldIncrement = BuildDayStatusField(
-    name: newBuildDayStatusFieldName,
-    value: Firestore.fieldValues.increment(1),
+  final statusFieldIncrement = _createBuildDayStatusField(
+    buildStatus: newBuild.buildStatus,
+    incrementCount: 1,
   );
   statusFields.add(statusFieldIncrement);
 
@@ -150,10 +142,29 @@ int _getSuccessfulBuildDuration(BuildData buildData) {
 /// from the given [dateTime].
 DateTime _getUtcDay(DateTime dateTime) => dateTime.toUtc().date;
 
+/// Creates an instance of the [BuildDayStatusField] based on
+/// the given [buildStatus] and [incrementCount].
+BuildDayStatusField _createBuildDayStatusField({
+  BuildStatus buildStatus,
+  int incrementCount,
+}) {
+  const statusFieldMapper = BuildDayStatusFieldNameMapper();
+
+  final buildDayStatusFieldName = statusFieldMapper.map(buildStatus);
+
+  return BuildDayStatusField(
+    name: buildDayStatusFieldName,
+    value: Firestore.fieldValues.increment(incrementCount),
+  );
+}
+
 /// Updates the build day's document data with the given [buildDayData].
 ///
 /// Adds a new document to the tasks collection if updating
 /// the build day's document data fails.
+///
+/// Throws an [ArgumentError] if either [buildDayData] or
+/// [onErrorData] is `null`.
 ///
 /// Returns `true` if setting the given [buildDayData] to the build day
 /// document is successful. Otherwise, returns `false`.
