@@ -26,11 +26,9 @@ class BuildTestDataGenerator {
     String apiUrl,
     Percent coverage,
   }) {
-    final buildId = '${projectId}_$buildNumber';
     final startedAtDateTime = startedAt ?? DateTime.now();
 
     return {
-      'id': buildId,
       'projectId': projectId,
       'buildNumber': buildNumber,
       'startedAt': Timestamp.fromDateTime(startedAtDateTime),

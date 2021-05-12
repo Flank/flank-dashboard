@@ -67,10 +67,7 @@ Future<void> onBuildAddedHandler(
 
 /// Process incrementing and decrementing logic for the build days collection
 /// document, based on a updated build's status and started date.
-Future<void> onBuildUpdatedHandler(
-  Change<DocumentSnapshot> change,
-  EventContext context,
-) async {
+Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
   final oldBuild = BuildDataDeserializer.fromJson(change.before.data.toMap());
   final newBuild = BuildDataDeserializer.fromJson(change.after.data.toMap());
   final startedAtDayUtc = _getUtcDay(oldBuild.startedAt);
