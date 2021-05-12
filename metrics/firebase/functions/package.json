@@ -2,8 +2,7 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "dependencies": "pub get",
-    "build": "pub run build_runner build --output=build",
+    "build": "pub get && pub run build_runner build --output=build",
     "lint": "eslint",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
