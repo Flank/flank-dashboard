@@ -156,6 +156,11 @@ jobs:
           fetch-depth: 1
           ref: ${{ github.ref }}
 
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.12.0-133.2.beta
+
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
@@ -166,6 +171,10 @@ jobs:
       - name: Run Firestore security rules tests
         run: firebase emulators:exec --only firestore "npm run test"
         working-directory: metrics/firebase/
+
+      - name: Run functions tests
+        run: pub run test
+        working-directory: metrics/firebase/functions
 
   coverage-converter-actions:
     name: Coverage Converter Actions
@@ -226,7 +235,7 @@ jobs:
       - name: Run tests
         run: pub run test_coverage --print-test-output --no-badge
         working-directory: metrics/ci_integrations/
-  
+
   cli-actions:
     name: CLI Actions
     runs-on: ubuntu-latest
