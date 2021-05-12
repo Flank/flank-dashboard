@@ -13,6 +13,14 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     steps:
+      - name: Trigger build data sync on start
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: building_project
+          client-payload: '{"building_coverage_converter": "true"}'
+
       - name: Checkout
         uses: actions/checkout@v2
         with:

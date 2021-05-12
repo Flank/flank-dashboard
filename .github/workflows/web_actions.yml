@@ -29,6 +29,14 @@ jobs:
       PRODUCTION_HOSTING_NAME: ${{ secrets.PRODUCTION_HOSTING_NAME }}
       PROJECT_PATH: metrics/web/
     steps:
+      - name: Trigger build data sync on start
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: platform-platform/monorepo
+          event-type: ${{ github.repository }}
+          client-payload: '{"building_metrics_web": "true"}'
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -173,7 +181,7 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: platform-platform/monorepo
-          event-type: building_project
+          event-type: ${{ github.repository }}
           client-payload: '{"building_metrics_web": "true"}'
       - name: Send notification to Slack
         if: needs.metrics-actions.result == 'failure' || needs.metrics-actions.result == 'cancelled'
