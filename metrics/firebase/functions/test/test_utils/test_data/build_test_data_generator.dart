@@ -17,7 +17,7 @@ class BuildTestDataGenerator {
 
   /// Generates a build [Map].
   Map<String, dynamic> generateBuildJson({
-    int buildNumber,
+    int buildNumber = 1,
     DateTime startedAt,
     BuildStatus buildStatus = BuildStatus.successful,
     Duration duration = const Duration(milliseconds: 100),
@@ -26,9 +26,11 @@ class BuildTestDataGenerator {
     String apiUrl,
     Percent coverage,
   }) {
+    final buildId = '${projectId}_$buildNumber';
     final startedAtDateTime = startedAt ?? DateTime.now();
 
     return {
+      'id': buildId,
       'projectId': projectId,
       'buildNumber': buildNumber,
       'startedAt': Timestamp.fromDateTime(startedAtDateTime),

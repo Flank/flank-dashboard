@@ -136,28 +136,6 @@ Future<void> onBuildUpdatedHandler(
   if (isUpdated && task != null) await _deleteTask(firestore, task.documentID);
 }
 
-/// Returns a task specified by data's [id].
-///
-/// Returns `null` if a task with the given data's [id] is not found.
-Future<DocumentSnapshot> _getTaskByDataId(
-  Firestore firestore,
-  String id,
-) async {
-  final snapshot =
-      await firestore.collection('tasks').where('data.id', isEqualTo: id).get();
-
-  final documents = snapshot.documents;
-
-  if (documents.isEmpty) return null;
-
-  return documents.first;
-}
-
-/// Deletes a task document specified by [documentId].
-Future<void> _deleteTask(Firestore firestore, String documentId) async {
-  await firestore.document('tasks/$documentId').delete();
-}
-
 /// Returns a given [buildData]'s duration in milliseconds.
 ///
 /// If the given [buildData] is `successful`, returns it's duration.
@@ -222,4 +200,26 @@ Future<void> _addTask(Firestore firestore, TaskData taskData) async {
   await firestore
       .collection('tasks')
       .add(DocumentData.fromMap(taskData.toMap()));
+}
+
+/// Returns a task specified by data's [id].
+///
+/// Returns `null` if a task with the given data's [id] is not found.
+Future<DocumentSnapshot> _getTaskByDataId(
+  Firestore firestore,
+  String id,
+) async {
+  final snapshot =
+      await firestore.collection('tasks').where('data.id', isEqualTo: id).get();
+
+  final documents = snapshot.documents;
+
+  if (documents.isEmpty) return null;
+
+  return documents.first;
+}
+
+/// Deletes a task document specified by [documentId].
+Future<void> _deleteTask(Firestore firestore, String documentId) async {
+  await firestore.document('tasks/$documentId').delete();
 }
