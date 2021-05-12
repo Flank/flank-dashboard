@@ -119,8 +119,6 @@ Future<void> onBuildUpdatedHandler(
     'newBuild': newBuild.toJson(),
   };
 
-  /// add build id?
-
   final onErrorData = TaskData(
     code: TaskCode.buildDaysUpdated,
     data: buildData,
