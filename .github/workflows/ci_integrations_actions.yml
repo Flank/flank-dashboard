@@ -13,6 +13,14 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     steps:
+      - name: Notify about building started
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: build_started
+          client-payload: '{"building_ci_integrations": "true"}'
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -166,7 +174,7 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
-          event-type: building_project
+          event-type: build_finished
           client-payload: '{"building_ci_integrations": "true"}'
       - name: Send notification to Slack
         if: needs.ci-integrations-publish-actions.result == 'failure' || needs.ci-integrations-actions.result == 'failure' || needs.ci-integrations-build-actions.result == 'failure' || needs.ci-integrations-publish-actions.result == 'cancelled' || needs.ci-integrations-actions.result == 'cancelled' || needs.ci-integrations-build-actions.result == 'cancelled'
