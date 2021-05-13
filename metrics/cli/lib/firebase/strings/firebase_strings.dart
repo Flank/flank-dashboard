@@ -8,13 +8,13 @@ class FirebaseStrings {
   static const String acceptTerms = '''
 If you have already accepted the terms of the Firebase service, skip this step. Otherwise, follow the steps below to accept the terms:
 
-1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
+1. Follow the link and click the 'Create a project' button: https://console.firebase.google.com/.
    NOTE: Make sure you are using the same account used to authenticate with the Firebase CLI on the previous steps.
 2. Enter any project name.
 3. Accept the Firebase terms of service.
-4. Press a 'Continue' button.
+4. Press the 'Continue' button.
 5. Disable Google Analytics for the project.
-6. Press a 'Create project' button.
+6. Press the 'Create project' button.
 
 Once you are done, press the ENTER to continue:''';
 
@@ -25,7 +25,7 @@ Thus, a Blaze plan is required for the Metrics app to function properly.
 To configure the Blaze billing plan for the Firebase project, consider the following steps:
 
 1. Follow the link and press the 'Continue' button in the open modal window: https://console.firebase.google.com/project/$projectId/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow.
-2. Select your country and press 'Confirm'.
+2. Select your country and press the 'Confirm'.
 3. Enter your customer info, choose the payment method, and press the 'Confirm Purchase'.
 
 Consider the following link to find out more about Firebase plans' pricing: https://firebase.google.com/pricing.
@@ -50,22 +50,22 @@ https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deplo
 Consider the following link for a detailed structure of the 'feature_config' collection:
 https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md#the-feature_config-collection.
 
-Press any key to continue when you finish with the Firestore database initialization:''';
+Press the ENTER continue when you finish with the Firestore database initialization:''';
 
   static String configureAuthProviders(String projectId) => '''
 To enable the Firebase Auth for the Metrics Web application, consider the following steps:
 
-1. Follow the link and click a 'Get started' button: https://console.firebase.google.com/project/$projectId/authentication.
+1. Follow the link and click the 'Get started' button: https://console.firebase.google.com/project/$projectId/authentication.
 2. Navigate to the 'Sign-in method' tab on the Firebase auth page or use the following link: https://console.firebase.google.com/project/$projectId/authentication/providers.
-3. Enable an Email/Password provider by clicking on provider name and toggling the 'Enable' switch.
-4. Enable a Google provider by clicking on provider name and toggling the 'Enable' switch.
+3. Enable an Email/Password provider by clicking on the provider name and toggling the 'Enable' switch.
+4. Enable a Google provider by clicking on the provider name and toggling the 'Enable' switch.
 5. On the 'Google' provider popup, open the 'Web SDK configuration' tab, copy the 'Web client ID' and paste it to the console.
 Paste your Web client Id here:''';
 
   static String enableAnalytics(String projectId) => '''
 To enable Firebase analytics for the currently deploying project, follow the next steps:
 
-1. Follow the link and click an 'Enable Google Analytics' button: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
+1. Follow the link and click the 'Enable Google Analytics' button: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
 
 Once you are done, press the ENTER to continue:''';
 }

@@ -8,8 +8,7 @@ class GCloudStrings {
   static const String enterRegionName = '''
 Please, chose the region name that suits you best. Note that the region cannot be changed after project creation.
 
-Enter the region to create a project:
-  ''';
+Enter the region to create a project:''';
 
   static const String acceptTerms = '''
 If you have already accepted the terms of the GCloud service, skip this step. Otherwise, follow the steps below to accept the terms: 
@@ -19,7 +18,7 @@ If you have already accepted the terms of the GCloud service, skip this step. Ot
 2. A welcome popup should appear.
 3. Select your country.
 4. Accept the GCloud terms of service.
-5. Press an 'AGREE AND CONTINUE' button.
+5. Press the 'AGREE AND CONTINUE' button.
 
 Once you are done, press the ENTER to continue:''';
 

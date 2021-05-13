@@ -13,8 +13,7 @@ class DeployCommand extends Command {
   final description = '''
 Creates GCloud and Firebase projects for Metrics components and deploys the Metrics Web Application.
       
-NOTE: The Metrics CLI does not collect and store any personal data during the deployment process.
-      ''';
+NOTE: The Metrics CLI does not collect and store any personal data during the deployment process.''';
 
   /// A [DeployerFactory] this command uses to create a [Deployer].
   final DeployerFactory deployerFactory;

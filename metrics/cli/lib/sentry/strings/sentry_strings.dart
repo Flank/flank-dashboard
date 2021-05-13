@@ -12,6 +12,7 @@ While creating a release name, consider it cannot:
 - be (in their entirety) period (.), double period (..), or space ( );
 - exceed 200 characters.
 Please enter your Sentry release name:''';
+
   static const String enterOrganizationSlug = '''
 The following steps help to find an 'Organization Slug' for the Sentry account:
 1. Visit the following link and authorize: https://sentry.io.
