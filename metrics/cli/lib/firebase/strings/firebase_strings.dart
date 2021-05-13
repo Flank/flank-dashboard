@@ -6,7 +6,7 @@
 /// A class that holds the strings for the Firebase prompts.
 class FirebaseStrings {
   static const String acceptTerms = '''
-If you have already accepted the terms of the Firebase service, skip this step otherwise, follow the steps below to accept them:
+If you have already accepted the terms of the Firebase service, skip this step. Otherwise, follow the steps below to accept the terms:
 
 1. Follow the link and click a 'Create a project' button: https://console.firebase.google.com/.
    NOTE: Make sure you are using the same account used to authenticate with the Firebase CLI on the previous steps.
@@ -16,7 +16,7 @@ If you have already accepted the terms of the Firebase service, skip this step o
 5. Disable Google Analytics for the project.
 6. Press a 'Create project' button.
 
-Once you are done, press ENTER to continue:''';
+Once you are done, press the ENTER to continue:''';
 
   static String upgradeBillingPlan(String projectId) => '''
 The Metrics app uses Firebase features not available in the Spark plan, such as Firebase Functions. 
@@ -24,9 +24,9 @@ Thus, a Blaze plan is required for the Metrics app to function properly.
 
 To configure the Blaze billing plan for the Firebase project, consider the following steps:
 
-1. Follow the link and press continue in the open modal window: https://console.firebase.google.com/project/$projectId/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow.
+1. Follow the link and press the 'Continue' button in the open modal window: https://console.firebase.google.com/project/$projectId/overview?purchaseBillingPlan=metered&billingContext=pricingBuyFlow.
 2. Select your country and press 'Confirm'.
-3. Enter your customer info, choose payment method and press 'Confirm Purchase'.
+3. Enter your customer info, choose the payment method, and press the 'Confirm Purchase'.
 
 Consider the following link to find out more about Firebase plans' pricing: https://firebase.google.com/pricing.
 
@@ -67,5 +67,5 @@ To enable Firebase analytics for the currently deploying project, follow the nex
 
 1. Follow the link and click an 'Enable Google Analytics' button: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
 
-Once you are done, press ENTER to continue:''';
+Once you are done, press the ENTER to continue:''';
 }

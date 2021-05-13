@@ -5,11 +5,14 @@
 
 /// A class that holds the strings for the GCloud prompts.
 class GCloudStrings {
-  static const String enterRegionName =
-      'Please enter the region name that suits you best:';
+  static const String enterRegionName = '''
+Please, chose the region name that suits you best. Note that the region cannot be changed after project creation.
+
+Enter the region to create a project:
+  ''';
 
   static const String acceptTerms = '''
-If you have already accepted the terms of the GCloud service, skip this step otherwise, follow the steps below to accept them:  
+If you have already accepted the terms of the GCloud service, skip this step. Otherwise, follow the steps below to accept the terms: 
   
 1. Follow the link https://console.cloud.google.com/.
    NOTE: Make sure you are using the same account used to authenticate with the Google Cloud SDK on the previous steps.
@@ -18,7 +21,7 @@ If you have already accepted the terms of the GCloud service, skip this step oth
 4. Accept the GCloud terms of service.
 5. Press an 'AGREE AND CONTINUE' button.
 
-Once you are done, press ENTER to continue:''';
+Once you are done, press the ENTER to continue:''';
 
   static String configureOAuth(String projectId) => '''
 The Metrics Web application deployed successfully! Use the following link for the correct work of the Metrics project: https://$projectId.firebaseapp.com. 
@@ -36,5 +39,5 @@ If you are going to use any other domains to access the Metrics Web application,
 The $projectId GCloud project has been created successfully! 
 If you want to configure the organization for the $projectId project, use the following guide https://cloud.google.com/resource-manager/docs/project-migration.
 
-Once you are done, press ENTER to continue:''';
+Once you are done, press the ENTER to continue:''';
 }
