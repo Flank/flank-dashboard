@@ -10,8 +10,6 @@ import 'package:functions/models/build_day_data.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:functions/models/task_code.dart';
 
-import 'models/task_data.dart';
-
 void main() {
   functions['onBuildAdded'] = functions.firestore
       .document('build/{buildId}')
