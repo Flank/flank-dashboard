@@ -46,14 +46,10 @@ jobs:
         run: pub run test
         working-directory: metrics/firebase/functions/
 
-      - name: Deploy Cloud Functions
-        run: firebase use default && firebase deploy --only functions
-        working-directory: metrics/firebase/
-
       - name: Run Firestore security rules tests
         run: firebase emulators:exec --only firestore "npm run test"
         working-directory: metrics/firebase/
 
-      - name: Deploy Firestore security rules
-        run: firebase use default && firebase deploy --only firestore:rules
+      - name: Deploy Cloud Functions and Firestore security rules
+        run: firebase use default && firebase deploy --only functions,firestore:rules
         working-directory: metrics/firebase/
