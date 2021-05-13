@@ -20,7 +20,6 @@ void main() {
   const projectId = 'projectId';
   const durationInMilliseconds = 123;
   const buildStatus = BuildStatus.successful;
-  const buildId = 'projectId_1';
 
   final startedAt = DateTime.now();
   final startedAtDayUtc = startedAt.toUtc().date;
