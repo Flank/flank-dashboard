@@ -70,30 +70,6 @@ void main() {
     );
 
     test(
-      ".copyWith() creates a new instance from the existing one",
-      () {
-        const code = TaskCode.buildDaysUpdated;
-        const context = 'newContext';
-        final createdAt = DateTime.now();
-        final data = {
-          'projectId': 'newProjectId',
-        };
-
-        final copiedTaskData = taskData.copyWith(
-          code: code,
-          context: context,
-          createdAt: createdAt,
-          data: data,
-        );
-
-        expect(copiedTaskData.code, equals(code));
-        expect(copiedTaskData.context, equals(context));
-        expect(copiedTaskData.createdAt, equals(createdAt));
-        expect(copiedTaskData.data, equals(data));
-      },
-    );
-
-    test(
       ".toMap() converts an instance to the map",
       () {
         final expectedMap = {
