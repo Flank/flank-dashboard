@@ -1,5 +1,5 @@
-# Structure
-This monorepo holds the source code for the following projects:
+# Projects
+This repository holds the source code for the following projects:
 - [Metrics](#metrics-bar_chart)
 - [Guardian](#guardian-shield)
 - [API Mock Server](#api-mock-server-test_tube)
