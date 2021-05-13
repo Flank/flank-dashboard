@@ -6,7 +6,7 @@
 /// A class that holds the strings for the GCloud prompts.
 class GCloudStrings {
   static const String enterRegionName = '''
-Please, chose the region name that suits you best. Note that the region cannot be changed after project creation.
+Please, choose the region name that suits you best. Note that the region cannot be changed after project creation.
 
 Enter the region to create a project:''';
 
