@@ -67,7 +67,7 @@ The Metrics components are configurable on your demand. You can always integrate
 
 # Getting started with Metrics :beginner:
 
-We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make fist steps:
+We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make first steps:
 
 1. [Metrics developer configuration :gear:](../docs/14_developer_configuration.md)
 2. [Why create a metrics platform? :thinking:](../docs/01_design_doc.md)
