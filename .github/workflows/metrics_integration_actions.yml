@@ -2,7 +2,7 @@ name: Metrics Integration Actions
 
 on:
   repository_dispatch:
-    types: [ building_project, building_project_started ]
+    types: [ building_project_finished, building_project_started ]
 
 jobs:
   ci_integrations_sync:
@@ -20,7 +20,7 @@ jobs:
           curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For CI Integrations check finished
-        if: github.event_name == 'building_project'
+        if: github.event_name == 'building_project_finished'
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
           curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Coverage Converter check finished
-        if: github.event_name == 'building_project'
+        if: github.event_name == 'building_project_finished'
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
           curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Metrics Web check finished
-        if: github.event_name == 'building_project'
+        if: github.event_name == 'building_project_finished'
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -191,7 +191,7 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
-          event-type: building_project
+          event-type: building_project_finished
           client-payload: '{"building_coverage_converter": "true"}'
       - name: Send notification to Slack
         if: needs.macos-actions.result == 'failure' || needs.linux-actions.result == 'failure' || needs.release-actions.result == 'failure' || needs.macos-actions.result == 'cancelled' || needs.linux-actions.result == 'cancelled' || needs.release-actions.result == 'cancelled'
