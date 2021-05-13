@@ -15,7 +15,7 @@ The Metrics project includes the following components:
 - [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
 - [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
 
-[Metrics Dashboard](docs/images/dashboard_ui.png)
+![Metrics Dashboard](docs/images/dashboard_ui.png)
 
 # Guardian :shield:
 [Guardian](guardian) is a tool to detect flaky tests by analyzing JUnit XML files and orchestrate tools like Slack, Jira to notify the team.
