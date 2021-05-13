@@ -8,13 +8,13 @@ Metrics is a set of software components to collect and review software project m
 
 We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics is used by developers, project teams, and organizations helping them to improve projects' performance, stability, and quality.
 
-## Beautiful User Experience
+### Beautiful User Experience
 
 The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered using [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different project by providing appropriate filters.
 
 ![Dashboard UI](docs/images/dashboard_ui.png)
 
-## Fully Integrated
+### Fully Integrated
 
 The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize projects data, configure logging and collecting analytics. Moreover, the CI Integrations Tool can be integrated to the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application ([user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)).
 
@@ -23,33 +23,33 @@ The Metrics software components consist of a set of tools that provide a conveni
 <details>
   <summary>Metrics Components</summary>
 
-### CI integrations
+#### CI integrations
 
 A CLI application that integrates with popular CI tools to collect software project metrics.
 
-### Core
+#### Core
 
 A Dart package that provides a common classes to use within Metrics applications.
 
-### Firebase
+#### Firebase
 
 A `Firebase` instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
 
 Firebase Analytics is optional and may not be configured during deployment.
 
-### Flutter Web
+#### Flutter Web
 
 A `Flutter Web` application that displays project metrics on easy to navigate Dashboard.
 
-### Deploy CLI
+#### Deploy CLI
 
 A `Deploy CLI` is a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, etc.) 
 
-### Dart Cloud Functions 
+#### Dart Cloud Functions 
 
 A `Dart Cloud Functions` is a serverless backend code deployed on Firebase that simplifies data managing for other Metrics components.
 
-### Sentry
+#### Sentry
 
 A `Sentry` service helps to store any logs and monitor runtime errors.
 
@@ -57,13 +57,13 @@ Sentry is optional and may not be configured during deployment.
 
 </details>
 
-## Safe
+### Safe
 
 All the data that the Metrics components orchestrate, belongs only to you: it is stored in the Cloud Firestore database as a part of your Firebase project, the logging is performed on your Sentry account, if enabled, analytics are reported to your Firebase Analytics account, and so on. Moreover, to make the components even safer, we provide a great set of [Firestore Security rules](https://firebase.google.com/docs/firestore/security/get-started) for Cloud Firestore to protect the stored projects' data. The [Firebase Authentication](https://firebase.google.com/docs/auth) stands on the guard of the deployed web application and the stored data from insufficient access.
 
 ![Auth UI](docs/images/auth_ui.png)
 
-## Configurable
+### Configurable
 
 The Metrics components are configurable on your demand. You can always integrate the builds synchronization into your CI system or schedule this synchronization, disable or enable Sentry logging and Firebase Analytics, configure the web application authentication processes, and so on.
 
