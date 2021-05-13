@@ -34,7 +34,7 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
-          event-type: building_project_started
+          event-type: build_started
           client-payload: '{"building_metrics_web": "true"}'
 
       - name: Checkout
@@ -181,7 +181,7 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
-          event-type: building_project_finished
+          event-type: build_finished
           client-payload: '{"building_metrics_web": "true"}'
       - name: Send notification to Slack
         if: needs.metrics-actions.result == 'failure' || needs.metrics-actions.result == 'cancelled'
