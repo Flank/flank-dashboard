@@ -15,6 +15,12 @@ void main() {
     final data = {
       'projectId': projectId,
     };
+    final taskData = TaskData(
+      code: code,
+      data: data,
+      context: context,
+      createdAt: createdAt,
+    );
 
     test(
       "throws an ArgumentError if the given code is null",
@@ -60,6 +66,30 @@ void main() {
         expect(taskData.data, equals(data));
         expect(taskData.context, equals(context));
         expect(taskData.createdAt, equals(createdAt));
+      },
+    );
+
+    test(
+      ".copyWith() creates a new instance from the existing one",
+      () {
+        const code = TaskCode.buildDaysUpdated;
+        const context = 'newContext';
+        final createdAt = DateTime.now();
+        final data = {
+          'projectId': 'newProjectId',
+        };
+
+        final copiedTaskData = taskData.copyWith(
+          code: code,
+          context: context,
+          createdAt: createdAt,
+          data: data,
+        );
+
+        expect(copiedTaskData.code, equals(code));
+        expect(copiedTaskData.context, equals(context));
+        expect(copiedTaskData.createdAt, equals(createdAt));
+        expect(copiedTaskData.data, equals(data));
       },
     );
 
