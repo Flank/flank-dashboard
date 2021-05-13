@@ -50,7 +50,7 @@ https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deplo
 Consider the following link for a detailed structure of the 'feature_config' collection:
 https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md#the-feature_config-collection.
 
-Press the ENTER continue when you finish with the Firestore database initialization:''';
+Press the ENTER to continue when you finish with the Firestore database initialization:''';
 
   static String configureAuthProviders(String projectId) => '''
 To enable the Firebase Auth for the Metrics Web application, consider the following steps:
