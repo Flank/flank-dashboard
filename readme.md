@@ -4,17 +4,17 @@ Metrics is a set of software components to collect and review software project m
 
 # About Metrics :bar_chart:
 
-We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics is used by developers, project teams, and organizations helping them to improve projects' performance, stability, and quality.
+We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics application helps developers, project teams, and organizations to monitor and improve projects' performance, stability, and quality.
 
 ### Beautiful User Experience
 
-The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered using [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different project by providing appropriate filters.
+The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered by [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different projects by providing appropriate filters.
 
 ![Dashboard UI](docs/images/dashboard_ui.png)
 
 ### Fully Integrated
 
-The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize projects data, configure logging and collecting analytics. Moreover, the CI Integrations Tool can be integrated to the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application ([user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)).
+The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize project data, configure logging, and collecting analytics. Moreover, the CI Integrations Tool can be integrated into the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application (See [user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) for more info).
 
 ![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
 
