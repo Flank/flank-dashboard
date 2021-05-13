@@ -1,4 +1,4 @@
-![Metrics Logo](../~~~~docs/images/metrics_logo.png)
+![Metrics Logo](../docs/images/metrics_logo.png)
 
 Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 
