@@ -401,6 +401,40 @@ void main() {
     );
 
     test(
+      "creates a task document with data equals to the old and new builds data if setting the build day's document data fails",
+      () async {
+        final oldBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.inProgress,
+        );
+        final newBuildJson = testDataGenerator.generateBuildJson();
+
+        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenTaskDocuments().thenReturn([]);
+        whenCreateTaskDocument().thenAnswer((_) => Future.value());
+        whenDocument().thenReturn(documentReferenceMock);
+
+        await onBuildUpdatedHandler(changeMock, null);
+
+        final dataMatcher = predicate<DocumentData>((data) {
+          oldBuildJson['startedAt'] = oldBuildJson['startedAt'].toDateTime();
+          newBuildJson['startedAt'] = newBuildJson['startedAt'].toDateTime();
+          final expectedData = {
+            'oldBuild': oldBuildJson,
+            'newBuild': newBuildJson,
+          };
+
+          return const DeepCollectionEquality().equals(
+            data.getNestedData('data').toMap(),
+            expectedData,
+          );
+        });
+
+        verify(taskCollectionReferenceMock.add(argThat(dataMatcher))).called(1);
+      },
+    );
+
+    test(
       "creates a task document with context equals to the error string representation if setting the build day's document data fails",
       () async {
         final exception = Exception('test');
