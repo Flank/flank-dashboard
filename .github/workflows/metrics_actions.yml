@@ -159,13 +159,9 @@ jobs:
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      - name: Install NPM dependencies to the firebase folder
-        run: npm install
+      - name: Install NPM dependencies
+        run: npm install && npm install --prefix functions
         working-directory: metrics/firebase/
-
-      - name: Install NPM dependencies to the functions folder
-        run: npm install
-        working-directory: metrics/firebase/functions/
 
       - uses: cedx/setup-dart@v2
         with:
@@ -176,7 +172,11 @@ jobs:
         run: pub get
         working-directory: metrics/firebase/functions/
 
-      - name: Run functions tests
+      - name: Dart analyze
+        run: dartanalyzer . --fatal-infos --fatal-warnings
+        working-directory: metrics/firebase/functions/
+
+      - name: Run Cloud Functions tests
         run: pub run test
         working-directory: metrics/firebase/functions/
 
