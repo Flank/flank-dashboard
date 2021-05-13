@@ -1,10 +1,8 @@
 ![Metrics Logo](docs/images/metrics_logo.png)
 
-# Metrics :bar_chart:
-
 Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 
-# About Metrics
+# About Metrics :bar_chart:
 
 We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics is used by developers, project teams, and organizations helping them to improve projects' performance, stability, and quality.
 
