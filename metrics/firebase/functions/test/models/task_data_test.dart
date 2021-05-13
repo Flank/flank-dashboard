@@ -15,12 +15,6 @@ void main() {
     final data = {
       'projectId': projectId,
     };
-    final taskData = TaskData(
-      code: code,
-      data: data,
-      context: context,
-      createdAt: createdAt,
-    );
 
     test(
       "throws an ArgumentError if the given code is null",
