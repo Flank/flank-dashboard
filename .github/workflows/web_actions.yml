@@ -29,12 +29,12 @@ jobs:
       PRODUCTION_HOSTING_NAME: ${{ secrets.PRODUCTION_HOSTING_NAME }}
       PROJECT_PATH: metrics/web/
     steps:
-      - name: Trigger build data sync on start
+      - name: Notify about building started
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
-          event-type: building_project
+          event-type: building_project_started
           client-payload: '{"building_metrics_web": "true"}'
 
       - name: Checkout
