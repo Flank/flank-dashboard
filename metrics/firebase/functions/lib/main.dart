@@ -72,7 +72,6 @@ Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
   final newBuild = BuildDataDeserializer.fromJson(change.after.data.toMap());
   final startedAtDayUtc = _getUtcDay(oldBuild.startedAt);
   final buildId = '${newBuild.projectId}_${newBuild.buildNumber}';
-
   final firestore = change.after.firestore;
   final statusFields = <BuildDayStatusField>[];
 
