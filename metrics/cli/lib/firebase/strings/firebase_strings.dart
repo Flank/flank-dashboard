@@ -30,7 +30,7 @@ To configure the Blaze billing plan for the Firebase project, consider the follo
 
 Consider the following link to find out more about Firebase plans' pricing: https://firebase.google.com/pricing.
 
-Press any key to continue once the billing plan configured:''';
+Press the ENTER to continue once the billing plan configured:''';
 
   static String initializeData(String projectId) => '''
 To initialize Firestore data for the currently deploying project, consider the following steps:
