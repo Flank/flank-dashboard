@@ -1,8 +1,22 @@
+![Metrics Logo](docs/images/metrics_logo.png)
+
 # Metrics :bar_chart:
 
 Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 
-The following diagram demonstrates the main Metrics components and the relationships between them:
+# About Metrics
+
+We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics is used by developers, project teams, and organizations helping them to improve projects' performance, stability, and quality.
+
+## Beautiful User Experience
+
+The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered using [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different project by providing appropriate filters.
+
+![Dashboard UI](docs/images/dashboard_ui.png)
+
+## Fully Integrated
+
+The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize projects data, configure logging and collecting analytics. Moreover, the CI Integrations Tool can be integrated to the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application ([user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)).
 
 ![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
 
@@ -42,6 +56,16 @@ A `Sentry` service helps to store any logs and monitor runtime errors.
 Sentry is optional and may not be configured during deployment.
 
 </details>
+
+## Safe
+
+All the data that the Metrics components orchestrate, belongs only to you: it is stored in the Cloud Firestore database as a part of your Firebase project, the logging is performed on your Sentry account, if enabled, analytics are reported to your Firebase Analytics account, and so on. Moreover, to make the components even safer, we provide a great set of [Firestore Security rules](https://firebase.google.com/docs/firestore/security/get-started) for Cloud Firestore to protect the stored projects' data. The [Firebase Authentication](https://firebase.google.com/docs/auth) stands on the guard of the deployed web application and the stored data from insufficient access.
+
+![Auth UI](docs/images/auth_ui.png)
+
+## Configurable
+
+The Metrics components are configurable on your demand. You can always integrate the builds synchronization into your CI system or schedule this synchronization, disable or enable Sentry logging and Firebase Analytics, configure the web application authentication processes, and so on.
 
 # Getting started with Metrics :beginner:
 
