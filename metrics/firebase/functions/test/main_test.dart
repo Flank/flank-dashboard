@@ -31,7 +31,6 @@ void main() {
 
   final firestore = FirestoreMock();
   final collectionReference = CollectionReferenceMock();
-  final taskCollectionReference = CollectionReferenceMock();
   final documentReference = DocumentReferenceMock();
   final documentSnapshot = DocumentSnapshotMock();
 
@@ -65,16 +64,15 @@ void main() {
     whenSetDocumentData().thenAnswer((_) => Future.error(exception));
 
     when(firestore.collection(tasksCollectionName))
-        .thenReturn(taskCollectionReference);
+        .thenReturn(collectionReference);
 
-    return when(taskCollectionReference.add(any));
+    return when(collectionReference.add(any));
   }
 
   tearDown(() {
     reset(documentSnapshot);
     reset(firestore);
     reset(collectionReference);
-    reset(taskCollectionReference);
     reset(documentReference);
   });
 
@@ -383,7 +381,7 @@ void main() {
           (data) => data.getString('code') == TaskCode.buildDaysCreated.value,
         );
 
-        verify(taskCollectionReference.add(argThat(codeMatcher))).called(1);
+        verify(collectionReference.add(argThat(codeMatcher))).called(1);
       },
     );
 
@@ -403,7 +401,7 @@ void main() {
           );
         });
 
-        verify(taskCollectionReference.add(argThat(dataMatcher))).called(1);
+        verify(collectionReference.add(argThat(dataMatcher))).called(1);
       },
     );
 
@@ -424,7 +422,7 @@ void main() {
         );
 
         verify(
-          taskCollectionReference.add(
+          collectionReference.add(
             argThat(contextMatcher),
           ),
         ).called(1);
@@ -449,7 +447,7 @@ void main() {
           });
 
           verify(
-            taskCollectionReference.add(
+            collectionReference.add(
               argThat(createdAtMatcher),
             ),
           ).called(1);
