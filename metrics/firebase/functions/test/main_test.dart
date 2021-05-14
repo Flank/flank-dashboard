@@ -79,12 +79,6 @@ void main() {
   });
 
   group("onBuildAddedHandler", () {
-    PostExpectation<DocumentData> whenDocumentSnapshotData() {
-      whenDocument().thenReturn(documentReferenceMock);
-
-      return when(documentSnapshotMock.data);
-    }
-
     test(
       "does not increment the successful builds duration if the build document snapshot's duration is null",
       () async {
@@ -93,7 +87,10 @@ void main() {
           duration: null,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -116,7 +113,10 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -139,7 +139,10 @@ void main() {
           startedAt: startedAt,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -158,7 +161,10 @@ void main() {
         );
         final expectedDate = startedAtDayUtc.millisecondsSinceEpoch;
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -172,7 +178,8 @@ void main() {
     test(
       "creates a build days document with project id equals to the build document snapshot's project id",
       () async {
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -195,7 +202,8 @@ void main() {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
 
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -219,7 +227,10 @@ void main() {
           buildStatus: BuildStatus.failed,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -243,7 +254,10 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -268,7 +282,10 @@ void main() {
           buildStatus: BuildStatus.inProgress,
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -291,7 +308,10 @@ void main() {
           duration: const Duration(milliseconds: durationInMilliseconds),
         );
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -318,7 +338,10 @@ void main() {
         );
         final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
 
-        whenDocumentSnapshotData().thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -338,7 +361,8 @@ void main() {
     test(
       "does not create a task document if the build day data set successfully",
       () async {
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -350,7 +374,8 @@ void main() {
       "creates a task document with 'build_days_created' code if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -366,7 +391,8 @@ void main() {
       "creates a task document with data equals to the build data if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -388,7 +414,8 @@ void main() {
 
         whenCreateTaskDocument(exception: exception)
             .thenAnswer((_) => Future.value());
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await onBuildAddedHandler(documentSnapshotMock, null);
 
@@ -409,7 +436,8 @@ void main() {
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
 
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocumentSnapshotData().thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReferenceMock);
+        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
 
         await withClock(Clock.fixed(currentDateTime), () async {
           await onBuildAddedHandler(documentSnapshotMock, null);
