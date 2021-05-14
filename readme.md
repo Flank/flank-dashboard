@@ -1,10 +1,3 @@
-# Getting Started
-
-Consider this useful links that may help you to get started:
-1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
-2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
-3. [Collaboration :raised_hands:](docs/10_collaboration.md)
-
 # Projects
 This repository holds the source code for the following projects:
 - [API Mock Server](#test_tube-api-mock-server)
@@ -12,6 +5,8 @@ This repository holds the source code for the following projects:
 - [Metrics](#bar_chart-metrics)
 - [Shell Words](#shell-shell-words)
 - [YAML Map](#world_map-yaml-map)
+
+Let's review each of them in a bit more details:
 
 ## :test_tube: Api Mock Server
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations.
@@ -77,6 +72,10 @@ void main() {
       client = TestClient(mockServer.url);
     });
 
+    tearDownAll(() async {
+      await mockServer.close();
+    });
+    
     test(
       ".fetchBar() returns 'bar'",
       () async {
@@ -93,7 +92,11 @@ void main() {
 </details>
 
 ## :shield: Guardian
-[Guardian](guardian) is a tool for detecting and publishing flaky tests by analyzing JUnit XML files. The tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
+[Guardian](guardian) is a tool for detecting and notifying about flaky tests by analyzing JUnit XML files. This tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
+
+### Features:
+- Slack integration for notifications;
+- Parsing JUnit XML reports.
 
 ## :bar_chart: Metrics
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
@@ -110,7 +113,7 @@ The Metrics project includes the following components:
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
 
 ### Features
-- Allows parsing shell commands into words for both Windows and POSIX depending on the underlying OS (using `split` function).
+- Parsing shell commands into words for both Windows and POSIX depending on the underlying OS (using `split` function).
 
 <details>
   <summary>Usage example</summary>
@@ -131,11 +134,11 @@ void main() {
 </details>
 
 ## :world_map: YAML Map
-[YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) that simplifies working with YAML documents.
+[YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) package that simplifies working with YAML documents.
 
 ### Features
 - Comparing to the [`yaml`](https://pub.dev/packages/yaml) package, parses the result to core Dart types.
-- Provides a `YamlMapFormatter` to convert Dart Maps to YAML formatted strings.
+- Converting Dart Maps to YAML formatted strings.
 
 <details>
   <summary>Usage example</summary>
@@ -171,5 +174,14 @@ void main() {
 
 </details>
 
+# Getting Started
+Consider these useful links that may help you to get started:
+1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
+2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
+3. [Collaboration :raised_hands:](docs/10_collaboration.md)
+4. [Effective Dart](https://dart.dev/guides/language/effective-dart)
+
 # :scroll: License
 Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
+
+Consider the following [document](docs/15_dependencies_licenses.md) that describes the licenses for all 3-rd party libraries used in monorepo.
