@@ -15,11 +15,11 @@ class DeployPaths {
     ArgumentError.checkNotNull(rootPath, 'rootPath');
   }
 
-  /// A path to the Mertrics Web project sources.
+  /// A path to the Metrics Web project sources.
   String get webAppPath => '$rootPath/metrics/web';
 
   /// A path to the built directory of the Metrics Web project.
-  String get webAppBuildPath => '$rootPath/build/web';
+  String get webAppBuildPath => '$webAppPath/build/web';
 
   /// A path to the Firebase sources.
   String get firebasePath => '$rootPath/metrics/firebase';
