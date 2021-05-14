@@ -79,7 +79,7 @@ void main() {
 
     test(
       ".fetchBar() returns 'bar'",
-          () async {
+      () async {
         const expectedResponse = 'bar';
 
         final actualResponse = await client.fetchBar();
@@ -93,7 +93,7 @@ void main() {
 </details>
 
 ## Guardian :shield:
-[Guardian](guardian) is a tool to for detecting and publishing flaky tests by analyzing JUnit XML files. The tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
+[Guardian](guardian) is a tool for detecting and publishing flaky tests by analyzing JUnit XML files. The tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
 
 ## Metrics :bar_chart:
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
@@ -131,7 +131,7 @@ void main() {
 </details>
 
 ## YAML Map :world_map:
-[YAML Map](yaml_map) is a wrapper around the Dart's [`yaml`](https://pub.dev/packages/yaml) that simplifies working with YAML documents.
+[YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) that simplifies working with YAML documents.
 
 ### Features
 - Comparing to the [`yaml`](https://pub.dev/packages/yaml) package, parses the result to core Dart types.
