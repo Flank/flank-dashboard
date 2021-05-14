@@ -16,7 +16,7 @@ This repository holds the source code for the following projects:
 ## Api Mock Server :test_tube:
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations.
 
-### Main Features
+### Features
 - Authentication verification (by providing `AuthCredentials`);
 - Handling `GET`, `DELETE`, `POST`, `PUT` HTTP methods;
 - Flexible request URL matching (using `ExactPathMatcher`, `RegExpPathMatcher`).
@@ -109,7 +109,7 @@ The Metrics project includes the following components:
 ## Shell Words :shell:
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
 
-### Main Features
+### Features
 - Allows parsing shell commands into words for both Windows and POSIX depending on the underlying OS (using `split` function).
 
 <details>
@@ -133,7 +133,7 @@ void main() {
 ## YAML Map :world_map:
 [YAML Map](yaml_map) is a wrapper around the Dart's [`yaml`](https://pub.dev/packages/yaml) that simplifies working with YAML documents.
 
-### Main features
+### Features
 - Comparing to the [`yaml`](https://pub.dev/packages/yaml) package, parses the result to core Dart types.
 - Provides a `YamlMapFormatter` to convert Dart Maps to YAML formatted strings.
 
