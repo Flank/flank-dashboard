@@ -552,8 +552,12 @@ void main() {
 
         await onBuildUpdatedHandler(change, null);
 
-        verify(collectionReference.where('data.id', isEqualTo: buildId))
-            .called(1);
+        verify(
+          collectionReference.where(
+            'data.id',
+            isEqualTo: buildId,
+          ),
+        ).called(1);
       },
     );
 
@@ -773,12 +777,7 @@ void main() {
           return data.getTimestamp('day') == expectedBuildDay;
         });
 
-        verify(
-          documentReference.setData(
-            argThat(dayMatcher),
-            any,
-          ),
-        ).called(1);
+        verify(documentReference.setData(argThat(dayMatcher), any)).called(1);
       },
     );
 
