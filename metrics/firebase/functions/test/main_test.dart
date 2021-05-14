@@ -27,13 +27,13 @@ void main() {
     projectId: projectId,
   );
   final buildJson = testDataGenerator.generateBuildJson();
-  final buildJsonDocumentData = DocumentData.fromMap(buildJson);
+  final buildDocumentData = DocumentData.fromMap(buildJson);
 
-  final firestoreMock = FirestoreMock();
-  final collectionReferenceMock = CollectionReferenceMock();
-  final taskCollectionReferenceMock = CollectionReferenceMock();
-  final documentReferenceMock = DocumentReferenceMock();
-  final documentSnapshotMock = DocumentSnapshotMock();
+  final firestore = FirestoreMock();
+  final collectionReference = CollectionReferenceMock();
+  final taskCollectionReference = CollectionReferenceMock();
+  final documentReference = DocumentReferenceMock();
+  final documentSnapshot = DocumentSnapshotMock();
 
   Matcher documentFieldIncrementMatcher(String fieldName, int expectedCount) {
     return predicate<DocumentData>((data) {
@@ -44,19 +44,19 @@ void main() {
   }
 
   PostExpectation<Firestore> whenFirestore() {
-    return when(documentSnapshotMock.firestore);
+    return when(documentSnapshot.firestore);
   }
 
   PostExpectation<DocumentReference> whenDocument() {
-    whenFirestore().thenReturn(firestoreMock);
+    whenFirestore().thenReturn(firestore);
 
-    return when(firestoreMock.document(any));
+    return when(firestore.document(any));
   }
 
   PostExpectation<Future<void>> whenSetDocumentData() {
-    whenDocument().thenReturn(documentReferenceMock);
+    whenDocument().thenReturn(documentReference);
 
-    return when(documentReferenceMock.setData(any, any));
+    return when(documentReference.setData(any, any));
   }
 
   PostExpectation<Future<DocumentReference>> whenCreateTaskDocument({
@@ -64,18 +64,18 @@ void main() {
   }) {
     whenSetDocumentData().thenAnswer((_) => Future.error(exception));
 
-    when(firestoreMock.collection(tasksCollectionName))
-        .thenReturn(taskCollectionReferenceMock);
+    when(firestore.collection(tasksCollectionName))
+        .thenReturn(taskCollectionReference);
 
-    return when(taskCollectionReferenceMock.add(any));
+    return when(taskCollectionReference.add(any));
   }
 
   tearDown(() {
-    reset(documentSnapshotMock);
-    reset(firestoreMock);
-    reset(collectionReferenceMock);
-    reset(taskCollectionReferenceMock);
-    reset(documentReferenceMock);
+    reset(documentSnapshot);
+    reset(firestore);
+    reset(collectionReference);
+    reset(taskCollectionReference);
+    reset(documentReference);
   });
 
   group("onBuildAddedHandler", () {
@@ -87,18 +87,18 @@ void main() {
           duration: null,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final successfulDurationIncrementMatcher =
             documentFieldIncrementMatcher('successfulBuildsDuration', 0);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(successfulDurationIncrementMatcher),
             any,
           ),
@@ -113,18 +113,18 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final successfulDurationIncrementMatcher =
             documentFieldIncrementMatcher('successfulBuildsDuration', 0);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(successfulDurationIncrementMatcher),
             any,
           ),
@@ -139,17 +139,17 @@ void main() {
           startedAt: startedAt,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final documentId =
             '${projectId}_${startedAtDayUtc.millisecondsSinceEpoch}';
 
-        verify(firestoreMock.document('build_days/$documentId')).called(1);
+        verify(firestore.document('build_days/$documentId')).called(1);
       },
     );
 
@@ -161,15 +161,15 @@ void main() {
         );
         final expectedDate = startedAtDayUtc.millisecondsSinceEpoch;
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         expect(
-          verify(firestoreMock.document(captureAny)).captured.single,
+          verify(firestore.document(captureAny)).captured.single,
           contains(expectedDate.toString()),
         );
       },
@@ -178,17 +178,17 @@ void main() {
     test(
       "creates a build days document with project id equals to the build document snapshot's project id",
       () async {
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final projectIdMatcher = predicate<DocumentData>(
           (data) => data.getString('projectId') == projectId,
         );
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(projectIdMatcher),
             any,
           ),
@@ -202,16 +202,16 @@ void main() {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final statusFieldIncrementMatcher =
             documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(statusFieldIncrementMatcher),
             any,
           ),
@@ -227,18 +227,18 @@ void main() {
           buildStatus: BuildStatus.failed,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final statusFieldIncrementMatcher =
             documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(statusFieldIncrementMatcher),
             any,
           ),
@@ -254,18 +254,18 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final statusFieldIncrementMatcher =
             documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(statusFieldIncrementMatcher),
             any,
           ),
@@ -282,18 +282,18 @@ void main() {
           buildStatus: BuildStatus.inProgress,
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final statusFieldIncrementMatcher =
             documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(statusFieldIncrementMatcher),
             any,
           ),
@@ -308,12 +308,12 @@ void main() {
           duration: const Duration(milliseconds: durationInMilliseconds),
         );
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final successfulDurationIncrementMatcher =
             documentFieldIncrementMatcher(
@@ -322,7 +322,7 @@ void main() {
         );
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(successfulDurationIncrementMatcher),
             any,
           ),
@@ -338,19 +338,19 @@ void main() {
         );
         final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
 
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final dayMatcher = predicate<DocumentData>((data) {
           return data.getTimestamp('day') == expectedBuildDay;
         });
 
         verify(
-          documentReferenceMock.setData(
+          documentReference.setData(
             argThat(dayMatcher),
             any,
           ),
@@ -361,12 +361,12 @@ void main() {
     test(
       "does not create a task document if the build day data set successfully",
       () async {
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
-        verifyNever(firestoreMock.collection(tasksCollectionName));
+        verifyNever(firestore.collection(tasksCollectionName));
       },
     );
 
@@ -374,16 +374,16 @@ void main() {
       "creates a task document with 'build_days_created' code if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final codeMatcher = predicate<DocumentData>(
           (data) => data.getString('code') == TaskCode.buildDaysCreated.value,
         );
 
-        verify(taskCollectionReferenceMock.add(argThat(codeMatcher))).called(1);
+        verify(taskCollectionReference.add(argThat(codeMatcher))).called(1);
       },
     );
 
@@ -391,10 +391,10 @@ void main() {
       "creates a task document with data equals to the build data if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
           return const MapEquality().equals(
@@ -403,7 +403,7 @@ void main() {
           );
         });
 
-        verify(taskCollectionReferenceMock.add(argThat(dataMatcher))).called(1);
+        verify(taskCollectionReference.add(argThat(dataMatcher))).called(1);
       },
     );
 
@@ -414,17 +414,17 @@ void main() {
 
         whenCreateTaskDocument(exception: exception)
             .thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
-        await onBuildAddedHandler(documentSnapshotMock, null);
+        await onBuildAddedHandler(documentSnapshot, null);
 
         final contextMatcher = predicate<DocumentData>(
           (data) => data.getString('context') == exception.toString(),
         );
 
         verify(
-          taskCollectionReferenceMock.add(
+          taskCollectionReference.add(
             argThat(contextMatcher),
           ),
         ).called(1);
@@ -438,18 +438,18 @@ void main() {
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
 
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReferenceMock);
-        when(documentSnapshotMock.data).thenReturn(buildJsonDocumentData);
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await withClock(Clock.fixed(currentDateTime), () async {
-          await onBuildAddedHandler(documentSnapshotMock, null);
+          await onBuildAddedHandler(documentSnapshot, null);
 
           final createdAtMatcher = predicate<DocumentData>((data) {
             return data.getTimestamp('createdAt') == expectedCreatedAt;
           });
 
           verify(
-            taskCollectionReferenceMock.add(
+            taskCollectionReference.add(
               argThat(createdAtMatcher),
             ),
           ).called(1);
