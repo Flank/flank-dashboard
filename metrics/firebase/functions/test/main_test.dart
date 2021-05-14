@@ -80,6 +80,11 @@ void main() {
       return when(eventContext.params);
     }
 
+    setUp(() {
+      whenDocument().thenReturn(documentReference);
+      whenEventContextParam().thenReturn(eventContextParams);
+    });
+
     tearDown(() {
       reset(eventContext);
     });
@@ -92,8 +97,6 @@ void main() {
           duration: null,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -119,8 +122,6 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -146,8 +147,6 @@ void main() {
           startedAt: startedAt,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -169,8 +168,6 @@ void main() {
         );
         final expectedDate = startedAtDayUtc.millisecondsSinceEpoch;
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -187,8 +184,6 @@ void main() {
     test(
       "creates a build days document with project id equals to the build document snapshot's project id",
       () async {
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -212,8 +207,6 @@ void main() {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -238,8 +231,6 @@ void main() {
           buildStatus: BuildStatus.failed,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -266,8 +257,6 @@ void main() {
           buildStatus: BuildStatus.unknown,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -295,8 +284,6 @@ void main() {
           buildStatus: BuildStatus.inProgress,
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -322,8 +309,6 @@ void main() {
           duration: const Duration(milliseconds: durationInMilliseconds),
         );
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -353,8 +338,6 @@ void main() {
         );
         final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
 
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(
           DocumentData.fromMap(buildJson),
         );
@@ -377,8 +360,6 @@ void main() {
     test(
       "does not create a task document if the build day data set successfully",
       () async {
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -391,8 +372,6 @@ void main() {
       "creates a task document with 'build_days_created' code if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -409,8 +388,6 @@ void main() {
       "creates a task document with data equals to the build data if setting the build day's document data fails",
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -436,8 +413,6 @@ void main() {
 
         whenCreateTaskDocument(exception: exception)
             .thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, eventContext);
@@ -461,8 +436,6 @@ void main() {
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
 
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
-        whenDocument().thenReturn(documentReference);
-        whenEventContextParam().thenReturn(eventContextParams);
         when(documentSnapshot.data).thenReturn(buildDocumentData);
 
         await withClock(Clock.fixed(currentDateTime), () async {
