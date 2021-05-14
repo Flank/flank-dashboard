@@ -52,16 +52,11 @@ void main() {
     return when(firestore.document(any));
   }
 
-  PostExpectation<Future<void>> whenSetDocumentData() {
-    whenDocument().thenReturn(documentReference);
-
-    return when(documentReference.setData(any, any));
-  }
-
   PostExpectation<Future<DocumentReference>> whenCreateTaskDocument({
     Exception exception,
   }) {
-    whenSetDocumentData().thenAnswer((_) => Future.error(exception));
+    when(documentReference.setData(any, any))
+        .thenAnswer((_) => Future.error(exception));
 
     when(firestore.collection(tasksCollectionName))
         .thenReturn(collectionReference);
