@@ -7,13 +7,13 @@ Consider this useful links that may help you to get started:
 
 # Projects
 This repository holds the source code for the following projects:
-- [API Mock Server](#api-mock-server-test_tube)
-- [Guardian](#guardian-shield)
-- [Metrics](#metrics-bar_chart)
-- [Shell Words](#shell-words-shell)
-- [YAML Map](#yaml-map-world_map)
+- [API Mock Server](#test_tube-api-mock-server)
+- [Guardian](#shield-guardian)
+- [Metrics](#bar_chart-metrics)
+- [Shell Words](#shell-shell-words)
+- [YAML Map](#world_map-yaml-map)
 
-## Api Mock Server :test_tube:
+## :test_tube: Api Mock Server
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations.
 
 ### Features
@@ -92,10 +92,10 @@ void main() {
 ```
 </details>
 
-## Guardian :shield:
+## :shield: Guardian
 [Guardian](guardian) is a tool for detecting and publishing flaky tests by analyzing JUnit XML files. The tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
 
-## Metrics :bar_chart:
+## :bar_chart: Metrics
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 The Metrics project includes the following components:
 - [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
@@ -106,7 +106,7 @@ The Metrics project includes the following components:
 
 ![Metrics Dashboard](docs/images/dashboard_ui.png)
 
-## Shell Words :shell:
+## :shell: Shell Words
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
 
 ### Features
@@ -130,7 +130,7 @@ void main() {
 
 </details>
 
-## YAML Map :world_map:
+## :world_map: YAML Map
 [YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) that simplifies working with YAML documents.
 
 ### Features
@@ -171,5 +171,5 @@ void main() {
 
 </details>
 
-# License :scroll:
+# :scroll: License
 Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
