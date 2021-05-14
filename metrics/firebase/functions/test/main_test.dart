@@ -423,9 +423,11 @@ void main() {
           (data) => data.getString('context') == exception.toString(),
         );
 
-        verify(taskCollectionReferenceMock.add(
-          argThat(contextMatcher),
-        )).called(1);
+        verify(
+          taskCollectionReferenceMock.add(
+            argThat(contextMatcher),
+          ),
+        ).called(1);
       },
     );
 
@@ -446,9 +448,11 @@ void main() {
             return data.getTimestamp('createdAt') == expectedCreatedAt;
           });
 
-          verify(taskCollectionReferenceMock.add(
-            argThat(createdAtMatcher),
-          )).called(1);
+          verify(
+            taskCollectionReferenceMock.add(
+              argThat(createdAtMatcher),
+            ),
+          ).called(1);
         });
       },
     );
