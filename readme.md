@@ -9,19 +9,21 @@ This repository holds the source code of the following projects:
 Let's review each of them in a bit more details:
 
 ## :test_tube: Api Mock Server
-[Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations.
+[Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
 
 ### Features
-- Authentication verification (by providing `AuthCredentials`);
-- Handling `GET`, `DELETE`, `POST`, `PUT` HTTP methods;
-- Flexible request URL matching (using `ExactPathMatcher` or `RegExpPathMatcher`).
+The API Mock server allows mocking the following real-server functionality:
+
+- Verify requests' authentication (by providing `AuthCredentials`);
+- Handle requests with `GET`, `DELETE`, `POST`, `PUT` HTTP methods;
+- Handle routing by matching requests' URL (using `ExactPathMatcher` or `RegExpPathMatcher`).
 
 <details>
   <summary>Usage example</summary>
 
 Consider this short example on how to use the API Mock Server.
 
-First, let's consider we have the following API client, and we need to test its `fetchBar` method:
+Let's assume that we have the following API client with the `fetchBar` method we should cover with tests:
 ```dart
 import 'package:http/http.dart' as http;
 
@@ -40,7 +42,7 @@ class TestClient {
 }
 ```
 
-After that, let's implement an Api Mock server to test the `TestClient`.
+Then, we should implement the mock server to test the desired client. The following `MockServer` implements the API Mock Server and mocks the behavior of the real server:
 ```dart
 class MockServer extends ApiMockServer {
   @override
@@ -60,7 +62,7 @@ class MockServer extends ApiMockServer {
 }
 ```
 
-Now, let's use the created `MockServer` in tests:
+Finally, `start` the implemented mock server and provide the base path to the client under tests (`TestClient` in our case). To prevent memory leaks, close the server after all tests are finished. We should test the `fetchBar` method as follows:
 ```dart
 void main() {
   group("TestClient", () {
@@ -92,7 +94,7 @@ void main() {
 </details>
 
 ## :shield: Guardian
-[Guardian](guardian) is a tool designed for detecting and notifying about flaky tests by analyzing JUnit XML files. This tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
+[Guardian](guardian) is a tool designed for detecting flaky tests by analyzing JUnit XML reports and notifying the team about the results. This tool accepts the actual reports and compares them to the stored results in a database. If the test is considered flaky, Guardian notifies the team using Slack and/or Jira integrations.
 
 ### Features:
 - Slack integration for notifications;
@@ -102,7 +104,7 @@ void main() {
 The Metrics project includes the following components:
 - [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
 - [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
-- [Metrics CLI](metrics/cli) - a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
+- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
 - [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
 - [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
 
@@ -136,7 +138,7 @@ void main() {
 [YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) package that simplifies working with YAML documents.
 
 ### Features
-- Comparing to the [`yaml`](https://pub.dev/packages/yaml) package, parses the result to core Dart types.
+- Parsing the YAML documents to core Dart types.
 - Converting Dart Maps to YAML formatted strings.
 
 <details>
@@ -183,4 +185,4 @@ Consider these useful links that may help you to get started:
 # :scroll: License
 Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
 
-Consider the following [document](docs/15_dependencies_licenses.md) that describes the licenses for all 3-rd party libraries used in projects of this repository.
+Consider the [Dependencies Licenses](docs/15_dependencies_licenses.md) document that describes the licenses for all 3-rd party libraries used in projects of this repository.
