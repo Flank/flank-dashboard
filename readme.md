@@ -101,7 +101,7 @@ void main() {
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 The Metrics project includes the following components:
 - [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
-- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools to collect software project metrics, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
+- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
 - [Metrics CLI](metrics/cli) - a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
 - [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
 - [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
