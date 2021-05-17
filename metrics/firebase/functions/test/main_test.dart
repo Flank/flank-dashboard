@@ -452,11 +452,20 @@ void main() {
       duration: null,
     );
     final oldBuildDocumentData = DocumentData.fromMap(oldBuildJson);
-    final taskData = TaskData(
+    final taskCreatedData = TaskData(
       code: TaskCode.buildDaysCreated,
       createdAt: DateTime.now(),
     );
-    final taskDocumentData = DocumentData.fromMap(taskData.toMap());
+    final taskCreatedDocumentData = DocumentData.fromMap(
+      taskCreatedData.toMap(),
+    );
+    final taskUpdatedData = TaskData(
+      code: TaskCode.buildDaysUpdated,
+      createdAt: DateTime.now(),
+    );
+    final taskUpdatedDocumentData = DocumentData.fromMap(
+      taskUpdatedData.toMap(),
+    );
 
     PostExpectation<Future<QuerySnapshot>> whenGetTaskDocument() {
       whenFirestore().thenReturn(firestore);
@@ -786,6 +795,123 @@ void main() {
       },
     );
 
+    ///
+
+    test(
+      "decrements a build day document's inProgress field value if the old build document snapshot's status is inProgress and there are 'build_days_updated' task with such build id in tasks collection",
+      () async {
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.inProgress.value;
+
+        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeAfterData().thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
+        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's unknown field value if the old build document snapshot's status is unknown and there are 'build_days_updated' task with such build id in tasks collection",
+      () async {
+        final oldBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.unknown,
+        );
+        final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
+
+        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeAfterData().thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
+        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's failed field value if the old build document snapshot's status is failed and there are 'build_days_updated' task with such build id in tasks collection",
+      () async {
+        final oldBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.failed,
+        );
+        final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
+
+        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeAfterData().thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
+        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's successful field value if the old build document snapshot's status is successful and there are 'build_days_updated' task with such build id in tasks collection",
+      () async {
+        final oldBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+        );
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.successful.value;
+        final newBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.unknown,
+        );
+
+        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
+        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+    //////////
+
     test(
       "increments a build day document's successfulBuildsDuration field by the updated build document snapshot's duration if the updated build is successful",
       () async {
@@ -961,7 +1087,7 @@ void main() {
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskDocumentData);
+        when(taskDocumentSnapshot.data).thenReturn(taskCreatedDocumentData);
 
         await onBuildUpdatedHandler(change, null);
 
@@ -976,7 +1102,7 @@ void main() {
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskDocumentData);
+        when(taskDocumentSnapshot.data).thenReturn(taskCreatedDocumentData);
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
 
         await onBuildUpdatedHandler(change, null);
