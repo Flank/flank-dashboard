@@ -378,7 +378,7 @@ void main() {
       () async {
         gcloudService.configureProjectOrganization(projectId);
 
-        verify(prompter.prompt(configureOrganization)).called(once);
+        verify(prompter.info(configureOrganization)).called(once);
       },
     );
 
