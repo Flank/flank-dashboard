@@ -97,7 +97,7 @@ void main() {
 [Guardian](guardian) is a tool designed for detecting flaky tests by analyzing JUnit XML reports and notifying the team about the results. This tool accepts the actual reports and compares them to the stored results in a database. If the test is considered flaky, Guardian notifies the team using Slack and/or Jira integrations.
 
 ### Features:
-- Slack integration for notifications;
+- Slack integration for notifications.
 
 ## :bar_chart: Metrics
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
