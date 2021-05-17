@@ -5,7 +5,9 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing serialization method for a [BuildData] model.
 class BuildDataSerializer {
-  /// Converts a given [buildData] into the JSON-encodable map.
+  /// Converts the given [buildData] into the JSON-encodable map.
+  ///
+  /// Returns `null` if the given [buildData] is `null`.
   static Map<String, dynamic> toJson(BuildData buildData) {
     if (buildData == null) return null;
 

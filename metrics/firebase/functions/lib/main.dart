@@ -74,7 +74,6 @@ Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
 
   final task = await _getTaskByDataId(firestore, buildId);
   final taskCode = task?.data?.getString('code');
-  print(task == null);
 
   if (task == null || taskCode == TaskCode.buildDaysUpdated.value) {
     final statusFieldDecrement = BuildDayStatusFieldFactory.create(

@@ -5,8 +5,6 @@ import 'package:functions/serializers/build_data_serializer.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: avoid_redundant_argument_values
-
 void main() {
   group("BuildDataSerializer", () {
     const id = 'id';
@@ -30,7 +28,7 @@ void main() {
     );
 
     test(
-      ".toJson() converts a given build data into the JSON-encodable map ",
+      ".toJson() converts the given build data into the JSON-encodable map",
       () {
         final buildData = BuildData(
           id: id,

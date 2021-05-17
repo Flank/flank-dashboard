@@ -20,6 +20,7 @@ void main() {
   const tasksCollectionName = 'tasks';
   const projectId = 'projectId';
   const durationInMilliseconds = 123;
+  const buildStatus = BuildStatus.successful;
   const buildId = 'projectId_1';
 
   final startedAt = DateTime.now();
@@ -72,373 +73,373 @@ void main() {
     reset(documentReference);
   });
 
-  // group("onBuildAddedHandler", () {
-  //   test(
-  //     "does not increment the successful builds duration if the build document snapshot's duration is null",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         buildStatus: buildStatus,
-  //         duration: null,
-  //       );
-
-  //       whenDocument().thenReturn(documentReference);
-  //       when(documentSnapshot.data).thenReturn(
-  //         DocumentData.fromMap(buildJson),
-  //       );
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final successfulDurationIncrementMatcher =
-  //           documentFieldIncrementMatcher('successfulBuildsDuration', 0);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(successfulDurationIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "does not increment the successful builds duration if the build's status is not successful",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         buildStatus: BuildStatus.unknown,
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final successfulDurationIncrementMatcher =
-  //           documentFieldIncrementMatcher('successfulBuildsDuration', 0);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(successfulDurationIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "uses a composite document id for the build days collection",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         startedAt: startedAt,
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final documentId =
-  //           '${projectId}_${startedAtDayUtc.millisecondsSinceEpoch}';
-
-  //       verify(firestore.document('build_days/$documentId')).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "trims the time part of the build's started at parameter and converts it to UTC",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         startedAt: startedAt,
-  //       );
-  //       final expectedDate = startedAtDayUtc.millisecondsSinceEpoch;
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       expect(
-  //         verify(firestore.document(captureAny)).captured.single,
-  //         contains(expectedDate.toString()),
-  //       );
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a build days document with project id equals to the build document snapshot's project id",
-  //     () async {
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final projectIdMatcher = predicate<DocumentData>(
-  //         (data) => data.getString('projectId') == projectId,
-  //       );
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(projectIdMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "increments a build day document's successful field value if the build document snapshot's status is successful",
-  //     () async {
-  //       final buildDayStatusFieldName =
-  //           BuildDayStatusFieldName.successful.value;
-
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final statusFieldIncrementMatcher =
-  //           documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(statusFieldIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "increments a build day document's failed field value if the build document snapshot's status is failed",
-  //     () async {
-  //       final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         buildStatus: BuildStatus.failed,
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final statusFieldIncrementMatcher =
-  //           documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(statusFieldIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "increments a build day document's unknown field value if the build document snapshot's status is unknown",
-  //     () async {
-  //       final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         buildStatus: BuildStatus.unknown,
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final statusFieldIncrementMatcher =
-  //           documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(statusFieldIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "increments a build day document's inProgress field value if the build document snapshot's status is inProgress",
-  //     () async {
-  //       final buildDayStatusFieldName =
-  //           BuildDayStatusFieldName.inProgress.value;
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         buildStatus: BuildStatus.inProgress,
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final statusFieldIncrementMatcher =
-  //           documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(statusFieldIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "increments a build day document's successfulBuildsDuration field by the build document snapshot's duration if the build is successful",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         duration: const Duration(milliseconds: durationInMilliseconds),
-  //       );
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final successfulDurationIncrementMatcher =
-  //           documentFieldIncrementMatcher(
-  //         'successfulBuildsDuration',
-  //         durationInMilliseconds,
-  //       );
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(successfulDurationIncrementMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a build days document with day equals to the build document snapshot's startedAt UTC day",
-  //     () async {
-  //       final buildJson = testDataGenerator.generateBuildJson(
-  //         startedAt: startedAt,
-  //       );
-  //       final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
-
-  //       when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final dayMatcher = predicate<DocumentData>((data) {
-  //         return data.getTimestamp('day') == expectedBuildDay;
-  //       });
-
-  //       verify(
-  //         documentReference.setData(
-  //           argThat(dayMatcher),
-  //           any,
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "does not create a task document if the build day data set successfully",
-  //     () async {
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       verifyNever(firestore.collection(tasksCollectionName));
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a task document with 'build_days_created' code if setting the build day's document data fails",
-  //     () async {
-  //       whenCreateTaskDocument().thenAnswer((_) => Future.value());
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final codeMatcher = predicate<DocumentData>(
-  //         (data) => data.getString('code') == TaskCode.buildDaysCreated.value,
-  //       );
-
-  //       verify(collectionReference.add(argThat(codeMatcher))).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a task document with data equals to the build data if setting the build day's document data fails",
-  //     () async {
-  //       whenCreateTaskDocument().thenAnswer((_) => Future.value());
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       when(documentSnapshot.documentID).thenReturn(buildId);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final dataMatcher = predicate<DocumentData>((data) {
-  //         buildJson['startedAt'] = buildJson['startedAt'].toDateTime();
-  //         buildJson.addAll({'id': buildId});
-
-  //         return const MapEquality().equals(
-  //           data.getNestedData('data').toMap(),
-  //           buildJson,
-  //         );
-  //       });
-
-  //       verify(collectionReference.add(argThat(dataMatcher))).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a task document with context equals to the error string representation if setting the build day's document data fails",
-  //     () async {
-  //       final exception = Exception('test');
-
-  //       whenCreateTaskDocument(exception: exception)
-  //           .thenAnswer((_) => Future.value());
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await onBuildAddedHandler(documentSnapshot, null);
-
-  //       final contextMatcher = predicate<DocumentData>(
-  //         (data) => data.getString('context') == exception.toString(),
-  //       );
-
-  //       verify(
-  //         collectionReference.add(
-  //           argThat(contextMatcher),
-  //         ),
-  //       ).called(1);
-  //     },
-  //   );
-
-  //   test(
-  //     "creates a task document with createdAt equals to the current date time if setting the build day's document data fails",
-  //     () async {
-  //       final currentDateTime = DateTime.now();
-  //       final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
-
-  //       whenCreateTaskDocument().thenAnswer((_) => Future.value());
-  //       when(documentSnapshot.data).thenReturn(buildDocumentData);
-  //       whenDocument().thenReturn(documentReference);
-
-  //       await withClock(Clock.fixed(currentDateTime), () async {
-  //         await onBuildAddedHandler(documentSnapshot, null);
-
-  //         final createdAtMatcher = predicate<DocumentData>((data) {
-  //           return data.getTimestamp('createdAt') == expectedCreatedAt;
-  //         });
-
-  //         verify(
-  //           collectionReference.add(
-  //             argThat(createdAtMatcher),
-  //           ),
-  //         ).called(1);
-  //       });
-  //     },
-  //   );
-  // });
+  group("onBuildAddedHandler", () {
+    test(
+      "does not increment the successful builds duration if the build document snapshot's duration is null",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: buildStatus,
+          duration: null,
+        );
+
+        whenDocument().thenReturn(documentReference);
+        when(documentSnapshot.data).thenReturn(
+          DocumentData.fromMap(buildJson),
+        );
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher('successfulBuildsDuration', 0);
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "does not increment the successful builds duration if the build's status is not successful",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.unknown,
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher('successfulBuildsDuration', 0);
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "uses a composite document id for the build days collection",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          startedAt: startedAt,
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final documentId =
+            '${projectId}_${startedAtDayUtc.millisecondsSinceEpoch}';
+
+        verify(firestore.document('build_days/$documentId')).called(1);
+      },
+    );
+
+    test(
+      "trims the time part of the build's started at parameter and converts it to UTC",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          startedAt: startedAt,
+        );
+        final expectedDate = startedAtDayUtc.millisecondsSinceEpoch;
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        expect(
+          verify(firestore.document(captureAny)).captured.single,
+          contains(expectedDate.toString()),
+        );
+      },
+    );
+
+    test(
+      "creates a build days document with project id equals to the build document snapshot's project id",
+      () async {
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final projectIdMatcher = predicate<DocumentData>(
+          (data) => data.getString('projectId') == projectId,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(projectIdMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's successful field value if the build document snapshot's status is successful",
+      () async {
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.successful.value;
+
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's failed field value if the build document snapshot's status is failed",
+      () async {
+        final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.failed,
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's unknown field value if the build document snapshot's status is unknown",
+      () async {
+        final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.unknown,
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's inProgress field value if the build document snapshot's status is inProgress",
+      () async {
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.inProgress.value;
+        final buildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.inProgress,
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's successfulBuildsDuration field by the build document snapshot's duration if the build is successful",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          duration: const Duration(milliseconds: durationInMilliseconds),
+        );
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher(
+          'successfulBuildsDuration',
+          durationInMilliseconds,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "creates a build days document with day equals to the build document snapshot's startedAt UTC day",
+      () async {
+        final buildJson = testDataGenerator.generateBuildJson(
+          startedAt: startedAt,
+        );
+        final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
+
+        when(documentSnapshot.data).thenReturn(DocumentData.fromMap(buildJson));
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final dayMatcher = predicate<DocumentData>((data) {
+          return data.getTimestamp('day') == expectedBuildDay;
+        });
+
+        verify(
+          documentReference.setData(
+            argThat(dayMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "does not create a task document if the build day data set successfully",
+      () async {
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        verifyNever(firestore.collection(tasksCollectionName));
+      },
+    );
+
+    test(
+      "creates a task document with 'build_days_created' code if setting the build day's document data fails",
+      () async {
+        whenCreateTaskDocument().thenAnswer((_) => Future.value());
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final codeMatcher = predicate<DocumentData>(
+          (data) => data.getString('code') == TaskCode.buildDaysCreated.value,
+        );
+
+        verify(collectionReference.add(argThat(codeMatcher))).called(1);
+      },
+    );
+
+    test(
+      "creates a task document with data equals to the build data if setting the build day's document data fails",
+      () async {
+        whenCreateTaskDocument().thenAnswer((_) => Future.value());
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        when(documentSnapshot.documentID).thenReturn(buildId);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final dataMatcher = predicate<DocumentData>((data) {
+          buildJson['startedAt'] = buildJson['startedAt'].toDateTime();
+          buildJson.addAll({'id': buildId});
+
+          return const MapEquality().equals(
+            data.getNestedData('data').toMap(),
+            buildJson,
+          );
+        });
+
+        verify(collectionReference.add(argThat(dataMatcher))).called(1);
+      },
+    );
+
+    test(
+      "creates a task document with context equals to the error string representation if setting the build day's document data fails",
+      () async {
+        final exception = Exception('test');
+
+        whenCreateTaskDocument(exception: exception)
+            .thenAnswer((_) => Future.value());
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await onBuildAddedHandler(documentSnapshot, null);
+
+        final contextMatcher = predicate<DocumentData>(
+          (data) => data.getString('context') == exception.toString(),
+        );
+
+        verify(
+          collectionReference.add(
+            argThat(contextMatcher),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "creates a task document with createdAt equals to the current date time if setting the build day's document data fails",
+      () async {
+        final currentDateTime = DateTime.now();
+        final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
+
+        whenCreateTaskDocument().thenAnswer((_) => Future.value());
+        when(documentSnapshot.data).thenReturn(buildDocumentData);
+        whenDocument().thenReturn(documentReference);
+
+        await withClock(Clock.fixed(currentDateTime), () async {
+          await onBuildAddedHandler(documentSnapshot, null);
+
+          final createdAtMatcher = predicate<DocumentData>((data) {
+            return data.getTimestamp('createdAt') == expectedCreatedAt;
+          });
+
+          verify(
+            collectionReference.add(
+              argThat(createdAtMatcher),
+            ),
+          ).called(1);
+        });
+      },
+    );
+  });
 
   group("onBuildUpdatedHandler", () {
     final newDocumentSnapshot = DocumentSnapshotMock();
