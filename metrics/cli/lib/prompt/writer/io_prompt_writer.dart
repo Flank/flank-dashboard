@@ -25,15 +25,20 @@ class IOPromptWriter implements PromptWriter {
         _stdout = outputStream ?? stdout;
 
   @override
-  String prompt(String text) {
+  void info(String text) {
     _stdout.writeln(text);
+  }
+
+  @override
+  String prompt(String text) {
+    info(text);
 
     return _stdin.readLineSync();
   }
 
   @override
   bool promptConfirm(String text, String confirmInput) {
-    _stdout.writeln(text);
+    info(text);
 
     final userInput = _stdin.readLineSync();
 

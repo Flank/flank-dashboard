@@ -62,7 +62,7 @@ class GCloudCliServiceAdapter implements GCloudService {
 
   @override
   void configureOAuthOrigins(String projectId) {
-    _prompter.prompt(GCloudStrings.configureOAuth(projectId));
+    _prompter.info(GCloudStrings.configureOAuth(projectId));
   }
 
   /// Generates the project identifier.
