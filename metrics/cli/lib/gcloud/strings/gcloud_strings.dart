@@ -31,7 +31,8 @@ If you are going to use any other domains to access the Metrics Web application,
 2. Press the 'Web client (auto created by Google Service)' name in the 'OAuth 2.0 Client IDs' section.
 3. Press the 'ADD URI' button at the end of the 'Authorized JavaScript origins' section.
 4. Enter the domain you want to use to access the Metrics Web application.
-5. Press the 'SAVE' button at the bottom of the web page.''';
+5. Press the 'SAVE' button at the bottom of the web page.
+''';
 
   static String configureProjectOrganization(String projectId) => '''
 The $projectId GCloud project has been created successfully! 
