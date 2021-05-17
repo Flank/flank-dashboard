@@ -1,104 +1,188 @@
-![Metrics Logo](docs/images/metrics_logo.png)
+# Projects
+This repository holds the source code of the following projects:
+- [API Mock Server](#test_tube-api-mock-server)
+- [Guardian](#shield-guardian)
+- [Metrics](#bar_chart-metrics)
+- [Shell Words](#shell-shell-words)
+- [YAML Map](#world_map-yaml-map)
 
-Metrics is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
+Let's review each of them in a bit more details:
 
-# About Metrics :bar_chart:
+## :test_tube: Api Mock Server
+[Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
 
-We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics application helps developers, project teams, and organizations to monitor and improve projects' performance, stability, and quality.
+### Features
+The API Mock server allows mocking the following real-server functionality:
 
-### Attractive
-
-The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered by [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different projects by providing appropriate filters.
-
-![Dashboard UI](docs/images/dashboard_ui.png)
-
-### Fully Integrated
-
-The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize project data, configure logging, and collecting analytics. Moreover, the CI Integrations Tool can be integrated into the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application.
-
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+- Verify requests' authentication (by providing `AuthCredentials`);
+- Handle requests with `GET`, `DELETE`, `POST`, `PUT` HTTP methods;
+- Handle routing by matching requests' URL (using `ExactPathMatcher` or `RegExpPathMatcher`).
 
 <details>
-  <summary>Metrics Components</summary>
+  <summary>Usage example</summary>
 
-#### CI integrations
+Consider this short example on how to use the API Mock Server.
 
-A CLI application that integrates with popular CI tools to collect software project metrics.
+Let's assume that we have the following API client with the `fetchBar` method we should cover with tests:
+```dart
+import 'package:http/http.dart' as http;
 
-#### Core
+class TestClient {
+  final String apiUrl;
 
-A Dart package that provides a common classes to use within Metrics applications.
+  const TestClient(this.apiUrl);
 
-#### Firebase
+  Future<String> fetchBar() async {
+    final response = await http.get('$apiUrl/foo');
 
-A `Firebase` instance that provides the Firestore, Firebase Cloud Functions services and ability to deploy the application on Firebase Hosting. Also, provides an Analytics service used to gather and store the analytics data (this service is optional and may not be configured during deployment).
+    if (response.statusCode != 200) return null;
 
-Firebase Analytics is optional and may not be configured during deployment.
+    return response.body;
+  }
+}
+```
 
-#### Flutter Web
+Then, we should implement the mock server to test the desired client. The following `MockServer` implements the API Mock Server and mocks the behavior of the real server:
+```dart
+class MockServer extends ApiMockServer {
+  @override
+  List<RequestHandler> get handlers => [
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher('/foo'),
+          dispatcher: _fooHandler,
+        ),
+      ];
 
-A `Flutter Web` application that displays project metrics on easy to navigate Dashboard.
+  Future<void> _fooHandler(HttpRequest request) async {
+    request.response.write('bar');
+    
+    await request.response.flush();
+    await request.response.close();
+  }
+}
+```
 
-#### Deploy CLI
+Finally, `start` the implemented mock server and provide the base path to the client under tests (`TestClient` in our case). To prevent memory leaks, close the server after all tests are finished. We should test the `fetchBar` method as follows:
+```dart
+void main() {
+  group("TestClient", () {
+    final mockServer = MockServer();
+    TestClient client;
 
-A `Deploy CLI` is a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, etc.) 
+    setUpAll(() async {
+      await mockServer.start();
+      client = TestClient(mockServer.url);
+    });
 
-#### Dart Cloud Functions 
+    tearDownAll(() async {
+      await mockServer.close();
+    });
+    
+    test(
+      ".fetchBar() returns 'bar'",
+      () async {
+        const expectedResponse = 'bar';
 
-A `Dart Cloud Functions` is a serverless backend code deployed on Firebase that simplifies data managing for other Metrics components.
+        final actualResponse = await client.fetchBar();
 
-#### Sentry
+        expect(actualResponse, equals(expectedResponse));
+      },
+    );
+  });
+}
+```
+</details>
 
-A `Sentry` service helps to store any logs and monitor runtime errors.
+## :shield: Guardian
+[Guardian](guardian) is a tool designed for detecting flaky tests by analyzing JUnit XML reports and notifying the team about the results. This tool accepts the actual reports and compares them to the stored results in a database. If the test is considered flaky, Guardian notifies the team using Slack and/or Jira integrations.
 
-Sentry is optional and may not be configured during deployment.
+### Features:
+- Slack integration for notifications.
+
+## :bar_chart: Metrics
+[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
+The Metrics project includes the following components:
+- [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
+- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
+- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
+- [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
+- [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
+
+![Metrics Dashboard](docs/images/dashboard_ui.png)
+
+## :shell: Shell Words
+[Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
+
+### Features
+- Parsing shell commands into words for both Windows and POSIX depending on the underlying OS (using `split` function).
+
+<details>
+  <summary>Usage example</summary>
+
+Consider this short example on how to use the shell words parser.
+
+```dart
+import 'package:shell_words/shell_words.dart';
+
+void main() {
+  final shellWords = split('cd foo/bar --some-flag=flag');
+
+  print(shellWords.words); // [cd, foo/bar, --some-flag=flag]
+  print(shellWords.error); // any occurred error
+}
+```
 
 </details>
 
-### Safe
+## :world_map: YAML Map
+[YAML Map](yaml_map) is a wrapper around Dart's [`yaml`](https://pub.dev/packages/yaml) package that simplifies working with YAML documents.
 
-All the data that the Metrics components orchestrate, belongs only to you: it is stored in the Cloud Firestore database as a part of your Firebase project, the logging is performed on your Sentry account, if enabled, analytics are reported to your Firebase Analytics account, and so on. Moreover, to make the components even safer, we provide a great set of [Firestore Security rules](https://firebase.google.com/docs/firestore/security/get-started) for Cloud Firestore to protect the stored projects' data. The [Firebase Authentication](https://firebase.google.com/docs/auth) stands on the guard of the deployed web application and the stored data from insufficient access.
+### Features
+- Parsing the YAML documents to core Dart types.
+- Converting Dart Maps to YAML formatted strings.
 
-![Auth UI](docs/images/auth_ui.png)
+<details>
+  <summary>Usage example</summary>
 
-### Configurable
+Consider this short example on how to use the main `YamlMapParser` and `YamlMapFormatter` classes:
 
-The Metrics components are configurable on your demand. You can always integrate the builds synchronization into your CI system or schedule this synchronization, disable or enable Sentry logging and Firebase Analytics, configure the web application authentication processes, and so on.
+```dart
+import 'package:yaml_map/src/yaml_map_formatter.dart';
+import 'package:yaml_map/src/yaml_map_parser.dart';
 
-# Getting started with Metrics :beginner:
+void main() {
+  const yaml = '''
+  foo:
+    bar:
+      baz: 1
+  ''';
 
-We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make fist steps:
+  const yamlMapParser = YamlMapParser();
+  final parsedYaml = yamlMapParser.parse(yaml);
 
-1. [Metrics developer configuration :gear:](docs/14_developer_configuration.md)
-2. [Why create a metrics platform? :thinking:](docs/01_design_doc.md)
-3. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
-4. [Dart code style :nail_care:](docs/09_dart_code_style.md)
-5. [Collaboration :raised_hands:](docs/10_collaboration.md)
+  print(parsedYaml); // {foo: {bar: {baz: 1}}}
+  print(parsedYaml['foo']); // {bar: {baz: 1}}
+  print(parsedYaml['foo']['bar']); // {baz: 1}
+  print(parsedYaml['foo']['bar']['baz']); // 1
 
-Furthermore, every Metrics component requires component-specific documentation. Thus, to get started with the `CI integrations` it is recommended to get familiar with the following documents: 
-1. [CI integrations module architecture :building_construction:](metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+  final yamlFormatter = YamlMapFormatter();
+  print(yamlFormatter.format(parsedYaml));
+  // foo: 
+  //   bar: 
+  //     baz: 1
+}
+```
 
-Similarly, here is a list for the `Firebase` component:
-1. [Metrics firebase deployment :boat:](docs/08_firebase_deployment.md)
+</details>
 
-In contrast with the above components, `Flutter Web` requires more steps to follow: 
-1. [Project metrics definitions :book:](docs/05_project_metrics.md)
-2. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
-3. [Metrics Web presentation layer architecture :running:](metrics/web/docs/02_presentation_layer_architecture.md)
-4. [Widget structure organization :bicyclist:](metrics/web/docs/03_widget_structure_organization.md)
+# Getting Started
+Consider these useful links that may help you to get started:
+1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
+2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
+3. [Collaboration :raised_hands:](docs/10_collaboration.md)
+4. [Effective Dart :dart:](https://dart.dev/guides/language/effective-dart)
 
-# Guardian :shield:
+# :scroll: License
+Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
 
-Detect flaky tests by analyzing JUnit XML files and orchestrate tools like Slack, Jira to notify the team.
-
-# Design :art:
-
-Follow the next links to get acquainted with the Metrics project design: 
-- [design/](design/)
-
-# Documentation :books:
-
-You can find complete Metrics documentation using the following links:
-- [general documentation](docs/)
-- [CI integrations documentation](metrics/ci_integrations/docs/)
-- [Web documentation](metrics/web/docs/)
+Consider the [Dependencies Licenses](docs/15_dependencies_licenses.md) document that describes the licenses for all 3-rd party libraries used in projects of this repository.
