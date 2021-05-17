@@ -4,6 +4,9 @@
 /// An abstract class for prompt writers that provide methods
 /// for working with prompts.
 abstract class PromptWriter {
+  /// Displays the given [text] to the user.
+  void info(String text);
+
   /// Requests an input from the user with a given description [text].
   String prompt(String text);
 

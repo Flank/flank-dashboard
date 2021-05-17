@@ -1298,6 +1298,18 @@ void main() {
     );
 
     test(
+      ".deploy() informs about deleting the temporary directory if it exists",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verify(prompter.info(DeployStrings.deletingTempDirectory)).called(once);
+      },
+    );
+
+    test(
       ".deploy() does not delete the temporary directory if it does not exist",
       () async {
         whenDirectoryExist().thenReturn(false);
@@ -1306,6 +1318,18 @@ void main() {
         await deployer.deploy();
 
         verifyNever(directory.delete(recursive: true));
+      },
+    );
+
+    test(
+      ".deploy() informs about the successful deployment if deployment succeeds",
+      () async {
+        whenDirectoryExist().thenReturn(false);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verify(prompter.info(DeployStrings.successfulDeployment)).called(once);
       },
     );
   });

@@ -130,7 +130,10 @@ class Deployer {
         deployPaths.firebasePath,
         deployPaths.webAppPath,
       );
+
       await _gcloudService.configureOAuthOrigins(projectId);
+
+      _prompter.info(DeployStrings.successfulDeployment);
     } finally {
       _deleteDirectory(tempDirectory);
     }
@@ -236,6 +239,8 @@ class Deployer {
     final directoryExist = directory.existsSync();
 
     if (!directoryExist) return;
+
+    _prompter.info(DeployStrings.deletingTempDirectory);
 
     directory.deleteSync(recursive: true);
   }
