@@ -1,5 +1,5 @@
 # Projects
-This repository holds the source code for the following projects:
+This repository holds the source code of the following projects:
 - [API Mock Server](#test_tube-api-mock-server)
 - [Guardian](#shield-guardian)
 - [Metrics](#bar_chart-metrics)
@@ -14,7 +14,7 @@ Let's review each of them in a bit more details:
 ### Features
 - Authentication verification (by providing `AuthCredentials`);
 - Handling `GET`, `DELETE`, `POST`, `PUT` HTTP methods;
-- Flexible request URL matching (using `ExactPathMatcher`, `RegExpPathMatcher`).
+- Flexible request URL matching (using `ExactPathMatcher` or `RegExpPathMatcher`).
 
 <details>
   <summary>Usage example</summary>
@@ -92,17 +92,16 @@ void main() {
 </details>
 
 ## :shield: Guardian
-[Guardian](guardian) is a tool for detecting and notifying about flaky tests by analyzing JUnit XML files. This tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
+[Guardian](guardian) is a tool designed for detecting and notifying about flaky tests by analyzing JUnit XML files. This tool accepts the unit test reports and compares the actual and previous test results stored in a database. If the test is considered flaky, Guardian notifies the team using Slack and creates an issue in Jira.
 
 ### Features:
 - Slack integration for notifications;
-- Parsing JUnit XML reports.
 
 ## :bar_chart: Metrics
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
 The Metrics project includes the following components:
 - [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
-- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools to collect software project metrics, such as Jenkins, GitHub Actions, and Buildkite.
+- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools to collect software project metrics, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
 - [Metrics CLI](metrics/cli) - a command-line tool that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
 - [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
 - [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
@@ -179,9 +178,9 @@ Consider these useful links that may help you to get started:
 1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
 3. [Collaboration :raised_hands:](docs/10_collaboration.md)
-4. [Effective Dart](https://dart.dev/guides/language/effective-dart)
+4. [Effective Dart :dart:](https://dart.dev/guides/language/effective-dart)
 
 # :scroll: License
 Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
 
-Consider the following [document](docs/15_dependencies_licenses.md) that describes the licenses for all 3-rd party libraries used in monorepo.
+Consider the following [document](docs/15_dependencies_licenses.md) that describes the licenses for all 3-rd party libraries used in projects of this repository.
