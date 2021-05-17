@@ -1298,7 +1298,7 @@ void main() {
     );
 
     test(
-      ".deploy() informs about deleting the temporary directory if it exists",
+      ".deploy() informs about deleting the temporary directory",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
