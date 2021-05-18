@@ -353,18 +353,18 @@ void main() {
     );
 
     test(
-      ".configureOAuthOrigins() prompts the user to configure OAuth origins",
+      ".configureOAuthOrigins() informs the user how to configure OAuth origins",
       () {
         gcloudService.configureOAuthOrigins(projectId);
 
-        verify(prompter.prompt(configureOAuth)).called(once);
+        verify(prompter.info(configureOAuth)).called(once);
       },
     );
 
     test(
       ".configureOAuthOrigins() throws if prompter throws during the configuring OAuth origins",
       () {
-        when(prompter.prompt(configureOAuth)).thenThrow(stateError);
+        when(prompter.info(configureOAuth)).thenThrow(stateError);
 
         expect(
           () => gcloudService.configureOAuthOrigins(projectId),

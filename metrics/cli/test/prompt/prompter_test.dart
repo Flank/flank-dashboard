@@ -27,6 +27,15 @@ void main() {
     );
 
     test(
+      ".info() displays the given text",
+      () async {
+        prompter.info(promptText);
+
+        verify(promptWriter.info(promptText)).called(once);
+      },
+    );
+
+    test(
       ".prompt() requests an input from the user with the given description text",
       () async {
         prompter.prompt(promptText);

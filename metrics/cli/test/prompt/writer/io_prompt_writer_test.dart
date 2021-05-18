@@ -7,6 +7,8 @@ import 'package:cli/prompt/writer/io_prompt_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/matchers.dart';
+
 void main() {
   group("IOPromptWriter", () {
     const promptText = 'text';
@@ -14,19 +16,28 @@ void main() {
     final stdinMock = _StdinMock();
     final stdoutMock = _StdoutMock();
 
+    final writer = IOPromptWriter(
+      inputStream: stdinMock,
+      outputStream: stdoutMock,
+    );
+
     tearDown(() {
       reset(stdinMock);
       reset(stdoutMock);
     });
 
     test(
+      ".info() displays the given text",
+      () {
+        writer.info(promptText);
+
+        verify(stdoutMock.writeln(promptText)).called(once);
+      },
+    );
+
+    test(
       ".prompt() requests an input from the user with the given description text",
       () {
-        final writer = IOPromptWriter(
-          inputStream: stdinMock,
-          outputStream: stdoutMock,
-        );
-
         writer.prompt(promptText);
 
         verifyInOrder([
@@ -39,11 +50,6 @@ void main() {
     test(
       ".promptConfirm() requests a confirm input from the user with a given description text",
       () {
-        final writer = IOPromptWriter(
-          inputStream: stdinMock,
-          outputStream: stdoutMock,
-        );
-
         writer.promptConfirm(promptText, confirmText);
 
         verifyInOrder([
@@ -56,11 +62,6 @@ void main() {
     test(
       ".promptConfirm() returns true if the input from the user equals to the confirmation text",
       () {
-        final writer = IOPromptWriter(
-          inputStream: stdinMock,
-          outputStream: stdoutMock,
-        );
-
         when(stdinMock.readLineSync()).thenReturn(confirmText);
 
         final actual = writer.promptConfirm(promptText, confirmText);
@@ -72,11 +73,6 @@ void main() {
     test(
       ".promptConfirm() returns false if the input from the user does not equal to the confirmation text",
       () {
-        final writer = IOPromptWriter(
-          inputStream: stdinMock,
-          outputStream: stdoutMock,
-        );
-
         when(stdinMock.readLineSync()).thenReturn('no');
 
         final actual = writer.promptConfirm(promptText, confirmText);

@@ -16,6 +16,11 @@ class Prompter {
     ArgumentError.checkNotNull(_promptWriter, 'promptWriter');
   }
 
+  /// Displays the given [text] to the user.
+  void info(String text) {
+    _promptWriter.info(text);
+  }
+
   /// Requests an input from the user with a given description [text].
   String prompt(String text) {
     return _promptWriter.prompt(text);
