@@ -65,7 +65,15 @@ Paste your Web client Id here:''';
   static String enableAnalytics(String projectId) => '''
 To enable Firebase analytics for the currently deploying project, follow the next steps:
 
-1. Follow the link and click the 'Enable Google Analytics' button: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
+1. Follow the link and click the 'Enable' button on the Google Analytics tab: https://console.firebase.google.com/project/$projectId/settings/integrations/analytics.
+2. You will be redirected to the Configure Google Analytics page where you should perform the next steps, depending on whether you accept the Google Analytics Terms or not:
+  2.1. Choose the Analytics location.
+  2.2. Accept the Google Analytics Terms.
+  or
+  2.1. Choose or create a Google Analytics account if you have accepted the Google Analytics Terms;
+  NOTE: If you want to create a new account you should provide the Google Analytics account name and perform the same steps as for accepting the Google Analytics Terms.
+3. Click the 'Enable Google Analytics' button.
+4. Click the 'Finish' button.
 
 Once you are done, press the ENTER to continue:''';
 }
