@@ -69,8 +69,7 @@ To enable Firebase analytics for the currently deploying project, follow the nex
 2. Configure the Google Analytics account:
    If you've ever configured the Firebase Analytics on your Google Account, choose an existing Google Analytics account from the dropdown.
 
-   If you've never configured the Firebase Analytics on your Google Account or you want to create a new one, use the following steps to configure it:
-  
+   If you've never configured the Firebase Analytics on your Google Account or you want to create a new one, use the following steps to configure it:  
    2.1. Choose the location from the `Analytics location` dropdown.
    2.2. Accept the Google Analytics Terms.
 3. Click the 'Enable Google Analytics' button.
