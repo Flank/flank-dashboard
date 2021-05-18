@@ -795,8 +795,6 @@ void main() {
       },
     );
 
-    ///
-
     test(
       "decrements a build day document's inProgress field value if the old build document snapshot's status is inProgress and there are 'build_days_updated' task with such build id in tasks collection",
       () async {
@@ -910,7 +908,6 @@ void main() {
         ).called(1);
       },
     );
-    //////////
 
     test(
       "increments a build day document's successfulBuildsDuration field by the updated build document snapshot's duration if the updated build is successful",
