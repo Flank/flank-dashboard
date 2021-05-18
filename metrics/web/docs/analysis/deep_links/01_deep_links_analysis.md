@@ -18,13 +18,24 @@ Since the Flutter [supports deep links](https://flutter.dev/docs/development/ui/
 
 - Possibility to handle deep links;
 - Possibility to generate deep links in response to UI events (filtering, dropdown selections, searching, etc.);
-- Extensible and testable approach.
+- Extensible and testable implementation approach.
 
 ### Landscape
 > Look for existing solutions in the area.
 
 #### Deep linking approach
-(query parameters vs path segments)
+There are two main approaches for deep linking implementation: query parameters and path segments.   
+Let's review them in more details:
+
+- Query parameters   
+  `metrics.web.app/dashboard?project=web_app`   
+  Usually query parameters are used to represent the filtering and grouping criteria. Such an approach allows combining several search parameters (e.g. `project` and `project group`)
+
+- Path segments    
+  `metrics.web.app/dashboard/projects/web_app`  
+  Path segments are usually used to identify the specific resource. They are more user-friendly and readable than the query parameters, but are less flexible, because you can't combine several parameters (e.g. several `project group`s).
+ 
+According to the [requirements](#requirements) listed above, we need to respond to the dynamic UI events, such as searching and filtering, thus the query parameters approach is more suitable for utilizing in the Metrics Web Application.
 
 #### Deep linking in the Metrics Web application
 (Using notifier vs straight using route parameters)
