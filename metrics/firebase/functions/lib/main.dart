@@ -3,11 +3,11 @@
 
 import 'package:clock/clock.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/factory/build_day_status_field_factory.dart';
+import 'package:functions/models/build_data_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
-import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
 import 'package:functions/models/build_day_data.dart';
-import 'package:functions/models/build_day_status_field.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:functions/models/task_code.dart';
 
@@ -20,15 +20,16 @@ void main() {
 /// Process incrementing logic for the build days collection document,
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
-  final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
+  final buildId = snapshot.documentID;
+  final buildData = BuildDataDeserializer.fromJson(
+    snapshot.data.toMap(),
+    id: buildId,
+  );
   final startedAtDayUtc = _getUtcDay(buildData.startedAt);
 
-  const statusFieldMapper = BuildDayStatusFieldNameMapper();
-  final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
-
-  final statusFieldIncrement = BuildDayStatusField(
-    name: buildDayStatusFieldName,
-    value: Firestore.fieldValues.increment(1),
+  final statusFieldIncrement = BuildDayStatusFieldFactory().create(
+    buildStatus: buildData.buildStatus,
+    incrementCount: 1,
   );
 
   final successfulBuildsDurationIncrement = Firestore.fieldValues.increment(
@@ -45,13 +46,13 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   await _updateBuildDay(snapshot, buildDayData);
 }
 
-/// Returns a given [buildData]'s duration in milliseconds.
+/// Returns a given [buildModel]'s duration in milliseconds.
 ///
-/// If the given [buildData] is `successful`, returns it's duration.
+/// If the given [buildModel] is `successful`, returns it's duration.
 /// Otherwise, returns `0`.
-int _getSuccessfulBuildDuration(BuildData buildData) {
-  if (buildData.buildStatus == BuildStatus.successful) {
-    return buildData.duration.inMilliseconds;
+int _getSuccessfulBuildDuration(BuildDataModel buildModel) {
+  if (buildModel.buildStatus == BuildStatus.successful) {
+    return buildModel.duration.inMilliseconds;
   }
 
   return 0;

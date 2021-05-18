@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/models/build_data_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
 import 'package:test/test.dart';
@@ -37,7 +38,7 @@ void main() {
     test(
       ".fromJson() creates a BuildData from the JSON-encodable map",
       () {
-        final expectedBuildData = BuildData(
+        final expectedBuildData = BuildDataModel(
           id: id,
           projectId: projectId,
           buildNumber: buildNumber,
