@@ -6,8 +6,10 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing deserialization methods for a [BuildData] model.
 class BuildDataDeserializer {
-  /// Creates the [BuildData] instance from the [json] and it's [id].
-  static BuildData fromJson(Map<String, dynamic> json, {String id}) {
+  /// Creates a new instance of the [BuildData] from the given [json].
+  ///
+  /// Returns `null` if the given [json] is `null`.
+  static BuildData fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
     final projectId = json['projectId'] as String;
@@ -28,7 +30,6 @@ class BuildDataDeserializer {
     final coverage = coveragePercent == null ? null : Percent(coveragePercent);
 
     return BuildData(
-      id: id,
       projectId: projectId,
       buildNumber: buildNumber,
       startedAt: startedAt,

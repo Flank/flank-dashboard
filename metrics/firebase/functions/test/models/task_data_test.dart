@@ -64,6 +64,47 @@ void main() {
     );
 
     test(
+      ".copyWith() creates a new instance with the same fields if called without params",
+      () {
+        final taskData = TaskData(
+          code: code,
+          data: data,
+          context: context,
+          createdAt: createdAt,
+        );
+
+        final copiedTaskData = taskData.copyWith();
+
+        expect(copiedTaskData.code, equals(code));
+        expect(copiedTaskData.data, equals(data));
+        expect(copiedTaskData.context, equals(context));
+        expect(copiedTaskData.createdAt, equals(createdAt));
+      },
+    );
+
+    test(
+      ".copyWith() creates a copy of an instance with the given fields replaced with the new values",
+      () {
+        final taskData = TaskData(
+          code: code,
+          data: data,
+          context: 'error',
+          createdAt: DateTime(2020),
+        );
+
+        final copiedTaskData = taskData.copyWith(
+          context: context,
+          createdAt: createdAt,
+        );
+
+        expect(copiedTaskData.code, equals(code));
+        expect(copiedTaskData.data, equals(data));
+        expect(copiedTaskData.context, equals(context));
+        expect(copiedTaskData.createdAt, equals(createdAt));
+      },
+    );
+
+    test(
       ".toMap() converts an instance to the map",
       () {
         final expectedMap = {
