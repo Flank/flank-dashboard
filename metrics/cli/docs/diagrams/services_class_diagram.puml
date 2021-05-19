@@ -1,191 +1,211 @@
 @startuml services_class_diagram
 
-package firebase {
-    package service as firebase.service {
+package services {
+    package firebase {
         interface FirebaseService {
             + login(): Future<void>
             + createWebApp(String projectId): Future<void>
             + deployHosting(String projectId, String target, String appPath): Future<void>
             + deployFirebase(String projectId, String firebasePath): Future<void>
-            + configureAuthProviders(String projectId) : FutureOr<String>
-            + enableAnalytics(String projectId) : FutureOr<void>
-            + initializeFirestoreData(String projectId) : FutureOr<void>
             + upgradeBillingPlan(String projectId) : FutureOr<void>
+            + initializeFirestoreData(String projectId) : FutureOr<void>
+            + enableAnalytics(String projectId) : FutureOr<void>
+            + configureAuthProviders(String projectId) : FutureOr<String>
             + acceptTermsOfService() : FutureOr<void>
         }
-    }
 
-    package adapter as firebase.adapter {
-        class FirebaseCliServiceAdapter {
-            - _firebaseCli: FirebaseCli
-            - _prompter : Prompter
+        package adapter as firebase.adapter {
+            class FirebaseCliServiceAdapter {
+                - _firebaseCli: FirebaseCli
+                - _prompter : Prompter
+            }
+        }
+
+        package cli as firebase.cli {
+            class FirebaseCli {
+                + login(): Future<void>
+                + addFirebase(String projectId): Future<void>
+                + createWebApp(String projectId, String appName): Future<void>
+                + setFirebaseProject(String projectId, String workingDirectory): Future<void>
+                + clearTarget(String target, String workingDirectory): Future<void>
+                + applyTarget(String hostingName, String target, String workingDirectory): Future<void>
+                + deployHosting(String target, String workingDirectory): Future<void>
+                + deployFirestore(String workingDirectory): Future<void>
+                + deployFunctions(String workingDirectory): Future<void>
+                + version(): Future<void>
+            }
+        }
+
+        package strings as firebase.strings {
+            class FirebaseStrings {
+                + {static} acceptTerms : String
+                + {static} upgradeBillingPlan(String projectId) : String
+                + {static} initializeData(String projectId) : String
+                + {static} configureAuthProviders(String projectId) : String
+                + {static} enableAnalytics(String projectId) : String
+            }
         }
     }
 
-    package cli as firebase.cli {
-        class FirebaseCli {
-            + login(): Future<void>
-            + addFirebase(String projectId): Future<void>
-            + createWebApp(String projectId, String appName): Future<void>
-            + setFirebaseProject(String projectId, String workingDirectory): Future<void>
-            + clearTarget(String target, String workingDirectory): Future<void>
-            + applyTarget(String hostingName, String target, String workingDirectory): Future<void>
-            + deployHosting(String target, String workingDirectory): Future<void>
-            + deployFirestore(String workingDirectory): Future<void>
-            + deployFunctions(String workingDirectory): Future<void>
-            + version(): Future<void>
-        }
-    }
-}
-
-package gcloud {
-    package service as gcloud.service {
+    package gcloud {
         interface GCloudService {
             + login() : Future<void>
             + createProject() : Future<String>
+            + acceptTermsOfService() : FutureOr<void>
+            + configureOAuthOrigins(String projectId) : FutureOr<void>
+            + configureProjectOrganization(String projectId) : FutureOr<void>
+        }
+
+        package adapter as gcloud.adapter {
+            class GCloudCliServiceAdapter {
+                - _gcloudCli : GCloudCli
+                - _prompter : Prompter
+            }
+        }
+
+        package cli as gcloud.cli {
+            class GCloudCli {
+                + login(): Future<void>
+                + createProject(String projectId): Future<void>
+                + listRegions(String projectId): Future<void>
+                + createProjectApp(String region, String projectId): Future<void>
+                + enableFirestoreApi(String projectId) : Future<void>
+                + createDatabase(String region, String projectId): Future<void>
+                + version() : Future<void>
+            }
+        }
+
+        package strings as gcloud.strings {
+            class GCloudStrings {
+                + {static} acceptTerms : String
+                + {static} enterRegionName : String
+                + {static} configureOAuth(String projectId) : String
+                + {static} configureProjectOrganization(String projectId) : String
+            }
         }
     }
 
-    package adapter as gcloud.adapter {
-        class GCloudCliServiceAdapter {
-            - _gcloudCli : GCloudCli
-            - _prompter : Prompter
-        }
-    }
-
-    package cli as gcloud.cli {
-        class GCloudCli {
-            + login(): Future<void>
-            + createProject(String projectId): Future<void>
-            + listRegions(): Future<void>
-            + createProjectApp(String region, String projectId): Future<void>
-            + enableFirestoreApi() : Future<void>
-            + createDatabase(String region, String projectId): Future<void>
-            + version() : Future<void>
-        }
-    }
-}
-
-package flutter {
-    package service as flutter.service {
+    package flutter {
         interface FlutterService  {
             + build(String appPath) : Future<void>
         }
 
-    }
+        package adapter as flutter.adapter {
+            class FlutterCliServiceAdapter  {
+                - _flutterCli : FlutterCli
+            }
+        }
 
-    package adapter as flutter.adapter {
-        class FlutterCliServiceAdapter  {
-            - _flutterCli : FlutterCli
+        package cli as flutter.cli {
+            class FlutterCli {
+                + buildWeb(String workingDirectory): Future<void>
+                + enableWeb(): Future<void>
+                + version(): Future<void>
+            }
         }
     }
 
-    package cli as flutter.cli {
-        class FlutterCli {
-            + version(): Future<void>
-            + enableWeb(): Future<void>
-            + buildWeb(String workingDirectory): Future<void>
-        }
-    }
-}
-
-package git {
-    package service as git.service {
+    package git {
         interface GitService  {
             + checkout(String repoUrl, String targetDirectory) : Future<void>
+            }
+
+        package adapter as git.adapter {
+            class GitCliServiceAdapter {
+                - _gitCli : GitCli
+            }
+        }
+
+        package cli as git.cli {
+            class GitCli {
+                + clone(String repoUrl, String targetDirectory): Future<void>
+                + version(): Future<void>
+            }
         }
     }
 
-    package adapter as git.adapter {
-        class GitCliServiceAdapter {
-            - _gitCli : GitCli
-        }
-    }
-
-    package cli as git.cli {
-        class GitCli {
-            + clone(String repoUrl, String directory): Future<void>
-            + version(): Future<void>
-        }
-    }
-}
-
-package npm {
-    package service as npm.service {
+    package npm {
         interface NpmService  {
             + installDependencies(String path) : Future<void>
         }
-    }
 
-    package adapter as npm.adapter {
-        class NpmCliServiceAdapter {
-            - _npmCli : NpmCli
+        package adapter as npm.adapter {
+            class NpmCliServiceAdapter {
+                - _npmCli : NpmCli
+            }
+        }
+
+        package cli as npm.cli {
+            class NpmCli {
+                + install(String workingDirectory): Future<void>
+                + version(): Future<void>
+            }
         }
     }
 
-    package cli as npm.cli {
-        class NpmCli {
-            + install(String workingDirectory): Future<void>
-            + version(): Future<void>
-        }
-    }
-}
-
-package sentry {
-    package service as sentry.service {
+    package sentry {
         interface SentryService {
             + login() : Future<void>
             + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
             + getProjectDsn(SentryProject project) : String
         }
+
+        package adapter as sentry.adapter {
+            class SentryCliServiceAdapter {
+                - _sentryCli : SentryCli
+                - _prompter : Prompter
+            }
+        }
+
+        package cli as sentry.cli {
+            class SentryCli {
+                + login(): Future<void>
+                + createRelease(SentryRelease release): Future<void>
+                + uploadSourceMaps(SentryRelease release, SourceMap sourceMap): Future<void>
+                + finalizeRelease(SentryRelease release): Future<void>
+                + version(): Future<void>
+            }
+        }
+        package model as sentry.model {
+            class SentryProject {
+                + organizationSlug : String
+                + projectSlug : String
+            }
+
+            class SentryRelease {
+                + name : String
+                + project : SentryProject
+            }
+
+            class SourceMap {
+                + path : String
+                + extensions : List<String>
+            }
+        }
+
+        package strings as sentry.strings {
+            class SentryStrings {
+                + {static} enterReleaseName : String
+                + {static} enterOrganizationSlug : String
+                + {static} enterProjectSlug(String organizationSlug) : String
+                + {static} enterDsn(String organizationSlug, String projectSlug) : String
+            }
+        }
     }
 
-    package adapter as sentry.adapter {
-        class SentryCliServiceAdapter {
-            - _sentryCli : SentryCli
-            - _prompter : Prompter
-        }
-    }
+package common {
+    package interfaces {
+            interface InfoService {
+                + version() : Future<void>
+            }
 
-    package cli as sentry.cli {
-        class SentryCli {
-            + login(): Future<void>
-            + createRelease(SentryRelease release): Future<void>
-            + uploadSourceMaps(SentryRelease release, SourceMap sourceMap): Future<void>
-            + finalizeRelease(SentryRelease release): Future<void>
-            + version(): Future<void>
-        }
-    }
-    package model as sentry.model{
-        class SentryProject {
-            + organizationSlug : String
-            + projectSlug : String
-        }
-
-        class SentryRelease {
-            + name : String
-            + project : SentryProject
-        }
-
-        class SourceMap {
-            + path : String
-            + extensions : List<String>
-        }
+            interface Cli {
+                + executable : String
+                + version() : Future<void>
+                + run(List<String> arguments, bool attachOutput, String workingDirectory, Stream<List<int>> stdin) : Future<ProcessResult>
+            }
     }
 }
-
-package interfaces {
-    package service {
-        interface InfoService {
-            + version() : Future<void>
-        }
-    }
-
-    package cli {
-        interface Cli {
-            + version() : Future<void>
-        }
-    }
 }
 
 FirebaseCliServiceAdapter .right.|> FirebaseService
@@ -196,7 +216,9 @@ NpmCliServiceAdapter .right.|> NpmService
 SentryCliServiceAdapter .right.|> SentryService
 
 FirebaseCliServiceAdapter -right-> FirebaseCli : uses
+FirebaseCliServiceAdapter --> FirebaseStrings : uses
 GCloudCliServiceAdapter -right-> GCloudCli : uses
+GCloudCliServiceAdapter --> GCloudStrings : uses
 FlutterCliServiceAdapter -left-> FlutterCli : uses
 GitCliServiceAdapter -left-> GitCli : uses
 NpmCliServiceAdapter -left-> NpmCli : uses
@@ -204,6 +226,7 @@ SentryCliServiceAdapter -left-> SentryCli : uses
 SentryCliServiceAdapter --> SentryProject : uses
 SentryCliServiceAdapter --> SentryRelease : uses
 SentryCliServiceAdapter --> SourceMap : uses
+SentryCliServiceAdapter --> SentryStrings : uses
 SentryRelease --> SentryProject : uses
 
 FirebaseCli .up.|> Cli

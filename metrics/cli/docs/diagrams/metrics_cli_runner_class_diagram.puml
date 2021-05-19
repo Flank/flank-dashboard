@@ -5,27 +5,26 @@ package args {
     class Command {}
 }
 
-package runner {
-    class MetricsCliRunner {}
-}
+package cli {
+    package runner {
+        class MetricsCliRunner {}
+    }
 
-package deploy {
     package command {
         class DeployCommand {}
-    }
-
-    package factory as deploy.factory{
-        class DeployerFactory {}
-    }
-}
-
-package doctor {
-    package command as doctor.command {
         class DoctorCommand {}
     }
 
-    package factory as doctor.factory {
-        class DoctorFactory {}
+    package deploy {
+        package factory as deploy.factory{
+            class DeployerFactory {}
+        }
+    }
+
+    package doctor {
+        package factory as doctor.factory {
+            class DoctorFactory {}
+        }
     }
 }
 

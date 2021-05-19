@@ -1,79 +1,84 @@
 @startuml doctor_command_class_diagram
 
-package firebase.service {
-    interface FirebaseService {
-        + login(): Future<void>
-        + createWebApp(String projectId): Future<void>
-        + deployHosting(String projectId, String target, String appPath): Future<void>
-        + deployFirebase(String projectId, String firebasePath): Future<void>
-        + configureAuthProviders(String projectId) : FutureOr<String>
-        + enableAnalytics(String projectId) : FutureOr<void>
-        + initializeFirestoreData(String projectId) : FutureOr<void>
-        + upgradeBillingPlan(String projectId) : FutureOr<void>
-        + acceptTermsOfService() : FutureOr<void>
-    }
-}
+package services {
+    package firebase {
+        interface FirebaseService {
+            + login(): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + deployHosting(String projectId, String target, String appPath): Future<void>
+            + deployFirebase(String projectId, String firebasePath): Future<void>
+            + upgradeBillingPlan(String projectId) : FutureOr<void>
+            + initializeFirestoreData(String projectId) : FutureOr<void>
+            + enableAnalytics(String projectId) : FutureOr<void>
+            + configureAuthProviders(String projectId) : FutureOr<String>
+            + acceptTermsOfService() : FutureOr<void>
+        }
+  }
 
-package gcould.service {
-    interface GCloudService {
-        + login() : Future<void>
-        + createProject() : Future<String>
+    package gcould {
+        interface GCloudService {
+            + login() : Future<void>
+            + createProject() : Future<String>
+            + acceptTermsOfService() : FutureOr<void>
+            + configureOAuthOrigins(String projectId) : FutureOr<void>
+            + configureProjectOrganization(String projectId) : FutureOr<void>
+        }
     }
-}
 
-package flutter.service {
-    interface FlutterService  {
-        + build(String appPath) : Future<void>
+    package flutter {
+        interface FlutterService  {
+            + build(String appPath) : Future<void>
+        }
     }
-}
 
-package git.service{
-    interface GitService  {
-        + checkout(String repoUrl, String targetDirectory) : Future<void>
+    package  git {
+        interface GitService {
+            + checkout(String repoUrl, String targetDirectory) : Future<void>
+        }
     }
-}
 
-package npm.service {
-    interface NpmService  {
-        + installDependencies(String path) : Future<void>
+    package  npm {
+        interface NpmService {
+            + installDependencies(String path) : Future<void>
+        }
     }
-}
 
-package sentry.service{
-    interface SentryService  {
-        + login() : Future<void>
-        + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
-        + getProjectDsn(SentryProject project) : String
+    package sentry {
+        interface SentryService {
+            + login() : Future<void>
+            + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
+            + getProjectDsn(SentryProject project) : String
+        }
     }
 }
 
 package common {
-    package model {
+    package model as common.model {
+        package factory as model.factory {
+            class ServicesFactory {
+                + create() : Services
+            }
+        }
         class Services {
-            + npmService : NpmService
-            + gitService : GitService
             + flutterService : FlutterService
             + gcloudService : GCloudService
+            + npmService : NpmService
+            + gitService : GitService
             + firebaseService : FirebaseService
             + sentryService : SentryService
         }
     }
-
-    package factory as common.factory{
-        class ServicesFactory {
-            + create() : Services
-        }
-    }
 }
-
-package doctor {
-    package command {
+package cli {
+    package command{
         class DoctorCommand {
-            - _doctorFactory : DoctorFactory
-            + run() : Future<void>
+        + name : String
+        + description : String
+        + doctorFactory : DoctorFactory
+        + run() : Future<void>
         }
     }
-
+package doctor {
     package factory {
         class DoctorFactory {
             - _servicesFactory : ServicesFactory
@@ -82,14 +87,15 @@ package doctor {
     }
 
     class Doctor {
-        - _npmService : NpmService
-        - _gitService : GitService
         - _flutterService : FlutterService
         - _gcloudService : GCloudService
+        - _npmService : NpmService
+        - _gitService : GitService
         - _firebaseService : FirebaseService
         - _sentryService : SentryService
         + checkVersions() : Future<void>
     }
+}
 }
 
 DoctorCommand -down-> Doctor : uses

@@ -85,7 +85,7 @@ To make the `Metrics CLI` more clean and structured, we should define interfaces
 
 The following class diagram demonstrates the relationships between [CLIs](#CLI) and [Services](#Service):
 
-![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
+![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/BRANCH_HERE/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
 
 Let's review the main `service` interfaces we need to deploy the Metrics Web Application: 
     
@@ -95,24 +95,33 @@ Let's review the main `service` interfaces we need to deploy the Metrics Web App
     - Create a Firebase project;
     - Deploying an application to the Firebase Hosting;
     - Deploy rules and functions;
+    - Upgrade a project billing plan;
+    - Initialize a Firestore data;
+    - Enable a Firebase Analytics;
+    - Configure Auth providers;
+    - Accept terms of the Firebase service.
 - `FlutterService` is an interface used to define the following Flutter behavior required for our commands:
-    - Build web application;
+    - Build web application.
 - `GCloudService` is an interface used to define the following GCloud behavior required for our commands:
     - GCloud login;
     - Create a GCloud project;
+    - Configure an OAuth origins;
+    - Configure a user organization for the project;
+    - Accept terms of the GCloud service.
 - `GitService` is an interface used to define the following Git behavior required for our commands:
-    - Checkout required repository;
+    - Checkout required repository.
 - `NpmService` is an interface used to define the following Npm behavior required for our commands:
     - Install Npm dependencies.
 - `SentryService` is an interface providing the following Sentry interaction abilities:
     - Login to the Sentry;
-    - Create a new release.
+    - Create a new release;
+    - Get a DSN of the project.
 
 Since we have interfaces for each service and `CLI`s implemented, we should adapt our `CLI` classes to the corresponding `Service`s. 
 
 Let's review the class diagram representing the `Metrics CLI` services and `CLI`s with relationships between them: 
 
-![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
+![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/BRANCH_HERE/metrics/cli/docs/diagrams/services_class_diagram.puml)
 
 ### Prompt
 
@@ -123,7 +132,7 @@ To interact with a user during the deployment process, we should include prompts
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
 
-![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
+![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/BRANCH_HERE/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
 
 Let's take a look at the classes the prompts integration requires in more details: 
 
@@ -141,7 +150,7 @@ The `Doctor` is a class used to check whether all required third-party `CLI`s ar
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
+![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/BRANCH_HERE/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
 
 ### Deployer
 
@@ -159,7 +168,7 @@ The `MetricsCliRunner` is a class that extends a `CommandRunner` and is used to 
 
 The following class diagram demonstrates the structure of the `MetricsCliRunner`:
 
-![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
+![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/BRANCH_HERE/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DoctorCommand`:
 

@@ -1,38 +1,33 @@
 @startuml prompt_class_diagram
 
-package prompt {
+package prompter {
     package writer {
         interface PromptWriter {
+            + info(String text) : void
             + prompt(String text) : String
-            + promptConfirm(String text, String confirmText) : bool
+            + promptConfirm(String text, String confirmInput) : bool
         }
 
-        class IOPromptWriter implements PromptWriter{
+        class IOPromptWriter implements PromptWriter {
             - _stdin : Stdin
             - _stdout : Stdout
         }
     }
 
-    package strings {
-        class PromptStrings{}
-    }
-
     class Prompter {
         - _promptWriter : PromptWriter
+        + info(String text) : void
         + prompt(String text) : String
-        + promptConfirm(String text, {String confirmText}) : bool
+        + promptConfirm(String text, {String confirmInput}) : bool
     }
 }
 
 package cool.adapter {
-    class CoolCliServiceAdapter {
-
-    }
+    class CoolCliServiceAdapter {}
 }
 
 Prompter --> PromptWriter : uses
 
 CoolCliServiceAdapter --> Prompter : uses
-CoolCliServiceAdapter --> PromptStrings : uses
 
 @enduml
