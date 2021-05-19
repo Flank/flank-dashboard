@@ -37,7 +37,6 @@ Let's consider a problem that we are to solve using deep links. For example, we 
 Using query parameters, the deep link may look like the following:
 `https://metrics.web.app/dashboard?project_name=web_app`   
 
-#### Description
 Usually, query parameters are used to represent some filtering and grouping criteria. Such an approach allows combining several searching, filtering, and grouping parameters simultaneously.
 
 #### Pros
@@ -59,7 +58,6 @@ Usually, query parameters are used to represent some filtering and grouping crit
 Using path segments, the deep link may look like the following:
 `https://metrics.web.app/dashboard/project_name/web_app`  
 
-#### Description
 Path segments are usually used to identify a specific resource. They may be more readable to users, however, they are less flexible in terms of combining multiple searching, filtering, or grouping parameters.
  
 #### Pros
@@ -79,10 +77,214 @@ Path segments are usually used to identify a specific resource. They may be more
 According to the [requirements](#requirements) listed above, and the comparison of the [`query parameters`](#query-parameters) and the [`path segments`](#path-segments), we choose to use the [`query parameters`](#query-parameters) approach for deep linking.
 
 ### Deep Links Integration Approach
-(Using notifier vs straight using route parameters)
+There are two main approaches for the integration of the deep links to the Metrics Web Application:
+- [Deep Links Integration Using DeepLinksNotifier](#deep-links-integration-using-deeplinksnotifier).
+- [Deep Links Integration Using Route Parameters](#deep-links-integration-using-route-parameters).
+
+Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md) describing `Navigator 2.0` integration in the Metrics Web Application) for navigation, both approaches are based on the features of the `Navigator 2.0`, thus they differ only in the way the deep links are applied to the Metrics Web Application components.
+
+Now, let's review the listed approaches.
+
+### Deep Links Integration Using DeepLinksNotifier
+The main idea of the approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`.
+The `DeepLinksNotifier` is responsible for:
+- Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
+- Providing page-specific deep links to corresponding page presenters, that are responsible for handling page-specific deep links;
+- Handling page-specific deep links updates provided by page presenters;
+- Providing deep links' updates to the `NavigationNotifier`, which updates the browser history state if needed.
+
+#### Pros
+- High responsibility segregation between components; 
+- Extensible approach - meaning that we can easily add new page-specific deep links or extend them;
+- Easy to test, because of the responsibility segregation.
+
+#### Cons
+- Requires implementing new `ChangeNotifier`s and extending existing ones.
+
+### Deep Links Integration Using Route Parameters
+The main idea of this approach is to dispatch deep links using page parameters, which are then handled by the pages. For example, if a `DashboardPage` includes a project group selection menu, we can add a `projectGroupName` parameter to a `DashboardPage`, which is then handled by the page itself.
+
+However, according to the ["UI elements"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) section of the ["Metrics Web Presentation Layer"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document, a `Page` is a widget, whose responsibility is a proper Metrics widgets combining, thus, handling any parameters is out of scope of a `Page` widget's responsibilities.
+
+#### Pros
+- Does not require implementing new or extending existing `ChangeNotifier`s.
+
+#### Cons
+- Does not satisfy the existing architecture requirements;
+- Harder to test;
+- Adding parameters handling may increase the `page` widgets size, and decrease the code readability.
+
+### Conclusion
+According to the comparison above, we choose the [Deep Links Integration Using DeepLinksNotifier](#deep-links-integration-using-deeplinksnotifier) approach, as it satisfies the architectural requirements, simplifies testing, and highly extensible.
 
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
+
+#### Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links
+<details>
+  <summary>Code snippet</summary>
+
+```dart
+/// An abstraction for page-specific deep links.
+abstract class PageDeepLinks {}
+
+/// A class that represents the Dashboard page specific deep links.
+class DashboardPageDeepLinks implements PageDeepLinks {
+  /// A name of a selected project group.
+  final String selectedProjectGroup;
+  
+  /// Creates a new instance of the [DashboardPageDeepLinks] with the given
+  /// parameters.
+  const DashboardPageDeepLinks({
+    this.selectedProjectGroup,
+  });
+  
+  /// Creates a new instance of the [DashboardPageDeepLinks] from the given
+  /// [routeParameters].
+  factory DashboardPageDeepLinks.fromRouteParameters(
+    Map<String, dynamic> routeParameters,
+  ) {
+    final selectedProjectGroup = routeParameters['selected_project_group'];
+    
+    return DashboardPageDeepLinks(selectedProjectGroup: selectedProjectGroup);
+  }
+}
+
+/// A [ChangeNotifier] that provides an ability to manage application's deep links.
+class DeepLinksNotifier extends ChangeNotifier {
+  /// The current value of [PageDeepLinks] of the application.
+  PageDeepLinks _currentDeepLinks;
+  
+  /// Provides a value of the current [PageDeepLinks] state.
+  PageDeepLinks get currentDeepLinks => _currentDeepLinks;
+  
+  /// Handles the given [routeConfiguration] and updates the [PageDeepLinks] value.
+  void handleRouteConfiguration(RouteConfiguration routeConfiguration) {
+    // If the deep links are associated with a Dashboard page
+    if(routeConfiguration.name = RouteName.dashboard) {
+      final routeParameters = routeConfiguration.routeParameters;
+
+      _currentDeepLinks = DashboardPageDeepLinks.fromRouteParameters(routeParameters);
+      notifyListeners();
+    }
+    // Other routes handling...
+  }
+}
+```
+
+</details>
+
+#### Providing page-specific deep links to corresponding page presenters
+<details>
+  <summary>Code snippet</summary>
+
+```dart
+/// An abstract class that represents a [ChangeNotifier] of a specific page.
+abstract class PageNotifier extends ChangeNotifier {
+  /// Provides the current state of deep links associated with this page.
+  PageDeepLinks get pageDeepLinks;
+  
+  /// Handles the deep links updates represented by the given
+  /// [pageDeepLinks].
+  void handleDeepLinkUpdates(PageDeepLinks pageDeepLinks);
+}
+
+/// Some widget's state for handling deep links updates.
+class _SomeWidgetState extends State<SomeWidget> {
+  /// A [DeepLinksNotifier] needed to subscribe to deep links updates.
+  DeepLinksNotifier _deepLinksNotifier;  
+  
+  /// A [SomeWidgetNotifier] to notify about deep links updates.
+  SomeWidgetNotifier _someWidgetNotifier;
+  
+  @override
+  void initState() {
+    super.initState();
+    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
+    _someWidgetNotifier = Provider.of<SomeWidgetNotifier>(context, listen: false);
+    
+    _deepLinksNotifier.addListener(_deepLinksNotifierListener);
+  }
+  
+  /// A listener that listens to [DeepLinksNotifier.currentDeepLinks] updates.
+  void _deepLinksNotifierListener() {
+    final currentDeepLinks = _deepLinksNotifier.currentDeepLinks;
+    
+    // Notifying about deep links updates.
+    _someWidgetNotifier.handleDeepLinkUpdates(currentDeepLinks);
+  }
+}
+```
+
+</details>
+
+#### Handling page-specific deep links updates provided by page presenters
+<details>
+  <summary>Code snippet</summary>
+
+```dart
+/// Some page's state.
+class _SomePageState extends State<SomePage> {
+  /// A [DeepLinksNotifier] needed to handle this page's deep links updates.
+  DeepLinksNotifier _deepLinksNotifier;
+  
+  /// A [SomePageNotifier] needed to subscribe to this page's deep links updates.
+  SomePageNotifier _somePageNotifier;
+  
+  @override
+  void initState() {
+    super.initState();
+    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
+    _somePageNotifier = Provider.of<SomePageNotifier>(context, listen: false);
+
+    _somePageNotifier.addListener(_somePageNotifierListener);
+  }
+  
+  /// A listener that notifies [DeepLinksNotifier] about [SomePageNotifier.pageDeepLinks]
+  /// updates.
+  void _somePageNotifierListener() {
+    final pageDeepLinks = _somePageNotifier.pageDeepLinks;
+    
+    _deepLinksNotifier.handlePageDeepLinks(pageDeepLinks);
+  }
+}
+```
+
+</details>
+
+#### Providing deep links' updates to the `NavigationNotifier`
+<details>
+  <summary>Code snippet</summary>
+
+```dart
+/// Some widget's state for handling deep links updates.
+class _SomeWidgetState extends State<SomeWidget> {
+  /// A [DeepLinksNotifier] needed to subscribe to deep links updates.
+  DeepLinksNotifier _deepLinksNotifier;
+  
+  /// A [NavigationNotifier] needed to update the browser history state on
+  /// deep link updates.
+  NavigationNofier _navigationNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
+    _navigationNotifier = Provider.of<NavigationNofier>(context, listen: false);
+
+    _deepLinksNotifier.addListener(_deepLinksNotifierListener);
+  }
+
+  /// A listener that triggers the [NavigationNotifier.saveDeepLinks] on deep links
+  /// updates.
+  void _deepLinksNotifierListener() {
+    final currentDeepLinks = _deepLinksNotifier.currentDeepLinks;
+
+    _navigationNotifier.saveDeepLinks(currentDeepLinks);
+  }
+}
+```
+</details>
 
 ### System modeling
 > Create an abstract model of the system/feature.
