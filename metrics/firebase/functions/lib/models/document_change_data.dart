@@ -6,18 +6,19 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class that represents task data that holds before and after update
 /// entity's values.
-class ChangeTaskData extends DataModel {
+class DocumentChangeData extends DataModel {
   /// A [DataModel] of an entity before the update.
   final DataModel beforeUpdateData;
 
   /// A [DataModel] of an entity after the update.
   final DataModel afterUpdateData;
 
-  /// Creates a new instance of the [ChangeTaskData] with the given parameters.
+  /// Creates a new instance of the [DocumentChangeData]
+  /// with the given parameters.
   ///
   /// Throws an [ArgumentError] if either [beforeUpdateData]
   /// or [afterUpdateData] is `null`.
-  ChangeTaskData({
+  DocumentChangeData({
     @required this.beforeUpdateData,
     @required this.afterUpdateData,
   }) {
