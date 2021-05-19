@@ -89,5 +89,27 @@ void main() {
         expect(map, equals(expectedMap));
       },
     );
+
+    test(
+      ".toMap() doesn't add status fields to the JSON-encodable map if the status fields list contains maps with the same key",
+      () {
+        final expectedMap = {
+          'projectId': projectId,
+          'day': Timestamp.fromDateTime(day),
+          'successfulBuildsDuration': successfulBuildsDuration,
+        };
+
+        final buildDayData = BuildDayData(
+          projectId: projectId,
+          day: day,
+          successfulBuildsDuration: successfulBuildsDuration,
+          statusFields: [buildDayStatusField, buildDayStatusField],
+        );
+
+        final map = buildDayData.toMap();
+
+        expect(map, equals(expectedMap));
+      },
+    );
   });
 }

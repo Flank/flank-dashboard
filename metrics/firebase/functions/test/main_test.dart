@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:functions/main.dart';
 import 'package:functions/models/build_day_status_field_name.dart';
+import 'package:functions/models/change_task_data.dart';
 import 'package:functions/models/task_code.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -19,9 +20,9 @@ import 'test_utils/test_data/build_test_data_generator.dart';
 void main() {
   const tasksCollectionName = 'tasks';
   const projectId = 'projectId';
+  const buildNumber = 1;
   const durationInMilliseconds = 123;
   const buildStatus = BuildStatus.successful;
-  const buildId = 'projectId_1';
 
   final startedAt = DateTime.now();
   final startedAtDayUtc = startedAt.toUtc().date;
@@ -371,14 +372,12 @@ void main() {
       () async {
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
         when(documentSnapshot.data).thenReturn(buildDocumentData);
-        when(documentSnapshot.documentID).thenReturn(buildId);
         whenDocument().thenReturn(documentReference);
 
         await onBuildAddedHandler(documentSnapshot, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
           buildJson['startedAt'] = buildJson['startedAt'].toDateTime();
-          buildJson.addAll({'id': buildId});
 
           return const MapEquality().equals(
             data.getNestedData('data').toMap(),
@@ -442,22 +441,23 @@ void main() {
   });
 
   group("onBuildUpdatedHandler", () {
-    final newDocumentSnapshot = DocumentSnapshotMock();
+    final beforeDocumentSnapshot = DocumentSnapshotMock();
+    final afterDocumentSnapshot = DocumentSnapshotMock();
     final taskDocumentSnapshot = DocumentSnapshotMock();
     final change = ChangeMock();
     final documentQuery = DocumentQueryMock();
     final querySnapshot = QuerySnapshotMock();
-    final oldBuildJson = testDataGenerator.generateBuildJson(
+    final beforeBuildJson = testDataGenerator.generateBuildJson(
       buildStatus: BuildStatus.inProgress,
       duration: null,
     );
-    final oldBuildDocumentData = DocumentData.fromMap(oldBuildJson);
-    final taskCreatedData = TaskData(
+    final beforeBuildDocumentData = DocumentData.fromMap(beforeBuildJson);
+    final createdTaskData = TaskData(
       code: TaskCode.buildDaysCreated,
       createdAt: DateTime.now(),
     );
     final taskCreatedDocumentData = DocumentData.fromMap(
-      taskCreatedData.toMap(),
+      createdTaskData.toMap(),
     );
     final taskUpdatedData = TaskData(
       code: TaskCode.buildDaysUpdated,
@@ -467,11 +467,15 @@ void main() {
       taskUpdatedData.toMap(),
     );
 
-    PostExpectation<Future<QuerySnapshot>> whenGetTaskDocument() {
-      whenFirestore().thenReturn(firestore);
+    PostExpectation<Future<QuerySnapshot>> whenGetTaskDocuments() {
+      when(afterDocumentSnapshot.firestore).thenReturn(firestore);
       when(firestore.collection(tasksCollectionName))
           .thenReturn(collectionReference);
       when(collectionReference.where(
+        any,
+        isEqualTo: anyNamed('isEqualTo'),
+      )).thenReturn(documentQuery);
+      when(documentQuery.where(
         any,
         isEqualTo: anyNamed('isEqualTo'),
       )).thenReturn(documentQuery);
@@ -480,25 +484,26 @@ void main() {
     }
 
     PostExpectation<List<DocumentSnapshot>> whenTaskDocuments() {
-      whenGetTaskDocument().thenAnswer((_) => Future.value(querySnapshot));
+      whenGetTaskDocuments().thenAnswer((_) => Future.value(querySnapshot));
 
       return when(querySnapshot.documents);
     }
 
     PostExpectation<DocumentData> whenChangeBeforeData() {
-      when(change.before).thenReturn(documentSnapshot);
+      when(change.before).thenReturn(beforeDocumentSnapshot);
 
-      return when(documentSnapshot.data);
+      return when(beforeDocumentSnapshot.data);
     }
 
     PostExpectation<DocumentData> whenChangeAfterData() {
-      when(change.after).thenReturn(newDocumentSnapshot);
+      when(change.after).thenReturn(afterDocumentSnapshot);
 
-      return when(newDocumentSnapshot.data);
+      return when(afterDocumentSnapshot.data);
     }
 
     tearDown(() {
-      reset(newDocumentSnapshot);
+      reset(beforeDocumentSnapshot);
+      reset(afterDocumentSnapshot);
       reset(taskDocumentSnapshot);
       reset(change);
       reset(documentQuery);
@@ -506,40 +511,89 @@ void main() {
     });
 
     test(
-      "uses a build id to get a task from the tasks collection",
+      "uses a build's project id to get a task from the tasks collection",
       () async {
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
           duration: null,
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
-        when(newDocumentSnapshot.documentID).thenReturn(buildId);
 
         await onBuildUpdatedHandler(change, null);
 
         verify(
           collectionReference.where(
-            'data.id',
-            isEqualTo: buildId,
+            'data.projectId',
+            isEqualTo: projectId,
           ),
         ).called(1);
       },
     );
 
     test(
-      "does not increment the successful builds duration if the updated build document snapshot's duration is null",
+      "uses a build's build number to get a task from the tasks collection",
       () async {
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          buildNumber: buildNumber,
+          duration: null,
+        );
+
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        verify(
+          documentQuery.where(
+            'data.buildNumber',
+            isEqualTo: buildNumber,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "uses a buildDaysCreated task code to get a task from the tasks collection",
+      () async {
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          buildNumber: buildNumber,
+          duration: null,
+        );
+
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        verify(
+          documentQuery.where(
+            'code',
+            isEqualTo: TaskCode.buildDaysCreated,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "does not increment the successful builds duration if the build document snapshot's duration updated to null",
+      () async {
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
           duration: null,
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -558,14 +612,14 @@ void main() {
     );
 
     test(
-      "does not increment the successful builds duration if the updated build's status is not successful",
+      "does not increment the successful builds duration if the build status updated to not successful one",
       () async {
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.unknown,
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -584,9 +638,9 @@ void main() {
     );
 
     test(
-      "updates a build days document with project id equals to the build document snapshot's project id",
+      "updates a build days document with project id equals to the changed build's project id",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -607,12 +661,12 @@ void main() {
     );
 
     test(
-      "increments a build day document's successful field value if the updated build document snapshot's status is successful",
+      "increments a build day document's successful field value if the build status updated to successful",
       () async {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -632,15 +686,15 @@ void main() {
     );
 
     test(
-      "increments a build day document's failed field value if the updated build document snapshot's status is failed",
+      "increments a build day document's failed field value if the build status updated to failed",
       () async {
         final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.failed,
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -659,15 +713,46 @@ void main() {
     );
 
     test(
-      "increments a build day document's unknown field value if the updated build document snapshot's status is unknown",
+      "increments a build day document's unknown field value if the build status updated to unknown",
       () async {
         final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.unknown,
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, 1);
+
+        verify(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "increments a build day document's inProgress field value if the build status updated to inProgress",
+      () async {
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.inProgress.value;
+        final beforeBuildJson = testDataGenerator.generateBuildJson();
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.inProgress,
+        );
+
+        whenChangeBeforeData().thenReturn(DocumentData.fromMap(
+          beforeBuildJson,
+        ));
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -691,7 +776,7 @@ void main() {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.inProgress.value;
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -713,12 +798,14 @@ void main() {
     test(
       "decrements a build day document's unknown field value if the old build document snapshot's status is unknown and there are no tasks with such build id in tasks collection",
       () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.unknown,
         );
         final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -740,12 +827,14 @@ void main() {
     test(
       "decrements a build day document's failed field value if the old build document snapshot's status is failed and there are no tasks with such build id in tasks collection",
       () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.failed,
         );
         final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -767,17 +856,19 @@ void main() {
     test(
       "decrements a build day document's successful field value if the old build document snapshot's status is successful and there are no tasks with such build id in tasks collection",
       () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
-          buildStatus: BuildStatus.successful,
-        );
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.unknown,
         );
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -796,128 +887,42 @@ void main() {
     );
 
     test(
-      "decrements a build day document's inProgress field value if the old build document snapshot's status is inProgress and there are 'build_days_updated' task with such build id in tasks collection",
+      "doesn't change a build day document's successful field value if the old build document snapshot's status is equals to the updated one",
       () async {
-        final buildDayStatusFieldName =
-            BuildDayStatusFieldName.inProgress.value;
-
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(buildDocumentData);
-        whenDocument().thenReturn(documentReference);
-        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
-
-        await onBuildUpdatedHandler(change, null);
-
-        final statusFieldIncrementMatcher =
-            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
-
-        verify(
-          documentReference.setData(
-            argThat(statusFieldIncrementMatcher),
-            any,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      "decrements a build day document's unknown field value if the old build document snapshot's status is unknown and there are 'build_days_updated' task with such build id in tasks collection",
-      () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
-          buildStatus: BuildStatus.unknown,
-        );
-        final buildDayStatusFieldName = BuildDayStatusFieldName.unknown.value;
-
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
-        whenChangeAfterData().thenReturn(buildDocumentData);
-        whenDocument().thenReturn(documentReference);
-        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
-
-        await onBuildUpdatedHandler(change, null);
-
-        final statusFieldIncrementMatcher =
-            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
-
-        verify(
-          documentReference.setData(
-            argThat(statusFieldIncrementMatcher),
-            any,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      "decrements a build day document's failed field value if the old build document snapshot's status is failed and there are 'build_days_updated' task with such build id in tasks collection",
-      () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
-          buildStatus: BuildStatus.failed,
-        );
-        final buildDayStatusFieldName = BuildDayStatusFieldName.failed.value;
-
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
-        whenChangeAfterData().thenReturn(buildDocumentData);
-        whenDocument().thenReturn(documentReference);
-        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
-
-        await onBuildUpdatedHandler(change, null);
-
-        final statusFieldIncrementMatcher =
-            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
-
-        verify(
-          documentReference.setData(
-            argThat(statusFieldIncrementMatcher),
-            any,
-          ),
-        ).called(1);
-      },
-    );
-
-    test(
-      "decrements a build day document's successful field value if the old build document snapshot's status is successful and there are 'build_days_updated' task with such build id in tasks collection",
-      () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
-          buildStatus: BuildStatus.successful,
-        );
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.successful.value;
-        final newBuildJson = testDataGenerator.generateBuildJson(
-          buildStatus: BuildStatus.unknown,
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
         );
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
-        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
-        when(taskDocumentSnapshot.data).thenReturn(taskUpdatedDocumentData);
+        whenTaskDocuments().thenReturn([]);
 
         await onBuildUpdatedHandler(change, null);
 
-        final statusFieldIncrementMatcher =
-            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
-
-        verify(
-          documentReference.setData(
-            argThat(statusFieldIncrementMatcher),
-            any,
-          ),
-        ).called(1);
+        expect(
+          verify(documentReference.setData(captureAny, any)).captured,
+          isNot(contains(buildDayStatusFieldName)),
+        );
       },
     );
 
     test(
-      "increments a build day document's successfulBuildsDuration field by the updated build document snapshot's duration if the updated build is successful",
+      "increments a build day document's successfulBuildsDuration field value by the updated build document snapshot's duration if the build status updated to successful",
       () async {
-        final newBuildJson = testDataGenerator.generateBuildJson(
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           duration: const Duration(milliseconds: durationInMilliseconds),
         );
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
 
@@ -939,16 +944,54 @@ void main() {
     );
 
     test(
-      "creates a build days document with day equals to the build document snapshot's startedAt UTC day",
+      "decrements a build day document's successfulBuildsDuration field value if the build status updated from successful to failed",
       () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          duration: const Duration(milliseconds: durationInMilliseconds),
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.failed,
+          duration: const Duration(milliseconds: durationInMilliseconds),
+        );
+
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenDocument().thenReturn(documentReference);
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher(
+          'successfulBuildsDuration',
+          -durationInMilliseconds,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "updates a build days document with day equals to the build document snapshot's startedAt UTC day",
+      () async {
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.inProgress,
           duration: null,
           startedAt: startedAt,
         );
         final expectedBuildDay = Timestamp.fromDateTime(startedAtDayUtc);
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -966,7 +1009,7 @@ void main() {
     test(
       "does not create a task document if the build day data updates successfully",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -980,7 +1023,7 @@ void main() {
     test(
       "creates a task document with 'build_days_updated' code if updating the build day's document data fails",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -999,14 +1042,16 @@ void main() {
     test(
       "creates a task document with data equals to the old and new builds data if updating the build day's document data fails",
       () async {
-        final oldBuildJson = testDataGenerator.generateBuildJson(
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.inProgress,
           duration: Duration.zero,
         );
-        final newBuildJson = testDataGenerator.generateBuildJson();
+        final afterBuildJson = testDataGenerator.generateBuildJson();
 
-        whenChangeBeforeData().thenReturn(DocumentData.fromMap(oldBuildJson));
-        whenChangeAfterData().thenReturn(DocumentData.fromMap(newBuildJson));
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
@@ -1014,11 +1059,13 @@ void main() {
         await onBuildUpdatedHandler(change, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
-          oldBuildJson['startedAt'] = oldBuildJson['startedAt'].toDateTime();
-          newBuildJson['startedAt'] = newBuildJson['startedAt'].toDateTime();
+          beforeBuildJson['startedAt'] =
+              beforeBuildJson['startedAt'].toDateTime();
+          afterBuildJson['startedAt'] =
+              afterBuildJson['startedAt'].toDateTime();
           final expectedData = {
-            'oldBuild': oldBuildJson,
-            'newBuild': newBuildJson,
+            'before': beforeBuildJson,
+            'after': afterBuildJson,
           };
 
           return const DeepCollectionEquality().equals(
@@ -1036,7 +1083,7 @@ void main() {
       () async {
         final exception = Exception('test');
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -1059,7 +1106,7 @@ void main() {
         final currentDateTime = DateTime.now();
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
 
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
@@ -1080,7 +1127,7 @@ void main() {
     test(
       "deletes an existing task if the build day data updates successfully",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
@@ -1095,7 +1142,7 @@ void main() {
     test(
       "does not delete an existing task if updating the build day's document data fails",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
@@ -1111,7 +1158,7 @@ void main() {
     test(
       "does not delete any task if the task does not exist",
       () async {
-        whenChangeBeforeData().thenReturn(oldBuildDocumentData);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
         whenChangeAfterData().thenReturn(buildDocumentData);
         whenDocument().thenReturn(documentReference);
         whenTaskDocuments().thenReturn([]);
