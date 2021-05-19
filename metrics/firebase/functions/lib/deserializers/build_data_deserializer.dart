@@ -6,7 +6,7 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing deserialization methods for a [BuildData] model.
 class BuildDataDeserializer {
-  /// Creates the [BuildData] instance from the [json].
+  /// Creates a new instance of the [BuildData] from the given [json].
   ///
   /// Returns `null` if the given [json] is `null`.
   static BuildData fromJson(Map<String, dynamic> json) {
