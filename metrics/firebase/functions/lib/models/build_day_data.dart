@@ -34,18 +34,11 @@ class BuildDayData {
   }
 
   /// Converts this [BuildDayData] into the [Map].
-  ///
-  /// If [BuildDayData.statusFields] contains maps with the same keys
-  /// it does not add the status fields' values to the [Map].
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> statusFieldsMap = {};
 
     for (final status in statusFields) {
-      if (statusFieldsMap.containsKey(status.name.value)) {
-        statusFieldsMap.remove(status.name.value);
-      } else {
-        statusFieldsMap.addAll(status.toMap());
-      }
+      statusFieldsMap.addAll(status.toMap());
     }
 
     return {
