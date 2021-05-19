@@ -3,11 +3,10 @@
 
 import 'package:clock/clock.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
-import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
+import 'package:functions/factory/build_day_status_field_factory.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/models/build_day_data.dart';
-import 'package:functions/models/build_day_status_field.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:functions/models/task_code.dart';
 
@@ -23,12 +22,9 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
   final startedAtDayUtc = _getUtcDay(buildData.startedAt);
 
-  const statusFieldMapper = BuildDayStatusFieldNameMapper();
-  final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
-
-  final statusFieldIncrement = BuildDayStatusField(
-    name: buildDayStatusFieldName,
-    value: Firestore.fieldValues.increment(1),
+  final statusFieldIncrement = BuildDayStatusFieldFactory().create(
+    buildStatus: buildData.buildStatus,
+    incrementCount: 1,
   );
 
   final successfulBuildsDurationIncrement = Firestore.fieldValues.increment(
