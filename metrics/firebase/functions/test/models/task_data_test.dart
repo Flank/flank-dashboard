@@ -85,12 +85,9 @@ void main() {
     test(
       ".copyWith() creates a copy of an instance with the given fields replaced with the new values",
       () {
-        const newCode = TaskCode.buildDaysUpdated;
-        const newData = {'id': 'id'};
-
         final taskData = TaskData(
-          code: newCode,
-          data: newData,
+          code: code,
+          data: data,
           context: 'error',
           createdAt: DateTime(2020),
         );
@@ -100,8 +97,8 @@ void main() {
           createdAt: createdAt,
         );
 
-        expect(copiedTaskData.code, equals(taskData.code));
-        expect(copiedTaskData.data, equals(taskData.data));
+        expect(copiedTaskData.code, equals(code));
+        expect(copiedTaskData.data, equals(data));
         expect(copiedTaskData.context, equals(context));
         expect(copiedTaskData.createdAt, equals(createdAt));
       },
