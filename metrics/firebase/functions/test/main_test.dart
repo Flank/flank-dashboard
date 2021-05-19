@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:functions/main.dart';
 import 'package:functions/models/build_day_status_field_name.dart';
-import 'package:functions/models/change_task_data.dart';
 import 'package:functions/models/task_code.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -458,13 +457,6 @@ void main() {
     );
     final taskCreatedDocumentData = DocumentData.fromMap(
       createdTaskData.toMap(),
-    );
-    final taskUpdatedData = TaskData(
-      code: TaskCode.buildDaysUpdated,
-      createdAt: DateTime.now(),
-    );
-    final taskUpdatedDocumentData = DocumentData.fromMap(
-      taskUpdatedData.toMap(),
     );
 
     PostExpectation<Future<QuerySnapshot>> whenGetTaskDocuments() {
