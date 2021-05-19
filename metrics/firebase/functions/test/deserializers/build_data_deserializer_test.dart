@@ -2,7 +2,6 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/models/build_data_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
 import 'package:test/test.dart';
@@ -13,7 +12,6 @@ import '../test_utils/test_data/build_test_data_generator.dart';
 
 void main() {
   group("BuildDataDeserializer", () {
-    const id = 'id';
     const projectId = 'projectId';
     const buildNumber = 1;
     const buildStatus = BuildStatus.failed;
@@ -38,8 +36,7 @@ void main() {
     test(
       ".fromJson() creates a BuildData from the JSON-encodable map",
       () {
-        final expectedBuildData = BuildDataModel(
-          id: id,
+        final expectedBuildData = BuildData(
           projectId: projectId,
           buildNumber: buildNumber,
           startedAt: startedAtDateTime,
@@ -61,20 +58,9 @@ void main() {
           coverage: coverage,
         );
 
-        final buildData = BuildDataDeserializer.fromJson(buildJson, id: id);
-
-        expect(buildData, equals(expectedBuildData));
-      },
-    );
-
-    test(
-      ".fromJson() creates a BuildData with a null id from the JSON-encodable map if the id is not passed",
-      () {
-        final buildJson = testDataGenerator.generateBuildJson();
-
         final buildData = BuildDataDeserializer.fromJson(buildJson);
 
-        expect(buildData.id, isNull);
+        expect(buildData, equals(expectedBuildData));
       },
     );
 

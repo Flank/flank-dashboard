@@ -2,18 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/models/build_data_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing deserialization methods for a [BuildData] model.
 class BuildDataDeserializer {
-  /// Creates the [BuildData] instance from the [json] and it's [id].
+  /// Creates the [BuildData] instance from the [json].
   ///
   /// Returns `null` if the given [json] is `null`.
-  static BuildDataModel fromJson(
-    Map<String, dynamic> json, {
-    String id,
-  }) {
+  static BuildData fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
     final projectId = json['projectId'] as String;
@@ -33,8 +29,7 @@ class BuildDataDeserializer {
     final coveragePercent = json['coverage'] as double;
     final coverage = coveragePercent == null ? null : Percent(coveragePercent);
 
-    return BuildDataModel(
-      id: id,
+    return BuildData(
       projectId: projectId,
       buildNumber: buildNumber,
       startedAt: startedAt,

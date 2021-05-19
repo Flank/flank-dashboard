@@ -3,10 +3,9 @@
 
 import 'package:clock/clock.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
-import 'package:functions/factory/build_day_status_field_factory.dart';
-import 'package:functions/models/build_data_model.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
+import 'package:functions/factory/build_day_status_field_factory.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/models/build_day_data.dart';
 import 'package:functions/models/task_data.dart';
 import 'package:functions/models/task_code.dart';
@@ -20,11 +19,7 @@ void main() {
 /// Process incrementing logic for the build days collection document,
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
-  final buildId = snapshot.documentID;
-  final buildData = BuildDataDeserializer.fromJson(
-    snapshot.data.toMap(),
-    id: buildId,
-  );
+  final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
   final startedAtDayUtc = _getUtcDay(buildData.startedAt);
 
   final statusFieldIncrement = BuildDayStatusFieldFactory().create(
@@ -46,13 +41,13 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
   await _updateBuildDay(snapshot, buildDayData);
 }
 
-/// Returns a given [buildModel]'s duration in milliseconds.
+/// Returns a given [buildData]'s duration in milliseconds.
 ///
-/// If the given [buildModel] is `successful`, returns it's duration.
+/// If the given [buildData] is `successful`, returns it's duration.
 /// Otherwise, returns `0`.
-int _getSuccessfulBuildDuration(BuildDataModel buildModel) {
-  if (buildModel.buildStatus == BuildStatus.successful) {
-    return buildModel.duration.inMilliseconds;
+int _getSuccessfulBuildDuration(BuildData buildData) {
+  if (buildData.buildStatus == BuildStatus.successful) {
+    return buildData.duration.inMilliseconds;
   }
 
   return 0;
