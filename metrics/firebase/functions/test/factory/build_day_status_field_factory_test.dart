@@ -55,7 +55,7 @@ void main() {
     test(
       ".create() creates a BuildDayStatusField using the given build day status field name mapper",
       () {
-        final statusFieldMapper = BuildDayStatusFieldNameMapperMock();
+        final statusFieldMapper = _BuildDayStatusFieldNameMapperMock();
         final buildDayStatusFieldFactory = BuildDayStatusFieldFactory(
           statusFieldMapper,
         );
@@ -91,5 +91,5 @@ void main() {
   });
 }
 
-class BuildDayStatusFieldNameMapperMock extends Mock
+class _BuildDayStatusFieldNameMapperMock extends Mock
     implements BuildDayStatusFieldNameMapper {}

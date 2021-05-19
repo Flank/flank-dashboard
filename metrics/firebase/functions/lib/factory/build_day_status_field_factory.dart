@@ -9,8 +9,8 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides method for creating [BuildDayStatusField]s.
 class BuildDayStatusFieldFactory {
-  /// A [BuildDayStatusFieldNameMapper] that provides a method for mapping
-  /// a [BuildStatus] into the [BuildDayStatusField.name].
+  /// A [BuildDayStatusFieldNameMapper] that is used to map a [BuildStatus] into
+  /// the [BuildDayStatusField.name].
   final BuildDayStatusFieldNameMapper _statusFieldMapper;
 
   /// Creates a new instance of the [BuildDayStatusFieldFactory]
