@@ -6,7 +6,7 @@ const {
   initializeAdminApp,
   loadFirestoreRules,
   apps,
-} = require("@firebase/testing");
+} = require("@firebase/rules-unit-testing");
 
 const { readFileSync } = require("fs");
 const projectId = `rules-spec-${Date.now()}`;

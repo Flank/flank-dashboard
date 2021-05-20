@@ -3,9 +3,10 @@
 
 import 'package:clock/clock.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/factory/build_day_status_field_factory.dart';
+import 'package:functions/models/document_change_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:functions/deserializers/build_data_deserializer.dart';
-import 'package:functions/mappers/build_day_status_field_name_mapper.dart';
 import 'package:functions/models/build_day_data.dart';
 import 'package:functions/models/build_day_status_field.dart';
 import 'package:functions/models/task_data.dart';
@@ -15,20 +16,23 @@ void main() {
   functions['onBuildAdded'] = functions.firestore
       .document('build/{buildId}')
       .onCreate(onBuildAddedHandler);
+
+  functions['onBuildUpdated'] = functions.firestore
+      .document('build/{buildId}')
+      .onUpdate(onBuildUpdatedHandler);
 }
 
 /// Process incrementing logic for the build days collection document,
 /// based on a created build's status and started date.
 Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
+  final buildDayStatusFieldFactory = BuildDayStatusFieldFactory();
   final buildData = BuildDataDeserializer.fromJson(snapshot.data.toMap());
   final startedAtDayUtc = _getUtcDay(buildData.startedAt);
+  final firestore = snapshot.firestore;
 
-  const statusFieldMapper = BuildDayStatusFieldNameMapper();
-  final buildDayStatusFieldName = statusFieldMapper.map(buildData.buildStatus);
-
-  final statusFieldIncrement = BuildDayStatusField(
-    name: buildDayStatusFieldName,
-    value: Firestore.fieldValues.increment(1),
+  final statusFieldIncrement = buildDayStatusFieldFactory.create(
+    buildStatus: buildData.buildStatus,
+    incrementCount: 1,
   );
 
   final successfulBuildsDurationIncrement = Firestore.fieldValues.increment(
@@ -42,7 +46,93 @@ Future<void> onBuildAddedHandler(DocumentSnapshot snapshot, _) async {
     statusFields: [statusFieldIncrement],
   );
 
-  await _updateBuildDay(snapshot, buildDayData);
+  final errorTaskData = TaskData(
+    code: TaskCode.buildDaysCreated,
+    data: buildData.toJson(),
+    createdAt: clock.now(),
+  );
+
+  await _updateBuildDay(
+    firestore,
+    buildDayData: buildDayData,
+    errorTaskData: errorTaskData,
+  );
+}
+
+/// Process incrementing and decrementing logic for the build days collection
+/// document, based on a updated build's status and started date.
+Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
+  final buildDayStatusFieldFactory = BuildDayStatusFieldFactory();
+  final beforeBuild = BuildDataDeserializer.fromJson(
+    change.before.data.toMap(),
+  );
+  final afterBuild = BuildDataDeserializer.fromJson(change.after.data.toMap());
+  final startedAtDayUtc = _getUtcDay(afterBuild.startedAt);
+  final firestore = change.after.firestore;
+  final statusFields = <BuildDayStatusField>[];
+
+  if (beforeBuild.buildStatus == afterBuild.buildStatus) return;
+
+  final task = await _getBuildTask(firestore, afterBuild);
+
+  if (task == null) {
+    final statusFieldDecrement = buildDayStatusFieldFactory.create(
+      buildStatus: beforeBuild.buildStatus,
+      incrementCount: -1,
+    );
+    statusFields.add(statusFieldDecrement);
+  }
+
+  final statusFieldIncrement = buildDayStatusFieldFactory.create(
+    buildStatus: afterBuild.buildStatus,
+    incrementCount: 1,
+  );
+  statusFields.add(statusFieldIncrement);
+
+  final successfulDurationChange = _getSuccessfulDurationChange(
+    beforeBuild,
+    afterBuild,
+  );
+  final successfulBuildsDurationIncrement = Firestore.fieldValues.increment(
+    successfulDurationChange,
+  );
+
+  final updatedBuildDayData = BuildDayData(
+    projectId: afterBuild.projectId,
+    successfulBuildsDuration: successfulBuildsDurationIncrement,
+    statusFields: statusFields,
+    day: startedAtDayUtc,
+  );
+
+  final documentChangeData = DocumentChangeData(
+    beforeUpdateData: beforeBuild,
+    afterUpdateData: afterBuild,
+  );
+
+  final errorTaskData = TaskData(
+    code: TaskCode.buildDaysUpdated,
+    data: documentChangeData.toJson(),
+    createdAt: clock.now(),
+  );
+
+  final isUpdated = await _updateBuildDay(
+    firestore,
+    buildDayData: updatedBuildDayData,
+    errorTaskData: errorTaskData,
+  );
+
+  if (isUpdated && task != null) await _deleteTask(firestore, task.documentID);
+}
+
+/// Returns a successful duration change using the given [beforeBuild] and
+/// [afterBuild].
+int _getSuccessfulDurationChange(BuildData beforeBuild, BuildData afterBuild) {
+  final successfulBeforeBuildDuration = _getSuccessfulBuildDuration(
+    beforeBuild,
+  );
+  final successfulAfterBuildDuration = _getSuccessfulBuildDuration(afterBuild);
+
+  return successfulAfterBuildDuration - successfulBeforeBuildDuration;
 }
 
 /// Returns a given [buildData]'s duration in milliseconds.
@@ -63,23 +153,31 @@ DateTime _getUtcDay(DateTime dateTime) => dateTime.toUtc().date;
 
 /// Updates the build day's document data with the given [buildDayData].
 ///
-/// Adds a new document to the tasks collection if updating
-/// the build day's document data fails.
-Future<void> _updateBuildDay(
-  DocumentSnapshot snapshot,
+/// Returns `true` if setting the given [buildDayData] to the build day
+/// document is successful. Otherwise, returns `false`.
+///
+/// Adds a new document with the given [errorTaskData] to the tasks collection
+/// if updating the build day's document data fails.
+///
+/// Throws an [ArgumentError] if either [buildDayData] or
+/// [errorTaskData] is `null`.
+Future<bool> _updateBuildDay(
+  Firestore firestore, {
   BuildDayData buildDayData,
-) async {
-  try {
-    await _setBuildDayData(snapshot, buildDayData);
-  } catch (error) {
-    final taskData = TaskData(
-      code: TaskCode.buildDaysCreated,
-      context: error.toString(),
-      createdAt: clock.now(),
-      data: snapshot.data.toMap(),
-    );
+  TaskData errorTaskData,
+}) async {
+  ArgumentError.checkNotNull(buildDayData, 'buildDayData');
+  ArgumentError.checkNotNull(errorTaskData, 'errorTaskData');
 
-    await _addTask(snapshot, taskData);
+  try {
+    await _setBuildDayData(firestore, buildDayData);
+
+    return true;
+  } catch (error) {
+    final taskData = errorTaskData.copyWith(context: error.toString());
+    await _addTask(firestore, taskData);
+
+    return false;
   }
 }
 
@@ -87,21 +185,47 @@ Future<void> _updateBuildDay(
 ///
 /// If the document already exists, merges the existing data with the given one.
 Future<void> _setBuildDayData(
-  DocumentSnapshot snapshot,
+  Firestore firestore,
   BuildDayData buildDayData,
 ) async {
   final documentId =
       '${buildDayData.projectId}_${buildDayData.day.millisecondsSinceEpoch}';
 
-  await snapshot.firestore.document('build_days/$documentId').setData(
+  await firestore.document('build_days/$documentId').setData(
         DocumentData.fromMap(buildDayData.toMap()),
         SetOptions(merge: true),
       );
 }
 
 /// Adds a new document with the given [taskData] to the tasks collection.
-Future<void> _addTask(DocumentSnapshot snapshot, TaskData taskData) async {
-  await snapshot.firestore
+Future<void> _addTask(Firestore firestore, TaskData taskData) async {
+  await firestore
       .collection('tasks')
       .add(DocumentData.fromMap(taskData.toMap()));
+}
+
+/// Returns a [TaskCode.buildDaysCreated] task that belongs to
+/// the given [buildData].
+///
+/// Returns `null` if the task is not found.
+Future<DocumentSnapshot> _getBuildTask(
+  Firestore firestore,
+  BuildData buildData,
+) async {
+  final snapshot = await firestore
+      .collection('tasks')
+      .where('data.projectId', isEqualTo: buildData.projectId)
+      .where('data.buildNumber', isEqualTo: buildData.buildNumber)
+      .where('code', isEqualTo: TaskCode.buildDaysCreated.value)
+      .get();
+  final documents = snapshot.documents;
+
+  if (documents.isEmpty) return null;
+
+  return documents.first;
+}
+
+/// Deletes a task document specified by the given [documentId].
+Future<void> _deleteTask(Firestore firestore, String documentId) async {
+  await firestore.document('tasks/$documentId').delete();
 }

@@ -12,7 +12,7 @@ void main() {
         TaskCode.buildDaysUpdated
       };
 
-      final values = TaskCode.values;
+      const values = TaskCode.values;
 
       expect(values, containsAll(expectedValues));
     });

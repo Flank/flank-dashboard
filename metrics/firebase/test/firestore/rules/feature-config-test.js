@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 const async = require("async");
-const { assertFails, assertSucceeds } = require("@firebase/testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   setupTestDatabaseWith,
   getApplicationWith,

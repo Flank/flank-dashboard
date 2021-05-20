@@ -32,6 +32,22 @@ class TaskData {
     ArgumentError.checkNotNull(createdAt, 'createdAt');
   }
 
+  /// Creates a copy of this [TaskData] but with the given fields
+  /// replaced with the new values.
+  TaskData copyWith({
+    TaskCode code,
+    Map<String, dynamic> data,
+    String context,
+    DateTime createdAt,
+  }) {
+    return TaskData(
+      code: code ?? this.code,
+      data: data ?? this.data,
+      context: context ?? this.context,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
   /// Converts this [TaskData] into the [Map].
   Map<String, dynamic> toMap() {
     return {

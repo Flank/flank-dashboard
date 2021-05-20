@@ -121,7 +121,7 @@ If the database update is in progress, we should follow the next steps:
 1. Log out a user from the application.
 2. Redirect the user to the `Updating the application` page to notify the user about the Metrics application update in progress.
 
-See [Metrics Web Supported Database Version](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/database_metadata/01_database_metadata.md) document to get more implementation details.
+See [Metrics Web Supported Database Version](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/supported_database_version/01_supported_database_version.md) document to get more implementation details.
 
 ### CI Integrations Tool 
 > Explain the usage of the supported database version in the CI Integrations tool.

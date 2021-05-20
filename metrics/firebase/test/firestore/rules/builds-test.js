@@ -7,7 +7,7 @@ const {
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const { assertFails, assertSucceeds } = require("@firebase/testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   passwordSignInProviderId,
   googleSignInProviderId,
@@ -16,6 +16,7 @@ const {
   builds,
   getBuild,
   allowedEmailDomains,
+  projects,
 } = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
 
@@ -136,7 +137,7 @@ describe("", async () => {
   ];
 
   before(async () => {
-    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains));
+    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects));
   });
 
   describe("Build collection rules", () => {
