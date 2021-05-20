@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".toJson() uses a before build's JSON to convert to the JSON-encodable map",
+      ".toJson() converts a before build to the JSON-encodable map to save as a 'before' key's value",
       () {
         final documentChangeData = DocumentChangeData(
           beforeUpdateData: beforeUpdateData,
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".toJson() uses an after build's JSON to convert to the JSON-encodable map",
+      ".toJson() converts an after build to the JSON-encodable map to save as a 'after' key's value",
       () {
         final documentChangeData = DocumentChangeData(
           beforeUpdateData: beforeUpdateData,

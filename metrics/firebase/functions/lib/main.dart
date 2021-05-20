@@ -70,6 +70,7 @@ Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
   final startedAtDayUtc = _getUtcDay(afterBuild.startedAt);
   final firestore = change.after.firestore;
   final statusFields = <BuildDayStatusField>[];
+
   if (beforeBuild.buildStatus == afterBuild.buildStatus) return;
 
   final task = await _getBuildTask(firestore, afterBuild);
