@@ -162,7 +162,7 @@ void main() {
     );
 
     test(
-      "creates a build days document with project id equals to the build document snapshot's project id",
+      "creates a build days document with project id equal to the build document snapshot's project id",
       () async {
         whenDocumentData().thenReturn(buildDocumentData);
 
@@ -303,7 +303,7 @@ void main() {
     );
 
     test(
-      "creates a build days document with day equals to the build document snapshot's startedAt UTC day",
+      "creates a build days document with day equal to the build document snapshot's startedAt UTC day",
       () async {
         final buildJson = testDataGenerator.generateBuildJson(
           startedAt: startedAt,
@@ -379,7 +379,7 @@ void main() {
     );
 
     test(
-      "creates a task document with context equals to the error string representation if setting the build day's document data fails",
+      "creates a task document with context equal to the error string representation if setting the build day's document data fails",
       () async {
         final exception = Exception('test');
 
@@ -402,7 +402,7 @@ void main() {
     );
 
     test(
-      "creates a task document with createdAt equals to the current date time if setting the build day's document data fails",
+      "creates a task document with createdAt equal to the current date time if setting the build day's document data fails",
       () async {
         final currentDateTime = DateTime.now();
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
@@ -640,7 +640,7 @@ void main() {
     );
 
     test(
-      "updates a build days document with project id equals to the changed build's project id",
+      "updates a build days document with project id equal to the changed build's project id",
       () async {
         whenDocument().thenReturn(documentReference);
         whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
@@ -889,7 +889,7 @@ void main() {
     );
 
     test(
-      "does not decrement a build day document's inProgress field value if there is buildDaysCreated task with such build id in tasks collection",
+      "does not decrement a build day document's status field value if there is buildDaysCreated task with such build id in tasks collection",
       () async {
         final buildDayStatusFieldName =
             BuildDayStatusFieldName.inProgress.value;
@@ -1058,7 +1058,7 @@ void main() {
     );
 
     test(
-      "updates a build days document with day equals to the build document snapshot's startedAt UTC day",
+      "updates a build days document with day equal to the build document snapshot's startedAt UTC day",
       () async {
         final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.inProgress,
@@ -1157,7 +1157,7 @@ void main() {
     );
 
     test(
-      "creates a task document with context equals to the error string representation if updating the build day's document data fails",
+      "creates a task document with context equal to the error string representation if updating the build day's document data fails",
       () async {
         final exception = Exception('test');
 
@@ -1179,7 +1179,7 @@ void main() {
     );
 
     test(
-      "creates a task document with createdAt equals to the current date time if updating the build day's document data fails",
+      "creates a task document with createdAt equal to the current date time if updating the build day's document data fails",
       () async {
         final currentDateTime = DateTime.now();
         final expectedCreatedAt = Timestamp.fromDateTime(currentDateTime);
