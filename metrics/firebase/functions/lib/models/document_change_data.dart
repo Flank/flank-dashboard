@@ -6,10 +6,10 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class that holds the document data before and after update.
 class DocumentChangeData extends DataModel {
-  /// A [DataModel] of an entity before the update.
+  /// A [DataModel] of a document data before the update.
   final DataModel beforeUpdateData;
 
-  /// A [DataModel] of an entity after the update.
+  /// A [DataModel] of a document data after the update.
   final DataModel afterUpdateData;
 
   /// Creates a new instance of the [DocumentChangeData]
