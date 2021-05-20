@@ -576,7 +576,7 @@ void main() {
         verify(
           documentQuery.where(
             'code',
-            isEqualTo: TaskCode.buildDaysCreated,
+            isEqualTo: TaskCode.buildDaysCreated.value,
           ),
         ).called(1);
       },

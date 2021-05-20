@@ -216,7 +216,7 @@ Future<DocumentSnapshot> _getBuildTask(
       .collection('tasks')
       .where('data.projectId', isEqualTo: buildData.projectId)
       .where('data.buildNumber', isEqualTo: buildData.buildNumber)
-      .where('code', isEqualTo: TaskCode.buildDaysCreated)
+      .where('code', isEqualTo: TaskCode.buildDaysCreated.value)
       .get();
   final documents = snapshot.documents;
 
