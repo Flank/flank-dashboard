@@ -17,7 +17,7 @@ class BuildTestDataGenerator {
 
   /// Generates a build [Map].
   Map<String, dynamic> generateBuildJson({
-    int buildNumber,
+    int buildNumber = 1,
     DateTime startedAt,
     BuildStatus buildStatus = BuildStatus.successful,
     Duration duration = const Duration(milliseconds: 100),
