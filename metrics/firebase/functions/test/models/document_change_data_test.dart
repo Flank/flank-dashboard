@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".toJson() converts a before build to the JSON-encodable map",
+      ".toJson() converts a before update data to the JSON-encodable map",
       () {
         final documentChangeData = DocumentChangeData(
           beforeUpdateData: beforeUpdateData,
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".toJson() converts an after build to the JSON-encodable map",
+      ".toJson() converts an after update data to the JSON-encodable map",
       () {
         final documentChangeData = DocumentChangeData(
           beforeUpdateData: beforeUpdateData,
