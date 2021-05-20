@@ -2,13 +2,20 @@
 
 package args {
     class CommandRunner{}
-    class Command {}
+    class Command {
+        + name : String
+        + description : String
+        + run() : Future<void>
+    }
 }
 
 package cli {
     package doctor {
         package factory as doctor.factory {
-            class DoctorFactory {}
+            class DoctorFactory {
+            - _servicesFactory : ServicesFactory
+            + create() : Doctor
+            }
         }
     }
 
@@ -17,13 +24,21 @@ package cli {
     }
 
     package command {
-        class DeployCommand {}
-        class DoctorCommand {}
+        class DeployCommand {
+            + deployerFactory : DeployerFactory
+        }
+
+        class DoctorCommand {
+            + doctorFactory : DoctorFactory
+        }
     }
 
     package deploy {
         package factory as deploy.factory{
-            class DeployerFactory {}
+            class DeployerFactory {
+                - _servicesFactory : ServicesFactory
+                + create() : Deployer
+            }
         }
     }
 }

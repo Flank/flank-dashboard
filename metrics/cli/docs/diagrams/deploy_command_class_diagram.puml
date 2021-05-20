@@ -86,7 +86,7 @@ package common {
     }
 }
 
-package core {
+package core.domain.entities {
     interface MetricsConfig {
         + googleSignInClientId : String
         + sentryDsn : String

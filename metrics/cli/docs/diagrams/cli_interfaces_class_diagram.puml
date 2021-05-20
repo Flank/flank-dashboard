@@ -21,23 +21,20 @@ package services {
     }
 
     package common {
-        package interface as common.interface {
-            package cli as common.cli {
-                interface Cli {
-                    + executable: String
-                    + version() : Future<void>
-                    + run(List<String> arguments, {bool attachOutput, String workingDirectory, Stream<List<int>> stdin}) : Future<ProcessResult>
-                }
+        package cli as common.cli {
+            interface Cli {
+                + executable: String
+                + version() : Future<void>
+                + run(List<String> arguments, {bool attachOutput, String workingDirectory, Stream<List<int>> stdin}) : Future<ProcessResult>
             }
+        }
 
-            package service {
-                interface InfoService {
-                    + version() : void
-                }
+        package service {
+            interface InfoService {
+                + version() : void
             }
         }
     }
-
 }
 
 CoolCliServiceAdapter -down-> CoolCli : uses
