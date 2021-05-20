@@ -17,8 +17,8 @@ participant GitService
 participant NpmService
 participant FlutterService
 participant SentryService
+participant DeployPathsFactory
 end box
-
 
 participant FileHelper
 
@@ -31,6 +31,11 @@ GCloudService --> Bob : start interactive login
 Bob -> GCloudService : signs in
 GCloudService --> Deployer -- : sign in finished
 
+Deployer -> GCloudService ++ : acceptTermsOfService()
+GCloudService --> Bob : asks to accept terms of GCloud service
+Bob -> GCloudService : accepts terms
+GCloudService -> Deployer  -- : terms accepted
+
 Deployer -> FirebaseService ++ : login()
 FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in
@@ -42,15 +47,23 @@ Bob -> FirebaseService : accepts terms
 FirebaseService -> Deployer  -- : terms accepted
 
 Deployer -> GCloudService ++ : createProject()
-
 GCloudService --> Bob : asks to enter the regionId
 Bob -> GCloudService : enters the regionId
-
 GCloudService --> Deployer -- : gcloud project has been created
 
-Deployer -> FirebaseService ++ : createWebApp(projectId)
+Deployer -> GCloudService ++ : configureProjectOrganization(projectId)
+GCloudService --> Bob : asks to configure the organization for the project
+Bob -> GCloudService : configures the organization for the project
+GCloudService --> Deployer -- : gcloud organization has been configured
 
+Deployer -> FirebaseService ++ : createWebApp(projectId)
 FirebaseService --> Deployer -- : firebase project has been added
+
+Deployer -> FileHelper ++: createTempDirectory()
+FileHelper --> Deployer --: directory
+
+Deployer -> DeployPathsFactory ++: create()
+DeployPathsFactory --> Deployer --: DeployPaths
 
 Deployer -> GitService ++ : checkout(repoUrl, srcPath)
 GitService --> Deployer -- : checkout finished
@@ -117,8 +130,14 @@ FirebaseService --> Deployer -- : firestore has been deployed
 Deployer -> FirebaseService ++ : deployHosting(projectId, target, appPath)
 FirebaseService -> Deployer -- : deploy finished
 
-Deployer -> FileHelper ++: getDirectory(path)
-FileHelper --> Deployer --: directory
+Deployer -> GCloudService ++ : configureOAuthOrigins(projectId)
+SentryService -> Bob : asks to configure OAuth origins
+Bob -> SentryService : configures OAuth origins
+SentryService -> Deployer -- : OAuth origins have been configured
+
+Deployer -> Bob : The deployment has finished successfully
+Deployer -> Bob : Deleting the temporary Metrics directory
+
 Deployer -> Deployer : delete directory
 Deployer --> DeployCommand --: deploy finished
 DeployCommand --> MetricsCliRunner --: command finished

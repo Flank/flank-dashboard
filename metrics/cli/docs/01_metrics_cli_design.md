@@ -158,7 +158,7 @@ The `Deployer` class is needed to separate the deployment logic from the [`Deplo
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
+![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/improve_cli_structure/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
 As we can see, the `Deployer` and `Doctor` classes requires the same services, so we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
 
@@ -176,7 +176,7 @@ Consider the following sequence diagram that illustrates the process of the `Doc
 
 Consider the following sequence diagram that illustrates the process of the `DeployCommand`:
 
-![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/improve_cli_structure/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
 
 ## Usage
 

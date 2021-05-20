@@ -227,7 +227,11 @@ SentryCliServiceAdapter --> SentryProject : uses
 SentryCliServiceAdapter --> SentryRelease : uses
 SentryCliServiceAdapter --> SourceMap : uses
 SentryCliServiceAdapter --> SentryStrings : uses
+
 SentryRelease --> SentryProject : uses
+
+SentryCli --> SentryProject : uses
+SentryCli --> SentryRelease : uses
 
 FirebaseCli .up.|> Cli
 GCloudCli .up.|> Cli
@@ -236,17 +240,14 @@ FlutterCli .down.|> Cli
 GitCli .down.|> Cli
 NpmCli .down.|> Cli
 
-SentryCli --> SentryProject : uses
-SentryCli --> SentryRelease : uses
-
-firebase --[hidden]right--> gcloud
-InfoService --[hidden]right--> Cli
-
 FirebaseService -up-|> InfoService
 GCloudService -up-|> InfoService
 SentryService -up-|> InfoService
 GitService -down-|> InfoService
 FlutterService -down-|> InfoService
 NpmService -down-|> InfoService
+
+firebase --[hidden]right--> gcloud
+InfoService --[hidden]right--> Cli
 
 @enduml

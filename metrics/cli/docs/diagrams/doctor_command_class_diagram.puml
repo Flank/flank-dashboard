@@ -59,6 +59,7 @@ package common {
                 + create() : Services
             }
         }
+
         class Services {
             + flutterService : FlutterService
             + gcloudService : GCloudService
@@ -78,6 +79,7 @@ package cli {
         + run() : Future<void>
         }
     }
+
 package doctor {
     package factory {
         class DoctorFactory {
@@ -95,7 +97,6 @@ package doctor {
         - _sentryService : SentryService
         + checkVersions() : Future<void>
     }
-}
 }
 
 DoctorCommand -down-> Doctor : uses

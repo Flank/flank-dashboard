@@ -5,11 +5,13 @@ package services {
         interface CoolService{
             + coolMethod() : void
         }
+
         package adapter {
             class CoolCliServiceAdapter implements CoolService {
                 - _coolCli : CoolCli
             }
        }
+
         package cli {
             class CoolCli {
                 + coolCommand() : void
