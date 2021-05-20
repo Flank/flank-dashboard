@@ -150,13 +150,6 @@ package services {
             + getProjectDsn(SentryProject project) : String
         }
 
-        package adapter as sentry.adapter {
-            class SentryCliServiceAdapter {
-                - _sentryCli : SentryCli
-                - _prompter : Prompter
-            }
-        }
-
         package cli as sentry.cli {
             class SentryCli {
                 + login(): Future<void>
@@ -164,6 +157,13 @@ package services {
                 + uploadSourceMaps(SentryRelease release, SourceMap sourceMap): Future<void>
                 + finalizeRelease(SentryRelease release): Future<void>
                 + version(): Future<void>
+            }
+        }
+
+        package adapter as sentry.adapter {
+            class SentryCliServiceAdapter {
+                - _sentryCli : SentryCli
+                - _prompter : Prompter
             }
         }
 
@@ -227,7 +227,7 @@ GCloudCliServiceAdapter --> GCloudStrings : uses
 FlutterCliServiceAdapter -down-> FlutterCli : uses
 GitCliServiceAdapter -down-> GitCli : uses
 NpmCliServiceAdapter -down-> NpmCli : uses
-SentryCliServiceAdapter -left-> SentryCli : uses
+SentryCliServiceAdapter -right-> SentryCli : uses
 SentryCliServiceAdapter --> SentryProject : uses
 SentryCliServiceAdapter --> SentryRelease : uses
 SentryCliServiceAdapter --> SourceMap : uses
