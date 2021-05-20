@@ -1,8 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0 
 // that can be found in the LICENSE file.
 
-const firestore = require("firebase").firestore;
 const cloneDeep = require("clone-deep");
+
+const currentDate = new Date();
 
 /** A list of test project groups */
 const projectGroups = {
@@ -21,7 +22,7 @@ const builds = {
   "build/1": {
     projectId: "1",
     buildNumber: 1,
-    startedAt: new firestore.Timestamp.now(),
+    startedAt: currentDate,
     buildStatus: "BuildStatus.failed",
     workflowName: "workflow",
     duration: 234,
@@ -32,7 +33,7 @@ const builds = {
   "build/2": {
     projectId: "2",
     buildNumber: 1,
-    startedAt: new firestore.Timestamp.now(),
+    startedAt: currentDate,
     buildStatus: "BuildStatus.unknown",
     workflowName: "workflow",
     duration: 345,
@@ -51,7 +52,7 @@ const buildDays = {
     unknown: 3,
     inProgress: 4,
     totalDuration: 1234,
-    day: new firestore.Timestamp.now(),
+    day: currentDate,
   },
   "build_days/2": {
     projectId: "2",
@@ -60,7 +61,7 @@ const buildDays = {
     unknown: 3,
     inProgress: 4,
     totalDuration: 1234,
-    day: new firestore.Timestamp.now(),
+    day: currentDate,
   },
 };
 
@@ -95,7 +96,7 @@ const tasks = {
       projectId: "1",
     },
     context: "context1",
-    createdAt: new firestore.Timestamp.now(),
+    createdAt: currentDate,
   },
   "tasks/2": {
     code: "code_2",
@@ -103,7 +104,7 @@ const tasks = {
       projectId: "2",
     },
     context: "context2",
-    createdAt: new firestore.Timestamp.now(),
+    createdAt: currentDate,
   },
 };
 
