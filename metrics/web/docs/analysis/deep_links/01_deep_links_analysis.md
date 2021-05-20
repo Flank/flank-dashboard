@@ -89,12 +89,12 @@ Now, let's review the listed approaches.
 The main idea of the approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`.
 The `DeepLinksNotifier` is responsible for:
 - Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
-- Providing page-specific deep links to corresponding page presenters, that are responsible for handling page-specific deep links;
+- Providing page-specific deep links to corresponding page presenters to handle them;
 - Handling page-specific deep links updates provided by page presenters;
-- Providing deep links' updates to the `NavigationNotifier`, which updates the browser history state if needed.
+- Providing deep links' updates to the `NavigationNotifier`, which updates the browser history state to save a deep link update in a URL.
 
 #### Pros
-- High responsibility segregation between components; 
+- Well segregated responsibility between components; 
 - Extensible approach - meaning that we can easily add new page-specific deep links or extend them;
 - Easy to test, because of the responsibility segregation.
 
@@ -130,14 +130,8 @@ abstract class PageDeepLinks {}
 
 /// A class that represents the Dashboard page specific deep links.
 class DashboardPageDeepLinks implements PageDeepLinks {
-  /// A name of a selected project group.
-  final String selectedProjectGroup;
-  
-  /// Creates a new instance of the [DashboardPageDeepLinks] with the given
-  /// parameters.
-  const DashboardPageDeepLinks({
-    this.selectedProjectGroup,
-  });
+
+  // Other fields, constructor here...
   
   /// Creates a new instance of the [DashboardPageDeepLinks] from the given
   /// [routeParameters].
@@ -152,11 +146,11 @@ class DashboardPageDeepLinks implements PageDeepLinks {
 
 /// A [ChangeNotifier] that provides an ability to manage application's deep links.
 class DeepLinksNotifier extends ChangeNotifier {
-  /// The current value of [PageDeepLinks] of the application.
-  PageDeepLinks _currentDeepLinks;
   
-  /// Provides a value of the current [PageDeepLinks] state.
-  PageDeepLinks get currentDeepLinks => _currentDeepLinks;
+  // Other fields, constructor here...
+  
+  /// A current value of the deep link in the application.
+  PageDeepLinks _currrentDeepLinks;
   
   /// Handles the given [routeConfiguration] and updates the [PageDeepLinks] value.
   void handleRouteConfiguration(RouteConfiguration routeConfiguration) {
@@ -189,30 +183,12 @@ abstract class PageNotifier extends ChangeNotifier {
   void handleDeepLinkUpdates(PageDeepLinks pageDeepLinks);
 }
 
-/// Some widget's state for handling deep links updates.
-class _SomeWidgetState extends State<SomeWidget> {
-  /// A [DeepLinksNotifier] needed to subscribe to deep links updates.
-  DeepLinksNotifier _deepLinksNotifier;  
-  
-  /// A [SomeWidgetNotifier] to notify about deep links updates.
-  SomeWidgetNotifier _someWidgetNotifier;
-  
-  @override
-  void initState() {
-    super.initState();
-    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
-    _someWidgetNotifier = Provider.of<SomeWidgetNotifier>(context, listen: false);
-    
-    _deepLinksNotifier.addListener(_deepLinksNotifierListener);
-  }
-  
-  /// A listener that listens to [DeepLinksNotifier.currentDeepLinks] updates.
-  void _deepLinksNotifierListener() {
-    final currentDeepLinks = _deepLinksNotifier.currentDeepLinks;
-    
-    // Notifying about deep links updates.
-    _someWidgetNotifier.handleDeepLinkUpdates(currentDeepLinks);
-  }
+/// A listener that triggers the [SomePageNotifier.handleDeepLinkUpdates] on [DeepLinksNotifier.currentDeepLinks]
+/// updates.
+void deepLinksNotifierListener() {
+  final currentDeepLinks = deepLinksNotifier.currentDeepLinks;
+
+  somePageNotifier.handleDeepLinkUpdates(currentDeepLinks);
 }
 ```
 
@@ -223,30 +199,12 @@ class _SomeWidgetState extends State<SomeWidget> {
   <summary>Code snippet</summary>
 
 ```dart
-/// Some page's state.
-class _SomePageState extends State<SomePage> {
-  /// A [DeepLinksNotifier] needed to handle this page's deep links updates.
-  DeepLinksNotifier _deepLinksNotifier;
-  
-  /// A [SomePageNotifier] needed to subscribe to this page's deep links updates.
-  SomePageNotifier _somePageNotifier;
-  
-  @override
-  void initState() {
-    super.initState();
-    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
-    _somePageNotifier = Provider.of<SomePageNotifier>(context, listen: false);
+/// A listener that triggers the [DeepLinksNotifier.handlePageDeepLinks] on [SomePageNotifier.pageDeepLinks]
+/// updates.
+void somePageNotifierListener() {
+  final pageDeepLinks = somePageNotifier.pageDeepLinks;
 
-    _somePageNotifier.addListener(_somePageNotifierListener);
-  }
-  
-  /// A listener that notifies [DeepLinksNotifier] about [SomePageNotifier.pageDeepLinks]
-  /// updates.
-  void _somePageNotifierListener() {
-    final pageDeepLinks = _somePageNotifier.pageDeepLinks;
-    
-    _deepLinksNotifier.handlePageDeepLinks(pageDeepLinks);
-  }
+  deepLinksNotifier.handlePageDeepLinks(pageDeepLinks);
 }
 ```
 
@@ -257,31 +215,12 @@ class _SomePageState extends State<SomePage> {
   <summary>Code snippet</summary>
 
 ```dart
-/// Some widget's state for handling deep links updates.
-class _SomeWidgetState extends State<SomeWidget> {
-  /// A [DeepLinksNotifier] needed to subscribe to deep links updates.
-  DeepLinksNotifier _deepLinksNotifier;
-  
-  /// A [NavigationNotifier] needed to update the browser history state on
-  /// deep link updates.
-  NavigationNofier _navigationNotifier;
+/// A listener that triggers the [NavigationNotifier.saveDeepLinks] on [DeepLinksNotifier.currentDeepLinks]
+/// updates.
+void deepLinksNotifierListener() {
+  final currentDeepLinks = deepLinksNotifier.currentDeepLinks;
 
-  @override
-  void initState() {
-    super.initState();
-    _deepLinksNotifier = Provider.of<DeepLinksNotifier>(context, listen: false);
-    _navigationNotifier = Provider.of<NavigationNofier>(context, listen: false);
-
-    _deepLinksNotifier.addListener(_deepLinksNotifierListener);
-  }
-
-  /// A listener that triggers the [NavigationNotifier.saveDeepLinks] on deep links
-  /// updates.
-  void _deepLinksNotifierListener() {
-    final currentDeepLinks = _deepLinksNotifier.currentDeepLinks;
-
-    _navigationNotifier.saveDeepLinks(currentDeepLinks);
-  }
+  navigationNotifier.saveDeepLinks(currentDeepLinks);
 }
 ```
 </details>
