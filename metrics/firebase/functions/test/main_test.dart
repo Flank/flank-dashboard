@@ -4,6 +4,7 @@
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:functions/deserializers/build_data_deserializer.dart';
 import 'package:functions/main.dart';
 import 'package:functions/models/build_day_status_field_name.dart';
 import 'package:functions/models/task_code.dart';
@@ -356,17 +357,20 @@ void main() {
     test(
       "creates a task document with data equals to the build data if setting the build day's document data fails",
       () async {
+        final buildJson = testDataGenerator.generateBuildJson();
+        final buildDocumentData = DocumentData.fromMap(buildJson);
+        final expectedTaskDataJson =
+            BuildDataDeserializer.fromJson(buildJson).toJson();
+
         whenCreateTaskDocument().thenAnswer((_) => Future.value());
         whenDocumentData().thenReturn(buildDocumentData);
 
         await onBuildAddedHandler(documentSnapshot, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
-          buildJson['startedAt'] = buildJson['startedAt'].toDateTime();
-
           return const MapEquality().equals(
             data.getNestedData('data').toMap(),
-            buildJson,
+            expectedTaskDataJson,
           );
         });
 
@@ -487,7 +491,7 @@ void main() {
     });
 
     test(
-      "doesn't update a build day document's if build's status doesn't change",
+      "does not update a build day document's if build's status does not change",
       () async {
         final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
@@ -509,7 +513,7 @@ void main() {
     );
 
     test(
-      "uses an updated build's project id to get a task from the tasks collection",
+      "gets the task with the data's project id equals to the updated build's build number",
       () async {
         final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
@@ -533,7 +537,7 @@ void main() {
     );
 
     test(
-      "uses an updated build's build number to get a task from the tasks collection",
+      "gets the task with the data's build number equals to the updated build's build number",
       () async {
         final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
@@ -885,33 +889,44 @@ void main() {
     );
 
     test(
-      "increments a build day document's successfulBuildsDuration field value by the updated build document snapshot's duration if the build status updated to successful",
+      "increments a build day document's successfulBuildsDuration field value by the changed build's duration if the build status updated to successful",
       () async {
-        const afterBuildDurationInMilliseconds = 200;
-
-        final beforeBuild = BuildData(
-          projectId: projectId,
+        final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
           duration: const Duration(milliseconds: durationInMilliseconds),
-          startedAt: startedAt,
         );
-        final afterBuild = BuildData(
-          projectId: projectId,
-          buildStatus: BuildStatus.failed,
-          duration: const Duration(
-            milliseconds: afterBuildDurationInMilliseconds,
+
+        whenDocument().thenReturn(documentReference);
+        whenChangeBeforeData().thenReturn(beforeBuildDocumentData);
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher(
+          'successfulBuildsDuration',
+          durationInMilliseconds,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
           ),
-          startedAt: startedAt,
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's successfulBuildsDuration field value by the before build document snapshot's duration if the build status updated from successful to failed",
+      () async {
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          duration: const Duration(milliseconds: durationInMilliseconds),
         );
-        final beforeBuildJson = beforeBuild.toJson();
-        beforeBuildJson['startedAt'] =
-            Timestamp.fromDateTime(beforeBuildJson['startedAt'] as DateTime);
-        final afterBuildJson = afterBuild.toJson();
-        afterBuildJson['startedAt'] =
-            Timestamp.fromDateTime(afterBuildJson['startedAt'] as DateTime);
-        final successfulDurationChange = _getSuccessfulDurationChange(
-          beforeBuild,
-          afterBuild,
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.failed,
         );
 
         whenDocument().thenReturn(documentReference);
@@ -926,7 +941,77 @@ void main() {
         final successfulDurationIncrementMatcher =
             documentFieldIncrementMatcher(
           'successfulBuildsDuration',
-          successfulDurationChange,
+          -durationInMilliseconds,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's successfulBuildsDuration field value by the before build document snapshot's duration if the build status updated from successful to unknown",
+      () async {
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          duration: const Duration(milliseconds: durationInMilliseconds),
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.unknown,
+        );
+
+        whenDocument().thenReturn(documentReference);
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher(
+          'successfulBuildsDuration',
+          -durationInMilliseconds,
+        );
+
+        verify(
+          documentReference.setData(
+            argThat(successfulDurationIncrementMatcher),
+            any,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      "decrements a build day document's successfulBuildsDuration field value by the before build document snapshot's duration if the build status updated from successful to inProgress",
+      () async {
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+          duration: const Duration(milliseconds: durationInMilliseconds),
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.inProgress,
+        );
+
+        whenDocument().thenReturn(documentReference);
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenTaskDocuments().thenReturn([]);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final successfulDurationIncrementMatcher =
+            documentFieldIncrementMatcher(
+          'successfulBuildsDuration',
+          -durationInMilliseconds,
         );
 
         verify(
@@ -1006,6 +1091,10 @@ void main() {
           duration: Duration.zero,
         );
         final afterBuildJson = testDataGenerator.generateBuildJson();
+        final expectedBeforeTaskDataJson =
+            BuildDataDeserializer.fromJson(beforeBuildJson).toJson();
+        final expectedAfterTaskDataJson =
+            BuildDataDeserializer.fromJson(afterBuildJson).toJson();
 
         whenDocument().thenReturn(documentReference);
         whenChangeBeforeData().thenReturn(
@@ -1018,13 +1107,9 @@ void main() {
         await onBuildUpdatedHandler(change, null);
 
         final dataMatcher = predicate<DocumentData>((data) {
-          beforeBuildJson['startedAt'] =
-              beforeBuildJson['startedAt'].toDateTime();
-          afterBuildJson['startedAt'] =
-              afterBuildJson['startedAt'].toDateTime();
           final expectedData = {
-            'before': beforeBuildJson,
-            'after': afterBuildJson,
+            'before': expectedBeforeTaskDataJson,
+            'after': expectedAfterTaskDataJson,
           };
 
           return const DeepCollectionEquality().equals(
@@ -1128,29 +1213,6 @@ void main() {
       },
     );
   });
-}
-
-/// Returns a difference between [beforeBuild]'s and [afterBuild]'s
-/// successful duration.
-int _getSuccessfulDurationChange(BuildData beforeBuild, BuildData afterBuild) {
-  final successfulBeforeBuildDuration = _getSuccessfulBuildDuration(
-    beforeBuild,
-  );
-  final successfulAfterBuildDuration = _getSuccessfulBuildDuration(afterBuild);
-
-  return successfulAfterBuildDuration - successfulBeforeBuildDuration;
-}
-
-/// Returns a given [buildData]'s duration in milliseconds.
-///
-/// If the given [buildData] is `successful`, returns it's duration.
-/// Otherwise, returns `0`.
-int _getSuccessfulBuildDuration(BuildData buildData) {
-  if (buildData.buildStatus == BuildStatus.successful) {
-    return buildData.duration.inMilliseconds;
-  }
-
-  return 0;
 }
 
 class _FirestoreMock extends Mock implements Firestore {}

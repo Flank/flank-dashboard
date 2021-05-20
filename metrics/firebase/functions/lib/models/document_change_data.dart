@@ -4,8 +4,7 @@
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents task data that holds before and after update
-/// entity's values.
+/// A class that holds the document data before and after update.
 class DocumentChangeData extends DataModel {
   /// A [DataModel] of an entity before the update.
   final DataModel beforeUpdateData;

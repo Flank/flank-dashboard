@@ -124,8 +124,8 @@ Future<void> onBuildUpdatedHandler(Change<DocumentSnapshot> change, _) async {
   if (isUpdated && task != null) await _deleteTask(firestore, task.documentID);
 }
 
-/// Returns a difference between [beforeBuild]'s and [afterBuild]'s
-/// successful duration.
+/// Returns a successful duration change using the given [beforeBuild] and
+/// [afterBuild].
 int _getSuccessfulDurationChange(BuildData beforeBuild, BuildData afterBuild) {
   final successfulBeforeBuildDuration = _getSuccessfulBuildDuration(
     beforeBuild,
