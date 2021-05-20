@@ -7,7 +7,7 @@ const {
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const { assertFails, assertSucceeds } = require("@firebase/testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   project,
   projects,
