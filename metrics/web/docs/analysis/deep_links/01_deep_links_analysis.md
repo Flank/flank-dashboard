@@ -16,8 +16,8 @@ Since the Flutter [supports deep links](https://flutter.dev/docs/development/ui/
 ## Requirements
 > Define requirements and make sure that they are complete.
 
-- Possibility to handle deep links;
-- Possibility to generate deep links in response to UI events (filtering, dropdown selections, searching, etc.);
+- Possibility to handle deep links and restore the application's state using them;
+- Possibility to generate deep links and save the application state in response to UI events (filtering, dropdown selections, searching, etc.);
 - Extensible and testable implementation approach.
 
 ## Landscape
@@ -30,7 +30,7 @@ We need to decide with the approaches for the following concepts:
 Let's review them in the next sections.
 
 ### Deep Linking approach
-There are two main approaches for deep linking: `query parameters` and `path segments`.   
+There are two main deep linking approaches: `query parameters` and `path segments`.   
 Let's consider a problem that we are to solve using deep links. For example, we need to save a project name filter's state in a deep link. Let's compare the listed approaches for solving this problem:
 
 ### Query Parameters
