@@ -85,7 +85,7 @@ Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [docume
 Now, let's review the listed approaches.
 
 ### Deep Links Integration Using DeepLinksNotifier
-The main idea of the approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`.
+The main idea of this approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`.
 The `DeepLinksNotifier` is responsible for:
 - Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
 - Providing page-specific deep links to corresponding page presenters to handle them;
