@@ -1,12 +1,23 @@
 # Projects
 This repository holds the source code of the following projects:
+- [Metrics](#bar_chart-metrics)
 - [API Mock Server](#test_tube-api-mock-server)
 - [Guardian](#shield-guardian)
-- [Metrics](#bar_chart-metrics)
 - [Shell Words](#shell-shell-words)
 - [YAML Map](#world_map-yaml-map)
 
 Let's review each of them in a bit more details:
+
+## :bar_chart: Metrics
+[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
+The Metrics project includes the following components:
+- [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
+- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
+- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
+- [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
+- [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
+
+![Metrics Dashboard](docs/images/dashboard_ui.png)
 
 ## :test_tube: Api Mock Server
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
@@ -99,16 +110,6 @@ void main() {
 ### Features:
 - Slack integration for notifications.
 
-## :bar_chart: Metrics
-[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
-The Metrics project includes the following components:
-- [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
-- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
-- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
-- [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
-- [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
-
-![Metrics Dashboard](docs/images/dashboard_ui.png)
 
 ## :shell: Shell Words
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
@@ -175,7 +176,7 @@ void main() {
 
 </details>
 
-# Getting Started
+# Contibuting to this repository
 Consider these useful links that may help you to get started:
 1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
