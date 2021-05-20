@@ -132,7 +132,7 @@ To interact with a user during the deployment process, we should include prompts
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
 
-![Prompt Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/improve_cli_structure/metrics/cli/docs/diagrams/prompt_class_diagram.puml)
+![Prompter Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/improve_cli_structure/metrics/cli/docs/diagrams/prompter_class_diagram.puml)
 
 Let's take a look at the classes the prompts integration requires in more details: 
 

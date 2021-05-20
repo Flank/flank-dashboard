@@ -15,7 +15,7 @@ package services {
         }
   }
 
-    package gcould {
+    package gcloud {
         interface GCloudService {
             + login() : Future<void>
             + createProject() : Future<String>

@@ -6,6 +6,12 @@ package args {
 }
 
 package cli {
+    package doctor {
+        package factory as doctor.factory {
+            class DoctorFactory {}
+        }
+    }
+
     package runner {
         class MetricsCliRunner {}
     }
@@ -20,18 +26,12 @@ package cli {
             class DeployerFactory {}
         }
     }
-
-    package doctor {
-        package factory as doctor.factory {
-            class DoctorFactory {}
-        }
-    }
 }
 
 MetricsCliRunner --> DoctorCommand : uses
 MetricsCliRunner --> DeployCommand : uses
-MetricsCliRunner --> DeployerFactory : uses
-MetricsCliRunner --> DoctorFactory : uses
+DeployCommand -left-> DeployerFactory : uses
+DoctorCommand -right-> DoctorFactory : uses
 
 DeployCommand --|> Command
 DoctorCommand --|> Command

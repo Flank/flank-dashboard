@@ -1,4 +1,4 @@
-@startuml prompt_class_diagram
+@startuml prompter_class_diagram
 
 package prompter {
     package writer {
