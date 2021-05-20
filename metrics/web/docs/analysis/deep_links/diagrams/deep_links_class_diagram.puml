@@ -1,0 +1,90 @@
+@startuml
+
+package dashboard {
+    package presentation {
+        package model {
+            class DashboardPageDeepLinks {
+                + selectedProjectGroup : String
+
+                + toQueryParameters() : Map<String, dynamic>
+            }
+        }
+
+        package state as dashboard_state {
+            class ProjectMetricsNotifier {
+                + pageDeepLinks: DashboardPageDeepLinks
+
+                + handleDeepLinkUpdates(PageDeepLinks pageDeepLinks) : void
+            }
+        }
+    }
+}
+
+package common.presentation {
+    package navigation {
+        package route_configuration {
+            class RouteConfiguration {
+                + name : RouteName
+                + queryParameters : Map<String, dynamic>
+            }
+        }
+
+        package widgets {
+            class DeepLinksDispatcher {
+                + List<PageNotifier> pageNotifiers
+
+                - _navigationNotifierListener(): void
+                - _deepLinksNotifierListener(): void
+                - _pageNotifierListener(): void
+            }
+        }
+
+        package state as navigation_state {
+            class NavigationNotifier {
+                - _currentConfiguration : RouteConfiguration
+            }
+        }
+    }
+
+    package deep_links {
+        abstract class PageDeepLinks {
+            + toQueryParameters() : Map<String, dynamic>
+        }
+
+        package state as deep_links_state {
+            class DeepLinksNotifier {
+                - _currentDeepLinks : PageDeepLinks
+
+                + handleRouteConfiguration(RouteConfiguration routeConfiguration) : void
+            }
+        }
+    }
+
+    package state {
+        abstract class PageNotifier {
+            + pageDeepLinks : PageDeepLinks
+
+            + handleDeepLinkUpdates(PageDeepLinks pageDeepLinks) : void
+        }
+    }
+}
+
+DeepLinksNotifier -right-> PageDeepLinks : uses
+DeepLinksNotifier -up-> RouteConfiguration : uses
+DeepLinksNotifier --> DashboardPageDeepLinks : uses
+
+DashboardPageDeepLinks .up.|> PageDeepLinks
+
+ProjectMetricsNotifier -up-|> PageNotifier
+ProjectMetricsNotifier --|> DashboardPageDeepLinks : uses
+
+NavigationNotifier -right-> RouteConfiguration : uses
+
+DeepLinksDispatcher --> PageNotifier : listens
+DeepLinksDispatcher --> DeepLinksNotifier : listens
+DeepLinksDispatcher --> NavigationNotifier : listens
+
+PageNotifier --> PageDeepLinks : uses
+PageNotifier -up-> RouteConfiguration : uses
+
+@enduml

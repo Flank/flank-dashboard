@@ -150,7 +150,7 @@ class DeepLinksNotifier extends ChangeNotifier {
   // Other fields, constructor here...
   
   /// A current value of the deep link in the application.
-  PageDeepLinks _currrentDeepLinks;
+  PageDeepLinks _currentDeepLinks;
   
   /// Handles the given [routeConfiguration] and updates the [PageDeepLinks] value.
   void handleRouteConfiguration(RouteConfiguration routeConfiguration) {
@@ -227,3 +227,19 @@ void deepLinksNotifierListener() {
 
 ### System modeling
 > Create an abstract model of the system/feature.
+
+Consider the following class diagram that describes how the feature can be implemented:
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/deep_links_class_diagram.puml)
+
+So, the main idea is to create a widget, let's name it a `DeepLinksDispatcher`, that is responsible for establishing the following connections:
+1. A connection between the `NavigationNotifier` and the `DeepLinksNotifier`. This connection allows the `DeepLinksNotifier` to handle each URL or query parameters update;
+2. A connection between the `DeepLinksNotifier` and the concrete page presenters. This connection allows the concrete page presenters to react on deep links updates (e.g. set filters, sorting criteria, etc.);
+3. A connection between the concrete page presenters and the `DeepLinksNotifier` to handle page deep links updates (e.g. search field updates, filtering events, etc.);
+4. A connection between the `DeepLinksNotifier` and the `NavigationNotifier` to update the browser history state to save the new deep links state.
+
+Consider the following sequence diagram that illustrates: 
+- Parsing deep links
+  ![Applying deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
+
+- Saving deep links
+![Saving deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/saving_deep_links_sequence_diagram.puml)

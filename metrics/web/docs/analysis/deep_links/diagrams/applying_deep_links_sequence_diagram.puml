@@ -1,0 +1,53 @@
+@startuml
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant Navigator2.0 << (C,#ADD1B2) >>
+participant NavigationNotifier << (C,#ADD1B2) >>
+participant SomePage << (C,#ADD1B2) >>
+participant DeepLinksDispatcher << (C,#ADD1B2) >>
+participant DeepLinksNotifier << (C,#ADD1B2) >>
+participant SomePageNotifier << (C,#ADD1B2) >>
+
+Bob -> Navigator2.0 : opens a URL with a deep link
+activate Navigator2.0
+
+Navigator2.0 --> Navigator2.0 : parses the URL to a RouteConfiguration
+
+Navigator2.0 -> NavigationNotifier : handleInitialRoutePath(routeConfiguration)
+activate NavigationNotifier
+deactivate Navigator2.0
+
+NavigationNotifier --> NavigationNotifier : _processConfiguration(routeConfiguration)
+NavigationNotifier --> NavigationNotifier : updates currentConfiguration
+
+NavigationNotifier -> SomePage: creates an instance of SomePage
+activate SomePage
+
+
+NavigationNotifier -> DeepLinksDispatcher : notifyListeners()
+activate DeepLinksDispatcher
+deactivate NavigationNotifier
+
+DeepLinksDispatcher -> DeepLinksNotifier : handleRouteConfiguration(navigationNotifier.currentConfiguration)
+activate DeepLinksNotifier
+
+DeepLinksNotifier --> DeepLinksNotifier : parses currentConfiguration \nto a SomePageDeepLink
+
+DeepLinksNotifier --> DeepLinksDispatcher : notifyListeners()
+deactivate DeepLinksNotifier
+
+DeepLinksDispatcher -> SomePageNotifier : handleDeepLinkUpdates(deepLinksNotifier.currentDeepLinks)
+activate SomePageNotifier
+deactivate DeepLinksDispatcher
+
+SomePageNotifier --> SomePageNotifier : applies deep links
+SomePageNotifier --> SomePage : notifyListeners()
+deactivate SomePageNotifier
+
+SomePage --> Bob : displays a page with applied deep links
+deactivate SomePage
+
+@enduml
