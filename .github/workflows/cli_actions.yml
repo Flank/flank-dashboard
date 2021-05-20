@@ -34,7 +34,110 @@ jobs:
       - name: Run tests
         run: pub run test
         working-directory: metrics/cli/
-        
+
+  cli-build-actions:
+    name: CLI Build Actions
+    needs: [ cli-actions ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
+        include:
+          - os: macos-latest
+            output_name: "cli_macos"
+          - os: ubuntu-latest
+            output_name: "cli_linux"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.12.0-133.2.beta
+
+      - name: Get dependencies
+        run: pub get
+        working-directory: metrics/cli/
+
+      - name: Build Application
+        run: dart2native -o ${{ matrix.output_name }} bin/main.dart
+        working-directory: metrics/cli/
+
+      - name: Generate SHA256 Hash
+        run: shasum -a 256 metrics/cli/${{ matrix.output_name }} > metrics/cli/${{ matrix.output_name }}.sha256
+
+      - name: Upload SHA256 Hash
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.output_name }}_sha256
+          path: metrics/cli/${{ matrix.output_name }}.sha256
+          if-no-files-found: error
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.output_name }}
+          path: metrics/cli/${{ matrix.output_name }}
+          if-no-files-found: error
+
+  cli-publish-actions:
+    name: CLI Publish Actions
+    needs: [ cli-build-actions ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Configure GitHub CLI
+        run: gh auth login --with-token <<< ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download MacOS Build
+        uses: actions/download-artifact@v2
+        with:
+          name: cli_macos
+          path: metrics/cli/
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v2
+        with:
+          name: cli_linux
+          path: metrics/cli/
+
+      - name: Download Linux SHA256 Hash
+        uses: actions/download-artifact@v2
+        with:
+          name: cli_linux_sha256
+          path: metrics/cli/
+
+      - name: Download MacOS SHA256 Hash
+        uses: actions/download-artifact@v2
+        with:
+          name: cli_macos_sha256
+          path: metrics/cli/
+
+      - name: Delete release
+        run: |
+          gh release delete cli-snapshot -y
+          git push --delete origin cli-snapshot
+        continue-on-error: true
+
+      - name: Create release
+        run: gh release create cli-snapshot metrics/cli/cli_macos metrics/cli/cli_macos.sha256 metrics/cli/cli_linux metrics/cli/cli_linux.sha256 --prerelease --title 'CLI snapshot'
+
   send-notification:
     name: Send notification to Slack
     runs-on: ubuntu-latest
