@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,23 +17,6 @@ class FirestoreMetricsRepository implements MetricsRepository {
         .where('projectId', isEqualTo: projectId)
         .orderBy('startedAt', descending: true)
         .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.documents
-            .map((doc) =>
-                BuildDataDeserializer.fromJson(doc.data, doc.documentID))
-            .toList());
-  }
-
-  @override
-  Stream<List<Build>> projectBuildsFromDateStream(
-    String projectId,
-    DateTime from,
-  ) {
-    return _firestore
-        .collection('build')
-        .orderBy('startedAt', descending: true)
-        .where('projectId', isEqualTo: projectId)
-        .where('startedAt', isGreaterThanOrEqualTo: from)
         .snapshots()
         .map((snapshot) => snapshot.documents
             .map((doc) =>

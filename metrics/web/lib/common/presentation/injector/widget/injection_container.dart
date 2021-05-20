@@ -18,6 +18,7 @@ import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/data/repositories/firestore_build_day_repository.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
@@ -26,7 +27,6 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates_stub.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
@@ -170,6 +170,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _featureConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
     final _hiveLocalConfigRepository = HiveLocalConfigRepository();
+    final _buildDayRepository = FirestoreBuildDayRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
@@ -216,7 +217,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _hiveLocalConfigRepository,
     );
     _receiveBuildDayProjectMetricsUpdates =
-        ReceiveBuildDayProjectMetricsUpdatesStub();
+        ReceiveBuildDayProjectMetricsUpdates(_buildDayRepository);
 
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,
