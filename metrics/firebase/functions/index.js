@@ -124,3 +124,4 @@ function randomInt(from, to) {
 }
 
 exports.onBuildAdded = dartFunctions.onBuildAdded;
+exports.onBuildUpdated = dartFunctions.onBuildUpdated;
