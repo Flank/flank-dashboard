@@ -39,7 +39,7 @@ void main() {
 
   Matcher documentFieldIncrementMatcher(String fieldName, int expectedCount) {
     return predicate<DocumentData>((data) {
-      final count = data.getNestedData(fieldName).getInt('operand');
+      final count = data.getNestedData(fieldName)?.getInt('operand');
 
       return count == expectedCount;
     });
@@ -355,7 +355,7 @@ void main() {
     );
 
     test(
-      "creates a task document with data equals to the build data if setting the build day's document data fails",
+      "creates a task document with data equal to the build data if setting the build day's document data fails",
       () async {
         final buildJson = testDataGenerator.generateBuildJson();
         final buildDocumentData = DocumentData.fromMap(buildJson);
@@ -513,7 +513,7 @@ void main() {
     );
 
     test(
-      "gets the task with the data's project id equals to the updated build's build number",
+      "gets the task with the data's project id equal to the updated build's build number",
       () async {
         final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
@@ -537,7 +537,7 @@ void main() {
     );
 
     test(
-      "gets the task with the data's build number equals to the updated build's build number",
+      "gets the task with the data's build number equal to the updated build's build number",
       () async {
         final afterBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.successful,
@@ -889,6 +889,40 @@ void main() {
     );
 
     test(
+      "does not decrement a build day document's inProgress field value if there is buildDaysCreated task with such build id in tasks collection",
+      () async {
+        final buildDayStatusFieldName =
+            BuildDayStatusFieldName.inProgress.value;
+        final beforeBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.inProgress,
+        );
+        final afterBuildJson = testDataGenerator.generateBuildJson(
+          buildStatus: BuildStatus.successful,
+        );
+
+        whenDocument().thenReturn(documentReference);
+        whenChangeBeforeData().thenReturn(
+          DocumentData.fromMap(beforeBuildJson),
+        );
+        whenChangeAfterData().thenReturn(DocumentData.fromMap(afterBuildJson));
+        whenTaskDocuments().thenReturn([taskDocumentSnapshot]);
+        when(taskDocumentSnapshot.data).thenReturn(taskCreatedDocumentData);
+
+        await onBuildUpdatedHandler(change, null);
+
+        final statusFieldIncrementMatcher =
+            documentFieldIncrementMatcher(buildDayStatusFieldName, -1);
+
+        verifyNever(
+          documentReference.setData(
+            argThat(statusFieldIncrementMatcher),
+            any,
+          ),
+        );
+      },
+    );
+
+    test(
       "increments a build day document's successfulBuildsDuration field value by the changed build's duration if the build status updated to successful",
       () async {
         final afterBuildJson = testDataGenerator.generateBuildJson(
@@ -1084,7 +1118,7 @@ void main() {
     );
 
     test(
-      "creates a task document with data equals to the before and after builds data if updating the build day's document data fails",
+      "creates a task document with data equal to the before and after builds data if updating the build day's document data fails",
       () async {
         final beforeBuildJson = testDataGenerator.generateBuildJson(
           buildStatus: BuildStatus.inProgress,
