@@ -120,13 +120,13 @@ jobs:
       - name: Download Linux SHA256 Hash
         uses: actions/download-artifact@v2
         with:
-          name: metrics_cli_linux_sha256
+          name: metrics_cli_linux.sha256
           path: metrics/cli/
 
       - name: Download MacOS SHA256 Hash
         uses: actions/download-artifact@v2
         with:
-          name: metrics_cli_macos_sha256
+          name: metrics_cli_macos.sha256
           path: metrics/cli/
 
       - name: Delete release
@@ -136,7 +136,7 @@ jobs:
         continue-on-error: true
 
       - name: Create release
-        run: gh release create cli-snapshot metrics/cli/metrics_cli_macos metrics/cli/metrics_cli_macos_sha256 metrics/cli/metrics_cli_linux metrics/cli/metrics_cli_linux_sha256 --prerelease --title 'Metrics CLI snapshot'
+        run: gh release create metrics-cli-snapshot metrics/cli/metrics_cli_macos metrics/cli/metrics_cli_macos.sha256 metrics/cli/metrics_cli_linux metrics/cli/metrics_cli_linux.sha256 --prerelease --title 'Metrics CLI snapshot'
 
   send-notification:
     name: Send notification to Slack
