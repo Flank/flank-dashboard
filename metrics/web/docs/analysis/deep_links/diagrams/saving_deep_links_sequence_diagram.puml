@@ -40,7 +40,7 @@ deactivate DeepLinksDispatcher
 activate NavigationNotifier
 
 NavigationNotifier --> NavigationNotifier : replaceState()
-NavigationNotifier --> Bob : sees updated URL with deep links
+NavigationNotifier --> Bob : updates URL with deep links
 deactivate NavigationNotifier
 
 @enduml

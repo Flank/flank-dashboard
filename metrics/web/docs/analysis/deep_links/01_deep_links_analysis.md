@@ -16,6 +16,7 @@ Since the Flutter [supports deep links](https://flutter.dev/docs/development/ui/
 ## Requirements
 > Define requirements and make sure that they are complete.
 
+The deep links implementation approach that we are to select must satisfy the following requirements:
 - Possibility to handle deep links and restore the application's state using them;
 - Possibility to save the application's state in deep links as a response to UI events (e.g. filtering, dropdown selections, searching, etc.);
 - Extensible and testable implementation approach.
@@ -30,8 +31,8 @@ We need to decide with the approaches for the following concepts:
 Let's review these approaches in the next sections.
 
 ### Deep Linking approach
-There are two main ways of representing deep links in the URL: `query parameters` and `path segments`.   
-Let's consider a problem that we are to solve using deep links. For example, we need to save a project name filter's state in a URL. Let's compare the listed approaches for solving this problem:
+There are two main ways of representing deep links in the URL: [`query parameters`](#query-parameters) and [`path segments`](#path-segments).   
+To start, let's consider a problem that we are to solve using deep links. For example, we need to save a project name filter's state in a URL. Let's compare the listed approaches for solving this problem:
 
 ### Query Parameters
 Using query parameters, the deep link may look like the following:
@@ -90,7 +91,7 @@ The main idea of this approach is to introduce a new `ChangeNotifier`, let's cal
 __Note: the naming is a work in progress and may be changed during the `Design` phase.__
 
 The `DeepLinksNotifier` is responsible for:
-- Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
+- Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links Dart objects;
 - Providing page-specific deep links to the corresponding page `ChangeNotifier`s to handle them;
 - Handling page-specific deep links updates provided by page `ChangeNotifier`s;
 - Providing deep link updates to the `NavigationNotifier`, which updates the browser history state to save a deep link update in a URL.
@@ -123,6 +124,9 @@ According to the comparison above, we choose the [Deep Links Integration Using C
 > Create a simple prototype to confirm that implementing this feature is possible.
 
 #### Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links
+
+This code snippet demonstrates the raw deep link parsing process.
+
 ```dart
 /// An abstraction for page-specific deep links.
 abstract class PageDeepLinks {}
@@ -167,6 +171,9 @@ class DeepLinksNotifier extends ChangeNotifier {
 
 
 #### Providing page-specific deep links to the corresponding page ChangeNotifiers
+
+This code snippet demonstrates an example of creating a connection between the `DeepLinksNotifier` and `SomePageNotifier` using a listener.
+
 ```dart
 /// An abstract class that represents a [ChangeNotifier] of a specific page.
 abstract class PageNotifier extends ChangeNotifier {
@@ -188,6 +195,9 @@ void deepLinksNotifierListener() {
 ```
 
 #### Handling page-specific deep links updates provided by page ChangeNotifiers
+
+This code snippet demonstrates the connection between `SomePageNotifier` and `DeepLinksNotifier` about `PageDeepLink`'s updates using a listener function.
+ 
 ```dart
 /// A listener that triggers the [DeepLinksNotifier.handlePageDeepLinks] on [SomePageNotifier.pageDeepLinks]
 /// updates.
@@ -199,6 +209,9 @@ void somePageNotifierListener() {
 ```
 
 #### Providing deep links' updates to the `NavigationNotifier`
+
+This code snippet demonstrates the connection between the `DeepLinksNotifier` and  `NavigationNotifier` to save the deep links in the URL using the listener function.
+
 ```dart
 /// A listener that triggers the [NavigationNotifier.saveDeepLinks] on [DeepLinksNotifier.currentDeepLinks]
 /// updates.
