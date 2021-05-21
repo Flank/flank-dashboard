@@ -299,7 +299,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml'
+        run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml' --repository=${{ secrets.REPOSITORY }}
 
   check-license-actions:
     name: Check License Actions
