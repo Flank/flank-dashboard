@@ -54,10 +54,13 @@ GCloudService --> Deployer -- : gcloud project has been created
 Deployer -> GCloudService ++ : configureProjectOrganization(projectId)
 GCloudService --> Bob : asks to configure the organization for the project
 
-opt
+alt configures the organization
 Bob -> GCloudService : configures the organization for the project
-GCloudService --> Deployer -- : GCloud organization configuration finished
+else skips configuring the organization
+Bob -> GCloudService : skips configuring the organization for the project
 end
+
+GCloudService --> Deployer -- : GCloud organization configuration finished
 
 Deployer -> FirebaseService ++ : createWebApp(projectId)
 FirebaseService --> Deployer -- : firebase project has been added
@@ -135,11 +138,14 @@ FirebaseService --> Deployer -- : hosting has been deployed
 
 Deployer -> GCloudService ++ : configureOAuthOrigins(projectId)
 GCloudService --> Bob : asks to configure OAuth origins
-
-opt
+alt configures OAuth origins
 Bob -> GCloudService : configures OAuth origins
-GCloudService --> Deployer -- : OAuth origins have been configured
+
+else
+Bob -> GCloudService : skips configuring OAuth origins
 end
+
+GCloudService --> Deployer -- : OAuth origins have been configured
 
 Deployer --> Bob : The deployment has finished successfully
 Deployer --> Bob : Deleting the temporary Metrics directory

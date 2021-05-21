@@ -22,12 +22,6 @@ package prompter {
     }
 }
 
-package cool.adapter {
-    class CoolCliServiceAdapter {}
-}
-
 Prompter --> PromptWriter : uses
-
-CoolCliServiceAdapter --> Prompter : uses
 
 @enduml

@@ -235,6 +235,7 @@ SentryRelease --> SentryProject : uses
 
 SentryCli --> SentryProject : uses
 SentryCli --> SentryRelease : uses
+SentryCli --> SourceMap : uses
 
 FirebaseCli .up.|> Cli
 GCloudCli .up.|> Cli

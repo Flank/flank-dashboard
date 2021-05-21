@@ -68,6 +68,11 @@ package common {
             + firebaseService : FirebaseService
             + sentryService : SentryService
         }
+    }
+}
+
+package common as common1 {
+    package model as common1.model1 {
 
         class WebMetricsConfig {
             + {static} googleSignInClientIdName : String
@@ -83,6 +88,7 @@ package common {
             + environment : String
             + release : String
         }
+
     }
 }
 
@@ -179,7 +185,7 @@ Deployer -down-> SentryService : uses
 Deployer -left-> FileHelper : uses
 Deployer -up-> DeployConstants : uses
 Deployer -> Services : uses
-Deployer -> WebMetricsConfig : uses
+Deployer -down-> WebMetricsConfig : uses
 Deployer -> SentryConfig : uses
 Deployer -> DeployPaths : uses
 Deployer -up-> DeployPathsFactory : uses
@@ -189,9 +195,18 @@ DeployCommand --> Deployer : uses
 DeployCommand -down-> DeployerFactory : uses
 DeployerFactory -left-> ServicesFactory : uses
 
-ServicesFactory --> Services : creates
+ServicesFactory -left-> Services : creates
 DeployerFactory -down-> Deployer : creates
 DeployPathsFactory -right-> DeployPaths : creates
+
+Services -up-> NpmService : uses
+Services -up-> GitService : uses
+Services -up-> FlutterService : uses
+Services -up-> GCloudService : uses
+Services -up-> FirebaseService : uses
+Services -up-> SentryService : uses
+
+WebMetricsConfig -> SentryConfig : uses
 
 WebMetricsConfig .up.|> MetricsConfig
 
