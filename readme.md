@@ -13,7 +13,7 @@ Let's review each of them in a bit more details:
 The Metrics project integrates with the following CI tools to collect software project metrics:
 - [Buildkite](https://buildkite.com/docs/tutorials/getting-started)
 - [Github Actions](https://docs.github.com/en/actions/quickstart)
-- [Jenkins](https://jenkins.io/doc/).
+- [Jenkins](https://jenkins.io/doc/)
 
 The Metrics Web Application displays next project metrics on the dashboard:
 | Metric | Description |
@@ -25,7 +25,7 @@ The Metrics Web Application displays next project metrics on the dashboard:
 | `Stability`   | A ratio of successful builds to finished builds for the last 30 builds. |
 | `Coverage`   | A last successful build's code coverage percent. |
 
-See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document for more details.
+See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document to get more information about project metrics.
 
 ![Metrics Dashboard](docs/images/dashboard_ui.png)
 
