@@ -186,7 +186,7 @@ void main() {
 
 </details>
 
-# Contibuting
+# Contributing
 Consider these useful links that may help you to get started:
 1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
