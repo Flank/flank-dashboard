@@ -10,10 +10,6 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksChecker", () {
-    final linksChecker = LinksChecker();
-    final file = _FileMock();
-    final files = <File>[file];
-
     const urls = [
       'http://raw.githubusercontent.com/platform-platform/monorepo',
       'http://github.com/platform-platform/monorepo/blob',
@@ -26,6 +22,10 @@ void main() {
       'https://github.com/platform-platform/monorepo/raw',
       'https://raw.com',
     ];
+
+    final linksChecker = LinksChecker(urls);
+    final file = _FileMock();
+    final files = <File>[file];
 
     const validSuffix = 'master/';
     const invalidSuffix = 'invalid/';
