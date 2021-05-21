@@ -16,10 +16,11 @@ The Metrics project integrates with the following CI tools to collect software p
 - [Jenkins](https://jenkins.io/doc/)
 
 The Metrics Web Application displays the next project metrics on the dashboard:
+
 | Metric | Description |
 | --- | --- |
 | `Build Status`   | The result of the latest build. |
-| `Build Results`   | Includes the build results and duration of the latest builds. |
+| `Build Results`   | The build results and duration of the last 30 builds. |
 | `Performance`   | An average build duration of successful builds by the last 7 days, excluding the queue time. |
 | `Builds`   | A count of performed builds of the project per week. |
 | `Stability`   | A ratio of successful builds to finished builds for the last 30 builds. |
@@ -120,7 +121,6 @@ void main() {
 ### Features:
 - Slack integration for notifications.
 
-
 ## :shell: Shell Words
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
 
@@ -186,7 +186,7 @@ void main() {
 
 </details>
 
-# Contibuting to this repository
+# Contibuting
 Consider these useful links that may help you to get started:
 1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 2. [Dart code style :nail_care:](docs/09_dart_code_style.md)
