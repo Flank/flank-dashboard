@@ -9,13 +9,23 @@ This repository holds the source code of the following projects:
 Let's review each of them in a bit more details:
 
 ## :bar_chart: Metrics
-[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
-The Metrics project includes the following components:
-- [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
-- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
-- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
-- [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
-- [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
+[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality. 
+The Metrics project integrates with the following CI tools to collect software project metrics:
+- [Buildkite](https://buildkite.com/docs/tutorials/getting-started)
+- [Github Actions](https://docs.github.com/en/actions/quickstart)
+- [Jenkins](https://jenkins.io/doc/).
+
+The Metrics Web Application displays next project metrics on the dashboard:
+| Metric | Description |
+| --- | --- |
+| `Build Status`   | The result of the latest build. It can be successful,failed, unknown, or in-progress. |
+| `Build Results`   | Includes the build results and duration of the latest builds. It can be successful,failed, unknown, or in-progress. |
+| `Performance`   | An average build duration of successful builds by the last 7 days, excluding the queue time. |
+| `Builds`   | A count of performed builds of the project per week |
+| `Stability`   | A ratio of successful builds to finished builds for the last 30 builds. |
+| `Coverage`   | A last successful build's code coverage percent. |
+
+See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document for more details.
 
 ![Metrics Dashboard](docs/images/dashboard_ui.png)
 
