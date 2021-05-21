@@ -1,5 +1,6 @@
 # Deep Links Approaches Analysis
 > Feature description / User story.
+
 As a user, I want to pass direct links to project and/or project groups, so that other users can navigate easier.
 
 # Analysis
@@ -88,7 +89,7 @@ The main idea of this approach is to introduce a new `ChangeNotifier`, let's cal
 
 The `DeepLinksNotifier` is responsible for:
 - Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
-- Providing page-specific deep links to corresponding page `ChangeNotifier`s to handle them;
+- Providing page-specific deep links to the corresponding page `ChangeNotifier`s to handle them;
 - Handling page-specific deep links updates provided by page `ChangeNotifier`s;
 - Providing deep link updates to the `NavigationNotifier`, which updates the browser history state to save a deep link update in a URL.
 
@@ -103,7 +104,7 @@ The `DeepLinksNotifier` is responsible for:
 ### Deep Links Integration Using Route Parameters
 The main idea of this approach is to dispatch deep links using page parameters, which are then handled by the pages. For example, if a `DashboardPage` includes a project group selection menu, we can add a `projectGroupName` parameter to a `DashboardPage`, which is then handled by the page itself.
 
-However, according to the ["UI elements"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) section of the ["Metrics Web Presentation Layer"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document, a `Page` is a widget, whose responsibility is a proper Metrics widgets combining, thus, handling any parameters is out of scope for a `Page` widget's responsibilities.
+However, according to the ["UI elements"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) section of the ["Metrics Web Presentation Layer"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document, a `Page` is a widget, whose responsibility is a proper Metrics widgets combining, thus, handling any parameters is out of scope of the `Page`'s responsibilities.
 
 #### Pros
 - Does not require implementing new or extending existing `ChangeNotifier`s.
@@ -114,7 +115,7 @@ However, according to the ["UI elements"](https://github.com/platform-platform/m
 - Adding parameters handling may increase the `page` widgets size, and decrease the code readability.
 
 ### Conclusion
-According to the comparison above, we choose the [Deep Links Integration Using DeepLinksNotifier](#deep-links-integration-using-deeplinksnotifier) approach, as it satisfies the architectural requirements, simplifies testing, and highly extensible.
+According to the comparison above, we choose the [Deep Links Integration Using ChangeNotifier](#deep-links-integration-using-changenotifier) approach, as it satisfies the architectural requirements, simplifies testing, and highly extensible.
 
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
@@ -163,7 +164,7 @@ class DeepLinksNotifier extends ChangeNotifier {
 ```
 
 
-#### Providing page-specific deep links to corresponding page ChangeNotifiers
+#### Providing page-specific deep links to the corresponding page ChangeNotifiers
 ```dart
 /// An abstract class that represents a [ChangeNotifier] of a specific page.
 abstract class PageNotifier extends ChangeNotifier {
