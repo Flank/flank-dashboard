@@ -91,7 +91,7 @@ jobs:
     env:
       LINUX_BUILD_NAME: "metrics_cli_linux"
       MACOS_BUILD_NAME: "metrics_cli_macos"
-      RELEASE_NAME : "metrics-cli-snapshot"
+      TAG_NAME : "metrics-cli-snapshot"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -135,12 +135,12 @@ jobs:
 
       - name: Delete release
         run: |
-          gh release delete ${{ env.RELEASE_NAME }} -y
+          gh release delete ${{ env.TAG_NAME }} -y
           git push --delete origin cli-snapshot
         continue-on-error: true
 
       - name: Create release
-        run: gh release create ${{ env.RELEASE_NAME }} metrics/cli/${{ env.MACOS_BUILD_NAME }} metrics/cli/${{ env.MACOS_BUILD_NAME }}.sha256 metrics/cli/${{ env.LINUX_BUILD_NAME }} metrics/cli/${{ env.LINUX_BUILD_NAME }}.sha256 --prerelease --title 'Metrics CLI snapshot'
+        run: gh release create ${{ env.TAG_NAME }} metrics/cli/${{ env.MACOS_BUILD_NAME }} metrics/cli/${{ env.MACOS_BUILD_NAME }}.sha256 metrics/cli/${{ env.LINUX_BUILD_NAME }} metrics/cli/${{ env.LINUX_BUILD_NAME }}.sha256 --prerelease --title 'Metrics CLI snapshot'
 
   send-notification:
     name: Send notification to Slack
