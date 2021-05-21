@@ -1,10 +1,10 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:links_checker/arguments/models/links_checker_arguments.dart';
-import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:links_checker/checker/links_checker.dart';
-import 'package:links_checker/command/links_checker_command.dart';
+import 'package:links_checker/cli/arguments/models/links_checker_arguments.dart';
+import 'package:links_checker/cli/arguments/parser/links_checker_arguments_parser.dart';
+import 'package:links_checker/cli/command/links_checker_command.dart';
 import 'package:links_checker/utils/file_helper_util.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -49,8 +49,9 @@ void main() {
     test(
       ".run() uses the given argument parser's .parseArgResults() to parse arguments",
       () {
-        when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
+        when(
+          argumentsParser.parseArgResults(any),
+        ).thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
 
         final command = LinksCheckerCommand(argumentsParser: argumentsParser);
         command.run();
@@ -64,8 +65,9 @@ void main() {
       () {
         final paths = ['file1', 'path/to/file2'];
         when(fileHelperUtil.getFiles(paths)).thenReturn([]);
-        when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: paths, ignorePaths: []));
+        when(
+          argumentsParser.parseArgResults(any),
+        ).thenReturn(LinksCheckerArguments(paths: paths, ignorePaths: []));
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -83,8 +85,9 @@ void main() {
         final linksChecker = _LinksCheckerMock();
 
         when(linksChecker.checkFiles([])).thenReturn(null);
-        when(argumentsParser.parseArgResults(any))
-            .thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
+        when(
+          argumentsParser.parseArgResults(any),
+        ).thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
 
         final command = LinksCheckerCommand(
           linksChecker: linksChecker,
@@ -102,8 +105,10 @@ void main() {
         const ignorePath = 'path/';
         final paths = ['file1', '${ignorePath}to/file2'];
         final ignore = [ignorePath];
-        final arguments =
-            LinksCheckerArguments(paths: paths, ignorePaths: ignore);
+        final arguments = LinksCheckerArguments(
+          paths: paths,
+          ignorePaths: ignore,
+        );
 
         when(fileHelperUtil.getFiles(any)).thenReturn([]);
         when(argumentsParser.parseArgResults(any)).thenReturn(arguments);

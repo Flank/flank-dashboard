@@ -1,10 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
 
+import 'package:links_checker/checker/error/links_checker_error.dart';
 import 'package:links_checker/checker/links_checker.dart';
-import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      ".checkFiles() throws a LinksCheckerException if the given files contain invalid links",
+      ".checkFiles() throws a LinksCheckerError if the given files contain invalid links",
       () {
         final invalidUrls = urls.map((url) => '$url/$invalidSuffix').join(',');
 
@@ -55,13 +55,13 @@ void main() {
 
         expect(
           () => linksChecker.checkFiles(files),
-          throwsA(isA<LinksCheckerException>()),
+          throwsA(isA<LinksCheckerError>()),
         );
       },
     );
 
     test(
-      ".checkFiles() throws a LinksCheckerException if the given files contain master-like links",
+      ".checkFiles() throws a LinksCheckerError if the given files contain master-like links",
       () {
         final masterLikeUrls =
             urls.map((url) => '$url/$validLikeSuffix').join(',');
@@ -70,7 +70,7 @@ void main() {
 
         expect(
           () => linksChecker.checkFiles(files),
-          throwsA(isA<LinksCheckerException>()),
+          throwsA(isA<LinksCheckerError>()),
         );
       },
     );

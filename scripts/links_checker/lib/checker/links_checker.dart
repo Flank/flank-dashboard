@@ -1,9 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
 
-import 'package:links_checker/exception/links_checker_exception.dart';
+import 'package:links_checker/checker/error/links_checker_error.dart';
 
 /// A class that checks that all Monorepo URLs point to the master branch
 /// in the given files.
@@ -31,7 +31,7 @@ class LinksChecker {
     }
 
     if (errors.isNotEmpty) {
-      throw LinksCheckerException(errors);
+      throw LinksCheckerError(errors);
     }
   }
 

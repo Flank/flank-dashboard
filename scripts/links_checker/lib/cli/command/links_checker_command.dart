@@ -2,13 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:links_checker/checker/links_checker.dart';
+import 'package:links_checker/cli/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:links_checker/utils/file_helper_util.dart';
 
 /// A [LinksCheckerCommand] used to check links validity in files.
 class LinksCheckerCommand extends Command<void> {
-  /// An [ArgumentsParser] used to parse the arguments for this command.
+  /// An [LinksCheckerArgumentsParser] used to parse the arguments for
+  /// this command.
   final LinksCheckerArgumentsParser argumentsParser;
 
   /// A class that provides methods for working with files.
