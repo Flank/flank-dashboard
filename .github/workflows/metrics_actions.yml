@@ -243,7 +243,7 @@ jobs:
       - name: Run tests
         run: pub run test_coverage --print-test-output --no-badge
         working-directory: metrics/ci_integrations/
-  
+
   cli-actions:
     name: CLI Actions
     runs-on: ubuntu-latest
@@ -278,6 +278,8 @@ jobs:
     name: Check Links Actions
     runs-on: macOS-latest
     timeout-minutes: 60
+    env:
+      REPOSITORY: ${{ secrets.REPOSITORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -299,7 +301,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart scripts/links_checker/bin/main.dart validate --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml' --repository=${{ secrets.REPOSITORY }}
+        run: dart scripts/links_checker/bin/main.dart validate --repository=$REPOSITORY --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml'
 
   check-license-actions:
     name: Check License Actions
