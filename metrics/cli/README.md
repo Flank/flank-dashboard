@@ -1,6 +1,10 @@
-# Metrics deploy CLI
+# Metrics CLI
 
-A simple command-line application build with Dart to deploy metrics app to GCP.
+A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
+
+<!-- add image -->
+
+Metrics CLI is available to install on macOS and Linux.
 
 # Build
 
