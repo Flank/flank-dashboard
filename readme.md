@@ -28,7 +28,7 @@ The Metrics Web Application displays the next project metrics on the dashboard:
 
 See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document to get more information about project metrics.
 
-![Metrics Dashboard](docs/images/dashboard_ui.png)
+![Metrics Dashboard](docs/images/dashboard_ui_dark.png)
 
 ## :test_tube: Api Mock Server
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
