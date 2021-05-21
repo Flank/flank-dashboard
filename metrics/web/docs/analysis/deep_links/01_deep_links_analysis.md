@@ -1,12 +1,11 @@
 # Deep Links Approaches Analysis
 > Feature description / User story.
-#update
-As a User, I want to pass direct links to project and/or project groups, so that other users can navigate easier.
+As a user, I want to pass direct links to project and/or project groups, so that other users can navigate easier.
 
 # Analysis
 > Describe the general analysis approach.
 
-During the analysis stage, we are going to investigate the implementation approaches for deep linking in the Metrics Web application and choose the most suitable one for us.
+During the analysis stage, we are going to investigate the implementation approaches for deep linking in Flutter Web applications and choose the most suitable one for the Metrics Web application.
 
 ## Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
@@ -42,7 +41,7 @@ Usually, query parameters are used to represent some filtering and grouping crit
 #### Pros
 - Dart provides a perfect API for parsing query parameters. Consider the following code snippet that demonstrates how to parse query parameters in Dart:
 ```dart
-  final url = Uri.parse("https://domain.com?foo=bar&bar=baz&array=q&array=w");
+final url = Uri.parse("https://domain.com?foo=bar&bar=baz&array=q&array=w");
 
 print(url.query); // foo=bar&bar=baz&array=q&array=w
 print(url.queryParameters); // {foo: bar, bar: baz, array: w}
@@ -66,7 +65,7 @@ Path segments are usually used to identify a specific resource. They may be more
 #### Cons
 - As the path segments of the URL are order-sensitive, the parsing is much more complicated, comparing to the query parameters. The following code snippet demonstrates the URL path segments parsing in Dart:
 ```dart
-  final url = Uri.parse("https://domain.com/foo/bar/baz");
+final url = Uri.parse("https://domain.com/foo/bar/baz");
 
 print(url.pathSegments); // [foo, bar, baz]
 ```
@@ -77,19 +76,20 @@ According to the [requirements](#requirements) listed above, and the comparison 
 
 ### Deep Links Integration Approach
 There are two main approaches for the integration of the deep links to the Metrics Web Application:
-- [Deep Links Integration Using DeepLinksNotifier](#deep-links-integration-using-deeplinksnotifier).
+- [Deep Links Integration Using ChangeNotifier](#deep-links-integration-using-changenotifier).
 - [Deep Links Integration Using Route Parameters](#deep-links-integration-using-route-parameters).
 
 Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md) describing `Navigator 2.0` integration in the Metrics Web Application) for navigation, both approaches are based on the features of the `Navigator 2.0` and differ only in the way the deep links are applied to the Metrics Web Application components.
 
 Now, let's review the listed approaches.
 
-### Deep Links Integration Using DeepLinksNotifier
-The main idea of this approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`.
+### Deep Links Integration Using ChangeNotifier
+The main idea of this approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`. __Note: the naming is a work in progress and may be changed during the `Design` phase.__
+
 The `DeepLinksNotifier` is responsible for:
 - Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links;
-- Providing page-specific deep links to corresponding page presenters to handle them;
-- Handling page-specific deep links updates provided by page presenters;
+- Providing page-specific deep links to corresponding page `ChangeNotifier`s to handle them;
+- Handling page-specific deep links updates provided by page `ChangeNotifier`s;
 - Providing deep link updates to the `NavigationNotifier`, which updates the browser history state to save a deep link update in a URL.
 
 #### Pros
@@ -120,9 +120,6 @@ According to the comparison above, we choose the [Deep Links Integration Using D
 > Create a simple prototype to confirm that implementing this feature is possible.
 
 #### Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links
-<details>
-  <summary>Code snippet</summary>
-
 ```dart
 /// An abstraction for page-specific deep links.
 abstract class PageDeepLinks {}
@@ -133,11 +130,11 @@ class DashboardPageDeepLinks implements PageDeepLinks {
   // Other fields, constructor here...
 
   /// Creates a new instance of the [DashboardPageDeepLinks] from the given
-  /// [routeParameters].
-  factory DashboardPageDeepLinks.fromRouteParameters(
-    Map<String, dynamic> routeParameters,
+  /// [map].
+  factory DashboardPageDeepLinks.fromMap(
+    Map<String, dynamic> map,
   ) {
-    final selectedProjectGroup = routeParameters['selected_project_group'];
+    final selectedProjectGroup = map['selected_project_group'];
 
     return DashboardPageDeepLinks(selectedProjectGroup: selectedProjectGroup);
   }
@@ -165,12 +162,8 @@ class DeepLinksNotifier extends ChangeNotifier {
 }
 ```
 
-</details>
 
-#### Providing page-specific deep links to corresponding page presenters
-<details>
-  <summary>Code snippet</summary>
-
+#### Providing page-specific deep links to corresponding page ChangeNotifiers
 ```dart
 /// An abstract class that represents a [ChangeNotifier] of a specific page.
 abstract class PageNotifier extends ChangeNotifier {
@@ -191,12 +184,7 @@ void deepLinksNotifierListener() {
 }
 ```
 
-</details>
-
-#### Handling page-specific deep links updates provided by page presenters
-<details>
-  <summary>Code snippet</summary>
-
+#### Handling page-specific deep links updates provided by page ChangeNotifiers
 ```dart
 /// A listener that triggers the [DeepLinksNotifier.handlePageDeepLinks] on [SomePageNotifier.pageDeepLinks]
 /// updates.
@@ -207,12 +195,7 @@ void somePageNotifierListener() {
 }
 ```
 
-</details>
-
 #### Providing deep links' updates to the `NavigationNotifier`
-<details>
-  <summary>Code snippet</summary>
-
 ```dart
 /// A listener that triggers the [NavigationNotifier.saveDeepLinks] on [DeepLinksNotifier.currentDeepLinks]
 /// updates.
@@ -222,21 +205,12 @@ void deepLinksNotifierListener() {
   navigationNotifier.saveDeepLinks(currentDeepLinks);
 }
 ```
-</details>
 
 ### System modeling
 > Create an abstract model of the system/feature.
 
-Consider the following class diagram that describes how the feature can be implemented:
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/deep_links_class_diagram.puml)
+Consider the following sequence diagrams that illustrate how the main requirements of the feature may work in the system:
 
-So, the main idea is to create a widget, let's name it a `DeepLinksDispatcher`, that is responsible for establishing the following connections:
-1. A connection between the `NavigationNotifier` and the `DeepLinksNotifier`. This connection allows the `DeepLinksNotifier` to handle each URL or query parameters update;
-2. A connection between the `DeepLinksNotifier` and the concrete page presenters. This connection allows the concrete page presenters to react on deep links updates (e.g. set filters, sorting criteria, etc.);
-3. A connection between the concrete page presenters and the `DeepLinksNotifier` to handle page deep links updates (e.g. search field updates, filtering events, etc.);
-4. A connection between the `DeepLinksNotifier` and the `NavigationNotifier` to update the browser history state to save the new deep links state.
-
-Consider the following sequence diagram that illustrates:
 - Parsing deep links
   ![Applying deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
 
