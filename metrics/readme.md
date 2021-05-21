@@ -16,8 +16,7 @@ The Metrics Web Application provides a beautiful and handy UI delivered by creat
 
 All the data that the Metrics components orchestrate, belongs only to you: it is stored in the Cloud Firestore database as a part of your Firebase project, the logging is performed on your Sentry account, if enabled, analytics are reported to your Firebase Analytics account, and so on. Moreover, to make the components even safer, we provide a great set of [Firestore Security rules](https://firebase.google.com/docs/firestore/security/get-started) for Cloud Firestore to protect the stored projects' data. The [Firebase Authentication](https://firebase.google.com/docs/auth) stands on the guard of the deployed web application and the stored data from insufficient access.
 
-![Auth UI](../docs/images/auth_ui_test.png)
-![Auth UI](../docs/images/auth_ui_dark.png)
+![Auth UI](../docs/images/auth_ui.png)
 
 ### Fully Integrated
 
