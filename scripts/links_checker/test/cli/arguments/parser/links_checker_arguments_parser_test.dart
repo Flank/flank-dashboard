@@ -8,14 +8,32 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksCheckerArgumentsParser", () {
-    const argumentsParser = LinksCheckerArgumentsParser();
-    final argResultsMock = _ArgResultsMock();
+    const pathsArgName = 'paths';
+    const ignorePathsArgName = 'ignore-paths';
+    const repositoryArgName = 'repository';
     const paths = ['file1', 'path/to/file2'];
+    const repository = 'owner/repository';
+    const argumentsParser = LinksCheckerArgumentsParser();
+
+    final argResultsMock = _ArgResultsMock();
     final pathsString = paths.join(' ');
 
-    setUpAll(() {
-      when(argResultsMock[any]).thenReturn('');
+    tearDown(() {
+      reset(argResultsMock);
     });
+
+    test(
+      ".configureArguments() configures the given arg parser to accept the repository option",
+      () {
+        final parser = ArgParser();
+
+        argumentsParser.configureArguments(parser);
+
+        final options = parser.options;
+
+        expect(options, contains(LinksCheckerArgumentsParser.repository));
+      },
+    );
 
     test(
       ".configureArguments() configures the given arg parser to accept the paths option",
@@ -58,9 +76,23 @@ void main() {
     );
 
     test(
+      ".parseArgResults() throws an ArgumentError if the given repository argument is null",
+      () {
+        when(argResultsMock[repositoryArgName]).thenReturn(null);
+        when(argResultsMock[pathsArgName]).thenReturn(pathsString);
+
+        expect(
+          () => argumentsParser.parseArgResults(argResultsMock),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
       ".parseArgResults() throws an ArgumentError if the given paths argument is null",
       () {
-        when(argResultsMock['paths']).thenReturn(null);
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn(null);
 
         expect(
           () => argumentsParser.parseArgResults(argResultsMock),
@@ -72,8 +104,9 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to null if the given ignore paths argument is null",
       () {
-        when(argResultsMock['paths']).thenReturn(pathsString);
-        when(argResultsMock['ignore-paths']).thenReturn(null);
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn(pathsString);
+        when(argResultsMock[ignorePathsArgName]).thenReturn(null);
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
@@ -84,7 +117,8 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with paths equal to an empty list if the given paths argument equals an empty string",
       () {
-        when(argResultsMock['paths']).thenReturn('');
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn('');
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
@@ -95,8 +129,9 @@ void main() {
     test(
       ".parseArgResults() creates a links checker arguments instance with ignorePaths equal to an empty list if the given ignore paths argument equals an empty string",
       () {
-        when(argResultsMock['paths']).thenReturn(pathsString);
-        when(argResultsMock['ignore-paths']).thenReturn('');
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn(pathsString);
+        when(argResultsMock[ignorePathsArgName]).thenReturn('');
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
@@ -107,7 +142,8 @@ void main() {
     test(
       ".parseArgResults() parses the given space-separated string of paths to the list of paths",
       () {
-        when(argResultsMock['paths']).thenReturn(pathsString);
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn(pathsString);
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 
@@ -118,7 +154,9 @@ void main() {
     test(
       ".parseArgResults() parses the given space-separated string of ignore paths to the list of ignore paths",
       () {
-        when(argResultsMock['ignore-paths']).thenReturn(pathsString);
+        when(argResultsMock[repositoryArgName]).thenReturn(repository);
+        when(argResultsMock[pathsArgName]).thenReturn(pathsString);
+        when(argResultsMock[ignorePathsArgName]).thenReturn(pathsString);
 
         final arguments = argumentsParser.parseArgResults(argResultsMock);
 

@@ -11,6 +11,14 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksCheckerCommand", () {
+    const paths = ['file1', 'path/to/file2'];
+    const repository = 'owner/repository';
+
+    final linksCheckerArguments = LinksCheckerArguments(
+      repository: repository,
+      paths: paths,
+      ignorePaths: [],
+    );
     final argumentsParser = _LinksCheckerArgumentsParserMock();
     final fileHelperUtil = _FileHelperUtilMock();
 
@@ -51,7 +59,7 @@ void main() {
       () {
         when(
           argumentsParser.parseArgResults(any),
-        ).thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
+        ).thenReturn(linksCheckerArguments);
 
         final command = LinksCheckerCommand(argumentsParser: argumentsParser);
         command.run();
@@ -63,11 +71,10 @@ void main() {
     test(
       ".run() uses the given file helper util's .getFiles() to get files from paths",
       () {
-        final paths = ['file1', 'path/to/file2'];
         when(fileHelperUtil.getFiles(paths)).thenReturn([]);
         when(
           argumentsParser.parseArgResults(any),
-        ).thenReturn(LinksCheckerArguments(paths: paths, ignorePaths: []));
+        ).thenReturn(linksCheckerArguments);
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -87,7 +94,7 @@ void main() {
         when(linksChecker.checkFiles([])).thenReturn(null);
         when(
           argumentsParser.parseArgResults(any),
-        ).thenReturn(LinksCheckerArguments(paths: [], ignorePaths: []));
+        ).thenReturn(linksCheckerArguments);
 
         final command = LinksCheckerCommand(
           linksChecker: linksChecker,
@@ -103,9 +110,11 @@ void main() {
       ".run() excludes files from the analyze based on the given ignore parameter",
       () {
         const ignorePath = 'path/';
+        const repository = 'owner/repository';
         final paths = ['file1', '${ignorePath}to/file2'];
         final ignore = [ignorePath];
         final arguments = LinksCheckerArguments(
+          repository: repository,
           paths: paths,
           ignorePaths: ignore,
         );

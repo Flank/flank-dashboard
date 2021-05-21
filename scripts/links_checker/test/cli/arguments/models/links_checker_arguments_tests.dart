@@ -8,23 +8,40 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksCheckerArguments", () {
+    const paths = ['1 2'];
+    const ignore = ['2 3'];
+    const repository = 'owner/repository';
+
     test(
-      "throws an ArgumentError if paths value is null",
+      "throws an ArgumentError if the given repository is null",
       () {
-        expect(() => LinksCheckerArguments(paths: null), throwsArgumentError);
+        expect(
+          () => LinksCheckerArguments(repository: null, paths: paths),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given paths value is null",
+      () {
+        expect(
+          () => LinksCheckerArguments(repository: repository, paths: null),
+          throwsArgumentError,
+        );
       },
     );
 
     test(
       "creates an instance with the given parameters",
       () {
-        const paths = ['1 2'];
-        const ignore = ['2 3'];
         final arguments = LinksCheckerArguments(
+          repository: repository,
           paths: paths,
           ignorePaths: ignore,
         );
 
+        expect(arguments.repository, equals(repository));
         expect(arguments.paths, equals(paths));
         expect(arguments.ignorePaths, equals(ignore));
       },

@@ -7,6 +7,9 @@ import 'package:links_checker/cli/arguments/models/links_checker_arguments.dart'
 /// A class that provides methods for registering
 /// and parsing the [LinksCheckerArguments].
 class LinksCheckerArgumentsParser {
+  /// A name of the repository argument.
+  static const String repository = 'repository';
+
   /// A name of the paths argument.
   static const String paths = 'paths';
 
@@ -18,6 +21,14 @@ class LinksCheckerArgumentsParser {
 
   /// Configures the given [argParser] to accept the required arguments.
   void configureArguments(ArgParser argParser) {
+    argParser.addOption(
+      repository,
+      help: 'A string representing the owner and the name '
+          'of the target Github repository (e.g. "owner/repository")',
+      valueHelp: "'owner/repository'",
+      abbr: 'r',
+    );
+
     argParser.addOption(
       paths,
       help: 'A string representing the space-separated '
@@ -37,10 +48,15 @@ class LinksCheckerArgumentsParser {
 
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
+    final repositoryString = argResults[repository] as String;
     final pathsList = _argumentToList(argResults, paths);
     final ignoreList = _argumentToList(argResults, ignorePaths);
 
-    return LinksCheckerArguments(paths: pathsList, ignorePaths: ignoreList);
+    return LinksCheckerArguments(
+      repository: repositoryString,
+      paths: pathsList,
+      ignorePaths: ignoreList,
+    );
   }
 
   /// Retrieves argument [List] for the given [option] from the given [argResults].
