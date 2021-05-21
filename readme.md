@@ -15,13 +15,13 @@ The Metrics project integrates with the following CI tools to collect software p
 - [Github Actions](https://docs.github.com/en/actions/quickstart)
 - [Jenkins](https://jenkins.io/doc/)
 
-The Metrics Web Application displays next project metrics on the dashboard:
+The Metrics Web Application displays the next project metrics on the dashboard:
 | Metric | Description |
 | --- | --- |
-| `Build Status`   | The result of the latest build. It can be successful,failed, unknown, or in-progress. |
-| `Build Results`   | Includes the build results and duration of the latest builds. It can be successful,failed, unknown, or in-progress. |
+| `Build Status`   | The result of the latest build. |
+| `Build Results`   | Includes the build results and duration of the latest builds. |
 | `Performance`   | An average build duration of successful builds by the last 7 days, excluding the queue time. |
-| `Builds`   | A count of performed builds of the project per week |
+| `Builds`   | A count of performed builds of the project per week. |
 | `Stability`   | A ratio of successful builds to finished builds for the last 30 builds. |
 | `Coverage`   | A last successful build's code coverage percent. |
 
