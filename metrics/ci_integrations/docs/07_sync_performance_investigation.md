@@ -4,7 +4,7 @@ The CI Integrations tool stands for builds synchronization for the specified pro
 
 ## Problem Statement
 
-As the CI Integrations tool makes the synchronized builds available on the Metrics Web Application, one may want to monitor builds and the related project's metrics as soon as possible. To make it possible, the tool synchronizes in-progress builds as well as the finished ones. Thus, one is able to automate builds synchronization by triggering it when a build is started. However, it appears that a pipeline for build synchronization may take too long to finish. Sometimes even longer than the whole build. In this document, we'll try to discover reasons for such behavior and possible solutions to reduce sync time.
+As the CI Integrations tool makes the synchronized builds available on the Metrics Web Application, one may want to monitor builds and the related project's metrics as soon as possible. To make it possible, the tool synchronizes in-progress builds as well as the finished ones. Thus, one can automate builds synchronization by triggering it when a build is started. However, it appears that a pipeline for build synchronization may take too long to finish. Sometimes even longer than the whole build. In this document, we'll try to discover reasons for such behavior and possible solutions to reduce sync time.
 
 The following timing diagram demonstrates the desired behavior for a build syncing:
 
@@ -32,13 +32,13 @@ ci_integrations sync --config-file=config.yaml --initial-sync-limit=1 --no-cover
 
 The idea is to test the syncing of build data itself without fetching any coverage data to simulate in-progress build syncing. The `config.yaml` file contains configurations for either Buildkite or GitHub Actions as a `source`. Also, the configuration file is ready to use meaning that we shouldn't evaluate it with environment variables.
 
-The below subsections contain investigation results for different sources. Let's take a look on what the different timing sections mean:
+The below subsections contain investigation results for different sources. Let's take a look at what the different timing sections mean:
 
-- **Starting** represents a duration of the tool's starting time that includes parsing configuration file, creating appropriate clients, etc., and before the sync is started.
-- **Fetching** represents a duration of fetching builds from the source that are to be synced.
-- **Adding** represents a duration of adding builds to the destination.
-- **Efficient** represents a duration of tasks performed by the tool that satisfies our purpose (the sum of **Starting**, **Fetching**, and **Adding** durations).
-- **Full** represents an execution duration of the tool from start to exit.
+- **Starting** represents the duration of the tool's starting time that includes parsing a configuration file, creating appropriate clients, etc., and before the sync is started.
+- **Fetching** represents the duration of fetching builds from the source that are to be synced.
+- **Adding** represents the duration of adding builds to the destination.
+- **Efficient** represents the duration of tasks performed by the tool that satisfies our purpose (the sum of **Starting**, **Fetching**, and **Adding** durations).
+- **Full** represents the execution duration of the tool from start to exit.
 
 ### GitHub Actions
 
@@ -70,7 +70,7 @@ Analyzing the real cases for one-build synchronization demonstrates the followin
 |---|---|
 |_Average_|3000 ms|
 
-Although the above results are consistent, it is possible that the algorithm itself requires improvements. Let's take a look on average results for five synchronization trials of 100 builds.
+Although the above results are consistent, it is possible that the algorithm itself requires improvements. Let's take a look at the average results for five synchronization trials of 100 builds.
 
 ||Starting|Fetching|Adding|Efficient|Full|
 |---|---|---|---|---|----|
@@ -92,7 +92,7 @@ The GitHub Actions job that synchronizes builds performs the following steps:
 1. Set up job.
 2. Checkout the repository.
 3. Download the CI Integration tool.
-4. Wait for build to finish.
+4. Wait for the build to finish.
 5. Apply environment variables to the configuration file.
 6. Synchronize builds data.
 7. Post Checkout clean up.
@@ -100,7 +100,7 @@ The GitHub Actions job that synchronizes builds performs the following steps:
 
 The initial step and the two last are performed automatically - the job specification lists only steps from 2 to 6. Also, we should note that the 4th step is performed only if the sync workflow should sync the finished build. Otherwise, the 3rd step is skipped. More precisely, this means that if the workflow is dispatched with the `build_started` event, the job shouldn't wait for a build to finish as the sync is performed for the running build. On the other hand, if the workflow is dispatched with the `build_finished` event, the job should wait for the build to finish before performing sync.
 
-Although the job performs two additional steps after the sync is finished, they don't really matter as the build is already synced. The steps that precede the synchronization influences the time spent for a new build to be available in the destination database and appear on the Metrics Web Application. Therefore, we focus on steps from initial to the sync step itself (0-5).
+Although the job performs two additional steps after the sync is finished, they don't really matter as the build is already synced. The steps that precede the synchronization influence the time spent for a new build to be available in the destination database and appear on the Metrics Web Application. Therefore, we focus on steps from the initial to the sync step itself (1-6).
 
 The following table contains the information about the execution time of each step of the sync job. The original sample contains eleven objects representing a single job run each. Please note that the value `0 s` (zero seconds) actually means `close to 0s` - the reason is that GitHub Actions API and web UI don't provide the precise value in milliseconds.
 
@@ -142,20 +142,20 @@ The following table contains the information about the execution time of each st
 |_Median_|3 s|2 s|26 s|
 |_Mode_|3 s|2 s|26 s|
 
-As we can see from the table above, the synchronization pipeline is pretty stable. The execution time values for different sync runs are distributed around the average value with a small variance. In average, the sync pipeline executes in around `32 seconds`.
+As we can see from the table above, the synchronization pipeline is pretty stable. The execution time values for different sync runs are distributed around the average value with a small variance. On average, the sync pipeline executes in around `32 seconds`.
 
 ### Analysis
 
-As we can see from the sections above, the synchronization time strongly depends on the pipeline structure and a CI tool. A Buildkite pipeline is more stable than a GitHub Actions job, but takes longer. The GitHub Actions job performs faster but some steps have unexpected behavior and may cause a significant delay.
+As we can see from the sections above, the synchronization time strongly depends on the pipeline structure and a CI tool. A Buildkite pipeline is more stable than a GitHub Actions job but takes longer. The GitHub Actions job performs faster but some steps have unexpected behavior and may cause a significant delay.
 
-Both integrations could be optimized to run the sync faster. However, the appropriate GitHub Actions job requires changing a pipeline in a way to prevent checking out a repository. This will remove a risky step from the job and therefore speed it up in average.
+Both integrations could be optimized to run the sync faster. However, the appropriate GitHub Actions job requires changing a pipeline in a way to prevent checking out a repository. This will remove a risky step from the job and therefore speed it up on average.
 
 For the Buildkite CI, the pipeline should be updated to avoid unnecessary steps as logging. Also, it is possible to optimize the pipeline by pre-installing `curl` and CI Integrations tool by creating an appropriate Docker image.
 
 ## Conclusions
 
-Taking in account the results of investigation, we can state the following:
+Taking into account the results of the investigation, we can state the following:
 
-1. The synchronization algorithm takes a reasonable time for one-build syncing, but should be reviewed for different integrations for many-builds syncing.
+1. The synchronization algorithm takes a reasonable time for one-build syncing but should be reviewed for different integrations for many-builds syncing.
 2. The synchronization time strongly depends on the pipeline structure and a CI tool.
 3. The synchronization pipelines and jobs can be optimized by removing unnecessary steps and reducing the required ones.
