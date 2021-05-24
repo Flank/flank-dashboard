@@ -125,6 +125,29 @@ Here is a table of security rules applied to the `build` collection:
 | `create`, `update` | [`isAccessAuthorized`](#isaccessauthorized), [`isBuildValid`](#isbuildvalid) |
 | `delete`           | [`Prohibited`](#prohibited) |
 
+### The `build_days` collection
+
+The `build_days` collection contains the aggregated project metrics of builds performed during a single day. The single document of this collection stands for a single project metrics aggregation for a specific project.
+
+Consider the following table that describes the fields of a document within the `build_days` collection:
+
+| Field                      | Description                                                                            |
+|----------------------------|----------------------------------------------------------------------------------------|
+| `projectId`                | An id of the project this build day describes.                                         |
+| `day`                      | A timestamp of a day this aggregation belongs to.                                      |
+| `successful`               | A total number of successful builds performed during this build day.                   |
+| `failed`                   | A total number of failed builds performed during this build day.                       |
+| `inProgress`               | A total number of in progress builds started during this build day.                    |
+| `successfulBuildsDuration` | A total duration in milliseconds of successful builds performed during this build day. |
+
+Here is a table of security rules applied to the `build_days` collection:
+
+| Operation | [Security Rules](#security-rules-description) |
+|-----------|---------------------------------------------|
+| `write`   | [`Prohibited`](#prohibited)                 |
+| `read`    | [`isAccessAuthorized`](#isaccessauthorized) |
+
+
 ### The `project_groups` collection
 
 The `project_groups` collection contains project group data. The single document of this collection contains data of a specific project group.
