@@ -64,45 +64,25 @@ The database metadata is represented by the `DatabaseMetadata` entity from the [
 
 Consider the class diagram below that demonstrates the main classes, and their relationships needed to introduce the `DatabaseVersionSyncStage` to the CI Integrations tool.
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_class_diagram.puml)
 
-// TODO sequence
+Let's examine the following sequence diagram that explains the process of performing the required database compatibility check during the project metrics data synchronization:
 
-The code snippet below demonstrates the required compatibility checks within the `DatabaseVersionSyncStage` `call` method:
-
-```dart
-@override
-Future<InteractionResult> call(SyncConfig config) async {
-  final supportedDatabaseVersion = config.supportedDatabaseVersion;
-  
-  final databaseMetadataInteraction = await destinationClient.fetchDatabaseMetadata();
-  if(databaseMetadataInteraction.isError) {
-    // fail sync stage due to the database metadata fetching failed
-  }
-  
-  final databaseMetadata = databaseMetadataInteraction.result;
-
-  final databaseVersion = databaseMetadata.version;
-  if(supportedDatabaseVersion != databaseVersion) {
-    // fail sync stage due to the database version incompatibility
-  }
-  
-  if(databaseMetadata.isUpdating) {
-    // fail sync stage due to the database is updating
-  }
-}
-```
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_sequence_diagram.puml)
 
 # Dependencies
-
 > What is the project blocked on?
 >
 > What will be impacted by the project?
 
-# Testing
+This project will impact the process of the project metrics data synchronization.
 
+# Testing
 > How will the project be tested?
 
-# Results
+This project will be tested using unit tests.
 
+# Results
 > What was the outcome of the project?
+
+This document described the process of getting the supported database version of the CI Integrations tool and verifying its compatibility with the current Metrics database version. 

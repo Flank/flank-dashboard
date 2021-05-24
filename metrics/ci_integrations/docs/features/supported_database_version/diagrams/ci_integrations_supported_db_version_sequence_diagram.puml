@@ -1,0 +1,69 @@
+@startuml
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+
+actor Bob
+participant SyncCommand << (C,#ADD1B2) >>
+participant ApplicationMetadata << (C,#ADD1B2) >>
+participant SyncStagesFactory << (C,#ADD1B2) >>
+participant CiIntegration << (C,#ADD1B2) >>
+participant DatabaseVersionSyncStage << (C,#ADD1B2) >>
+participant FirestoreDestinationClientAdapter << (C,#ADD1B2) >>
+
+Bob -> SyncCommand : run()
+activate SyncCommand
+
+SyncCommand -> ApplicationMetadata : .supportedDatabaseVersion
+activate ApplicationMetadata
+
+ApplicationMetadata --> SyncCommand : supportedDatabaseVersion
+deactivate ApplicationMetadata
+
+SyncCommand --> SyncCommand : creates SyncConfig
+SyncCommand --> SyncCommand : creates SourceClient, DestinationClient
+
+SyncCommand -> SyncStagesFactory : create(sourceClient, destinationClient)
+activate SyncStagesFactory
+
+SyncStagesFactory -> DatabaseVersionSyncStage : DatabaseVersionSyncStage(sourceClient, destinationClient)
+activate DatabaseVersionSyncStage
+
+DatabaseVersionSyncStage --> SyncStagesFactory : databaseVersionSyncStage
+SyncStagesFactory --> SyncStagesFactory : creates other `SyncStage`s
+
+SyncStagesFactory --> SyncCommand : syncStages
+deactivate SyncStagesFactory
+
+SyncCommand -> CiIntegration : CiIntegration(syncStages)
+activate CiIntegration
+
+CiIntegration --> SyncCommand : ciIntegration
+
+SyncCommand -> CiIntegration : sync(syncConfig)
+
+CiIntegration -> DatabaseVersionSyncStage : call(syncConfig)
+
+DatabaseVersionSyncStage -> FirestoreDestinationClientAdapter : fetchDatabaseMetadata()
+activate FirestoreDestinationClientAdapter
+
+FirestoreDestinationClientAdapter --> DatabaseVersionSyncStage : databaseMetadata
+deactivate FirestoreDestinationClientAdapter
+
+alt Database Is Not Updating And Compatible
+    DatabaseVersionSyncStage --> CiIntegration : InteractionResult.success
+    CiIntegration --> CiIntegration : Runs next `SyncStage`s
+    CiIntegration --> SyncCommand : InteractionResult.success
+    SyncCommand --> Bob : Sync finished
+else Database Is Updating | Not Compatible | Metadata Fetch Failed
+    DatabaseVersionSyncStage --> CiIntegration : InteractionResult.failure
+    deactivate DatabaseVersionSyncStage
+
+    CiIntegration --> SyncCommand : InteractionResult.failure
+    deactivate CiIntegration
+
+    SyncCommand --> Bob : Sync finished with an error
+    deactivate SyncCommand
+end
+@enduml
