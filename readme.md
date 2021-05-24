@@ -10,6 +10,7 @@ Let's review each of them in a bit more details:
 
 ## :bar_chart: Metrics
 [Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality. 
+
 The Metrics project integrates with the following CI tools to collect software project metrics:
 - [Buildkite](https://buildkite.com/docs/tutorials/getting-started)
 - [Github Actions](https://docs.github.com/en/actions/quickstart)
@@ -19,12 +20,12 @@ The Metrics Web Application displays the next project metrics on the dashboard:
 
 | Metric | Description |
 | --- | --- |
-| `Build Status`   | The result of the latest build. |
-| `Build Results`   | The build results and duration of the last 30 builds. |
-| `Performance`   | An average build duration of successful builds by the last 7 days, excluding the queue time. |
-| `Builds`   | A count of performed builds of the project per week. |
-| `Stability`   | A ratio of successful builds to finished builds for the last 30 builds. |
-| `Coverage`   | A last successful build's code coverage percent. |
+| `Build Status`   | A graph indicator displaying the result of the latest build in front of the project's name. |
+| `Build Results`   | A bar chart displaying the build results and duration of the last 30 builds. |
+| `Performance`   | A sparkline graph displaying an average build duration of successful builds by the last 7 days, excluding the queue time. |
+| `Builds`   | A scorecard displaying a count of performed builds of the project per week. |
+| `Stability`   | A circular graph displaying a ratio of successful builds to finished builds for the last 30 builds. |
+| `Coverage`   | A circular graph displaying a last successful build's code coverage percent. |
 
 See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document to get more information about project metrics.
 
