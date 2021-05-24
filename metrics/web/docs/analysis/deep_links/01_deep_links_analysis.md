@@ -164,7 +164,7 @@ class DeepLinksNotifier extends ChangeNotifier {
     if(routeConfiguration.name = RouteName.dashboard) {
       final routeParameters = routeConfiguration.routeParameters;
 
-      _currentDeepLinks = DashboardPageDeepLinks.fromRouteParameters(routeParameters);
+      _currentDeepLinks = DashboardPageDeepLinks.fromMap(routeParameters);
       notifyListeners();
     }
     // Other routes handling...
