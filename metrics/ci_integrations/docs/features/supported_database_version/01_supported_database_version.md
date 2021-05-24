@@ -41,7 +41,7 @@ To sum up, the synchronization algorithm now must include the `SyncStage`s in th
 ## DatabaseVersionSyncStage
 The `DatabaseVersionSyncStage` needs the following values to be able to detect whether the CI Integrations tool is compatible with the current database:
 - [Supported database version](#Supported-Database-Version) of this CI Integrations tool;
-- [Database metadata](#Database-Metadata).
+- [Database metadata](#Getting-Database-Metadata).
 
 Let's review the way of getting each of them separately:
 
@@ -52,7 +52,9 @@ Since the CI Integrations tool is built with the `SUPPORTED_DATABASE_VERSION` en
 
 When we have the `SUPPORTED_DATABASE_VERSION` value, we need to provide it to the `DatabaseVersionSyncStage`.  To do that, we can add a `supportedDatabaseVersion` field to the `SyncConfig` class to store it and call the `DatabaseVersionSyncStage`s with the `SyncConfig` instance so the `SUPPORTED_DATABASE_VERSION` value is accessible.
 
-### Database Metadata
+Let's proceed to the next [section](#Getting-Database-Metadata) and consider the ways of getting the Firestore database metadata in the CI Integrations tool.
+
+### Getting Database Metadata
 > Explain the way of loading the database metadata.
 
 # Making things work
