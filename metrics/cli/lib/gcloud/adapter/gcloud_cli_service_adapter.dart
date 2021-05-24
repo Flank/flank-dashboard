@@ -36,10 +36,11 @@ class GCloudCliServiceAdapter implements GCloudService {
   @override
   Future<String> createProject() async {
     final projectId = _generateProjectId();
+    final gcloudProjectName = _promptGCloudProjectName(projectId);
 
-    await _gcloudCli.createProject(projectId);
-
+    await _gcloudCli.createProject(projectId, gcloudProjectName);
     await _gcloudCli.listRegions(projectId);
+
     final regionPrompt = _prompter.prompt(GCloudStrings.enterRegionName);
     final region = regionPrompt.trim();
 
@@ -69,6 +70,28 @@ class GCloudCliServiceAdapter implements GCloudService {
   String _generateProjectId() {
     final randomString = randomAlphaNumeric(5).toLowerCase();
     return 'metrics-$randomString';
+  }
+
+  /// Prompts the GCloud project name.
+  ///
+  /// Uses the [projectId] as the project's name
+  /// if the user doesn't specify the name.
+  String _promptGCloudProjectName(String projectId) {
+    // 1, 2, 3, 4, 5, 6, 7
+    bool userConfirm = false;
+    String projectName;
+
+    while (!userConfirm) {
+      final userProjectName = _prompter.prompt(GCloudStrings.enterProjectName);
+      final projectNameTrimmed = userProjectName.trim();
+
+      projectName = projectNameTrimmed.isEmpty ? projectId : projectNameTrimmed;
+      userConfirm = _prompter.promptConfirm(GCloudStrings.confirmProjectName(
+        projectName,
+      ));
+    }
+
+    return projectName;
   }
 
   @override

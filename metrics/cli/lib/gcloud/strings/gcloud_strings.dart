@@ -22,6 +22,9 @@ If you have already accepted the terms of the GCloud service, skip this step. Ot
 
 Once you are done, press the ENTER to continue:''';
 
+  static const String enterProjectName =
+      'Please, enter the GCloud project name that suits you best, otherwise, the generated project identifier would be used';
+
   static String configureOAuth(String projectId) => '''
 The Metrics Web application deployed successfully! Use the following link for the correct work of the Metrics project: https://$projectId.firebaseapp.com. 
 
@@ -39,4 +42,7 @@ The $projectId GCloud project has been created successfully!
 If you want to configure the organization for the $projectId project, use the following guide https://cloud.google.com/resource-manager/docs/project-migration.
 
 Once you are done, press the ENTER to continue:''';
+
+  static String confirmProjectName(String projectName) =>
+      'The $projectName would be used as the name of your project, do you agree?(y/n)';
 }

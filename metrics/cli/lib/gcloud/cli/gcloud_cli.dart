@@ -14,8 +14,8 @@ class GCloudCli extends Cli {
   }
 
   /// Creates a new GCloud project with the given [projectId].
-  Future<void> createProject(String projectId) {
-    return run(['projects', 'create', projectId]);
+  Future<void> createProject(String projectId, String projectName) {
+    return run(['projects', 'create', projectId, '--name', projectName]);
   }
 
   /// Displays a list of the GCloud application's available regions
