@@ -1,38 +1,63 @@
 # Metrics CLI
 
-A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
+A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules) and general setup.
 
 <!-- add image -->
 
 Metrics CLI is available to install on macOS and Linux.
 
-# Build
+# Requirements
 
-```
+The `Metrics CLI` based on a list of third-party packages. To view the recommended versions of the dependencies, please check out the [dependencies](#https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml) file.
+
+# Installation
+
+The `Metrics CLI` is available via source code and as a downloadable binary from the releases page. 
+
+## Build from the source
+
+If you've downloaded the [Metrics CLI](#https://github.com/platform-platform/dashboard/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
+
+```bash
 make build
+```
+
+Now you can execute `Metrics CLI` commands using the next form:
+
+```bash
+./build/metrics <command>
+``` 
+
+## Use the releases
+
+You can download the built Metrics CLI tool from the [CLI releases](#xxx) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+- [`CLI for Linux`]();
+- [`CLI for macOS`]().
+
+Now you can use the binary to run `Metrics CLI` commands:
+
+```bash
+metrics <command>
 ```
 
 # Usage
 
-Get supported commands.
+The Metrics CLI command has the following structure:
 
-```
-build/metrics
-```
-
-
-Check env and dependencies.
-
-```
-build/metrics doctor
+```bash
+metrics <command> [arguments]
 ```
 
-Deploy 
+# Available commands
 
-```
-build/metrics deploy
-```
+The following table lists commands with their descriptions:
 
+| Command | Description |
+| --- | --- |
+| `doctor`   | Shows the version information of the third-party dependencies. |
+| `deploy`   | Creates GCloud and Firebase projects for Metrics components and deploys the Metrics Web Application. |
+
+# License
 
 Created from templates made available by Stagehand under a BSD-style
 [license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
