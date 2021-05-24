@@ -73,7 +73,6 @@ package common {
 
 package common as common1 {
     package model as common1.model1 {
-
         class WebMetricsConfig {
             + {static} googleSignInClientIdName : String
             + {static} sentryDsnName : String
@@ -176,6 +175,9 @@ package util {
     }
 }
 
+Services --> services : uses
+ServicesFactory --> Services : creates
+
 Deployer -down-> NpmService : uses
 Deployer -down-> GitService : uses
 Deployer -down-> FlutterService : uses
@@ -184,30 +186,21 @@ Deployer -down-> FirebaseService : uses
 Deployer -down-> SentryService : uses
 Deployer -left-> FileHelper : uses
 Deployer -up-> DeployConstants : uses
-Deployer -> Services : uses
-Deployer -down-> WebMetricsConfig : uses
-Deployer -> SentryConfig : uses
+Deployer --> Services : uses
+Deployer ---> WebMetricsConfig : uses
+Deployer ---> SentryConfig : uses
 Deployer -> DeployPaths : uses
 Deployer -up-> DeployPathsFactory : uses
 Deployer -up-> DeployStrings : uses
 
 DeployCommand --> Deployer : uses
 DeployCommand -down-> DeployerFactory : uses
-DeployerFactory -left-> ServicesFactory : uses
 
-ServicesFactory -left-> Services : creates
+DeployerFactory -right> ServicesFactory : uses
 DeployerFactory -down-> Deployer : creates
 DeployPathsFactory -right-> DeployPaths : creates
 
-Services -up-> NpmService : uses
-Services -up-> GitService : uses
-Services -up-> FlutterService : uses
-Services -up-> GCloudService : uses
-Services -up-> FirebaseService : uses
-Services -up-> SentryService : uses
-
 WebMetricsConfig -> SentryConfig : uses
-
-WebMetricsConfig .up.|> MetricsConfig
+WebMetricsConfig .down.|> MetricsConfig
 
 @enduml

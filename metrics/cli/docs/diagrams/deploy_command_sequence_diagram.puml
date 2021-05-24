@@ -145,7 +145,7 @@ else
 Bob -> GCloudService : skips configuring OAuth origins
 end
 
-GCloudService --> Deployer -- : OAuth origins have been configured
+GCloudService --> Deployer -- : OAuth origins configuration finished
 
 Deployer --> Bob : The deployment has finished successfully
 Deployer --> Bob : Deleting the temporary Metrics directory
