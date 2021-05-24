@@ -84,7 +84,7 @@ void main() {
     );
 
     test(
-      ".run() uses the given file helper util's .getFiles() to get files from paths",
+      ".run() gets the files with the given paths using the file helper",
       () {
         when(fileHelperUtil.getFiles(paths)).thenReturn([]);
         when(

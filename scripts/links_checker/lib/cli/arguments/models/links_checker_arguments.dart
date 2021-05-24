@@ -3,7 +3,7 @@
 
 import 'package:meta/meta.dart';
 
-/// A class that represents the links checker arguments.
+/// A class that represents the links checker command-line arguments.
 class LinksCheckerArguments {
   /// A target repository to analyze.
   final String repository;

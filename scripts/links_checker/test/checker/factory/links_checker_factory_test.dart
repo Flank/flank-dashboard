@@ -22,17 +22,14 @@ void main() {
       ".create() returns a links checker with the prefixes containing the given repository",
       () {
         const repository = 'owner/repository';
-        const expectedPrefixes = [
-          'raw.githubusercontent.com/$repository',
-          'github.com/$repository/blob',
-          'github.com/$repository/raw',
-          'github.com/$repository/tree',
-        ];
 
         final linksChecker = factory.create(repository);
 
         expect(linksChecker, isA<LinksChecker>());
-        expect(linksChecker.repositoryPrefixes, equals(expectedPrefixes));
+        expect(
+          linksChecker.repositoryPrefixes,
+          everyElement(contains(repository)),
+        );
       },
     );
   });

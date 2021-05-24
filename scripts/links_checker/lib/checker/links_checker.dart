@@ -49,7 +49,7 @@ class LinksChecker {
     final lines = fileContent.split('\n');
 
     for (int i = 0; i < lines.length; ++i) {
-      final invalidUrls = _parseRepositoryUrls(lines[i]).skipWhile(_isValidUrl);
+      final invalidUrls = _getRepositoryUrls(lines[i]).skipWhile(_isValidUrl);
 
       final descriptions = invalidUrls.map(
         (url) => 'In ${file.path}, line ${i + 1}, $url',
@@ -72,15 +72,10 @@ class LinksChecker {
     }
   }
 
-  /// Returns a list of repository URLs from the given [string] using the
+  /// Returns a list of repository URLs from the given [string] having the
   /// [repositoryPrefixes].
-  List<String> _parseRepositoryUrls(String string) {
-    final urls = urlRegExp
-        .allMatches(string)
-        .map(
-          (match) => match.group(0),
-        )
-        .toList();
+  List<String> _getRepositoryUrls(String string) {
+    final urls = urlRegExp.allMatches(string).map((match) => match.group(0));
 
     return urls
         .where(
@@ -91,7 +86,7 @@ class LinksChecker {
         .toList();
   }
 
-  /// Returns `true` if the given [url] points to `master` branch or is a root
+  /// Detects whether the given [url] points to `master` branch or is a root
   /// link.
   bool _isValidUrl(String url) {
     final masterPrefixes =

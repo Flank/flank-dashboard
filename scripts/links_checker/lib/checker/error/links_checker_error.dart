@@ -3,7 +3,8 @@
 
 /// A class that represents the links checker [Error].
 class LinksCheckerError extends Error {
-  /// A [List] with this error's descriptions.
+  /// A [List] of error descriptions that provides an information
+  /// about concrete links checker errors.
   final List<String> errors;
 
   /// Creates a new instance of the [LinksCheckerError]

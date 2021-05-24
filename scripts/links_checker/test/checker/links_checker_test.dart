@@ -22,14 +22,13 @@ void main() {
       'https://github.com/platform-platform/monorepo/raw',
       'https://raw.com',
     ];
+    const validSuffix = 'master/';
+    const invalidSuffix = 'invalid/';
+    const validLikeSuffix = 'master_like/';
 
     final linksChecker = LinksChecker(urls);
     final file = _FileMock();
     final files = <File>[file];
-
-    const validSuffix = 'master/';
-    const invalidSuffix = 'invalid/';
-    const validLikeSuffix = 'master_like/';
 
     tearDown(() {
       reset(file);
