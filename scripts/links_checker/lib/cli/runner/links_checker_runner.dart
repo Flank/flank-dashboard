@@ -1,8 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:args/command_runner.dart';
-import 'package:links_checker/command/links_checker_command.dart';
+import 'package:links_checker/cli/command/links_checker_command.dart';
 
 /// A [CommandRunner] for the links checker CLI.
 class LinksCheckerRunner extends CommandRunner<void> {
