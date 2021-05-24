@@ -10,7 +10,7 @@ The following timing diagram demonstrates the desired behavior for a build synci
 
 ![Ideal timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/sync_perf_investigate/metrics/ci_integrations/docs/diagrams/sync_ideal_timing_diagram.puml)
 
-But the actual behavior differs from the expected as the build sync can take too long and may cause the problems demonstrated in the diagrams below. The first case demonstrates the long-running sync when a build is started causing the finishing sync to appear far after the build is actually finished. The second example demonstrates the long-running sync as well but in this case, we have two runners for builds syncing. In the second diagram, the starting sync takes too long and finishes at the same time as the finishing build causing. The UI doesn't display this build as running, or display for a few seconds, though the build may take longer.
+But the actual behavior differs from the expected as the build sync can take too long and may cause the problems demonstrated in the diagrams below. The first case demonstrates the long-running sync when a build is started causing the finishing sync to appear far after the build is finished. The second example demonstrates the long-running sync as well but in this case, we have two runners for builds syncing. In the second diagram, the starting sync takes too long and finishes at the same time as the finishing build causing. The UI doesn't display this build as running, or display for a few seconds, though the build may take longer.
 
 ![problematic queue timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/sync_perf_investigate/metrics/ci_integrations/docs/diagrams/sync_problematic_queue_timing_diagram.puml)
 
@@ -62,7 +62,7 @@ The following table contains the average duration in milliseconds for different 
 
 ### Analysis
 
-Evidently, the execution duration changes depending on the real distance between the CI Integrations tool runner and the CI's API server (request-response time). Running the CI Integration tool on a local machine in East Europe leads to the above results. Also, the network connection quality affects the request-response time and may cause the tool execution to take too long.
+The execution duration changes depending on the real distance between the CI Integrations tool runner and the CI's API server (request-response time). Running the CI Integration tool on a local machine in East Europe leads to the above results. Also, the network connection quality affects the request-response time and may cause the tool execution to take too long.
 
 Analyzing the real cases for one-build synchronization demonstrates the following result for **GitHub Actions** (similar to the above experiments, we average ten different trials but for different builds and with enabled coverage fetching):
 
@@ -70,7 +70,7 @@ Analyzing the real cases for one-build synchronization demonstrates the followin
 |---|---|
 |_Average_|3000 ms|
 
-Although the above results are consistent, it is possible that the algorithm itself requires improvements. Let's take a look at the average results for five synchronization trials of 100 builds.
+Although the above results are consistent, the algorithm itself may require improvements. Let's take a look at the average results for five synchronization trials of 100 builds.
 
 ||Starting|Fetching|Adding|Efficient|Full|
 |---|---|---|---|---|----|
@@ -100,9 +100,9 @@ The GitHub Actions job that synchronizes builds performs the following steps:
 
 The initial step and the two last are performed automatically - the job specification lists only steps from 2 to 6. Also, we should note that the 4th step is performed only if the sync workflow should sync the finished build. Otherwise, the 3rd step is skipped. More precisely, this means that if the workflow is dispatched with the `build_started` event, the job shouldn't wait for a build to finish as the sync is performed for the running build. On the other hand, if the workflow is dispatched with the `build_finished` event, the job should wait for the build to finish before performing sync.
 
-Although the job performs two additional steps after the sync is finished, they don't really matter as the build is already synced. The steps that precede the synchronization influence the time spent for a new build to be available in the destination database and appear on the Metrics Web Application. Therefore, we focus on steps from the initial to the sync step itself (1-6).
+Although the job performs two additional steps after the sync is finished, they don't matter as the build is already synced. The steps that precede the synchronization influence the time spent for a new build to be available in the destination database and appear on the Metrics Web Application. Therefore, we focus on steps from the initial to the sync step itself (1-6).
 
-The following table contains the information about the execution time of each step of the sync job. The original sample contains eleven objects representing a single job run each. Please note that the value `0 s` (zero seconds) actually means `close to 0s` - the reason is that GitHub Actions API and web UI don't provide the precise value in milliseconds.
+The following table contains the information about the execution time of each step of the sync job. The original sample contains eleven objects representing a single job run each. Please note that the value `0 s` (zero seconds) means `close to 0s` - the reason is that GitHub Actions API and web UI don't provide the precise value in milliseconds.
 
 ||Setup|Checkout|Download|Wait|Configure|Sync|
 |---|---|---|---|---|---|---|
@@ -129,9 +129,9 @@ The Buildkite pipeline that synchronizes builds performs the following steps:
     3. Apply environment variables to the configuration file.
     4. Run synchronization.
 
-Unlike GitHub Actions, the Buildkite sync pipeline is configured with as few steps as possible. The reason is that each step runs on its own working directory and the agent (i.e. pipeline runner) spends some time preparing this directory for the step. Thus, the list above should be considered as the list of steps each beginning with the working directory preparation. And the nested list in the third step is the list of commands performed as a part of this step.
+Unlike GitHub Actions, the Buildkite sync pipeline is configured with as few steps as possible. The reason is that each step runs on its working directory and the agent (i.e. pipeline runner) spends some time preparing this directory for the step. Thus, the list above should be considered as the list of steps each beginning with the working directory preparation. And the nested list in the third step is the list of commands performed as a part of this step.
 
-The following table contains the information about the execution time of each step of the sync pipeline. The original sample contains ten objects representing a single pipeline run each.
+The following table contains the information about the execution time of each step of the sync pipeline. The original sample consists of ten objects representing a single pipeline run each.
 
 ||Upload|Log|Sync|
 |---|---|---|---|
