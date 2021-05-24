@@ -31,7 +31,10 @@ We need to decide with the approaches for the following concepts:
 Let's review these approaches in the next sections.
 
 ### Deep Linking approach
-There are two main ways of representing deep links in the URL: [`query parameters`](#query-parameters) and [`path segments`](#path-segments).   
+There are two main ways of representing deep links in the URL: 
+- [Query parameters](#query-parameters);
+- [Path segments](#path-segments).   
+
 To start, let's consider a problem that we are to solve using deep links. For example, we need to save a project name filter's state in a URL. Let's compare the listed approaches for solving this problem:
 
 ### Query Parameters
@@ -83,7 +86,7 @@ There are two main approaches for the integration of the deep links to the Metri
 
 Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md) describing `Navigator 2.0` integration in the Metrics Web Application) for navigation, both approaches are based on the features of the `Navigator 2.0` and differ only in the way the deep links are applied to the Metrics Web Application components.
 
-Now, let's review the listed approaches.
+Now, let's review the listed approaches in a bit more detail.
 
 ### Deep Links Integration Using ChangeNotifier
 The main idea of this approach is to introduce a new `ChangeNotifier`, let's call it a `DeepLinksNotifier`. 
@@ -125,7 +128,7 @@ According to the comparison above, we choose the [Deep Links Integration Using C
 
 #### Processing raw deep links provided by the `NavigationNotifier` into page-specific deep links
 
-This code snippet demonstrates the raw deep link parsing process.
+The code snippet below demonstrates the raw deep link parsing process.
 
 ```dart
 /// An abstraction for page-specific deep links.
@@ -172,7 +175,7 @@ class DeepLinksNotifier extends ChangeNotifier {
 
 #### Providing page-specific deep links to the corresponding page ChangeNotifiers
 
-This code snippet demonstrates an example of creating a connection between the `DeepLinksNotifier` and `SomePageNotifier` using a listener.
+The code snippet below demonstrates an example of creating a connection between the `DeepLinksNotifier` and `SomePageNotifier` using a listener.
 
 ```dart
 /// An abstract class that represents a [ChangeNotifier] of a specific page.
@@ -196,7 +199,7 @@ void deepLinksNotifierListener() {
 
 #### Handling page-specific deep links updates provided by page ChangeNotifiers
 
-This code snippet demonstrates the connection between `SomePageNotifier` and `DeepLinksNotifier` about `PageDeepLink`'s updates using a listener function.
+The code snippet below demonstrates the connection between `SomePageNotifier` and `DeepLinksNotifier` about `PageDeepLink`'s updates using a listener function.
  
 ```dart
 /// A listener that triggers the [DeepLinksNotifier.handlePageDeepLinks] on [SomePageNotifier.pageDeepLinks]
@@ -210,7 +213,7 @@ void somePageNotifierListener() {
 
 #### Providing deep links' updates to the `NavigationNotifier`
 
-This code snippet demonstrates the connection between the `DeepLinksNotifier` and  `NavigationNotifier` to save the deep links in the URL using the listener function.
+The following code snippet demonstrates the connection between the `DeepLinksNotifier` and  `NavigationNotifier` to save the deep links in the URL using the listener function.
 
 ```dart
 /// A listener that triggers the [NavigationNotifier.saveDeepLinks] on [DeepLinksNotifier.currentDeepLinks]
@@ -225,7 +228,9 @@ void deepLinksNotifierListener() {
 ### System modeling
 > Create an abstract model of the system/feature.
 
-Consider the following sequence diagrams that illustrate how the main requirements of the feature may work in the system:
+Let’s consider that a `DeepLinksDispatcher`  is a widget that is responsible for establishing the connections between the `NavigationNotifier`, `DeepLinksNotifier` and the specific page `ChangeNotifier`s.
+
+The following sequence diagrams illustrate how the main requirements of the feature may work in the system:
 
 - Parsing deep links
   ![Applying deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/deep_links_analysis/metrics/web/docs/analysis/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
