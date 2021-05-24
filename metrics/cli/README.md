@@ -2,13 +2,13 @@
 
 A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules) and general setup.
 
-<!-- add image -->
+![Metrics CLI](docs/images/terminal.png)
 
 Metrics CLI is available to install on macOS and Linux.
 
 # Requirements
 
-The `Metrics CLI` based on a list of third-party packages. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
+The `Metrics CLI` is based on a list of third-party packages. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 # Installation
 
@@ -30,9 +30,9 @@ Now you can execute `Metrics CLI` commands using the next form:
 
 ## Use the releases
 
-You can download the built Metrics CLI tool from the [CLI releases](#) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
-- [`CLI for Linux`](#);
-- [`CLI for macOS`](#).
+You can download the built Metrics CLI tool from the [CLI releases](https://github.com/platform-platform/dashboard/releases) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+- [`CLI for Linux`](#)
+- [`CLI for macOS`](#)
 
 Now you can use the binary to run `Metrics CLI` commands:
 
@@ -48,7 +48,7 @@ The Metrics CLI command has the following structure:
 metrics <command> [arguments]
 ```
 
-# Available commands
+## Available commands
 
 The following table lists commands with their descriptions:
 
