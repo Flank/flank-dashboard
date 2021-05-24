@@ -1,12 +1,35 @@
 # Projects
 This repository holds the source code of the following projects:
+- [Metrics](#bar_chart-metrics)
 - [API Mock Server](#test_tube-api-mock-server)
 - [Guardian](#shield-guardian)
-- [Metrics](#bar_chart-metrics)
 - [Shell Words](#shell-shell-words)
 - [YAML Map](#world_map-yaml-map)
 
 Let's review each of them in a bit more details:
+
+## :bar_chart: Metrics
+[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality. 
+
+The Metrics project integrates with the following CI tools to collect software project metrics:
+- [Buildkite](https://buildkite.com/docs/tutorials/getting-started)
+- [Github Actions](https://docs.github.com/en/actions/quickstart)
+- [Jenkins](https://jenkins.io/doc/)
+
+The Metrics Web Application displays the next project metrics on the dashboard:
+
+| Metric | Description |
+| --- | --- |
+| `Build Status`   | A graph indicator displaying the result of the latest build in front of the project's name. |
+| `Build Results`   | A bar chart displaying the build results and duration of the last 30 builds. |
+| `Performance`   | A sparkline graph displaying an average build duration of successful builds by the last 7 days, excluding the queue time. |
+| `Builds`   | A scorecard displaying a count of performed builds of the project per week. |
+| `Stability`   | A circular graph displaying a ratio of successful builds to finished builds for the last 30 builds. |
+| `Coverage`   | A circular graph displaying a last successful build's code coverage percent. |
+
+See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document to get more information about project metrics.
+
+![Metrics Dashboard](docs/images/dashboard_ui_dark.png)
 
 ## :test_tube: Api Mock Server
 [Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
@@ -99,17 +122,6 @@ void main() {
 ### Features:
 - Slack integration for notifications.
 
-## :bar_chart: Metrics
-[Metrics](metrics/readme.md) is a set of software components to collect and review software project metrics like performance, build stability, and codebase quality.
-The Metrics project includes the following components:
-- [Metrics Web](metrics/web) - a web application for the project metrics visualisation.
-- [CI Integrations](metrics/ci_integrations) - a CLI application that integrates with popular CI tools, such as Jenkins, GitHub Actions, and Buildkite, to collect software project metrics.
-- [Metrics CLI](metrics/cli) - a CLI application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules, and general setup).
-- [Firebase](metrics/firebase) - defines the Firestore Security Rules and Cloud Functions needed to provide a secure and efficient serverless backend.
-- [Coverage Converter](metrics/coverage_converter) - a tool that converts coverage data of specific coverage formats into [Metrics coverage format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format).
-
-![Metrics Dashboard](docs/images/dashboard_ui.png)
-
 ## :shell: Shell Words
 [Shell Words](shell_words) is a package that provides tools for parsing the command-line strings.
 
@@ -175,7 +187,7 @@ void main() {
 
 </details>
 
-# Getting Started
+# Contributing
 Consider these useful links that may help you to get started:
 1. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 2. [Dart code style :nail_care:](docs/09_dart_code_style.md)

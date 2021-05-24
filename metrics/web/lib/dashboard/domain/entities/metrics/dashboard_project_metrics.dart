@@ -2,9 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -16,12 +14,6 @@ class DashboardProjectMetrics extends Equatable {
 
   /// A status of the build of the project these metrics belong to.
   final ProjectBuildStatusMetric projectBuildStatusMetric;
-
-  /// A [BuildNumberMetric] of project with [projectId].
-  final BuildNumberMetric buildNumberMetrics;
-
-  /// A [PerformanceMetric] of project with [projectId].
-  final PerformanceMetric performanceMetrics;
 
   /// A [BuildResultMetric] of project with [projectId].
   final BuildResultMetric buildResultMetrics;
@@ -36,8 +28,6 @@ class DashboardProjectMetrics extends Equatable {
   List<Object> get props => [
         projectId,
         projectBuildStatusMetric,
-        buildNumberMetrics,
-        performanceMetrics,
         buildResultMetrics,
         coverage,
         stability,
@@ -47,8 +37,6 @@ class DashboardProjectMetrics extends Equatable {
   const DashboardProjectMetrics({
     this.projectId,
     this.projectBuildStatusMetric,
-    this.buildNumberMetrics,
-    this.performanceMetrics,
     this.buildResultMetrics,
     this.coverage,
     this.stability,
