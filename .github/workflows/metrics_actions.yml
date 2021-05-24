@@ -278,8 +278,6 @@ jobs:
     name: Check Links Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-    env:
-      REPOSITORY: ${{ secrets.REPOSITORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -301,7 +299,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart scripts/links_checker/bin/main.dart validate --repository=$REPOSITORY --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml'
+        run: dart scripts/links_checker/bin/main.dart validate --repository=$GITHUB_REPOSITORY --paths='${{ steps.files.outputs.added_modified }} ${{ steps.files.outputs.renamed }}' --ignore-paths='.github/workflows/cla.yml'
 
   check-license-actions:
     name: Check License Actions
