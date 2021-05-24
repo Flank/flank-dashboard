@@ -8,7 +8,7 @@ Metrics CLI is available to install on macOS and Linux.
 
 # Requirements
 
-The `Metrics CLI` based on a list of third-party packages. To view the recommended versions of the dependencies, please check out the [dependencies](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml) file.
+The `Metrics CLI` based on a list of third-party packages. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 # Installation
 

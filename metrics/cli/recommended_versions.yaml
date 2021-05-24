@@ -5,4 +5,3 @@ recommended_versions:
   git: ^2.21.0
   firebase: ^9.8.0
   sentry-cli: ^1.60.1
-
