@@ -99,12 +99,13 @@ package doctor {
     }
 }
 
+Services --> services : uses
+
 DoctorCommand -down-> Doctor : uses
 DoctorCommand --> DoctorFactory : uses
 
 DoctorFactory --> Doctor : creates
 DoctorFactory -left-> ServicesFactory : uses
-
 ServicesFactory --> Services : creates
 
 Doctor -down-> NpmService : uses
