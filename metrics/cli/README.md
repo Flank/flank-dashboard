@@ -50,12 +50,18 @@ metrics <command> [arguments]
 
 ## Available commands
 
-The following table lists commands with their descriptions:
+The next table lists commands with their descriptions:
 
 | Command | Description |
 | --- | --- |
 | `doctor`   | Shows the version information of the third-party dependencies. |
 | `deploy`   | Creates GCloud and Firebase projects for Metrics components and deploys the Metrics Web Application. |
+
+To get more information about the particular command run the following:
+
+```bash
+metrics help <command>
+```
 
 # Documentation
 
