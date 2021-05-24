@@ -1,0 +1,108 @@
+@startuml
+
+package core {
+    package util {
+        class ApplicationMetadata {
+            + supportedDatabaseVersion: bool
+        }
+    }
+
+    package data.model {
+        class DatabaseMetadata {
+            + isUpdating: bool
+            + version: String
+
+            # DatabaseMetadata.fromJson(json: Map<String, dynamic>) : DatabaseMetadata
+            + toJson() : Map<String, dynamic>
+        }
+
+        interface DataModel {
+            + toJson() : Map<String, dynamic>
+        }
+    }
+}
+
+package cli.command {
+    class SyncCommand {
+        + run(): Future<void>
+        + createCiIntegration(): CiIntegration
+        + sync(sourceClient: SourceClient, destinationClient: DestinationClient, config: SyncConfig): Future<void>
+    }
+}
+
+package integration {
+    package interface.destination.client {
+        interface DestinationClient {
+            + fetchDatabaseMetadata() : Future<InteractionResult<DatabaseMetadata>>
+        }
+    }
+
+    package ci {
+        class CiIntegration {
+            + stages: List<SyncStage>
+
+            + sync(config: SyncConfig) : Future<InteractionResult>
+        }
+
+        package config.model {
+            class SyncConfig {
+                + supportedDatabaseVersion: String
+            }
+        }
+
+        package sync_stage {
+            package factory {
+                class SyncStagesFactory {
+                    + create(sourceClient: SourceClient, destinationClient: destinationClient): List<SyncStage>
+                }
+            }
+
+            package database_version {
+                class DatabaseVersionSyncStage {
+                    + sourceClient: SourceClient
+                    + destinationClient: DestinationClient
+
+                    + call(SyncConfig config): Future<InteractionResult>
+                }
+            }
+
+            interface SyncStage {
+                + sourceClient: SourceClient
+                + destinationClient: DestinationClient
+
+                + call(SyncConfig config): Future<InteractionResult>
+            }
+        }
+    }
+}
+
+package destination.firestore.adapter {
+    class FirestoreDestinationClientAdapter {
+        + fetchDatabaseMetadata() : Future<InteractionResult<DatabaseMetadata>>
+    }
+}
+
+SyncCommand --> SyncConfig : creates
+SyncCommand --> SyncStagesFactory : uses
+SyncCommand --> CiIntegration : creates
+SyncCommand --> ApplicationMetadata : uses
+
+CiIntegration --> DatabaseVersionSyncStage : uses
+CiIntegration --> SyncConfig : uses
+
+DatabaseVersionSyncStage ..|> SyncStage
+DatabaseVersionSyncStage --> DatabaseMetadata : uses
+DatabaseVersionSyncStage -left-> SyncConfig : uses
+DatabaseVersionSyncStage --> FirestoreDestinationClientAdapter : uses
+
+FirestoreDestinationClientAdapter ..|> DestinationClient
+FirestoreDestinationClientAdapter --> ApplicationMetadata : uses
+
+SyncStagesFactory --> DatabaseVersionSyncStage : creates
+SyncStagesFactory --> FirestoreDestinationClientAdapter : uses
+
+DatabaseMetadata ..|> DataModel
+
+DatabaseVersionSyncStage -[hidden]-> DestinationClient
+
+@enduml

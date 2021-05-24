@@ -57,8 +57,41 @@ Let's proceed to the next [section](#Getting-Database-Metadata) and consider the
 ### Getting Database Metadata
 > Explain the way of loading the database metadata.
 
+The database metadata is represented by the `DatabaseMetadata` entity from the [`core` library](https://github.com/platform-platform/dashboard/tree/master/metrics/core). To be able to get the `DatabaseMetadata` we should introduce a new `fetchDatabaseMetadata` method to the `DestinationClient` and implement it in all `DestinationClient`'s subclasses. Since the `destinationClient` is available within all `SyncStage`'s subclasses, we can use it to fetch the database metadata within the `DatabaseVersionSyncStage` and perform any necessary compatibility checks.
+
 # Making things work
 > Describe the way of blocking the application from accessing the database.
+
+Consider the class diagram below that demonstrates the main classes, and their relationships needed to introduce the `DatabaseVersionSyncStage` to the CI Integrations tool.
+
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version.puml)
+
+// TODO sequence
+
+The code snippet below demonstrates the required compatibility checks within the `DatabaseVersionSyncStage` `call` method:
+
+```dart
+@override
+Future<InteractionResult> call(SyncConfig config) async {
+  final supportedDatabaseVersion = config.supportedDatabaseVersion;
+  
+  final databaseMetadataInteraction = await destinationClient.fetchDatabaseMetadata();
+  if(databaseMetadataInteraction.isError) {
+    // fail sync stage due to the database metadata fetching failed
+  }
+  
+  final databaseMetadata = databaseMetadataInteraction.result;
+
+  final databaseVersion = databaseMetadata.version;
+  if(supportedDatabaseVersion != databaseVersion) {
+    // fail sync stage due to the database version incompatibility
+  }
+  
+  if(databaseMetadata.isUpdating) {
+    // fail sync stage due to the database is updating
+  }
+}
+```
 
 # Dependencies
 
