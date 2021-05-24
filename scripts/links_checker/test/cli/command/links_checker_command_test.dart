@@ -68,7 +68,7 @@ void main() {
     );
 
     test(
-      ".run() uses the given argument parser's .parseArgResults() to parse arguments",
+      ".run() parses the given arguments using the given argument parser",
       () {
         when(
           argumentsParser.parseArgResults(any),

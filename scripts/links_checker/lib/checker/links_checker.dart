@@ -49,7 +49,8 @@ class LinksChecker {
     final lines = fileContent.split('\n');
 
     for (int i = 0; i < lines.length; ++i) {
-      final invalidUrls = _getRepositoryUrls(lines[i]).skipWhile(_isValidUrl);
+      final invalidUrls = _getRepositoryUrls(lines[i])
+        ..removeWhere(_isValidUrl);
 
       final descriptions = invalidUrls.map(
         (url) => 'In ${file.path}, line ${i + 1}, $url',
