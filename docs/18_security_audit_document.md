@@ -215,6 +215,25 @@ Here is a table of security rules applied to the `feature_config` collection:
 | `read`    | [`Allowed`](#allowed) |
 | `write`   | [`Prohibited`](#prohibited) |
 
+### The `tasks` collection
+
+The `tasks` collection contains the list of failed Firestore Cloud functions to re-run them separately. The single document of this collection stands for a single task that was failed and needs to be re-run.
+
+Consider the following table that describes the fields of a document in the `tasks` collection:
+
+| Field       | Description |
+|-------------|-------------|
+| `code`   	  | A code that identifies the task to perform (e.g. `build_day_created`, `build_day_updated`). |
+| `data`      |	A map containing the data needed to run the task with the specified code. |
+| `context`   |	An additional context for this task. |
+| `createdAt` |	A timestamp with this task creation date. |
+
+Here is a table of security rules applied to the `tasks` collection:
+
+| Operation       | [Security Rules](#security-rules-description) |
+|-----------------|----------------|
+| `read`, `write` | [`Prohibited`](#prohibited) |
+
 ### Security Rules Testing
 
 To prove the Security Rules work in the expected way, they are covered with tests. Consider [`metrics/firebase/test/firestore/security_rules`](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase/test/firestore/rules) to examine the tests.
@@ -232,6 +251,20 @@ Each rule is tested imitating any possible type of user. Consider the following 
 - `Authenticated with Google and not allowed email domain user with not verified email`.
 
 The tests also cover invalid data input cases if the rule requires additional data validation.
+
+### Firebase Cloud Functions
+
+Metrics Web Application uses the [Firestore Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) to trigger the updates of the [`build_days` collection](#the-build_days-collection). The Functions itself do not store any data, and holds the logic for the `build_days` collection update.
+
+Let's review the two main cloud functions in a bit more details:
+
+#### `onBuildAdded`
+
+The following function creates a new document in the `build_days` collection once a new build is added to the `build` collection.
+
+#### `onBuildUpdated`
+
+This cloud function handles the updates of a document in the `build_days` collection in response to the status change of a specific build from the `build` collection. 
 
 ### Firebase Key Protection
 
