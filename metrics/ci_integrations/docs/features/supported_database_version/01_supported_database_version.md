@@ -57,18 +57,18 @@ Let's proceed to the next [section](#Getting-Database-Metadata) and consider the
 ### Getting Database Metadata
 > Explain the way of loading the database metadata.
 
-The database metadata is represented by the `DatabaseMetadata` entity from the [`core` library](https://github.com/platform-platform/dashboard/tree/master/metrics/core). To be able to get the `DatabaseMetadata` we should introduce a new `fetchDatabaseMetadata` method to the `DestinationClient` and implement it in all `DestinationClient`'s subclasses. Since the `destinationClient` is available within all `SyncStage`'s subclasses, we can use it to fetch the database metadata within the `DatabaseVersionSyncStage` and perform any necessary compatibility checks.
+The database metadata is represented by the `DatabaseMetadata` entity from the [`core` library](https://github.com/platform-platform/monorepo/tree/master/metrics/core). To be able to get the `DatabaseMetadata` we should introduce a new `fetchDatabaseMetadata` method to the `DestinationClient` and implement it in all `DestinationClient`'s subclasses. Since the `destinationClient` is available within all `SyncStage`'s subclasses, we can use it to fetch the database metadata within the `DatabaseVersionSyncStage` and perform any necessary compatibility checks.
 
 # Making things work
 > Describe the way of blocking the application from accessing the database.
 
 Consider the class diagram below that demonstrates the main classes, and their relationships needed to introduce the `DatabaseVersionSyncStage` to the CI Integrations tool.
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_class_diagram.puml)
 
 Let's examine the following sequence diagram that explains the process of performing the required database compatibility check during the project metrics data synchronization:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_database_version/diagrams/ci_integrations_supported_db_version_sequence_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?
