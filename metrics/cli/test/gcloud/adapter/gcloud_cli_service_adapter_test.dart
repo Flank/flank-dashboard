@@ -137,12 +137,10 @@ void main() {
     );
 
     test(
-      ".createProject() prompts the user to confirm the generated name of the GCloud project if the name is empty",
+      ".createProject() prompts the user to confirm the generated name of the GCloud project if the user-entered name is empty",
       () async {
-        const emptyName = '';
-
         whenEnterRegionPrompt().thenReturn(region);
-        when(prompter.prompt(enterProjectName)).thenReturn(emptyName);
+        when(prompter.prompt(enterProjectName)).thenReturn('');
         when(prompter.promptConfirm(any)).thenReturn(true);
 
         final projectId = await gcloudService.createProject();
