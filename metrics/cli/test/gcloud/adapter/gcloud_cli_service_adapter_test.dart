@@ -108,6 +108,23 @@ void main() {
     );
 
     test(
+      ".createProject() stops the project creation process if there is an error during the confirmation requesting of the project name from the user",
+      () async {
+        when(prompter.prompt(enterProjectName)).thenThrow(stateError);
+
+        await expectLater(
+          gcloudService.createProject(),
+          throwsStateError,
+        );
+
+        verify(prompter.prompt(enterProjectName)).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
       ".createProject() prompts the user to confirm the entered name of the GCloud project",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
@@ -142,6 +159,24 @@ void main() {
         whenConfirmProjectName().thenThrow(stateError);
 
         expect(() => gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
+      ".createProject() stops the project creation process if there is an error during the requesting the project name from the user",
+      () async {
+        whenConfirmProjectName().thenThrow(stateError);
+
+        await expectLater(
+          gcloudService.createProject(),
+          throwsStateError,
+        );
+
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
       },
     );
 
@@ -202,9 +237,9 @@ void main() {
           throwsStateError,
         );
 
-        verify(gcloudCli.createProject(any, any)).called(once);
         verify(prompter.prompt(enterProjectName)).called(once);
         verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
@@ -243,6 +278,8 @@ void main() {
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
         verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
 
@@ -281,6 +318,8 @@ void main() {
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
         verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
@@ -324,6 +363,8 @@ void main() {
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
         verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
@@ -368,6 +409,8 @@ void main() {
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
         verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);

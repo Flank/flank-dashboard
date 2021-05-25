@@ -77,7 +77,6 @@ class GCloudCliServiceAdapter implements GCloudService {
   /// Uses the [projectId] as the project's name
   /// if the user doesn't specify the name.
   String _promptGCloudProjectName(String projectId) {
-    // 1, 2, 3, 4, 5, 6, 7
     bool userConfirm = false;
     String projectName;
 
