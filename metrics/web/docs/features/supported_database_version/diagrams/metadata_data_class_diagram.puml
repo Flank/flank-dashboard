@@ -10,15 +10,15 @@ package metadata {
 
     package domain {
         package entities {
-            class DatabaseMetadata {
+            class StorageMetadata {
                 + version : String
                 + isUpdating : bool
             }
         }
 
         package repositories as domain.repositories {
-            interface DatabaseMetadataRepository {
-                + databaseMetadataStream() : Stream<DatabaseMetadata>
+            interface StorageMetadataRepository {
+                + storageMetadataStream() : Stream<StorageMetadata>
             }
         }
 
@@ -26,23 +26,23 @@ package metadata {
 
     package data {
         package model {
-            class DatabaseMetadataData extends DatabaseMetadata implements DataModel {
-                + {static} fromJson() : DatabaseMetadataData
+            class StorageMetadataData extends StorageMetadata implements DataModel {
+                + {static} fromJson() : StorageMetadataData
             }
         }
 
 
         package repositories {
-            class FirestoreDatabaseMetadataRepository implements DatabaseMetadataRepository {
+            class FirestoreStorageMetadataRepository implements DatabaseMetadataRepository {
                 - firestore : Firestore
             }
         }
     }
 }
 
-FirestoreDatabaseMetadataRepository --> DatabaseMetadataData : provides
+FirestoreStorageMetadataRepository --> StorageMetadataData : provides
 
-DatabaseMetadataRepository -> DatabaseMetadata : provides
+DatabaseMetadataRepository -> StorageMetadata : provides
 
 
 @enduml

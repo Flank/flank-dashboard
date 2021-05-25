@@ -4,9 +4,9 @@ participant Bob
 
 participant MetadataNotifier
 
-participant ReceiveDatabaseMetadataUpdates
+participant ReceiveStorageMetadataUpdates
 
-participant FirestoreDatabaseMetadataRepository
+participant FirestoreStorageMetadataRepository
 
 participant NavigationNotifier
 
@@ -18,18 +18,18 @@ database Firestore
 
 Bob -> MetadataNotifier : opens the app
 activate MetadataNotifier
-MetadataNotifier -> ReceiveDatabaseMetadataUpdates : get database metadata updates
-activate ReceiveDatabaseMetadataUpdates
-ReceiveDatabaseMetadataUpdates -> FirestoreDatabaseMetadataRepository : get database metadata updates
-activate FirestoreDatabaseMetadataRepository
-FirestoreDatabaseMetadataRepository --> Firestore : get database metadata updates
+MetadataNotifier -> ReceiveStorageMetadataUpdates : get database metadata updates
+activate ReceiveStorageMetadataUpdates
+ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get database metadata updates
+activate FirestoreStorageMetadataRepository
+FirestoreStorageMetadataRepository --> Firestore : get database metadata updates
 activate Firestore
-Firestore --> FirestoreDatabaseMetadataRepository : return database metadata updates
+Firestore --> FirestoreStorageMetadataRepository : return database metadata updates
 deactivate Firestore
-FirestoreDatabaseMetadataRepository --> ReceiveDatabaseMetadataUpdates : return database metadata updates
-deactivate FirestoreDatabaseMetadataRepository
-ReceiveDatabaseMetadataUpdates --> MetadataNotifier : return database metadata updates
-deactivate ReceiveDatabaseMetadataUpdates
+FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return database metadata updates
+deactivate FirestoreStorageMetadataRepository
+ReceiveStorageMetadataUpdates --> MetadataNotifier : return database metadata updates
+deactivate ReceiveStorageMetadataUpdates
 
 MetadataNotifier -> MetadataNotifier : subscribes to database metadata updates
 MetadataNotifier -> MetadataNotifier : receives database metadata snapshot

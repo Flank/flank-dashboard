@@ -8,30 +8,30 @@ package base.domain.usecases {
 
 package metadata.domain {
     package entities {
-        class DatabaseMetadata {
+        class StorageMetadata {
             + version : String
             + isUpdating : bool
         }
     }
 
     package repositories {
-        interface DatabaseMetadataRepository {
-            + databaseMetadataStream() : Stream<DatabaseMetadata>
+        interface StorageMetadataRepository {
+            + storageMetadataStream() : Stream<StorageMetadata>
         }
     }
 
     package usecases {
-        class ReceiveDatabaseMetadataUpdates implements UseCase{
-            - databaseMetadataRepository : DatabaseMetadataRepository
-            + call() : Stream<DatabaseMetadata>
+        class ReceiveStorageMetadataUpdates implements UseCase {
+            - storageMetadataRepository : StorageMetadataRepository
+            + call() : Stream<StorageMetadata>
         }
     }
 
 }
 
-ReceiveDatabaseMetadataUpdates --> DatabaseMetadataRepository : provides
-DatabaseMetadataRepository --> DatabaseMetadata : provides
-ReceiveDatabaseMetadataUpdates --> DatabaseMetadata : uses
+ReceiveStorageMetadataUpdates --> StorageMetadataRepository : provides
+StorageMetadataRepository --> StorageMetadata : provides
+ReceiveStorageMetadataUpdates --> StorageMetadata : uses
 
 
 

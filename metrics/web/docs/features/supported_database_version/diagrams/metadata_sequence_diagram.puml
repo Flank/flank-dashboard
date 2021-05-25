@@ -5,11 +5,11 @@ participant Bob
 
 participant MetadataNotifier
 
-participant ReceiveDatabaseMetadataUpdates
+participant ReceiveStorageMetadataUpdates
 
 participant ApplicationMetadata
 
-participant FirestoreDatabaseMetadataRepository
+participant FirestoreStorageMetadataRepository
 
 participant NavigationNotifier
 
@@ -22,22 +22,22 @@ database Firestore
 Bob -> MetadataNotifier : opens the application
 activate MetadataNotifier
 
-MetadataNotifier -> ReceiveDatabaseMetadataUpdates : get database metadata updates stream
-activate ReceiveDatabaseMetadataUpdates
-ReceiveDatabaseMetadataUpdates -> FirestoreDatabaseMetadataRepository : get database metadata stream
-activate FirestoreDatabaseMetadataRepository
-FirestoreDatabaseMetadataRepository -> Firestore : get database metadata stream
+MetadataNotifier -> ReceiveStorageMetadataUpdates : get storage metadata updates stream
+activate ReceiveStorageMetadataUpdates
+ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get storage metadata stream
+activate FirestoreStorageMetadataRepository
+FirestoreStorageMetadataRepository -> Firestore : get storage metadata stream
 activate Firestore
-Firestore --> FirestoreDatabaseMetadataRepository : returns database metadata stream
+Firestore --> FirestoreStorageMetadataRepository : returns storage metadata stream
 deactivate Firestore
-FirestoreDatabaseMetadataRepository --> ReceiveDatabaseMetadataUpdates : return database metadata updates stream
-deactivate FirestoreDatabaseMetadataRepository
-ReceiveDatabaseMetadataUpdates --> MetadataNotifier : return database metadata updates stream
-deactivate ReceiveDatabaseMetadataUpdates
+FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return storage metadata updates stream
+deactivate FirestoreStorageMetadataRepository
+ReceiveStorageMetadataUpdates --> MetadataNotifier : return storage metadata updates stream
+deactivate ReceiveStorageMetadataUpdates
 
-MetadataNotifier -> MetadataNotifier : listen to database metadata updates stream
+MetadataNotifier -> MetadataNotifier : listen to storage metadata updates stream
 
-loop receives new database metadata
+loop receives new storage metadata
 
     alt database is updating
 

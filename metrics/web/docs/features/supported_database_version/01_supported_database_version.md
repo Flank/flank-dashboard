@@ -11,7 +11,7 @@ Have the supported database version in the Metrics Web Application to block the 
 # Motivation
 > What problem is this project solving?
 
-Notify the users about the application update is in progress or the application version is not compatible with the database version.
+Notify the users about the application update is in progress, or the application version is not compatible with the database version.
 
 # Goals
 
@@ -38,7 +38,7 @@ This document does not describe the way of storing the database and supported da
 To be able to detect whether the application is compatible with the current database, we should get the following values: 
 
 - [Supported database version](#Supported-Database-Version) of this application
-- [Database metadata](#Database-Metadata)
+- [Storage metadata](#Storage-Metadata)
 
 Let's review the way of getting each of them separately: 
 
@@ -52,28 +52,28 @@ Since the Metrics Web Application built with the `SUPPORTED_DATABASE_VERSION` en
 
 The way of fetching this value is common for all Metrics applications, so we should place the class responsible for retrieving this value to the `core` library to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
 
-## Database Metadata
-> Explain the way of loading the database metadata.
+## Storage Metadata
+> Explain the way of loading the storage metadata.
 
-Also, to detect whether the current application is compatible with the database, we should load the database metadata from the Firestore database. To do so, we should implement the following application layers: 
+Also, to detect whether the current application is compatible with the database, we should load the storage metadata from the Firestore database. To do so, we should implement the following application layers: 
 
 ### Domain Layer
 > Explain the structure of the metadata domain layer.
 
-To load the database version, we should create a `DatabaseMetadata` entity in the domain layer. Also, we should have a `DatabaseMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveDatabaseMetadataUpdates` use case. 
+To load the database version, we should create a `StorageMetadata` entity in the domain layer. Also, we should have a `StorageMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveStorageMetadataUpdates` use case. 
 
 Let's review domain layer classes and their relationships on the class diagram below: 
 
-![Database Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_domain_class_diagram.puml)
+![Storage Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_domain_class_diagram.puml)
 
 ### Data Layer
 > Explain the structure of the metadata data layer.
 
-To load the data from the Firestore database, we should implement a `DatabaseMetadataRepository` and create a `DatabaseMetadataData` data model class used to map the JSON-encodable objects to the `DatabaseMetadata` entity and back.
+To load the data from the Firestore database, we should implement a `StorageMetadataRepository` and create a `StorageMetadataData` data model class used to map the JSON-encodable objects to the `StorageMetadata` entity and back.
 
 Let's consider the class diagram of the data layer: 
 
-![Database Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_data_class_diagram.puml)
+![Storage Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_data_class_diagram.puml)
 
 ### Presentation Layer
 > Explain the structure of the metadata presentation layer.
@@ -82,7 +82,7 @@ Once we have domain and data layers, we should implement the `MetadataNotifier` 
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
-![Database Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_presentation_class_diagram.puml)
+![Storage Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_presentation_class_diagram.puml)
 
 # Making things work
 > Describe the way of blocking the application from accessing the database. 
@@ -95,7 +95,7 @@ To do so, we should add a listener to the `MetadataNotifier` in the `InjectionCo
 
 Let's consider the following sequence diagram explaining this process: 
 
-![Database Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_sequence_diagram.puml)
+![Storage Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_database_version/diagrams/metadata_sequence_diagram.puml)
 
 Also, we should modify the application initialization process to wait until the database version got loaded before making the application available for users. So, we should subscribe to the MetadataNotifier changes on the LoadingPage to detect whether the application finished initializing.
 

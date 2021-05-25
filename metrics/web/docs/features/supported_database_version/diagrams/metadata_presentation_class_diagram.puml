@@ -15,7 +15,7 @@ package common.presentation.widgets {
 package metadata {
     package domain {
         package entities {
-            class DatabaseMetadata {
+            class StorageMetadata {
                 + version : String
                 + isUpdating : bool
             }
@@ -23,8 +23,8 @@ package metadata {
 
 
         package usecases {
-            class ReceiveDatabaseMetadataUpdates {
-                + call() : Stream<DatabaseMetadata>
+            class ReceiveStorageMetadataUpdates {
+                + call() : Stream<StorageMetadata>
             }
         }
     }
@@ -32,7 +32,7 @@ package metadata {
     package presentation {
         package state {
             class MetadataNotifier {
-                - receiveDatabaseMetadataUpdates : ReceiveDatabaseMetadataUpdates
+                - receiveStorageMetadataUpdates : ReceiveStorageMetadataUpdates
                 - applicationMetadata : ApplicationMetadata
                 + isDbSupported : bool
                 + isDbUpdating : bool
@@ -59,8 +59,8 @@ package metadata {
 }
 
 MetadataNotifier --> ApplicationMetadata : uses
-MetadataNotifier --> ReceiveDatabaseMetadataUpdates : uses
-MetadataNotifier --> DatabaseMetadata : uses
+MetadataNotifier --> ReceiveStorageMetadataUpdates : uses
+MetadataNotifier --> StorageMetadata : uses
 
 ApplicationUpdatingPage --> MetadataStrings : uses
 ApplicationIsOutdatedPage --> MetadataStrings : uses
