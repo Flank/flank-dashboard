@@ -13,7 +13,7 @@ class GCloudCli extends Cli {
     return run(['auth', 'login', '--force']);
   }
 
-  /// Creates a new GCloud project with the given [projectId].
+  /// Creates a new GCloud project with the given [projectId] and [projectName].
   Future<void> createProject(String projectId, String projectName) {
     return run(['projects', 'create', projectId, '--name', projectName]);
   }

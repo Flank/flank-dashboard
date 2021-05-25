@@ -108,7 +108,7 @@ void main() {
     );
 
     test(
-      ".createProject() stops the project creation process if there is an error during the confirmation requesting of the project name from the user",
+      ".createProject() stops the project creation process if there is an error during requesting the project name from the user",
       () async {
         when(prompter.prompt(enterProjectName)).thenThrow(stateError);
 
@@ -163,7 +163,7 @@ void main() {
     );
 
     test(
-      ".createProject() stops the project creation process if there is an error during the requesting the project name from the user",
+      ".createProject() stops the project creation process if there is an error during requesting the project name confirmation from the user",
       () async {
         whenConfirmProjectName().thenThrow(stateError);
 
