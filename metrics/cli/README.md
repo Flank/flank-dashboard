@@ -63,10 +63,6 @@ To get more information about the particular command run the following:
 metrics help <command>
 ```
 
-# Documentation
-
-[See the manual](https://github.com/platform-platform/dashboard/blob/master/metrics/cli/docs/05_user_manual_steps.md) for usage instructions.
-
 # License
 
 Created from templates made available by Stagehand under a BSD-style
