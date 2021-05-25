@@ -7,12 +7,19 @@ package core {
         }
     }
 
+    package domain.entities {
+        class StorageMetadata {
+            + isUpdating: bool
+            + version: String
+        }
+    }
+
     package data.model {
-        class DatabaseMetadata {
+        class StorageMetadataData {
             + isUpdating: bool
             + version: String
 
-            # DatabaseMetadata.fromJson(json: Map<String, dynamic>) : DatabaseMetadata
+            + StorageMetadataData.fromJson(json: Map<String, dynamic>) : StorageMetadataData
             + toJson() : Map<String, dynamic>
         }
 
@@ -33,7 +40,7 @@ package cli.command {
 package integration {
     package interface.destination.client {
         interface DestinationClient {
-            + fetchDatabaseMetadata() : Future<InteractionResult<DatabaseMetadata>>
+            + fetchMetadata() : Future<InteractionResult<StorageMetadata>>
         }
     }
 
@@ -58,7 +65,7 @@ package integration {
             }
 
             package database_version {
-                class DatabaseVersionSyncStage {
+                class CompatibilitySyncStage {
                     + sourceClient: SourceClient
                     + destinationClient: DestinationClient
 
@@ -78,7 +85,7 @@ package integration {
 
 package destination.firestore.adapter {
     class FirestoreDestinationClientAdapter {
-        + fetchDatabaseMetadata() : Future<InteractionResult<DatabaseMetadata>>
+        + fetchMetadata() : Future<InteractionResult<StorageMetadata>>
     }
 }
 
@@ -87,22 +94,21 @@ SyncCommand --> SyncStagesFactory : uses
 SyncCommand --> CiIntegration : creates
 SyncCommand --> ApplicationMetadata : uses
 
-CiIntegration --> DatabaseVersionSyncStage : uses
+CiIntegration --> CompatibilitySyncStage : uses
 CiIntegration --> SyncConfig : uses
 
-DatabaseVersionSyncStage ..|> SyncStage
-DatabaseVersionSyncStage --> DatabaseMetadata : uses
-DatabaseVersionSyncStage -left-> SyncConfig : uses
-DatabaseVersionSyncStage --> FirestoreDestinationClientAdapter : uses
+CompatibilitySyncStage ..|> SyncStage
+CompatibilitySyncStage --> StorageMetadata : uses
+CompatibilitySyncStage -left-> SyncConfig : uses
+CompatibilitySyncStage --> DestinationClient : uses
+
+StorageMetadataData --|> StorageMetadata
+StorageMetadataData ..|> DataModel
 
 FirestoreDestinationClientAdapter ..|> DestinationClient
-FirestoreDestinationClientAdapter --> ApplicationMetadata : uses
+FirestoreDestinationClientAdapter --> StorageMetadataData : uses
 
-SyncStagesFactory --> DatabaseVersionSyncStage : creates
+SyncStagesFactory --> CompatibilitySyncStage : creates
 SyncStagesFactory --> FirestoreDestinationClientAdapter : uses
-
-DatabaseMetadata ..|> DataModel
-
-DatabaseVersionSyncStage -[hidden]-> DestinationClient
 
 @enduml

@@ -9,7 +9,7 @@ participant SyncCommand << (C,#ADD1B2) >>
 participant ApplicationMetadata << (C,#ADD1B2) >>
 participant SyncStagesFactory << (C,#ADD1B2) >>
 participant CiIntegration << (C,#ADD1B2) >>
-participant DatabaseVersionSyncStage << (C,#ADD1B2) >>
+participant CompatibilitySyncStage << (C,#ADD1B2) >>
 participant FirestoreDestinationClientAdapter << (C,#ADD1B2) >>
 
 Bob -> SyncCommand : run()
@@ -27,38 +27,31 @@ SyncCommand --> SyncCommand : creates SourceClient, DestinationClient
 SyncCommand -> SyncStagesFactory : create(sourceClient, destinationClient)
 activate SyncStagesFactory
 
-SyncStagesFactory -> DatabaseVersionSyncStage : DatabaseVersionSyncStage(sourceClient, destinationClient)
-activate DatabaseVersionSyncStage
-
-DatabaseVersionSyncStage --> SyncStagesFactory : databaseVersionSyncStage
-SyncStagesFactory --> SyncStagesFactory : creates other `SyncStage`s
-
 SyncStagesFactory --> SyncCommand : syncStages
 deactivate SyncStagesFactory
 
-SyncCommand -> CiIntegration : CiIntegration(syncStages)
+SyncCommand -> CiIntegration : sync(syncConfig)
 activate CiIntegration
 
-CiIntegration --> SyncCommand : ciIntegration
+CiIntegration -> CompatibilitySyncStage : call(syncConfig)
+activate CompatibilitySyncStage
 
-SyncCommand -> CiIntegration : sync(syncConfig)
-
-CiIntegration -> DatabaseVersionSyncStage : call(syncConfig)
-
-DatabaseVersionSyncStage -> FirestoreDestinationClientAdapter : fetchDatabaseMetadata()
+CompatibilitySyncStage -> FirestoreDestinationClientAdapter : fetchMetadata()
 activate FirestoreDestinationClientAdapter
 
-FirestoreDestinationClientAdapter --> DatabaseVersionSyncStage : databaseMetadata
+FirestoreDestinationClientAdapter --> CompatibilitySyncStage : storageMetadata
 deactivate FirestoreDestinationClientAdapter
 
-alt Database Is Not Updating And Compatible
-    DatabaseVersionSyncStage --> CiIntegration : InteractionResult.success
+CompatibilitySyncStage --> CompatibilitySyncStage : performs compatibility checks
+
+alt The versions are compatible and the storage is not updating
+    CompatibilitySyncStage --> CiIntegration : InteractionResult.success
     CiIntegration --> CiIntegration : Runs next `SyncStage`s
     CiIntegration --> SyncCommand : InteractionResult.success
     SyncCommand --> Bob : Sync finished
-else Database Is Updating | Not Compatible | Metadata Fetch Failed
-    DatabaseVersionSyncStage --> CiIntegration : InteractionResult.failure
-    deactivate DatabaseVersionSyncStage
+else
+    CompatibilitySyncStage --> CiIntegration : InteractionResult.failure
+    deactivate CompatibilitySyncStage
 
     CiIntegration --> SyncCommand : InteractionResult.failure
     deactivate CiIntegration
