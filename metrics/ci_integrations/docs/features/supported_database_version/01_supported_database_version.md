@@ -41,7 +41,7 @@ To sum up, the synchronization algorithm now must include the `SyncStage`s in th
 ## CompatibilitySyncStage
 The `CompatibilitySyncStage` needs the following values to be able to detect whether the CI Integrations tool is compatible with the current database:
 - [Supported database version](#Supported-Database-Version) of this CI Integrations tool;
-- [Database metadata](#Getting-Database-Metadata).
+- [Storage metadata](#Getting-Database-Metadata).
 
 Let's review the way of getting each of them separately:
 
@@ -50,14 +50,14 @@ Let's review the way of getting each of them separately:
 
 Since the CI Integrations tool is built with the `SUPPORTED_DATABASE_VERSION` environment variable (based on the [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md#supported-database-version) document), we can get this value in the application from the environment, using the `ApplicationMetadata` class from the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library (as described in this [section](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/supported_database_version/01_supported_database_version.md#supported-database-version)).
 
-When we have the `SUPPORTED_DATABASE_VERSION` value, we need to provide it to the `CompatibilitySyncStage`.  To do that, we can add a `supportedDatabaseVersion` field to the `SyncConfig` class to store it and call the `CompatibilitySyncStage` with the `SyncConfig` instance so the `SUPPORTED_DATABASE_VERSION` value is accessible.
+When we have the `SUPPORTED_DATABASE_VERSION` value, we need to provide it to the `CompatibilitySyncStage`.  To do that, we can add a `supportedStorageVersion` field to the `SyncConfig` class to store it and call the `CompatibilitySyncStage` with the `SyncConfig` instance so the `SUPPORTED_DATABASE_VERSION` value is accessible.
 
 Let's proceed to the next [section](#Getting-Database-Metadata) and consider the ways of getting the Firestore database metadata in the CI Integrations tool.
 
 ### Getting Database Metadata
 > Explain the way of loading the database metadata.
 
-The database metadata is represented by the `StorageMetadata` entity from the [`core` library](https://github.com/platform-platform/monorepo/tree/master/metrics/core). To be able to get the `DatabaseMetadata` we should introduce a new `fetchDatabaseMetadata` method to the `DestinationClient` and implement it in all `DestinationClient`'s subclasses. Since the `destinationClient` is available within all `SyncStage`'s subclasses, we can use it to fetch the database metadata within the `CompatibilitySyncStage` and perform any necessary compatibility checks.
+The database metadata is represented by the `StorageMetadata` entity from the [`core` library](https://github.com/platform-platform/monorepo/tree/master/metrics/core). To be able to get the `StorageMetadata` we should introduce a new `fetchMetadata` method to the `DestinationClient` and implement it in all `DestinationClient`'s subclasses. Since the `destinationClient` is available within all `SyncStage`'s subclasses, we can use it to fetch the database metadata within the `CompatibilitySyncStage` and perform any necessary compatibility checks.
 
 # Making things work
 > Describe the way of blocking the application from accessing the database.

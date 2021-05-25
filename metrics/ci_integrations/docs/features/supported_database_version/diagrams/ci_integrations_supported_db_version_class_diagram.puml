@@ -3,7 +3,7 @@
 package core {
     package util {
         class ApplicationMetadata {
-            + supportedDatabaseVersion: bool
+            + supportedStorageVersion: bool
         }
     }
 
@@ -53,7 +53,7 @@ package integration {
 
         package config.model {
             class SyncConfig {
-                + supportedDatabaseVersion: String
+                + supportedStorageVersion: String
             }
         }
 
@@ -83,8 +83,8 @@ package integration {
     }
 }
 
-package destination.firestore.adapter {
-    class FirestoreDestinationClientAdapter {
+package destination.cool.adapter {
+    class CoolDestinationClientAdapter {
         + fetchMetadata() : Future<InteractionResult<StorageMetadata>>
     }
 }
@@ -105,10 +105,12 @@ CompatibilitySyncStage --> DestinationClient : uses
 StorageMetadataData --|> StorageMetadata
 StorageMetadataData ..|> DataModel
 
-FirestoreDestinationClientAdapter ..|> DestinationClient
-FirestoreDestinationClientAdapter --> StorageMetadataData : uses
+CoolDestinationClientAdapter ..|> DestinationClient
+CoolDestinationClientAdapter --> StorageMetadataData : uses
 
 SyncStagesFactory --> CompatibilitySyncStage : creates
-SyncStagesFactory --> FirestoreDestinationClientAdapter : uses
+SyncStagesFactory --> CoolDestinationClientAdapter : uses
+
+DestinationClient --> StorageMetadata : uses
 
 @enduml

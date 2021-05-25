@@ -15,10 +15,10 @@ participant FirestoreDestinationClientAdapter << (C,#ADD1B2) >>
 Bob -> SyncCommand : run()
 activate SyncCommand
 
-SyncCommand -> ApplicationMetadata : .supportedDatabaseVersion
+SyncCommand -> ApplicationMetadata : .supportedStorageVersion
 activate ApplicationMetadata
 
-ApplicationMetadata --> SyncCommand : supportedDatabaseVersion
+ApplicationMetadata --> SyncCommand : supportedStorageVersion
 deactivate ApplicationMetadata
 
 SyncCommand --> SyncCommand : creates SyncConfig
