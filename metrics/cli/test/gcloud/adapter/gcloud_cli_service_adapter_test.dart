@@ -393,6 +393,25 @@ void main() {
         );
       },
     );
+
+    test(
+      ".deleteProject() deletes the GCloud project with the given project id",
+      () async {
+        await gcloudService.deleteProject(projectId);
+
+        verify(gcloudCli.deleteProject(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deleteProject() throws if GCloud CLI throws during the project deleting",
+      () {
+        when(gcloudCli.deleteProject(any))
+            .thenAnswer((_) => Future.error(stateError));
+
+        expect(gcloudService.deleteProject(projectId), throwsStateError);
+      },
+    );
   });
 }
 
