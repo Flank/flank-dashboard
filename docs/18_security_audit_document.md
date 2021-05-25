@@ -115,7 +115,7 @@ Consider the following table that describes the fields of a document within the 
 |`projectId`   | An id of the project this build belongs to.                 |
 |`startedAt`   | A date-time of this build's start.                          |
 |`url`         | A URL of the source control revision used to run the build. |
-|`workflowName`| A name of the workflow executed this build.                 |
+|`workflowName`| A name of the workflow that executed this build.            |
 
 Here is a table of security rules applied to the `build` collection:
 
@@ -127,17 +127,17 @@ Here is a table of security rules applied to the `build` collection:
 
 ### The `build_days` collection
 
-The `build_days` collection contains the aggregated project metrics of builds performed during a single day. The single document of this collection stands for a single project metrics aggregation for a specific project.
+The `build_days` collection contains the aggregated project metrics of builds performed during a single day. The single document of this collection stands for a single project metrics aggregation for a specific project of builds performed during a single day.
 
 Consider the following table that describes the fields of a document within the `build_days` collection:
 
 | Field                      | Description                                                                            |
 |----------------------------|----------------------------------------------------------------------------------------|
-| `projectId`                | An id of the project this build day describes.                                         |
-| `day`                      | A timestamp of a day this aggregation belongs to.                                      |
+| `projectId`                | An id of the project this build day belongs to.                                        |
+| `day`                      | A timestamp of this build day.                                                         |
 | `successful`               | A total number of successful builds performed during this build day.                   |
 | `failed`                   | A total number of failed builds performed during this build day.                       |
-| `inProgress`               | A total number of in progress builds started during this build day.                    |
+| `inProgress`               | A total number of in-progress builds started during this build day.                    |
 | `successfulBuildsDuration` | A total duration in milliseconds of successful builds performed during this build day. |
 
 Here is a table of security rules applied to the `build_days` collection:
@@ -147,6 +147,7 @@ Here is a table of security rules applied to the `build_days` collection:
 | `write`   | [`Prohibited`](#prohibited)                 |
 | `read`    | [`isAccessAuthorized`](#isaccessauthorized) |
 
+Any modification of this collection is prohibited. The `build_days` collection is managed by the `Cloud Functions` component. Consider this [section](#firebase-cloud-functions) describing the `Cloud Functions` related security aspects.
 
 ### The `project_groups` collection
 
@@ -217,7 +218,7 @@ Here is a table of security rules applied to the `feature_config` collection:
 
 ### The `tasks` collection
 
-The `tasks` collection contains the list of failed Firestore Cloud functions to re-run them separately. The single document of this collection stands for a single failed task that needs to be re-run.
+The `tasks` collection contains the list of failed [Firebase Cloud functions](#firebase-cloud-functions) to re-run them separately. The single document of this collection stands for a single failed task that needs to be re-run.
 
 Consider the following table that describes the fields of a document in the `tasks` collection:
 
@@ -254,17 +255,15 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 ### Firebase Cloud Functions
 
-Metrics Web Application uses the [Firestore Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) to trigger the updates of the [`build_days` collection](#the-build_days-collection). The Functions itself do not store any data, and holds the logic for the `build_days` collection updates.
+The [Firebase Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) component is responsible the [`build_days` collection](#the-build_days-collection) updates when the [`build` collection](#the-build-collection) changes. The `Firebase Cloud Functions` do not store any data, and just process the [`build` collection](#the-build-collection) updates.
 
-Let's review the two main cloud functions in a bit more details:
+The `Firebase Cloud Functions` includes the two main functions: `onBuildAdded` and `onBuildUpdated`. Let's review them in a bit more details:
 
-#### `onBuildAdded`
+#### The `onBuildAdded` function
+This function is triggered when a new build is added to the [`build` collection](#the-build-collection). If this build is the first build of this project performed during a day, the function creates a new document in the [`build_days` collection](#the-build_days-collection) and adds the build data aggregation to it. Otherwise, the function updates an existing `build_day` document.
 
-The following function creates a new document in the `build_days` collection once a new build is added to the `build` collection.
-
-#### `onBuildUpdated`
-
-This cloud function handles the updates of a document in the `build_days` collection in response to the status change of a specific build from the `build` collection. 
+#### The `onBuildUpdated` function
+This function is triggered when a specific build is updated in the [`build` collection](#the-build-collection), for example, when an in-progress build finishes and the [CI Integrations tool](#ci-integrations) updates its data in the database. The function searches for a build day aggregation the old build data belongs to and updates any necessary fields.
 
 ### Firebase Key Protection
 
