@@ -42,7 +42,7 @@ The below subsections contain investigation results for different sources. Let's
 
 ### GitHub Actions
 
-To test the GitHub Actions integration performance we use the configuration file `config.yaml` that contains the source configurations for GitHub Actions API. After each trial, the destination database is cleared up from builds just like the trial is never happened.
+To test the GitHub Actions integration performance, we use the configuration file `config.yaml` that contains the source configurations for GitHub Actions API. After each trial, the destination database is cleared up from builds, just like the trial has never happened.
 
 The following table contains the average duration in milliseconds for different sections. The experiment consists of ten different trials resulting in a sample. The _Average_ row contains the [arithmetic mean](https://en.wikipedia.org/wiki/Arithmetic_mean) of durations for each timing section.
 
@@ -52,7 +52,7 @@ The following table contains the average duration in milliseconds for different 
 
 ### Buildkite
 
-To test the Buildkite integration performance we use the configuration file `config.yaml` that contains the source configurations for Buildkite API. After each trial, the destination database is cleared up from builds just like the trial is never happened.
+To test the Buildkite integration performance, we use the configuration file `config.yaml` that contains the source configurations for Buildkite API. After each trial, the destination database is cleared up from builds, just like the trial has never happened.
 
 The following table contains the average duration in milliseconds for different sections. The experiment consists of ten different trials resulting in a sample. The _Average_ row contains the [arithmetic mean](https://en.wikipedia.org/wiki/Arithmetic_mean) of durations for each timing section.
 
@@ -98,20 +98,22 @@ The GitHub Actions job that synchronizes builds performs the following steps:
 7. Post Checkout clean up.
 8. Complete job.
 
-The initial step and the two last are performed automatically - the job specification lists only steps from 2 to 6. Also, we should note that the 4th step is performed only if the sync workflow should sync the finished build. Otherwise, the 3rd step is skipped. More precisely, this means that if the workflow is dispatched with the `build_started` event, the job shouldn't wait for a build to finish as the sync is performed for the running build. On the other hand, if the workflow is dispatched with the `build_finished` event, the job should wait for the build to finish before performing sync.
+The initial step and the two last are performed automatically - the job specification lists only steps from 2 to 6. Also, we should note that the 4th step is performed only if the sync workflow should sync the finished build. Otherwise, the 4th step is skipped. More precisely, this means that if the workflow is dispatched with the `build_started` event, the job shouldn't wait for a build to finish as the sync is performed for the running build. On the other hand, if the workflow is dispatched with the `build_finished` event, the job should wait for the build to finish before performing sync.
 
 Although the job performs two additional steps after the sync is finished, they don't matter as the build is already synced. The steps that precede the synchronization influence the time spent for a new build to be available in the destination database and appear on the Metrics Web Application. Therefore, we focus on steps from the initial to the sync step itself (1-6).
 
 The following table contains the information about the execution time of each step of the sync job. The original sample contains eleven objects representing a single job run each. Please note that the value `0 s` (zero seconds) means `close to 0s` - the reason is that GitHub Actions API and web UI don't provide the precise value in milliseconds.
 
-||Setup|Checkout|Download|Wait|Configure|Sync|
-|---|---|---|---|---|---|---|
-|_Average_|7,18 s|12,91 s|1,91 s|1,27 s|0,18 s|3,27 s|
-|_Trimmed mean_|5,44 s|9,11 s|1,89 s|0,44 s|0,11 s|3,33 s|
-|_Max_|28 s|58 s|4 s|10 s|1 s|4 s|
-|_Min_|2 s|2 s|0 s|0 s|0 s|2 s|
-|_Median_|3 s|3 s|2 s|0 s|0 s|3 s|
-|_Mode_|3 s|3 s|1 s|0 s|0 s|4 s|
+||Setup|Checkout|Download|Wait|Configure|Sync|Total|
+|---|---|---|---|---|---|---|---|
+|_Average_|7,18 s|12,91 s|1,91 s|1,27 s|0,18 s|3,27 s|26,73 s|
+|_Trimmed mean_|5,44 s|9,11 s|1,89 s|0,44 s|0,11 s|3,33 s|21,11 s|
+|_Max_|28 s|58 s|4 s|10 s|1 s|4 s|95 s|
+|_Min_|2 s|2 s|0 s|0 s|0 s|2 s|9 s|
+|_Median_|3 s|3 s|2 s|0 s|0 s|3 s|13 s|
+|_Mode_|3 s|3 s|1 s|0 s|0 s|4 s|9 s|
+
+_**Note**: The **Total** column is calculated using the original sample and is not the sum of values in the corresponding row._
 
 In the table above we must use the trimmed mean (more precisely, [interquartile mean](https://en.wikipedia.org/wiki/Interquartile_mean) in this case) to demonstrate that the sample contains some extreme values. These extreme values mostly occur as a setup, checkout, or wait steps execution time. Consider the _max_, _min_, [_median_](https://en.wikipedia.org/wiki/Median), and [_mode_](https://en.wikipedia.org/wiki/Mode_(statistics)) rows to know more about values' distribution.
 
@@ -133,14 +135,16 @@ Unlike GitHub Actions, the Buildkite sync pipeline is configured with as few ste
 
 The following table contains the information about the execution time of each step of the sync pipeline. The original sample consists of ten objects representing a single pipeline run each.
 
-||Upload|Log|Sync|
-|---|---|---|---|
-|_Average_|3,36 s|2,36 s|25,82 s|
-|_Trimmed mean_|3,22 s|2,22 s|25,44 s|
-|_Max_|5 s|4 s|31 s|
-|_Min_|3 s|2 s|24 s|
-|_Median_|3 s|2 s|26 s|
-|_Mode_|3 s|2 s|26 s|
+||Upload|Log|Sync|Total|
+|---|---|---|---|---|
+|_Average_|3,36 s|2,36 s|25,82 s|31,55 s|
+|_Trimmed mean_|3,22 s|2,22 s|25,44 s|31,33 s|
+|_Max_|5 s|4 s|31 s|36 s|
+|_Min_|3 s|2 s|24 s|29 s|
+|_Median_|3 s|2 s|26 s|31 s|
+|_Mode_|3 s|2 s|26 s|31 s|
+
+_**Note**: The **Total** column is calculated using the original sample and is not the sum of values in the corresponding row._
 
 As we can see from the table above, the synchronization pipeline is pretty stable. The execution time values for different sync runs are distributed around the average value with a small variance. On average, the sync pipeline executes in around `32 seconds`.
 
