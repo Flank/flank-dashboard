@@ -1,0 +1,27 @@
+@startuml prompter_class_diagram
+
+package prompter {
+    package writer {
+        interface PromptWriter {
+            + info(String text) : void
+            + prompt(String text) : String
+            + promptConfirm(String text, String confirmInput) : bool
+        }
+
+        class IOPromptWriter implements PromptWriter {
+            - _stdin : Stdin
+            - _stdout : Stdout
+        }
+    }
+
+    class Prompter {
+        - _promptWriter : PromptWriter
+        + info(String text) : void
+        + prompt(String text) : String
+        + promptConfirm(String text, {String confirmInput}) : bool
+    }
+}
+
+Prompter --> PromptWriter : uses
+
+@enduml

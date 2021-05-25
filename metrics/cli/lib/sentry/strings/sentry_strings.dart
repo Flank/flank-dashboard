@@ -8,7 +8,7 @@ class SentryStrings {
   static const String enterReleaseName = '''
 The last thing required for the Sentry configuration is a release name. The Sentry web page will display the entered release name in the issues tags.
 While creating a release name, consider it cannot:  
-- contain newlines, tabulator characters, forward slashes(/), or back slashes();
+- contain newlines, tabulator characters, forward slashes(/), or back slashes(\\);
 - be (in their entirety) period (.), double period (..), or space ( );
 - exceed 200 characters.
 Please enter your Sentry release name:''';

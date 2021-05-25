@@ -1,19 +1,15 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:io';
 
+import 'package:links_checker/checker/error/links_checker_error.dart';
 import 'package:links_checker/checker/links_checker.dart';
-import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("LinksChecker", () {
-    final linksChecker = LinksChecker();
-    final file = _FileMock();
-    final files = <File>[file];
-
     const urls = [
       'http://raw.githubusercontent.com/platform-platform/monorepo',
       'http://github.com/platform-platform/monorepo/blob',
@@ -26,10 +22,13 @@ void main() {
       'https://github.com/platform-platform/monorepo/raw',
       'https://raw.com',
     ];
-
     const validSuffix = 'master/';
     const invalidSuffix = 'invalid/';
     const validLikeSuffix = 'master_like/';
+
+    final linksChecker = LinksChecker(urls);
+    final file = _FileMock();
+    final files = <File>[file];
 
     tearDown(() {
       reset(file);
@@ -47,7 +46,7 @@ void main() {
     );
 
     test(
-      ".checkFiles() throws a LinksCheckerException if the given files contain invalid links",
+      ".checkFiles() throws a LinksCheckerError if the given files contain invalid links",
       () {
         final invalidUrls = urls.map((url) => '$url/$invalidSuffix').join(',');
 
@@ -55,13 +54,13 @@ void main() {
 
         expect(
           () => linksChecker.checkFiles(files),
-          throwsA(isA<LinksCheckerException>()),
+          throwsA(isA<LinksCheckerError>()),
         );
       },
     );
 
     test(
-      ".checkFiles() throws a LinksCheckerException if the given files contain master-like links",
+      ".checkFiles() throws a LinksCheckerError if the given files contain master-like links",
       () {
         final masterLikeUrls =
             urls.map((url) => '$url/$validLikeSuffix').join(',');
@@ -70,7 +69,7 @@ void main() {
 
         expect(
           () => linksChecker.checkFiles(files),
-          throwsA(isA<LinksCheckerException>()),
+          throwsA(isA<LinksCheckerError>()),
         );
       },
     );

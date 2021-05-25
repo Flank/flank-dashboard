@@ -1,110 +1,182 @@
 @startuml deploy_command_class_diagram
 
-package firebase.service {
-    interface FirebaseService {
-        + login(): Future<void>
-        + createWebApp(String projectId): Future<void>
-        + deployHosting(String projectId, String target, String appPath): Future<void>
-        + deployFirebase(String projectId, String firebasePath): Future<void>
-        + configureAuthProviders(String projectId) : FutureOr<String>
-        + enableAnalytics(String projectId) : FutureOr<void>
-        + initializeFirestoreData(String projectId) : FutureOr<void>
-        + upgradeBillingPlan(String projectId) : FutureOr<void>
-        + acceptTermsOfService() : FutureOr<void>
-    }
-}
+package services {
+    package firebase {
+        interface FirebaseService {
+            + login(): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + deployHosting(String projectId, String target, String appPath): Future<void>
+            + deployFirebase(String projectId, String firebasePath): Future<void>
+            + upgradeBillingPlan(String projectId) : FutureOr<void>
+            + initializeFirestoreData(String projectId) : FutureOr<void>
+            + enableAnalytics(String projectId) : FutureOr<void>
+            + configureAuthProviders(String projectId) : FutureOr<String>
+            + acceptTermsOfService() : FutureOr<void>
+        }
+  }
 
-package gcould.service {
-    interface GCloudService {
-        + login() : Future<void>
-        + createProject() : Future<String>
+    package gcloud {
+        interface GCloudService {
+            + login() : Future<void>
+            + createProject() : Future<String>
+            + acceptTermsOfService() : FutureOr<void>
+            + configureOAuthOrigins(String projectId) : FutureOr<void>
+            + configureProjectOrganization(String projectId) : FutureOr<void>
+        }
     }
-}
 
-package flutter.service {
-    interface FlutterService  {
-        + build(String appPath) : Future<void>
+    package flutter {
+        interface FlutterService  {
+            + build(String appPath) : Future<void>
+        }
     }
-}
 
-package  git.service{
-    interface GitService  {
-        + checkout(String repoUrl, String targetDirectory) : Future<void>
+    package  git {
+        interface GitService {
+            + checkout(String repoUrl, String targetDirectory) : Future<void>
+        }
     }
-}
 
-package  npm.service {
-    interface NpmService  {
-        + installDependencies(String path) : Future<void>
+    package  npm {
+        interface NpmService {
+            + installDependencies(String path) : Future<void>
+        }
     }
-}
 
-package sentry.service{
-    interface SentryService  {
-        + login() : Future<void>
-        + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
-        + getProjectDsn(SentryProject project) : String
+    package sentry {
+        interface SentryService {
+            + login() : Future<void>
+            + createRelease(List<SourceMap> sourceMaps) : Future<SentryRelease>
+            + getProjectDsn(SentryProject project) : String
+        }
     }
 }
 
 package common {
-    package model {
+    package model as common.model {
+        package factory as model.factory {
+            class ServicesFactory {
+                + create() : Services
+            }
+        }
+
         class Services {
-            + npmService : NpmService
-            + gitService : GitService
             + flutterService : FlutterService
             + gcloudService : GCloudService
+            + npmService : NpmService
+            + gitService : GitService
             + firebaseService : FirebaseService
             + sentryService : SentryService
         }
     }
+}
 
-    package factory as common.factory{
-        class ServicesFactory {
-            + create() : Services
+package common as common1 {
+    package model as common1.model1 {
+        class WebMetricsConfig {
+            + {static} googleSignInClientIdName : String
+            + {static} sentryDsnName : String
+            + {static} sentryEnvironmentName : String
+            + {static} sentryReleaseName : String
+            + sentryConfig : SentryConfig
+            + toMap() : Map<String, String>
         }
+
+        class SentryConfig {
+            + dsn : String
+            + environment : String
+            + release : String
+        }
+
     }
 }
 
+package core.domain.entities {
+    interface MetricsConfig {
+        + googleSignInClientId : String
+        + sentryDsn : String
+        + sentryEnvironment : String
+        + sentryRelease : String
+    }
+}
 
-package deploy {
+package cli {
     package command {
         class DeployCommand {
-            - _deployerFactory : DeployerFactory
+            + name : String
+            + description : String
+            + deployerFactory : DeployerFactory
             + run() : Future<void>
         }
     }
 
-    package constants {
-        class DeployConstants{}
-    }
+    package deployer {
+        package constants {
+            class DeployConstants {
+                + {static} repoURL : String
+                + {static} firebaseTarget : String
+                + {static} sentryEnvironment : String
+                + {static} tempDirectoryPrefix : String
+            }
+        }
 
-    package factory {
-        class DeployerFactory {
-            - _servicesFactory : ServicesFactory
-            + create() : Deployer
+        package factory {
+            class DeployerFactory {
+                - _servicesFactory : ServicesFactory
+                + create() : Deployer
+            }
+        }
+
+        package model as deployer.model {
+            package factory as deployer.model.factory{
+                class DeployPathsFactory {
+                    + create(String rootPath) : DeployPaths
+                }
+            }
+
+            class DeployPaths {
+                + rootPath : String
+                + webAppPath : String
+                + webAppBuildPath : String
+                + firebasePath : String
+                + firebaseFunctionsPath : String
+                + metricsConfigPath : String
+            }
+        }
+
+        package strings {
+            class DeployStrings {
+                + {static} setupSentry : String
+            }
+        }
+
+        class Deployer {
+            - _flutterService : FlutterService
+            - _gcloudService : GCloudService
+            - _npmService : NpmService
+            - _gitService : GitService
+            - _firebaseService : FirebaseService
+            - _sentryService : SentryService
+            - _fileHelper: FileHelper
+            - _prompter: Prompter
+            - _deployPathsFactory: DeployPathsFactory
+            + deploy() : Future<void>
         }
     }
+}
 
-    class Deployer {
-        - _fileHelper: FileHelper
-        - _npmService : NpmService
-        - _gitService : GitService
-        - _flutterService : FlutterService
-        - _gcloudService : GCloudService
-        - _firebaseService : FirebaseService
-        - _sentryService : SentryService
-        + deploy() : Future<void>
+package util {
+    package file {
+        class FileHelper {
+            + getFile(String path) : File
+            + createTempDirectory(Directory directory, String prefix) : Directory
+            + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : void
+        }
     }
 }
 
-package helper {
-    class FileHelper {
-        + getFile(String path) : File
-        + getDirectory(String path) : Directory
-        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : void
-    }
-}
+Services --> services : uses
+ServicesFactory --> Services : creates
 
 Deployer -down-> NpmService : uses
 Deployer -down-> GitService : uses
@@ -113,15 +185,22 @@ Deployer -down-> GCloudService : uses
 Deployer -down-> FirebaseService : uses
 Deployer -down-> SentryService : uses
 Deployer -left-> FileHelper : uses
-Deployer -> DeployConstants : uses
-Deployer -> Services : uses
+Deployer -up-> DeployConstants : uses
+Deployer --> Services : uses
+Deployer ---> WebMetricsConfig : uses
+Deployer ---> SentryConfig : uses
+Deployer -> DeployPaths : uses
+Deployer -up-> DeployPathsFactory : uses
+Deployer -up-> DeployStrings : uses
 
-DeployCommand -down-> Deployer : uses
+DeployCommand --> Deployer : uses
 DeployCommand -down-> DeployerFactory : uses
-DeployerFactory -left-> ServicesFactory : uses
 
-ServicesFactory --> Services : creates
+DeployerFactory -right> ServicesFactory : uses
+DeployerFactory -down-> Deployer : creates
+DeployPathsFactory -right-> DeployPaths : creates
 
-DeployerFactory --> Deployer : creates
+WebMetricsConfig -> SentryConfig : uses
+WebMetricsConfig .down.|> MetricsConfig
 
 @enduml
