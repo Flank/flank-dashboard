@@ -112,7 +112,7 @@ Consider the following table that describes the fields of a document within the 
 |`buildStatus` | A resulting status of this build.                           |
 |`coverage`    | A test coverage percent of this build.                      |
 |`duration`    | A duration of this build excluding the queue time.          |
-|`projectId`   | An id of the project this build belongs to.                 |
+|`projectId`   | An identifier of the project this build belongs to          |
 |`startedAt`   | A date-time of this build's start.                          |
 |`url`         | A URL of the source control revision used to run the build. |
 |`workflowName`| A name of the workflow that executed this build.            |
@@ -133,12 +133,12 @@ Consider the following table that describes the fields of a document within the 
 
 | Field                      | Description                                                                            |
 |----------------------------|----------------------------------------------------------------------------------------|
-| `projectId`                | An id of the project this build day belongs to.                                        |
-| `day`                      | A timestamp of this build day.                                                         |
-| `successful`               | A total number of successful builds performed during this build day.                   |
-| `failed`                   | A total number of failed builds performed during this build day.                       |
-| `inProgress`               | A total number of in-progress builds started during this build day.                    |
-| `successfulBuildsDuration` | A total duration in milliseconds of successful builds performed during this build day. |
+| `projectId`                | An identifier of the project this build day belongs to.                                |
+| `day`                      | A timestamp of the start of this day in the UTC timezone.                              |
+| `successful`               | A total number of successful builds performed during this day.                         |
+| `failed`                   | A total number of failed builds performed during this day.                             |
+| `inProgress`               | A total number of in-progress builds started during this day.                          |
+| `successfulBuildsDuration` | A total duration in milliseconds of successful builds performed during this day.       |
 
 Here is a table of security rules applied to the `build_days` collection:
 
@@ -218,7 +218,7 @@ Here is a table of security rules applied to the `feature_config` collection:
 
 ### The `tasks` collection
 
-The `tasks` collection contains the list of failed [Firebase Cloud functions](#firebase-cloud-functions) to re-run them separately. The single document of this collection stands for a single failed task that needs to be re-run.
+The `tasks` collection contains the list of queued tasks. The single document of this collection stands for a single queued task that needs to be run.
 
 Consider the following table that describes the fields of a document in the `tasks` collection:
 
@@ -255,15 +255,25 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 ### Firebase Cloud Functions
 
-The [Firebase Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) component is responsible the [`build_days` collection](#the-build_days-collection) updates when the [`build` collection](#the-build-collection) changes. The `Firebase Cloud Functions` do not store any data, and just process the [`build` collection](#the-build-collection) updates.
+The [Firebase Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) component is responsible for the server-side data processing (e.g. email domain validation or the [`build_days` collection](#the-build_days-collection) updates when the [`build` collection](#the-build-collection) changes). 
 
-The `Firebase Cloud Functions` includes the two main functions: `onBuildAdded` and `onBuildUpdated`. Let's review them in a bit more details:
+Consider the following list of cloud functions used in the Metrics Application:
+- [The `validateEmailDomain` function](#the-validateemaildomain-function);
+- [The `onBuildAdded` function](#the-onbuildadded-function);
+- [The `onBuildUpdated` function](#the-onbuildupdated-function).
+
+Let's review each of them in a bit more details:
+
+#### The `validateEmailDomain` function
+This function is responsible for the [email domain validation](#email-domains-validation) for the Google sign-in option
 
 #### The `onBuildAdded` function
 This function is triggered when a new build is added to the [`build` collection](#the-build-collection). If this build is the first build of this project performed during a day, the function creates a new document in the [`build_days` collection](#the-build_days-collection) and adds the build data aggregation to it. Otherwise, the function updates an existing `build_day` document.
 
 #### The `onBuildUpdated` function
 This function is triggered when a specific build is updated in the [`build` collection](#the-build-collection), for example, when an in-progress build finishes and the [CI Integrations tool](#ci-integrations) updates its data in the database. The function searches for a build day aggregation the old build data belongs to and updates any necessary fields.
+
+_NOTE: Any of the functions above does not store and/or expose any data to the third-parties applications._
 
 ### Firebase Key Protection
 
