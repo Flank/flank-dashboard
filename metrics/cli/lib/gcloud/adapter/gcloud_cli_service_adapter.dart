@@ -75,4 +75,9 @@ class GCloudCliServiceAdapter implements GCloudService {
   FutureOr<void> configureProjectOrganization(String projectId) {
     _prompter.prompt(GCloudStrings.configureProjectOrganization(projectId));
   }
+
+  @override
+  Future<void> deleteProject(String projectId) {
+    return _gcloudCli.deleteProject(projectId);
+  }
 }

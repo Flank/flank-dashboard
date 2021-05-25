@@ -23,4 +23,7 @@ abstract class GCloudService extends InfoService {
 
   /// Configures the organization for the project with the given [projectId].
   FutureOr<void> configureProjectOrganization(String projectId);
+
+  /// Deletes the GCloud project with the given [projectId].
+  Future<void> deleteProject(String projectId);
 }
