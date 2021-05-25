@@ -5,28 +5,36 @@ import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/gcloud/strings/gcloud_strings.dart';
 import 'package:mockito/mockito.dart';
+import 'package:random_string/random_string.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
 import '../../test_utils/prompter_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group('GCloudCliServiceAdapter', () {
-    const projectId = 'projectId';
+    const projectId = 'metrics-00000';
     const projectName = 'projectName';
     const region = 'testRegion';
     const enterRegion = GCloudStrings.enterRegionName;
     const acceptTerms = GCloudStrings.acceptTerms;
-    const enterProjectName = GCloudStrings.enterProjectName;
 
     final gcloudCli = _GCloudCliMock();
     final prompter = PrompterMock();
-    final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
+    final randomProvider = _RandomProviderStub();
+    final gcloudService = GCloudCliServiceAdapter(
+      gcloudCli,
+      prompter,
+      randomProvider,
+    );
     final stateError = StateError('test');
     final configureOAuth = GCloudStrings.configureOAuth(projectId);
     final configureOrganization = GCloudStrings.configureProjectOrganization(
       projectId,
     );
+    final enterProjectName = GCloudStrings.enterProjectName(projectId);
     final confirmProjectName = GCloudStrings.confirmProjectName(projectName);
 
     tearDown(() {
@@ -141,9 +149,11 @@ void main() {
       () async {
         whenEnterRegionPrompt().thenReturn(region);
         when(prompter.prompt(enterProjectName)).thenReturn('');
-        when(prompter.promptConfirm(any)).thenReturn(true);
+        when(
+          prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
+        ).thenReturn(true);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(
           prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
@@ -206,7 +216,7 @@ void main() {
         whenEnterRegionPrompt().thenReturn(region);
         whenConfirmProjectName().thenReturn(true);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createProject(projectId, projectName)).called(once);
       },
@@ -250,7 +260,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.listRegions(projectId)).called(once);
       },
@@ -333,7 +343,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createProjectApp(region, projectId)).called(once);
       },
@@ -379,7 +389,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
       },
@@ -426,7 +436,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createDatabase(region, projectId)).called(once);
       },
@@ -441,7 +451,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createDatabase(expectedRegion, projectId))
             .called(once);
@@ -466,7 +476,7 @@ void main() {
         whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         expect(projectId, isNotNull);
         verify(gcloudCli.createProject(projectId, projectName)).called(once);
@@ -554,3 +564,10 @@ void main() {
 }
 
 class _GCloudCliMock extends Mock implements GCloudCli {}
+
+class _RandomProviderStub implements AbstractRandomProvider {
+  @override
+  double nextDouble() {
+    return 0;
+  }
+}

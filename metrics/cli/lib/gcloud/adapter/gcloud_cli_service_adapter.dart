@@ -18,12 +18,21 @@ class GCloudCliServiceAdapter implements GCloudService {
   /// A [Prompter] class this adapter uses to interact with a user.
   final Prompter _prompter;
 
+  /// An [AbstractRandomProvider] class uses to generate the [double] values.
+  final AbstractRandomProvider _randomProvider;
+
   /// Creates a new instance of the [GCloudCliServiceAdapter]
   /// with the given [GCloudCli].
   ///
+  /// If the [randomProvider] is `null`, the [DefaultRandomProvider] is used.
+  ///
   /// Throws an [ArgumentError] if the given [GCloudCli] is `null`.
   /// Throws an [ArgumentError] if the given [Prompter] is `null`.
-  GCloudCliServiceAdapter(this._gcloudCli, this._prompter) {
+  GCloudCliServiceAdapter(
+    this._gcloudCli,
+    this._prompter, [
+    AbstractRandomProvider randomProvider,
+  ]) : _randomProvider = randomProvider ?? const DefaultRandomProvider() {
     ArgumentError.checkNotNull(_gcloudCli, 'gcloudCli');
     ArgumentError.checkNotNull(_prompter, 'prompter');
   }
@@ -68,8 +77,9 @@ class GCloudCliServiceAdapter implements GCloudService {
 
   /// Generates the project identifier.
   String _generateProjectId() {
-    final randomString = randomAlphaNumeric(5).toLowerCase();
-    return 'metrics-$randomString';
+    final randomString = randomAlphaNumeric(5, provider: _randomProvider);
+
+    return 'metrics-$randomString'.toLowerCase();
   }
 
   /// Prompts the GCloud project name.
@@ -77,17 +87,19 @@ class GCloudCliServiceAdapter implements GCloudService {
   /// Uses the [projectId] as the project's name
   /// if the user doesn't specify the name.
   String _promptGCloudProjectName(String projectId) {
-    bool userConfirm = false;
+    bool projectNameConfirmed = false;
     String projectName;
 
-    while (!userConfirm) {
-      final userProjectName = _prompter.prompt(GCloudStrings.enterProjectName);
-      final projectNameTrimmed = userProjectName.trim();
+    while (!projectNameConfirmed) {
+      final userProjectName = _prompter.prompt(
+        GCloudStrings.enterProjectName(projectId),
+      );
+      final trimmedProjectName = userProjectName.trim();
 
-      projectName = projectNameTrimmed.isEmpty ? projectId : projectNameTrimmed;
-      userConfirm = _prompter.promptConfirm(GCloudStrings.confirmProjectName(
-        projectName,
-      ));
+      projectName = trimmedProjectName.isEmpty ? projectId : trimmedProjectName;
+      projectNameConfirmed = _prompter.promptConfirm(
+        GCloudStrings.confirmProjectName(projectName),
+      );
     }
 
     return projectName;
