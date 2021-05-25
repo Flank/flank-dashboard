@@ -1,6 +1,6 @@
 flutter: 1.25.0-8.2.pre
-gcloud: ^340.0.0
-npm: ^6.14.10
-git: ^2.21.0
-firebase: ^9.8.0
-sentry-cli: ^1.60.1
+gcloud: 341.0.0
+npm: 6.14.13
+git: 2.31.1
+firebase: 9.11.0
+sentry-cli: 1.64.2
