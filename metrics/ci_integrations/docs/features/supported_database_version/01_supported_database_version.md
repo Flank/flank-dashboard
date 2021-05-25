@@ -50,7 +50,7 @@ Let's review the way of getting each of them separately:
 
 Since the CI Integrations tool is built with the `SUPPORTED_DATABASE_VERSION` environment variable (based on the [Storing Database Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_database_metadata.md#supported-database-version) document), we can get this value in the application from the environment, using the `ApplicationMetadata` class from the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library (as described in this [section](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/supported_database_version/01_supported_database_version.md#supported-database-version)).
 
-When we have the `SUPPORTED_DATABASE_VERSION` value, we need to provide it to the `CompatibilitySyncStage`.  To do that, we can add a `supportedDatabaseVersion` field to the `SyncConfig` class to store it and call the `CompatibilitySyncStage`s with the `SyncConfig` instance so the `SUPPORTED_DATABASE_VERSION` value is accessible.
+When we have the `SUPPORTED_DATABASE_VERSION` value, we need to provide it to the `CompatibilitySyncStage`.  To do that, we can add a `supportedDatabaseVersion` field to the `SyncConfig` class to store it and call the `CompatibilitySyncStage` with the `SyncConfig` instance so the `SUPPORTED_DATABASE_VERSION` value is accessible.
 
 Let's proceed to the next [section](#Getting-Database-Metadata) and consider the ways of getting the Firestore database metadata in the CI Integrations tool.
 
