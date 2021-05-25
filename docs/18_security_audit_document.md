@@ -112,7 +112,7 @@ Consider the following table that describes the fields of a document within the 
 |`buildStatus` | A resulting status of this build.                           |
 |`coverage`    | A test coverage percent of this build.                      |
 |`duration`    | A duration of this build excluding the queue time.          |
-|`projectId`   | An identifier of the project this build belongs to          |
+|`projectId`   | An identifier of the project this build belongs to.         |
 |`startedAt`   | A date-time of this build's start.                          |
 |`url`         | A URL of the source control revision used to run the build. |
 |`workflowName`| A name of the workflow that executed this build.            |
