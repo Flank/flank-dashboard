@@ -98,7 +98,7 @@ dart2native bin/main.dart --define=SUPPORTED_DATABASE_VERSION=$SUPPORTED_VERSION
 To get the application version in the Metrics applications, we can use the following line of code: 
 
 ```dart
-const supportedDatabaseVersion = String.fromEnvironment('SUPPORTED_DATABASE_VERSION');
+const supportedStorageVersion = String.fromEnvironment('SUPPORTED_DATABASE_VERSION');
 ```
 
 ## Making Things Work

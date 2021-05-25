@@ -33,7 +33,7 @@ package metadata {
 
 
         package repositories {
-            class FirestoreStorageMetadataRepository implements DatabaseMetadataRepository {
+            class FirestoreStorageMetadataRepository implements StorageMetadataRepository {
                 - firestore : Firestore
             }
         }
@@ -42,7 +42,7 @@ package metadata {
 
 FirestoreStorageMetadataRepository --> StorageMetadataData : provides
 
-DatabaseMetadataRepository -> StorageMetadata : provides
+StorageMetadataRepository -> StorageMetadata : provides
 
 
 @enduml
