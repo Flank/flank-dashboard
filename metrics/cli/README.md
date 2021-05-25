@@ -30,9 +30,9 @@ Now you can execute `Metrics CLI` commands using the next form:
 
 ## Use the releases
 
-You can download the built Metrics CLI tool from the [CLI releases](https://github.com/platform-platform/dashboard/releases) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
-- [`CLI for Linux`](#)
-- [`CLI for macOS`](#)
+You can download the built Metrics CLI tool from the [CLI releases](https://github.com/platform-platform/monorepo/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+- [`CLI for Linux`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux)
+- [`CLI for macOS`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos)
 
 Now you can use the binary to run `Metrics CLI` commands:
 
