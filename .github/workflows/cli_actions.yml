@@ -136,7 +136,7 @@ jobs:
       - name: Delete release
         run: |
           gh release delete ${{ env.TAG_NAME }} -y
-          git push --delete origin cli-snapshot
+          git push --delete origin ${{ env.TAG_NAME }}
         continue-on-error: true
 
       - name: Create release
