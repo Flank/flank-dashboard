@@ -258,22 +258,22 @@ The tests also cover invalid data input cases if the rule requires additional da
 The [Firebase Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) component is responsible for the server-side data processing (e.g. email domain validation or the [`build_days` collection](#the-build_days-collection) updates when the [`build` collection](#the-build-collection) changes). 
 
 Consider the following list of cloud functions used in the Metrics Application:
-- [The `validateEmailDomain` function](#the-validateemaildomain-function);
-- [The `onBuildAdded` function](#the-onbuildadded-function);
-- [The `onBuildUpdated` function](#the-onbuildupdated-function).
+- The [validateEmailDomain](#the-validateemaildomain-function) function;
+- The [onBuildAdded](#the-onbuildadded-function) function;
+- The [onBuildUpdated](#the-onbuildupdated-function) function.
+
+_NOTE: Any of the functions above does not store and/or expose any data to the third-parties applications._
 
 Let's review each of them in a bit more details:
 
 #### The `validateEmailDomain` function
-This function is responsible for the [email domain validation](#email-domains-validation) for the Google sign-in option
+This function is responsible for the [email domain validation](#email-domains-validation) for the Google sign-in option.
 
 #### The `onBuildAdded` function
 This function is triggered when a new build is added to the [`build` collection](#the-build-collection). If this build is the first build of this project performed during a day, the function creates a new document in the [`build_days` collection](#the-build_days-collection) and adds the build data aggregation to it. Otherwise, the function updates an existing `build_day` document.
 
 #### The `onBuildUpdated` function
 This function is triggered when a specific build is updated in the [`build` collection](#the-build-collection), for example, when an in-progress build finishes and the [CI Integrations tool](#ci-integrations) updates its data in the database. The function searches for a build day aggregation the old build data belongs to and updates any necessary fields.
-
-_NOTE: Any of the functions above does not store and/or expose any data to the third-parties applications._
 
 ### Firebase Key Protection
 
