@@ -17,8 +17,8 @@ participant GitService
 participant NpmService
 participant FlutterService
 participant SentryService
+participant DeployPathsFactory
 end box
-
 
 participant FileHelper
 
@@ -31,6 +31,11 @@ GCloudService --> Bob : start interactive login
 Bob -> GCloudService : signs in
 GCloudService --> Deployer -- : sign in finished
 
+Deployer -> GCloudService ++ : acceptTermsOfService()
+GCloudService --> Bob : asks to accept terms of GCloud service
+Bob -> GCloudService : accepts terms
+GCloudService --> Deployer  -- : terms accepted
+
 Deployer -> FirebaseService ++ : login()
 FirebaseService --> Bob : starts interactive login
 Bob -> FirebaseService : signs in
@@ -39,18 +44,32 @@ FirebaseService --> Deployer -- : sign in finished
 Deployer -> FirebaseService ++ : acceptTermsOfService()
 FirebaseService --> Bob : asks to accept terms of Firebase service
 Bob -> FirebaseService : accepts terms
-FirebaseService -> Deployer  -- : terms accepted
+FirebaseService --> Deployer  -- : terms accepted
 
 Deployer -> GCloudService ++ : createProject()
-
 GCloudService --> Bob : asks to enter the regionId
 Bob -> GCloudService : enters the regionId
-
 GCloudService --> Deployer -- : gcloud project has been created
 
-Deployer -> FirebaseService ++ : createWebApp(projectId)
+Deployer -> GCloudService ++ : configureProjectOrganization(projectId)
+GCloudService --> Bob : asks to configure the organization for the project
 
+alt configures the organization
+Bob -> GCloudService : configures the organization for the project
+else skips configuring the organization
+Bob -> GCloudService : skips configuring the organization for the project
+end
+
+GCloudService --> Deployer -- : GCloud organization configuration finished
+
+Deployer -> FirebaseService ++ : createWebApp(projectId)
 FirebaseService --> Deployer -- : firebase project has been added
+
+Deployer -> FileHelper ++: createTempDirectory()
+FileHelper --> Deployer --: directory has been created
+
+Deployer -> DeployPathsFactory ++: create()
+DeployPathsFactory --> Deployer --: DeployPaths has been created
 
 Deployer -> GitService ++ : checkout(repoUrl, srcPath)
 GitService --> Deployer -- : checkout finished
@@ -63,27 +82,27 @@ Deployer -> NpmService ++ : installDependencies(firebaseFunctionsPath)
 NpmService --> Deployer --: dependencies have been installed
 
 Deployer -> FlutterService ++ : build(appPath)
-FlutterService -> Deployer -- : build finished
+FlutterService --> Deployer -- : build finished
 
 Deployer -> FirebaseService ++ : upgradeBillingPlan(projectId)
 FirebaseService --> Bob : asks to upgrade billing plan
 Bob -> FirebaseService : upgrades billing plan
-FirebaseService -> Deployer  -- : billing plan upgraded
+FirebaseService --> Deployer  -- : billing plan upgraded
 
 Deployer -> FirebaseService ++ : enableAnalytics(projectId)
 FirebaseService --> Bob : asks to enable Analytics
 Bob -> FirebaseService : enables Analytics
-FirebaseService -> Deployer  -- : Analytics enabled
+FirebaseService --> Deployer  -- : Analytics enabled
 
 Deployer -> FirebaseService ++ : initializeFirestoreData(projectId)
 FirebaseService --> Bob : asks to initialize Firestore data
 Bob -> FirebaseService : initializes Firestore data
-FirebaseService -> Deployer  -- : Firestore data initialized
+FirebaseService --> Deployer  -- : Firestore data initialized
 
 Deployer -> FirebaseService ++ : configureAuthProviders(projectId)
 FirebaseService --> Bob : asks to configure Auth providers
 Bob -> FirebaseService : enters Google sign in client Id
-FirebaseService -> Deployer  -- : googleClientId
+FirebaseService --> Deployer  -- : googleClientId
 
 Deployer --> Bob : setup Sentry request
 alt configure Sentry
@@ -93,33 +112,45 @@ Bob -> SentryService : signs in
 SentryService --> Deployer -- : sign in finished
 
 Deployer -> SentryService ++ : createRelease(sourceMaps)
-SentryService -> Bob : asks to enter the Sentry's organizationSlug, projectSlug, and releaseName
+SentryService --> Bob : asks to enter the Sentry's organizationSlug, projectSlug, and releaseName
 Bob -> SentryService : enters Sentry params
-SentryService -> Deployer -- : sentryRelease
+SentryService --> Deployer -- : SentryRelease has been created
 
 Deployer -> SentryService ++ : getProjectDsn(sentryProject)
-SentryService -> Bob : asks to enter the Sentry project DSN
+SentryService --> Bob : asks to enter the Sentry project DSN
 Bob -> SentryService : enters Sentry project DSN
-SentryService -> Deployer -- : Sentry DSN
+SentryService --> Deployer -- : Sentry DSN
 
 else don't configure Sentry
 Deployer --> Deployer : Skip Sentry setup
 end
 
 Deployer -> FileHelper ++ : getFile(metricsConfigPath)
-FileHelper -> Deployer -- : config file
+FileHelper --> Deployer -- : config file
 Deployer -> FileHelper ++ : replaceEnvironmentVariables(config, options)
-FileHelper -> Deployer -- : config has been updated
+FileHelper --> Deployer -- : config has been updated
 
 Deployer -> FirebaseService ++ : deployFirestore(firestorePath)
 FirebaseService --> Deployer -- : firestore has been deployed
 
 Deployer -> FirebaseService ++ : deployHosting(projectId, target, appPath)
-FirebaseService -> Deployer -- : deploy finished
+FirebaseService --> Deployer -- : hosting has been deployed
 
-Deployer -> FileHelper ++: getDirectory(path)
-FileHelper --> Deployer --: directory
-Deployer -> Deployer : delete directory
+Deployer -> GCloudService ++ : configureOAuthOrigins(projectId)
+GCloudService --> Bob : asks to configure OAuth origins
+alt configures OAuth origins
+Bob -> GCloudService : configures OAuth origins
+
+else
+Bob -> GCloudService : skips configuring OAuth origins
+end
+
+GCloudService --> Deployer -- : OAuth origins configuration finished
+
+Deployer --> Bob : The deployment has finished successfully
+Deployer --> Bob : Deleting the temporary Metrics directory
+
+Deployer --> Deployer : delete directory
 Deployer --> DeployCommand --: deploy finished
 DeployCommand --> MetricsCliRunner --: command finished
 MetricsCliRunner --> Bob -- : terminate

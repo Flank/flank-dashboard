@@ -1,40 +1,45 @@
 @startuml cli_interfaces_class_diagram
 
-package interfaces {
-    package cli {
-        interface Cli {
-            + executable: String
-            + version() : Future<void>
-            + run(List<String> arguments, {bool attachOutput, String workingDirectory, Stream<List<int>> stdin}) : Future<ProcessResult>
-        }
-    }
-
-    package service {
-        interface InfoService {
-            + version() : void
-        }
-    }
-}
-
-package cool {
-    package service as cool.service{
-        interface CoolService extends InfoService{
+package services {
+    package cool as services.cool {
+        interface CoolService{
             + coolMethod() : void
         }
 
-        class CoolCliServiceAdapter implements CoolService {
-            - _coolCli : CoolCli
+        package adapter {
+            class CoolCliServiceAdapter implements CoolService {
+                - _coolCli : CoolCli
+            }
+       }
+
+        package cli {
+            class CoolCli {
+                + coolCommand() : void
+                + awesomeCommand() : void
+            }
         }
     }
 
-    package cli as cool.cli {
-        class CoolCli implements Cli {
-            + coolCommand() : void
-            + awesomeCommand() : void
+    package common {
+        package cli as common.cli {
+            interface Cli {
+                + executable: String
+                + version() : Future<void>
+                + run(List<String> arguments, {bool attachOutput, String workingDirectory, Stream<List<int>> stdin}) : Future<ProcessResult>
+            }
+        }
+
+        package service {
+            interface InfoService {
+                + version() : void
+            }
         }
     }
 }
 
-CoolCliServiceAdapter -> CoolCli : uses
+CoolCliServiceAdapter -down-> CoolCli : uses
+
+CoolService --|> InfoService
+CoolCli ..|> Cli
 
 @enduml
