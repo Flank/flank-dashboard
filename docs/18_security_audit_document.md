@@ -217,7 +217,7 @@ Here is a table of security rules applied to the `feature_config` collection:
 
 ### The `tasks` collection
 
-The `tasks` collection contains the list of failed Firestore Cloud functions to re-run them separately. The single document of this collection stands for a single task that was failed and needs to be re-run.
+The `tasks` collection contains the list of failed Firestore Cloud functions to re-run them separately. The single document of this collection stands for a single failed task that needs to be re-run.
 
 Consider the following table that describes the fields of a document in the `tasks` collection:
 
@@ -254,7 +254,7 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 ### Firebase Cloud Functions
 
-Metrics Web Application uses the [Firestore Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) to trigger the updates of the [`build_days` collection](#the-build_days-collection). The Functions itself do not store any data, and holds the logic for the `build_days` collection update.
+Metrics Web Application uses the [Firestore Cloud Functions](https://firebase.google.com/docs/firestore/extend-with-functions) to trigger the updates of the [`build_days` collection](#the-build_days-collection). The Functions itself do not store any data, and holds the logic for the `build_days` collection updates.
 
 Let's review the two main cloud functions in a bit more details:
 
