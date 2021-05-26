@@ -3,7 +3,7 @@
 
 import 'dart:io';
 
-import 'package:cli/runner/metrics_cli_runner.dart';
+import 'package:cli/cli/runner/metrics_cli_runner.dart';
 
 Future main(List<String> arguments) async {
   final runner = MetricsCliRunner();
