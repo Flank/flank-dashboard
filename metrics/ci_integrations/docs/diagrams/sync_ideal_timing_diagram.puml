@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/en/timing-diagram
+
+hide time-axis
+
+concise "Build Pipeline" as Build
+concise "Sync Pipeline" as Sync
+
+@0
+Build is {-}
+Sync is {-}
+
+@Build
+10 is "start"
++10 is build #palegreen
+Build -> Sync@+0 : trigger
++50 is finish
++10 is {-}
+Build -> Sync@+0 : trigger
+
+@Sync
+20 is "start"
++10 is sync #palegreen
++20 is finish
++10 is {-}
++20 is "start"
++10 is sync #palegreen
++20 is finish
++10 is {-}
+
+@enduml
