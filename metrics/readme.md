@@ -6,6 +6,21 @@ Metrics is a set of software components to collect and review software project m
 
 We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics application helps developers, project teams, and organizations to monitor and improve projects' performance, stability, and quality.
 
+## Installation
+
+There are a couple of ways to install the `Metrics`: 
+
+- [Manually using UI](#manual)
+- [Using the Metrics CLI](#using-metrics-cli)
+
+### Manual
+
+If you want to install the `Metrics` manually, you should download the [source code](https://github.com/platform-platform/monorepo/tree/master/metrics) and perform some Firebase configurations using the [Firebase web UI](https://console.firebase.google.com/). See [Metrics Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md) document to get more information about required configurations.
+
+### Using Metrics CLI
+
+If you prefer to automatically deploy to Firebase for the Metrics app, install it using the `Metrics CLI`. See [Metrics CLI installation](https://github.com/platform-platform/monorepo/blob/update_metrics_cli_readme/metrics/cli#installation) for more information.
+
 ### Attractive
 
 The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered by [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different projects by providing appropriate filters.
