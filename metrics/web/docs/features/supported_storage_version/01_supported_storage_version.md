@@ -27,7 +27,7 @@ This document has the following goals:
 
 > Identify what's not in scope.
 
-This document does not describe the way of storing the storage and supported storage versions. See [Storing Storage Metadata](https://github.com/platform-platform/monorepo/blob/ci_integrations_supported_database_version_doc/metrics/docs/01_storing_storage_metadata.md) document to get more info about these details.
+This document does not describe the way of storing the storage metadata and supported storage versions. See [Storing Storage Metadata](https://github.com/platform-platform/monorepo/blob/ci_integrations_supported_database_version_doc/metrics/docs/01_storing_storage_metadata.md) document to get more info about these details.
 
 # Design
 

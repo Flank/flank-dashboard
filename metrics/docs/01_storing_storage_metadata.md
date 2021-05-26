@@ -77,7 +77,7 @@ SUPPORTED_VERSION=$(cat ../STORAGE_VERSION)
 flutter build web --release --dart-define=SUPPORTED_STORAGE_VERSION=$SUPPORTED_VERSION
 ```
 
-So, we are getting the storage version from the STORAGE_VERSION file and storing it to the `SUPPORTED_VERSION` variable using the `SUPPORTED_VERSION=$(cat ../STORAGE_VERSION)` command. After that, we are using this variable in the `--dart-define=SUPPORTED_STORAGE_VERSION=$SUPPORTED_VERSION` flag to set the Flutter application environment variable.
+So, we are getting the storage version from the `STORAGE_VERSION` file and storing it to the `SUPPORTED_VERSION` variable using the `SUPPORTED_VERSION=$(cat ../STORAGE_VERSION)` command. After that, we are using this variable in the `--dart-define=SUPPORTED_STORAGE_VERSION=$SUPPORTED_VERSION` flag to set the Flutter application environment variable.
 
 ### Set supported storage version for the command line applications
 > Explain the way of passing the supported storage version to the command line applications.
