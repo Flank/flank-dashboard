@@ -439,7 +439,7 @@ void main() {
     );
 
     test(
-      ".deploy() creates the GCloud project before configuring the organization for it",
+      ".deploy() creates the GCloud project before adding the Firebase for it",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
@@ -449,7 +449,7 @@ void main() {
 
         verifyInOrder([
           gcloudService.createProject(),
-          gcloudService.configureProjectOrganization(any),
+          gcloudService.addFirebase(any),
         ]);
       },
     );
@@ -466,6 +466,21 @@ void main() {
           gcloudService.createProject(),
           firebaseService.createWebApp(any),
         ]);
+      },
+    );
+
+    test(
+      ".deploy() adds Firebase to the GCloud project with the created project id",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verify(
+          gcloudService.addFirebase(projectId),
+        ).called(once);
       },
     );
 
