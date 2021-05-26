@@ -51,12 +51,7 @@ Deployment to other platforms is out of scope.
 
 ## Before you begin
 
-Before you start, you should have the following installed:
-
-1. [Flutter](https://flutter.dev/docs/get-started/install)
-2. [npm](https://www.npmjs.com/get-npm)
-
-To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/raw/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
+Since the `Metrics CLI` is based on a list of third-party CLIs, you should have the required dependencies installed. To view the recommended versions of dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/raw/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 

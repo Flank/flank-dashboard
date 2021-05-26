@@ -2,7 +2,7 @@
 
 ![Metrics CLI](docs/images/terminal.png)
 
-A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules) and general setup.
+A command-line application, that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules) and general setup.
 
 It creates GCloud and Firebase projects, enables Firestore and other Firebase services necessary for correct Metrics Web Application working, and deploys the Metrics Web Application to the Firebase hosting. The tool downloads the source code by itself, so you don't have to check out the code from the repository before running the Metrics CLI.
 
@@ -40,6 +40,18 @@ Now you can execute `Metrics CLI` commands using the next form:
 You can download the built Metrics CLI tool from the [GitHub releases](https://github.com/platform-platform/monorepo/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links:
 - [`CLI for Linux`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux)
 - [`CLI for macOS`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos)
+
+Also, you can download the `Metrics CLI` tool using the CLI tools. Let's consider the macOS command to download the Metrics CLI:
+
+```bash
+curl -o <OUTPUT_PATH> -k <DOWNLOAD_URL> -L
+```
+
+Where the `<OUTPUT_PATH>` is the file path where you want to download the Metrics CLI, and the `<DOWNLOAD_URL>` is the download URL. Here is an example how to download the `Metrics CLi` for macOS:
+
+```bash
+curl -o metrics_cli -k https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos -L
+```
 
 Now you can use the binary to run `Metrics CLI` commands:
 

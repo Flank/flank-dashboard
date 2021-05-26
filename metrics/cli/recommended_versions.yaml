@@ -4,9 +4,9 @@
 flutter: 1.25.0-8.2.pre
 
 # Provides an ability to create and manage Google Cloud resources.
-# Used to create a GCloud project.
+# Used to create and configure a GCloud project.
 #
-# Consider the following link to install: https://cloud.google.com/sdk/gcloud
+# Consider the following link to install: https://cloud.google.com/sdk/docs/install
 gcloud: 341.0.0
 
 # Provides an ability to adapt packages of code for applications, download standalone tools, etc.
@@ -16,13 +16,13 @@ gcloud: 341.0.0
 npm: 6.14.13
 
 # Provides an ability to run Git commands.
-# Used to checkout the Metrics Web project from the remote repository.
+# Used to checkout the Metrics project from the remote repository.
 #
-# Consider the following link to install: https://cli.github.com/
+# Consider the following link to install: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 git: 2.31.1
 
 # Provides a variety of tools for managing, viewing, and deploying to Firebase projects.
-# Used to create a Firebase project and deploy the application.
+# Used to create a Firebase project and deploy the application components.
 #
 # Consider the following link to install: https://firebase.google.com/docs/cli
 firebase: 9.11.0
