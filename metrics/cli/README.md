@@ -12,7 +12,7 @@ Metrics CLI is available to install on macOS and Linux.
 
 # Requirements
 
-The `Metrics CLI` is based on a list of third-party CLIs. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
+The `Metrics CLI` is based on a list of third-party CLIs. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/raw/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 # Installation
 
@@ -23,7 +23,7 @@ There are a couple of ways to install the `Metrics CLI`:
 
 ## Build from the source
 
-If you've downloaded the [Metrics CLI](https://github.com/platform-platform/dashboard/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
+If you've downloaded the [Metrics CLI](https://github.com/platform-platform/monorepo/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
 
 ```bash
 make build

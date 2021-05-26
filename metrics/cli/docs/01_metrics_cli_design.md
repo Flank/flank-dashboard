@@ -191,7 +191,7 @@ Before you start, you should download the latest version of the Metrics CLI tool
 5. [gcloud](https://cloud.google.com/sdk/gcloud);
 6. [sentry-cli](https://docs.sentry.io/product/cli/installation).
 
-To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
+To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/raw/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 ### Doctor
 

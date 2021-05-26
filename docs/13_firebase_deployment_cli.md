@@ -10,7 +10,7 @@ Before you start, you should have the following installed:
 3. [Google Cloud SDK ](https://cloud.google.com/sdk/docs)
 4. [Firebase CLI](https://firebase.google.com/docs/cli)
 
-To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
+To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/raw/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 
