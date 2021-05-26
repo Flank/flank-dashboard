@@ -45,9 +45,9 @@ class GCloudCliServiceAdapter implements GCloudService {
   @override
   Future<String> createProject() async {
     final projectId = _generateProjectId();
-    final gcloudProjectName = _promptGCloudProjectName(projectId);
+    final projectName = _promptProjectName(projectId);
 
-    await _gcloudCli.createProject(projectId, gcloudProjectName);
+    await _gcloudCli.createProject(projectId, projectName);
 
     return projectId;
   }
@@ -91,7 +91,7 @@ class GCloudCliServiceAdapter implements GCloudService {
   ///
   /// Uses the [projectId] as the project's name
   /// if the user doesn't specify the name.
-  String _promptGCloudProjectName(String projectId) {
+  String _promptProjectName(String projectId) {
     bool projectNameConfirmed = false;
     String projectName;
 
