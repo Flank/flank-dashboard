@@ -1,0 +1,80 @@
+@startuml metadata_sequence_diagram
+
+
+participant Bob
+
+participant MetadataNotifier
+
+participant ReceiveStorageMetadataUpdates
+
+participant ApplicationMetadata
+
+participant FirestoreStorageMetadataRepository
+
+participant NavigationNotifier
+
+participant AuthNotifier
+
+
+database Firestore
+
+
+Bob -> MetadataNotifier : opens the application
+activate MetadataNotifier
+
+MetadataNotifier -> ReceiveStorageMetadataUpdates : get storage metadata updates stream
+activate ReceiveStorageMetadataUpdates
+ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get storage metadata stream
+activate FirestoreStorageMetadataRepository
+FirestoreStorageMetadataRepository -> Firestore : get storage metadata stream
+activate Firestore
+Firestore --> FirestoreStorageMetadataRepository : returns storage metadata stream
+deactivate Firestore
+FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return storage metadata updates stream
+deactivate FirestoreStorageMetadataRepository
+ReceiveStorageMetadataUpdates --> MetadataNotifier : return storage metadata updates stream
+deactivate ReceiveStorageMetadataUpdates
+
+MetadataNotifier -> MetadataNotifier : listen to storage metadata updates stream
+
+loop receives new storage metadata
+
+    alt storage is updating
+
+        MetadataNotifier -> NavigationNotifier : notifies storage updating
+        activate NavigationNotifier
+        NavigationNotifier --> Bob : redirects to the ApplicationUpdatingPage
+        deactivate NavigationNotifier
+        MetadataNotifier -> AuthNotifier : log out user
+        activate AuthNotifier
+        AuthNotifier --> Bob : logs out
+        deactivate AuthNotifier
+
+
+    end
+
+    MetadataNotifier -> ApplicationMetadata : get application version
+    activate ApplicationMetadata
+
+    ApplicationMetadata --> MetadataNotifier : application version
+    deactivate ApplicationMetadata
+
+
+    alt storageVersion != applicationVersion
+
+        MetadataNotifier -> NavigationNotifier : notifies storage version not compatible
+        activate NavigationNotifier
+        NavigationNotifier --> Bob : redirects to the ApplicationIsOutdatedPage
+        deactivate NavigationNotifier
+        MetadataNotifier -> AuthNotifier : log out user
+        activate AuthNotifier
+        AuthNotifier --> Bob : logs out
+        deactivate AuthNotifier
+
+
+    end
+
+end
+
+
+@enduml

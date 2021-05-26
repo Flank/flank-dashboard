@@ -1,0 +1,62 @@
+@startuml
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+
+actor Bob
+participant SyncCommand << (C,#ADD1B2) >>
+participant ApplicationMetadata << (C,#ADD1B2) >>
+participant SyncStagesFactory << (C,#ADD1B2) >>
+participant CiIntegration << (C,#ADD1B2) >>
+participant CompatibilitySyncStage << (C,#ADD1B2) >>
+participant FirestoreDestinationClientAdapter << (C,#ADD1B2) >>
+
+Bob -> SyncCommand : run()
+activate SyncCommand
+
+SyncCommand -> ApplicationMetadata : .supportedStorageVersion
+activate ApplicationMetadata
+
+ApplicationMetadata --> SyncCommand : supportedStorageVersion
+deactivate ApplicationMetadata
+
+SyncCommand --> SyncCommand : creates SyncConfig
+SyncCommand --> SyncCommand : creates SourceClient, DestinationClient
+
+SyncCommand -> SyncStagesFactory : create(sourceClient, destinationClient)
+activate SyncStagesFactory
+
+SyncStagesFactory --> SyncCommand : syncStages
+deactivate SyncStagesFactory
+
+SyncCommand -> CiIntegration : sync(syncConfig)
+activate CiIntegration
+
+CiIntegration -> CompatibilitySyncStage : call(syncConfig)
+activate CompatibilitySyncStage
+
+CompatibilitySyncStage -> FirestoreDestinationClientAdapter : fetchMetadata()
+activate FirestoreDestinationClientAdapter
+
+FirestoreDestinationClientAdapter --> CompatibilitySyncStage : storageMetadata
+deactivate FirestoreDestinationClientAdapter
+
+CompatibilitySyncStage --> CompatibilitySyncStage : performs compatibility checks
+
+alt The versions are compatible and the storage is not updating
+    CompatibilitySyncStage --> CiIntegration : InteractionResult.success
+    CiIntegration --> CiIntegration : Runs next `SyncStage`s
+    CiIntegration --> SyncCommand : InteractionResult.success
+    SyncCommand --> Bob : Sync finished
+else
+    CompatibilitySyncStage --> CiIntegration : InteractionResult.failure
+    deactivate CompatibilitySyncStage
+
+    CiIntegration --> SyncCommand : InteractionResult.failure
+    deactivate CiIntegration
+
+    SyncCommand --> Bob : Sync finished with an error
+    deactivate SyncCommand
+end
+@enduml

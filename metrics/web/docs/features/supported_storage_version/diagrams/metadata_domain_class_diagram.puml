@@ -1,0 +1,37 @@
+@startuml metadata_domain_class_diagram
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        + call(Params) : Type
+    }
+}
+
+package metadata.domain {
+    package repositories {
+        interface StorageMetadataRepository {
+            + storageMetadataStream() : Stream<StorageMetadata>
+        }
+    }
+
+    package usecases {
+        class ReceiveStorageMetadataUpdates implements UseCase {
+            - storageMetadataRepository : StorageMetadataRepository
+            + call() : Stream<StorageMetadata>
+        }
+    }
+}
+
+package core.domain.entities {
+    class StorageMetadata {
+        + version : String
+        + isUpdating : bool
+    }
+}
+
+ReceiveStorageMetadataUpdates --> StorageMetadataRepository : provides
+StorageMetadataRepository --> StorageMetadata : provides
+ReceiveStorageMetadataUpdates --> StorageMetadata : uses
+
+
+
+@enduml

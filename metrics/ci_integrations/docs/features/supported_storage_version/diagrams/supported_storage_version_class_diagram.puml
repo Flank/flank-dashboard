@@ -1,0 +1,116 @@
+@startuml
+
+package core {
+    package util {
+        class ApplicationMetadata {
+            + supportedStorageVersion: bool
+        }
+    }
+
+    package domain.entities {
+        class StorageMetadata {
+            + isUpdating: bool
+            + version: String
+        }
+    }
+
+    package data.model {
+        class StorageMetadataData {
+            + isUpdating: bool
+            + version: String
+
+            + StorageMetadataData.fromJson(json: Map<String, dynamic>) : StorageMetadataData
+            + toJson() : Map<String, dynamic>
+        }
+
+        interface DataModel {
+            + toJson() : Map<String, dynamic>
+        }
+    }
+}
+
+package cli.command {
+    class SyncCommand {
+        + run(): Future<void>
+        + createCiIntegration(): CiIntegration
+        + sync(sourceClient: SourceClient, destinationClient: DestinationClient, config: SyncConfig): Future<void>
+    }
+}
+
+package integration {
+    package interface.destination.client {
+        interface DestinationClient {
+            + fetchMetadata() : Future<InteractionResult<StorageMetadata>>
+        }
+    }
+
+    package ci {
+        class CiIntegration {
+            + stages: List<SyncStage>
+
+            + sync(config: SyncConfig) : Future<InteractionResult>
+        }
+
+        package config.model {
+            class SyncConfig {
+                + supportedStorageVersion: String
+            }
+        }
+
+        package sync_stage {
+            package factory {
+                class SyncStagesFactory {
+                    + create(sourceClient: SourceClient, destinationClient: destinationClient): List<SyncStage>
+                }
+            }
+
+            package storage_version {
+                class CompatibilitySyncStage {
+                    + sourceClient: SourceClient
+                    + destinationClient: DestinationClient
+
+                    + call(SyncConfig config): Future<InteractionResult>
+                }
+            }
+
+            interface SyncStage {
+                + sourceClient: SourceClient
+                + destinationClient: DestinationClient
+
+                + call(SyncConfig config): Future<InteractionResult>
+            }
+        }
+    }
+}
+
+package destination.cool.adapter {
+    class CoolDestinationClientAdapter {
+        + fetchMetadata() : Future<InteractionResult<StorageMetadata>>
+    }
+}
+
+SyncCommand --> SyncConfig : creates
+SyncCommand --> SyncStagesFactory : uses
+SyncCommand --> CiIntegration : creates
+SyncCommand --> ApplicationMetadata : uses
+
+CiIntegration --> CompatibilitySyncStage : uses
+CiIntegration --> SyncConfig : uses
+
+CompatibilitySyncStage ..|> SyncStage
+CompatibilitySyncStage --> StorageMetadata : uses
+CompatibilitySyncStage -left-> SyncConfig : uses
+CompatibilitySyncStage --> DestinationClient : uses
+
+StorageMetadataData --|> StorageMetadata
+StorageMetadataData ..|> DataModel
+
+CoolDestinationClientAdapter ..|> DestinationClient
+CoolDestinationClientAdapter --> StorageMetadataData : uses
+
+SyncStagesFactory --> CompatibilitySyncStage : creates
+SyncStagesFactory --> CoolDestinationClientAdapter : uses
+
+DestinationClient --> StorageMetadata : uses
+
+@enduml

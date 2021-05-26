@@ -39,4 +39,14 @@ The $projectId GCloud project has been created successfully!
 If you want to configure the organization for the $projectId project, use the following guide https://cloud.google.com/resource-manager/docs/project-migration.
 
 Once you are done, press the ENTER to continue:''';
+
+  static String enterProjectName(String projectId) => '''
+Please, choose the GCloud project name that suits you best.
+Note: The GCloud project name can contain only letters, numbers, single quotes, hyphens, spaces, or exclamation points, and must be between 4 and 30 characters.
+Also, you can skip this step, and then the generated '$projectId' would be used.
+
+Enter the GCloud project name:''';
+
+  static String confirmProjectName(String projectName) =>
+      "The '$projectName' would be used as the name of your project, do you agree?(y/n)";
 }
