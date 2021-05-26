@@ -27,7 +27,7 @@ The Metrics Web Application displays the next project metrics on the dashboard:
 | `Stability`   | A circular graph displaying a ratio of successful builds to finished builds for the last 30 builds. |
 | `Coverage`   | A circular graph displaying a last successful build's code coverage percent. |
 
-See [Project metrics definitions](https://github.com/platform-platform/dashboard/blob/improve_repository_readme/docs/05_project_metrics.md) document to get more information about project metrics.
+See [Project metrics definitions](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md) document to get more information about project metrics.
 
 ![Metrics Dashboard](docs/images/dashboard_ui_dark.png)
 
