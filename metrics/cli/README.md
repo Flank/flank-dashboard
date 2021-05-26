@@ -47,10 +47,18 @@ Also, you can download the `Metrics CLI` tool using the CLI tools. Let's conside
 curl -o <OUTPUT_PATH> -k <DOWNLOAD_URL> -L
 ```
 
-Where the `<OUTPUT_PATH>` is the file path where you want to download the Metrics CLI, and the `<DOWNLOAD_URL>` is the download URL. Here is an example how to download the `Metrics CLi` for macOS:
+Where the `<OUTPUT_PATH>` is the file path where you want to download the Metrics CLI, and the `<DOWNLOAD_URL>` is the download URL. Here are examples how to download the `Metrics CLI`:
+
+- for `macOS`:
 
 ```bash
 curl -o metrics_cli -k https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos -L
+```
+
+- for `Linux`: 
+
+```bash
+curl -o metrics_cli -k https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux -L
 ```
 
 Now you can use the binary to run `Metrics CLI` commands:
