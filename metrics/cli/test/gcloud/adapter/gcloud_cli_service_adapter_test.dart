@@ -5,26 +5,37 @@ import 'package:cli/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/gcloud/strings/gcloud_strings.dart';
 import 'package:mockito/mockito.dart';
+import 'package:random_string/random_string.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
 import '../../test_utils/prompter_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group('GCloudCliServiceAdapter', () {
-    const projectId = 'projectId';
+    const projectId = 'metrics-00000';
+    const projectName = 'projectName';
     const region = 'testRegion';
     const enterRegion = GCloudStrings.enterRegionName;
     const acceptTerms = GCloudStrings.acceptTerms;
 
     final gcloudCli = _GCloudCliMock();
     final prompter = PrompterMock();
-    final gcloudService = GCloudCliServiceAdapter(gcloudCli, prompter);
+    final randomProvider = _RandomProviderStub();
+    final gcloudService = GCloudCliServiceAdapter(
+      gcloudCli,
+      prompter,
+      randomProvider,
+    );
     final stateError = StateError('test');
     final configureOAuth = GCloudStrings.configureOAuth(projectId);
     final configureOrganization = GCloudStrings.configureProjectOrganization(
       projectId,
     );
+    final enterProjectName = GCloudStrings.enterProjectName(projectId);
+    final confirmProjectName = GCloudStrings.confirmProjectName(projectName);
 
     tearDown(() {
       reset(gcloudCli);
@@ -33,6 +44,16 @@ void main() {
 
     PostExpectation<String> whenEnterRegionPrompt() {
       return when(prompter.prompt(enterRegion));
+    }
+
+    PostExpectation<bool> whenConfirmProjectName({
+      String withProjectName = projectName,
+    }) {
+      when(prompter.prompt(enterProjectName)).thenReturn(withProjectName);
+
+      return when(prompter.promptConfirm(GCloudStrings.confirmProjectName(
+        withProjectName,
+      )));
     }
 
     test(
@@ -74,20 +95,153 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project with the generated project id",
+      ".createProject() prompts the user to enter the name of the GCloud project",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
+        whenConfirmProjectName().thenReturn(true);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
-        verify(gcloudCli.createProject(projectId)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() throws if prompter throws during the project name prompting",
+      () {
+        when(prompter.prompt(enterProjectName)).thenThrow(stateError);
+
+        expect(() => gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
+      ".createProject() stops the project creation process if there is an error during requesting the project name from the user",
+      () async {
+        when(prompter.prompt(enterProjectName)).thenThrow(stateError);
+
+        await expectLater(
+          gcloudService.createProject(),
+          throwsStateError,
+        );
+
+        verify(prompter.prompt(enterProjectName)).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() prompts the user to confirm the entered name of the GCloud project",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+        whenConfirmProjectName().thenReturn(true);
+
+        await gcloudService.createProject();
+
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() prompts the user to confirm the generated name of the GCloud project if the user-entered name is empty",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+        when(prompter.prompt(enterProjectName)).thenReturn('');
+        when(
+          prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
+        ).thenReturn(true);
+
+        await gcloudService.createProject();
+
+        verify(
+          prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".createProject() throws if prompter throws during the project name confirmation prompting",
+      () {
+        whenConfirmProjectName().thenThrow(stateError);
+
+        expect(() => gcloudService.createProject(), throwsStateError);
+      },
+    );
+
+    test(
+      ".createProject() stops the project creation process if there is an error during requesting the project name confirmation from the user",
+      () async {
+        whenConfirmProjectName().thenThrow(stateError);
+
+        await expectLater(
+          gcloudService.createProject(),
+          throwsStateError,
+        );
+
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+
+        verifyNoMoreInteractions(gcloudCli);
+        verifyNoMoreInteractions(prompter);
+      },
+    );
+
+    test(
+      ".createProject() re-prompts the user to enter the GCloud project name again if the user doesn't agree with the previous name",
+      () async {
+        const secondName = 'secondName';
+
+        final confirmSecondName = GCloudStrings.confirmProjectName(secondName);
+
+        whenEnterRegionPrompt().thenReturn(region);
+        whenConfirmProjectName().thenAnswer((_) {
+          whenConfirmProjectName(withProjectName: secondName).thenReturn(true);
+
+          return false;
+        });
+
+        await gcloudService.createProject();
+
+        verify(prompter.prompt(enterProjectName)).called(equals(2));
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmSecondName)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() creates the project with the generated project id and the prompted project name",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+        whenConfirmProjectName().thenReturn(true);
+
+        await gcloudService.createProject();
+
+        verify(gcloudCli.createProject(projectId, projectName)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() creates the project with the generated project id and the generated project name",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+        when(prompter.prompt(enterProjectName)).thenReturn('');
+        when(
+          prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
+        ).thenReturn(true);
+
+        await gcloudService.createProject();
+
+        verify(gcloudCli.createProject(projectId, projectId)).called(once);
       },
     );
 
     test(
       ".createProject() throws if GCloud CLI throws during the project creation",
       () {
-        when(gcloudCli.createProject(any))
+        whenConfirmProjectName().thenReturn(true);
+        when(gcloudCli.createProject(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
         expect(gcloudService.createProject(), throwsStateError);
@@ -97,7 +251,8 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the project creation",
       () async {
-        when(gcloudCli.createProject(any))
+        whenConfirmProjectName().thenReturn(true);
+        when(gcloudCli.createProject(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
@@ -105,7 +260,9 @@ void main() {
           throwsStateError,
         );
 
-        verify(gcloudCli.createProject(any)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
 
         verifyNoMoreInteractions(gcloudCli);
         verifyNoMoreInteractions(prompter);
@@ -115,9 +272,10 @@ void main() {
     test(
       ".createProject() shows available regions for the created project",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.listRegions(projectId)).called(once);
       },
@@ -126,6 +284,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the available regions showing",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         when(gcloudCli.listRegions(any))
             .thenAnswer((_) => Future.error(stateError));
 
@@ -136,12 +295,15 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the available regions showing",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         when(gcloudCli.listRegions(any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
-        verify(gcloudCli.createProject(any)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
 
         verifyNoMoreInteractions(gcloudCli);
@@ -152,6 +314,7 @@ void main() {
     test(
       ".createProject() requests the region from the user",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
         await gcloudService.createProject();
@@ -163,6 +326,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the requesting the region from the user",
       () {
+        whenConfirmProjectName().thenReturn(true);
         when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
         expect(gcloudService.createProject(), throwsStateError);
@@ -172,11 +336,14 @@ void main() {
     test(
       ".createProject() stops the project creation process if there is an error during the requesting the region from the user",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
-        verify(gcloudCli.createProject(any)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
 
@@ -188,9 +355,10 @@ void main() {
     test(
       ".createProject() creates the project app with the given region and the generated project id",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createProjectApp(region, projectId)).called(once);
       },
@@ -199,6 +367,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the project app creation",
       () {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createProjectApp(any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -210,13 +379,16 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the project app creation",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createProjectApp(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
-        verify(gcloudCli.createProject(any)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
         verify(gcloudCli.createProjectApp(any, any)).called(once);
@@ -229,9 +401,10 @@ void main() {
     test(
       ".createProject() enables Firestore API for the project with the generated project id",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
       },
@@ -240,6 +413,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the Firestore API enabling",
       () {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.enableFirestoreApi(any))
             .thenAnswer((_) => Future.error(stateError));
@@ -251,13 +425,16 @@ void main() {
     test(
       ".createProject() stops the project creation process if GCloud CLI throws during the Firestore API enabling",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.enableFirestoreApi(any))
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(gcloudService.createProject(), throwsStateError);
 
-        verify(gcloudCli.createProject(any)).called(once);
+        verify(prompter.prompt(enterProjectName)).called(once);
+        verify(prompter.promptConfirm(confirmProjectName)).called(once);
+        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
         verify(gcloudCli.createProjectApp(any, any)).called(once);
@@ -271,9 +448,10 @@ void main() {
     test(
       ".createProject() creates database with the generated id and the given region",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createDatabase(region, projectId)).called(once);
       },
@@ -284,9 +462,11 @@ void main() {
       () async {
         const region = 'region-1   ';
         const expectedRegion = 'region-1';
+
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         verify(gcloudCli.createDatabase(expectedRegion, projectId))
             .called(once);
@@ -296,6 +476,7 @@ void main() {
     test(
       ".createProject() throws if GCloud CLI throws during the database creation",
       () {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
         when(gcloudCli.createDatabase(any, any))
             .thenAnswer((_) => Future.error(stateError));
@@ -307,12 +488,13 @@ void main() {
     test(
       ".createProject() returns the identifier of the created project",
       () async {
+        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        final projectId = await gcloudService.createProject();
+        await gcloudService.createProject();
 
         expect(projectId, isNotNull);
-        verify(gcloudCli.createProject(projectId)).called(once);
+        verify(gcloudCli.createProject(projectId, projectName)).called(once);
       },
     );
 
@@ -416,3 +598,10 @@ void main() {
 }
 
 class _GCloudCliMock extends Mock implements GCloudCli {}
+
+class _RandomProviderStub implements AbstractRandomProvider {
+  @override
+  double nextDouble() {
+    return 0.0;
+  }
+}
