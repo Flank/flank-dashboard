@@ -211,7 +211,7 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project with the generated project id and project name",
+      ".createProject() creates the project with the generated project id and the prompted project name",
       () async {
         whenEnterRegionPrompt().thenReturn(region);
         whenConfirmProjectName().thenReturn(true);
@@ -219,6 +219,21 @@ void main() {
         await gcloudService.createProject();
 
         verify(gcloudCli.createProject(projectId, projectName)).called(once);
+      },
+    );
+
+    test(
+      ".createProject() creates the project with the generated project id and the generated project name",
+      () async {
+        whenEnterRegionPrompt().thenReturn(region);
+        when(prompter.prompt(enterProjectName)).thenReturn('');
+        when(
+          prompter.promptConfirm(GCloudStrings.confirmProjectName(projectId)),
+        ).thenReturn(true);
+
+        await gcloudService.createProject();
+
+        verify(gcloudCli.createProject(projectId, projectId)).called(once);
       },
     );
 
@@ -568,6 +583,6 @@ class _GCloudCliMock extends Mock implements GCloudCli {}
 class _RandomProviderStub implements AbstractRandomProvider {
   @override
   double nextDouble() {
-    return 0;
+    return 0.0;
   }
 }

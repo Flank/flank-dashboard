@@ -43,7 +43,7 @@ Once you are done, press the ENTER to continue:''';
   static String enterProjectName(String projectId) => '''
 Please, choose the GCloud project name that suits you best.
 Note: The GCloud project name can contain only letters, numbers, single quotes, hyphens, spaces, or exclamation points, and must be between 4 and 30 characters.
-Also, you can skip this step, and then the generated $projectId would be used.
+Also, you can skip this step, and then the generated '$projectId' would be used.
 
 Enter the GCloud project name:''';
 
