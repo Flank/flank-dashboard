@@ -111,6 +111,14 @@ void main() {
       return when(sentryService.createRelease(any));
     }
 
+    PostExpectation<Future<void>> whenAddFirebase() {
+      return when(gcloudService.addFirebase(projectId));
+    }
+
+    PostExpectation<Future<void>> whenCreateFirebaseApp() {
+      return when(firebaseService.createWebApp(projectId));
+    }
+
     tearDown(() {
       reset(flutterService);
       reset(gcloudService);
