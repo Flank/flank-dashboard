@@ -8,13 +8,13 @@ As the CI Integrations tool makes the synchronized builds available on the Metri
 
 The following timing diagram demonstrates the desired behavior for a build syncing:
 
-![Ideal timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/sync_perf_investigate/metrics/ci_integrations/docs/diagrams/sync_ideal_timing_diagram.puml)
+![Ideal timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_ideal_timing_diagram.puml)
 
 But the actual behavior differs from the expected as the build sync can take too long and may cause the problems demonstrated in the diagrams below. The first case demonstrates the long-running sync when a build is started causing the finishing sync to appear far after the build is finished. The second example demonstrates the long-running sync as well but in this case, we have two runners for builds syncing. In the second diagram, the starting sync takes too long and finishes at the same time as the finishing build causing. The UI doesn't display this build as running, or display for a few seconds, though the build may take longer.
 
-![problematic queue timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/sync_perf_investigate/metrics/ci_integrations/docs/diagrams/sync_problematic_queue_timing_diagram.puml)
+![problematic queue timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_problematic_queue_timing_diagram.puml)
 
-![problematic timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/sync_perf_investigate/metrics/ci_integrations/docs/diagrams/sync_problematic_timing_diagram.puml)
+![problematic timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_problematic_timing_diagram.puml)
 
 ## Sync Command Performance
 
