@@ -4,7 +4,7 @@
 
 A simple command-line application that simplifies the deployment of Metrics components (Flutter Web application, Cloud Functions, Firestore Rules) and general setup.
 
-It allows to create GCloud and Firebase projects, enable Firestore and other Firebase services necessary for correct Metrics Web Application working, and deploy the Metrics Web Application to the Firebase hosting. The tool downloads the source code by itself, so you don't have to check out the code from the repository before running the Metrics CLI.
+It creates GCloud and Firebase projects, enables Firestore and other Firebase services necessary for correct Metrics Web Application working, and deploys the Metrics Web Application to the Firebase hosting. The tool downloads the source code by itself, so you don't have to check out the code from the repository before running the Metrics CLI.
 
 _**Note**: The Metrics CLI does not collect any data you pass and using them only during the Metrics deployment by the machine on which the CLI runs._
 
