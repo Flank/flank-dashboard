@@ -10,12 +10,12 @@ flutter: 1.25.0-8.2.pre
 gcloud: 341.0.0
 
 # Provides an ability to adapt packages of code for applications, download standalone tools, etc.
-# Used to install the Npm dependencies.
+# Used to install npm dependencies.
 #
 # Consider the following link to install: https://www.npmjs.com/get-npm
 npm: 6.14.13
 
-# Provides an ability to run all Git commands.
+# Provides an ability to run Git commands.
 # Used to checkout the Metrics Web project from the remote repository.
 #
 # Consider the following link to install: https://cli.github.com/

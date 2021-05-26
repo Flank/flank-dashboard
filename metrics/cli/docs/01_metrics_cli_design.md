@@ -184,12 +184,14 @@ Consider the following sequence diagram that illustrates the process of the `Dep
 
 Before you start, you should download the latest version of the Metrics CLI tool and have the following installed:
 
-1. [flutter](https://flutter.dev/docs/get-started/install) v1.25.0-8.2.pre;
+1. [flutter](https://flutter.dev/docs/get-started/install);
 2. [npm](https://www.npmjs.com/get-npm);
 3. [git](https://cli.github.com);
 4. [firebase](https://firebase.google.com/docs/cli);
 5. [gcloud](https://cloud.google.com/sdk/gcloud);
 6. [sentry-cli](https://docs.sentry.io/product/cli/installation).
+
+To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/dashboard/tree/update_metrics_cli_readme/metrics/cli/recommended_versions.yaml).
 
 ### Doctor
 
