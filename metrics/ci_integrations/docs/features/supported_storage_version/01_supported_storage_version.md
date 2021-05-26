@@ -64,11 +64,11 @@ The storage metadata is represented by the `StorageMetadata` entity from the [`c
 
 Consider the class diagram below that demonstrates the main classes, and their relationships needed to introduce the `CompatibilitySyncStage` to the CI Integrations tool.
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_storage_version/diagrams/ci_integrations_supported_db_version_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_storage_version/diagrams/ci_integrations_supported_storage_version_class_diagram.puml)
 
 Let's examine the following sequence diagram that explains the process of performing the required compatibility checks during the project metrics data synchronization:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_storage_version/diagrams/ci_integrations_supported_db_version_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/ci_integrations_supported_database_version_doc/metrics/ci_integrations/docs/features/supported_storage_version/diagrams/ci_integrations_supported_storage_version_sequence_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?
