@@ -493,8 +493,9 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gcloudService.configureProjectOrganization(projectId))
-            .called(once);
+        verify(
+          gcloudService.configureProjectOrganization(projectId),
+        ).called(once);
       },
     );
 
