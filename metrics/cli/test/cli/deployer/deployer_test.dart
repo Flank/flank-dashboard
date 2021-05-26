@@ -478,9 +478,21 @@ void main() {
 
         await deployer.deploy();
 
-        verify(
-          gcloudService.addFirebase(projectId),
-        ).called(once);
+        verify(gcloudService.addFirebase(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if GCloud service throws during the Firebase adding",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenAddFirebase().thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
@@ -509,6 +521,20 @@ void main() {
         await deployer.deploy();
 
         verify(firebaseService.createWebApp(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if Firebase service throws during the Firebase web app creation",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenCreateFirebaseApp().thenAnswer((_) => Future.error(stateError));
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
