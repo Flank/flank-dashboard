@@ -51,7 +51,7 @@ Deployment to other platforms is out of scope.
 
 ## Before you begin
 
-Since the `Metrics CLI` is based on a list of third-party CLIs, you should have the required dependencies installed. To view the recommended versions of dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/master/metrics/cli/recommended_versions.yaml).
+Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/platform-platform/monorepo/master/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 
