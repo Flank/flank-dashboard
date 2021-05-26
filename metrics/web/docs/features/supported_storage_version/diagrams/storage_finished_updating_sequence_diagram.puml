@@ -1,0 +1,63 @@
+@startuml storage_finished_updating
+
+participant Bob
+
+participant MetadataNotifier
+
+participant ReceiveStorageMetadataUpdates
+
+participant FirestoreStorageMetadataRepository
+
+participant NavigationNotifier
+
+participant BrowserNavigationState
+
+database Firestore
+
+
+
+Bob -> MetadataNotifier : opens the app
+activate MetadataNotifier
+MetadataNotifier -> ReceiveStorageMetadataUpdates : get storage metadata updates
+activate ReceiveStorageMetadataUpdates
+ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get storage metadata updates
+activate FirestoreStorageMetadataRepository
+FirestoreStorageMetadataRepository --> Firestore : get storage metadata updates
+activate Firestore
+Firestore --> FirestoreStorageMetadataRepository : return storage metadata updates
+deactivate Firestore
+FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return storage metadata updates
+deactivate FirestoreStorageMetadataRepository
+ReceiveStorageMetadataUpdates --> MetadataNotifier : return storage metadata updates
+deactivate ReceiveStorageMetadataUpdates
+
+MetadataNotifier -> MetadataNotifier : subscribes to storage metadata updates
+MetadataNotifier -> MetadataNotifier : receives storage metadata snapshot
+
+alt storage is updating
+
+    MetadataNotifier -> NavigationNotifier : notifies storage updating
+    activate NavigationNotifier
+    NavigationNotifier --> Bob : shows application updating page
+    deactivate NavigationNotifier
+
+else
+
+    MetadataNotifier -> NavigationNotifier : notifies storage is not updating
+    activate NavigationNotifier
+
+    alt currentPage == ApplicationUpdatingPage
+
+        NavigationNotifier -> BrowserNavigationState : refresh
+        activate BrowserNavigationState
+        BrowserNavigationState --> Bob : refreshes the browser page
+        deactivate BrowserNavigationState
+        deactivate NavigationNotifier
+
+    end
+
+end
+
+deactivate MetadataNotifier
+
+@enduml

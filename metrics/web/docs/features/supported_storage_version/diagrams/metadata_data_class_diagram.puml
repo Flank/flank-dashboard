@@ -1,0 +1,41 @@
+@startuml metadata_data_class_diagram
+
+package core {
+    package domain.entities {
+        class StorageMetadata {
+            + version : String
+            + isUpdating : bool
+        }
+    }
+
+    package data.model {
+        class StorageMetadataData extends StorageMetadata implements DataModel {
+            + {static} fromJson() : StorageMetadataData
+        }
+
+        class DataModel {
+            + toJson() : Map<String, dynamic>
+        }
+    }
+}
+
+
+package domain.repositories {
+    interface StorageMetadataRepository {
+        + storageMetadataStream() : Stream<StorageMetadata>
+    }
+}
+
+package data.repositories {
+    class FirestoreStorageMetadataRepository implements StorageMetadataRepository {
+        - firestore : Firestore
+    }
+}
+
+
+FirestoreStorageMetadataRepository --> StorageMetadataData : provides
+
+StorageMetadataRepository -> StorageMetadata : provides
+
+
+@enduml
