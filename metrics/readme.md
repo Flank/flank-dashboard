@@ -19,7 +19,7 @@ If you want to install the `Metrics` manually, you should download the [source c
 
 ### Using Metrics CLI
 
-If you prefer to automatically deploy to Firebase for the Metrics app, install it using the `Metrics CLI`. See [Metrics CLI installation](https://github.com/platform-platform/monorepo/blob/update_metrics_cli_readme/metrics/cli#installation) for more information.
+If you prefer to automatically deploy to Firebase, install the `Metrics` using the `Metrics CLI`. See [Metrics CLI installation](https://github.com/platform-platform/monorepo/blob/update_metrics_cli_readme/metrics/cli#installation) for more information.
 
 ### Attractive
 
