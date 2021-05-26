@@ -117,7 +117,7 @@ _**Note**: The **Total** column is calculated using the original sample and is n
 
 In the table above we must use the trimmed mean (more precisely, [interquartile mean](https://en.wikipedia.org/wiki/Interquartile_mean) in this case) to demonstrate that the sample contains some extreme values. These extreme values mostly occur as a setup, checkout, or wait steps execution time. Consider the _max_, _min_, [_median_](https://en.wikipedia.org/wiki/Median), and [_mode_](https://en.wikipedia.org/wiki/Mode_(statistics)) rows to know more about values' distribution.
 
-Generally speaking, if _risky steps_ (setup, checkout, and wait) demonstrate good performance (as for _mode_ value), the sync job executes in around `15 seconds`.
+Generally speaking, if _risky steps_ (setup, checkout, and wait) demonstrate good performance (as for _mode_ value), the sync job's execution time close to the total _median_ (`13 seconds`).
 
 ### Buildkite
 
