@@ -48,16 +48,21 @@ class GCloudCliServiceAdapter implements GCloudService {
     final gcloudProjectName = _promptGCloudProjectName(projectId);
 
     await _gcloudCli.createProject(projectId, gcloudProjectName);
+
+    return projectId;
+  }
+
+  @override
+  Future<void> addFirebase(String projectId) async {
     await _gcloudCli.listRegions(projectId);
 
     final regionPrompt = _prompter.prompt(GCloudStrings.enterRegionName);
     final region = regionPrompt.trim();
-
     await _gcloudCli.createProjectApp(region, projectId);
-    await _gcloudCli.enableFirestoreApi(projectId);
-    await _gcloudCli.createDatabase(region, projectId);
 
-    return projectId;
+    await _gcloudCli.enableFirestoreApi(projectId);
+
+    await _gcloudCli.createDatabase(region, projectId);
   }
 
   @override
