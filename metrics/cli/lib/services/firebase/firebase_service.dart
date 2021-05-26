@@ -3,7 +3,7 @@
 
 import 'dart:async';
 
-import 'package:cli/services/common/service/info_service.dart';
+import 'package:cli/services/common/info_service.dart';
 
 /// An abstract class for Firebase service that provides methods
 /// for working with Firebase.

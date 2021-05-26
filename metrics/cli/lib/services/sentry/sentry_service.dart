@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/services/common/service/info_service.dart';
+import 'package:cli/services/common/info_service.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:cli/services/sentry/model/source_map.dart';

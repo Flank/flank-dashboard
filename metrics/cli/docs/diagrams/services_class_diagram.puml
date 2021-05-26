@@ -195,18 +195,16 @@ package services {
     }
 
     package common {
-        package service {
-            interface InfoService {
-                + version() : Future<void>
-            }
-        }
-
         package cli {
             interface Cli {
                 + executable : String
                 + version() : Future<void>
                 + run(List<String> arguments, bool attachOutput, String workingDirectory, Stream<List<int>> stdin) : Future<ProcessResult>
             }
+        }
+
+        interface InfoService {
+            + version() : Future<void>
         }
     }
 }
