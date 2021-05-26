@@ -39,9 +39,9 @@ MetadataNotifier -> MetadataNotifier : listen to storage metadata updates stream
 
 loop receives new storage metadata
 
-    alt database is updating
+    alt storage is updating
 
-        MetadataNotifier -> NavigationNotifier : notifies database updating
+        MetadataNotifier -> NavigationNotifier : notifies storage updating
         activate NavigationNotifier
         NavigationNotifier --> Bob : redirects to the ApplicationUpdatingPage
         deactivate NavigationNotifier
@@ -60,9 +60,9 @@ loop receives new storage metadata
     deactivate ApplicationMetadata
 
 
-    alt databaseVersion != applicationVersion
+    alt storageVersion != applicationVersion
 
-        MetadataNotifier -> NavigationNotifier : notifies database version not compatible
+        MetadataNotifier -> NavigationNotifier : notifies storage version not compatible
         activate NavigationNotifier
         NavigationNotifier --> Bob : redirects to the ApplicationIsOutdatedPage
         deactivate NavigationNotifier

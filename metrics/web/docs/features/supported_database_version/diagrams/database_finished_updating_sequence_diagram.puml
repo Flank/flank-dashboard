@@ -1,4 +1,4 @@
-@startuml database_finished_updating
+@startuml storage_finished_updating
 
 participant Bob
 
@@ -18,32 +18,32 @@ database Firestore
 
 Bob -> MetadataNotifier : opens the app
 activate MetadataNotifier
-MetadataNotifier -> ReceiveStorageMetadataUpdates : get database metadata updates
+MetadataNotifier -> ReceiveStorageMetadataUpdates : get storage metadata updates
 activate ReceiveStorageMetadataUpdates
-ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get database metadata updates
+ReceiveStorageMetadataUpdates -> FirestoreStorageMetadataRepository : get storage metadata updates
 activate FirestoreStorageMetadataRepository
-FirestoreStorageMetadataRepository --> Firestore : get database metadata updates
+FirestoreStorageMetadataRepository --> Firestore : get storage metadata updates
 activate Firestore
-Firestore --> FirestoreStorageMetadataRepository : return database metadata updates
+Firestore --> FirestoreStorageMetadataRepository : return storage metadata updates
 deactivate Firestore
-FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return database metadata updates
+FirestoreStorageMetadataRepository --> ReceiveStorageMetadataUpdates : return storage metadata updates
 deactivate FirestoreStorageMetadataRepository
-ReceiveStorageMetadataUpdates --> MetadataNotifier : return database metadata updates
+ReceiveStorageMetadataUpdates --> MetadataNotifier : return storage metadata updates
 deactivate ReceiveStorageMetadataUpdates
 
-MetadataNotifier -> MetadataNotifier : subscribes to database metadata updates
-MetadataNotifier -> MetadataNotifier : receives database metadata snapshot
+MetadataNotifier -> MetadataNotifier : subscribes to storage metadata updates
+MetadataNotifier -> MetadataNotifier : receives storage metadata snapshot
 
-alt database is updating
+alt storage is updating
 
-    MetadataNotifier -> NavigationNotifier : notifies database updating
+    MetadataNotifier -> NavigationNotifier : notifies storage updating
     activate NavigationNotifier
     NavigationNotifier --> Bob : shows application updating page
     deactivate NavigationNotifier
 
 else
 
-    MetadataNotifier -> NavigationNotifier : notifies database is not updating
+    MetadataNotifier -> NavigationNotifier : notifies storage is not updating
     activate NavigationNotifier
 
     alt currentPage == ApplicationUpdatingPage
@@ -59,6 +59,5 @@ else
 end
 
 deactivate MetadataNotifier
-
 
 @enduml

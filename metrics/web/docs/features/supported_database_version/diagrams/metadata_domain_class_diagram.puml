@@ -7,13 +7,6 @@ package base.domain.usecases {
 }
 
 package metadata.domain {
-    package entities {
-        class StorageMetadata {
-            + version : String
-            + isUpdating : bool
-        }
-    }
-
     package repositories {
         interface StorageMetadataRepository {
             + storageMetadataStream() : Stream<StorageMetadata>
@@ -26,7 +19,13 @@ package metadata.domain {
             + call() : Stream<StorageMetadata>
         }
     }
+}
 
+package core.domain.entities {
+    class StorageMetadata {
+        + version : String
+        + isUpdating : bool
+    }
 }
 
 ReceiveStorageMetadataUpdates --> StorageMetadataRepository : provides

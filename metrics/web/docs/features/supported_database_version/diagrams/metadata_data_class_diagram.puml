@@ -1,44 +1,37 @@
 @startuml metadata_data_class_diagram
 
-package core.data.model {
-    class DataModel {
-        + toJson() : Map<String, dynamic>
+package core {
+    package domain.entities {
+        class StorageMetadata {
+            + version : String
+            + isUpdating : bool
+        }
+    }
+
+    package data.model {
+        class StorageMetadataData extends StorageMetadata implements DataModel {
+            + {static} fromJson() : StorageMetadataData
+        }
+
+        class DataModel {
+            + toJson() : Map<String, dynamic>
+        }
     }
 }
 
-package metadata {
 
-    package domain {
-        package entities {
-            class StorageMetadata {
-                + version : String
-                + isUpdating : bool
-            }
-        }
-
-        package repositories as domain.repositories {
-            interface StorageMetadataRepository {
-                + storageMetadataStream() : Stream<StorageMetadata>
-            }
-        }
-
-    }
-
-    package data {
-        package model {
-            class StorageMetadataData extends StorageMetadata implements DataModel {
-                + {static} fromJson() : StorageMetadataData
-            }
-        }
-
-
-        package repositories {
-            class FirestoreStorageMetadataRepository implements StorageMetadataRepository {
-                - firestore : Firestore
-            }
-        }
+package domain.repositories {
+    interface StorageMetadataRepository {
+        + storageMetadataStream() : Stream<StorageMetadata>
     }
 }
+
+package data.repositories {
+    class FirestoreStorageMetadataRepository implements StorageMetadataRepository {
+        - firestore : Firestore
+    }
+}
+
 
 FirestoreStorageMetadataRepository --> StorageMetadataData : provides
 

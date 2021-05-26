@@ -12,20 +12,17 @@ package common.presentation.widgets {
     }
 }
 
+package core.domain.entities {
+    class StorageMetadata {
+        + version : String
+        + isUpdating : bool
+    }
+}
+
 package metadata {
-    package domain {
-        package entities {
-            class StorageMetadata {
-                + version : String
-                + isUpdating : bool
-            }
-        }
-
-
-        package usecases {
-            class ReceiveStorageMetadataUpdates {
-                + call() : Stream<StorageMetadata>
-            }
+    package domain.usecases {
+        class ReceiveStorageMetadataUpdates {
+            + call() : Stream<StorageMetadata>
         }
     }
 
@@ -34,9 +31,9 @@ package metadata {
             class MetadataNotifier {
                 - receiveStorageMetadataUpdates : ReceiveStorageMetadataUpdates
                 - applicationMetadata : ApplicationMetadata
-                + isDbSupported : bool
-                + isDbUpdating : bool
-                + isIntialized : bool
+                + isStorageSupported : bool
+                + isStorageUpdating : bool
+                + isInitialized : bool
             }
         }
 
@@ -52,7 +49,7 @@ package metadata {
         package strings {
             class MetadataStrings {
                 + {static} applicationIsOutdated : String
-                + {static} databaseUpdating : String
+                + {static} storageUpdating : String
             }
         }
     }
@@ -60,7 +57,7 @@ package metadata {
 
 MetadataNotifier --> ApplicationMetadata : uses
 MetadataNotifier --> ReceiveStorageMetadataUpdates : uses
-MetadataNotifier --> StorageMetadata : uses
+MetadataNotifier -up-> StorageMetadata : uses
 
 ApplicationUpdatingPage --> MetadataStrings : uses
 ApplicationIsOutdatedPage --> MetadataStrings : uses
