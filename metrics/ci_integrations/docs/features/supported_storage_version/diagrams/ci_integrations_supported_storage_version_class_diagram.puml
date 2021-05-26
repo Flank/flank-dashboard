@@ -64,7 +64,7 @@ package integration {
                 }
             }
 
-            package database_version {
+            package storage_version {
                 class CompatibilitySyncStage {
                     + sourceClient: SourceClient
                     + destinationClient: DestinationClient
