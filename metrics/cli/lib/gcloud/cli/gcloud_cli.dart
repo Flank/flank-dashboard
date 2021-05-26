@@ -55,6 +55,11 @@ class GCloudCli extends Cli {
     ]);
   }
 
+  /// Deletes the GCloud project with the given [projectId].
+  Future<void> deleteProject(String projectId) {
+    return run(['projects', 'delete', projectId]);
+  }
+
   @override
   Future<void> version() {
     return run(['--version']);
