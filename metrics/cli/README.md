@@ -18,30 +18,17 @@ The `Metrics CLI` is based on a list of third-party CLIs. To view the recommende
 
 There are a couple of ways to install the `Metrics CLI`: 
 
-- [Compilation from source code](#build-from-the-source)
 - [Downloading from the releases page](#use-the-releases)
-
-## Build from the source
-
-If you've downloaded the [Metrics CLI](https://github.com/platform-platform/monorepo/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
-
-```bash
-make build
-```
-
-Now you can execute `Metrics CLI` commands using the next form:
-
-```bash
-./build/metrics <command>
-``` 
+- [Compilation from source code](#build-from-the-source)
 
 ## Use the releases
 
 You can download the built Metrics CLI tool from the [GitHub releases](https://github.com/platform-platform/monorepo/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links:
+
 - [`CLI for Linux`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux)
 - [`CLI for macOS`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos)
 
-Also, you can download the `Metrics CLI` tool using the CLI tools. Let's consider the macOS command to download the Metrics CLI:
+Also, you can download the `Metrics CLI` tool using the command line tools. Let's consider the bash command to download the Metrics CLI:
 
 ```bash
 curl -o <OUTPUT_PATH> -k <DOWNLOAD_URL> -L
@@ -66,6 +53,20 @@ Now you can use the binary to run `Metrics CLI` commands:
 ```bash
 metrics <command>
 ```
+
+## Build from the source
+
+If you've downloaded the [Metrics CLI](https://github.com/platform-platform/monorepo/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
+
+```bash
+make build
+```
+
+Now you can execute `Metrics CLI` commands using the next form:
+
+```bash
+./build/metrics <command>
+``` 
 
 # Usage
 
