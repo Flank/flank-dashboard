@@ -119,6 +119,10 @@ void main() {
       return when(firebaseService.createWebApp(projectId));
     }
 
+    PostExpectation<void> whenConfigureProjectOrganization() {
+      return when(gcloudService.configureProjectOrganization(projectId));
+    }
+
     tearDown(() {
       reset(flutterService);
       reset(gcloudService);
@@ -491,6 +495,22 @@ void main() {
     );
 
     test(
+      ".deploy() adds Firebase to the GCloud project before creating the Firebase web app",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+        await deployer.deploy();
+
+        verifyInOrder([
+          gcloudService.addFirebase(projectId),
+          firebaseService.createWebApp(projectId),
+        ]);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if GCloud service throws during the Firebase adding",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -516,6 +536,20 @@ void main() {
         verify(
           gcloudService.configureProjectOrganization(projectId),
         ).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if GCloud service throws during the organization configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenConfigureProjectOrganization().thenThrow(stateError);
+
+        await expectLater(deployer.deploy(), throwsStateError);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
