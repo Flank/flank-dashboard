@@ -29,10 +29,8 @@ package services {
             }
         }
 
-        package service {
-            interface InfoService {
-                + version() : void
-            }
+        interface InfoService {
+            + version() : void
         }
     }
 }

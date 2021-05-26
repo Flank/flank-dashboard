@@ -1,12 +1,12 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/firebase/service/firebase_service.dart';
-import 'package:cli/flutter/service/flutter_service.dart';
-import 'package:cli/gcloud/service/gcloud_service.dart';
-import 'package:cli/git/service/git_service.dart';
-import 'package:cli/npm/service/npm_service.dart';
-import 'package:cli/sentry/service/sentry_service.dart';
+import 'package:cli/services/firebase/firebase_service.dart';
+import 'package:cli/services/flutter/flutter_service.dart';
+import 'package:cli/services/gcloud/gcloud_service.dart';
+import 'package:cli/services/git/git_service.dart';
+import 'package:cli/services/npm/npm_service.dart';
+import 'package:cli/services/sentry/sentry_service.dart';
 
 /// A class that holds services needed to deploy the Metrics application.
 class Services {
