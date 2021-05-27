@@ -14,19 +14,32 @@ class IOPromptWriter implements PromptWriter {
   /// A standard output stream of data used by this writer.
   final Stdout _stdout;
 
+  /// A standard error output stream used by this writer.
+  final Stdout _stderr;
+
   /// Creates a new instance of the [IOPromptWriter].
   ///
-  /// If the given [inputStream] is `null`, a [stdin] used.
-  /// If the given [outputStream] is `null`, a [stdout] used.
+  /// If the given [inputStream] is `null`, the [stdin] is used.
+  /// If the given [outputStream] is `null`, the [stdout] is used.
+  /// If the given [errorStream] is `null`, the [stderr] is used.
   IOPromptWriter({
     Stdin inputStream,
     Stdout outputStream,
+    Stdout errorStream,
   })  : _stdin = inputStream ?? stdin,
-        _stdout = outputStream ?? stdout;
+        _stdout = outputStream ?? stdout,
+        _stderr = errorStream ?? stderr;
 
   @override
   void info(String text) {
     _stdout.writeln(text);
+  }
+
+  @override
+  void error(Object error) {
+    if (error == null) return;
+
+    _stderr.writeln(error);
   }
 
   @override
