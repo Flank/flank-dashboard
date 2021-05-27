@@ -4,7 +4,6 @@
 
 Describe the process of deployment of the Metrics application to the Firebase Hosting and deploying the Cloud functions needed to create test data for the application.
 
-
 # References
 
 > Link to supporting documentation, GitHub tickets, etc.
@@ -50,13 +49,9 @@ Deployment to other platforms is out of scope.
 
 > What will the proposed API look like?
 
-
 ## Before you begin
 
-Before you start, you should have the following installed:
-
-1. [Flutter](https://flutter.dev/docs/get-started/install) v1.25.0-8.2.pre.
-2. [npm](https://www.npmjs.com/get-npm).
+Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/platform-platform/monorepo/master/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 
