@@ -1272,7 +1272,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if Sentry service throws during the release creation",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
 
@@ -1332,7 +1331,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if prompter throws during the Sentry DSN requesting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer(
           (_) => Future.value(sentryRelease),
