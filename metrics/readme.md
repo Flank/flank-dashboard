@@ -6,6 +6,28 @@ Metrics is a set of software components to collect and review software project m
 
 We believe Metrics will help you to monitor the quality of your project's codebase and processes. Metrics application helps developers, project teams, and organizations to monitor and improve projects' performance, stability, and quality.
 
+## Installation
+
+There are a couple of ways to install the `Metrics` application: 
+
+- [Using the Metrics CLI](#using-the-metrics-cli)
+- [Manually using UI](#manual)
+
+#### Using the Metrics CLI
+
+If you prefer to install the `Metrics` application automatically, follow the next steps: 
+
+1. Download the `Metrics CLI` [binary](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#use-the-releases) or [build it from the source](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#build-from-the-source).
+2. Run the `doctor` command to verify all required third-party CLIs are installed.
+3. Run the `deploy` command to start deploying the Metrics Web Application.
+4. Follow the `Metrics CLI` instructions to finish the deployment.
+
+See [Metrics CLI usage](https://github.com/platform-platform/monorepo/blob/master/metrics/cli#usage) for more information.
+
+#### Manual
+
+If you want to install the `Metrics` manually, you should download the [source code](https://github.com/platform-platform/monorepo/tree/master/metrics) and perform some Firebase configurations using the [Firebase web UI](https://console.firebase.google.com/). See [Metrics Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md) document to get more information about required configurations.
+
 ### Attractive
 
 The Metrics Web Application provides a beautiful and handy UI delivered by creative designers and developers. The web application is powered by [Flutter](https://flutter.dev) making it fast and reliable. The UI visualizes the project's metrics and makes it easier to monitor metrics for different projects by providing appropriate filters.
