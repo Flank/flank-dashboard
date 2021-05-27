@@ -37,8 +37,6 @@ class IOPromptWriter implements PromptWriter {
 
   @override
   void error(Object error) {
-    if (error == null) return;
-
     _stderr.writeln(error);
   }
 

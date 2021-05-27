@@ -11,7 +11,7 @@ class Prompter {
 
   /// Creates a new instance of the [Prompter] with the given [PromptWriter].
   ///
-  /// Throws an [AssertionError] if the given [PromptWriter] is `null`.
+  /// Throws an [ArgumentError] if the given [PromptWriter] is `null`.
   Prompter(this._promptWriter) {
     ArgumentError.checkNotNull(_promptWriter, 'promptWriter');
   }
@@ -19,6 +19,15 @@ class Prompter {
   /// Displays the given [text] to the user.
   void info(String text) {
     _promptWriter.info(text);
+  }
+
+  /// Displays the given [error] to the user.
+  ///
+  /// Does nothing if the given [error] is `null`.
+  void error(Object error) {
+    if (error == null) return;
+
+    _promptWriter.error(error);
   }
 
   /// Requests an input from the user with a given description [text].

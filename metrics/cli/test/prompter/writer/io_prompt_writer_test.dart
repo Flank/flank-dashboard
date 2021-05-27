@@ -49,15 +49,6 @@ void main() {
     );
 
     test(
-      ".error() does nothing if the given error is null",
-      () {
-        writer.error(null);
-
-        verifyNever(stderrMock.writeln(errorText));
-      },
-    );
-
-    test(
       ".prompt() requests an input from the user with the given description text",
       () {
         writer.prompt(promptText);
