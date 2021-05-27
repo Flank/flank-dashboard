@@ -241,69 +241,59 @@ void main() {
       ".createProject() throws if GCloud CLI throws during the project creation",
       () {
         whenConfirmProjectName().thenReturn(true);
-        when(gcloudCli.createProject(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.createProject(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
         expect(gcloudService.createProject(), throwsStateError);
       },
     );
 
     test(
-      ".createProject() stops the project creation process if GCloud CLI throws during the project creation",
+      ".createProject() returns the identifier of the created project",
       () async {
         whenConfirmProjectName().thenReturn(true);
-        when(gcloudCli.createProject(any, any))
-            .thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(
-          gcloudService.createProject(),
-          throwsStateError,
-        );
+        final result = await gcloudService.createProject();
 
-        verify(prompter.prompt(enterProjectName)).called(once);
-        verify(prompter.promptConfirm(confirmProjectName)).called(once);
-        verify(gcloudCli.createProject(any, any)).called(once);
-
-        verifyNoMoreInteractions(gcloudCli);
-        verifyNoMoreInteractions(prompter);
+        expect(result, equals(projectId));
       },
     );
 
     test(
-      ".createProject() shows available regions for the created project",
+      ".addFirebase() shows available regions for the created project",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
         verify(gcloudCli.listRegions(projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() throws if GCloud CLI throws during the available regions showing",
+      ".addFirebase() throws if GCloud CLI throws during the available regions showing",
       () async {
-        whenConfirmProjectName().thenReturn(true);
-        when(gcloudCli.listRegions(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.listRegions(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        expect(gcloudService.createProject(), throwsStateError);
+        expect(gcloudService.addFirebase(projectId), throwsStateError);
       },
     );
 
     test(
-      ".createProject() stops the project creation process if GCloud CLI throws during the available regions showing",
+      ".addFirebase() stops adding the Firebase if GCloud CLI throws during the available regions showing",
       () async {
-        whenConfirmProjectName().thenReturn(true);
-        when(gcloudCli.listRegions(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.listRegions(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        await expectLater(gcloudService.createProject(), throwsStateError);
+        await expectLater(
+          gcloudService.addFirebase(projectId),
+          throwsStateError,
+        );
 
-        verify(prompter.prompt(enterProjectName)).called(once);
-        verify(prompter.promptConfirm(confirmProjectName)).called(once);
-        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
 
         verifyNoMoreInteractions(gcloudCli);
@@ -312,38 +302,34 @@ void main() {
     );
 
     test(
-      ".createProject() requests the region from the user",
+      ".addFirebase() requests the region from the user",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
         verify(prompter.prompt(enterRegion)).called(once);
       },
     );
 
     test(
-      ".createProject() throws if GCloud CLI throws during the requesting the region from the user",
+      ".addFirebase() throws if GCloud CLI throws during the requesting the region from the user",
       () {
-        whenConfirmProjectName().thenReturn(true);
         when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
-        expect(gcloudService.createProject(), throwsStateError);
+        expect(gcloudService.addFirebase(projectId), throwsStateError);
       },
     );
 
     test(
-      ".createProject() stops the project creation process if there is an error during the requesting the region from the user",
+      ".addFirebase() stops adding the Firebase if there is an error during the requesting the region from the user",
       () async {
         whenConfirmProjectName().thenReturn(true);
         when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
-        await expectLater(gcloudService.createProject(), throwsStateError);
+        await expectLater(
+            gcloudService.addFirebase(projectId), throwsStateError);
 
-        verify(prompter.prompt(enterProjectName)).called(once);
-        verify(prompter.promptConfirm(confirmProjectName)).called(once);
-        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
 
@@ -353,42 +339,41 @@ void main() {
     );
 
     test(
-      ".createProject() creates the project app with the given region and the generated project id",
+      ".addFirebase() creates the project app with the given region and the given project id",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
         verify(gcloudCli.createProjectApp(region, projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() throws if GCloud CLI throws during the project app creation",
+      ".addFirebase() throws if GCloud CLI throws during the project app creation",
       () {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
-        when(gcloudCli.createProjectApp(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.createProjectApp(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        expect(gcloudService.createProject(), throwsStateError);
+        expect(gcloudService.addFirebase(projectId), throwsStateError);
       },
     );
 
     test(
-      ".createProject() stops the project creation process if GCloud CLI throws during the project app creation",
+      ".addFirebase() stops adding the Firebase if GCloud CLI throws during the project app creation",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
-        when(gcloudCli.createProjectApp(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.createProjectApp(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        await expectLater(gcloudService.createProject(), throwsStateError);
+        await expectLater(
+          gcloudService.addFirebase(projectId),
+          throwsStateError,
+        );
 
-        verify(prompter.prompt(enterProjectName)).called(once);
-        verify(prompter.promptConfirm(confirmProjectName)).called(once);
-        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
         verify(gcloudCli.createProjectApp(any, any)).called(once);
@@ -399,42 +384,39 @@ void main() {
     );
 
     test(
-      ".createProject() enables Firestore API for the project with the generated project id",
+      ".addFirebase() enables Firestore API for the project with the given project id",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
         verify(gcloudCli.enableFirestoreApi(projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() throws if GCloud CLI throws during the Firestore API enabling",
+      ".addFirebase() throws if GCloud CLI throws during the Firestore API enabling",
       () {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
-        when(gcloudCli.enableFirestoreApi(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.enableFirestoreApi(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        expect(gcloudService.createProject(), throwsStateError);
+        expect(gcloudService.addFirebase(projectId), throwsStateError);
       },
     );
 
     test(
-      ".createProject() stops the project creation process if GCloud CLI throws during the Firestore API enabling",
+      ".addFirebase() stops adding the Firebase if GCloud CLI throws during the Firestore API enabling",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
-        when(gcloudCli.enableFirestoreApi(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.enableFirestoreApi(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        await expectLater(gcloudService.createProject(), throwsStateError);
+        await expectLater(
+            gcloudService.addFirebase(projectId), throwsStateError);
 
-        verify(prompter.prompt(enterProjectName)).called(once);
-        verify(prompter.promptConfirm(confirmProjectName)).called(once);
-        verify(gcloudCli.createProject(any, any)).called(once);
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
         verify(gcloudCli.createProjectApp(any, any)).called(once);
@@ -446,55 +428,41 @@ void main() {
     );
 
     test(
-      ".createProject() creates database with the generated id and the given region",
+      ".addFirebase() creates database with the given project id and the given region",
       () async {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
         verify(gcloudCli.createDatabase(region, projectId)).called(once);
       },
     );
 
     test(
-      ".createProject() correctly trims the region prompt",
+      ".addFirebase() correctly trims the region prompt",
       () async {
         const region = 'region-1   ';
         const expectedRegion = 'region-1';
 
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
 
-        await gcloudService.createProject();
+        await gcloudService.addFirebase(projectId);
 
-        verify(gcloudCli.createDatabase(expectedRegion, projectId))
-            .called(once);
+        verify(
+          gcloudCli.createDatabase(expectedRegion, projectId),
+        ).called(once);
       },
     );
 
     test(
-      ".createProject() throws if GCloud CLI throws during the database creation",
+      ".addFirebase() throws if GCloud CLI throws during the database creation",
       () {
-        whenConfirmProjectName().thenReturn(true);
         whenEnterRegionPrompt().thenReturn(region);
-        when(gcloudCli.createDatabase(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.createDatabase(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        expect(gcloudService.createProject(), throwsStateError);
-      },
-    );
-
-    test(
-      ".createProject() returns the identifier of the created project",
-      () async {
-        whenConfirmProjectName().thenReturn(true);
-        whenEnterRegionPrompt().thenReturn(region);
-
-        await gcloudService.createProject();
-
-        expect(projectId, isNotNull);
-        verify(gcloudCli.createProject(projectId, projectName)).called(once);
+        expect(gcloudService.addFirebase(projectId), throwsStateError);
       },
     );
 
@@ -588,8 +556,9 @@ void main() {
     test(
       ".deleteProject() throws if GCloud CLI throws during the project deleting",
       () {
-        when(gcloudCli.deleteProject(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(gcloudCli.deleteProject(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
         expect(gcloudService.deleteProject(projectId), throwsStateError);
       },

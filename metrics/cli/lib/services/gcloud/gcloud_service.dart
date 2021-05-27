@@ -14,6 +14,10 @@ abstract class GCloudService extends InfoService {
   /// Creates a new GCloud project.
   Future<String> createProject();
 
+  /// Adds the Firebase services to the GCloud project with the given
+  /// [projectId].
+  Future<void> addFirebase(String projectId);
+
   /// Accepts the terms of the service.
   FutureOr<void> acceptTermsOfService();
 

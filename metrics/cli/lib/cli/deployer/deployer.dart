@@ -95,13 +95,15 @@ class Deployer {
 
     final projectId = await _gcloudService.createProject();
 
-    _gcloudService.configureProjectOrganization(projectId);
-    await _firebaseService.createWebApp(projectId);
-
     final tempDirectory = _createTempDirectory();
     final deployPaths = _deployPathsFactory.create(tempDirectory.path);
 
     try {
+      await _gcloudService.addFirebase(projectId);
+
+      _gcloudService.configureProjectOrganization(projectId);
+      await _firebaseService.createWebApp(projectId);
+
       await _gitService.checkout(DeployConstants.repoURL, deployPaths.rootPath);
       await _installNpmDependencies(
         deployPaths.firebasePath,

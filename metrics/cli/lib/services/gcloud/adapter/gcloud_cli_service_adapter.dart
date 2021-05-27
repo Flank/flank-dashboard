@@ -45,19 +45,24 @@ class GCloudCliServiceAdapter implements GCloudService {
   @override
   Future<String> createProject() async {
     final projectId = _generateProjectId();
-    final gcloudProjectName = _promptGCloudProjectName(projectId);
+    final projectName = _promptProjectName(projectId);
 
-    await _gcloudCli.createProject(projectId, gcloudProjectName);
+    await _gcloudCli.createProject(projectId, projectName);
+
+    return projectId;
+  }
+
+  @override
+  Future<void> addFirebase(String projectId) async {
     await _gcloudCli.listRegions(projectId);
 
     final regionPrompt = _prompter.prompt(GCloudStrings.enterRegionName);
     final region = regionPrompt.trim();
-
     await _gcloudCli.createProjectApp(region, projectId);
-    await _gcloudCli.enableFirestoreApi(projectId);
-    await _gcloudCli.createDatabase(region, projectId);
 
-    return projectId;
+    await _gcloudCli.enableFirestoreApi(projectId);
+
+    await _gcloudCli.createDatabase(region, projectId);
   }
 
   @override
@@ -86,7 +91,7 @@ class GCloudCliServiceAdapter implements GCloudService {
   ///
   /// Uses the [projectId] as the project's name
   /// if the user doesn't specify the name.
-  String _promptGCloudProjectName(String projectId) {
+  String _promptProjectName(String projectId) {
     bool projectNameConfirmed = false;
     String projectName;
 
