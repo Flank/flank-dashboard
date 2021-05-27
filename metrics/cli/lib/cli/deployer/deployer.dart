@@ -137,6 +137,8 @@ class Deployer {
       await _gcloudService.configureOAuthOrigins(projectId);
 
       _prompter.info(DeployStrings.successfulDeployment);
+    } catch (error) {
+      _prompter.error(DeployStrings.failedDeployment(error));
     } finally {
       _prompter.info(DeployStrings.deletingTempDirectory);
       _deleteDirectory(tempDirectory);

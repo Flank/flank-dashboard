@@ -82,6 +82,10 @@ void main() {
     );
     final stateError = StateError('test');
 
+    Matcher isADeployerErrorMessage(Object expectedError) {
+      return equals(DeployStrings.failedDeployment(expectedError));
+    }
+
     PostExpectation<Directory> whenCreateTempDirectory() {
       return when(fileHelper.createTempDirectory(any, any));
     }
@@ -518,7 +522,7 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenAddFirebase().thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -547,7 +551,7 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenConfigureProjectOrganization().thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -574,7 +578,7 @@ void main() {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenCreateFirebaseApp().thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -656,10 +660,12 @@ void main() {
       ".deploy() deletes the temporary directory if Git service throws during the checkout process",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(gitService.checkout(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(gitService.checkout(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -741,10 +747,12 @@ void main() {
       ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(npmService.installDependencies(any))
-            .thenAnswer((_) => Future.error(stateError));
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(
+          npmService.installDependencies(any),
+        ).thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -796,10 +804,11 @@ void main() {
       ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(flutterService.build(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(flutterService.build(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -834,12 +843,27 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase billing plan upgrading",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase billing plan upgrading",
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -874,12 +898,27 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if the Firebase service throws during the Firebase Analytics enabling",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase Analytics enabling",
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -914,13 +953,31 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase Analytics enabling",
+      ".deploy() informs the user about the failed deployment if the Firebase service throws during initializing the Firestore data",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(firebaseService.initializeFirestoreData(any))
-            .thenThrow(stateError);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(
+          firebaseService.initializeFirestoreData(any),
+        ).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".deploy() deletes the temporary directory if the Firebase service throws during initializing the Firestore data",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(
+          firebaseService.initializeFirestoreData(any),
+        ).thenThrow(stateError);
+
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -955,12 +1012,27 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if the Firebase service throws during the Firebase auth providers configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase auth providers configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -994,12 +1066,27 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if prompter throws during the Sentry config prompting",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if prompter throws during the Sentry config prompting",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1049,13 +1136,29 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Sentry service throws during the login process",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Sentry service throws during the login process",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1099,7 +1202,7 @@ void main() {
         whenPromptToSetupSentry().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1145,7 +1248,7 @@ void main() {
             .thenAnswer((_) => Future.value(sentryRelease));
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1165,13 +1268,29 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if FileHelper throws during the Metrics config file getting",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenReturn(false);
+        when(fileHelper.getFile(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if FileHelper throws during the Metrics config file getting",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1206,6 +1325,27 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if FileHelper throws during replacing variables in the Metrics config file",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenReturn(false);
+        when(
+          fileHelper.replaceEnvironmentVariables(any, any),
+        ).thenThrow(stateError);
+        when(
+          firebaseService.configureAuthProviders(projectId),
+        ).thenReturn(clientId);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if FileHelper throws during replacing variables in the Metrics config file",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -1215,7 +1355,7 @@ void main() {
         when(firebaseService.configureAuthProviders(projectId))
             .thenReturn(clientId);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1253,6 +1393,23 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase components deployment",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(firebaseService.deployFirebase(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -1260,7 +1417,7 @@ void main() {
         when(firebaseService.deployFirebase(any, any))
             .thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1299,14 +1456,33 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase hosting deployment",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenReturn(false);
+        when(firebaseService.deployHosting(any, any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(firebaseService.deployHosting(any, any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseService.deployHosting(any, any, any),
+        ).thenAnswer((_) => Future.error(stateError));
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
@@ -1341,13 +1517,28 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if GCloud service throws during the OAuth origins configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
 
-        await expectLater(deployer.deploy(), throwsStateError);
+        await deployer.deploy();
 
         verify(directory.deleteSync(recursive: true)).called(once);
       },
