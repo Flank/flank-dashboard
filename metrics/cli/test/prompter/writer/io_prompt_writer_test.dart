@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      ".error() displays the given error",
+      ".error() prints the given error to the given error stream",
       () {
         writer.error(errorText);
 

@@ -5,16 +5,15 @@ import 'dart:io';
 
 import 'package:cli/prompter/writer/prompt_writer.dart';
 
-/// A [PromptWriter] implementation that uses the [Stdin] and the [Stdout]
-/// to prompt.
+/// A [PromptWriter] that uses the IO streams to prompt the user.
 class IOPromptWriter implements PromptWriter {
-  /// A standard input stream of data used by this writer.
+  /// An input stream of data used by this writer.
   final Stdin _stdin;
 
-  /// A standard output stream of data used by this writer.
+  /// An output stream of data used by this writer.
   final Stdout _stdout;
 
-  /// A standard error output stream used by this writer.
+  /// An error output stream used by this writer.
   final Stdout _stderr;
 
   /// Creates a new instance of the [IOPromptWriter].
