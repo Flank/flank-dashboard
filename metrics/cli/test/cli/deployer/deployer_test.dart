@@ -544,6 +544,22 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if GCloud service throws during the organization configuration",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenConfigureProjectOrganization().thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if GCloud service throws during the organization configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -567,6 +583,22 @@ void main() {
         await deployer.deploy();
 
         verify(firebaseService.createWebApp(projectId)).called(once);
+      },
+    );
+
+    test(
+      ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase web app creation",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenPromptToSetupSentry().thenReturn(false);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenCreateFirebaseApp().thenAnswer((_) => Future.error(stateError));
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
       },
     );
 
@@ -657,10 +689,25 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Git service throws during the checkout process",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(gitService.checkout(any, any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Git service throws during the checkout process",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -744,10 +791,25 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Npm service throws during the dependencies installing",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(npmService.installDependencies(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(
           npmService.installDependencies(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -801,6 +863,23 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Flutter service throws during the web application building",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        when(flutterService.build(any)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -846,7 +925,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase billing plan upgrading",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
 
         await deployer.deploy();
@@ -901,7 +979,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if the Firebase service throws during the Firebase Analytics enabling",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
 
         await deployer.deploy();
@@ -956,7 +1033,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if the Firebase service throws during initializing the Firestore data",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1015,7 +1091,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if the Firebase service throws during the Firebase auth providers configuration",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
 
         await deployer.deploy();
@@ -1069,7 +1144,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if prompter throws during the Sentry config prompting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenThrow(stateError);
 
         await deployer.deploy();
@@ -1140,7 +1214,6 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
 
         await deployer.deploy();
@@ -1196,6 +1269,22 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if Sentry service throws during the release creation",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -1240,6 +1329,25 @@ void main() {
     );
 
     test(
+      ".deploy() informs the user about the failed deployment if prompter throws during the Sentry DSN requesting",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+        whenPromptToSetupSentry().thenReturn(true);
+        whenCreateSentryRelease().thenAnswer(
+          (_) => Future.value(sentryRelease),
+        );
+        when(sentryService.getProjectDsn(any)).thenThrow(stateError);
+
+        await deployer.deploy();
+
+        verify(
+          prompter.error(argThat(isADeployerErrorMessage(stateError))),
+        ).called(once);
+      },
+    );
+
+    test(
       ".deploy() deletes the temporary directory if prompter throws during the Sentry DSN requesting",
       () async {
         whenDirectoryExist().thenReturn(true);
@@ -1271,7 +1379,6 @@ void main() {
       ".deploy() informs the user about the failed deployment if FileHelper throws during the Metrics config file getting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
 
@@ -1328,14 +1435,13 @@ void main() {
       ".deploy() informs the user about the failed deployment if FileHelper throws during replacing variables in the Metrics config file",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenReturn(false);
-        when(
-          fileHelper.replaceEnvironmentVariables(any, any),
-        ).thenThrow(stateError);
         when(
           firebaseService.configureAuthProviders(projectId),
         ).thenReturn(clientId);
+        when(
+          fileHelper.replaceEnvironmentVariables(any, any),
+        ).thenThrow(stateError);
 
         await deployer.deploy();
 
@@ -1350,10 +1456,12 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(fileHelper.replaceEnvironmentVariables(any, any))
-            .thenThrow(stateError);
-        when(firebaseService.configureAuthProviders(projectId))
-            .thenReturn(clientId);
+        when(
+          fileHelper.replaceEnvironmentVariables(any, any),
+        ).thenThrow(stateError);
+        when(
+          firebaseService.configureAuthProviders(projectId),
+        ).thenReturn(clientId);
 
         await deployer.deploy();
 
@@ -1414,8 +1522,9 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(firebaseService.deployFirebase(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseService.deployFirebase(any, any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await deployer.deploy();
 
@@ -1456,10 +1565,9 @@ void main() {
     );
 
     test(
-      ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase hosting deployment",
+      ".deploy() informs the user about the failed deployment if Firebase service throws during the ,g deployment",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
