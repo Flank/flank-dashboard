@@ -51,7 +51,7 @@ Deployment to other platforms is out of scope.
 
 ## Before you begin
 
-Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/platform-platform/monorepo/master/metrics/cli/recommended_versions.yaml).
+Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/platform-platform/monorepo/blob/master/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 
