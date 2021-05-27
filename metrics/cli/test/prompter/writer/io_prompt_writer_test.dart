@@ -12,18 +12,22 @@ import '../../test_utils/matchers.dart';
 void main() {
   group("IOPromptWriter", () {
     const promptText = 'text';
+    const errorText = 'error';
     const confirmText = 'confirm';
     final stdinMock = _StdinMock();
     final stdoutMock = _StdoutMock();
+    final stderrMock = _StdoutMock();
 
     final writer = IOPromptWriter(
       inputStream: stdinMock,
       outputStream: stdoutMock,
+      errorStream: stderrMock,
     );
 
     tearDown(() {
       reset(stdinMock);
       reset(stdoutMock);
+      reset(stderrMock);
     });
 
     test(
@@ -32,6 +36,15 @@ void main() {
         writer.info(promptText);
 
         verify(stdoutMock.writeln(promptText)).called(once);
+      },
+    );
+
+    test(
+      ".error() prints the given error to the given error stream",
+      () {
+        writer.error(errorText);
+
+        verify(stderrMock.writeln(errorText)).called(once);
       },
     );
 

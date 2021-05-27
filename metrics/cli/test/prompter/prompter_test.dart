@@ -11,6 +11,7 @@ import '../test_utils/prompt_writer_mock.dart';
 void main() {
   group("Prompter", () {
     const promptText = 'promptText';
+    const errorText = 'errorText';
     const confirmInput = 'yes';
     final promptWriter = PromptWriterMock();
     final prompter = Prompter(promptWriter);
@@ -32,6 +33,24 @@ void main() {
         prompter.info(promptText);
 
         verify(promptWriter.info(promptText)).called(once);
+      },
+    );
+
+    test(
+      ".error() displays the given error",
+      () async {
+        prompter.error(errorText);
+
+        verify(promptWriter.error(errorText)).called(once);
+      },
+    );
+
+    test(
+      ".error() does nothing if the given error is null",
+      () async {
+        prompter.error(null);
+
+        verifyNever(promptWriter.error(errorText));
       },
     );
 
@@ -61,8 +80,9 @@ void main() {
       () async {
         prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
-        verify(promptWriter.promptConfirm(promptText, confirmInput))
-            .called(once);
+        verify(
+          promptWriter.promptConfirm(promptText, confirmInput),
+        ).called(once);
       },
     );
 
@@ -71,8 +91,9 @@ void main() {
       () async {
         const confirmInput = 'yes';
 
-        when(promptWriter.promptConfirm(promptText, confirmInput))
-            .thenReturn(true);
+        when(
+          promptWriter.promptConfirm(promptText, confirmInput),
+        ).thenReturn(true);
 
         final result = prompter.promptConfirm(
           promptText,
@@ -88,8 +109,9 @@ void main() {
       () {
         prompter.promptConfirm(promptText);
 
-        verify(promptWriter.promptConfirm(promptText, argThat(isNotNull)))
-            .called(once);
+        verify(
+          promptWriter.promptConfirm(promptText, argThat(isNotNull)),
+        ).called(once);
       },
     );
   });

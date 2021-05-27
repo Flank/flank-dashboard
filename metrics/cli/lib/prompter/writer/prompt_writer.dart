@@ -7,6 +7,9 @@ abstract class PromptWriter {
   /// Displays the given [text] to the user.
   void info(String text);
 
+  /// Displays the given [error] to the user.
+  void error(Object error);
+
   /// Requests an input from the user with a given description [text].
   String prompt(String text);
 
