@@ -13,18 +13,18 @@ There are a couple of ways to install the `Metrics` application:
 - [Using the Metrics CLI](#using-the-metrics-cli)
 - [Manually using UI](#manual)
 
-### Using the Metrics CLI
+#### Using the Metrics CLI
 
-If you prefer to automatically deploy to Firebase, install the `Metrics` using the `Metrics CLI`. 
+If you prefer to install the `Metrics` application automatically, follow the next steps: 
 
-To do so, consider the following steps:
 1. Download the `Metrics CLI` [binary](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#use-the-releases) or [build it from the source](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#build-from-the-source).
 2. Run the `doctor` command to verify all required third-party CLIs are installed.
 3. Run the `deploy` command to start deploying the Metrics Web Application.
+4. Follow the `Metrics CLI` instructions to finish the deployment.
 
 See [Metrics CLI usage](https://github.com/platform-platform/monorepo/blob/master/metrics/cli#usage) for more information.
 
-### Manual
+#### Manual
 
 If you want to install the `Metrics` manually, you should download the [source code](https://github.com/platform-platform/monorepo/tree/master/metrics) and perform some Firebase configurations using the [Firebase web UI](https://console.firebase.google.com/). See [Metrics Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md) document to get more information about required configurations.
 
