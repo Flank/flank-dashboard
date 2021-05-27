@@ -1,6 +1,6 @@
 # Metrics firebase deployment with CLI
 
-_**Note:** This document is for **internal purposes**. It describes the process of deployment of the Metrics application to the Firebase Hosting and deploying the Cloud functions needed to create test data for the application with CLI._
+_**Note:** This document is for **internal purposes**. It describes the process of deployment of the Metrics using the third-party CLIs to show the ways of deployment automation._
 
 ## Before you begin
 
