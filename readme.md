@@ -27,12 +27,12 @@ The Metrics Web Application displays the next project metrics on the dashboard:
 | `Stability`   | A circular graph displaying a ratio of successful builds to finished builds for the last 30 builds. |
 | `Coverage`   | A circular graph displaying a last successful build's code coverage percent. |
 
-See [Project metrics definitions](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md) document to get more information about project metrics.
+See [Project metrics definitions](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md) document to get more information about project metrics.
 
 ![Metrics Dashboard](docs/images/dashboard_ui_dark.png)
 
 ## :test_tube: Api Mock Server
-[Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) documents for more details.
+[Api Mock Server](api_mock_server) is a package that provides an abstraction to create mock HTTP servers for testing 3-rd party API integrations. Consider the [Third Party API Testing](https://github.com/Flank/flank-dashboard/blob/master/docs/03_third_party_api_testing.md) and [Mock Server](https://github.com/Flank/flank-dashboard/blob/master/docs/04_mock_server.md) documents for more details.
 
 ### Features
 The API Mock server allows mocking the following real-server functionality:
@@ -195,6 +195,6 @@ Consider these useful links that may help you to get started:
 4. [Effective Dart :dart:](https://dart.dev/guides/language/effective-dart)
 
 # :scroll: License
-Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/platform-platform/monorepo/blob/master/LICENSE).
+Licensed under the terms of the Apache 2.0 License that can be found in the [LICENSE file](https://github.com/Flank/flank-dashboard/blob/master/LICENSE).
 
 Consider the [Dependencies Licenses](docs/15_dependencies_licenses.md) document that describes the licenses for all 3-rd party libraries used in projects of this repository.

@@ -29,7 +29,7 @@ Once we have a new collection, we have to add security rules for this collection
 
 ## Metrics application
 
-The following sub-sections provide an implementation of Feature config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following sub-sections provide an implementation of Feature config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
@@ -37,7 +37,7 @@ The data layer provides the `FirestoreFeatureConfigRepository` implementation of
 
 The following class diagram states the structure of the data layer:
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_data_layer_class_diagram.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_data_layer_class_diagram.puml)
 
 ### Domain layer
 
@@ -49,7 +49,7 @@ The domain layer should provide an interface for the `FirestoreFeatureConfigRepo
 
 The following class diagram demonstrates the domain layer structure:
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_domain_layer_class_diagram.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_domain_layer_class_diagram.puml)
 
 ### Presentation layer
 
@@ -57,10 +57,10 @@ Once we've added both the domain and data layers, it's time to add the feature t
 
 The following class diagram demonstrates the structure of the presentation layer:
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_presentation_layer_class_diagram.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_presentation_layer_class_diagram.puml)
 
 The following sequence diagram describes how the application applies `Feature Config` values when a user enters the application:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/feature_config/diagrams/feature_config_sequence_diagram.puml)
 
 Let's consider the mechanism of applying the `Feature Config` values in the application. When a user enters the application, he or she stays on the `LoadingPage` until the `initializeConfig` method of the `FeatureConfigNotifier` finishes. Once the initializing completes, the `isLoading` status of the `FeatureConfigNotifier` is set to `false`. The user then can proceed to the application with the configurations applied.

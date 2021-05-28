@@ -3,4 +3,4 @@ services:
   ubuntu:
     image: "ubuntu:focal"
     volumes:
-      - ../../.:/monorepo
+      - ../../.:/flank-dashboard

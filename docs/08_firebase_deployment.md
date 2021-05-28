@@ -51,7 +51,7 @@ Deployment to other platforms is out of scope.
 
 ## Before you begin
 
-Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/platform-platform/monorepo/blob/master/metrics/cli/recommended_versions.yaml).
+Before you start, you should have the required command line tools installed. To view the recommended versions, please check out the [command line tools file](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
 
 ## Creating a new Firebase project.
 
@@ -161,7 +161,7 @@ To enable the email and password sign-in option, consider the following steps:
 4. Enable the `Email/Password` sign-in method using the toggle in the opened menu.
 5. Press the `Save` button.
 
-The email and password sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPasswordSignInOptionEnabled` configuration stands for the email and password auth form availability on the Login Page of the application. If the `isPasswordSignInOptionEnabled` is `false` then users are not allowed to log in using the email and password sign-in method and no appropriate authentication form appears on the UI. To know more about the `Feature Config` consider the [Feature Config](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
+The email and password sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPasswordSignInOptionEnabled` configuration stands for the email and password auth form availability on the Login Page of the application. If the `isPasswordSignInOptionEnabled` is `false` then users are not allowed to log in using the email and password sign-in method and no appropriate authentication form appears on the UI. To know more about the `Feature Config` consider the [Feature Config](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
 
 To enable the email and password authentication form, consider the following steps:
 
@@ -274,7 +274,7 @@ flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
 
 #### Building with Sentry support
 
-The Metrics Web Application uses Sentry to report errors occurred during the app execution. Sentry requires additional configurations related to the application building. Thus, it requires binding DSN and release options Sentry uses to report errors. To know more about the Sentry options itself and how to bind them consider the [Metrics Logger](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) document and [Sentry Integration](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#sentry-integration) section.
+The Metrics Web Application uses Sentry to report errors occurred during the app execution. Sentry requires additional configurations related to the application building. Thus, it requires binding DSN and release options Sentry uses to report errors. To know more about the Sentry options itself and how to bind them consider the [Metrics Logger](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) document and [Sentry Integration](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#sentry-integration) section.
 
 Also, Sentry uses source maps generated during the build to make errors more readable and clear. To ensure `flutter build` command generates source maps it is required to pass the `--source-maps` flag.
 
@@ -284,7 +284,7 @@ The following example demonstrates building the application with Sentry support:
 flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=<YOUR_SENTRY_DSN> --dart-define=SENTRY_RELEASE=<YOUR_SENTRY_RELEASE>
 ```
 
-Then, using Sentry CLI one should update source maps as described in the [Updating Source Maps](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) section of the Metrics Logger document.
+Then, using Sentry CLI one should update source maps as described in the [Updating Source Maps](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) section of the Metrics Logger document.
 
 Once you've built the application, you can proceed to deploying to the Firebase Hosting.
 

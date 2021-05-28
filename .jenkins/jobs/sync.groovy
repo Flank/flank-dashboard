@@ -7,7 +7,7 @@ pipelineJob('sync_build_data') {
             scm {
                 git {
                     remote {
-                        url('https://github.com/platform-platform/monorepo.git')
+                        url('https://github.com/Flank/flank-dashboard.git')
                     }
                     branches('*/master')
                 }

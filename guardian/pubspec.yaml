@@ -12,7 +12,7 @@ dependencies:
   meta: ^1.1.8
   yaml_map:
     git:
-      url: https://github.com/platform-platform/monorepo.git
+      url: https://github.com/Flank/flank-dashboard.git
       path: yaml_map
   xml: ^3.7.0
   equatable: ^1.0.3

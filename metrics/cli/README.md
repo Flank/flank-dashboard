@@ -12,21 +12,21 @@ Metrics CLI is available to install on macOS and Linux.
 
 # Requirements
 
-The `Metrics CLI` is based on a list of third-party CLIs. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/blob/master/metrics/cli/recommended_versions.yaml).
+The `Metrics CLI` is based on a list of third-party CLIs. To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
 
 # Installation
 
 There are a couple of ways to install the `Metrics CLI`: 
 
-- [Downloading from the releases page](#use-the-releases)
-- [Compilation from source code](#build-from-the-source)
+- [Using the binary release](#using-the-binary-release)
+- [Building from the source](#building-from-the-source)
 
-## Use the releases
+## Using the binary release
 
-You can download the built Metrics CLI tool from the [GitHub releases](https://github.com/platform-platform/monorepo/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links:
+You can download the built Metrics CLI tool from the [GitHub releases](https://github.com/Flank/flank-dashboard/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links:
 
-- [`CLI for Linux`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux)
-- [`CLI for macOS`](https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos)
+- [`CLI for Linux`](https://github.com/Flank/flank-dashboard/releases/download/metrics-cli-snapshot/metrics_cli_linux)
+- [`CLI for macOS`](https://github.com/Flank/flank-dashboard/releases/download/metrics-cli-snapshot/metrics_cli_macos)
 
 Also, you can download the `Metrics CLI` tool using the command line tools. Let's consider the bash command to download the Metrics CLI:
 
@@ -39,13 +39,13 @@ Where the `<OUTPUT_PATH>` is the file path where you want to download the Metric
 - for `macOS`:
 
 ```bash
-curl -o metrics_cli -k https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_macos -L
+curl -o metrics_cli -k https://github.com/Flank/flank-dashboard/releases/download/metrics-cli-snapshot/metrics_cli_macos -L
 ```
 
 - for `Linux`: 
 
 ```bash
-curl -o metrics_cli -k https://github.com/platform-platform/monorepo/releases/download/metrics-cli-snapshot/metrics_cli_linux -L
+curl -o metrics_cli -k https://github.com/Flank/flank-dashboard/releases/download/metrics-cli-snapshot/metrics_cli_linux -L
 ```
 
 Now you can use the binary to run `Metrics CLI` commands:
@@ -54,9 +54,9 @@ Now you can use the binary to run `Metrics CLI` commands:
 metrics <command>
 ```
 
-## Build from the source
+## Building from the source
 
-If you've downloaded the [Metrics CLI](https://github.com/platform-platform/monorepo/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
+If you've downloaded the [Metrics CLI](https://github.com/Flank/flank-dashboard/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
 
 ```bash
 make build

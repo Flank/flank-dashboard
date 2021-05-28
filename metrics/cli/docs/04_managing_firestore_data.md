@@ -3,7 +3,7 @@
 ## Motivation
 > What problem is this project solving?
 
-Since the Metrics App stores [allowed domains](https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md#the-allowed_email_domains-collection) and [feature config](https://github.com/platform-platform/monorepo/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) collections in Cloud Firestore and these collections are protected by the Firebase rules from the writing, we should find an approach of managing Firestore data using [Admin SDK](https://developers.google.com/admin-sdk).
+Since the Metrics App stores [allowed domains](https://github.com/Flank/flank-dashboard/blob/master/docs/18_security_audit_document.md#the-allowed_email_domains-collection) and [feature config](https://github.com/Flank/flank-dashboard/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) collections in Cloud Firestore and these collections are protected by the Firebase rules from the writing, we should find an approach of managing Firestore data using [Admin SDK](https://developers.google.com/admin-sdk).
 
 Therefore, the document's goal is to investigate all approaches of managing Cloud Firestore data using [Admin SDK](https://developers.google.com/admin-sdk) to make the Metrics CLI the most usable.
 

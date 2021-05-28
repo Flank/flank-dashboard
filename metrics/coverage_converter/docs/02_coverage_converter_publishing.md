@@ -102,7 +102,7 @@ Let's consider each of them separately:
 
 To download the Coverage Converter tool from the GitHub releases, follow the next steps: 
 
-1. Go to the platform-platform/monorepo GitHub repository [releases page](https://github.com/platform-platform/monorepo/releases). 
+1. Go to the Flank/flank-dashboard GitHub repository [releases page](https://github.com/Flank/flank-dashboard/releases). 
 2. Find the version of the Coverage Converter tool you want to download.
 3. Open the `Assets` collapsible section and choose the Coverage Converter file compatible with your OS.
 4. Click to download.
@@ -111,9 +111,9 @@ To download the Coverage Converter tool from the GitHub releases, follow the nex
 
 To download the latest snapshot release, you should use the following links: 
 
- - [macOS download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_macos)
- - [Linux download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux)
- - [Windows download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_windows) 
+ - [macOS download](https://github.com/Flank/flank-dashboard/releases/download/coverage-converter-snapshot/coverage_converter_macos)
+ - [Linux download](https://github.com/Flank/flank-dashboard/releases/download/coverage-converter-snapshot/coverage_converter_linux)
+ - [Windows download](https://github.com/Flank/flank-dashboard/releases/download/coverage-converter-snapshot/coverage_converter_windows) 
 
 ## Downloading using the command line commands
 
@@ -125,7 +125,7 @@ If you want to download the Coverage Converter tool you should follow the steps 
 
 After these steps, you should obtain the download link similar to this one: 
 
-`https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
+`https://github.com/Flank/flank-dashboard/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 ## Using the Coverage Converter tool
 
@@ -135,7 +135,7 @@ Once you've obtained the download link, you can download the Coverage Converter 
 
 Where the `<output>` is the file path where you want to download the coverage converter, and the `<url>` is the download URL obtained previously. Let's consider the example download command: 
 
-`curl -o coverage_converter_macos -k https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
+`curl -o coverage_converter_macos -k https://github.com/Flank/flank-dashboard/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 So, when you've got the Coverage Converter executable, you probably, want to convert coverage to be readable by the CI integrations tool. To run the conversion process, you should have the coverage report in one of the supported formats: 
 
@@ -146,7 +146,7 @@ Let's consider the command for converting the `LCOV` format for macOS:
 
 `./coverage_converter_macos lcov -i <YOUR_COVERAGE_REPORT_FILE> -o <COVERAGE_REPORT_OUTPUT_FILE.json>`
 
-As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. See [Coverage Converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#cli-design) document for a detailed description of the CLI arguments.
+As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. See [Coverage Converter design](https://github.com/Flank/flank-dashboard/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#cli-design) document for a detailed description of the CLI arguments.
 
 After the conversion process is finished, the command will create a `COVERAGE_REPORT_OUTPUT_FILE.json` file with the coverage report JSON readable by the CI integrations tool.
 

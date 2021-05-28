@@ -23,11 +23,11 @@ Component | Description | Link
 
 ### Base Widget
 
-Now, let's implement the `base` `SearchableDropdown` widget. Here is a [document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/03_widget_structure_organization.md) that describes widget implementation in the Metrics Web Application.
+Now, let's implement the `base` `SearchableDropdown` widget. Here is a [document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md) that describes widget implementation in the Metrics Web Application.
 
 Consider the following class diagram that describes the `SearchableDropdown` widget structure
 and how it interacts with the `selection_menu` package.  
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/searchable_dropdown_widget_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/searchable_dropdown_widget_class_diagram.puml)
 
 Consider the following table that describes each `SearchableDropdown` field:
 
@@ -85,7 +85,7 @@ void _closeMenu() {
 
 #### Search Bar Component Focus Management
 
-The `Search Bar Component` will be built using the [MetricsTextFormField widget](https://github.com/platform-platform/monorepo/blob/master/metrics/web/lib/common/presentation/widgets/metrics_text_form_field.dart). Currently, it lacks some functionality to control the focus behaviour of this field. So, we should add a `focusNode` parameter to the `MetricsTextFormField` widget.
+The `Search Bar Component` will be built using the [MetricsTextFormField widget](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/lib/common/presentation/widgets/metrics_text_form_field.dart). Currently, it lacks some functionality to control the focus behaviour of this field. So, we should add a `focusNode` parameter to the `MetricsTextFormField` widget.
 
 First of all, we need to open the `Dropdown Menu` and select all text when we focus the `Search Bar` and close the `Dropdown Menu` when the `Search Bar` unfocuses. To do that, let's create a `FocusNode`, pass it to the `Search Bar` and track its state changes. For the text selection feature, we should pass a `TextEditingController` to the `Search Bar`. Consider the following code example:
 
@@ -205,7 +205,7 @@ void _onEnterKeyPressed() {
 
 Consider the following class diagram that describes the `ProjectGroupsSearchableDropdown` widget structure
 and how it interacts with the `SearchableDropdown` widget.  
-![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/project_groups_searchable_dropdown_widget_class_diagram.puml)
+![Widget class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/searchable_dropdown/diagrams/project_groups_searchable_dropdown_widget_class_diagram.puml)
 
 # Testing
 > How will the project be tested?

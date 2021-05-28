@@ -53,8 +53,8 @@ To capture design documentation, we use the following techniques and tools:
 
 Examples:
 
-- Application architecture: [Metrics Web Application architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
-- Feature design: [User Profile Theme](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/user_profile_theme/01_user_profile_theme_design.md)
+- Application architecture: [Metrics Web Application architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
+- Feature design: [User Profile Theme](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/user_profile_theme/01_user_profile_theme_design.md)
 
 ## Workflow
 

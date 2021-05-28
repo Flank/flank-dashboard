@@ -7,8 +7,8 @@ Introducing the auto-deployment to Firebase  for the Metrics app allows users to
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Metrics firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md)
-- [Metrics firebase deployment with CLI](https://github.com/platform-platform/monorepo/blob/master/docs/13_firebase_deployment_cli.md)
+- [Metrics firebase deployment](https://github.com/Flank/flank-dashboard/blob/master/docs/08_firebase_deployment.md)
+- [Metrics firebase deployment with CLI](https://github.com/Flank/flank-dashboard/blob/master/docs/13_firebase_deployment_cli.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
@@ -85,7 +85,7 @@ To make the `Metrics CLI` more clean and structured, we should define interfaces
 
 The following class diagram demonstrates the relationships between [CLIs](#CLI) and [Services](#Service):
 
-![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
+![CLI interfaces Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/cli_interfaces_class_diagram.puml)
 
 Let's review the main `service` interfaces we need to deploy the Metrics Web Application: 
     
@@ -121,7 +121,7 @@ Since we have interfaces for each service and `CLI`s implemented, we should adap
 
 Let's review the class diagram representing the `Metrics CLI` services and `CLI`s with relationships between them: 
 
-![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
+![Services Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/services_class_diagram.puml)
 
 ### Prompt
 
@@ -132,7 +132,7 @@ To interact with a user during the deployment process, we should include prompts
 
 The following class diagram demonstrates the structure of the prompts integration and the relationships of classes this integration requires:
 
-![Prompter Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/prompter_class_diagram.puml)
+![Prompter Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/prompter_class_diagram.puml)
 
 Let's take a look at the classes the prompts integration requires in more details: 
 
@@ -150,7 +150,7 @@ The `Doctor` is a class used to check whether all required third-party `CLI`s ar
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
+![Doctor class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/doctor_command_class_diagram.puml)
 
 ### Deployer
 
@@ -158,7 +158,7 @@ The `Deployer` class is needed to separate the deployment logic from the [`Deplo
 
 The following class diagram demonstrates how the classes described above interact:
 
-![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
+![Deploy class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/deploy_command_class_diagram.puml)
 
 As we can see, the `Deployer` and `Doctor` classes requires the same services, so we should create a `Services` class that holds all required services. This will allow us to avoid code duplication and improve testability.
 
@@ -168,15 +168,15 @@ The `MetricsCliRunner` is a class that extends a `CommandRunner` and is used to 
 
 The following class diagram demonstrates the structure of the `MetricsCliRunner`:
 
-![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
+![Metrics Cli Runner Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/metrics_cli_runner_class_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DoctorCommand`:
 
-![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
+![Doctor Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/doctor_command_sequence_diagram.puml)
 
 Consider the following sequence diagram that illustrates the process of the `DeployCommand`:
 
-![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
+![Deploy Command sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/diagrams/deploy_command_sequence_diagram.puml)
 
 ## Usage
 
@@ -191,7 +191,7 @@ Before you start, you should download the latest version of the Metrics CLI tool
 5. [gcloud](https://cloud.google.com/sdk/gcloud);
 6. [sentry-cli](https://docs.sentry.io/product/cli/installation).
 
-To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/platform-platform/monorepo/blob/master/metrics/cli/recommended_versions.yaml).
+To view the recommended versions of the dependencies, please check out the [dependencies file](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
 
 ### Doctor
 

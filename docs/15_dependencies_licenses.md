@@ -31,7 +31,7 @@ The list of dependencies for the Third Party API is out of the scope.
 Each Metrics component contains a list of dependencies like plugins, packages, etc. The following subsections provide tables
  of licenses of such dependencies for each component.
 
-## [CI Integrations](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations)
+## [CI Integrations](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -52,7 +52,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | coverage | [pub.dev](https://pub.dev/packages/coverage) | [Apache 2.0](https://github.com/dart-lang/coverage/blob/master/LICENSE) |
 | test_coverage| [pub.dev](https://pub.dev/packages/test_coverage) | [BSD](https://github.com/pulyaevskiy/test-coverage/blob/master/LICENSE) |
 
-## [Core](https://github.com/platform-platform/monorepo/tree/master/metrics/core)
+## [Core](https://github.com/Flank/flank-dashboard/tree/master/metrics/core)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -67,7 +67,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
 
-## [Coverage Converter](https://github.com/platform-platform/monorepo/tree/master/metrics/coverage_converter)	
+## [Coverage Converter](https://github.com/Flank/flank-dashboard/tree/master/metrics/coverage_converter)	
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -85,7 +85,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Cli](https://github.com/platform-platform/monorepo/tree/master/metrics/cli)
+## [Cli](https://github.com/Flank/flank-dashboard/tree/master/metrics/cli)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -100,7 +100,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Firebase](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase)
+## [Firebase](https://github.com/Flank/flank-dashboard/tree/master/metrics/firebase)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -121,7 +121,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://pub.dev/packages/mockito/license) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://pub.dev/packages/test/license) |
 
-## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)
+## [Web](https://github.com/Flank/flank-dashboard/tree/master/metrics/web)
 
 | Name | Source | License |
 | :---: | :---: | :---: |	
@@ -165,7 +165,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | uuid | [pub.dev](https://pub.dev/packages/uuid) | [MIT](https://github.com/Daegalus/dart-uuid/blob/master/LICENSE) |
 
 
-## [API Mock Server](https://github.com/platform-platform/monorepo/tree/master/api_mock_server)			
+## [API Mock Server](https://github.com/Flank/flank-dashboard/tree/master/api_mock_server)			
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -177,7 +177,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Shell Words](https://github.com/platform-platform/monorepo/tree/master/shell_words)		
+## [Shell Words](https://github.com/Flank/flank-dashboard/tree/master/shell_words)		
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -189,7 +189,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | pedantic | [pub.dev](https://pub.dev/packages/pedantic) | [BSD](https://github.com/dart-lang/pedantic/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Guardian](https://github.com/platform-platform/monorepo/tree/master/guardian)		
+## [Guardian](https://github.com/Flank/flank-dashboard/tree/master/guardian)		
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -205,7 +205,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## [Yaml Map](https://github.com/platform-platform/monorepo/tree/master/yaml_map)	
+## [Yaml Map](https://github.com/Flank/flank-dashboard/tree/master/yaml_map)	
 
 | Name | Source | License |
 | :---: | :---: | :---: |

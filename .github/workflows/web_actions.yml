@@ -75,7 +75,7 @@ jobs:
 
       - name: Download coverage tool
         run: |
-          curl -o coverage -k https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_macos -L
+          curl -o coverage -k https://github.com/Flank/flank-dashboard/releases/download/coverage-converter-snapshot/coverage_converter_macos -L
           chmod a+x coverage
         working-directory: metrics/web/
 

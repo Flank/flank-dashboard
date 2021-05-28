@@ -2,13 +2,13 @@
 
 ## TL;DR
 
-Importing builds data to the Metrics project requires using the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations) tool. This tool requires configurations to be set up to perform synchronization correctly and make builds data available in the `Metrics Web Application`. This document clarifies using and configuring the `CI Integrations` tool to make it more clear for a user.
+Importing builds data to the Metrics project requires using the [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) tool. This tool requires configurations to be set up to perform synchronization correctly and make builds data available in the `Metrics Web Application`. This document clarifies using and configuring the `CI Integrations` tool to make it more clear for a user.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-* [CI Integrations Tool Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
-* [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/16_buildkite_ci_integration.md)
+* [CI Integrations Tool Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+* [Buildkite CI Integration](https://github.com/Flank/flank-dashboard/blob/master/docs/16_buildkite_ci_integration.md)
 
 ## Using The CI Integrations Tool
 
@@ -31,9 +31,9 @@ First, let's consider a couple of terms the CI Integration tool uses and what th
 
 ### Downloading The CI Integrations Tool
 
-You can download the built CI Integration tool from the [CI Integrations releases](https://github.com/platform-platform/monorepo/releases/tag/ci_integrations-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
-- [`CI Integrations for Linux`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux);
-- [`CI Integrations for macOS`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos).
+You can download the built CI Integration tool from the [CI Integrations releases](https://github.com/Flank/flank-dashboard/releases/tag/ci_integrations-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+- [`CI Integrations for Linux`](https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_linux);
+- [`CI Integrations for macOS`](https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos).
 
 #### CI Integrations CLI
 
@@ -101,17 +101,17 @@ Each such a client has its own specific list of configuration items it requires.
 
 | Integration | Type | Key | Template | 
 | --- | --- | --- | --- |
-| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
-| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
-| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
-| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
+| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
+| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
+| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
+| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
 #### Example
 
 Imagine that you want to expose your GitHub Actions builds to the `Metrics Web Application`. In this case, your `source` integration is GitHub Actions and `destination` is Firestore. Assume that you've already downloaded and configured the CI Integrations tool. The next stage is creating a configuration file for the integrations you require. Let's consider the following steps:
 1. Create a new YAML file with a clear, self-speaking name. Let this file be `github_actions_firestore.yaml`.
-2. Open the [GitHub Actions configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) and copy the `source` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
-3. Open the [Firestore configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) and copy the `destination` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
+2. Open the [GitHub Actions configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) and copy the `source` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
+3. Open the [Firestore configuration template](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) and copy the `destination` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
 4. Fill the configuration file with your values by replacing the `...` for each key. Each configuration template contains the information about how the CI Integration tool uses the values you provide and how you can obtain them. Follow the comments in configuration templates to fill your configuration file with appropriate data.
 5. Save your configuration file and keep it private as most of the values you provide should be kept safe.
 
@@ -262,7 +262,7 @@ Obviously, it is not very handy to manually run the CI Integrations tool every t
 Moreover, storing a configuration file on your machine may be not as safe as it would like to be. 
 
 The solution is to automate builds data importing within the CI tool you are using. 
-The implementation of such automation is out of the scope for this user guide and can be tricky, but the result worth all the efforts. For more information, consider the [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/16_buildkite_ci_integration.md) document that provides an example of how to configure automatic builds importing for `Buildkite` CI.
+The implementation of such automation is out of the scope for this user guide and can be tricky, but the result worth all the efforts. For more information, consider the [Buildkite CI Integration](https://github.com/Flank/flank-dashboard/blob/master/docs/16_buildkite_ci_integration.md) document that provides an example of how to configure automatic builds importing for `Buildkite` CI.
 
 ## Results
 > What was the outcome of the project?

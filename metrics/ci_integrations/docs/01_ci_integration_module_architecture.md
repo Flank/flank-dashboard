@@ -36,7 +36,7 @@ Both types are presented as a set of interfaces in `integration.interface.source
 
 The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` that parses the given configurations, creates clients and then performs `CiIntegration.sync` on them.
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
 
 # Coverage importing
 
@@ -54,9 +54,9 @@ So, the JSON will contain only one field: `pct`, which represents the total cove
 
 Let's consider the class diagram of the coverage structure: 
 
-![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
+![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
 
-To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
+To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/Flank/flank-dashboard/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
 
 # Adding new integration
 
@@ -82,7 +82,7 @@ source | destination
 
 Suppose you are going to add a new `Cool` integration. Here is a diagram displaying the process: 
 
-![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
+![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
 
 # Package structure
 
@@ -154,7 +154,7 @@ The CI integrations module implementation is impacted.
 # Testing
 > How will the project be tested?
 
-Different parts of each integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
+Different parts of each integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/Flank/flank-dashboard/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/Flank/flank-dashboard/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
