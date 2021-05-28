@@ -18,10 +18,10 @@ The `Metrics CLI` is based on a list of third-party CLIs. To view the recommende
 
 There are a couple of ways to install the `Metrics CLI`: 
 
-- [Downloading from the releases page](#use-the-releases)
-- [Compilation from source code](#build-from-the-source)
+- [Using the binary release](#using-the-binary-release)
+- [Building from the source](#building-from-the-source)
 
-## Use the releases
+## Using the binary release
 
 You can download the built Metrics CLI tool from the [GitHub releases](https://github.com/platform-platform/monorepo/releases/tag/metrics-cli-snapshot) page. Select a release depending on your operating system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links:
 
@@ -54,7 +54,7 @@ Now you can use the binary to run `Metrics CLI` commands:
 metrics <command>
 ```
 
-## Build from the source
+## Building from the source
 
 If you've downloaded the [Metrics CLI](https://github.com/platform-platform/monorepo/tree/master/metrics/cli) via `git clone`, use the following command from inside the `cli` folder to build from the source:
 
