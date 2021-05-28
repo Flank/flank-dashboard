@@ -43,7 +43,7 @@ The above table is not complete meaning that the sync algorithm can throw an err
 
 The following activity diagram demonstrates main stages of the algorithm:
 
-![Sync activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_activity_diagram.puml)
+![Sync activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_activity_diagram.puml)
 
 The below sections discover two main stages of the sync process ([Re-Sync In-Progress Builds](#re-sync-in-progress-builds) and [Sync Builds](#sync-builds)) but first, let's take a closer look at the controlling parameters.
 
@@ -77,7 +77,7 @@ The re-sync in-progress builds stage is represented by the `InProgressBuildsSync
 
 The following activity diagram details the second step for a single in-progress build:
 
-![Re-sync single build activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_activity_diagram.puml)
+![Re-sync single build activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_activity_diagram.puml)
 
 More precisely, the code snippet below demonstrates the meaning of the **should force timeout** statement from the diagram. In this snippet, the `config` object is an instance of the `SyncConfig` class containing the general configurations for the current synchronization process. These configurations contains the `inProgressTimeout` value parsed from the corresponding `--in-progress-timeout` CLI option as a `Duration`.
 
@@ -89,7 +89,7 @@ More precisely, the code snippet below demonstrates the meaning of the **should 
 
 Finally, the following activity diagram describes the re-sync in-progress builds stage:
 
-![Re-sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
+![Re-sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_activity_diagram.puml)
 
 #### Timeout In-Progress Builds
 
@@ -163,7 +163,7 @@ _**Note**: The `unknown` status doesn't always mean that the `source` doesn't kn
 
 The following activity diagram describes the sync builds stage:
 
-![Sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_activity_diagram.puml)
+![Sync builds stage activity diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_activity_diagram.puml)
 
 ### Making Things Work
 
@@ -171,25 +171,25 @@ The above sections describe the sync algorithm and diagram the behavior of its p
 
 Let's consider the following class diagram that contains the main classes and interfaces that participate in the sync process:
 
-![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
 When a user starts the synchronization process, the tool creates the `CiIntegration` instance with the proper list of `SyncStage`s (`InProgressBuildsSyncStage` and `NewBuildsSyncStage` - order matters). The tool then invokes the `CiIntegration.sync` method on the created instance. This method performs sync algorithm calling the given stages in the given order.
 
 First, the `CiIntegration.sync` calls the `InProgressBuildsSyncStage.call` method on the given stage instance. This call re-syncs in-progress builds. The sequence diagram below details the method's algorithm:
 
-![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
+![Re-sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/resync_builds_stage_sequence_diagram.puml)
 
 In the above diagram, the method `_syncInProgressBuild` re-syncs a single in-progress build returning either a new build data to store or `null` (meaning the build has no updates). The following sequence diagram explains the activity diagram for a single build from the [Re-Sync In-Progress Builds](#re-sync-in-progress-builds) section:
 
-![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
+![Re-sync single build sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/resync_single_build_sequence_diagram.puml)
 
 After the re-syncing process completes, the sync algorithm proceeds to the sync builds stage and calls the `NewBuildsSyncStage.call` method on the given stage instance. The sequence diagram below details the method's algorithm:
 
-![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
+![Sync builds stage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/sync_builds_stage_sequence_diagram.puml)
 
 Both of the above stages uses the `BuildsSyncStage.addCoverageData` method to fetch coverage for builds if the appropriate configuration is enabled. The diagram below examines the coverage fetching for the given list of builds:
 
-![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
+![Add coverage data sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/add_coverage_data_sequence_diagram.puml)
 
 ## Results
 > What was the outcome of the project?

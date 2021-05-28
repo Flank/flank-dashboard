@@ -45,10 +45,10 @@ To initialize Firestore data for the currently deploying project, consider the f
    - 'isPasswordSignInOptionEnabled' - indicates whether the Email and Password sign-in option is enabled.
 
 To get more info about creating the 'allowed_email_domains' collection, see the following document: 
-https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#google-sign-in-allowed-domains-configuration.
+https://github.com/Flank/flank-dashboard/blob/master/docs/08_firebase_deployment.md#google-sign-in-allowed-domains-configuration.
 
 Consider the following link for a detailed structure of the 'feature_config' collection:
-https://github.com/platform-platform/monorepo/blob/master/docs/18_security_audit_document.md#the-feature_config-collection.
+https://github.com/Flank/flank-dashboard/blob/master/docs/18_security_audit_document.md#the-feature_config-collection.
 
 Press the ENTER to continue when you finish with the Firestore database initialization:''';
 

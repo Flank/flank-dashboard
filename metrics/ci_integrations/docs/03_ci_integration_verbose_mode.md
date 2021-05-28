@@ -2,12 +2,12 @@
 
 ## TL;DR
 
-Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations) tool. Running the `CI Integrations` tool in the `verbose mode` gives more context and provides additional details on what's going on during the tool running.
+Introducing a `verbose mode` for the [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) tool. Running the `CI Integrations` tool in the `verbose mode` gives more context and provides additional details on what's going on during the tool running.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [CI Integrations Tool Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+- [CI Integrations Tool Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
@@ -21,7 +21,7 @@ This document meets the following goals:
 
 The following sequence diagram describes the process of displaying logs depends on the given `verbose` option:
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_verbose_mode_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/ci_integrations_verbose_mode_diagram.puml)
 
 ## API
 > What will the proposed API look like?

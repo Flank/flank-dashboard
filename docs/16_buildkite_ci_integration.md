@@ -69,7 +69,7 @@ Finally, let's create a pipeline YAML file for the **Sync Pipeline**. In the con
     - label: "Sync builds"
       commands:
         - cd path/to/config/directory
-        - curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux -L && chmod a+x ci_integrations
+        - curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_linux -L && chmod a+x ci_integrations
         - eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
         - ./ci_integrations sync --config-file integration.yml
   ```
@@ -156,7 +156,7 @@ Well done! Once the trigger step is configured, the auto-exporting is ready to u
 
 The algorithm for auto-exporting builds data in Buildkite uses three main components: the pipeline we want to export, the `CI integration` tool, and the `Sync Pipeline`. The following sequence diagram demonstrates how these components behave together and how the exporting happens (assume the pipeline to export as `Awesome Pipeline`):
 
-![Buildkite Sync Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/docs/diagrams/buildkite_sync_sequence_diagram.puml)
+![Buildkite Sync Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/docs/diagrams/buildkite_sync_sequence_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?

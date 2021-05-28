@@ -147,7 +147,7 @@ _**Note:** The command must be run inside the firebase folder to apply available
 
 Consider the following class diagram showing the main classes and relationships needed to implement this feature:
 
-![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
+![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
 ### Program
 
@@ -169,4 +169,4 @@ With this, all requests to the `Firestore` database will point to the `Firestore
 
 The following sequence diagram demonstrate the process of running the integration tests with the emulator:
 
-![Firestore emulator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_sequence_diagram.puml)
+![Firestore emulator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_sequence_diagram.puml)

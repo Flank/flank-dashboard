@@ -84,7 +84,7 @@ There are two main approaches for the integration of the deep links to the Metri
 - [Deep Links Integration Using ChangeNotifier](#deep-links-integration-using-changenotifier).
 - [Deep Links Integration Using Route Parameters](#deep-links-integration-using-route-parameters).
 
-Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md) describing `Navigator 2.0` integration in the Metrics Web Application) for navigation, both approaches are based on the features of the `Navigator 2.0` and differ only in the way the deep links are applied to the Metrics Web Application components.
+Note, as the Metrics Web Application uses `Navigator 2.0` (consider this [document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md) describing `Navigator 2.0` integration in the Metrics Web Application) for navigation, both approaches are based on the features of the `Navigator 2.0` and differ only in the way the deep links are applied to the Metrics Web Application components.
 
 Now, let's review the listed approaches in a bit more detail.
 
@@ -110,7 +110,7 @@ The `DeepLinksNotifier` is responsible for:
 ### Deep Links Integration Using Route Parameters
 The main idea of this approach is to dispatch deep links using page parameters, which are then handled by the pages. For example, if a `DashboardPage` includes a project group selection menu, we can add a `projectGroupName` parameter to a `DashboardPage`, which is then handled by the page itself.
 
-However, according to the ["UI elements"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) section of the ["Metrics Web Presentation Layer"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document, a `Page` is a widget, whose responsibility is a proper Metrics widgets combining, thus, handling any parameters is out of scope of the `Page`'s responsibilities.
+However, according to the ["UI elements"](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) section of the ["Metrics Web Presentation Layer"](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document, a `Page` is a widget, whose responsibility is a proper Metrics widgets combining, thus, handling any parameters is out of scope of the `Page`'s responsibilities.
 
 #### Pros
 - Does not require implementing new or extending existing `ChangeNotifier`s.

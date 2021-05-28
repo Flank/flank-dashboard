@@ -111,7 +111,7 @@ Once we have widgets, we probably have some constant texts in them like titles, 
 
 Let's consider a class diagram explaining the structure of widgets in the Metrics Web Application: 
 
-![Widget Structure Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/diagrams/widget_structure_class_diagram.puml)
+![Widget Structure Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/diagrams/widget_structure_class_diagram.puml)
 
 > Explain the package structure of the presentation layer.
 

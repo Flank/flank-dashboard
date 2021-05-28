@@ -11,15 +11,15 @@ import 'package:test/test.dart';
 void main() {
   group("LinksChecker", () {
     const urls = [
-      'http://raw.githubusercontent.com/platform-platform/monorepo',
-      'http://github.com/platform-platform/monorepo/blob',
-      'http://github.com/platform-platform/monorepo/tree',
-      'http://github.com/platform-platform/monorepo/raw',
+      'http://raw.githubusercontent.com/Flank/flank-dashboard',
+      'http://github.com/Flank/flank-dashboard/blob',
+      'http://github.com/Flank/flank-dashboard/tree',
+      'http://github.com/Flank/flank-dashboard/raw',
       'http://raw.com',
-      'https://raw.githubusercontent.com/platform-platform/monorepo',
-      'https://github.com/platform-platform/monorepo/blob',
-      'https://github.com/platform-platform/monorepo/tree',
-      'https://github.com/platform-platform/monorepo/raw',
+      'https://raw.githubusercontent.com/Flank/flank-dashboard',
+      'https://github.com/Flank/flank-dashboard/blob',
+      'https://github.com/Flank/flank-dashboard/tree',
+      'https://github.com/Flank/flank-dashboard/raw',
       'https://raw.com',
     ];
     const validSuffix = 'master/';

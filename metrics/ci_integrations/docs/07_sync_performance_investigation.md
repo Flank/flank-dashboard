@@ -1,6 +1,6 @@
 # Sync Performance Investigation
 
-The CI Integrations tool stands for builds synchronization for the specified projects. The tool consumes and parses a configuration file, initializes the required source and destination integrations, and orchestrates them to synchronize builds. To know more about the CI Integrations tool and how it works, consider the tool's [documentation](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations/docs).
+The CI Integrations tool stands for builds synchronization for the specified projects. The tool consumes and parses a configuration file, initializes the required source and destination integrations, and orchestrates them to synchronize builds. To know more about the CI Integrations tool and how it works, consider the tool's [documentation](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations/docs).
 
 ## Problem Statement
 
@@ -8,13 +8,13 @@ As the CI Integrations tool makes the synchronized builds available on the Metri
 
 The following timing diagram demonstrates the desired behavior for a build syncing:
 
-![Ideal timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_ideal_timing_diagram.puml)
+![Ideal timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/sync_ideal_timing_diagram.puml)
 
 But the actual behavior differs from the expected as the build sync can take too long and may cause the problems demonstrated in the diagrams below. The first case demonstrates the long-running sync when a build is started causing the finishing sync to appear far after the build is finished. The second example demonstrates the long-running sync as well but in this case, we have two runners for builds syncing. In the second diagram, the starting sync takes too long and finishes at the same time as the finishing build causing. The UI doesn't display this build as running, or display for a few seconds, though the build may take longer.
 
-![problematic queue timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_problematic_queue_timing_diagram.puml)
+![problematic queue timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/sync_problematic_queue_timing_diagram.puml)
 
-![problematic timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/sync_problematic_timing_diagram.puml)
+![problematic timing diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/diagrams/sync_problematic_timing_diagram.puml)
 
 ## Sync Command Performance
 
@@ -83,7 +83,7 @@ So, we admit that the one-build synchronization executes in a reasonable time. H
 
 ## Sync Command Performance in CI
 
-The above section examines the sync execution time for one-build synchronization and admits this time as reasonable. However, the performed experiments demonstrate results for running the CI Integration tool on a local machine. In reality, if we want to [automate builds synching](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md#automating-ci-integrations), we face the sync-time problem. In the below subsections, we discover the problem for each CI integration and try to figure out what causes the problem.
+The above section examines the sync execution time for one-build synchronization and admits this time as reasonable. However, the performed experiments demonstrate results for running the CI Integration tool on a local machine. In reality, if we want to [automate builds synching](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md#automating-ci-integrations), we face the sync-time problem. In the below subsections, we discover the problem for each CI integration and try to figure out what causes the problem.
 
 ### GitHub Actions
 

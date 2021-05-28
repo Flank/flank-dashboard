@@ -6,15 +6,15 @@ For now, to make builds aggregations we should load all builds and process calcu
 
 This solution is okay if a project has not many builds, but over time, the number of builds growth and it will pull along increase the number of reads from the database and leads to heavy load/price implications.
 
-To resolve the described problem, we've investigated a possibility to provide some aggregation calculations using the back-end, provided by the Firebase using the Cloud Functions. See [Firebase Metrics Aggregation](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md) document for more details.
+To resolve the described problem, we've investigated a possibility to provide some aggregation calculations using the back-end, provided by the Firebase using the Cloud Functions. See [Firebase Metrics Aggregation](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md) document for more details.
 
 ## References
 
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Github epic: Reduce Firebase usage / document reads](https://github.com/platform-platform/monorepo/issues/1042)
-- [Firebase aggregation](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md)
-- [Firestore Cloud Function using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md)
+- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
+- [Firebase aggregation](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md)
+- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md)
 
 ## Design
 
@@ -125,7 +125,7 @@ No one can read from or write to this collection. Let's consider the security ru
 
 ### Firestore Cloud Functions
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/platform-platform/monorepo/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
 
 Let's review each Cloud Function we need for this feature separately: 
 
@@ -150,7 +150,7 @@ _**Note**: A `successfulBuildsDuration` value should be incremented only if stat
 
 The following sequence diagram shows the overall process of how the `onBuildAdded` triggers works:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_create_builds_aggregation_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_create_builds_aggregation_sequence_diagram.puml)
 
 #### onBuildUpdated
 
@@ -170,7 +170,7 @@ In case, the `onCreate` or `onUpdate` trigger's handler processing failed, we sh
 
 The following sequence diagram shows the overall process of how the `onBuildUpdated` triggers works:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_update_builds_aggregation_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_update_builds_aggregation_sequence_diagram.puml)
 
 #### Testing
 

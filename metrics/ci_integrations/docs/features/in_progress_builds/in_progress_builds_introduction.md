@@ -8,8 +8,8 @@ The CI Integrations Tool synchronizes builds for a specified project. The synchr
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [CI Integrations module architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
-- [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md)
+- [CI Integrations module architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+- [Builds Synchronization](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md)
 
 ## Design
 > Explain and diagram the technical design.
@@ -28,19 +28,19 @@ The `core` component contains definitions (i.e. implementations) related to buil
 
 The following class diagram demonstrates the core structure of classes related to builds. Note that the class structure doesn't change but the `BuildStatus` enum contains a new `inProgress` value.
 
-![Build Core Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/build_core_class_diagram.puml)
+![Build Core Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/build_core_class_diagram.puml)
 
 ### CI Integrations Tool
 
-The CI Integrations Tool is implemented within the `ci_integrations` component. The CLI provides several integrations for different `source` clients - i.e., CI tools (as Jenkins, Buildkite, GitHub Actions) - and `destination` client - Firestore database. These integrations are used by the `SyncStage`s that perform the stages of the synchronization algorithm, controlled by the `CiIntegration` class. And finally, the `SyncCommand` class represents the tool's `sync` command and starts the synchronization providing [Controlling Parameters](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#control-synchronization) and synchronization algorithm `SyncStage`s with appropriate `source` and `destination` integrations.
+The CI Integrations Tool is implemented within the `ci_integrations` component. The CLI provides several integrations for different `source` clients - i.e., CI tools (as Jenkins, Buildkite, GitHub Actions) - and `destination` client - Firestore database. These integrations are used by the `SyncStage`s that perform the stages of the synchronization algorithm, controlled by the `CiIntegration` class. And finally, the `SyncCommand` class represents the tool's `sync` command and starts the synchronization providing [Controlling Parameters](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#control-synchronization) and synchronization algorithm `SyncStage`s with appropriate `source` and `destination` integrations.
 
-All the components listed above are participants of the synchronization process. As the in-progress builds introduction affects the synchronization process, the participants of that process should be changed to meet the latest requirements. The `SyncStage` and concrete stage implementations should be added and integrated to the `CiIntegration` class. The synchronization process in details is described in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document.
+All the components listed above are participants of the synchronization process. As the in-progress builds introduction affects the synchronization process, the participants of that process should be changed to meet the latest requirements. The `SyncStage` and concrete stage implementations should be added and integrated to the `CiIntegration` class. The synchronization process in details is described in the [Builds Synchronization](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document.
 
-The following subsections describe changes in the described parts of the tool. To know more about the CI Integration tool, its usage, and architecture consider the [CI Integration Module Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md) and [CI Integration User Guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) documents.
+The following subsections describe changes in the described parts of the tool. To know more about the CI Integration tool, its usage, and architecture consider the [CI Integration Module Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md) and [CI Integration User Guide](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) documents.
 
 #### Sync Command
 
-The `SyncCommand` class represents an implementation of the `ci_integration sync` command. The main purpose of this class is to start the synchronization process with the configured `source` and `destination` clients and controlling parameters. The in-progress builds introduction requires a new controlling parameter to be passed to the sync algorithm - `SyncConfig.inProgressTimeout`. This parameter defines a timeout duration for in-progress builds and is represented by the `--in-progress-timeout` option of the `sync` command. The [Timeout In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#timeout-in-progress-builds) section of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document describes and examples how this parameter is used.
+The `SyncCommand` class represents an implementation of the `ci_integration sync` command. The main purpose of this class is to start the synchronization process with the configured `source` and `destination` clients and controlling parameters. The in-progress builds introduction requires a new controlling parameter to be passed to the sync algorithm - `SyncConfig.inProgressTimeout`. This parameter defines a timeout duration for in-progress builds and is represented by the `--in-progress-timeout` option of the `sync` command. The [Timeout In-Progress Builds](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#timeout-in-progress-builds) section of the [Builds Synchronization](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document describes and examples how this parameter is used.
 
 The `SyncCommand` should add the `--in-progress-timeout` option using the [`ArgParser.addOption`](https://pub.dev/documentation/args/latest/args/ArgParser/addOption.html) method as follows:
 
@@ -59,7 +59,7 @@ Also, the `SyncCommand` should be able to parse the given `--in-progress-timeout
 
 The following class diagram demonstrates the described changes:
 
-![Sync command class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/sync_command_class_diagram.puml)
+![Sync command class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/sync_command_class_diagram.puml)
 
 #### Sync Algorithm
 
@@ -85,11 +85,11 @@ The following table contains classes to implement with a short description:
 |`NewBuildsSyncStage`|An implementation of the `BuildsSyncStage` that represents a stage for syncing new builds.|
 |`SyncStagesFactory`|A factory class that creates a list of stages for the synchronization algorithm in the proper order.|
 
-The re-syncing in-progress builds stage is described within the [Re-Sync In-Progress Builds](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
+The re-syncing in-progress builds stage is described within the [Re-Sync In-Progress Builds](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#re-sync-in-progress-builds) and [Making Things Work](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md#making-things-work) sections of the [Builds Synchronization](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document. This section also covers how steps of the re-sync part should work. Thus, to implement the desired part of the sync algorithm, it is strongly recommended to follow the definitions and tips listed in the mentioned document.
 
-As in the [Builds Synchronization](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
+As in the [Builds Synchronization](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/06_builds_synchronization.md) document, the following class diagram contains the main classes and interfaces that participate in the sync algorithm:
 
-![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
+![Sync algorithm class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/sync_algorithm_class_diagram.puml)
 
 #### Source Client
 
@@ -97,7 +97,7 @@ The `SourceClient` is an interface for `source` clients that provide abilities t
 
 The following class diagram demonstrates the structure of `source` clients:
 
-![Source clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/source_clients_class_diagram.puml)
+![Source clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/source_clients_class_diagram.puml)
 
 Also, the `source` clients should now return in-progress builds. The following subsections cover the details of changes to concrete clients implemented within the CI Integrations tool.
 
@@ -213,7 +213,7 @@ The following methods are to be added to the `DestinationClient` interface:
 
 The following class diagram demonstrates the structure of `destination` clients:
 
-![Destination clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/destination_clients_class_diagram.puml)
+![Destination clients class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/features/in_progress_builds/diagrams/destination_clients_class_diagram.puml)
 
 The following subsection covers the details of changes to the Firestore integration.
 

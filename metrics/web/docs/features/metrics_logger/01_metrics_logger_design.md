@@ -48,7 +48,7 @@ The `MetricsLogger` is a main part of the logger integration. The application us
 
 The following class diagram demonstrates the structure of the logger integration and the relationships of classes this integration requires.
 
-![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
+![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
 
 ### Making Things Work
 
@@ -56,11 +56,11 @@ The main idea of the `Metrics Logger` integration is to initialize it with the `
 
 The following sequence diagram describes the process of `Metrics Logger` initializing with the `CoolLoggerWriter` implementation:
 
-![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
+![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
 
 And the following sequence diagram describes the logging process:
 
-![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
+![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
 
 To know more about the concrete writer integration, consider the [Sentry Integration](#sentry-integration) section.
 
@@ -221,7 +221,7 @@ _**Note**: Using the above classes to set the contexts with the same key is requ
 
 The following class diagram demonstrates the complete structure of the Metrics Logger that uses the `SentryWriter`:
 
-![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
+![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
 
 ### Sentry Options Binding
 
@@ -310,7 +310,7 @@ To test the `MetricsLogger` class we should inject the `LoggerWriter` test imple
 
 The main idea in testing Sentry integration is to use the [`Sentry.bindClient`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method and bind a test client to use in test cases. 
 
-As Sentry is a third-party integration it should be tested using the [third-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) approach that uses the [mock server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md). It is possible to mock the client using a [mockito](https://pub.dev/packages/mockito) package as well.
+As Sentry is a third-party integration it should be tested using the [third-party API testing](https://github.com/Flank/flank-dashboard/blob/master/docs/03_third_party_api_testing.md) approach that uses the [mock server](https://github.com/Flank/flank-dashboard/blob/master/docs/04_mock_server.md). It is possible to mock the client using a [mockito](https://pub.dev/packages/mockito) package as well.
 
 ## Results
 > What was the outcome of the project?

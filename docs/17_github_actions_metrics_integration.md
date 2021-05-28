@@ -38,7 +38,7 @@ This document does not describe the configuration of building or publishing jobs
 
 Let's review a sequence diagram that will show the main aspects of GitHub Actions configuration and explain the relationships between them:
 
-![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/docs/diagrams/github_actions_sequence_diagram.puml)
+![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/docs/diagrams/github_actions_sequence_diagram.puml)
 
 As we see in the diagram above, we should perform the following actions: 
 
@@ -110,7 +110,7 @@ So, the configuration consists of the following properties:
 | repository_owner        | Public         | A username or an organization name that owns the repository. |
 | access_token            | Secret         | A GitHub API access token. Since we are using the GitHub actions to run the synchronization, we can use the default token from secrets `${{ secrets.GITHUB_TOKEN }}`, but you can create a separate personal access token using this [guide](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). Your token should have the `repo` scope to be able to load the data from the GitHub Actions API.|
 | job_name                | Public         | A name of the job inside of the workflow with the provided `workflow_identifier`. The build data of this job will be exported to the Metrics Web Application.|
-| coverage_artifact_name  | Public         | A name of the coverage artifact exported from the building workflow with the specified `workflow_identifier`. Notice, that the coverage artifact should be in the [CI Integrations format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format). |
+| coverage_artifact_name  | Public         | A name of the coverage artifact exported from the building workflow with the specified `workflow_identifier`. Notice, that the coverage artifact should be in the [CI Integrations format](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format). |
 | firebase_project_id      | Public | A firebase project identifier where to export the data. |
 | firebase_user_email      | Secret | A firebase user email used to log in to the Metrics Web Application. |
 | firebase_user_pass       | Secret | A firebase user password used to log in to the Metrics Web Application. |
@@ -168,7 +168,7 @@ So, the `Notify about the finishing awesome project build` for this project will
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: platform-platform/monorepo
+          repository: Flank/flank-dashboard
           event-type: finishing_project_workflow
           client-payload: '{"finishing_awesome_project_build": "true"}'
 ```
@@ -202,7 +202,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download CI integrations
         run: |
-          curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
+          curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Awesome Project check finished
         uses: fountainhead/action-wait-for-check@v1.0.0

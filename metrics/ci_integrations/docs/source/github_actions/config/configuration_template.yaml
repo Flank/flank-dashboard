@@ -5,8 +5,8 @@
 #
 # Also, consider the following links to know how GitHub Actions API is used 
 # in the scope of CI Integrations:
-# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
-# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md
+# - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
+# - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md
 
 source:
   # The `github_actions` key defines that the following source config stands for Github Actions integration.
@@ -83,7 +83,7 @@ source:
     # Consider the following links for more information:
     # - https://github.com/actions/upload-artifact
     # - https://docs.github.com/en/rest/reference/actions#artifacts
-    # - https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md
+    # - https://github.com/Flank/flank-dashboard/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md
     coverage_artifact_name: ...
 
     # A GitHub API Access Token that is used to authenticate HTTP requests.
@@ -94,7 +94,7 @@ source:
     # - https://docs.github.com/en/free-pro-team@latest/developers/apps/scopes-for-oauth-apps#available-scopes
     # 
     # Consider the following links for more information:
-    # - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md#authorization
+    # - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md#authorization
     # - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
     access_token: ...
 

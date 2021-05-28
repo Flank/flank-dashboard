@@ -6,8 +6,8 @@ Describe the security aspects of the Metrics Web Application, CI Integrations to
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [CI Integrations user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)
-- [Coverage converter](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md)
+- [CI Integrations user guide](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)
+- [Coverage converter](https://github.com/Flank/flank-dashboard/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md)
 - [Privacy and Security in Firebase](https://firebase.google.com/support/privacy)
 
 # Motivation
@@ -28,9 +28,9 @@ This document has the following goals:
 > Identify what's not in scope.
 
 The implementation notes of any parts of the Metrics applications are out of the scope for this document. Consider the documentation for each of these applications to know more about their implementation and structure:
-- [Web Application docs](https://github.com/platform-platform/monorepo/tree/master/metrics/web/docs)
-- [CI Integration docs](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations/docs)
-- [Coverage Converter docs](https://github.com/platform-platform/monorepo/tree/master/metrics/coverage_converter/docs)
+- [Web Application docs](https://github.com/Flank/flank-dashboard/tree/master/metrics/web/docs)
+- [CI Integration docs](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations/docs)
+- [Coverage Converter docs](https://github.com/Flank/flank-dashboard/tree/master/metrics/coverage_converter/docs)
 
 # Table of Contents
 
@@ -237,7 +237,7 @@ Here is a table of security rules applied to the `tasks` collection:
 
 ### Security Rules Testing
 
-To prove the Security Rules work in the expected way, they are covered with tests. Consider [`metrics/firebase/test/firestore/security_rules`](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase/test/firestore/rules) to examine the tests.
+To prove the Security Rules work in the expected way, they are covered with tests. Consider [`metrics/firebase/test/firestore/security_rules`](https://github.com/Flank/flank-dashboard/tree/master/metrics/firebase/test/firestore/rules) to examine the tests.
 
 Each rule is tested imitating any possible type of user. Consider the following types of users used under tests:
 
@@ -277,7 +277,7 @@ This function is triggered when a specific build is updated in the [`build` coll
 
 ### Firebase Key Protection
 
-Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
+Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/Flank/flank-dashboard/blob/master/docs/08_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
 
 Currently, the following APIs are enabled for the `browser key`:
 - `Identity Toolkit API`
@@ -293,7 +293,7 @@ Application validates the user's email while signing in using the `Google` sign 
 # CI Integrations
 
 A CI Integrations tool is a command-line application that helps to import build data to the Metrics project making it available in the Metrics Web Application.
-Consider the following [document](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) to learn more about the CI Integrations tool.
+Consider the following [document](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md) to learn more about the CI Integrations tool.
 
 ## Authorization
 

@@ -73,7 +73,7 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
             buildStatus: buildStatuses[randomInt(0, buildStatuses.length)],
             startedAt: buildDate,
             coverage: Math.round(Math.random() * 100) / 100,
-            url: 'https://github.com/platform-platform/monorepo/commits/master',
+            url: 'https://github.com/Flank/flank-dashboard/commits/master',
             workflowName: 'run_tests',
         });
     }

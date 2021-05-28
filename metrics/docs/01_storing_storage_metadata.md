@@ -62,7 +62,7 @@ To update the storage metadata we should use the Firebase Admin SDK.
 
 To detect whether the application is compatible with the storage, we should have the supported storage version in the Metrics applications. The supported storage version is a version of the storage this application can interact with. Actually, it is a version of the storage at the time of building the Metrics application. Since this value is common for the storage and Metrics applications, we should make it easily accessible in any application like `CI Integrations`, `Metrics CLI`, or `Metrics Web`.
 
-To do so, we can store the storage version in the `STORAGE_VERSION` file under the [metrics](https://github.com/platform-platform/monorepo/tree/master/metrics) package of our repository. It allows us to get the contents of this file and pass it as a `SUPPORTED_STORAGE_VERSION` environment variable to any Metrics application during the building process. Also, with the `STORAGE_VERSION` file, it will be much easier to get the current storage version during the deployment/update process.
+To do so, we can store the storage version in the `STORAGE_VERSION` file under the [metrics](https://github.com/Flank/flank-dashboard/tree/master/metrics) package of our repository. It allows us to get the contents of this file and pass it as a `SUPPORTED_STORAGE_VERSION` environment variable to any Metrics application during the building process. Also, with the `STORAGE_VERSION` file, it will be much easier to get the current storage version during the deployment/update process.
 
 ### Set supported storage version for the Metrics Web Application
 > Explain the way of passing the supported storage version to the Metrics Web Application.
@@ -121,7 +121,7 @@ If the storage update is in progress, we should follow the next steps:
 1. Log out a user from the application.
 2. Redirect the user to the `Updating the application` page to notify the user about the Metrics application update in progress.
 
-See [Metrics Web Supported Storage Version](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/supported_storage_version/01_supported_storage_version.md) document to get more implementation details.
+See [Metrics Web Supported Storage Version](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/supported_storage_version/01_supported_storage_version.md) document to get more implementation details.
 
 ### CI Integrations Tool
 > Explain the usage of the supported storage version in the CI Integrations tool.
@@ -130,7 +130,7 @@ If the `CI Integrations` tool is not compatible with the current storage version
 
 ```
 The current application version is out of date. Please, use the following link to download a latest version of the application and try again: 
-https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos
+https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos
 ```
 
 ### Metrics CLI Tool

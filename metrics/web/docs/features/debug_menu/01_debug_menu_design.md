@@ -10,7 +10,7 @@ One of the main ideas of the `Debug Menu` feature is to store the configurations
 
 For the current implementation, we suggest using the [`Hive` package](https://pub.dev/packages/hive) that uses the [`IndexedDB`](https://developers.google.com/web/ilt/pwa/working-with-indexeddb) to store key-value pairs in [boxes](https://docs.hivedb.dev/#/basics/boxes). Read more about Hive in their [documentation](https://docs.hivedb.dev/#/).
 
-The local configurations are to be stored using the following document structure that matches one for the [`Firestore Feature Config`](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) feature:
+The local configurations are to be stored using the following document structure that matches one for the [`Firestore Feature Config`](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) feature:
 ```json
 {
   "local_config" : {
@@ -21,7 +21,7 @@ The local configurations are to be stored using the following document structure
 
 ## Metrics Web Application
 
-The following sub-sections provide an implementation of `Debug Menu` feature for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following sub-sections provide an implementation of `Debug Menu` feature for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
@@ -29,7 +29,7 @@ The data layer provides the `HiveLocalConfigRepository` implementation of `Local
 
 The following class diagram states the structure of the data layer:
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_data_layer_class_diagram.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_data_layer_class_diagram.puml)
 
 ### Domain layer
 
@@ -41,7 +41,7 @@ The domain layer should provide an interface for the `HiveLocalConfigRepository`
 
 The following class diagram demonstrates the domain layer structure:
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_domain_layer_class_diagram.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_domain_layer_class_diagram.puml)
 
 ### Presentation layer
 
@@ -49,11 +49,11 @@ Once we've added both the domain and data layers, it's time to add the feature t
 
 The following class diagram demonstrates the structure of the presentation layer:
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_presentation_layer_class_diagram.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_presentation_layer_class_diagram.puml)
 
 The following sequence diagram describes how the application applies `Local Config` values when a user enters the application:
 
-![Read config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_read_config_sequence_diagram.puml)
+![Read config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_read_config_sequence_diagram.puml)
 
 Let's consider the mechanism of applying the `Local Config` values. When a user enters the application, he or she stays on the `LoadingPage` until the `Local Config` is initialized.
 
@@ -73,7 +73,7 @@ The only difference for the disabled `Debug Menu` feature is that the applicatio
 
 The following sequence diagram describes how the application updates the `Local Config` values:
 
-![Update config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_update_config_sequence_diagram.puml)
+![Update config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/debug_menu/diagrams/debug_menu_update_config_sequence_diagram.puml)
 
 Let's consider the mechanism of updating the `Local Config` values in the application. Assume that the `local_config` box has been opened already using the `OpenLocalConfigStorageUseCase` within the initialize method. The following steps describe how the application acts when the user updates the `Local Config`, e.g. by toggling the FPS Monitor:
 1. The UI calls the `toggleFpsMonitor` method of the `DebugMenuNotifier`.

@@ -4,7 +4,7 @@
 #
 # Also, consider the following links to know how Jenkins API is used 
 # in the scope of CI Integrations:
-# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
+# - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
 
 source:
   # The `jenkins` key defines that the following source config stands for Jenkins integration.

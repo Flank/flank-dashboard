@@ -22,7 +22,7 @@ All the data that the Metrics components orchestrate, belongs only to you: it is
 
 The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize project data, configure logging, and collecting analytics. Moreover, the CI Integrations Tool can be integrated into the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application.
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/concept_map.puml)
 
 <details>
   <summary>Metrics Components</summary>

@@ -46,7 +46,7 @@ In the application domain layer, we should add an ability to create, update, and
 
 So, the domain layer should look like this: 
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_domain_class.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_domain_class.puml)
 
 ### Data layer
 
@@ -54,7 +54,7 @@ The `FirestoreUserRepository` of the data layer should implement new methods fro
 
 The following class diagram represents the classes of the data layer required for this feature: 
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_data_class.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_data_class.puml)
 
 ### Presentation layer
 
@@ -69,11 +69,11 @@ Once we've created a `domain` and `data` layers, it's time to create a `presenta
 
 The structure of the presentation layer shown in the following diagram: 
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_class.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_class.puml)
 
 Also, we should create a user profile record once we receive a new user. The following sequence diagram displays the logic of logging in the user.
 
-![User creation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_creation_sequence.puml)
+![User creation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_creation_sequence.puml)
 
 So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we can say that the user is logged in only when the `UserProfile` is not null in the `AuthNotifier`.
 
@@ -81,7 +81,7 @@ Let's consider the mechanism of changing the selected theme. To change the selec
 
 The following sequence diagram shows the process of changing the application theme: 
 
-![Theme change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_sequence.puml)
+![Theme change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_sequence.puml)
 
 As we can see in the sequence diagram above, the `ThemeNotifier` should, in some way, communicate with the `AuthNotifier` and vise versa. Let's consider the way of communication between these two provides. 
 

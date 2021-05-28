@@ -9,7 +9,7 @@ steps:
     commands:
       - cd .metrics/buildkite
       - DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y curl
-      - curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux -L
+      - curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_linux -L
       - chmod a+x ci_integrations
       - eval "echo \"$(sed 's/"/\\"/g' prod_integration_config.yml)\"" >> integration.yml
       - ./ci_integrations sync --config-file integration.yml --no-coverage --initial-sync-limit=2000 -v

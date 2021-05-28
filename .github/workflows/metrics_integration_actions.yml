@@ -17,7 +17,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
+          curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For CI Integrations check finished
         if: github.event_name == 'build_finished'
@@ -50,7 +50,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
+          curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Coverage Converter check finished
         if: github.event_name == 'build_finished'
@@ -83,7 +83,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
+          curl -o ci_integrations -k https://github.com/Flank/flank-dashboard/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Metrics Web check finished
         if: github.event_name == 'build_finished'

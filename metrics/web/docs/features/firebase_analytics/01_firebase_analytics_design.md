@@ -14,7 +14,7 @@ Also, to be sure that the logged page exists and avoid passing the invalid data 
 
 So, the domain layer should look like this:
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_domain_class.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_domain_class.puml)
 
 ### Data layer
 
@@ -22,7 +22,7 @@ The `FirebaseAnalyticsRepository` of the data layer should implement methods fro
 
 The following class diagram represents the classes of the data layer required for this feature: 
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_data_class.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_data_class.puml)
 
 ### Presentation layer
 
@@ -36,12 +36,12 @@ Once we've created a `domain` and `data` layers, it's time to create a `presenta
 
 The structure of the presentation layer shown in the following diagram: 
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_presentation.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_presentation.puml)
 
 The following sequence diagram displays the logic of logging the user logins.
 
-![Log login sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_login_sequence.puml)
+![Log login sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_login_sequence.puml)
 
 The following sequence diagram displays the logic of logging the page changes.
 
-![Log page view sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_page_view_sequence.puml)
+![Log page view sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_page_view_sequence.puml)

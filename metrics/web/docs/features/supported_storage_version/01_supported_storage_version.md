@@ -6,7 +6,7 @@ Have the supported storage version in the Metrics Web Application to block the a
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Storing storage metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_storage_metadata.md)
+- [Storing storage metadata](https://github.com/Flank/flank-dashboard/blob/master/metrics/docs/01_storing_storage_metadata.md)
 
 # Motivation
 > What problem is this project solving?
@@ -27,7 +27,7 @@ This document has the following goals:
 
 > Identify what's not in scope.
 
-This document does not describe the way of storing the storage metadata and supported storage versions. See [Storing Storage Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_storage_metadata.md) document to get more info about these details.
+This document does not describe the way of storing the storage metadata and supported storage versions. See [Storing Storage Metadata](https://github.com/Flank/flank-dashboard/blob/master/metrics/docs/01_storing_storage_metadata.md) document to get more info about these details.
 
 # Design
 
@@ -46,11 +46,11 @@ Let's review the way of getting each of them separately:
 > Explain the process of getting the supported storage version.
 
 
-Since the Metrics Web Application built with the `SUPPORTED_STORAGE_VERSION` environment variable (based on the [Storing Storage Metadata](https://github.com/platform-platform/monorepo/blob/master/metrics/docs/01_storing_storage_metadata.md#supported-storage-version) document), we can get this value in the application from the environment with the following code: 
+Since the Metrics Web Application built with the `SUPPORTED_STORAGE_VERSION` environment variable (based on the [Storing Storage Metadata](https://github.com/Flank/flank-dashboard/blob/master/metrics/docs/01_storing_storage_metadata.md#supported-storage-version) document), we can get this value in the application from the environment with the following code: 
 
 `String.fromEnvironment('SUPPORTED_STORAGE_VERSION')`
 
-The way of fetching this value is common for all Metrics applications, so we should place the class responsible for retrieving this value to the `core` library to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library.
+The way of fetching this value is common for all Metrics applications, so we should place the class responsible for retrieving this value to the `core` library to reuse it across the Metrics applications. So let's name it `ApplicationMetadata` and place this class under the `util` package in the [core](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
 
 ## Storage Metadata
 > Explain the way of loading the storage metadata.
@@ -60,11 +60,11 @@ Also, to detect whether the current application is compatible with the storage, 
 ### Domain Layer
 > Explain the structure of the metadata domain layer.
 
-To load the storage version, we should use a `StorageMetadata` entity from the [core](https://github.com/platform-platform/monorepo/tree/master/metrics/core) library. Also, we should have a `StorageMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveStorageMetadataUpdates` use case. 
+To load the storage version, we should use a `StorageMetadata` entity from the [core](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library. Also, we should have a `StorageMetadataRepository` interface to load the data from the remote. To be able to interact with the domain layer from the presentation layer, we should create a `ReceiveStorageMetadataUpdates` use case. 
 
 Let's review domain layer classes and their relationships on the class diagram below: 
 
-![Storage Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_domain_class_diagram.puml)
+![Storage Metadata Domain Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_domain_class_diagram.puml)
 
 ### Data Layer
 > Explain the structure of the metadata data layer.
@@ -73,7 +73,7 @@ To load the data from the Firestore database, we should implement a `StorageMeta
 
 Let's consider the class diagram of the data layer: 
 
-![Storage Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_data_class_diagram.puml)
+![Storage Metadata Data Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_data_class_diagram.puml)
 
 ### Presentation Layer
 > Explain the structure of the metadata presentation layer.
@@ -82,7 +82,7 @@ Once we have domain and data layers, we should implement the `MetadataNotifier` 
 
 Let's examine the following class diagram that displays the main classes of the presentation layer: 
 
-![Storage Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_presentation_class_diagram.puml)
+![Storage Metadata Presentation Layer](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_presentation_class_diagram.puml)
 
 # Making things work
 > Describe the way of blocking the application from accessing the storage. 
@@ -95,13 +95,13 @@ To do so, we should add a listener to the `MetadataNotifier` in the `InjectionCo
 
 Let's consider the following sequence diagram explaining this process: 
 
-![Storage Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_sequence_diagram.puml)
+![Storage Metadata Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/supported_storage_version/diagrams/metadata_sequence_diagram.puml)
 
 Also, we should modify the application initialization process to wait until the storage version got loaded before making the application available for users. So, we should subscribe to the MetadataNotifier changes on the LoadingPage to detect whether the application finished initializing.
 
 Another thing we should do is refresh the application page once the storage finishes updating. To do so, we should add a `refresh` method to the `NavigationState` interface that will force the browser to refresh the application page. Let's consider the following sequence diagram explaining this process: 
 
-![Storage Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/web/docs/features/supported_storage_version/diagrams/storage_finished_updating_sequence_diagram.puml)
+![Storage Finished Updating Sequence](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/supported_storage_version/diagrams/storage_finished_updating_sequence_diagram.puml)
 
 # Dependencies
 
