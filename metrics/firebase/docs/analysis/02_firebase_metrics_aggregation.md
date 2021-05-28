@@ -6,7 +6,7 @@ Data aggregation is the process of gathering data and presenting it in a summari
 
 By aggregating data, it is easier to identify patterns and trends that would not be immediately visible. Quick access to information helps make better decisions and improve product services and communications.
 
-As for the `Metrics` application - [builds per week](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrated a total count of performed builds by the last 7 days.
+As for the `Metrics` application - [builds per week](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrated a total count of performed builds by the last 7 days.
 
 The same aggregation definition we can apply to Firebase aggregations.
 

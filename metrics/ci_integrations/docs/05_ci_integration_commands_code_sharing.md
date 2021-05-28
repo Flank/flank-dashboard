@@ -177,4 +177,4 @@ Consider the following code snippets that show how the proposed changes may simp
 
 Consider the following class diagram that describes the required classes and interfaces used to share the code between commands:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/commands_code_sharing.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/commands_code_sharing.puml)

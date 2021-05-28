@@ -18,6 +18,6 @@ jobs:
           PERSONAL_ACCESS_TOKEN : ${{ secrets.GITHUB_TOKEN }}
         with:
           path-to-signatures: 'cla/v1/signatures.json'
-          path-to-document: 'https://github.com/platform-platform/monorepo/blob/master/cla.md'
+          path-to-document: 'https://github.com/Flank/flank-dashboard/blob/master/cla.md'
           branch: 'cla_signatures'
           allowlist: bot*

@@ -7,8 +7,8 @@ The Metrics Web Application displays different project metrics using builds of t
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
-- [Project Metrics Definitions](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md)
+- [Metrics Web Application Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
+- [Project Metrics Definitions](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md)
 
 ## Design
 > Explain and diagram the technical design.
@@ -21,11 +21,11 @@ The `core` component of the Metrics project contains the `BuildStatus` enum that
 
 The following class diagram demonstrates the `core` structure of classes related to builds. Note that the class structure doesn't change but the `BuildStatus` enum contains a new value.
 
-![Build Core Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/build_core_class_diagram.puml)
+![Build Core Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/build_core_class_diagram.puml)
 
 ### Metrics Web Application
 
-The following subsections cover the in-progress builds introduction into Metrics Web Application by layers. To know more about the application's architecture, consider the [Metrics Web Application Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md) document. Working with builds is concentrated within the `dashboard` package so the following sections' statements are mainly related to the `dashboard` module.
+The following subsections cover the in-progress builds introduction into Metrics Web Application by layers. To know more about the application's architecture, consider the [Metrics Web Application Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md) document. Working with builds is concentrated within the `dashboard` package so the following sections' statements are mainly related to the `dashboard` module.
 
 #### Domain Layer
 
@@ -44,7 +44,7 @@ The following table describes changes in metrics calculation according to the in
 
 The above changes are related to the `ReceiveProjectMetricsUpdates` use case. The following diagram demonstrates the structure of the domain layer for the `dashboard` module:
 
-![Domain Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/domain_layer_class_diagram.puml)
+![Domain Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/domain_layer_class_diagram.puml)
 
 #### Data Layer
 
@@ -65,7 +65,7 @@ To clarify that build's status parsing during the deserialization doesn't requir
 
 The following class diagram demonstrates the structure of the data layer for the `dashboard` module:
 
-![Data Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/data_layer_class_diagram.puml)
+![Data Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/data_layer_class_diagram.puml)
 
 #### Presentation Layer
 
@@ -91,7 +91,7 @@ To sum up, implementing the `TimerNotifier` simplifies testing bar graphs for bu
 
 The following class diagram demonstrates the updated structure of states and view models related to project metrics and builds:
 
-![Presentation Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_class_diagram.puml)
+![Presentation Layer Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_class_diagram.puml)
 
 ##### Widgets
 
@@ -116,7 +116,7 @@ About other style changes consider the [Appearance Changes Notes](#appearance-ch
 
 The following class diagram demonstrates the structure of widgets:
 
-![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_widgets_class_diagram.puml)
+![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_widgets_class_diagram.puml)
 
 ##### Strategies
 
@@ -155,7 +155,7 @@ About other style changes consider the [Appearance Changes Notes](#appearance-ch
 
 The following class diagram represents the structure of strategies classes:
 
-![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_strategies_class_diagram.puml)
+![Presentation Layer Widgets Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/in_progress_builds/diagrams/presentation_layer_strategies_class_diagram.puml)
 
 ##### Appearance Changes Notes
 

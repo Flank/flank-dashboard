@@ -119,7 +119,7 @@ Stability (Light theme) - Positive, Neutral, Negative, Inactive.
 Coverage metrics displays a project code coverage of the tests, measured in percent. Depending on the configuration it could be: line coverage, branch, function, etc.
 #### Source
 The CI system generates the coverage artifact. After that the CI integrations component processes this artifact and transfers the coverage to the database. 
-See [coverage converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
+See [coverage converter design](https://github.com/Flank/flank-dashboard/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
 #### Date ranges
 A coverage metric displays the coverage of the last successful build.
 #### Appearance

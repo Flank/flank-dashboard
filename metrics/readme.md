@@ -22,7 +22,7 @@ All the data that the Metrics components orchestrate, belongs only to you: it is
 
 The Metrics software components consist of a set of tools that provide a convenient way to deploy components, synchronize project data, configure logging, and collecting analytics. Moreover, the CI Integrations Tool can be integrated into the project's CI to automate builds synchronization and provide up-to-date data to the Web Metrics Application.
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/concept_map.puml)
 
 <details>
   <summary>Metrics Components</summary>
@@ -76,16 +76,16 @@ There are a couple of ways to install the `Metrics` application:
 
 If you prefer to install the `Metrics` application automatically, follow the next steps: 
 
-1. Download the `Metrics CLI` [binary](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#use-the-releases) or [build it from the source](https://github.com/platform-platform/monorepo/tree/master/metrics/cli#build-from-the-source).
+1. Download the `Metrics CLI` [binary](https://github.com/Flank/flank-dashboard/tree/master/metrics/cli#use-the-releases) or [build it from the source](https://github.com/Flank/flank-dashboard/tree/master/metrics/cli#build-from-the-source).
 2. Run the `doctor` command to verify all required third-party CLIs are installed.
 3. Run the `deploy` command to start deploying the Metrics Web Application.
 4. Follow the `Metrics CLI` instructions to finish the deployment.
 
-See [Metrics CLI usage](https://github.com/platform-platform/monorepo/blob/master/metrics/cli#usage) for more information.
+See [Metrics CLI usage](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli#usage) for more information.
 
 ### Manual
 
-If you want to install the `Metrics` manually, you should download the [source code](https://github.com/platform-platform/monorepo/tree/master/metrics) and perform some Firebase configurations using the [Firebase web UI](https://console.firebase.google.com/). See [Metrics Firebase deployment](https://github.com/platform-platform/monorepo/blob/master/docs/08_firebase_deployment.md) document to get more information about required configurations.
+If you want to install the `Metrics` manually, you should download the [source code](https://github.com/Flank/flank-dashboard/tree/master/metrics) and perform some Firebase configurations using the [Firebase web UI](https://console.firebase.google.com/). See [Metrics Firebase deployment](https://github.com/Flank/flank-dashboard/blob/master/docs/08_firebase_deployment.md) document to get more information about required configurations.
 
 # Contributing :beginner:
 

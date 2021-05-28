@@ -8,7 +8,7 @@ For example, if the configuration file contains a non-valid email/password used 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [CI Integrations Tool Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+- [CI Integrations Tool Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
 
 ## Goals
 > Identify success metrics and measurable goals.
@@ -33,7 +33,7 @@ Let's start with the necessary abstractions. Consider the following classes:
 
 Consider the following class diagram that demonstrates the main abstract and base classes needed to implement the config validation feature:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_base_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_base_class_diagram.puml)
 
 Consider the following package structure for the abstract and base classes of the config validation feature: 
 
@@ -110,11 +110,11 @@ Assume a `CoolIntegration` as a destination party for which we want to provide t
 
 - Class diagram:
 
-![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_destination_class_diagram.puml)
+![Class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_destination_class_diagram.puml)
 
 - Sequence diagram:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/ci_integrations/docs/diagrams/config_validator_sequence_diagram.puml)
 
 Consider the following package structure for the `CoolIntegration` config validation feature:
 
@@ -136,7 +136,7 @@ Consider the following package structure for the `CoolIntegration` config valida
 ## Testing
 > How will the project be tested?
 
-The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used to test new methods of the clients that perform direct HTTP calls.
+The project will be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/Flank/flank-dashboard/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/Flank/flank-dashboard/blob/master/docs/04_mock_server.md) should be used to test new methods of the clients that perform direct HTTP calls.
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)

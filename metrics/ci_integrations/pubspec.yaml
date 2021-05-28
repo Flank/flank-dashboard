@@ -18,13 +18,13 @@ dependencies:
     path: ../core
   yaml_map:
     git:
-      url: https://github.com/platform-platform/monorepo.git
+      url: https://github.com/Flank/flank-dashboard.git
       path: yaml_map
 
 dev_dependencies:
   api_mock_server:
     git:
-      url: https://github.com/platform-platform/monorepo.git
+      url: https://github.com/Flank/flank-dashboard.git
       path: api_mock_server
   coverage: ^0.14.2
   lint: ^1.1.1

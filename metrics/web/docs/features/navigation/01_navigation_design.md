@@ -129,7 +129,7 @@ The `NavigationNotifier` requires two classes to be injected:
  - [Metrics Pages Factory](#metrics-page-factory)
  - [Route Configuration Factory](#route-configuration-factory)
 
-The `NavigationNotifier` provides several navigation methods that are similar to methods the `Navigator` widget provides. But unlike the `Navigator` methods, the ones of `NavigationNotifier` do not return a `Future`. The main reason is that the [Metrics Web presentation layer architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) declares the interactions between pages and the UI logic to be in a presenter (`ChangeNotifier`, in our case) and performed using `View Models`. Thus, the following statements hold:
+The `NavigationNotifier` provides several navigation methods that are similar to methods the `Navigator` widget provides. But unlike the `Navigator` methods, the ones of `NavigationNotifier` do not return a `Future`. The main reason is that the [Metrics Web presentation layer architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) declares the interactions between pages and the UI logic to be in a presenter (`ChangeNotifier`, in our case) and performed using `View Models`. Thus, the following statements hold:
 - using the `MetricsPage` data directly in the UI (for example, in a page widget) or adding such logic to the widget itself - breaks the principle of separation between the presentation layer components and complexifies testing;
 - implementing the data flow (using `View Model`s) between pages/widgets using the result param of the `.pop()` method - breaks the principle of separation between the presentation layer components and complexifies testing.
 
@@ -139,7 +139,7 @@ To be sure that the application will work correctly, we should ensure that all o
 
 Consider the following sequence diagram that will describe this process in more details:
 
-![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
+![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
 
 ### Metrics Page Factory
 
@@ -157,11 +157,11 @@ The `RouteConfigurationFactory` is responsible for creating the [RouteConfigurat
 
 The following diagram describes the structure and relationship between the above classes:
 
-![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/navigation_class_diagram.puml)
+![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/navigation/diagrams/navigation_class_diagram.puml)
 
 ## Making things work
 
-The following section provides implementation details of a new navigation system for the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following section provides implementation details of a new navigation system for the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 According to the above class diagram, we should implement several classes to integrate the Router class into the application. Here is a list of them providing a short description for each class: 
 - `MetricsRouteInformationParser` as the app-specific [`RouteInformationParser`](#route-information-parser) with the `RouteConfigurationFactory` to simplify parsing.
@@ -175,11 +175,11 @@ The following sequence diagrams describe the navigation process using the new `N
 
 Navigation using the browser history or the browser URL bar:
 
-![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/external_navigation_sequence_diagram.puml)
+![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/navigation/diagrams/external_navigation_sequence_diagram.puml)
 
 Navigation using the application API:
 
-![Navigation 2](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/internal_navigation_sequence_diagram.puml)
+![Navigation 2](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/navigation/diagrams/internal_navigation_sequence_diagram.puml)
 
 ## Dependencies
 > What is the project blocked on?

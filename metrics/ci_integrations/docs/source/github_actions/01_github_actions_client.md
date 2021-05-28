@@ -11,16 +11,16 @@ Details of the client integration is out of scope of this document.
 
 ## References
 * [Github Actions API](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions)
-* [CI integrations CLI architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
-* [Project metrics definition](https://github.com/platform-platform/monorepo/blob/master/docs/05_project_metrics.md)
-* [Third-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md)
+* [CI integrations CLI architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
+* [Project metrics definition](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md)
+* [Third-party API testing](https://github.com/Flank/flank-dashboard/blob/master/docs/03_third_party_api_testing.md)
 
 ## Design
 We should implement the GithubActionsClient and related models in a way they will fit the Metrics and CI integration
  requirements. The main idea is that client performs granular API calls, so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
 
 * Class diagram
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/source/github_actions/diagrams/github_actions_client_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/ci_integrations/docs/source/github_actions/diagrams/github_actions_client_class_diagram.puml)
 
 * Package structure
 

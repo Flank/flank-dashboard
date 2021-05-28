@@ -5,8 +5,8 @@
 #
 # Also, consider the following links to know how Buildkite API is used
 # in the scope of CI Integrations:
-# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
-# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md
+# - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
+# - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md
 
 source:
   # The `buildkite` key defines that the following source config stands for Buildkite integration.
@@ -16,7 +16,7 @@ source:
     # You can create an access token on the API Access Tokens page in Personal Settings on Buildkite.
     # The following link leads to the required page: https://buildkite.com/user/api-access-tokens.
     # Consider the following link for more information on what REST scopes the CI Integration requires:
-    # - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md#authorization
+    # - https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md#authorization
     access_token: ...
 
     # A unique slug (identifier) of the pipeline on Buildkite.

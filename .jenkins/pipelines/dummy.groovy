@@ -14,7 +14,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/platform-platform/monorepo.git'
+                git branch: 'master', url: 'https://github.com/Flank/flank-dashboard.git'
             }
         }
 
