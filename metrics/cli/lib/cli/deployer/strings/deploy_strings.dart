@@ -11,8 +11,9 @@ class DeployStrings {
   static const String deletingTempDirectory =
       'Deleting the temporary Metrics directory. This may take a while...';
 
-  static String failedDeployment(Object error) =>
-      'The deployment has failed due to the following error: $error';
+  static String failedDeployment(Object error) => '''
+The deployment has failed due to the following error:
+$error''';
 
   static const String successfulDeployment =
       'The deployment has finished successfully!';
