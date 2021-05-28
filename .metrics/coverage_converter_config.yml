@@ -1,8 +1,8 @@
 source:
   github_actions:
     workflow_identifier: coverage_converter_actions.yml
-    repository_name: monorepo
-    repository_owner: platform-platform
+    repository_name: flank-dashboard
+    repository_owner: Flank
     access_token: $GITHUB_TOKEN
     job_name: Coverage Converter MacOS Actions
     coverage_artifact_name: coverage_report
