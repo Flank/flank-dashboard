@@ -17,4 +17,8 @@ $error''';
 
   static const String successfulDeployment =
       'The deployment has finished successfully!';
+
+  static String deleteProject(String projectId) {
+    return 'Would you like to delete the GCloud project "$projectId" used during deployment?(y/n): ';
+  }
 }

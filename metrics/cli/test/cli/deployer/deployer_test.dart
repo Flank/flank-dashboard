@@ -117,6 +117,14 @@ void main() {
       return when(sentryService.createRelease(any));
     }
 
+    PostExpectation<bool> whenPromptToDeleteProject() {
+      whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
+
+      return when(
+        prompter.promptConfirm(DeployStrings.deleteProject(projectId)),
+      );
+    }
+
     tearDown(() {
       reset(flutterService);
       reset(gcloudService);
@@ -511,6 +519,7 @@ void main() {
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -527,6 +536,7 @@ void main() {
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -556,6 +566,7 @@ void main() {
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -572,6 +583,7 @@ void main() {
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -599,6 +611,7 @@ void main() {
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -615,6 +628,7 @@ void main() {
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -701,6 +715,7 @@ void main() {
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -717,6 +732,7 @@ void main() {
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -803,6 +819,7 @@ void main() {
         when(npmService.installDependencies(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -819,6 +836,7 @@ void main() {
         when(
           npmService.installDependencies(any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -875,6 +893,7 @@ void main() {
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -891,6 +910,7 @@ void main() {
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -931,6 +951,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -945,6 +966,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -985,6 +1007,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -999,6 +1022,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1041,6 +1065,7 @@ void main() {
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1057,6 +1082,7 @@ void main() {
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1097,6 +1123,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1111,6 +1138,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1150,6 +1178,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1164,6 +1193,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1220,6 +1250,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1235,6 +1266,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1278,6 +1310,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1292,6 +1325,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1338,6 +1372,7 @@ void main() {
           (_) => Future.value(sentryRelease),
         );
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1355,6 +1390,7 @@ void main() {
           (_) => Future.value(sentryRelease),
         );
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1381,6 +1417,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1396,6 +1433,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1439,6 +1477,7 @@ void main() {
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1456,6 +1495,7 @@ void main() {
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
         ).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1502,6 +1542,7 @@ void main() {
         when(firebaseService.deployFirebase(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1519,6 +1560,7 @@ void main() {
         when(
           firebaseService.deployFirebase(any, any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1566,6 +1608,7 @@ void main() {
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1583,6 +1626,7 @@ void main() {
         when(
           firebaseService.deployHosting(any, any, any),
         ).thenAnswer((_) => Future.error(stateError));
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1624,6 +1668,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1639,6 +1684,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
@@ -1667,6 +1713,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
+        whenPromptToDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 

@@ -141,6 +141,8 @@ class Deployer {
       isDeploymentSuccessful = false;
 
       _prompter.error(DeployStrings.failedDeployment(error));
+
+      await _proposeDeleteProject(projectId);
     } finally {
       if (isDeploymentSuccessful) {
         _prompter.info(DeployStrings.successfulDeployment);
@@ -234,6 +236,20 @@ class Deployer {
     final configFile = _fileHelper.getFile(metricsConfigPath);
 
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
+  }
+
+  /// Prompts the user to delete a GCloud project used during deployment
+  /// identified by the given [projectId].
+  ///
+  /// Delegates deleting the project to the [GCloudService.deleteProject].
+  Future<void> _proposeDeleteProject(String projectId) async {
+    final deleteProject = _prompter.promptConfirm(
+      DeployStrings.deleteProject(projectId),
+    );
+
+    if (deleteProject) {
+      await _gcloudService.deleteProject(projectId);
+    }
   }
 
   /// Creates a temporary directory in the current working directory.
