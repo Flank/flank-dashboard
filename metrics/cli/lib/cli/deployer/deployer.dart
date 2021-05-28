@@ -98,7 +98,7 @@ class Deployer {
     final tempDirectory = _createTempDirectory();
     final deployPaths = _deployPathsFactory.create(tempDirectory.path);
 
-    bool isDeploymentSuccessful = false;
+    bool isDeploymentSuccessful = true;
 
     try {
       await _gcloudService.addFirebase(projectId);
@@ -137,9 +137,9 @@ class Deployer {
       );
 
       await _gcloudService.configureOAuthOrigins(projectId);
-
-      isDeploymentSuccessful = true;
     } catch (error) {
+      isDeploymentSuccessful = false;
+
       _prompter.error(DeployStrings.failedDeployment(error));
     } finally {
       if (isDeploymentSuccessful) {
