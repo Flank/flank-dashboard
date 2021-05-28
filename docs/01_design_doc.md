@@ -34,7 +34,7 @@ Overall status
 
 ## Tech Stack
 
-- [GitHub](https://github.com/platform-platform/metrics) is used to store the source code
+- [GitHub](https://github.com/Flank/flank-dashboard) is used to store the source code
 - [ZenHub](https://www.zenhub.com/) is the project management software (install the [free extension](https://www.zenhub.com/extension))
 - [Flutter Web](https://flutter.dev/web) is the framework
 - [Adobe XD](https://www.adobe.com/products/xd.html) is the design tool because of [upcoming Flutter support](https://theblog.adobe.com/xd-flutter-plugin-generate-dart-code-design-elements/)

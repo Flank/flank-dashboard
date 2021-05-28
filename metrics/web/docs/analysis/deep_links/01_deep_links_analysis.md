@@ -233,7 +233,7 @@ Let’s consider that a `DeepLinksDispatcher`  is a widget that is responsible f
 The following sequence diagrams illustrate how the main requirements of the feature may work in the system:
 
 - Parsing deep links
-  ![Applying deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/master/metrics/web/docs/analysis/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
+  ![Applying deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/analysis/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
 
 - Saving deep links
-  ![Saving deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/dashboard/raw/master/metrics/web/docs/analysis/deep_links/diagrams/saving_deep_links_sequence_diagram.puml)
+  ![Saving deep links sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/analysis/deep_links/diagrams/saving_deep_links_sequence_diagram.puml)

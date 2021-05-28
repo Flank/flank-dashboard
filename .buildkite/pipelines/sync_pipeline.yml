@@ -18,7 +18,7 @@ steps:
       - docker-compose:
           config: ".buildkite/compose-files/docker-compose.yml"
           run: ubuntu
-          workdir: /monorepo
+          workdir: /flank-dashboard
           env:
             - BUILDKITE_TOKEN
             - PIPELINE_SLUG
