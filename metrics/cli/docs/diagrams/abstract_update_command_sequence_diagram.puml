@@ -1,0 +1,52 @@
+@startuml abstract_update_command_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box Deploy Command
+participant MetricsCLI
+participant UpdateCommand
+participant Firebase
+participant Git
+participant Npm
+participant Flutter
+participant Sentry
+end box
+
+Bob -> MetricsCLI ++ : run update command
+MetricsCLI -> UpdateCommand ++ : run()
+
+UpdateCommand -> Git ++ : checkout repo
+Git --> UpdateCommand -- : checkout finished
+
+UpdateCommand -> Npm ++ : install necessary dependencies
+Npm --> UpdateCommand -- : dependencies have been installed
+
+UpdateCommand -> Flutter ++ : build the web app
+Flutter --> UpdateCommand -- : build finished
+
+UpdateCommand --> UpdateCommand : check if the Sentry config exists
+alt Sentry config exists
+
+UpdateCommand -> Sentry ++ : create a new release
+Sentry --> UpdateCommand -- : a new Sentry release has been created
+
+else Sentry config does not exists
+UpdateCommand --> UpdateCommand : Skip Sentry setup
+end
+
+UpdateCommand -> Firebase ++ : deploy Firebase function and rules
+Firebase --> UpdateCommand -- : function and rules have been deployed
+
+UpdateCommand -> Firebase ++ : deploy Firebase hosting
+Firebase --> UpdateCommand -- : hosting has been deployed
+
+UpdateCommand --> Bob : The deployment has finished successfully
+UpdateCommand --> Bob : Deleting the temporary resources
+
+UpdateCommand --> MetricsCLI --: command finished
+MetricsCLI --> Bob -- : terminate
+
+@enduml
