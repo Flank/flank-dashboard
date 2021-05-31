@@ -238,8 +238,10 @@ class Deployer {
     _fileHelper.replaceEnvironmentVariables(configFile, config.toMap());
   }
 
-  /// Prompts the user to delete a GCloud project created during deployment
-  /// identified by the given [projectId].
+  /// Deletes the project with the given [projectId].
+  ///
+  /// Asks the user if delete a GCloud project created during deployment
+  /// identified by the given [projectId] before deleting.
   ///
   /// Delegates deleting the project to the [GCloudService.deleteProject].
   Future<void> _deleteProject(String projectId) async {
