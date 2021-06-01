@@ -1,4 +1,4 @@
-# Deep Links Design
+# Deep Linking
 > Feature description / User story.
 
 As a user, I want to pass direct links to project and/or project groups, so that other users can navigate easier.
@@ -10,8 +10,8 @@ The `Deep Linking` feature improves the navigation experience by allowing users 
 
 The analysis stage aims the following goals:
 1. Define the detailed requirements for the deep linking feature;
-2. Investigate existing implementation approaches for the deep linking in the Flutter Web application.
-3. Select the implementation approach for the Metrics Web application that will satisfy the requirements.
+2. Investigate existing approaches for the deep linking in the Flutter Web applications.
+3. Define which approach satisfy our requirements: existing external solutions, or the custom-developed approach.
 
 # Requirements
 > Define requirements and make sure that they are complete.
@@ -72,7 +72,7 @@ Consider this diagram that briefly describes the custom implementation approach:
 # Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-The following code snippet demonstrates the process of parsing the route parameters from the URL:
+The following code snippet demonstrates the process of parsing the query parameters from the URL:
 ```dart
 final url = 'https://some-website/page?queryParameter=someParameter';
 
