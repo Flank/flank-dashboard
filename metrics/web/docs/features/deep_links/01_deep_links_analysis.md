@@ -98,5 +98,8 @@ history.replaceState(path: '$uri');
 ```
 
 ### System modeling
-
 > Create an abstract model of the system/feature.
+
+The `Deep Linking` feature implementation mostly includes the modification of existing components of the navigation system used in the Metrics Web application. Consider the following component diagram that demonstrates this:
+
+![Deep links integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/update_deep_links_analysis/metrics/web/docs/features/deep_links/diagrams/deep_links_integration_component_diagram.puml)

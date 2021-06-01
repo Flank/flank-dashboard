@@ -1,0 +1,35 @@
+@startuml deep_links_integration_component_diagram
+
+skinparam componentStyle rectangle
+
+component Browser #A9DCDF
+component RouteInformationProvider
+component RouteInformationParser
+component RouterDelegate
+component NavigationState
+component NavigationNotifier
+component ApplicationState
+
+Browser -down-> RouteInformationProvider : URL
+
+RouteInformationProvider -down-> RouteInformationParser : routeInformation
+
+RouteInformationParser -down-> RouterDelegate : routeConfiguration
+
+RouterDelegate -down-> NavigationNotifier : delegate handling\n new routeConfiguration
+
+NavigationNotifier -left-> NavigationState : updates
+
+NavigationNotifier --> ApplicationState : updates
+
+ApplicationState --> NavigationNotifier : UI events \n (e.g. filtering, searching, \n back button pressed)
+
+NavigationNotifier -up-> RouterDelegate : notifies about \n navigation state updates
+
+RouterDelegate -up-> RouteInformationParser : updated routeConfiguration
+
+RouteInformationParser -up-> RouteInformationProvider : updated routeInformation
+
+RouteInformationProvider -up-> Browser : updates URL
+
+@enduml
