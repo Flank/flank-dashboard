@@ -10,7 +10,7 @@ The `Deep Linking` feature improves the navigation experience by allowing users 
 
 The analysis stage aims the following goals:
 1. Define the detailed requirements for the deep linking feature;
-2. Investigate existing implementation approaches for the deep linking in Flutter Web application.
+2. Investigate existing implementation approaches for the deep linking in the Flutter Web application.
 3. Select the implementation approach for the Metrics Web application that will satisfy the requirements.
 
 # Requirements
@@ -21,44 +21,44 @@ The deep links implementation approach that we are to select must satisfy the fo
 - Possibility to reflect the application's state in deep links as a response to UI events (e.g. filtering, dropdown selections, searching, etc.);
 
 # Prerequisites
-Before deep diving into deep linking feature analysis, make sure to get familiar with the Flutter new navigation system ([Navigator 2.0](https://flutter.dev/docs/release/breaking-changes/route-navigator-refactoring)) which is [used in the Metrics Web application](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md). The understanding of Navigator 2.0 approach is important for the understanding deep linking feature.
+Before deep-diving into deep linking feature analysis, make sure to get familiar with the Flutter new navigation system ([Navigator 2.0](https://flutter.dev/docs/release/breaking-changes/route-navigator-refactoring)) which is [used in the Metrics Web application](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md). The understanding of the Navigator 2.0 approach is important for the understanding deep linking feature.
 
 # Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-The `Deep Linking` feature improves the overall user experience in terms of the navigation, so this feature makes sense for the project.
+The `Deep Linking` feature improves the overall user experience in terms of navigation, so this feature makes sense for the project.
 
 To be able to implement the `Deep Linking` feature we should be able to perform the following actions:
 - Parsing the `query parameters` from the URL;
 - Updating the URL and the `query parameters` in response to any events.
 
-Since the `Navigator 2.0` provides the navigation system that allows performing the actions listed above, and the Metrics Web application uses the `Navigator 2.0`, it is possible to implement the `Deep Linking` feature in the Metrics Web application.
+Since `Navigator 2.0` provides the navigation system that allows performing the actions listed above, and the Metrics Web application uses `Navigator 2.0`, it is possible to implement the `Deep Linking` feature in the Metrics Web application.
 
-## Landscape
+# Landscape
 > Look for existing solutions in the area.
 
 There are 2 main approaches for implementing the `Deep Linking` feature in the Metrics Web application:
 - Using 3-rd party package (such as [`routemaster`](https://pub.dev/packages/routemaster), [`beamer`](https://pub.dev/packages/beamer), etc.);
 - A custom implementation based on the existing `Navigator 2.0` integration.
 
-Let's compare the listed approaches in a bit more details.
+Let's compare the listed approaches in a bit more detail.
 
-### 3-rd party package approach
+## 3-rd party package approach
 Consider the following pros and cons of the 3-rd party package utilization approach:
 
 Pros:
-- Provides ready-to-use implementation out of the box, including the deep linking, nested navigation and many other features.
+- Provides ready-to-use implementation out of the box, including deep linking, nested navigation, and many other features.
 
 Cons:
 - May require code generation;
 - Requires the navigation system reintegration - meaning that we must use the 3-rd party `RouteInformationParser`s and `RouterDelegate`s.
 
-### Custom implementation
+## Custom implementation
 Consider the following pros and cons of the custom implementation approach:
 
 Pros:
 - Highly customizable approach;
-- Well testable approach;
+- Well-testable approach;
 
 Cons:
 - Requires more code comparing to the 3-rd party package approach.
@@ -66,9 +66,10 @@ Cons:
 According to the comparison above, we choose the [`Custom implementation`](#custom-implementation) approach, as it fits the current navigation approach used in the Metrics Web application, and satisfies the customization and testability requirements.
 
 Consider this diagram that briefly describes the custom implementation approach:
+
 ![Custom approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/update_deep_links_analysis/metrics/web/docs/features/deep_links/diagrams/custom_approach_component_diagram.puml)
 
-### Prototyping
+# Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
 The following code snippet demonstrates the process of parsing the route parameters from the URL:
