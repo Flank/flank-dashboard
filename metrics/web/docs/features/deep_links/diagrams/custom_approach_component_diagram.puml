@@ -1,0 +1,14 @@
+@startuml
+skinparam componentStyle rectangle
+
+component Browser #A9DCDF
+
+component NavigationComponent
+
+component ApplicationState #ff9645
+
+Browser --> NavigationComponent : "notifies about \n URL updates"
+NavigationComponent --> Browser : "requests to \n update URLs"
+ApplicationState --> NavigationComponent : "notifies about \nnavigation state changes"
+NavigationComponent --> ApplicationState : "updates application \n navigation state"
+@enduml
