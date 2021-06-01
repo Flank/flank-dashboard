@@ -17,4 +17,13 @@ $error''';
 
   static const String successfulDeployment =
       'The deployment has finished successfully!';
+
+  static String deleteProject(String projectId) {
+    return '''
+    The GCloud project "$projectId" was created during the deployment.
+    Consider the following link to the GCloud console of this project:
+    https://console.cloud.google.com/home/dashboard?project=$projectId
+    
+    Would you like to delete the created GCloud project "$projectId"?(y/n): ''';
+  }
 }
