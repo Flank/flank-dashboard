@@ -27,13 +27,11 @@ _**Important Note**: Avoid excessive details in the Analysis subsections. Think 
 ### Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-Once the requirements are defined, one should consider the feature and conclude if this feature makes sense for the project. In the context of usability and project's purposes, one should answer the following: 
+One should answer the following:
 
 - How this feature would help end-users and would they use it?
 - Does this feature meet the project's scope?
 - Does this feature fit the project's purpose?
-
-Once the feature makes sense, one should review is it feasible. More precisely, one should conclude is it possible to implement the feature taking into account the listed requirements from the [Requirements](#requirements) section. It is possible here to refer to existing solutions in the [Landscape](#landscape) section.
 
 ### Requirements
 > Define requirements and make sure that they are complete.
