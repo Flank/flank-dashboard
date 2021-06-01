@@ -73,28 +73,7 @@ The following table summarizes the above requirements into the validation result
 
 Let's take a look at the example of how the improved `doctor` command output should look like:
 
-// example
-
-The following output example demonstrates how the desired output should look like:
-
-- Success check.
-```
-[✓] GCloud CLI (version 2.0.1)
-```
-
-- Failed check:
-```
-[✗] GCloud CLI - Not installed
-Process output...
-     Command gcloud --version
-```
-
-- Warning check:
-```
-[!] GCloud CLI (version 2.0.0, recommended version 2.0.1)
-Warning output...
-     Versions mismatch does not guarantee the successful deployment! We advise to use the recommended version of the tool or newest.
-```
+![Metrics Doctor](images/metrics_cli_doctor_example.png)
 
 ### Landscape
 > Look for existing solutions in the area.
