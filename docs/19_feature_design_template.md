@@ -4,9 +4,20 @@
 # Analysis
 > Describe a general analysis approach.
 
-In this section, state the overall purpose of this analysis. Describe a new feature, omitting deep details, and what this analysis reviews.
+In this section, describe the methodology to feature analysis, possible solutions, and areas that need to be explored, ways to compare alternatives. It should be a brief plan for all sub-sections.
 
 _**Important Note**: Avoid excessive details in the Analysis subsections. Think about the feature at the very top-level abstraction. Provide the details only where necessary (e.g. in the [Prototyping](#prototyping) section)._
+
+### Feasibility study
+> A preliminary study of the feasibility of implementing this feature.
+
+Once the requirements are defined, one should consider the feature and conclude if this feature makes sense for the project. In the context of usability and project's purposes, one should answer the following: 
+
+- How this feature would help end-users and would they use it?
+- Does this feature meet the project's scope?
+- Does this feature fit the project's purpose?
+
+Once the feature makes sense, one should review is it feasible. More precisely, one should conclude is it possible to implement the feature taking into account the listed requirements from the [Requirements](#requirements) section. It is possible here to refer to existing solutions in the [Landscape](#landscape) section.
 
 ### Requirements
 > Define requirements and make sure that they are complete.
@@ -20,21 +31,12 @@ This section should cover the requirements of the feature. One should follow the
 
 The described requirements should become acceptance criteria for the feature and its parts under development.
 
-### Feasibility study
-> A preliminary study of the feasibility of implementing this feature.
-
-Once the requirements are defined, one should consider the feature and conclude if this feature makes sense for the project. In the context of usability and project's purposes, one should answer the following: 
-
-- How this feature would help end-users and would they use it?
-- Does this feature meet the project's scope?
-- Does this feature fit the project's purpose?
-
-Once the feature makes sense, one should review is it feasible. More precisely, one should conclude is it possible to implement the feature taking into account the listed requirements from the [Requirements](#requirements) section. It is possible here to refer to existing solutions in the [Landscape](#landscape) section.
-
 ### Landscape
 > Look for existing solutions in the area.
 
-In this section, one should select the general implementation approach for the feature under analysis. The purpose is to answer the question: **"Is this going to be a custom solution or the existing one is to be used?"** One should review the existing solutions in the area and find out what fits most to the feature requirements. Or conclude that this should be a custom solution.
+In this section, one should select the general implementation approach for the feature under analysis. The purpose is to answer the question: **"Is this going to be a custom solution or the existing one is to be used?"**.
+
+One should review the existing solutions in the area and capture all relevant references, snippets, excerpts that would help to make an informed decision.
 
 The general algorithm in this section is following:
 
@@ -47,20 +49,19 @@ _**Note**: The implementing approach shouldn't be a diagram, algorithm, etc. Thi
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-Using the selected approach, one should provide prototypes. This means that for each requirement from the [Requirements](#requirements) section, one should give an example of code that meets this requirement (or could be used for this purpose). 
+Using the selected approach, one should provide prototypes for all high-risk requirements. High-risk means the ones that we are not sure that it's possible to implement in a reasonable time frame while applying best practices.
 
-Generally speaking, in the [Feasibility study](#feasibility-study) and [Landscape](#landscape) section, one states the solution is possible. In this section, one should prove this statement with prototypes (code snippets).
+Generally speaking, in the [Feasibility study](#feasibility-study) and [Landscape](#landscape) section, one states the solution is possible. In this section, one should prove this statement with prototypes and provide profs in a form of code snippets/sample application.
 
 _**Note**: Prototypes must cover the possible problems and edge cases for the feature, and exemplify how to solve them. There is no need to deep dive into such cases - the [Design](#design) section should discover details. Instead, prototypes should expose that the selected approach provides a convenient way to handle edge cases._
 
 ### System modeling
 > Create an abstract model of the system/feature.
 
-The purpose of this section is to discover the relation of the new feature to the existing project's implementations. In general, the section should examine the feature's place in the project's world. To archive this goal, one should consider the existing components of the project and think of the feature as such a component. Then, answer the following:
+The purpose of this section is to discover the relation of the new feature to the existing project's implementations. In general, the section should examine the feature's place in the project's world. To archive this goal, one should consider the existing components/modules of the project and think of the feature as such. Then, answer the following:
 
 - Is the new feature a part of the existing component? Does it complement or improve/upgrade this component?
-- Is the new feature should be a part of a standalone component? How this component is going to relate to the project and other components?
-- In what way the new feature integrates into the project's functionality?
+- Is the new feature should be a part of a standalone component? How this component is going to interact with other components?
 
 The above questions are focused on one purpose: the place and role of the new feature. To simplify reasoning, one may use the component or other diagrams in this section.
 
