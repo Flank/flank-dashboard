@@ -15,8 +15,13 @@ participant Flutter
 participant Sentry
 end box
 
+participant YamlParser
+
 Bob -> MetricsCLI ++ : run update command
 MetricsCLI -> UpdateCommand ++ : run()
+
+UpdateCommand -> YamlParser ++ : parse the configuration
+YamlParser --> UpdateCommand -- : parsed configuration
 
 UpdateCommand -> Git ++ : checkout repo
 Git --> UpdateCommand -- : checkout finished
