@@ -596,11 +596,13 @@ class ProjectMetricsNotifier extends PageNotifier {
   void _applyPageParameters(DashboardPageParameters dashboardPageParameters) {
     final selectedProjectGroup = dashboardPageParameters.selectedProjectGroup;
 
-    if (_projectGroupModels.any(
+    final projectGroupExists = _projectGroupModels.any(
       (projectGroupModel) => projectGroupModel.id == selectedProjectGroup,
-    )) {
-      selectProjectGroup(selectedProjectGroup);
-    }
+    );
+    final projectGroupId = projectGroupExists
+        ? selectedProjectGroup
+        : _allProjectsGroupDropdownItemViewModel.id;
+    selectProjectGroup(projectGroupId);
   }
 
   @override

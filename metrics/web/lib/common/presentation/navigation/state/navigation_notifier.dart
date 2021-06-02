@@ -279,7 +279,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   ///
   void _updatePageParameters() {
-    final queryParameters = _currentConfiguration.queryParameters;
+    final queryParameters = _currentConfiguration.queryParameters ?? {};
 
     if (_currentConfiguration.name == RouteName.dashboard) {
       final pageParameters = DashboardPageParameters.fromMap(queryParameters);
