@@ -132,7 +132,7 @@ final uri = Uri(path: path, queryParameters: queryParameters);
 
 print('$uri'); // /page?queryParameter=someParameter
 
-history.replaceState(null, ‘metrics’, ‘$uri’); 
+history.replaceState(null, 'metrics', '$uri'); 
 ```
 
 ### System modeling
