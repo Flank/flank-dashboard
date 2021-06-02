@@ -77,7 +77,7 @@ Pros:
 - Provides ready-to-use implementation out of the box, including deep linking, nested navigation, and many other features.
 
 Cons:
-- May require code generation;
+- May require code generation (e.g. as in [`auto_route`](https://pub.dev/packages/auto_route) package);
 - Requires the navigation system reintegration - meaning that we must use the 3-rd party `RouteInformationParser`s and `RouterDelegate`s.
 
 #### Custom implementation
