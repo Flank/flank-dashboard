@@ -106,7 +106,7 @@ Consider this diagram that briefly describes the custom implementation approach:
 
 As we've described in the [`requirements`](#requirements) section, we must be able to perform the following actions to implement the `Deep Linking` feature:
 - Parsing the `query parameters` from the URL;
-- Updating the URL and the `query parameters` in response to any events without changing the current browser history.
+- Updating the URL and the query parameters without changing the current browser history;
 
 The next code snippets demonstrate how we can perform the listed required actions:
 
@@ -119,7 +119,7 @@ final uri = Uri.parse(url);
 print(uri.queryParameters); // {queryParameter : someParameter)
 ```
 
-- Updating the URL in the browser (using the [`universal_html`](https://pub.dev/packages/universal_html) package without changing its history):
+- Updating the URL and the query parameters without changing the current browser history (using the [`universal_html`](https://pub.dev/packages/universal_html) package):
 ```dart
 import 'package:universal_html/universal_html.dart' show window;
 
