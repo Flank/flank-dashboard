@@ -32,7 +32,7 @@ The `Deep Linking` feature improves the overall user experience in terms of navi
 
 To implement the `Deep Linking` feature, we should be able to perform the following actions:
 - Parsing the `query parameters` from the URL;
-- Updating the URL and the `query parameters` in response to any events.
+- Possibility to update the URL and the query parameters without changing the current browser history;
 
 Since `Navigator 2.0` provides the navigation system that allows performing the actions listed above, and the Metrics Web application uses `Navigator 2.0`, it is possible to implement the `Deep Linking` feature in the Metrics Web application.
 
