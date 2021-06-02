@@ -99,7 +99,7 @@ According to the comparison above, we choose the [`Custom implementation`](#cust
 
 Consider this diagram that briefly describes the custom implementation approach:
 
-![Custom approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/update_deep_links_analysis/metrics/web/docs/features/deep_links/diagrams/custom_approach_component_diagram.puml)
+![Custom approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/custom_approach_component_diagram.puml)
 
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
@@ -141,4 +141,4 @@ history.replaceState(null, 'metrics', '$uri');
 
 The `Deep Linking` feature implementation mostly includes the modification of existing components of the navigation system used in the Metrics Web application. Consider the following component diagram that demonstrates this:
 
-![Deep links integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/update_deep_links_analysis/metrics/web/docs/features/deep_links/diagrams/deep_links_integration_component_diagram.puml)
+![Deep links integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_integration_component_diagram.puml)
