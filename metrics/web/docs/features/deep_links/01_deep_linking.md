@@ -41,7 +41,7 @@ Since `Navigator 2.0` provides the navigation system that allows performing the 
 
 The `Deep Linking` feature must satisfy the following requirements:
 - Possibility to handle deep links and restore the application's state using them;
-- Possibility to reflect the application's state in deep links as a response to UI events (e.g. filtering, dropdown selections, searching, etc.) without changing the current browser history;
+- Possibility to update the URL and the query parameters without changing the current browser history;
 
 ### Prerequisites
 Before deep-diving into deep linking feature analysis, make sure to get familiar with the Flutter new navigation system ([Navigator 2.0](https://flutter.dev/docs/release/breaking-changes/route-navigator-refactoring)) which is [used in the Metrics Web application](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md). The understanding of the Navigator 2.0 approach is important for the understanding deep linking approaches.
@@ -132,7 +132,7 @@ final uri = Uri(path: path, queryParameters: queryParameters);
 
 print('$uri'); // /page?queryParameter=someParameter
 
-history.replaceState(path: '$uri'); 
+history.replaceState(null, ‘metrics’, ‘$uri’); 
 ```
 
 ### System modeling
