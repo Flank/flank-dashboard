@@ -106,7 +106,7 @@ Consider this diagram that briefly describes the custom implementation approach:
 
 As we've described in the [`requirements`](#requirements) section, we must be able to perform the following actions to implement the `Deep Linking` feature:
 - Parsing the `query parameters` from the URL;
-- Updating the URL and the `query parameters` in response to any events.
+- Updating the URL and the `query parameters` in response to any events without changing the current browser history.
 
 The next code snippets demonstrate how we can perform the listed required actions:
 
