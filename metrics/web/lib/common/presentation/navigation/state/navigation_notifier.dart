@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
@@ -7,14 +7,63 @@ import 'package:metrics/common/presentation/navigation/constants/metrics_routes.
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
 /// conditions.
 typedef MetricsPagePredicate = bool Function(MetricsPage);
 
+///
+abstract class PageParameters {
+  ///
+  const PageParameters();
+
+  ///
+  Map<String, dynamic> toQueryParameters();
+}
+
+///
+class DashboardPageParameters implements PageParameters {
+  ///
+  final String selectedProjectGroup;
+
+  ///
+  const DashboardPageParameters({
+    @required this.selectedProjectGroup,
+  });
+
+  ///
+  factory DashboardPageParameters.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
+    return DashboardPageParameters(
+      selectedProjectGroup: map['selectedProjectGroup'] as String,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toQueryParameters() {
+    return {
+      if (selectedProjectGroup != null)
+        'selectedProjectGroup': selectedProjectGroup,
+    };
+  }
+}
+
 /// A [ChangeNotifier] that manages navigation.
 class NavigationNotifier extends ChangeNotifier {
+  ///
+  final BehaviorSubject<PageParameters> _pageParametersStream =
+      BehaviorSubject();
+
+  ///
+  PageParameters _pendingPageParameters;
+
+  ///
+  Stream<PageParameters> get pageParametersStream => _pageParametersStream;
+
   /// A [NavigationState] used to interact with the current navigation state.
   final NavigationState _navigationState;
 
@@ -101,6 +150,8 @@ class NavigationNotifier extends ChangeNotifier {
 
     _currentConfiguration = newConfiguration;
 
+    _updatePageParameters();
+
     notifyListeners();
   }
 
@@ -122,9 +173,9 @@ class NavigationNotifier extends ChangeNotifier {
   void replaceState({
     dynamic data,
     String title = 'metrics',
-    String path,
+    RouteConfiguration routeConfiguration,
   }) {
-    _navigationState.replaceState(data, title, path);
+    _navigationState.replaceState(data, title, routeConfiguration.toLocation());
   }
 
   /// Removes all underlying pages until the [predicate] returns `true`
@@ -153,7 +204,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     push(configuration);
     replaceState(
-      path: _currentConfiguration.path,
+      routeConfiguration: _currentConfiguration,
     );
   }
 
@@ -183,12 +234,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    final name = page?.name;
-
-    return MetricsRoutes.values.firstWhere(
-      (route) => route.name.value == name,
-      orElse: () => MetricsRoutes.dashboard,
-    );
+    return page?.arguments as RouteConfiguration;
   }
 
   /// Adds a new page created from the given [configuration] to the [pages].
@@ -200,6 +246,8 @@ class NavigationNotifier extends ChangeNotifier {
     final newPage = _pageFactory.create(_currentConfiguration);
 
     _pages.add(newPage);
+
+    _updatePageParameters();
   }
 
   /// Processes the given [configuration] depending on [_isAppInitialized] state,
@@ -219,7 +267,7 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isAppInitialized) {
       _redirectRoute = configuration;
 
-      return MetricsRoutes.loading.copyWith(path: configuration.path);
+      return MetricsRoutes.loading.copyWith(path: configuration.toLocation());
     }
 
     final authorizationRequired = configuration.authorizationRequired;
@@ -227,5 +275,20 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isUserLoggedIn && authorizationRequired) return MetricsRoutes.login;
 
     return configuration;
+  }
+
+  ///
+  void _updatePageParameters() {
+    final queryParameters = _currentConfiguration.queryParameters;
+
+    if (_currentConfiguration.name == RouteName.dashboard) {
+      final pageParameters = DashboardPageParameters.fromMap(queryParameters);
+
+      if (pageParameters != null) _addPageParameters(pageParameters);
+    }
+  }
+
+  void _addPageParameters(PageParameters pageParameters) {
+    _pageParametersStream.add(pageParameters);
   }
 }

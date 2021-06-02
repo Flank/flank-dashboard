@@ -21,6 +21,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_build_day_repository.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/presentation/injector/widget/page_parameters_dispatcher.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
@@ -344,7 +345,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
           },
         ),
       ],
-      child: widget.child,
+      child: Builder(builder: (context) {
+        return PageParametersDispatcher(
+          child: widget.child,
+          pageNotifiers: [
+            Provider.of<ProjectMetricsNotifier>(context, listen: false),
+          ],
+        );
+      }),
     );
   }
 

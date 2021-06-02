@@ -1,8 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 
 /// A class that represents a Metrics application page.
 class MetricsPage<T> extends Page<T> {
@@ -26,9 +27,9 @@ class MetricsPage<T> extends Page<T> {
     @required this.child,
     this.maintainState = true,
     this.fullscreenDialog = false,
+    RouteConfiguration arguments,
     LocalKey key,
     String name,
-    Object arguments,
   })  : assert(child != null),
         assert(maintainState != null),
         assert(fullscreenDialog != null),

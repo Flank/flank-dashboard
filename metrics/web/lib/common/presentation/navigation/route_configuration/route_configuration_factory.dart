@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
@@ -16,13 +16,20 @@ class RouteConfigurationFactory {
   /// [RouteName]s, returns [MetricsRoutes.dashboard].
   RouteConfiguration create(Uri uri) {
     final pathSegments = uri?.pathSegments;
+    final queryParameters = uri?.queryParameters;
 
     if (pathSegments == null || pathSegments.isEmpty) {
       return MetricsRoutes.loading;
     }
 
     final routeName = pathSegments.first;
+    final route = _getRouteByName(routeName);
 
+    return route.copyWith(queryParameters: queryParameters);
+  }
+
+  ///
+  RouteConfiguration _getRouteByName(String routeName) {
     if (routeName == RouteName.login.value) {
       return MetricsRoutes.login;
     } else if (routeName == RouteName.dashboard.value) {

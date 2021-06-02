@@ -8,7 +8,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/injector/widget/page_parameters_dispatcher.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -38,7 +40,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
-class ProjectMetricsNotifier extends ChangeNotifier {
+class ProjectMetricsNotifier extends PageNotifier {
   /// A [ProjectGroupDropdownItemViewModel] representing
   /// a project group with all projects.
   static const _allProjectsGroupDropdownItemViewModel =
@@ -254,6 +256,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       (group) => group.id == _selectedProjectGroup?.id,
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
+
+    _applyPageParameters(_pendingPageParameters);
 
     notifyListeners();
   }
@@ -571,6 +575,36 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   FutureOr<void> dispose() async {
     await _cancelSubscriptions();
     await _projectNameFilterSubject.close();
+
     super.dispose();
   }
+
+  DashboardPageParameters _pendingPageParameters;
+
+  @override
+  void handlePageParameters(PageParameters parameters) {
+    if (parameters is DashboardPageParameters) {
+      if (isMetricsLoading) {
+        _pendingPageParameters = parameters;
+        return;
+      }
+
+      _applyPageParameters(parameters);
+    }
+  }
+
+  void _applyPageParameters(DashboardPageParameters dashboardPageParameters) {
+    final selectedProjectGroup = dashboardPageParameters.selectedProjectGroup;
+
+    if (_projectGroupModels.any(
+      (projectGroupModel) => projectGroupModel.id == selectedProjectGroup,
+    )) {
+      selectProjectGroup(selectedProjectGroup);
+    }
+  }
+
+  @override
+  // TODO: implement pageParametersUpdatesStream
+  Stream<PageParameters> get pageParametersUpdatesStream =>
+      throw UnimplementedError();
 }

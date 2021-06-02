@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/auth/presentation/pages/login_page.dart';
@@ -26,32 +26,38 @@ class MetricsPageFactory {
         return MetricsPage(
           child: const LoadingPage(),
           name: routePath,
+          arguments: configuration,
         );
       case RouteName.login:
         return MetricsPage(
           child: const LoginPage(),
           name: routePath,
+          arguments: configuration,
         );
       case RouteName.dashboard:
         return MetricsPage(
           child: DashboardPage(),
           name: routePath,
+          arguments: configuration,
         );
       case RouteName.projectGroups:
         return MetricsPage(
           child: ProjectGroupPage(),
           name: routePath,
+          arguments: configuration,
         );
       case RouteName.debugMenu:
         return MetricsPage(
           child: const DebugMenuPage(),
           name: routePath,
+          arguments: configuration,
         );
     }
 
     return MetricsPage(
       child: DashboardPage(),
       name: routePath,
+      arguments: configuration,
     );
   }
 }

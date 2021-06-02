@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
@@ -36,6 +36,6 @@ class MetricsRouteInformationParser
   RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
     if (configuration == null) return null;
 
-    return RouteInformation(location: configuration.path);
+    return RouteInformation(location: configuration.toLocation());
   }
 }

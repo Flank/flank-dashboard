@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -197,7 +197,7 @@ class _LoadingPageState extends State<LoadingPage>
       notifier.handleAppInitialized(isAppInitialized: true);
 
       notifier.replaceState(
-        path: notifier.currentConfiguration.path,
+        routeConfiguration: notifier.currentConfiguration,
       );
     });
   }
