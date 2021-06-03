@@ -33,7 +33,7 @@ The same aggregation definition we can apply to Firebase aggregations.
       - [onBuildAdded](#onBuildAdded)
       - [onBuildUpdated](#onBuildUpdated)
       - [Testing](#Testing)
-      
+
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
@@ -60,8 +60,7 @@ This solution is okay if a project has not many builds, but over time, the numbe
 > Define requirements and make sure that they are complete.
 
 - Should reduce Firestore usage.
-- Possibility to implement this approach using [the firebase-functions-interop package]
-(https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md#the-firebase-functions-interop-package).
+- Possibility to implement this approach using [the firebase-functions-interop package](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md#the-firebase-functions-interop-package).
 
 ### Landscape
 > Look for existing solutions in the area.
@@ -92,7 +91,7 @@ With Cloud Functions, we can move our aggregation logic to the cloud and process
 
 There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#fieldValue.increment) method or create a [Distributed counter](#distributed-counter).
 
-##### Firebase transactions
+#### Firebase transactions
 
 The transaction is a set of read and write operations on one or more documents. Transactions are useful when we want to update a field's value based on its current value, or the value of some other field.
 
@@ -106,7 +105,7 @@ Cons:
 - Has a maximum writes and time [limits](https://firebase.google.com/docs/firestore/quotas#writes_and_transactions).
 - Requires a lot of code to implement a simple logic(e.g.g. counters).
 
-##### FieldValue.increment
+#### FieldValue.increment
 
 The [FieldValue.increment](https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue#static-increment) method gives the ability to increment (or decrement) numeric values directly in the database.
 
@@ -120,7 +119,7 @@ Pros:
 Cons:
 - Limited by the document's write limit.
 
-##### Distributed counter
+#### Distributed counter
 
 As we've described above, the [FieldValue.increment](#FieldValue.increment) method has a limitation to one write per second per document. If we have a more frequent counter updates, we should create a distributed counter.
 
@@ -165,7 +164,7 @@ The section contains information about the main purposes of new collections, the
 
 The first collection we should create is the `build_days`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
 
-##### Document Structure
+#### Document Structure
 
 > Explain the structure of the documents under this collection.
 
@@ -199,7 +198,7 @@ Let's take a closer look at the document's fields:
 | `successfulBuildsDuration` | A total duration of successful builds. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
-##### Security Rules
+#### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
 
@@ -216,7 +215,7 @@ Every authenticated user can read the documents from the `build_days` collection
 
 The collection stands for a list of delayed jobs and lets you separate out pieces of work that can be performed independently, outside of your main application flow. The collection's fields contain all required information for each job to perform required actions.
 
-##### Document Structure
+#### Document Structure
 
 > Explain the structure of the documents under this collection.
 
@@ -246,7 +245,7 @@ For our purposes, the following code strings we can create, related to the funct
 
 Later, using the described above information we can fix counters inside the `build_days` collection.
 
-##### Security Rules
+#### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
 
