@@ -2,7 +2,7 @@
 
 > Feature description / User story.
 
-Storybook in JavaScript world is a tool for UI development. It makes development faster and easier in an isolated manner. It allows you to browse a components library, view the different states of each component, and interactively develop and test components.
+Storybook in JavaScript world is a tool for UI development. It makes development faster and easier in an isolated manner. It allows to browse a components library, view the different states, and interactively develop and test them.
 
 A similar concept we want to apply to the Metrics Web Application.
 
@@ -12,7 +12,7 @@ A similar concept we want to apply to the Metrics Web Application.
     - [Feasibility study](#feasibility-study)
     - [Requirements](#requirements)
     - [Landscape](#landscape)
-        - [Using existing packages](#using-existing-packages)
+        - [Use existing packages](#use-existing-packages)
         - [Manually create a Storybook from scratch](#manually-create-a-storybook-from-scratch)
 - [**Design**](#design)
     - [Architecture](#architecture)
@@ -48,12 +48,12 @@ Metrics storybook creating allows developers to work in parallel on widgets and 
 
 - Displays a set of Metrics widgets.
 - An ability to manage themes.
-- Contains a tab with widget documentation.
+- Contains a tab with the widget documentation.
 - Contains a list of inputs to change widgets' appearance (height, width, color, etc.).
 - Contains the Metrics color palette to view all project's colors.
 - An ability to search across components.
 - Visually groups widgets by their types.
-- Change viewport size (view widgets on different devices).
+- Change a viewport size (view widgets on different devices).
 
 ### Landscape
 
@@ -65,19 +65,15 @@ There are [two types of widgets](https://github.com/Flank/flank-dashboard/blob/m
  - *base* - a widget that is responsible for only displaying the given data. These widgets should be highly configurable and usable out of the Metrics Web Application context.
  - *common* - is a widget that is actually used in the Metrics Web Application context and can be used across the modules.
 
-The main question is whether we want to extract to the Metrics storybook only base widgets or add common widgets as well.
-
-If we add only base widgets to the storybook, we can accidentally duplicate the existing common Metrics widgets with the same functionality. Also, we will not be able to view the entire list of possible components that are used in the application.
-
-That's why our choice is to take out base widgets together with common ones.
+The main question is whether we want to extract to the Metrics storybook only base widgets or add common widgets as well. If we add only base widgets to the storybook, we can accidentally duplicate the existing common Metrics widgets with the same functionality. Also, we will not be able to view the entire list of possible components that are used in the application. That's why our choice is to take out base widgets together with common ones.
 
 According to the [widget structure organization document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#applying-a-theme-to-a-widget-appearance) common widgets use the Metrics theme. Thus to display these widgets in the storybook correctly we should move the Metrics theme along with them. The disadvantage of moving common widgets is the loss of the ability to customize them as base widgets.
 
 Now, when we've determined a set of components to extract to the storybook we can investigate existing solutions that provide the logic to showcase widgets.
 
-There are two approaches to create the storybook for Flutter widgets - [using existing packages](#using-existing-packages) or [creating a UI from scratch](#Manually-create-a-storybook-from-scratch).
+There are two approaches to create the storybook for Flutter widgets - [using existing packages](#use-existing-packages) or [creating a UI from scratch](#manually-create-a-storybook-from-scratch).
 
-#### Using existing packages
+#### Use existing packages
 
 At this time, there are only a few packages, that provide the functionality to write Storybook for Flutter widgets.
 
@@ -114,23 +110,23 @@ Pros:
 
 Cons:
 
-- Requires to download the Monarch binary.
-- Requires to install XCode.
+- Requires downloading the Monarch binary.
+- Requires installing XCode.
 - Does not contain a panel with inputs to change widgets' appearance.
 - Does not support Web as a device target to test UI components.
 - Does not have an ability to group widgets by their types (base/common).
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
-- Requires to update a Dart version to 2.12.0 or higher.
+- Requires updating a Dart version to 2.12.0 or higher.
 - It's not so popular (has only a few stars on GitHub).
 
 3. [Dashbook](https://pub.dev/packages/dashbook)
 
-Dashbook is a UI development tool for Flutter, it allows showcasing widgets. It supports both mobile and web. The package has a similar principle for isolating and previewing a list of widgets.
+Dashbook is a UI development tool for Flutter, that allows showcasing widgets. It supports both mobile and web. The package has a similar principle for isolating and previewing a list of widgets.
 
 Pros:
 
 - Allows managing themes.
-- Allows group widgets by their types.
+- Allows to group widgets by their types.
 - Contains a list of inputs to change widgets' appearance.
 
 Cons:
@@ -140,7 +136,7 @@ Cons:
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Does not have a search across components functionality.
 - It's not so popular (has only a few stars on GitHub).
-- Requires to update a Dart version to 2.12.0 or higher.
+- Requires updating a Dart version to 2.12.0 or higher.
 
 4. [Storybook_flutter](https://pub.dev/packages/storybook_flutter)
 
@@ -157,7 +153,7 @@ Cons:
 - Provides only a plain UI.
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Does not have a search across components functionality.
-- Requires to update a Dart version to 2.12.0 or higher.
+- Requires updating a Dart version to 2.12.0 or higher.
 - It's not so popular (has only a few stars on GitHub).
 
 #### Manually create a Storybook from scratch
@@ -177,7 +173,7 @@ Cons:
 
 The described above packages do not suit us for several reasons:
 
-- They are rather libraries to showcasing widgets with an ability to change their appearance, but the storybook is a bit more than that. A storybook contains documentation about widgets, information about the possible parameters that widgets can accept, search across widgets functionality, and more.
+- They are rather libraries to showcasing widgets with an ability to change their appearance, but the storybook is a bit more than that. A storybook contains documentation about widgets, information about the possible parameters they can accept, search across their functionality, and more.
 
 - The management of themes in these packages is reduced only to the possibility of switching between the dark and the light themes, as well as the presence of a toggle theme button, the behavior of which we cannot control. Even though the packages allow managing themes, it becomes a complex task to integrate the Metrics theme into the storybook. The described above packages do not allow to provide the theme data for all the Metric widgets. See [Metrics Theme guidelines](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#metrics-theme-guidelines) to get more metrics theme implementation details.
 
