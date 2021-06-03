@@ -14,6 +14,12 @@ As a user, I want to pass direct links to project and/or project groups, so that
       - [Custom implementation approach](#custom-implementation)
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
+- [**Design**](#design)
+    - [Approach](#approach)
+      - [`NavigationNotifier` approach](#navigationnotifier-approach)
+      - [Route parameters approach](#route-parameters-approach)
+    - [Architecture](#architecture)
+    - [Prototyping](#prototyping)
 
 # Analysis
 > Describe the general analysis approach.
@@ -142,3 +148,68 @@ history.replaceState(null, 'metrics', '$uri');
 The `Deep Linking` feature implementation mostly includes the modification of existing components of the navigation system used in the Metrics Web application. Consider the following component diagram that demonstrates this:
 
 ![Deep links integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_integration_component_diagram.puml)
+
+# Design
+Let's review the implementation details in the next subsections.
+
+### Approach
+> Describe the implementation approach.
+
+There are two possible approaches of the `Deep Linking` feature integration to the Metrics Web application:
+- [`NavigationNotifier`](#navigationnotifier-approach) approach;
+- [`Route Parameters`](#route-parameters-approach) approach.
+
+In general, the listed approaches have the same `query parameters` parsing algorithm, which is considered in the next sections. 
+
+However, the `NavigationNotifier` and the `Route Parameters` approaches differ in the following aspects:
+- How the application applies the deep links (for example, how the Metrics Web application restores its state from a deep link);
+- How the application updates the URL and the query parameters without changing the browser history.
+
+Let's compare the listed approaches.
+
+#### `NavigationNotifier` approach
+The `NavigationNotifier` is a `ChangeNotifier` that holds the navigation logic of the Metrics Web application. 
+The `Page ChangeNotifiers` are `ChangeNotifier`s that are responsible for providing the data to display to specific `Page`s. For example, the `ProjectMetricsNotifier` provides the data to the `DashboardPage`, and the `ProjectGroupsNotifier` provides the data to the `ProjectGroupPage`.
+
+So, the main idea of this approach is to create a bidirectional connection between the `NavigationNotifier` and the `Page ChangeNotifiers`, which allows to:
+- Provide the deep links updates to `Page ChangeNotifiers`, which apply them (e.g., apply filtering criteria, searching values, etc.);
+- Provide the page deep links updates to `NavigationNotifier` (e.g., when the user applies a filter, searches, etc.), which updates the URL and the browser history.
+
+Consider the following component diagram that briefly describes this approach:
+
+![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links/diagrams/navigation_notifier_approach_component_diagram.puml)
+
+Let's sum up the pros and cons of this approach:
+
+Pros:
+- Well segregated responsibility between components;
+- Extensible approach - meaning that we can easily add new page-specific deep links or extend them;
+- Easy to test, because of the responsibility segregation.
+
+Cons:
+- Requires implementing new `ChangeNotifier`s and extending existing ones.
+
+#### Route Parameters approach
+The main idea of that approach is to pass the deep links directly to the specific pages that will handle them. When the page parameters change (e.g., in response to sorting, filtering, etc.), the pages use the `NavigationNotifier` to update the URL and the query parameters without changing the browser history.
+
+Consider the next component diagram that illustrates this approach:
+
+![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links/diagrams/route_parameters_approach_component_diagram.puml)
+
+Let's review the pros and cons of the `route parameters` approach:
+
+Pros:
+- Does not require implementing new or extending existing `ChangeNotifier`s.
+
+Cons:
+- Does not satisfy the existing architecture requirements (see this [section](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#ui-elements) of the ["Metrics Web Presentation Layer"](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) document); 
+- Harder to test;
+- High coupling;
+- Adding parameters handling may increase the page widgets size, and decrease the code readability.
+
+### Architecture
+> Fundamental structures of the feature and context (diagram).
+
+
+### Program
+> Detailed solution description to class/method level.

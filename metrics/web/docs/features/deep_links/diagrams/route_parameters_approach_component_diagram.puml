@@ -1,0 +1,22 @@
+@startuml route_parameters_approach_component_diagram
+
+skinparam componentStyle rectangle
+
+component Browser #A9DCDF
+component "Browser History" as History #A9DCDF
+
+package "Metrics Web" {
+    component "Navigator 2.0" as Navigator
+    component NavigationNotifier
+    component Page
+}
+
+History -left-> Browser : provides URLs
+Browser --> Navigator : URL
+Navigator --> NavigationNotifier : routeConfiguration \n (with query parameters)
+NavigationNotifier --> Page : page parameters
+NavigationNotifier -up-> History : updates the URL \n and query parameters
+
+Page --> NavigationNotifier : page parameters updates \n (e.g., sorting, filtering)
+
+@enduml

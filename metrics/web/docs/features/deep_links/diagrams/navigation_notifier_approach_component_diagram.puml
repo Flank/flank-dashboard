@@ -1,0 +1,25 @@
+@startuml navigation_notifier_approach_component_diagram
+
+skinparam componentStyle rectangle
+
+component Browser #A9DCDF
+component "Browser History" as History #A9DCDF
+
+package "Metrics Web" {
+    component "Navigator 2.0" as Navigator
+    component NavigationNotifier
+    component "Page ChangeNotifier" as PageNotifier
+    component Page
+}
+
+History -left-> Browser : provides URLs
+Browser --> Navigator : URL
+Navigator --> NavigationNotifier : routeConfiguration \n (with query parameters)
+NavigationNotifier --> PageNotifier : page parameters
+PageNotifier --> Page : updated data \n with parameters \n (filtering, sorting, etc.)
+NavigationNotifier -up-> History : updates the URL \n and query parameters
+
+Page --> PageNotifier : UI events \n (filtering, searching, etc.)
+PageNotifier --> NavigationNotifier : page parameters updates
+
+@enduml
