@@ -43,6 +43,15 @@ class DashboardPageParameters implements PageParameters {
     );
   }
 
+  ///
+  DashboardPageParameters copyWith({
+    String selectedProjectGroup,
+  }) {
+    return DashboardPageParameters(
+      selectedProjectGroup: selectedProjectGroup ?? this.selectedProjectGroup,
+    );
+  }
+
   @override
   Map<String, dynamic> toQueryParameters() {
     return {
@@ -175,7 +184,11 @@ class NavigationNotifier extends ChangeNotifier {
     String title = 'metrics',
     RouteConfiguration routeConfiguration,
   }) {
-    _navigationState.replaceState(data, title, routeConfiguration.toLocation());
+    _navigationState.replaceState(
+      data,
+      title,
+      routeConfiguration?.toLocation(),
+    );
   }
 
   /// Removes all underlying pages until the [predicate] returns `true`

@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/injector/widget/page_parameters_dispatcher.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
@@ -21,6 +22,7 @@ import 'package:metrics/common/presentation/routes/observers/toast_route_observe
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
+import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:provider/provider.dart';
 
@@ -96,7 +98,15 @@ class _MetricsAppState extends State<MetricsApp> {
                   builder: (context, child) {
                     return ScrollConfiguration(
                       behavior: MetricsScrollBehavior(),
-                      child: child,
+                      child: PageParametersDispatcher(
+                        child: child,
+                        pageNotifiers: [
+                          Provider.of<ProjectMetricsNotifier>(
+                            context,
+                            listen: false,
+                          ),
+                        ],
+                      ),
                     );
                   },
                   themeMode: isDark ? ThemeMode.dark : ThemeMode.light,

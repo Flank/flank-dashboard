@@ -210,6 +210,10 @@ class ProjectMetricsNotifier extends PageNotifier {
 
     _selectedProjectGroup = projectGroup;
 
+    _pageParametersUpdatesStream.add(_currentPageParameters.copyWith(
+      selectedProjectGroup: _selectedProjectGroup?.id,
+    ));
+
     notifyListeners();
   }
 
@@ -257,7 +261,7 @@ class ProjectMetricsNotifier extends PageNotifier {
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
 
-    _applyPageParameters(_pendingPageParameters);
+    _applyPageParameters(_currentPageParameters);
 
     notifyListeners();
   }
@@ -579,13 +583,20 @@ class ProjectMetricsNotifier extends PageNotifier {
     super.dispose();
   }
 
-  DashboardPageParameters _pendingPageParameters;
+  DashboardPageParameters _currentPageParameters;
+  final _pageParametersUpdatesStream =
+      BehaviorSubject<DashboardPageParameters>();
+
+  @override
+  // TODO: implement pageParametersUpdatesStream
+  Stream<PageParameters> get pageParametersUpdatesStream =>
+      _pageParametersUpdatesStream;
 
   @override
   void handlePageParameters(PageParameters parameters) {
     if (parameters is DashboardPageParameters) {
       if (isMetricsLoading) {
-        _pendingPageParameters = parameters;
+        _currentPageParameters = parameters;
         return;
       }
 
@@ -602,11 +613,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     final projectGroupId = projectGroupExists
         ? selectedProjectGroup
         : _allProjectsGroupDropdownItemViewModel.id;
+
     selectProjectGroup(projectGroupId);
   }
-
-  @override
-  // TODO: implement pageParametersUpdatesStream
-  Stream<PageParameters> get pageParametersUpdatesStream =>
-      throw UnimplementedError();
 }

@@ -41,7 +41,20 @@ class _PageParametersDispatcherState extends State<PageParametersDispatcher> {
     }
   }
 
-  void _pageParametersUpdatesListener(PageParameters pageParameters) {}
+  void _pageParametersUpdatesListener(PageParameters pageParameters) {
+    if (pageParameters == null) return;
+
+    print(pageParameters.runtimeType);
+
+    final newRouteConfiguration =
+        _navigationNotifier.currentConfiguration.copyWith(
+      queryParameters: pageParameters?.toQueryParameters(),
+    );
+
+    _navigationNotifier.replaceState(
+      routeConfiguration: newRouteConfiguration,
+    );
+  }
 
   @override
   void initState() {
@@ -56,6 +69,12 @@ class _PageParametersDispatcherState extends State<PageParametersDispatcher> {
         _navigationNotifier.pageParametersStream.listen(
       _pageParametersListener,
     );
+
+    for (final pageNotifier in widget.pageNotifiers) {
+      pageNotifier.pageParametersUpdatesStream.listen(
+        _pageParametersUpdatesListener,
+      );
+    }
   }
 
   @override
