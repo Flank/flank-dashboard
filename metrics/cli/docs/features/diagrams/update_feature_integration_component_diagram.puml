@@ -1,0 +1,24 @@
+@startuml update_feature_integration_component_diagram
+
+skinparam componentStyle rectangle
+
+legend top left
+    | Color | Arrow type |
+    |<#B70033>| Existing relationship |
+    |<#Green>| New relationship |
+endlegend
+
+component "Metrics Cli" as Cli
+component "Update"
+component "Deploy"
+component "Doctor"
+component Cloud
+
+Cli -[#Green]-> Update : uses
+Cli --> Deploy : uses
+Cli --> Doctor : uses
+
+Update -[#Green]-> Cloud : hosting
+Deploy --> Cloud : hosting
+
+@enduml
