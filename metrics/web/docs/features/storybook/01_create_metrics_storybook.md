@@ -14,8 +14,6 @@ A similar concept we want to apply to the Metrics Web Application.
     - [Landscape](#landscape)
         - [Using existing packages](#using-existing-packages)
         - [Manually create a Storybook from scratch](#manually-create-a-storybook-from-scratch)
-    - [Prototyping](#prototyping)
-    - [System modeling](#system-modeling)
 - [**Design**](#design)
     - [Architecture](#architecture)
     - [User Interface](#user-interface)
@@ -24,9 +22,9 @@ A similar concept we want to apply to the Metrics Web Application.
 
 # Analysis
 
-> Describe the general analysis approach.
+> Describe a general analysis approach.
 
-During the analysis stage, we should understand a [feasibility](#feasibility-study) to implement the feature along with a list of the given [requirements](#requirements). For this purposes we need to define a set of components, that we want to extract from the Metrics Web Application into the Metrics storybook - base widgets, Metrics specific widgets, the Metrics theme(To read more about widgets and theme in the Metrics Web Application consider the following link: [Widget structure organization](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#widget-creation-guidelines)). After that we should consider examples of existing component libraries and packages for Flutter projects, that provide a possibility to create similar UI libraries.
+During the analysis stage, we should understand a [feasibility](#feasibility-study) to implement the feature along with a list of the given [requirements](#requirements). For this purpose, we need to define a set of components, that we want to extract from the Metrics Web Application into the Metrics storybook. After that, we should consider examples of existing component libraries and packages for Flutter projects, that provide a possibility to create similar UI libraries.
 
 Based on the analysis, we should make a decision about an optimal approach that satisfies the [requirements](#requirements) for the Metrics storybook.
 
@@ -34,11 +32,11 @@ Based on the analysis, we should make a decision about an optimal approach that 
 
 > A preliminary study of the feasibility of implementing this feature.
 
-First of all, the great purpose of the Metrics storybook is that each widget and story(a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX.
+First of all, the great purpose of the Metrics storybook is that each widget and story (a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX.
 
 The storybook application can be shared with and commented on by designers so that they can add their input regarding the implementation of the designs.
 
-Another group that can use this feature is clients. Storybook makes it easy to show pieces of the software in order to keep the client in the loop. Even small pieces of UI can be shared and made available for feedback, preventing longer periods without any deliverables.
+Another group that can use this feature is clients. Storybook makes it easy to show pieces of the software to keep the client in the loop. Even small pieces of UI can be shared and made available for feedback, preventing longer periods without any deliverables.
 
 As you write your components in isolation, without regard to business logic, you can potentially put a greater emphasis on code quality and reusability.
 
@@ -51,10 +49,11 @@ Metrics storybook creating allows developers to work in parallel on widgets and 
 - Displays a set of Metrics widgets.
 - An ability to manage themes.
 - Contains a tab with widget documentation.
-- Contains a list of inputs to change widgets' appearance(height, width, color, etc.).
+- Contains a list of inputs to change widgets' appearance (height, width, color, etc.).
 - Contains the Metrics color palette to view all project's colors.
 - An ability to search across components.
 - Visually groups widgets by their types.
+- Change viewport size (view widgets on different devices).
 
 ### Landscape
 
@@ -72,14 +71,17 @@ If we add only base widgets to the storybook, we can accidentally duplicate the 
 
 That's why our choice is to take out base widgets together with common ones.
 
-According to the [widget structure organization document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#applying-a-theme-to-a-widget-appearance) common widgets use the Metrics theme. Thus to display these widgets in the storybook correctly we should move the Metrics theme along with them.
-
-The disadvantage of moving common widgets is the loss of the ability to customize them as base widgets.
+According to the [widget structure organization document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#applying-a-theme-to-a-widget-appearance) common widgets use the Metrics theme. Thus to display these widgets in the storybook correctly we should move the Metrics theme along with them. The disadvantage of moving common widgets is the loss of the ability to customize them as base widgets.
 
 Now, when we've determined a set of components to extract to the storybook we can investigate existing solutions that provide the logic to showcase widgets.
 
-There are two approaches to create the storybook for Flutter widgets - using existing packages or creating a UI from scratch.
+There are two approaches to create the storybook for Flutter widgets - [using existing packages](#using-existing-packages) or [creating a UI from scratch](#Manually-create-a-storybook-from-scratch).
+
 #### Using existing packages
+
+At this time, there are only a few packages, that provide the functionality to write Storybook for Flutter widgets.
+
+Let's take a closer look at the packages:
 
 1. [Storyboard](https://pub.dev/packages/storyboard)
 
@@ -94,13 +96,13 @@ Cons:
 - It is more a simple boilerplate rather than a storybook project.
 - Not frequent updates to code.
 - Managing themes are done on our own.
-- Don't have a docs tab that supports MDX (or similar) with the documentation about the widget.
-- Don't have a search across components.
-- It not so popular (have only a few stars on GitHub).
+- Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
+- Does not have a search across components functionality.
+- It's not so popular (has only a few stars on GitHub).
 
 2. [Monarch](https://pub.dev/packages/monarch)
 
-Provides a sandbox to build Flutter widgets in an isolation. The isolation is provided through `Stories`. It is a function that returns a `Widget`. A story captures a rendered state of a Flutter widget.
+Provides a sandbox to build Flutter widgets in an isolation. The isolation is provided through `Stories` - a function that returns a `Widget`. A story captures a rendered state of a Flutter widget.
 
 To make it work, we should install the Xcode and download the Monarch binary.
 
@@ -115,15 +117,15 @@ Cons:
 - Requires to download the Monarch binary.
 - Requires to install XCode.
 - Does not contain a panel with inputs to change widgets' appearance.
-- Does not support Web as a device target, to test UI components.
+- Does not support Web as a device target to test UI components.
 - Does not have an ability to group widgets by their types (base/common).
-- Don't have a docs tab that supports MDX (or similar) with the documentation about the widget.
-- Require to update a Dart version to 2.12.0 or higher.
-- It not so popular (have only a few stars on GitHub).
+- Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
+- Requires to update a Dart version to 2.12.0 or higher.
+- It's not so popular (has only a few stars on GitHub).
 
 3. [Dashbook](https://pub.dev/packages/dashbook)
 
-The package has a similar principle for isolate and previews the list of widgets.
+Dashbook is a UI development tool for Flutter, it allows showcasing widgets. It supports both mobile and web. The package has a similar principle for isolating and previewing a list of widgets.
 
 Pros:
 
@@ -134,10 +136,11 @@ Pros:
 Cons:
 
 - Provides only a plain UI.
-- On the preview screen in Storybook, users cannot select the viewport size.
-- Don't have a docs tab that supports MDX (or similar) with the documentation about the widget.
-- Don't have a search across components.
-- It not so popular (have only a few stars on GitHub).
+- On the preview screen, users cannot select the viewport size.
+- Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
+- Does not have a search across components functionality.
+- It's not so popular (has only a few stars on GitHub).
+- Requires to update a Dart version to 2.12.0 or higher.
 
 4. [Storybook_flutter](https://pub.dev/packages/storybook_flutter)
 
@@ -152,12 +155,14 @@ Pros:
 Cons:
 
 - Provides only a plain UI.
-- Don't have a docs tab that supports MDX (or similar) with the documentation about the widget.
-- Don't have a search across components.
-- Require to update a Dart version to 2.12.0 or higher.
-- It not so popular (have only a few stars on GitHub).
+- Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
+- Does not have a search across components functionality.
+- Requires to update a Dart version to 2.12.0 or higher.
+- It's not so popular (has only a few stars on GitHub).
 
 #### Manually create a Storybook from scratch
+
+Another solution is to provide a completely new Flutter project with the [required functionality](#requirements).
 
 Pros:
 
@@ -165,7 +170,7 @@ Pros:
 
 Cons:
 
-- Requires designing a new Storybook UI.
+- Requires designing a new UI for the Metrics storybook.
 - Takes extra time to realize the new UI.
 
 #### Conclusion
@@ -178,8 +183,7 @@ The described above packages do not suit us for several reasons:
 
 - The UI in these packages is, also very basic, without thoughtful design and UX.
 
-Summing up the consideration of approaches, and given the above explanations, the best solution would be to create this library from [scratch](#manual-create-a-storybook-from-scratch).
-
+Summing up the consideration of approaches and given the above explanations, the best solution would be to create this library from [scratch](#manually-create-a-storybook-from-scratch).
 
 # Design
 
