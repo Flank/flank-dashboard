@@ -169,6 +169,7 @@ Let's compare the listed approaches.
 
 #### `NavigationNotifier` approach
 The `NavigationNotifier` is a `ChangeNotifier` that holds the navigation logic of the Metrics Web application. 
+
 The `Page ChangeNotifiers` are `ChangeNotifier`s that are responsible for providing the data to display to specific `Page`s. For example, the `ProjectMetricsNotifier` provides the data to the `DashboardPage`, and the `ProjectGroupsNotifier` provides the data to the `ProjectGroupPage`.
 
 So, the main idea of this approach is to create a bidirectional connection between the `NavigationNotifier` and the `Page ChangeNotifiers`, which allows to:
@@ -177,7 +178,7 @@ So, the main idea of this approach is to create a bidirectional connection betwe
 
 Consider the following component diagram that briefly describes this approach:
 
-![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links/diagrams/navigation_notifier_approach_component_diagram.puml)
+![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/navigation_notifier_approach_component_diagram.puml)
 
 Let's sum up the pros and cons of this approach:
 
@@ -194,7 +195,7 @@ The main idea of that approach is to pass the deep links directly to the specifi
 
 Consider the next component diagram that illustrates this approach:
 
-![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links/diagrams/route_parameters_approach_component_diagram.puml)
+![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/route_parameters_approach_component_diagram.puml)
 
 Let's review the pros and cons of the `route parameters` approach:
 
