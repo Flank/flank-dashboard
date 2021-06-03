@@ -208,9 +208,10 @@ Cons:
 - High coupling;
 - Adding parameters handling may increase the page widgets size, and decrease the code readability.
 
+Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
+
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
-
 
 ### Program
 > Detailed solution description to class/method level.

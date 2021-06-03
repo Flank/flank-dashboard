@@ -1,0 +1,52 @@
+@startuml
+
+abstract class PageNotifier {
+    + pageParametersUpdatesStream : Stream<PageParameters>
+
+    + handlePageParameters(PageParameters parameters) : void
+}
+
+class PageParametersDispatcher {
+    + pageNotifiers : List<PageNotifier>
+    + child : Widget
+}
+
+class MetricsPage<T> {}
+
+class MetricsPageFactory {}
+
+class RouteConfiguration {
+    + name : RouteName
+    + path : String
+    + authorizationRequired : bool
+    + queryParameters : Map<String, dynamic>
+
+    + toLocation() : String
+}
+
+class RouteConfigurationFactory {}
+
+abstract class PageParameters {}
+
+class DashboardPageParameters {}
+
+class NavigationNotifier {}
+
+package common {
+    package presentation {
+        package state {
+            class ProjectMetricsNotifier {
+            }
+        }
+    }
+}
+
+PageNotifier --|> ChangeNotifier
+
+ProjectMetricsNotifier --|> PageNotifier
+
+MetricsPageFactory --> MetricsPage : creates
+
+RouteConfigurationFactory --> RouteConfiguration : creates
+
+@enduml
