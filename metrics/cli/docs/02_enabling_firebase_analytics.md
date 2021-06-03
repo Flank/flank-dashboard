@@ -1,13 +1,11 @@
 # Enabling Firebase Analytics
-
-## Motivation
-> What problem is this project solving?
+> Feature description / User story.
 
 The Metrics CLI tool's goal is to deploy a Metrics project to Firebase from scratch. Since the Metrics Web application uses Firebase Analytics, and the Firebase Analytics is disabled by default, we should find an approach to enabling it.
 
 Therefore, the document's goal is to investigate all approaches of enabling Firebase analytics for a newly created Firebase project, to make the Metrics CLI the most usable.
 
-### References
+## References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Firebase Management API](https://firebase.google.com/docs/projects/api/reference/rest)
@@ -16,14 +14,24 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [gcloud CLI auth](https://cloud.google.com/sdk/gcloud/reference/auth)
 
-## Analysis
+## Contents
 
-### Process
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+     - [Manual](#manual)
+     - [Using an API](#using-an-api)
+     - [Decision](#decision)
+
+# Analysis
+> Describe a general analysis approach.
 
 The analysis begins with an overview of enabling Firebase Analytics approaches during Metrics Web application deployment.
 It provides the main pros and cons and a short description of each approach we've investigated.
 
 The research should conclude with a chosen approach and a short description of why did we choose such an approach.
+
+### Landscape
+> Look for existing solutions in the area.
 
 #### Manual
 
@@ -66,7 +74,7 @@ Cons:
 - requires complicated steps from the user side (configure OAuth consent screen, configure billing account);
 - does not allow automating the Firebase Analytics enabling process.
 
-### Decision
+#### Decision
 
 As we've analyzed above, the [API method](#using-an-api) does not allow us to automate the Firebase Analytics enabling process for now, so
 we are going to use the [manual method](#manual) since it provides a more clean and fast way of enabling Firebase Analytics.

@@ -1,5 +1,4 @@
 # Using Dart in the Firebase Cloud Functions 
-
 > Feature description / User story.
 
 As we want to add more server-side processing to the Cloud Firestore, we should explore the possibility of writing the Cloud Functions using the Dart language.
@@ -18,13 +17,11 @@ As we want to add more server-side processing to the Cloud Firestore, we should 
       - [Cloud Function deployment](#cloud-function-deployment)
 
 # Analysis
-
 > Describe general analysis approach.
 
 During the analysis stage, we are going to investigate the packages providing an ability to write Cloud Functions using the Dart programming language and chose the most suitable one for us. Also, we'll provide a simple example explaining the way of creating a Cloud Function using the Dart lang and deploying it to the Firebase. 
 
 ### Feasibility study
-
 > A preliminary study of the feasibility of implementing this feature.
 
 Since the `Dart` code could be compiled to the `JavaScript` code, we are able to write a Cloud Functions using `Dart`. Another problem we are facing is the Dart package providing an API for writing the Cloud Functions. There are few packages providing this functionality: 
@@ -33,7 +30,6 @@ Since the `Dart` code could be compiled to the `JavaScript` code, we are able to
  - [functions_framework](https://pub.dev/packages/functions_framework)
 
 ### Requirements
-
 > Define requirements and make sure that they are complete.
 
 1. Possibility to create Cloud Functions for Firebase.
@@ -41,7 +37,6 @@ Since the `Dart` code could be compiled to the `JavaScript` code, we are able to
 3. Provides an ability to write Cloud Functions using Dart.
 
 ### Landscape
-
 > Look for existing solutions in the area.
 
 At this time, there are only a few packages, that allow writing Cloud Functions using the Dart language. All of them are in the early development stage, which means not all features are ready to use or provided.
@@ -79,7 +74,6 @@ Cons:
 We've considered and analyzed the described above packages and chose the `firebase-functions-interop`, as it satisfies our [requirements](#requirements).
 
 ### Prototyping
-
 > Create a simple prototype to confirm that implementing this feature is possible.
 
 #### Cloud Function creation

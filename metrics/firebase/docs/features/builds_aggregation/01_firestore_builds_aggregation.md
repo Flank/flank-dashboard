@@ -1,4 +1,4 @@
-# Firestore Builds Aggregation design
+# Firestore Builds Aggregation
 > Feature description / User story.
 
 Data aggregation is the process of gathering data and presenting it in a summarized format. The data may be gathered from multiple data sources with the intent of combining these data sources into a summary for public reporting or statistical analysis. For example, raw data can be aggregated over a given period to provide statistics such as average, minimum, maximum, sum, and count. 
@@ -8,6 +8,12 @@ By aggregating data, it is easier to identify patterns and trends that would not
 As for the `Metrics` application - [builds per week](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrated a total count of performed builds by the last 7 days.
 
 The same aggregation definition we can apply to Firebase aggregations.
+
+## References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
+- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
 
 ## Contents
 
@@ -34,12 +40,6 @@ The same aggregation definition we can apply to Firebase aggregations.
       - [onBuildUpdated](#onBuildUpdated)
       - [Testing](#Testing)
 
-## References
-> Link to supporting documentation, GitHub tickets, etc.
-
-- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
-- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
-
 # Analysis
 > Describe a general analysis approach.
 
@@ -59,8 +59,9 @@ This solution is okay if a project has not many builds, but over time, the numbe
 ### Requirements
 > Define requirements and make sure that they are complete.
 
-- Should reduce Firestore usage.
-- Possibility to implement this approach using [the firebase-functions-interop package](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md#the-firebase-functions-interop-package).
+- Reduces Firestore usage.
+- Processes aggregation calculations.
+- Works correctly in case of concurrent document edits.
 
 ### Landscape
 > Look for existing solutions in the area.
@@ -148,7 +149,6 @@ The [Distributed counter](#distributed-counter) is designed for the heavier load
 Considering all pros and cons [FieldValue.increment](#FieldValue.increment) seems to be a great approach to start with aggregations due to the absence of reads for increments and providing sufficient limits for writes.
 
 # Design
-
 > Explain and diagram the technical design.
 
 The Firestore builds aggregation implementation requires changes in the Firestore Database and Firestore Cloud Functions. The design describes new collections we should create and a list of security rules we should apply. There is also information about Firestore Cloud Function triggers.
@@ -159,13 +159,11 @@ The Firestore builds aggregation implementation requires changes in the Firestor
 The section contains information about the main purposes of new collections, their document structures with field descriptions, and a set of security rules.
 
 #### `build_days`
-
 > Explain the main purpose of the collection.
 
 The first collection we should create is the `build_days`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
 
 #### Document Structure
-
 > Explain the structure of the documents under this collection.
 
 We should produce a composite document identifier that consists of a project's id and a day (represented as milliseconds since the epoch in a UTC) this aggregation document belongs to. We can use this identifier to easily update a value of the `build_days` document.
@@ -199,7 +197,6 @@ Let's take a closer look at the document's fields:
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
 #### Security Rules
-
 > Explain the Firestore Security Rules for this collection.
 
 Every authenticated user can read the documents from the `build_days` collection, but no one can write to this collection. Let's consider the security rules for this collection in more details:
@@ -210,13 +207,11 @@ Every authenticated user can read the documents from the `build_days` collection
   - authenticated users **cannot** create, update, delete this document.
 
 #### `tasks`
-
 > Explain the main purpose of the collection.
 
 The collection stands for a list of delayed jobs and lets you separate out pieces of work that can be performed independently, outside of your main application flow. The collection's fields contain all required information for each job to perform required actions.
 
 #### Document Structure
-
 > Explain the structure of the documents under this collection.
 
 The collection's document has the following structure:
@@ -246,7 +241,6 @@ For our purposes, the following code strings we can create, related to the funct
 Later, using the described above information we can fix counters inside the `build_days` collection.
 
 #### Security Rules
-
 > Explain the Firestore Security Rules for this collection.
 
 No one can read from or write to this collection. Let's consider the security rules for this collection in more details:
@@ -263,7 +257,6 @@ When we've created collections and applied rules for them, we should create the 
 Let's review each Cloud Function we need for this feature separately: 
 
 #### onBuildAdded
-
 > Explain the main purpose of the trigger.
 
 If we want to provide builds aggregations, we need to process calculations in reaction to added build. For this purpose, we should create the `onCreate` function trigger on the `build` collection.
@@ -286,7 +279,6 @@ The following sequence diagram shows the overall process of how the `onBuildAdde
 ![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_create_builds_aggregation_sequence_diagram.puml)
 
 #### onBuildUpdated
-
 > Explain the main purpose of the trigger.
 
 The second trigger - `onUpdate`, should handle the logic to increment or decrement the builds count, related to changes in the build status. Also, it should increment the `successfulBuildsDuration` value if a new build status is `successful`. For example, if the build with an `inProgress` status changes to `successful`, we should increment `successful` count of the document, decrement the `inProgress` count and increment the `successfulBuildsDuration`. 
@@ -306,7 +298,6 @@ The following sequence diagram shows the overall process of how the `onBuildUpda
 ![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/firebase/docs/features/builds_aggregation/diagrams/firestore_update_builds_aggregation_sequence_diagram.puml)
 
 #### Testing
-
 > How will the functions be tested?
 
 The described above functions we will test using the [test](https://pub.dev/packages/test) package, and perform unit-testing the functions' event handlers.

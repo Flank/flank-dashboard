@@ -1,5 +1,4 @@
 # Firestore emulator for driver tests
-
 > Feature description / User story.
 
 At the moment, integration tests run inside the production environment (e.g. using production Firestore). This approach carries the risk of accidental data loss or alteration. Therefore, we should use the test environment to run the tests.

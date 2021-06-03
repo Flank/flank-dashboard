@@ -1,15 +1,11 @@
 # Animation Library Approaches
-
-## Motivation
-
-> What problem is this project solving?
+> Feature description / User story.
 
 To improve the user experience of the Metrics Web Application, we need to add some animated visual effects.
 
 Therefore, the document's goal is to investigate the main approaches of animations displaying in Flutter considering both web and mobile and select the best approach for the Metrics Web Application.
 
 ## References
-
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Flutter guide: Introduction to animations](https://flutter.dev/docs/development/ui/animations).
@@ -18,13 +14,24 @@ Therefore, the document's goal is to investigate the main approaches of animatio
 - [Rive app](https://rive.app/).
 - [Rive package](https://pub.dev/packages/rive).
 
-## Analysis
+## Contents
 
-### Process
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+     - [Manual](#manual)
+     - [Lottie](#lottie)
+     - [Rive](#rive)
+     - [Decision](#decision)
+
+# Analysis
+> Describe a general analysis approach.
 
 This analysis begins with the comparison of main approaches to display animations in the Metrics Web Application. It provides the main pros and cons and a short description of each approach we've investigated.
 
 The research should conclude with a chosen approach and a short description of why did we choose such an approach.
+
+### Landscape
+> Look for existing solutions in the area.
 
 #### Manual
 
@@ -128,6 +135,6 @@ Cons:
 - Needs additional setup for testing.
 
 
-### Decision
+#### Decision
 
 As we've analyzed above the `Lottie` library is not suitable for mobile at the moment, so we are going to use the `Rive` package to render the animations for the Metrics Web Application.
