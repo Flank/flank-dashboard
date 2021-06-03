@@ -19,7 +19,7 @@ As a user, I want to pass direct links to project and/or project groups, so that
       - [`NavigationNotifier` approach](#navigationnotifier-approach)
       - [Route parameters approach](#route-parameters-approach)
     - [Architecture](#architecture)
-    - [Prototyping](#prototyping)
+    - [Program](#program)
 
 # Analysis
 > Describe the general analysis approach.
