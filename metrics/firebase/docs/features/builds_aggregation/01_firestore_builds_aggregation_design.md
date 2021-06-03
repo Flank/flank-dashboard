@@ -1,38 +1,171 @@
 # Firestore Builds Aggregation design
+> Feature description / User story.
 
-## Introduction
+Data aggregation is the process of gathering data and presenting it in a summarized format. The data may be gathered from multiple data sources with the intent of combining these data sources into a summary for public reporting or statistical analysis. For example, raw data can be aggregated over a given period to provide statistics such as average, minimum, maximum, sum, and count. 
+
+By aggregating data, it is easier to identify patterns and trends that would not be immediately visible. Quick access to information helps make better decisions and improve product services and communications.
+
+As for the `Metrics` application - [builds per week](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrated a total count of performed builds by the last 7 days.
+
+The same aggregation definition we can apply to Firebase aggregations.
+
+## Contents
+
+- [**Analysis**](#analysis)
+    - [Feasibility study](#feasibility-study)
+    - [Requirements](#requirements)
+    - [Landscape](#landscape)
+      - [Loading all documents](#loading-all-documents)
+      - [Aggregating data using the Cloud Functions](#aggregating-data-using-the-cloud-functions)
+        - [Firebase transactions](#firebase-transactions)
+        - [FieldValue.increment](#FieldValue.increment)
+        - [Distributed counter](#distributed-counter)
+      - [Decision](#decision)   
+- [**Design**](#design)
+    - [Database](#database)
+      - [build_days](#build_days)
+        - [Document Structure](#document-structure)
+        - [Security Rules](#security-rules)
+      - [tasks](#tasks)
+        - [Document Structure](#document-structure-1)
+        - [Security Rules](#security-rules-1)
+    - [Program](#program)
+      - [onBuildAdded](#onBuildAdded)
+      - [onBuildUpdated](#onBuildUpdated)
+      - [Testing](#Testing)
+      
+## References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
+- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
+
+# Analysis
+> Describe a general analysis approach.
+
+During the analysis stage, we should understand a [feasibility](#feasibility-study) to implement the `builds aggregation` to reduce Firebase usage. For this purpose, we should investigated a possibility to provide some aggregation calculations using the back-end, provided by the Firebase using the Cloud Functions.
+
+Based on the analysis, we should make a decision about an optimal approach that satisfies the [requirements](#requirements) for the Firestore builds aggregation.
+
+### Feasibility study
+> A preliminary study of the feasibility of implementing this feature.
+
+If we want to quickly find documents in large collections, we should use Firebase advanced queries. Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g.g. builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation somehow, because of the Firestore limitations.
 
 For now, to make builds aggregations we should load all builds and process calculations on the client, because Cloud Firestore does not support the aggregation queries.
 
 This solution is okay if a project has not many builds, but over time, the number of builds growth and it will pull along increase the number of reads from the database and leads to heavy load/price implications.
 
-To resolve the described problem, we've investigated a possibility to provide some aggregation calculations using the back-end, provided by the Firebase using the Cloud Functions. See [Firebase Metrics Aggregation](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md) document for more details.
+### Requirements
+> Define requirements and make sure that they are complete.
 
-## References
+- Should reduce Firestore usage.
+- Possibility to implement this approach using [the firebase-functions-interop package]
+(https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md#the-firebase-functions-interop-package).
 
-> Link to supporting documentation, GitHub tickets, etc.
+### Landscape
+> Look for existing solutions in the area.
 
-- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
-- [Firebase aggregation](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/02_firebase_metrics_aggregation.md)
-- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md)
+There are a few approaches to get data for the aggregated metrics:
+- Load all collection's documents and provide aggregation using the client.
+- Aggregate data in the Firestore Cloud Functions using:
+  - `transaction`;
+  - `FieldValue.increment`;
+  - `distributed counter`.
 
-## Design
+Let's take a closer look at them.
+
+#### Loading all documents
+
+At this time, for the aggregated metric `builds per week`, we download all the builds of the project for the last 7 days using Firebase advanced query, count the number of builds, and display the information on the `Metrics` dashboard.
+
+Pros:
+- Easy to implement.
+
+Cons:
+- With an increase in the number of builds, the number of reads from the database grows respectively. It leads to heavy load/price implications.
+- Increases the time of calculating the aggregation metric.
+
+#### Aggregating data using the Cloud Functions
+
+With Cloud Functions, we can move our aggregation logic to the cloud and process calculations on the back-end, provided by Firebase.
+
+There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#fieldValue.increment) method or create a [Distributed counter](#distributed-counter).
+
+##### Firebase transactions
+
+The transaction is a set of read and write operations on one or more documents. Transactions are useful when we want to update a field's value based on its current value, or the value of some other field.
+
+Pros:
+- Code runs in the cloud, so the client is less loaded.
+- In the case of a concurrent edit, the entire transaction runs again.
+
+Cons:
+- There is a maximum count of transaction reruns, that's why some transactions may fail.
+- An extra read a field's value before updating.
+- Has a maximum writes and time [limits](https://firebase.google.com/docs/firestore/quotas#writes_and_transactions).
+- Requires a lot of code to implement a simple logic(e.g.g. counters).
+
+##### FieldValue.increment
+
+The [FieldValue.increment](https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue#static-increment) method gives the ability to increment (or decrement) numeric values directly in the database.
+
+Keep in mind, that documents are still limited to a [sustained write limit](https://firebase.google.com/docs/firestore/quotas#soft_limits). Although it has limits for document writes to 1 per second as a default soft limit, we can increase this number to 500 by creating the [indexed field](https://firebase.google.com/docs/firestore/query-data/indexing).
+
+Pros:
+- Easy to implement.
+- Requires less code to implement compared to transactions.
+- Provide a solution to prevent concurrent edit problem.
+
+Cons:
+- Limited by the document's write limit.
+
+##### Distributed counter
+
+As we've described above, the [FieldValue.increment](#FieldValue.increment) method has a limitation to one write per second per document. If we have a more frequent counter updates, we should create a distributed counter.
+
+It is a document with a subcollection of "shards", and the value of the counter is the sum of the value of the shards. 
+
+To increment the counter, choose a random "shard" and increment the count. To get the total count, query for all "shards" and sum their count fields.
+
+With that, we can increase our write document limit to the count of "shards"(e.g.g if we have 50 shards, that means 50x more writes compare with the simple increment method).
+
+There are certain disadvantages of this approach. With too few shards, some transactions may have to retry before succeeding, which will slow writes. With too many shards, reads become slower and more expensive. Also, as we have a subcollection of "shards" that we must load, so the cost of reading a counter value increases.
+
+Pros:
+- Provides an ability to increase the document write limit.
+
+Cons:
+- The number of shards controls the performance of the distributed counter.
+- The cost of reading a counter value increases linearly with the number of shards.
+- Requires a lot of code to implement.
+
+#### Decision
+
+Using the "transaction approach", reads are required - thus producing more load/billing than [FieldValue.increment](#FieldValue.increment). 
+
+The [Distributed counter](#distributed-counter) is designed for the heavier load than we currently estimate and could be a good scaling approach if something changes.
+
+Considering all pros and cons [FieldValue.increment](#FieldValue.increment) seems to be a great approach to start with aggregations due to the absence of reads for increments and providing sufficient limits for writes.
+
+# Design
 
 > Explain and diagram the technical design.
 
 The Firestore builds aggregation implementation requires changes in the Firestore Database and Firestore Cloud Functions. The design describes new collections we should create and a list of security rules we should apply. There is also information about Firestore Cloud Function triggers.
 
-### Firestore
+### Database
+> How relevant data will be persisted.
 
 The section contains information about the main purposes of new collections, their document structures with field descriptions, and a set of security rules.
 
-### `build_days`
+#### `build_days`
 
 > Explain the main purpose of the collection.
 
 The first collection we should create is the `build_days`. It holds builds grouped by the `status` and `day`. Each status contains the count of builds, created per day. 
 
-#### Document Structure
+##### Document Structure
 
 > Explain the structure of the documents under this collection.
 
@@ -66,7 +199,7 @@ Let's take a closer look at the document's fields:
 | `successfulBuildsDuration` | A total duration of successful builds. |
 | `day`   | A timestamp that represents the day start this aggregation belongs to. |
 
-#### Security Rules
+##### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
 
@@ -77,13 +210,13 @@ Every authenticated user can read the documents from the `build_days` collection
   - authenticated users **can** read;
   - authenticated users **cannot** create, update, delete this document.
 
-### `tasks`
+#### `tasks`
 
 > Explain the main purpose of the collection.
 
 The collection stands for a list of delayed jobs and lets you separate out pieces of work that can be performed independently, outside of your main application flow. The collection's fields contain all required information for each job to perform required actions.
 
-#### Document Structure
+##### Document Structure
 
 > Explain the structure of the documents under this collection.
 
@@ -113,7 +246,7 @@ For our purposes, the following code strings we can create, related to the funct
 
 Later, using the described above information we can fix counters inside the `build_days` collection.
 
-#### Security Rules
+##### Security Rules
 
 > Explain the Firestore Security Rules for this collection.
 
@@ -123,9 +256,10 @@ No one can read from or write to this collection. Let's consider the security ru
   - not authenticated users **cannot** read, create, update, delete this document;
   - authenticated users **cannot** read, create, update, delete this document.
 
-### Firestore Cloud Functions
+### Program
+> Detailed solution description to class/method level.
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/analysis/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
 
 Let's review each Cloud Function we need for this feature separately: 
 

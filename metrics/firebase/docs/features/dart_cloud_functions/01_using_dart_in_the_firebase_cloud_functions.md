@@ -4,6 +4,19 @@
 
 As we want to add more server-side processing to the Cloud Firestore, we should explore the possibility of writing the Cloud Functions using the Dart language.
 
+## Contents
+
+- [**Analysis**](#analysis)
+    - [Feasibility study](#feasibility-study)
+    - [Requirements](#requirements)
+    - [Landscape](#landscape)
+      - [The firebase-functions-interop package](#the-firebase-functions-interop-package)
+      - [The functions_framework package](#the-functions_framework-package)
+      - [Decision](#decision)
+    - [Prototyping](#prototyping)
+      - [Cloud Function creation](#cloud-function-creation)
+      - [Cloud Function deployment](#cloud-function-deployment)
+
 # Analysis
 
 > Describe general analysis approach.
