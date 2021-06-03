@@ -4,7 +4,7 @@
 
 Storybook in JavaScript world is a tool for UI development. It makes development faster and easier in an isolated manner. It allows to browse a components library, view the different states, and interactively develop and test them.
 
-A similar concept we want to apply to the Metrics Web Application.
+A similar concept we want to apply to the Metrics Storybook.
 
 ## Contents
 
