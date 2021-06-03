@@ -14,8 +14,8 @@ At the moment, integration tests run inside the production environment (e.g. usi
     - [User Interface](#user-interface)
     - [Database](#database)
     - [Program](#program)
-        -[Configure the test runner](#configure-the-test-runner)
-        -[Configure the application](#configure-the-application)
+        - [Configure the test runner](#configure-the-test-runner)
+        - [Configure the application](#configure-the-application)
 
 # Analysis
 > Describe a general analysis approach.

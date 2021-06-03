@@ -16,13 +16,13 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 
 ## Contents
 
-- [**Analysis**](#analysis)
+- [**Analysis**](#analysis)    
     - [Landscape](#landscape)
-     - [Manual](#manual)
-     - [Using an API](#using-an-api)
-      - [Enable Email & Password provider](#enable-email--password-provider)
-      - [Enable Google sign-in provider](#enable-google-sign-in-provider)
-     - [Decision](#decision)
+        - [Manual](#manual)
+        - [Using an API](#using-an-api)
+          - [Enable Email & Password provider](#enable-email--password-provider)
+          - [Enable Google sign-in provider](#enable-google-sign-in-provider)
+        - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.

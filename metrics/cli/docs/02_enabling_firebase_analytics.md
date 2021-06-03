@@ -18,9 +18,9 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 
 - [**Analysis**](#analysis)
     - [Landscape](#landscape)
-     - [Manual](#manual)
-     - [Using an API](#using-an-api)
-     - [Decision](#decision)
+        - [Manual](#manual)
+        - [Using an API](#using-an-api)
+        - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.

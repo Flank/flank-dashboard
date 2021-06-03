@@ -18,10 +18,10 @@ Therefore, the document's goal is to investigate the main approaches of animatio
 
 - [**Analysis**](#analysis)
     - [Landscape](#landscape)
-     - [Manual](#manual)
-     - [Lottie](#lottie)
-     - [Rive](#rive)
-     - [Decision](#decision)
+      - [Manual](#manual)
+      - [Lottie](#lottie)
+      - [Rive](#rive)
+      - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.
