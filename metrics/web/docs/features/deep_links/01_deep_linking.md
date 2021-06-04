@@ -209,9 +209,9 @@ Cons:
 
 Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
 
-Once we've figured out the desired implementation approach, let's proceed to the next subsections describing the required changes needed to implement the `Deep Linking` in the Metrics Web application.
+Once we've chosen the desired implementation approach, let's proceed to the next subsections describing the required changes needed to implement the `Deep Linking` in the Metrics Web application.
 
-First, we should be able to parse the `query parameters` from the URL, and update the URL with the `query parameters`. When we're able to do that, we should create a unified mechanism to apply the deep links in the application.
+First, we should be able to parse the `query parameters` from the URL, and update the URL with the `query parameters`. When we're able to do that, we should create a unified mechanism to apply the deep links in the Metrics Web application.
 
 Consider the following subsections that describe each point:
 - [Parsing the deep links]()

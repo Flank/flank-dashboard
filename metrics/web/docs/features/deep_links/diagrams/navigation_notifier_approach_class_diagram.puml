@@ -11,21 +11,6 @@ class PageParametersDispatcher {
     + child : Widget
 }
 
-class MetricsPage<T> {}
-
-class MetricsPageFactory {}
-
-class RouteConfiguration {
-    + name : RouteName
-    + path : String
-    + authorizationRequired : bool
-    + queryParameters : Map<String, dynamic>
-
-    + toLocation() : String
-}
-
-class RouteConfigurationFactory {}
-
 abstract class PageParameters {
     + toQueryParameters() : Map<String, dynamic>
 }
@@ -34,15 +19,48 @@ class DashboardPageParameters {
     + selectedProjectGroup : String
 }
 
-class NavigationNotifier {}
+package common.presentation {
+    package navigation {
+        class MetricsRouteInformationParser {
+            + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
+        }
 
-package common {
-    package presentation {
-        package state {
-            class ProjectMetricsNotifier {
+        package metrics_page {
+            class MetricsPage<T> {}
+
+            class MetricsPageFactory {
+                + create(configuration : RouteConfiguration)
             }
         }
+
+        package route_configuration {
+            class RouteConfiguration {
+                + name : RouteName
+                + path : String
+                + authorizationRequired : bool
+                + queryParameters : Map<String, dynamic>
+
+                + props() : List<Object>
+                + copyWith() : RouteConfiguration
+                + toUrl() : String
+            }
+
+            class RouteConfigurationFactory {
+                + create(uri: Uri) : RouteConfiguration
+                - _getRoute(routeName: String)
+            }
+        }
+
+        package state {
+            class NavigationNotifier {}
+        }
     }
+
+
+}
+
+package dashboard.presentation.state {
+    class ProjectMetricsNotifier {}
 }
 
 PageParametersDispatcher --> PageNotifier : uses
@@ -54,8 +72,12 @@ ProjectMetricsNotifier --|> PageNotifier
 
 MetricsPageFactory --> MetricsPage : creates
 
+MetricsPageFactory --> RouteConfiguration : uses
+
 RouteConfigurationFactory --> RouteConfiguration : creates
 
 DashboardPageParameters ..|> PageParameters
+
+MetricsRouteInformationParser --> RouteConfiguration : uses
 
 @enduml
