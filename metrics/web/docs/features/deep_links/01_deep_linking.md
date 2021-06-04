@@ -15,10 +15,9 @@ As a user, I want to pass direct links to project and/or project groups, so that
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
 - [**Design**](#design)
-    - [Approach](#approach)
+    - [Architecture](#architecture)
       - [`NavigationNotifier` approach](#navigationnotifier-approach)
       - [Route parameters approach](#route-parameters-approach)
-    - [Architecture](#architecture)
     - [Program](#program)
 
 # Analysis
@@ -152,10 +151,10 @@ The `Deep Linking` feature implementation mostly includes the modification of ex
 # Design
 Let's review the implementation details in the next subsections.
 
-### Approach
-> Describe the implementation approach.
+### Architecture
+> Fundamental structures of the feature and context (diagram).
 
-There are two possible approaches of the `Deep Linking` feature integration to the Metrics Web application:
+There are two possible architecture approaches of the `Deep Linking` feature integration to the Metrics Web application:
 - [`NavigationNotifier`](#navigationnotifier-approach) approach;
 - [`Route Parameters`](#route-parameters-approach) approach.
 
@@ -210,8 +209,137 @@ Cons:
 
 Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
 
-### Architecture
-> Fundamental structures of the feature and context (diagram).
+Once we've figured out the desired implementation approach, let's proceed to the next subsections describing the required changes needed to implement the `Deep Linking` in the Metrics Web application.
 
-### Program
-> Detailed solution description to class/method level.
+First, we should be able to parse the `query parameters` from the URL, and update the URL with the `query parameters`. When we're able to do that, we should create a unified mechanism to apply the deep links in the application.
+
+Consider the following subsections that describe each point:
+- [Parsing the deep links]()
+
+### RouteConfiguration
+The `RouteConfiguration` is a class that holds the information describing a specific route in the Metrics Web application. 
+
+Currently, the `RouteConfiguration` holds the following fields:
+- `name` - a name of a route;
+- `path` - a full path of the route (excluding query parameters);
+- `isAuthorizationRequired` - a flag that indicates whether the route requires the authorization. 
+  
+To be able to handle the deep links represented as the `query parameters` of the given URL, we should extend the `RouteConfiguration` model by adding a `queryParameters: Map<String, dynamic>` field to it. We should also update the helper methods, such as `props` and `copyWith`.
+
+### RouteConfigurationFactory
+The `RouteConfigurationFactory` is a class responsible for creating a `RouteConfiguration` from the given `Uri`. Consider this factory's `create` method code:
+```dart
+RouteConfiguration create(Uri uri) {
+  final pathSegments = uri?.pathSegments;
+
+  if (pathSegments == null || pathSegments.isEmpty) {
+    return MetricsRoutes.loading;
+  }
+
+  final routeName = pathSegments.first;
+
+  if (routeName == RouteName.login.value) {
+    return MetricsRoutes.login;
+  } else if (routeName == RouteName.dashboard.value) {
+    return MetricsRoutes.dashboard;
+  } else if (routeName == RouteName.projectGroups.value) {
+    return MetricsRoutes.projectGroups;
+  } else if (routeName == RouteName.debugMenu.value) {
+    return MetricsRoutes.debugMenu;
+  }
+
+  return MetricsRoutes.dashboard;
+}
+```
+
+To be able to create a specific route with the `query parameters` we should extract the route matching logic to a separate `_parseRoute` method. Then we can use the parsed `RouteConfiguration` and provide it with the `query parameters` using the `RouteConfiguration.copyWith` method.
+
+Consider the following code snippet that demonstrates this:
+```dart
+RouteConfiguration create(Uri uri) {
+  final pathSegments = uri?.pathSegments;
+
+  if (pathSegments == null || pathSegments.isEmpty) {
+    return MetricsRoutes.loading;
+  }
+
+  final routeName = pathSegments.first;
+  final route = _getRoute(routeName);
+
+  final queryParameters = uri.queryParameters;
+  
+  return route.copyWith(queryParameters: queryParameters);
+}
+
+RouteConfiguration _getRoute(String routeName) {
+  if (routeName == RouteName.login.value) {
+    return MetricsRoutes.login;
+  } else if (routeName == RouteName.dashboard.value) {
+    return MetricsRoutes.dashboard;
+  } else if (routeName == RouteName.projectGroups.value) {
+    return MetricsRoutes.projectGroups;
+  } else if (routeName == RouteName.debugMenu.value) {
+    return MetricsRoutes.debugMenu;
+  }
+
+  return MetricsRoutes.dashboard;
+}
+```
+
+### RouteInformationParser
+The `Navigator 2.0` integration uses the `RouteConfiguration` to restore the URLs when the navigation state changes (e.g., when the user opens or closes a page). This restoration takes place in the `MetricsRouteInformationParser.restoreRouteInformation()` method. Consider this method's code:
+```dart
+@override
+RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
+  if (configuration == null) return null;
+
+  return RouteInformation(location: configuration.path);
+}
+```
+
+As we can see, the current implementation does not restore the `query parameters` of a URL, but only the URL's `path`. 
+
+To restore the `RouteInformation` correctly, we should implement a `RouteConfiguration.toUrl()` method, that converts a `RouteConfiguration` instance to a URL location.
+```dart
+/// A class that represents the configuration of the route.
+class RouteConfiguration {
+  /// A path of this route that is used to create the application URL.
+  final String path;
+  
+  /// A query parameters of this route that is used to create the application URL.
+  final Map<String, dynamic> queryParameters;
+  
+  /// ... other fields declarations, constructors
+  
+  /// Converts this instance to a URL [String].
+  String toUrl() {
+    Uri uri = Uri(path: path);
+    
+    /// We need to perform this because:
+    /// Uri(path: 'foo', queryParameters: null) => '/foo?' instead of '/foo'
+    /// Uri(path: 'foo', queryParameters: {}) => '/foo?' instead of '/foo'
+    if(queryParameters != null && queryParameters.isNotEmpty) {
+      uri = uri.replace(queryParameters: queryParameters);
+    }
+    
+    return '$uri';
+  }
+}
+```
+
+When we've implemented the `RouteConfiguration.toUrl()` method, we can use it in the `MetricsRouteInformationParser.restoreRouteInformation()` method as the following:
+```dart
+@override
+RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
+  if (configuration == null) return null;
+  
+  final url = configuration.toUrl();
+  
+  return RouteInformation(location: url);
+}
+```
+
+### NavigationNotifier
+
+####
+
