@@ -26,9 +26,13 @@ class RouteConfiguration {
 
 class RouteConfigurationFactory {}
 
-abstract class PageParameters {}
+abstract class PageParameters {
+    + toQueryParameters() : Map<String, dynamic>
+}
 
-class DashboardPageParameters {}
+class DashboardPageParameters {
+    + selectedProjectGroup : String
+}
 
 class NavigationNotifier {}
 
@@ -41,12 +45,17 @@ package common {
     }
 }
 
+PageParametersDispatcher --> PageNotifier : uses
+
 PageNotifier --|> ChangeNotifier
+PageNotifier --> PageParameters : uses
 
 ProjectMetricsNotifier --|> PageNotifier
 
 MetricsPageFactory --> MetricsPage : creates
 
 RouteConfigurationFactory --> RouteConfiguration : creates
+
+DashboardPageParameters ..|> PageParameters
 
 @enduml
