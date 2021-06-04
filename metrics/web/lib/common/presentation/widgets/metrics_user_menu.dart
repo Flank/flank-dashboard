@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -91,7 +91,7 @@ class MetricsUserMenu extends StatelessWidget {
               Padding(
                 padding: itemPadding,
                 child: TappableArea(
-                  onTap: () => navigationNotifier.push(
+                  onTap: () => navigationNotifier.pushIfUnique(
                     MetricsRoutes.projectGroups,
                   ),
                   builder: (context, isHovered, child) => child,
@@ -110,7 +110,7 @@ class MetricsUserMenu extends StatelessWidget {
                     return Padding(
                       padding: itemPadding,
                       child: TappableArea(
-                        onTap: () => navigationNotifier.push(
+                        onTap: () => navigationNotifier.pushIfUnique(
                           MetricsRoutes.debugMenu,
                         ),
                         builder: (context, isHovered, child) => child,

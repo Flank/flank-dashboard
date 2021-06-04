@@ -209,6 +209,30 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
+  ///
+  void tryPop({
+    @required RouteConfiguration orElse,
+  }) {
+    if (pages.length == 1) {
+      push(orElse);
+      return;
+    }
+
+    pop();
+  }
+
+  ///
+  void pushIfUnique(RouteConfiguration configuration) {
+    final currentRouteName = _currentConfiguration.name;
+
+    if (currentRouteName != configuration.name) {
+      push(configuration);
+      return;
+    }
+
+    pushReplacement(configuration);
+  }
+
   /// Replaces the current route with the route created from the given
   /// [configuration] and replaces the current state path with
   /// the path of the pushed route configuration.

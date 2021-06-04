@@ -605,6 +605,8 @@ class ProjectMetricsNotifier extends PageNotifier {
   }
 
   void _applyPageParameters(DashboardPageParameters dashboardPageParameters) {
+    if (dashboardPageParameters == null) return;
+
     final selectedProjectGroup = dashboardPageParameters.selectedProjectGroup;
 
     final projectGroupExists = _projectGroupModels.any(

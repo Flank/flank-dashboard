@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -60,6 +60,6 @@ class MetricsPageTitle extends StatelessWidget {
     final navigationNotifier =
         Provider.of<NavigationNotifier>(context, listen: false);
 
-    navigationNotifier.push(MetricsRoutes.dashboard);
+    navigationNotifier.tryPop(orElse: MetricsRoutes.dashboard);
   }
 }
