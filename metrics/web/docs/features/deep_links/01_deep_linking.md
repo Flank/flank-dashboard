@@ -85,7 +85,7 @@ Pros:
 - Provides ready-to-use implementation out of the box, including deep linking, nested navigation, and many other features.
 
 Cons:
-- May require code generation (e.g. as in [`auto_route`](https://pub.dev/packages/auto_route) package);
+- May require code generation (e.g., as in [`auto_route`](https://pub.dev/packages/auto_route) package);
 - Requires the navigation system reintegration - meaning that we must use the 3-rd party `RouteInformationParser`s and `RouterDelegate`s.
 
 #### Custom implementation
@@ -207,6 +207,7 @@ Cons:
 - High coupling;
 - Adding parameters handling may increase the page widgets size, and decrease the code readability.
 
+#### Approach decision
 Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
 
 Once we've chosen the desired implementation approach, let's proceed to the next subsections describing the required changes needed to implement the `Deep Linking` in the Metrics Web application.
@@ -214,7 +215,13 @@ Once we've chosen the desired implementation approach, let's proceed to the next
 First, we should be able to parse the `query parameters` from the URL, and update the URL with the `query parameters`. When we're able to do that, we should create a unified mechanism to apply the deep links in the Metrics Web application.
 
 Consider the following subsections that describe each point:
-- [Parsing the deep links]()
+- [Parsing the deep links](#parsing-deep-links)
+
+## Parsing Deep Links
+The following subsections describe the required changes we should implement to be able to parse the deep links in the Metrics Web application:
+- [RouteConfiguration](#routeconfiguration)
+- [RouteConfigurationFactory](#routeconfigurationfactory)
+- [RouteInformationParser](#routeinformationparser)
 
 ### RouteConfiguration
 The `RouteConfiguration` is a class that holds the information describing a specific route in the Metrics Web application. 
@@ -226,7 +233,7 @@ Currently, the `RouteConfiguration` holds the following fields:
   
 To be able to handle the deep links represented as the `query parameters` of the given URL, we should extend the `RouteConfiguration` model by adding a `queryParameters: Map<String, dynamic>` field to it. We should also update the helper methods, such as `props` and `copyWith`.
 
-### RouteConfigurationFactory
+#### RouteConfigurationFactory
 The `RouteConfigurationFactory` is a class responsible for creating a `RouteConfiguration` from the given `Uri`. Consider this factory's `create` method code:
 ```dart
 RouteConfiguration create(Uri uri) {
@@ -286,7 +293,7 @@ RouteConfiguration _getRoute(String routeName) {
 }
 ```
 
-### RouteInformationParser
+#### RouteInformationParser
 The `Navigator 2.0` integration uses the `RouteConfiguration` to restore the URLs when the navigation state changes (e.g., when the user opens or closes a page). This restoration takes place in the `MetricsRouteInformationParser.restoreRouteInformation()` method. Consider this method's code:
 ```dart
 @override
@@ -339,7 +346,7 @@ RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
 }
 ```
 
-### NavigationNotifier
+### Parsing Deep Links Summary
+Consider this class diagram that illustrates the required changes needed to parse the deep links from the URL:
 
-####
-
+![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/parsing_deep_links_class_diagram.puml)

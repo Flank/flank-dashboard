@@ -1,0 +1,57 @@
+@startuml parsing_deep_links_class_diagram
+
+package common.presentation.navigation {
+    class MetricsRouteInformationParser {
+        - _routeConfigurationFactory : RouteConfigurationFactory
+
+        + parseRouteInformation(information: RouteInformation) : RouteConfiguration
+        + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
+    }
+
+    package route_configuration {
+        class RouteConfiguration {
+            + name : RouteName
+            + path : String
+            + authorizationRequired : bool
+            + queryParameters : Map<String, dynamic>
+
+            + copyWith(name: RouteName, path: String, authorizationRequired: bool, queryParameters: Map<String, dynamic> queryParameters) : RouteConfiguration
+            + toUrl() : String
+        }
+
+        class RouteConfigurationFactory {
+            + create(uri: Uri) : RouteConfiguration
+
+            - _getRoute(routeName: String): RouteConfiguration
+        }
+    }
+
+    package constants {
+        class MetricsRoutes {
+            {static} MetricsRoutes.dashboard : RouteConfiguration
+            {static} MetricsRoutes.projectGroups : RouteConfiguration
+            {static} MetricsRoutes.login : RouteConfiguration
+            {static} MetricsRoutes.loading : RouteConfiguration
+            {static} MetricsRoutes.debugMenu : RouteConfiguration
+            {static} MetricsRoutes.values: Set<RouteConfiguration>
+        }
+    }
+}
+
+package flutter.material {
+    class RouteInformation {
+        + location: String
+        + state: Object
+    }
+}
+
+MetricsRouteInformationParser --> RouteConfiguration : uses
+MetricsRouteInformationParser -up-> RouteInformation : uses
+MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+
+RouteConfigurationFactory --> RouteConfiguration : creates
+RouteConfigurationFactory -up-> MetricsRoutes : uses
+
+MetricsRoutes --> RouteConfiguration : uses
+
+@enduml
