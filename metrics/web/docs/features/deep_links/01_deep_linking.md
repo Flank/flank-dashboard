@@ -55,7 +55,7 @@ The `Deep Linking` feature must satisfy the following requirements:
 - Possibility to restore deep links/application state in response to app-specific events (`back`, `home` button pressed, etc.);
 
 ### Prerequisites
-Before deep-diving into deep linking feature analysis, make sure to get familiar with the Flutter new navigation system ([Navigator 2.0](https://flutter.dev/docs/release/breaking-changes/route-navigator-refactoring)) which is [used in the Metrics Web application](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md). The understanding of the Navigator 2.0 approach is important for the understanding deep linking approaches.
+Before deep-diving into deep linking feature analysis, make sure to get familiar with the Flutter new navigation system ([Navigator 2.0](https://flutter.dev/docs/release/breaking-changes/route-navigator-refactoring)) which is [used in the Metrics Web application](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/navigation/01_navigation_design.md). The understanding of the Navigator 2.0 approach is important for understanding deep linking approaches.
 
 ### Landscape
 > Look for existing solutions in the area.
@@ -129,7 +129,7 @@ The next code snippets demonstrate how we can perform the listed required action
 
 - Parsing the query parameters from the URL:
 
-Since the `Navigator 2.0` provides a `RouteInformationParser` class that gives the access to the URL, so we are able to parse the `query parameters` from the URL.
+Since `Navigator 2.0` provides a `RouteInformationParser` class that gives access to the URL, we can parse the `query parameters` from the URL.
 
 ```dart
 T parseRouteInformation(RouteInformation routeInformation) {
