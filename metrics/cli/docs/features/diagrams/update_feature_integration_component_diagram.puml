@@ -8,17 +8,17 @@ legend top left
     |<#Green>| New relationship |
 endlegend
 
-component "Metrics Cli" as Cli
+component "Metrics CLI" as Cli
 component "Update"
 component "Deploy"
 component "Doctor"
 component Cloud
 
-Cli -[#Green]-> Update : uses
-Cli --> Deploy : uses
-Cli --> Doctor : uses
+Cli -[#Green]-* Update
+Cli --* Deploy
+Cli --* Doctor
 
-Update -[#Green]-> Cloud : hosting
-Deploy --> Cloud : hosting
+Update -[#Green]-> Cloud : [redeploys a new version of components]
+Deploy --> Cloud : [deploys components]
 
 @enduml
