@@ -18,7 +18,12 @@ As a user, I want to pass direct links to project and/or project groups, so that
     - [Architecture](#architecture)
       - [`NavigationNotifier` approach](#navigationnotifier-approach)
       - [Route parameters approach](#route-parameters-approach)
-    - [Program](#program)
+      - [Approach decision](#approach-decision)
+    - [Parsing Deep Links](#parsing-deep-links)
+      - [RouteConfiguration](#routeconfiguration)
+      - [RouteConfigurationFactory](#routeconfigurationfactory)
+      - [RouteInformationParser](#routeinformationparser)
+      - [Parsing Deep Links Summary](#parsing-deep-links-summary)
 
 # Analysis
 > Describe the general analysis approach.
@@ -231,13 +236,13 @@ First, we should be able to parse the `query parameters` from the URL, and updat
 Consider the following subsections that describe each point:
 - [Parsing the deep links](#parsing-deep-links)
 
-## Parsing Deep Links
+### Parsing Deep Links
 The following subsections describe the required changes we should implement to be able to parse the deep links in the Metrics Web application:
 - [RouteConfiguration](#routeconfiguration)
 - [RouteConfigurationFactory](#routeconfigurationfactory)
 - [RouteInformationParser](#routeinformationparser)
 
-### RouteConfiguration
+#### RouteConfiguration
 The `RouteConfiguration` is a class that holds the information describing a specific route in the Metrics Web application. 
 
 Currently, the `RouteConfiguration` holds the following fields:
@@ -360,7 +365,7 @@ RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
 }
 ```
 
-### Parsing Deep Links Summary
+#### Parsing Deep Links Summary
 Consider this class diagram that illustrates the required changes needed to parse the deep links from the URL:
 
-![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/parsing_deep_links_class_diagram.puml)
+![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links_design/diagrams/parsing_deep_links_class_diagram.puml)
