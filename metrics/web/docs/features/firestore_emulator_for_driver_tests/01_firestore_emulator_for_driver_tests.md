@@ -1,7 +1,7 @@
 # Firestore emulator for driver tests
 > Feature description / User story.
 
-At the moment, integration tests run inside the production environment (e.g. using production Firestore). This approach carries the risk of accidental data loss or alteration. Therefore, we should use the test environment to run the tests.
+At the moment, integration tests run inside the production environment (e.g., using production Firestore). This approach carries the risk of accidental data loss or alteration. Therefore, we should use the test environment to run the tests.
 
 ## Contents
 
@@ -111,13 +111,6 @@ The specified port in the `host` argument must be equal to the emulator's port.
 
 # Design
 
-### Architecture
-> Fundamental structures of the feature and context (diagram).
-
-Consider the following class diagram showing the main classes and relationships needed to implement this feature:
-
-![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
-
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
@@ -172,6 +165,10 @@ To pass the Firestore emulator configuration to the application under tests, we 
 In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the default port from the `FirestoreEmulatorConfig`.
 
 With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
+
+The following class diagram demonstrates the main classes and their relationships required to implement the feature:
+
+![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
 The following sequence diagram demonstrate the process of running the integration tests with the emulator:
 

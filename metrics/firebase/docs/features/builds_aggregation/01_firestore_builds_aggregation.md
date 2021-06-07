@@ -24,7 +24,7 @@ The same aggregation definition we can apply to Firebase aggregations.
       - [Loading all documents](#loading-all-documents)
       - [Aggregating data using the Cloud Functions](#aggregating-data-using-the-cloud-functions)
         - [Firebase transactions](#firebase-transactions)
-        - [FieldValue.increment](#FieldValue.increment)
+        - [FieldValue.increment](#fieldvalueincrement)
         - [Distributed counter](#distributed-counter)
       - [Decision](#decision)   
 - [**Design**](#design)
@@ -50,7 +50,7 @@ Based on the analysis, we should make a decision about an optimal approach that 
 ### Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-If we want to quickly find documents in large collections, we should use Firebase advanced queries. Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g.g. builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation somehow, because of the Firestore limitations.
+If we want to quickly find documents in large collections, we should use Firebase advanced queries. Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g., builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation because of the Firestore limitations.
 
 For now, to make builds aggregations we should load all builds and process calculations on the client, because Cloud Firestore does not support the aggregation queries.
 
@@ -90,7 +90,7 @@ Cons:
 
 With Cloud Functions, we can move our aggregation logic to the cloud and process calculations on the back-end, provided by Firebase.
 
-There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#fieldValue.increment) method or create a [Distributed counter](#distributed-counter).
+There are several ways, we can use the aggregation with the Cloud Functions - using the [Firebase transactions](#firebase-transactions), the [FieldValue.increment](#fieldvalueincrement) method or create a [Distributed counter](#distributed-counter).
 
 #### Firebase transactions
 
@@ -104,7 +104,7 @@ Cons:
 - There is a maximum count of transaction reruns, that's why some transactions may fail.
 - An extra read a field's value before updating.
 - Has a maximum writes and time [limits](https://firebase.google.com/docs/firestore/quotas#writes_and_transactions).
-- Requires a lot of code to implement a simple logic(e.g.g. counters).
+- Requires a lot of code to implement a simple logic (e.g., counters).
 
 #### FieldValue.increment
 
@@ -122,13 +122,13 @@ Cons:
 
 #### Distributed counter
 
-As we've described above, the [FieldValue.increment](#FieldValue.increment) method has a limitation to one write per second per document. If we have a more frequent counter updates, we should create a distributed counter.
+As we've described above, the [FieldValue.increment](#fieldvalueincrement) method has a limitation to one write per second per document. If we have a more frequent counter updates, we should create a distributed counter.
 
 It is a document with a subcollection of "shards", and the value of the counter is the sum of the value of the shards. 
 
 To increment the counter, choose a random "shard" and increment the count. To get the total count, query for all "shards" and sum their count fields.
 
-With that, we can increase our write document limit to the count of "shards"(e.g.g if we have 50 shards, that means 50x more writes compare with the simple increment method).
+With that, we can increase our write document limit to the count of "shards" (e.g., if we have 50 shards, that means 50x more writes compare with the simple increment method).
 
 There are certain disadvantages of this approach. With too few shards, some transactions may have to retry before succeeding, which will slow writes. With too many shards, reads become slower and more expensive. Also, as we have a subcollection of "shards" that we must load, so the cost of reading a counter value increases.
 
@@ -142,11 +142,11 @@ Cons:
 
 #### Decision
 
-Using the "transaction approach", reads are required - thus producing more load/billing than [FieldValue.increment](#FieldValue.increment). 
+Using the "transaction approach", reads are required - thus producing more load/billing than [FieldValue.increment](#fieldvalueincrement). 
 
 The [Distributed counter](#distributed-counter) is designed for the heavier load than we currently estimate and could be a good scaling approach if something changes.
 
-Considering all pros and cons [FieldValue.increment](#FieldValue.increment) seems to be a great approach to start with aggregations due to the absence of reads for increments and providing sufficient limits for writes.
+Considering all pros and cons [FieldValue.increment](#fieldvalueincrement) seems to be a great approach to start with aggregations due to the absence of reads for increments and providing sufficient limits for writes.
 
 # Design
 > Explain and diagram the technical design.

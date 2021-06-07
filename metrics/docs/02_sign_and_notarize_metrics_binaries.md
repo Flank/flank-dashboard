@@ -1,4 +1,4 @@
-# Feature design
+# Sign and Notarize Metrics Binaries
 > Feature description / User story.
 
 Apple's ongoing initiatives at controlling what runs on their platforms took a new turn with macOS Catalina (10.15), with a required app and command-line binary signing.
@@ -34,7 +34,7 @@ The document's goal is to investigate and analyze tools and methods that can hel
         - [gon](#gon)
         - [signing_tools](#signing_tools)
         - [notarize-cli](#notarize-cli)
-        - [generate sha256 hash](#generate-sha256-hash)
+        - [Generate sha256 hash](#generate-sha256-hash)
         - [Decision](#decision)
 
 # Analysis
@@ -151,7 +151,7 @@ Cons:
  - requires Xcode
  - does not check if the given file is already signed
 
-#### [generate sha256 hash](https://ss64.com/osx/shasum.html)
+#### [Generate sha256 hash](https://ss64.com/osx/shasum.html)
 
 This method provides an easy way to compute SHA hash for Metrics binaries.
 
