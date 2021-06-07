@@ -13,10 +13,10 @@ package common.presentation.navigation {
             + name : RouteName
             + path : String
             + authorizationRequired : bool
-            + queryParameters : Map<String, dynamic>
+            + parameters : Map<String, dynamic>
 
-            + copyWith(name: RouteName, path: String, authorizationRequired: bool, queryParameters: Map<String, dynamic> queryParameters) : RouteConfiguration
-            + toUrl() : String
+            + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+            + getUrl() : String
         }
 
         class RouteConfigurationFactory {

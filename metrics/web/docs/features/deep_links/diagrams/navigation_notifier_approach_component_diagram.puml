@@ -20,6 +20,6 @@ PageNotifier --> Page : updated data \n with parameters \n (filtering, sorting, 
 NavigationNotifier -up-> History : updates the URL \n and query parameters
 
 Page --> PageNotifier : UI events \n (filtering, searching, etc.)
-PageNotifier --> NavigationNotifier : page parameters updates
+PageNotifier --> NavigationNotifier : updated page parameters
 
 @enduml
