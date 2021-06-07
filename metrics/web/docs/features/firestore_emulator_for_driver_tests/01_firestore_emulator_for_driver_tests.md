@@ -10,7 +10,6 @@ At the moment, integration tests run inside the production environment (e.g., us
     - [Requirements](#requirements)
     - [Prototyping](#prototyping)
 - [**Design**](#design)
-    - [Architecture](#architecture)
     - [User Interface](#user-interface)
     - [Database](#database)
     - [Program](#program)
