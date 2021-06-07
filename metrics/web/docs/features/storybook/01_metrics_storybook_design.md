@@ -1,10 +1,7 @@
-# Metrics Storybook design
-
+# Metrics Storybook
 > Feature description / User story.
 
-Storybook in JavaScript world is a tool for UI development. It makes development faster and easier in an isolated manner. It allows to browse a components library, view the different states, and interactively develop and test them.
-
-A similar concept we want to apply to the Metrics Storybook.
+The Storybook is a tool for UI development that allows building UI components in isolation. It provides a convenient way to browsing a components library, viewing their different states and usecases, and interactively test them. Creating a UI library allows designers, project managers, and developers to collaborate in delivering the most beautiful and clear UI components.
 
 ## Contents
 
@@ -14,22 +11,16 @@ A similar concept we want to apply to the Metrics Storybook.
     - [Landscape](#landscape)
         - [Use existing packages](#use-existing-packages)
         - [Manually create a Storybook from scratch](#manually-create-a-storybook-from-scratch)
-- [**Design**](#design)
-    - [Architecture](#architecture)
-    - [User Interface](#user-interface)
-    - [Database](#database)
-    - [Program](#program)
+        - [Decision](#decision)
 
 # Analysis
-
 > Describe a general analysis approach.
 
-During the analysis stage, we should understand a [feasibility](#feasibility-study) to implement the feature along with a list of the given [requirements](#requirements). For this purpose, we need to define a set of components, that we want to extract from the Metrics Web Application into the Metrics storybook. After that, we should consider examples of existing component libraries and packages for Flutter projects, that provide a possibility to create similar UI libraries.
+This analysis purposes to discover the feasibility of implementing the feature and the requirements list for the feature to implement. The Metrics Storybook feature requires defining the set of UI elements of Metrics Web Application that we should present on the storybook. 
 
-Based on the analysis, we should make a decision about an optimal approach that satisfies the [requirements](#requirements) for the Metrics storybook.
+The analysis examines the possible solutions for the feature implementation and compares these solutions using the projects architecture rules and principles. Then, the document states the general approach of implementing the Metrics Storybook and defines whether it should be custom implementation or the existing solution.
 
 ### Feasibility study
-
 > A preliminary study of the feasibility of implementing this feature.
 
 First of all, the great purpose of the Metrics storybook is that each widget and story (a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX.
@@ -43,20 +34,20 @@ As you write your components in isolation, without regard to business logic, you
 Metrics storybook creating allows developers to work in parallel on widgets and do not touch the main Metrics Web Application's codebase. It also, makes it easier to add new widgets, since we can test them separately and only then make changes to the code of the application.
 
 ### Requirements
-
 > Define requirements and make sure that they are complete.
 
+The Metrics Storybook feature must satisfy the following requirements:
+
 - Displays a set of Metrics widgets.
-- An ability to manage themes.
+- Provides an ability to manage themes.
 - Contains a tab with the widget documentation.
 - Contains a list of inputs to change widgets' appearance (height, width, color, etc.).
 - Contains the Metrics color palette to view all project's colors.
-- An ability to search across components.
+- Provides an ability to search across components.
 - Visually groups widgets by their types.
-- Change a viewport size (view widgets on different devices).
+- Provides an ability to change a viewport size (view widgets on different devices).
 
 ### Landscape
-
 > Look for existing solutions in the area.
 
 Before launching the solutions, we need to determine which components from the Metrics Web Application should be included in the storybook.
@@ -85,16 +76,16 @@ There are simple classes, which provide all the logic to start writing the story
 
 Pros:
 
-- Simple classes without much complex logic.
+- Easy-to-use classes.
+- Clear and simple usability logic.
 
 Cons:
 
 - It is more a simple boilerplate rather than a storybook project.
-- Not frequent updates to code.
-- Managing themes are done on our own.
+- Does not updates frequently.
+- Does not provide functionality for managing themes.
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Does not have a search across components functionality.
-- It's not so popular (has only a few stars on GitHub).
 
 2. [Monarch](https://pub.dev/packages/monarch)
 
@@ -104,9 +95,9 @@ To make it work, we should install the Xcode and download the Monarch binary.
 
 Pros:
 
-- Does not need to create a separate project to have a storybook.
-- Allows managing themes.
-- Views widgets on different devices.
+- Does not require a separate project to have a storybook.
+- Provides an ability to manage themes
+- Provides an ability to views widgets on different devices.
 
 Cons:
 
@@ -117,7 +108,6 @@ Cons:
 - Does not have an ability to group widgets by their types (base/common).
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Requires updating a Dart version to 2.12.0 or higher.
-- It's not so popular (has only a few stars on GitHub).
 
 3. [Dashbook](https://pub.dev/packages/dashbook)
 
@@ -125,17 +115,16 @@ Dashbook is a UI development tool for Flutter, that allows showcasing widgets. I
 
 Pros:
 
-- Allows managing themes.
-- Allows to group widgets by their types.
-- Contains a list of inputs to change widgets' appearance.
+- Provides an ability to manage themes.
+- Provides an ability to group widgets by their types.
+- Provides an ability to change widgets' appearance.
 
 Cons:
 
 - Provides only a plain UI.
-- On the preview screen, users cannot select the viewport size.
+- Does not have an ability to change the viewport size.
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Does not have a search across components functionality.
-- It's not so popular (has only a few stars on GitHub).
 - Requires updating a Dart version to 2.12.0 or higher.
 
 4. [Storybook_flutter](https://pub.dev/packages/storybook_flutter)
@@ -145,7 +134,7 @@ A cross-platform storybook for showcasing widgets. It works on all platforms sup
 Pros:
 
 - Allows managing themes.
-- Allows creating a custom Storybook (e.g. UI).
+- Allows creating a custom Storybook (e.g., UI).
 - Allows approximating how a particular widget looks and performs on different devices (requires additional related package).
 
 Cons:
@@ -154,7 +143,6 @@ Cons:
 - Does not have a docs tab that supports MDX (or similar) with the documentation about the widget.
 - Does not have a search across components functionality.
 - Requires updating a Dart version to 2.12.0 or higher.
-- It's not so popular (has only a few stars on GitHub).
 
 #### Manually create a Storybook from scratch
 
@@ -167,9 +155,9 @@ Pros:
 Cons:
 
 - Requires designing a new UI for the Metrics storybook.
-- Takes extra time to realize the new UI.
+- Takes extra time to implement a new UI element.
 
-#### Conclusion
+#### Decision
 
 The described above packages do not suit us for several reasons:
 
@@ -180,17 +168,3 @@ The described above packages do not suit us for several reasons:
 - The UI in these packages is, also very basic, without thoughtful design and UX.
 
 Summing up the consideration of approaches and given the above explanations, the best solution would be to create this library from [scratch](#manually-create-a-storybook-from-scratch).
-
-# Design
-
-### Architecture
-> Fundamental structures of the feature and context (diagram).
-
-### User Interface
-> How users will interact with the feature (API, CLI, Graphical interface, etc.).
-
-### Database
-> How relevant data will be persisted.
-
-### Program
-> Detailed solution description to class/method level.
