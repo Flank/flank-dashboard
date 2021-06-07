@@ -79,7 +79,13 @@ void main() {
 }
 ```
 
-Let's review the pros and cons of this approach:
+In general, the 3-rd party libraries listed above use the following approaches for handling `query parameters`:
+- Accessing the current configuration with a `Map` of `query parameters` (e.g., [`beamer`](https://pub.dev/packages/beamer#quick-start), [`routemaster`](https://pub.dev/packages/routemaster#features));
+- Automatic handling using annotations and code generation (e.g., [`auto_route`](https://pub.dev/packages/auto_route#working-with-paths)).
+
+The listed 3-rd party libraries don't provide a way to update the URL without changing the current history.
+
+Let's sum up the pros and cons of using 3-rd party libraries:
 
 Pros:
 - Provides ready-to-use implementation out of the box, including deep linking, nested navigation, and many other features.
@@ -87,6 +93,7 @@ Pros:
 Cons:
 - May require code generation (e.g., as in [`auto_route`](https://pub.dev/packages/auto_route) package);
 - Requires the navigation system reintegration - meaning that we must use the 3-rd party `RouteInformationParser`s and `RouterDelegate`s.
+- Does not provide a way to replace the current URL value without changing the browser history.
 
 #### Custom implementation
 This approach means the `Deep Linking` implementation using the `Navigator 2.0` features, which is already integrated into the Metrics Web application. 
@@ -116,12 +123,19 @@ As we've described in the [`requirements`](#requirements) section, we must be ab
 The next code snippets demonstrate how we can perform the listed required actions:
 
 - Parsing the query parameters from the URL:
+
+Since the `Navigator 2.0` provides a `RouteInformationParser` class that gives the access to the URL, so we are able to parse the `query parameters` from the URL.
+
 ```dart
-final url = 'https://some-website/page?queryParameter=someParameter';
+T parseRouteInformation(RouteInformation routeInformation) {
+  final location = routeInformation.location;
+  
+  print(location); // page?queryParameter=someParameter
+  
+  final uri = Uri.parse(location);
 
-final uri = Uri.parse(url);
-
-print(uri.queryParameters); // {queryParameter : someParameter)
+  print(uri.queryParameters); // {queryParameter : someParameter}
+}
 ```
 
 - Updating the URL and the query parameters without changing the current browser history (using the [`universal_html`](https://pub.dev/packages/universal_html) package):
@@ -177,7 +191,7 @@ So, the main idea of this approach is to create a bidirectional connection betwe
 
 Consider the following component diagram that briefly describes this approach:
 
-![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/navigation_notifier_approach_component_diagram.puml)
+![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links_design/diagrams/navigation_notifier_approach_component_diagram.puml)
 
 Let's sum up the pros and cons of this approach:
 
@@ -194,7 +208,7 @@ The main idea of that approach is to pass the deep links directly to the specifi
 
 Consider the next component diagram that illustrates this approach:
 
-![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_desing/metrics/web/docs/features/deep_links_design/diagrams/route_parameters_approach_component_diagram.puml)
+![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links_design/diagrams/route_parameters_approach_component_diagram.puml)
 
 Let's review the pros and cons of the `route parameters` approach:
 

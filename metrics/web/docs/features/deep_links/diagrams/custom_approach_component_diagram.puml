@@ -5,17 +5,17 @@ skinparam componentStyle rectangle
 component Browser #A9DCDF
 
 package "Metrics Web" {
-    component NavigationComponent
+    component "Navigator 2.0" as Navigator
     component ApplicationState
     component "User Interface" as UI
 }
 
-Browser -down-> NavigationComponent : notifies about \n URL updates
-NavigationComponent -down-> ApplicationState : opens new pages, \n provides deep links
+Browser -down-> Navigator : notifies about \n URL updates
+Navigator -down-> ApplicationState : opens new pages, \n provides deep links
 ApplicationState -down-> UI : data to display
 
 UI -up-> ApplicationState : UI events(sorting, filtering, etc.)
-ApplicationState -up-> NavigationComponent : deep links updates
-NavigationComponent -up-> Browser : updates URL
+ApplicationState -up-> Navigator : deep links updates
+Navigator -up-> Browser : updates URL
 
 @enduml
