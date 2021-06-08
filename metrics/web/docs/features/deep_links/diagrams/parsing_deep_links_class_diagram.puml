@@ -21,7 +21,7 @@ package common.presentation.navigation {
             {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
             {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
             {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
-            {static} RouteConfiguration.loading(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.loading(): RouteConfiguration
 
             + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
         }

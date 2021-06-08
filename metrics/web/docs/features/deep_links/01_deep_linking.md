@@ -325,7 +325,7 @@ class RouteConfigurationFactory {
     final pathSegments = uri?.pathSegments;
 
     if (pathSegments == null || pathSegments.isEmpty) {
-      return RouteConfiguration.loading(parameters: queryParameters);
+      return RouteConfiguration.loading();
     }
 
     final routeName = pathSegments.first;
