@@ -359,43 +359,43 @@ RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
 
 As we can see, the current implementation does not restore the `query parameters` of a URL, but only the URL's `path`. 
 
-To restore the `RouteInformation` correctly, we should implement a `RouteConfiguration.getUrl()` method, that converts a `RouteConfiguration` instance to a URL location.
+To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationUrlConverter.getUrl()` method, that converts a `RouteConfiguration` instance to a URL location.
 ```dart
-/// A class that represents the configuration of the route.
-class RouteConfiguration {
-  /// A path of this route that is used to create the application URL.
-  final String path;
-  
-  /// A parameters of this route that is used to create the application URL.
-  final Map<String, dynamic> parameters;
-  
-  /// ... other fields declarations, constructors
-  
-  /// Converts this instance to a URL [String].
-  String getUrl() {
-    Uri uri = Uri(path: path);
+class RouteConfigurationUrlConverter {
+  /// Converts the given [configuration] to a URL [String].
+  String getUrl(RouteConfiguration configuration) {
+    final path = configuration.path;
+    final parameters =  configuration.parameters;
     
+    Uri uri = Uri(path: path);
+
     /// We need to perform this because:
     /// Uri(path: 'foo', queryParameters: null) => '/foo?' instead of '/foo'
     /// Uri(path: 'foo', queryParameters: {}) => '/foo?' instead of '/foo'
     if(parameters != null && parameters.isNotEmpty) {
       uri = uri.replace(queryParameters: parameters);
     }
-    
+
     return '$uri';
   }
 }
 ```
 
-When we've implemented the `RouteConfiguration.getUrl()` method, we can use it in the `MetricsRouteInformationParser.restoreRouteInformation()` method as the following:
+When we've implemented the `RouteConfigurationUrlConverter` class, we can use it in the `MetricsRouteInformationParser.restoreRouteInformation()` method as the following:
 ```dart
-@override
-RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
-  if (configuration == null) return null;
+class MetricsRouteInformationParser {
+  final routeConfigurationUrlConverter;
   
-  final url = configuration.getUrl();
-  
-  return RouteInformation(location: url);
+  // Upper fields constructors..
+
+  @override
+  RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
+    if (configuration == null) return null;
+
+    final url = routeConfigurationUrlConverter.getUrl(configuration);
+
+    return RouteInformation(location: url);
+  }
 }
 ```
 

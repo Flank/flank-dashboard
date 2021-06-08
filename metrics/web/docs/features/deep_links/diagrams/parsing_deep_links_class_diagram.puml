@@ -3,6 +3,7 @@
 package common.presentation.navigation {
     class MetricsRouteInformationParser {
         - _routeConfigurationFactory : RouteConfigurationFactory
+        + routeConfigurationUrlConverter : RouteConfigurationUrlConverter
 
         + parseRouteInformation(information: RouteInformation) : RouteConfiguration
         + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
@@ -23,11 +24,14 @@ package common.presentation.navigation {
             {static} RouteConfiguration.loading(parameters: Map<String, dynamic>): RouteConfiguration
 
             + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
-            + getUrl() : String
         }
 
         class RouteConfigurationFactory {
             + create(uri: Uri) : RouteConfiguration
+        }
+
+        class RouteConfigurationUrlConverter {
+            + getUrl(configuration: RouteConfiguration): String
         }
     }
 }
@@ -42,7 +46,10 @@ package flutter.material {
 MetricsRouteInformationParser --> RouteConfiguration : uses
 MetricsRouteInformationParser -up-> RouteInformation : uses
 MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+MetricsRouteInformationParser --> RouteConfigurationUrlConverter : uses
 
 RouteConfigurationFactory --> RouteConfiguration : creates
+
+RouteConfigurationUrlConverter --> RouteConfiguration : uses
 
 @enduml
