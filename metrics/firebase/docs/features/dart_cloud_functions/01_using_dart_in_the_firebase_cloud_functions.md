@@ -32,6 +32,8 @@ Since the `Dart` code could be compiled to the `JavaScript` code, we are able to
 ### Requirements
 > Define requirements and make sure that they are complete.
 
+The chosen approach must satisfy the following requirements:
+
 1. Possibility to create Cloud Functions for Firebase.
 2. Allows using the Admin SDK to manipulate the Firestore data.
 3. Provides an ability to write Cloud Functions using Dart.
@@ -75,6 +77,8 @@ We've considered and analyzed the described above packages and chose the `fireba
 
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
+
+There are two steps that need to be done to implement the feature - [create](#cloud-function-creation) and [deploy](#cloud-function-deployment) the Cloud Function.
 
 #### Cloud Function creation
 

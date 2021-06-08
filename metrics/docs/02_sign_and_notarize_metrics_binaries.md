@@ -15,7 +15,18 @@ Currently, Metrics binaries for macOS have not been signed or notarized.
 
 The document's goal is to investigate and analyze tools and methods that can help in signing and notarizing binaries.
 
-## References
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+        - [Use existing packages](#use-existing-packages)
+            - [gon](#gon)
+            - [signing_tools](#signing_tools)
+            - [notarize-cli](#notarize-cli)
+        - [Generate sha256 hash](#generate-sha256-hash)
+        - [Decision](#decision)
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [notarizing macOS software before distribution](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution)
@@ -27,16 +38,6 @@ The document's goal is to investigate and analyze tools and methods that can hel
 - [generate sha256 hash](https://ss64.com/osx/shasum.html)
 - [import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
 
-## Contents
-
-- [**Analysis**](#analysis)
-    - [Landscape](#landscape)
-        - [gon](#gon)
-        - [signing_tools](#signing_tools)
-        - [notarize-cli](#notarize-cli)
-        - [Generate sha256 hash](#generate-sha256-hash)
-        - [Decision](#decision)
-
 # Analysis
 > Describe a general analysis approach.
 
@@ -46,6 +47,14 @@ The research concludes with a short description of the tool (method), an example
 
 ### Landscape
 > Look for existing solutions in the area.
+
+There are two approaches to sign and notarize binaries - [using existing packages](#use-existing-packages) or [generate sha256 hash](#generate-sha256-hash).
+
+### Use existing packages
+
+At this time, there are only a few packages, that meets our requirements.
+
+Let's take a closer look at the packages: 
 
 #### [gon](https://github.com/mitchellh/gon)
 
@@ -151,7 +160,7 @@ Cons:
  - requires Xcode
  - does not check if the given file is already signed
 
-#### [Generate sha256 hash](https://ss64.com/osx/shasum.html)
+### [Generate sha256 hash](https://ss64.com/osx/shasum.html)
 
 This method provides an easy way to compute SHA hash for Metrics binaries.
 

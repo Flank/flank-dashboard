@@ -5,18 +5,13 @@ Data aggregation is the process of gathering data and presenting it in a summari
 
 By aggregating data, it is easier to identify patterns and trends that would not be immediately visible. Quick access to information helps make better decisions and improve product services and communications.
 
-As for the `Metrics` application - [builds per week](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrated a total count of performed builds by the last 7 days.
+As for the `Metrics` application - [builds per week](https://github.com/Flank/flank-dashboard/blob/master/docs/05_project_metrics.md#builds-metric) - is one of the examples of aggregated data. This metric illustrates a total count of performed builds by the last 7 days.
 
 The same aggregation definition we can apply to Firebase aggregations.
 
-## References
-> Link to supporting documentation, GitHub tickets, etc.
-
-- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
-- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
-
 ## Contents
 
+- [**References**](#references)
 - [**Analysis**](#analysis)
     - [Feasibility study](#feasibility-study)
     - [Requirements](#requirements)
@@ -40,6 +35,12 @@ The same aggregation definition we can apply to Firebase aggregations.
       - [onBuildUpdated](#onBuildUpdated)
       - [Testing](#Testing)
 
+# References
+> Link to supporting documentation, GitHub tickets, etc.
+
+- [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
+- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
+
 # Analysis
 > Describe a general analysis approach.
 
@@ -50,7 +51,7 @@ Based on the analysis, we should make a decision about an optimal approach that 
 ### Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-If we want to quickly find documents in large collections, we should use Firebase advanced queries. Advanced queries in Cloud Firestore allow quickly find documents in large collections. If we want to gain insight into the properties of the collection as a whole (e.g., builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation because of the Firestore limitations.
+If we want to quickly find documents in large collections, we should use Firebase advanced queries. If we want to gain insight into the properties of the collection as a whole (e.g., builds per week), we need an aggregation over a collection. Unfortunately, Cloud Firestore does not support native aggregation queries. So, we should implement this calculation because of the Firestore limitations.
 
 For now, to make builds aggregations we should load all builds and process calculations on the client, because Cloud Firestore does not support the aggregation queries.
 
@@ -58,6 +59,8 @@ This solution is okay if a project has not many builds, but over time, the numbe
 
 ### Requirements
 > Define requirements and make sure that they are complete.
+
+The `Firestore builds aggregation` feature should meet the following requirements: 
 
 - Reduces Firestore usage.
 - Processes aggregation calculations.

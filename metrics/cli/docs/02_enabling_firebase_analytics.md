@@ -5,7 +5,16 @@ The Metrics CLI tool's goal is to deploy a Metrics project to Firebase from scra
 
 Therefore, the document's goal is to investigate all approaches of enabling Firebase analytics for a newly created Firebase project, to make the Metrics CLI the most usable.
 
-## References
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+        - [Manual](#manual)
+        - [Using an API](#using-an-api)
+        - [Decision](#decision)
+
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Firebase Management API](https://firebase.google.com/docs/projects/api/reference/rest)
@@ -13,14 +22,6 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 - [Compute engine API](https://cloud.google.com/compute/docs/reference/rest/v1)
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [gcloud CLI auth](https://cloud.google.com/sdk/gcloud/reference/auth)
-
-## Contents
-
-- [**Analysis**](#analysis)
-    - [Landscape](#landscape)
-        - [Manual](#manual)
-        - [Using an API](#using-an-api)
-        - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.
@@ -32,6 +33,8 @@ The research should conclude with a chosen approach and a short description of w
 
 ### Landscape
 > Look for existing solutions in the area.
+
+At this time, there are two approaches to enable Firebase analytics - [manually](#manual) or [using an API](#using-an-api).
 
 #### Manual
 

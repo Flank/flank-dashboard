@@ -5,21 +5,22 @@ Since the Metrics App stores [allowed domains](https://github.com/Flank/flank-da
 
 Therefore, the document's goal is to investigate all approaches of managing Cloud Firestore data using [Admin SDK](https://developers.google.com/admin-sdk) to make the Metrics CLI the most usable.
 
-## References
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+      - [Using Dart package](#using-dart-package)
+      - [Using Cloud Functions for Firebase](#using-cloud-functions-for-firebase)
+      - [Decision](#decision)
+
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Cloud Firestore](https://firebase.google.com/docs/firestore)
 - [Cloud Functions for Firebase](https://firebase.google.com/docs/functions)
 - [Admin SDK](https://developers.google.com/admin-sdk)
 - [dartbase_admin package](https://pub.dev/packages/dartbase_admin)
-
-## Contents
-
-- [**Analysis**](#analysis)
-    - [Landscape](#landscape)
-      - [Using Dart package](#using-dart-package)
-      - [Using Cloud Functions for Firebase](#using-cloud-functions-for-firebase)
-      - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.
@@ -31,6 +32,8 @@ This research should conclude with a chosen approach and a short explanation of 
 
 ### Landscape
 > Look for existing solutions in the area.
+
+At this time, there are two approaches to manage Firebase data - [using Dart package](#using-dart-package) or [using Cloud Functions for Firebase](#using-cloud-functions-for-firebase).
 
 #### Using Dart package
 

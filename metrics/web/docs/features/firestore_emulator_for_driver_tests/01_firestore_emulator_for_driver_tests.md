@@ -38,6 +38,8 @@ We are not configuring the [Firebase Auth emulator](https://firebase.google.com/
 ### Requirements
 > Define requirements and make sure that they are complete.
 
+The `Firestore emulator for driver tests` feature should meet the following requirements: 
+
 1. A Firestore emulator, run using the imported test data.
 2. The web application uses the Firestore instance configured to use the emulator while running integration tests.
 
@@ -109,6 +111,9 @@ setupAll(() {
 The specified port in the `host` argument must be equal to the emulator's port.
 
 # Design
+> Explain and diagram the technical design.
+
+The Firestore emulator for driver tests implementation requires changes in the classes related to driver tests. The design describes configuring the test runner and application. There is also information about creating necessary test data for the Firestore emulator. 
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -150,6 +155,8 @@ _**Note:** The command must be run inside the firebase folder to apply available
 
 ### Program
 > Detailed solution description to class/method level.
+
+There are two steps, that need to be done to implement the feature - [configure the test runner](#configure-the-test-runner) and [the application](#configure-the-application).
 
 #### Configure the test runner
 

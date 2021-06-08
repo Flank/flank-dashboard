@@ -5,7 +5,17 @@ To improve the user experience of the Metrics Web Application, we need to add so
 
 Therefore, the document's goal is to investigate the main approaches of animations displaying in Flutter considering both web and mobile and select the best approach for the Metrics Web Application.
 
-## References
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+      - [Manual](#manual)
+      - [Lottie](#lottie)
+      - [Rive](#rive)
+      - [Decision](#decision)
+
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Flutter guide: Introduction to animations](https://flutter.dev/docs/development/ui/animations).
@@ -13,15 +23,6 @@ Therefore, the document's goal is to investigate the main approaches of animatio
 - [Lottie package](https://pub.dev/packages/lottie)
 - [Rive app](https://rive.app/).
 - [Rive package](https://pub.dev/packages/rive).
-
-## Contents
-
-- [**Analysis**](#analysis)
-    - [Landscape](#landscape)
-      - [Manual](#manual)
-      - [Lottie](#lottie)
-      - [Rive](#rive)
-      - [Decision](#decision)
 
 # Analysis
 > Describe a general analysis approach.
@@ -32,6 +33,10 @@ The research should conclude with a chosen approach and a short description of w
 
 ### Landscape
 > Look for existing solutions in the area.
+
+At this time, there are few approaches to provide animated visual effects in the Metrics Web Application - [manually](#manual), [using Lottie library](#lottie), or [using Rive package](#rive). 
+
+Let's take a closer look at them.
 
 #### Manual
 
