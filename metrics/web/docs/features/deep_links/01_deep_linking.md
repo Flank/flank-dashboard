@@ -283,10 +283,43 @@ RouteConfiguration create(Uri uri) {
 }
 ```
 
-To be able to create a specific route with the `query parameters` we should extract the route matching logic to a separate `_getRoute` method. Then we can use the parsed `RouteConfiguration` and provide it with the `query parameters` using the `RouteConfiguration.copyWith` method.
+To be able to create a specific route with the `query parameters` we should modify the `RouteConfiguration` class to provide named constructors for routes used in the Metrics Web application, and make the default constructor private. After the described changes, we should reuse the created named constructors in the `RouteConfigurationFactory` instead of the `MetricsRoutes` class.
 
 Consider the following code snippet that demonstrates this:
 ```dart
+
+class RouteConfiguration {
+  /// A name of this route.
+  final RouteName name;
+
+  /// A path of this route that is used to create the application URL.
+  final String path;
+
+  /// A flag that indicates whether the authorization is required for this route.
+  final bool authorizationRequired;
+
+  /// A parameters of this route that is used to create the application URL.
+  final Map<String, dynamic> parameters;
+
+  const RouteConfiguration._({
+    @required this.name,
+    @required this.authorizationRequired,
+    this.path,
+    this.parameters,
+  })  : assert(name != null),
+        assert(authorizationRequired != null);
+  
+  const RouteConfiguration.dashboard({
+    Map<String, dynamic> parameters,  
+  }) : super(name: RouteName.dashboard, 
+             authorizationRequired: true, 
+             path: '${RouteName.dashboard}',
+             parameters: parameters,
+            );
+  
+  /// Other named constructors...
+} 
+
 RouteConfiguration create(Uri uri) {
   final pathSegments = uri?.pathSegments;
 
@@ -295,26 +328,21 @@ RouteConfiguration create(Uri uri) {
   }
 
   final routeName = pathSegments.first;
-  final route = _getRoute(routeName);
+  final queryParameters = uri?.queryParameters;
 
-  final queryParameters = uri.queryParameters;
-  
-  return route.copyWith(parameters: queryParameters);
-}
-
-RouteConfiguration _getRoute(String routeName) {
   if (routeName == RouteName.login.value) {
-    return MetricsRoutes.login;
+    return RouteConfiguration.login(parameters: queryParameters);
   } else if (routeName == RouteName.dashboard.value) {
-    return MetricsRoutes.dashboard;
+    return RouteConfiguration.dashboard(parameters: queryParameters);
   } else if (routeName == RouteName.projectGroups.value) {
-    return MetricsRoutes.projectGroups;
+    return RouteConfiguration.projectGroups(parameters: queryParameters);
   } else if (routeName == RouteName.debugMenu.value) {
-    return MetricsRoutes.debugMenu;
+    return RouteConfiguration.debugMenu(parameters: queryParameters);
   }
 
-  return MetricsRoutes.dashboard;
+  return RouteConfiguration.dashboard();
 }
+
 ```
 
 ##### RouteInformationParser
@@ -337,7 +365,7 @@ class RouteConfiguration {
   /// A path of this route that is used to create the application URL.
   final String path;
   
-  /// A query parameters of this route that is used to create the application URL.
+  /// A parameters of this route that is used to create the application URL.
   final Map<String, dynamic> parameters;
   
   /// ... other fields declarations, constructors
