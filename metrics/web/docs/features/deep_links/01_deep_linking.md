@@ -359,11 +359,11 @@ RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
 
 As we can see, the current implementation does not restore the `query parameters` of a URL, but only the URL's `path`. 
 
-To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationLocationConverter` class with a `.getLocation()` method that converts the given `RouteConfiguration` instance to a URL location.
+To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationLocationConverter` class with a `.convert()` method that converts the given `RouteConfiguration` instance to a URL location.
 ```dart
 class RouteConfigurationLocationConverter {
   /// Converts the given [configuration] to a URL [String].
-  String getLocation(RouteConfiguration configuration) {
+  String convert(RouteConfiguration configuration) {
     final path = configuration.path;
     final parameters =  configuration.parameters;
     
@@ -392,7 +392,7 @@ class MetricsRouteInformationParser {
   RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
     if (configuration == null) return null;
 
-    final url = routeConfigurationLocationConverter.location(configuration);
+    final url = routeConfigurationLocationConverter.convert(configuration);
 
     return RouteInformation(location: url);
   }
