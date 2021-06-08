@@ -16,11 +16,11 @@ package common.presentation.navigation {
             + parameters : Map<String, dynamic>
 
             - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
-            + RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
-            + RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
-            + RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
-            + RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
-            + RouteConfiguration.loading(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
+            {static} RouteConfiguration.loading(parameters: Map<String, dynamic>): RouteConfiguration
 
             + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
             + getUrl() : String

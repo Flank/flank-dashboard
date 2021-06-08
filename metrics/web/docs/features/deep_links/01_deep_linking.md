@@ -283,7 +283,7 @@ RouteConfiguration create(Uri uri) {
 }
 ```
 
-To be able to create a specific route with the `query parameters` we should modify the `RouteConfiguration` class to provide named constructors for routes used in the Metrics Web application, and make the default constructor private. After the described changes, we should reuse the created named constructors in the `RouteConfigurationFactory` instead of the `MetricsRoutes` class.
+To be able to create a specific route with the `query parameters`, we should modify the `RouteConfiguration` class to provide named constructors for routes used in the Metrics Web application and make the default constructor private. After the described changes, we should reuse the created named constructors in the `RouteConfigurationFactory` instead of the `MetricsRoutes` class.
 
 Consider the following code snippet that demonstrates this:
 ```dart
@@ -318,31 +318,32 @@ class RouteConfiguration {
             );
   
   /// Other named constructors...
-} 
-
-RouteConfiguration create(Uri uri) {
-  final pathSegments = uri?.pathSegments;
-
-  if (pathSegments == null || pathSegments.isEmpty) {
-    return MetricsRoutes.loading;
-  }
-
-  final routeName = pathSegments.first;
-  final queryParameters = uri?.queryParameters;
-
-  if (routeName == RouteName.login.value) {
-    return RouteConfiguration.login(parameters: queryParameters);
-  } else if (routeName == RouteName.dashboard.value) {
-    return RouteConfiguration.dashboard(parameters: queryParameters);
-  } else if (routeName == RouteName.projectGroups.value) {
-    return RouteConfiguration.projectGroups(parameters: queryParameters);
-  } else if (routeName == RouteName.debugMenu.value) {
-    return RouteConfiguration.debugMenu(parameters: queryParameters);
-  }
-
-  return RouteConfiguration.dashboard();
 }
 
+class RouteConfigurationFactory {
+  RouteConfiguration create(Uri uri) {
+    final pathSegments = uri?.pathSegments;
+
+    if (pathSegments == null || pathSegments.isEmpty) {
+      return RouteConfiguration.loading(parameters: queryParameters);
+    }
+
+    final routeName = pathSegments.first;
+    final queryParameters = uri?.queryParameters;
+
+    if (routeName == RouteName.login.value) {
+      return RouteConfiguration.login(parameters: queryParameters);
+    } else if (routeName == RouteName.dashboard.value) {
+      return RouteConfiguration.dashboard(parameters: queryParameters);
+    } else if (routeName == RouteName.projectGroups.value) {
+      return RouteConfiguration.projectGroups(parameters: queryParameters);
+    } else if (routeName == RouteName.debugMenu.value) {
+      return RouteConfiguration.debugMenu(parameters: queryParameters);
+    }
+
+    return RouteConfiguration.dashboard();
+  }
+}
 ```
 
 ##### RouteInformationParser
