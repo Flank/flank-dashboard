@@ -29,13 +29,13 @@ Flutter allows us to create separate widgets that we can reuse and combine later
 
 Given the above, it's possible to create the `Metrics storybook`.
 
-This feature will be useful to the following end-users: developers, designers, and a client.
+This feature will be useful to the following end-users: developers, designers, and clients.
 
 First of all, the great purpose of the Metrics storybook is that each widget and story (a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX. Metrics storybook creating allows developers to work in parallel on widgets and do not touch the main Metrics Web Application's codebase. It also, makes it easier to add new widgets, since we can test them separately and only then make changes to the code of the application.
 
 The storybook application can be shared with and commented on by designers so that they can add their input regarding the implementation of the designs.
 
-Another group that can use this feature is the client. Storybook makes it easy to show pieces of the software to keep the client in the loop. Even small pieces of UI can be shared and made available for feedback, preventing longer periods without any deliverables.
+Another group that can use this feature is clients. Storybook makes it easy to show pieces of the software to keep the client in the loop. Even small pieces of UI can be shared and made available for feedback, preventing longer periods without any deliverables.
 
 ### Requirements
 > Define requirements and make sure that they are complete.
