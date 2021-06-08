@@ -3,7 +3,7 @@
 package common.presentation.navigation {
     class MetricsRouteInformationParser {
         - _routeConfigurationFactory : RouteConfigurationFactory
-        + routeConfigurationUrlConverter : RouteConfigurationUrlConverter
+        + routeConfigurationLocationConverter : RouteConfigurationLocationConverter
 
         + parseRouteInformation(information: RouteInformation) : RouteConfiguration
         + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
@@ -30,7 +30,7 @@ package common.presentation.navigation {
             + create(uri: Uri) : RouteConfiguration
         }
 
-        class RouteConfigurationUrlConverter {
+        class RouteConfigurationLocationConverter {
             + convert(configuration: RouteConfiguration): String
         }
     }
@@ -46,10 +46,10 @@ package flutter.material {
 MetricsRouteInformationParser --> RouteConfiguration : uses
 MetricsRouteInformationParser -up-> RouteInformation : uses
 MetricsRouteInformationParser --> RouteConfigurationFactory : uses
-MetricsRouteInformationParser --> RouteConfigurationUrlConverter : uses
+MetricsRouteInformationParser --> RouteConfigurationLocationConverter : uses
 
 RouteConfigurationFactory --> RouteConfiguration : creates
 
-RouteConfigurationUrlConverter --> RouteConfiguration : uses
+RouteConfigurationLocationConverter --> RouteConfiguration : uses
 
 @enduml
