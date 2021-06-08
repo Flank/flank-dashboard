@@ -31,7 +31,7 @@ package common.presentation.navigation {
         }
 
         class RouteConfigurationUrlConverter {
-            + getUrl(configuration: RouteConfiguration): String
+            + convert(configuration: RouteConfiguration): String
         }
     }
 }
