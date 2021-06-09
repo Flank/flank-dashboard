@@ -145,6 +145,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     _isAppInitialized = isAppInitialized;
 
+    print('app is intitialized');
     if (_isAppInitialized) _redirect();
   }
 
@@ -266,7 +267,16 @@ class NavigationNotifier extends ChangeNotifier {
 
     _pages.clear();
     push(_redirectRoute);
-    _redirectRoute = null;
+
+    if (_isUserLoggedIn) {
+      _redirectRoute = null;
+    }
+  }
+
+  ///
+  void redirectOnLogIn() {
+    final redirect = _redirectRoute ?? MetricsRoutes.dashboard;
+    pushStateReplacement(redirect);
   }
 
   /// Creates a [RouteConfiguration] using the given [page].
