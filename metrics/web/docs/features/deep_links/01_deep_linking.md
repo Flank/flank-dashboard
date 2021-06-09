@@ -362,20 +362,17 @@ As we can see, the current implementation does not restore the `query parameters
 To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationLocationConverter` class with a `.convert()` method that converts the given `RouteConfiguration` instance to a URL location.
 ```dart
 class RouteConfigurationLocationConverter {
-  /// Converts the given [configuration] to a URL [String].
+  /// Converts the given [configuration] to a location [String].
   String convert(RouteConfiguration configuration) {
     final path = configuration.path;
-    final parameters =  configuration.parameters;
-    
-    Uri uri = Uri(path: path);
+    final parameters = configuration.parameters;
 
     /// We need to perform this because:
-    /// Uri(path: 'foo', queryParameters: null) => '/foo?' instead of '/foo'
     /// Uri(path: 'foo', queryParameters: {}) => '/foo?' instead of '/foo'
-    if(parameters != null && parameters.isNotEmpty) {
-      uri = uri.replace(queryParameters: parameters);
-    }
-
+    /// Uri(path: 'foo', queryParameters: null) => '/foo'
+    final queryParameters = parameters.isNotEmpty ? parameters : null;
+    
+    final uri = Uri(path: path, queryParameters: queryParameters);
     return '$uri';
   }
 }
@@ -384,7 +381,7 @@ class RouteConfigurationLocationConverter {
 When we've implemented the `RouteConfigurationLocationConverter` class, we can use it in the `MetricsRouteInformationParser.restoreRouteInformation()` method as the following:
 ```dart
 class MetricsRouteInformationParser {
-  final routeConfigurationLocationConverter;
+  final RouteConfigurationLocationConverter routeConfigurationLocationConverter;
   
   // Upper fields constructors..
 
