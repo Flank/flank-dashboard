@@ -6,19 +6,84 @@ legend top left
     | Color | Arrow type |
     |<#B70033>| Existing relationship |
     |<#Green>| New relationship |
+    |<#5B95BB>| Modified classes |
 endlegend
 
-component "Metrics CLI" as Cli
-component "Update"
-component "Deploy"
+component "Metrics CLI" as CLI
+component "UpdateCommand"
+component "DeployCommand"
+component "DoctorCommand"
+component "MetricsCliRunner"
+component "Updater"
+component "Deployer" #5B95BB
 component "Doctor"
-component Cloud
+component "Config File" as File
 
-Cli -[#Green]-* Update
-Cli --* Deploy
-Cli --* Doctor
+package services {
+    package firebase {
+        component FirebaseService #5B95BB
+        package cli as firebase.cli {
+            component FirebaseCli #5B95BB
+        }
+    }
 
-Update -[#Green]-> Cloud : [redeploys a new version of components]
-Deploy --> Cloud : [deploys components]
+    package gcloud {
+        component GCloudService
+        package cli as gcloud.cli {
+            component GCloudCli
+        }
+    }
+
+    package flutter {
+        component FlutterService
+        package cli as flutter.cli {
+            component FlutterCli
+        }
+    }
+
+    package git {
+        component GitService
+        package cli as git.cli {
+            component GitCli
+        }
+    }
+
+    package npm {
+        component NpmService
+        package cli as npm.cli {
+            component NpmCli
+        }
+    }
+
+    package sentry {
+        component SentryService #5B95BB
+        package cli as sentry.cli {
+            component SentryCli #5B95BB
+        }
+    }
+}
+
+
+CLI --> MetricsCliRunner : uses to run the selected command
+
+UpdateCommand -[#Green]up-* MetricsCliRunner
+DeployCommand -up-* MetricsCliRunner
+DoctorCommand -up-* MetricsCliRunner
+
+UpdateCommand -[#Green]left-> File : receives from the console as option
+UpdateCommand -[#Green]-> Updater : uses to redeploy components with using data from the config file
+DeployCommand --> Deployer : uses to deploy components
+DoctorCommand --> Doctor : uses to display version information of the components
+
+Updater -[#Green]-> services : uses
+Deployer --> services : uses
+Doctor --> services : uses
+
+FirebaseService -down-> FirebaseCli : uses
+GCloudService -down-> GCloudCli : uses
+FlutterService -down-> FlutterCli : uses
+GitService -down-> GitCli : uses
+NpmService -down-> NpmCli : uses
+SentryService -down-> SentryCli : uses
 
 @enduml
