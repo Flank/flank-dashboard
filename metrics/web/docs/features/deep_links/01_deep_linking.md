@@ -229,17 +229,17 @@ Cons:
 - High coupling;
 - Adding parameters handling may increase the page widgets size, and decrease the code readability.
 
+Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
+
 ### Program
 > Detailed solution description to class/method level.
 
-Comparing the approaches described above, we choose the [`NavigationNotifier`](#navigationnotifier-approach) approach as it aligns with the overall architectural requirements, simplifies the testing process, and is highly extensible.
-
-Once we've chosen the desired implementation approach, let's proceed to the next sections describing the required changes needed to implement the `Deep Linking` in the Metrics Web application.
+Once we've chosen the desired implementation approach, let's review the required changes needed to implement the `Deep Linking` in the Metrics Web application.
 
 First, we should be able to parse the `query parameters` from the URL and update the URL with the `query parameters`. When we're able to do that, we should create a unified mechanism to apply the deep links in the Metrics Web application.
 
 Consider the following subsections that describe each point:
-- [Parsing the deep links](#parsing-deep-links)
+- [Parsing the deep links](#parsing-deep-links).
 
 #### Parsing Deep Links
 The following subsections describe the required changes we should implement to be able to parse the deep links in the Metrics Web application:
@@ -359,7 +359,7 @@ RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
 
 As we can see, the current implementation does not restore the `query parameters` of a URL, but only the URL's `path`. 
 
-To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationLocationConverter` class with a `.convert()` method that converts the given `RouteConfiguration` instance to a URL location.
+To restore the `RouteInformation` correctly, we should implement a `RouteConfigurationLocationConverter` class with a `.convert()` method that converts the given `RouteConfiguration` instance to a location `String`.
 ```dart
 class RouteConfigurationLocationConverter {
   /// Converts the given [configuration] to a location [String].
