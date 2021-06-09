@@ -39,7 +39,7 @@ The same aggregation definition we can apply to Firebase aggregations.
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Github epic: Reduce Firebase usage / document reads](https://github.com/Flank/flank-dashboard/issues/1042)
-- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
+- [Firestore Cloud Function using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md)
 
 # Analysis
 > Describe a general analysis approach.
@@ -255,7 +255,7 @@ No one can read from or write to this collection. Let's consider the security ru
 ### Program
 > Detailed solution description to class/method level.
 
-When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/Flank/flank-dashboard/blob/concatenate_document_sections/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
+When we've created collections and applied rules for them, we should create the Firestore Cloud Functions. See [Cloud Functions using Dart](https://github.com/Flank/flank-dashboard/blob/master/metrics/firebase/docs/features/dart_cloud_functions/01_using_dart_in_the_firebase_cloud_functions.md) for more info on how to create Cloud Functions using the Dart programming language.
 
 Let's review each Cloud Function we need for this feature separately: 
 
