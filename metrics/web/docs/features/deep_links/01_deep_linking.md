@@ -20,7 +20,6 @@ As a user, I want to pass direct links to project and/or project groups, so that
     - [Architecture](#architecture)
       - [`NavigationNotifier` approach](#navigationnotifier-approach)
       - [Route parameters approach](#route-parameters-approach)
-      - [Approach decision](#approach-decision)
     - [Program](#program)
         - [Parsing Deep Links](#parsing-deep-links)
           - [RouteConfiguration](#routeconfiguration)
