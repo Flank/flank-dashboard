@@ -198,7 +198,7 @@ So, the main idea of this approach is to create a bidirectional connection betwe
 
 Consider the following component diagram that briefly describes this approach:
 
-![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links/diagrams/navigation_notifier_approach_component_diagram.puml)
+![Navigation notifier approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/navigation_notifier_approach_component_diagram.puml)
 
 Let's sum up the pros and cons of this approach:
 
@@ -215,7 +215,7 @@ The main idea of this approach is to pass the deep links directly to the specifi
 
 Consider the next component diagram that illustrates this approach:
 
-![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links/diagrams/route_parameters_approach_component_diagram.puml)
+![Route parameters approach diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/route_parameters_approach_component_diagram.puml)
 
 Let's review the pros and cons of the `route parameters` approach:
 
@@ -398,4 +398,4 @@ class MetricsRouteInformationParser {
 ##### Parsing Deep Links Summary
 Consider this class diagram that illustrates the required changes needed to parse the deep links from the URL:
 
-![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
+![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
