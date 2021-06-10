@@ -732,14 +732,14 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
 
 To improve the understanding of this feature implementation, consider the class diagram that illustrates the required classes and relationships between them needed to introduce the deep linking feature:
 
-![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_application/metrics/web/docs/features/deep_links/diagrams/deep_linking_class_diagram.puml)
+![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_class_diagram.puml)
 
 To understand how the feature works in terms of time, consider the following sequence diagrams:
 - Applying deep links in the Metrics Web application:
-  ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_application/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
+  ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
 
 - Saving deep links in response to the UI state changes (e.g., when the user applies a filter, searches, etc.):
-  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_application/metrics/web/docs/features/deep_links/diagrams/saving_deep_links_sequence_diagram.puml)
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
 
 #### Handling internal app navigation
 This section describes the changes we should perform to improve the overall navigation experience in the Metrics Wev application.
@@ -787,9 +787,9 @@ To improve this aspect of the navigation, we should modify the existing redirect
 2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_authorizationRedirect`. If the route does not require authorization, clear the `_authorizationRedirect`.
 3. When the user logs in, redirect the user to the `_authorizationRedirect` and clear the `_authorizationRedirect`.
 
-To do that, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into 2 methods: `.handleUserLoggedOut()` and `.handleUserLoggedIn()`.
+To do that, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into 2 methods: `.handleLogOut()` and `.handleLogIn()`.
 
-The `.handleUserLoggedOut()` should redirect the user to the `LoginPage`, and the `.handleUserLoggedIn()` should redirect the user to the `_authorizationRedirect`, or to the `DashboardPage` if the `_authorizationRedirect` is `null`.
+The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_authorizationRedirect`, or to the `DashboardPage` if the `_authorizationRedirect` is `null`.
 
 ```dart
 class NavigationNotifier extends ChangeNotifier {
@@ -818,8 +818,8 @@ class NavigationNotifier extends ChangeNotifier {
     return configuration;
   }
   
-  /// 
-  void handleUserLoggedIn() {
+  /// Handles the user's log in.
+  void handleLogIn() {
     _isUserLoggedIn = true;
     
     final redirect = _authorizationRedirect ?? MetricsRoutes.dashboard;
@@ -827,8 +827,8 @@ class NavigationNotifier extends ChangeNotifier {
     pushStateReplacement(redirect);
   }
 
-  ///
-  void handleUserLoggedOut() {
+  /// Handles the user's log out.
+  void handleLogOut() {
     _isUserLoggedIn = false;
     final currentPageName = currentConfiguration?.name;
 
@@ -841,7 +841,7 @@ class NavigationNotifier extends ChangeNotifier {
 }
 ```
 
-The `.handleUserLoggedIn()` should be called within the `Router.neglect` callback to avoid adding the `LoginPage` to the browser's history:
+The `.handleLogIn()` should be called within the `Router.neglect` callback to avoid adding the `LoginPage` to the browser's history:
 ```dart
 class _LoginPageState extends State<LoginPage> {
   ///...
@@ -856,7 +856,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       Router.neglect(context, () {
-        navigationNotifier.handleUserLoggedIn();
+        navigationNotifier.handleLogIn();
       });
     }
   }

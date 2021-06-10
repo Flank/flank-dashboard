@@ -1,4 +1,4 @@
-@startuml
+@startuml deep_links_class_diagram
 package common.presentation {
     package navigation {
         class MetricsRouteInformationParser {
