@@ -1,3 +1,6 @@
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
+
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
