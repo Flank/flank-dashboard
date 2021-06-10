@@ -4,8 +4,6 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
 
 ## Contents
 
-In this section, provide the contents for the document including all custom subsections created.
-
 - [**Analysis**](#analysis)
     - [Feasibility study](#feasibility-study)
     - [Requirements](#requirements)
@@ -17,7 +15,7 @@ In this section, provide the contents for the document including all custom subs
 
 The following analysis discovers the Metrics CLI `doctor` command output improvements feature. This feature purposes to improve the output of the `doctor` command in a way it would be clearer for users.
 
-The analysis defines the requirements for the feature, studies its feasibility, and selects the implementation approach.
+The analysis defines the requirements for the feature, studies its feasibility, and states the implementation approach.
 
 ### Feasibility Study
 > A preliminary study of the feasibility of implementing this feature.
