@@ -615,17 +615,6 @@ class NavigationNotifier extends ChangeNotifier {
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
     return page.restoreConfiguration();
   }
-  
-  /// Adds a new page created from the given [configuration] to the [pages].
-  void _addNewPage(RouteConfiguration configuration) {
-    final newConfiguration = _processConfiguration(configuration);
-
-    _setRouteConfiguration(newConfiguration);
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-  }
 }
 ```
 
