@@ -1,14 +1,22 @@
 # Enabling Firebase Authentication
-
-## Motivation
-> What problem is this project solving?
+> Feature description / User story.
 
 The Metrics CLI tool's goal is to deploy a Metrics project to Firebase from scratch. Since the Metrics Web application uses Firebase Authentication, and the Firebase Authentication is disabled by default, we should find an approach to enabling Firebase Authentication with necessary providers.
 
 Therefore, the document's goal is to investigate all approaches of enabling Firebase Authentication for a newly created Firebase project to make the Metrics CLI the most usable.
 
-## References
+## Contents
 
+- [**References**](#references)
+- [**Analysis**](#analysis)    
+    - [Landscape](#landscape)
+        - [Manual](#manual)
+        - [Using an API](#using-an-api)
+          - [Enable Email & Password provider](#enable-email--password-provider)
+          - [Enable Google sign-in provider](#enable-google-sign-in-provider)
+        - [Decision](#decision)
+
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Firebase Authentication](https://firebase.google.com/docs/auth)
@@ -16,14 +24,18 @@ Therefore, the document's goal is to investigate all approaches of enabling Fire
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [gcloud CLI auth](https://cloud.google.com/sdk/gcloud/reference/auth)
 
-## Analysis
-
-### Process
+# Analysis
+> Describe a general analysis approach.
 
 The analysis begins with an overview of enabling Firebase Authentication with necessary providers approaches during Metrics Web application deployment.
 It provides the main pros and cons and a short description of each approach we've investigated.
 
 This research should conclude with a chosen approach and a short explanation of why did we choose such an approach.
+
+### Landscape
+> Look for existing solutions in the area.
+
+At this time, there are two approaches to enable Firebase authentication - [manually](#manual) or [using an API](#using-an-api).
 
 #### Manual
 
@@ -132,6 +144,6 @@ Cons:
 
 - still requires user interaction.
 
-## Decision
+#### Decision
 
 As we analyzed above, both cases require manual actions, but in the [API approach](#using-an-api), the user will not need to worry about enabling required providers, so we should choose an [API approach](#using-an-api) because it requires less action from the user side.

@@ -1,13 +1,20 @@
 # Managing Firestore data
-
-## Motivation
-> What problem is this project solving?
+> Feature description / User story.
 
 Since the Metrics App stores [allowed domains](https://github.com/Flank/flank-dashboard/blob/master/docs/18_security_audit_document.md#the-allowed_email_domains-collection) and [feature config](https://github.com/Flank/flank-dashboard/blob/master/docs/19_security_audit_document.md#the-feature_config-collection) collections in Cloud Firestore and these collections are protected by the Firebase rules from the writing, we should find an approach of managing Firestore data using [Admin SDK](https://developers.google.com/admin-sdk).
 
 Therefore, the document's goal is to investigate all approaches of managing Cloud Firestore data using [Admin SDK](https://developers.google.com/admin-sdk) to make the Metrics CLI the most usable.
 
-## References
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+      - [Using Dart package](#using-dart-package)
+      - [Using Cloud Functions for Firebase](#using-cloud-functions-for-firebase)
+      - [Decision](#decision)
+
+# References
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Cloud Firestore](https://firebase.google.com/docs/firestore)
@@ -15,14 +22,18 @@ Therefore, the document's goal is to investigate all approaches of managing Clou
 - [Admin SDK](https://developers.google.com/admin-sdk)
 - [dartbase_admin package](https://pub.dev/packages/dartbase_admin)
 
-## Analysis
-
-### Process
+# Analysis
+> Describe a general analysis approach.
 
 The analysis begins with an overview of managing Cloud Firestore data using `Admin SDK` approaches during Metrics Web application deployment.
 It provides the main pros and cons and a short description of each approach we've investigated.
 
 This research should conclude with a chosen approach and a short explanation of why did we choose such an approach.
+
+### Landscape
+> Look for existing solutions in the area.
+
+At this time, there are two approaches to manage Firebase data - [using Dart package](#using-dart-package) or [using Cloud Functions for Firebase](#using-cloud-functions-for-firebase).
 
 #### Using Dart package
 
@@ -109,6 +120,6 @@ Cons:
 
 - requires steps from the user side (configure billing plan).
 
-### Decision
+#### Decision
 
 As we've analyzed above, the [Cloud Functions](#using-cloud-functions-for-firebase) does not allow us to automate the Cloud Firestore data managing, so we should choose the [Dart Package](#using-dart-package) since it provides a more clean and fully automated way of managing Cloud Firestore data.

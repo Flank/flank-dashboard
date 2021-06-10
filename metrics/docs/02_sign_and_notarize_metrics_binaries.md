@@ -1,5 +1,5 @@
-# Motivation
-> What problem is this project solving?
+# Sign and Notarize Metrics Binaries
+> Feature description / User story.
 
 Apple's ongoing initiatives at controlling what runs on their platforms took a new turn with macOS Catalina (10.15), with a required app and command-line binary signing.
 
@@ -15,6 +15,17 @@ Currently, Metrics binaries for macOS have not been signed or notarized.
 
 The document's goal is to investigate and analyze tools and methods that can help in signing and notarizing binaries.
 
+## Contents
+
+- [**References**](#references)
+- [**Analysis**](#analysis)
+    - [Landscape](#landscape)
+        - [Use existing packages](#use-existing-packages)
+            - [gon](#gon)
+            - [signing_tools](#signing_tools)
+            - [notarize-cli](#notarize-cli)
+        - [Generate sha256 hash](#generate-sha256-hash)
+        - [Decision](#decision)
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
@@ -28,14 +39,24 @@ The document's goal is to investigate and analyze tools and methods that can hel
 - [import codesign certificate Github Action](https://github.com/Apple-Actions/import-codesign-certs)
 
 # Analysis
-
-## Process
+> Describe a general analysis approach.
 
 The analysis begins with the selection of programs and the study of their work, complexity, and popularity. This provides a comprehensive view of how to solve the given problem.
 
 The research concludes with a short description of the tool (method), an example of the usage, and a list of pros and cons of each.
 
-### [gon](https://github.com/mitchellh/gon)
+### Landscape
+> Look for existing solutions in the area.
+
+There are two approaches to sign and notarize binaries - [using existing packages](#use-existing-packages) or [generate sha256 hash](#generate-sha256-hash).
+
+### Use existing packages
+
+At this time, there are only a few packages, that meets our requirements.
+
+Let's take a closer look at the packages: 
+
+#### [gon](https://github.com/mitchellh/gon)
 
 `gon` is a simple tool for signing and notarizing CLI binaries for macOS. It can be run manually or in automation pipelines. `gon` requires a configuration file (`.hcl` or `.json`) that can be specified as a file path or passed in via stdin. The configuration specifies all the settings tool will use to sign and package files.
 Before using `gon` you should install it:
@@ -67,7 +88,7 @@ Pros:
 Cons:
  - can't be used with `sign-only` configuration
 
-### [signing_tools](https://github.com/drud/signing_tools)
+#### [signing_tools](https://github.com/drud/signing_tools)
 
 These are two `.sh` scripts that provide sign and notarize binaries.
 
@@ -104,7 +125,7 @@ Cons:
  - does not have a single configuration file
  - not a popular tool (only a few GitHub stars, does not have contributors)
 
-### [notarize-cli](https://github.com/bacongravy/notarize-cli)
+#### [notarize-cli](https://github.com/bacongravy/notarize-cli)
 
 This tool is a wrapper for `xcrun altool` and `xcrun stapler`, so it requires Xcode to be installed.
 
@@ -139,7 +160,7 @@ Cons:
  - requires Xcode
  - does not check if the given file is already signed
 
-### [generate sha256 hash](https://ss64.com/osx/shasum.html)
+### [Generate sha256 hash](https://ss64.com/osx/shasum.html)
 
 This method provides an easy way to compute SHA hash for Metrics binaries.
 
@@ -158,7 +179,7 @@ Cons:
  - requires an extra step for users to verify the checksum
  - no signatures generated and macOS will block such app by default - so users will have to take extra steps to run unsigned apps
 
-## Decision
+#### Decision
 
 As we've discovered, binaries compiled via `dart2native` can't be signed and notarized. The existing [issue](https://github.com/dart-lang/sdk/issues/39106) in the `dart-SDK` repo confirmed the problem.
 
