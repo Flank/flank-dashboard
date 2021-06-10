@@ -215,6 +215,10 @@ With that, we can display a list of extracted widgets within the storybook, and 
 ### System modeling
 > Create an abstract model of the system/feature.
 
-As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` will be a separate Flutter web project.
+As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` will be a separate Flutter web project next to the `Metrics Web Application` and contain a list of widgets, extracted from the web application.
 
 The interaction of the `Metrics storybook` and `Metrics Web Application` will go through the provision of a list of widgets by the storybook and their use by the application. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
+
+The following diagram shows the described interaction:
+
+![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_analysis_doc/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)

@@ -1,0 +1,13 @@
+@startuml metrics_storybook_web_relation_diagram
+
+package "metrics" {
+  package "storybook" {
+    [Metrics Storybook UI] ..> [Widgets] : uses
+  }
+
+  package "web" {
+    [Metrics Web Application UI] ..> [Widgets] : uses
+  }
+}
+
+@enduml
