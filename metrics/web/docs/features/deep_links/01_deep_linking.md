@@ -215,7 +215,7 @@ Consider the following component diagram that briefly describes this approach:
 Let's sum up the pros and cons of this approach:
 
 Pros:
-- Well segregated responsibility between components;
+- Well-segregated responsibility between components;
 - Extensible approach - meaning that we can easily add new page-specific deep links or extend them;
 - Well-testable because of the responsibility segregation.
 
@@ -472,9 +472,9 @@ class DashboardPageParameters implements PageParameters {
 ```
 
 ##### PageParametersFactory
-Once we've implemented the required `PageParameters`, we should have the ability to create specific `PageParameters` instances from the given `RouteConfiguration`. To do that, we should implement a `PageParametersFactory` which is responsible for that.
+Once we've implemented the required `PageParameters`, we should create a `PageParametersFactory` that encapsulates the creation of specific `PageParameters` from the given `RouteConfiguration`.
 
-Consider the following code snippet that demonstrates the possible way of creating the `PageParameters` from the given `RouteConfiguration` instance:
+Consider the following code snippet that demonstrates the `PageParametersFactory.create` method:
 ```dart
 /// Returns the [PageParameters] based on the given [configuration].
 PageParameters create(RouteConfiguration configuration) {
@@ -489,12 +489,14 @@ PageParameters create(RouteConfiguration configuration) {
 }
 ```
 
-The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this factory application.
+The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application and controls the deep linking of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this factory application.
 
 ##### MetricsPage and MetricsPageFactory
-To be able to restore the `PageParameters` when the application pops a page, we should update the `MetricsPage` and `MetricsPageFactory` classes.
+To be able to restore the `PageParameters` when the application, for example, pops a page, we should update the `MetricsPage` and `MetricsPageFactory` classes.
 
-A `MetricsPage` now should store a `RouteConfiguration` as an `arguments` field and provide a method `restoreConfiguration()`. The `MetricsPage` class should also provide an overridden `copyWith` method to be able to copy a page with the updated `arguments`. Consider the following code snippet that demonstrates this:
+A `MetricsPage` should store a `RouteConfiguration` as an `arguments` field and provide a method `restoreConfiguration()` for restoring the `RouteConfiguration` used to create this page. The `MetricsPage` class should also provide an overridden `copyWith` method to be able to copy a page with the updated `arguments`. 
+
+Consider the following code snippet that demonstrates the `MetricsPage` related changes:
 ```dart
   const MetricsPage({
     @required this.child,
@@ -510,9 +512,7 @@ A `MetricsPage` now should store a `RouteConfiguration` as an `arguments` field 
 
   /// Restores the [RouteConfiguration] this used to create this page.
   PageParameters restoreConfiguration() {
-    if(arguments is PageParameters) return arguments;
-    
-    return null;
+    return arguments as RouteConfiguration;
   }
   
   @override
@@ -528,7 +528,9 @@ A `MetricsPage` now should store a `RouteConfiguration` as an `arguments` field 
   }
 ```
 
-The `MetricsPageFactory` should be updated as well to create the `MetricsPage`s with the given `RouteConfiguration` as `arguments`. The code snippet below demonstrates the required changes to the `MetricsPageFactory`:
+The `MetricsPageFactory` should be updated as well to create `MetricsPage`s with the given `RouteConfiguration` as `arguments`. 
+
+The code snippet below demonstrates the `MetricsPageFactory.create` method changes:
 ```dart
   /// Creates the [MetricsPage] from the given [RouteConfiguration].
   MetricsPage create(RouteConfiguration configuration) {
@@ -557,7 +559,7 @@ To do that, we should implement a new method `_updatePageParameters()` method an
 Consider the following code snippets that demonstrate the required changes.
 
 ###### Updating page parameters
-The following code snippet demonstrates the changes required to be able to update the `PageParameters` in response to any `RouteConfiguration` changes.
+The following code snippet demonstrates the changes required to update the `PageParameters` in response to any `RouteConfiguration` changes.
 
 ```dart
 class NavigationNotifier extends ChangeNotifier {
@@ -657,7 +659,10 @@ class NavigationNotifier {
 ```
 
 ##### PageNotifier
-Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides interface for page parameters handling:
+Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides interface for a `page` that uses `PageParameters`.
+
+The following code snippet demonstrates the `PageNotifier` interface:
+
 ```dart
 /// An abstract [ChangeNotifier] that provides methods for handling
 /// page parameters.
@@ -671,7 +676,7 @@ abstract class PageNotifier extends ChangeNotifier
 }
 ```
 
-The `pageParametersUpdatesStream` allows subscribing directly to the `PageParameters` updates of a specific page. The `.handlePageParameters()` method allows to handle the new `PageParameters` provided by the `NavigationNotifier` (e.g., when the user opens a deep link, navigates back, etc.).
+The `pageParametersUpdatesStream` allows subscribing directly to the `PageParameters` updates of a specific page. The `.handlePageParameters()` method allows reacting to the new `PageParameters` provided by the `NavigationNotifier` (e.g., when the user opens a deep link, navigates back, etc.).
 
 Once we need to add new `PageParameters` to some page, we should update the corresponding `ChangeNotifier` of this page to implement the `PageNotifier` interface, implement the logic of applying the received `PageParameters`, and the logic of updating the `PageParameters` of this page.
 
@@ -686,7 +691,6 @@ The `PageParametersProxy` must perform the following:
 - Accept a `List` of `PageNotifier`s (`pageNotifiers`) that holds all `PageNotifier`s of the application;
 - Subscribe to `NavigationNofier.pageParametersStream` and provide the latest `PageParameters` to the `pageNotifiers`;
 - Subscribe to each `PageNotifier.pageParametersUpdatesStream` of the given `pageNotifiers` and provide the `PageParameters` updates to the `NavigationNotifier`;
-- Wrap the given `child`, as this widget
 
 ```dart
 class PageParametersProxy extends StatefulWidget {
@@ -747,7 +751,7 @@ To understand how the feature works in terms of time, consider the following seq
   ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
 
 #### Internal app navigation
-This section describes the changes we should perform to improve the overall navigation experience in the Metrics Wev application.
+This section describes the changes we should introduce to improve the overall navigation experience in the Metrics Web application.
 
 ##### Back Button navigation
 Currently, the back button that is displayed on the `ProjectGroupPage` and on the `DebugMenuPage` navigates to the `DashboardPage` using the following code:
@@ -760,7 +764,7 @@ void _navigateHome(BuildContext context) {
 }
 ```
 
-Formally, current behaviour of the `Back Button` can be unexpected to the user. Consider the following examples describing why this behaviour may be unexpected:
+Formally, the current behaviour of the `Back Button` can be unexpected to the user. Consider the following examples describing why this behaviour may be unexpected:
 - The user navigates to the `ProjectGroupPage` from the `DebugMenuPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage` instead of the `DebugMenuPage`;
 - The user applies some filtering or sorting parameters on the `DashboardPage`, navigates to the `ProjectGroupPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage`, however, does not restore the page parameters.
 
@@ -768,7 +772,7 @@ To improve the navigation experience here, we should introduce a new method to t
 - Remove the current page if there is an underlying page under it;
 - If there is no underlying page, push the given `orElse` route, which defaults to the `RouteConfiguration.dashboard()`.
 
-Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParameters` to the previous page, if any.
+Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParameters` to the previous page if any.
 
 The following code snippet demonstrates how the method `NavigationNotifier.tryPop` can be implemented:
 ```dart
