@@ -221,4 +221,4 @@ The interaction of the `Metrics storybook` and `Metrics Web Application` will go
 
 The following diagram shows the described interaction:
 
-![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_analysis_doc/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
+![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
