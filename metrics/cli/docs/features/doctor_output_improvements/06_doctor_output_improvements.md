@@ -1,4 +1,4 @@
-# Doctor Command Output Improvements
+# Doctor Output Improvements
 
 The Metrics CLI `doctor` command checks all third-party CLI tools that participate in a deployment process. As the command is to be generally used by end-users, we should improve the output of the `doctor` command to make it more comfortable.
 
@@ -115,4 +115,4 @@ The validation output classes and models are a part of the Metrics project and s
 
 The following component diagram describes the desired approach:
 
-![doctor output feature diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/doctor_command_analysis/metrics/cli/docs/diagrams/doctor_output_feature_component_diagram.puml)
+![doctor output feature diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/doctor_command_analysis/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_feature_component_diagram.puml)
