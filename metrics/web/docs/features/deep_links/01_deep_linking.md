@@ -26,6 +26,18 @@ As a user, I want to pass direct links to project and/or project groups, so that
           - [RouteConfigurationFactory](#routeconfigurationfactory)
           - [RouteInformationParser](#routeinformationparser)
           - [Parsing Deep Links Summary](#parsing-deep-links-summary)
+        - [Applying Deep Links](#applying-deep-links)
+          - [PageParameters](#pageparameters)
+          - [PageParametersFactory](#pageparametersfactory)
+          - [MetricsPage and MetricsPageFactory](#metricspage-and-metricspagefactory)
+          - [NavigationNotifier](#navigationnotifier)
+            - [Updating page parameters](#updating-page-parameters)
+            - [Pop method changes](#pop-method-changes)
+          - [PageNotifier](#pagenotifier)
+        - [Making things work](#making-things-work)
+        - [Internal app navigation](#internal-app-navigation)
+          - [Back Button navigation](#back-button-navigation)
+          - [Deep linking with authorization](#deep-linking-with-authorization)
 
 # Analysis
 > Describe the general analysis approach.
@@ -400,11 +412,11 @@ Consider this class diagram that illustrates the required changes needed to pars
 
 ![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
 
-### Applying Deep Links
+#### Applying Deep Links
 
 The following subsections describe the required changes needed to be able to apply the deep links in the Metrics Web application.
 
-#### PageParameters
+##### PageParameters
 Once we're able to parse `query parameters`, we should have a way to represent them in the Metrics Web application. To do that, let's introduce a `PageParameters` abstract class.
 
 Now, to create page parameters that are specific to some `page` (e.g., `DashboardPage`, `ProjectGroupPage`), we should create a new class that implements a `PageParameters` class, implement all necessary methods, and create a `.fromMap` factory constructor.
@@ -459,7 +471,7 @@ class DashboardPageParameters implements PageParameters {
 }
 ```
 
-#### PageParametersFactory
+##### PageParametersFactory
 Once we've implemented the required `PageParameters`, we should have the ability to create specific `PageParameters` instances from the given `RouteConfiguration`. To do that, we should implement a `PageParametersFactory` which is responsible for that.
 
 Consider the following code snippet that demonstrates the possible way of creating the `PageParameters` from the given `RouteConfiguration` instance:
@@ -479,7 +491,7 @@ PageParameters create(RouteConfiguration configuration) {
 
 The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this factory application.
 
-#### MetricsPage and MetricsPageFactory
+##### MetricsPage and MetricsPageFactory
 To be able to restore the `PageParameters` when the application pops a page, we should update the `MetricsPage` and `MetricsPageFactory` classes.
 
 A `MetricsPage` now should store a `RouteConfiguration` as an `arguments` field and provide a method `restoreConfiguration()`. The `MetricsPage` class should also provide an overridden `copyWith` method to be able to copy a page with the updated `arguments`. Consider the following code snippet that demonstrates this:
@@ -533,7 +545,7 @@ The `MetricsPageFactory` should be updated as well to create the `MetricsPage`s 
     /// Other Pages creation...
 ```
 
-#### NavigationNotifier
+##### NavigationNotifier
 The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application.
 
 When the `NavigationNotifier` gets a new `RouteConfiguration`, it should create new `PageParameters` from the received `RouteConfiguration` and notify any listeners about the `PageParameters` updates.
@@ -544,7 +556,9 @@ To do that, we should implement a new method `_updatePageParameters()` method an
 
 Consider the following code snippets that demonstrate the required changes.
 
-##### Updating page parameters
+###### Updating page parameters
+The following code snippet demonstrates the changes required to be able to update the `PageParameters` in response to any `RouteConfiguration` changes.
+
 ```dart
 class NavigationNotifier extends ChangeNotifier {
   /// A [RouteConfiguration] that represents the current page route.
@@ -578,7 +592,9 @@ class NavigationNotifier extends ChangeNotifier {
 }
 ```
 
-##### Changes to methods that modify the current RouteConfiguration
+###### Pop method changes
+The following code snippet demonstrates the changes required to restore the `RouteConfiguration` from a popped `MetricsPage`.
+
 ```dart
 class NavigationNotifier extends ChangeNotifier {
   /// Removes the current page and navigates to the previous one.
@@ -651,7 +667,7 @@ class NavigationNotifier {
 }
 ```
 
-#### PageNotifier
+##### PageNotifier
 Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides interface for page parameters handling:
 ```dart
 /// An abstract [ChangeNotifier] that provides methods for handling
@@ -741,7 +757,7 @@ To understand how the feature works in terms of time, consider the following seq
 - Saving deep links in response to the UI state changes (e.g., when the user applies a filter, searches, etc.):
   ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
 
-#### Handling internal app navigation
+#### Internal app navigation
 This section describes the changes we should perform to improve the overall navigation experience in the Metrics Wev application.
 
 ##### Back Button navigation
