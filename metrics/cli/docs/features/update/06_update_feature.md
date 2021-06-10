@@ -1,4 +1,4 @@
-# Update feature
+, # Update feature
 > Feature description / User story.
 
 As a user, I want to have the opportunity to redeploy the updated Metrics Web application into an existing GCloud project, so I can get new available application features without creating a new GCloud project. Also, I want this feature to work without user interaction as I want to use it for continuous integration automatization.
@@ -46,6 +46,8 @@ The `Update feature` has the following requirements:
 - for the parsing configuration action:
   - should consume the configuration file path via the command line arguments;
   - should read the configuration from the `YAML` configuration file.
+  - should stop the redeploy process of the Metrics CLI if the provided YAML file does not contain required attributes 
+  - should stop the redeploy process of the Metrics CLI if the provided file is not valid YAML or does not exist.
 - for the redeploying action:
   - should populate the Web Metrics Config variables;
   - should stop the redeploy process of the Metrics CLI if something went wrong during the process;
@@ -63,33 +65,7 @@ Let's firstly take a look at the components necessary for the `Update feature` t
 
 #### Third-party CLIs
 
-There are several `CLIs`, which the `Update feature` requires, so let's start with reviewing the `Firebase CLI`, which provides the command for deploying the Metrics Web application to the Firebase hosting of the selected Firebase project.
-
-Here is an example of the `deploy` command and the [documentation](https://firebase.google.com/docs/cli#deployment) for it:
-
-```bash
-firebase deploy
-```
-
-The next one is the `Sentry CLI`, which provides the commands to configure the Sentry for the Metrics Web application. Consider the following [Sentry documentation](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) to understand how the Metrics Web application interacts with the Sentry.
-
-Also, don't forget about `GitHub`, `Flutter` and `Npm` CLIs, which provide the abilities to clone the Metrics repository, to build the Metrics Web application and to install the Npm dependencies required for the firebase deployment respectively.
-
-Here are a couple of CLIs usage examples:
-- the command for installing Npm dependencies, see the [documentation](https://docs.npmjs.com/cli/v7/commands/npm-install) for details
-  ```bash
-  npm install
-  ```
-- the command for cloning the Metrics repository, see the [documentation](https://git-scm.com/docs/git-clone) for details
-  ```bash
-  git clone $METRICS_REPO_URL
-  ```
-- the command for building flutter web application, see the [documentation](https://flutter.dev/docs/get-started/web#build) for details
-  ```bash
-  flutter build web 
-  ```
-
-_**Note**: All of the CLIs described above had been already integrated into the Metrics CLI. You can check these CLIs usages by looking at the [deployer](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#deployer) and [doctor](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#doctor) implementation._
+There are several `CLIs`, which the `Update feature` requires. These CLIs are already used in the [deployer](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#deployer) - the component of the `Metrics CLI`. Since the `Update feature` intersects with the [deployer](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#deployer) functionality, therefore we're gonna to reuse these CLIs. Also, consider the following [documentation](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#metrics-cli-interfaces) to learn more about `CLIs` we are going to use.
 
 #### YAML map parser
 
@@ -135,9 +111,82 @@ To confirm that we are able to implement the `Update feature`, let's highlight t
 
 The first one is consuming the configuration file path via the command line arguments. We can use the [`addOption`](https://pub.dev/documentation/args/latest/args/ArgParser/addOption.html) method within the [args](https://pub.dev/packages/args) package to consume arguments via the command line.
 
+Consider the following code snippet showing the process of adding an ability for a command to accept an argument
+
+```dart
+class ExampleCommand extends Command {
+  /// A name of the option that holds a path to the YAML configuration file.
+  static const _configFileOptionName = 'config-file';
+
+  ExampleCommand() {
+    argParser.addOption(
+      _configFileOptionName,
+      help: 'A path to the YAML configuration file to validate.',
+      valueHelp: 'config.yaml',
+    );
+  }
+
+  @override
+  Future<void> run() async {
+    // Retrieves the provided file path
+    final configFilePath = getArgumentValue(_configFileOptionName) as String; 
+  }
+}
+```
+
 The next one is populating the Metrics Web config variables. We can reuse that [implementation](https://github.com/Flank/flank-dashboard/blob/722a626c49594022fccda7af48c77be40cce1cef/metrics/cli/lib/cli/deployer/deployer.dart#L233-L239) from the Deployer.
 
 The last one is redeploying the existing Metrics Web application to the same Firebase project. We can reuse and modify the [implementation](https://github.com/Flank/flank-dashboard/blob/722a626c49594022fccda7af48c77be40cce1cef/metrics/cli/lib/cli/deployer/deployer.dart#L214-L231) for that from the Deployer.
+
+Also let's highlight how we're going to resolve the edge cases of the `Update feature`.
+
+Consider the following code snippet which stops the redeploy process if the provided YAML file does not contain required attributes:
+
+```dart
+try {
+  const yamlParser = YamlMapParser();
+  final map = yamlParse.parse(configFilePath);
+  
+  if(map['requiredAttribute'] == null) {
+    throws MissingAttributeException();
+  }
+} catch {
+  // stops the redeploy
+}
+```
+
+Here is a code snippet which stops the redeploy process if the provided file is not valid YAML.
+
+```dart
+try {
+  final map = yamlParse.parse(configFilePath); // throws if the YAML file is not valid
+} catch {
+  // stops the redeploy 
+}
+```
+
+The next code snippet which stops the redeploy process if the provided YAML does not exist.
+
+```dart
+final file = File(configFilePath);
+
+try {
+  final fileData = file.readAsStringSync() ; // throws if the YAML file does not exist
+} catch {
+  // stops the redeploy 
+}
+```
+
+The final code snippet which skips the optional configuration steps if attributes for these steps are missing in the `YAML` configuration
+
+```dart
+const yamlParser = YamlMapParser();
+final map = yamlParse.parse(configFilePath);
+
+if(map['optionalAttribute'] != null) {
+  // process the attribute
+}
+```
 
 ### System modeling
 > Create an abstract model of the system/feature.
