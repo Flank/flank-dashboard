@@ -2,11 +2,11 @@
 
 package "metrics" {
   package "storybook" {
-    [Metrics Storybook UI] ..> [Widgets] : uses
+    [Metrics Storybook UI] ..> [Metrics Widgets] : uses
   }
 
   package "web" {
-    [Metrics Web Application UI] ..> [Widgets] : uses
+    [Metrics Web Application UI] ..> [Metrics Widgets] : uses
   }
 }
 
