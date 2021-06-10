@@ -35,7 +35,7 @@ Given the above, it's possible to create the `Metrics storybook`.
 
 This feature will be useful to the following end-users: developers, designers, and clients.
 
-First of all, the great purpose of the Metrics storybook is that each widget and story (a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX. Metrics storybook creating allows developers to work in parallel on widgets and do not touch the main Metrics Web Application's codebase. It also, makes it easier to add new widgets, since we can test them separately and only then make changes to the code of the application.
+First of all, the great purpose of the Metrics storybook is that each widget and story (a specific state of a widget) can be easily reused across the entire project by any developer who works on it, ensuring consistent design and UX. Metrics storybook creating allows developers to work in parallel on widgets and do not touch the main Metrics Web Application's codebase. It also makes it easier to add new widgets since we can test them separately and only then make changes in the application code.
 
 The storybook application can be shared with and commented on by designers so that they can add their input regarding the implementation of the designs.
 
@@ -44,7 +44,7 @@ Another group that can use this feature is clients. Storybook makes it easy to s
 ### Requirements
 > Define requirements and make sure that they are complete.
 
-Before defining requirements to the feature, we should determine which components from the Metrics Web Application should be included in the storybook.
+Before defining requirements to the feature, we should determine which components from the Metrics Web Application the storybook should include.
 
 There are [two types of widgets](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#widget-creation-guidelines):
  - *base* - a widget that is responsible for only displaying the given data. These widgets should be highly configurable and usable out of the Metrics Web Application context.
@@ -54,9 +54,9 @@ The main question is whether we want to extract to the Metrics storybook only ba
 
 At the same time, some of the common Metrics widgets (e.g., [MetricsUserMenu](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/lib/common/presentation/widgets/metrics_user_menu.dart)) are using [ChangeNotifiers](https://pub.dev/documentation/provider/latest/provider/ChangeNotifierProvider-class.html) internally. It makes widgets dependent on the Metrics Web Application's notifiers, so in these cases, we cannot extract this kind of widget, without changing them.
 
-According to the [widget structure organization document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#applying-a-theme-to-a-widget-appearance) common widgets use the Metrics theme. Thus to display these widgets in the storybook correctly, we should move the Metrics theme along with them. The disadvantage of moving common widgets is the loss of the ability to customize them as base widgets.
+According to the [widget structure organization document](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#applying-a-theme-to-a-widget-appearance), common widgets use the Metrics theme. Thus to display these widgets in the storybook correctly, we should move the Metrics theme along with them. The disadvantage of moving common widgets is the loss of the ability to customize them as base widgets.
 
-Also, as the common Metrics widgets use the Metrics theme, the storybook should have the ability to toggle between the light and dark variants of the theme, to affect widgets' appearance.
+Also, as the common Metrics widgets use the Metrics theme, the storybook should have the ability to toggle between the light and dark variants of the theme to affect widgets' appearance.
 
 Now, we can list the requirements the `Metrics storybook` feature must satisfy:
 
@@ -82,7 +82,7 @@ Let's take a closer look at the packages:
 
 #### [Storyboard](https://pub.dev/packages/storyboard)
 
-There are simple classes, which provide all the logic to start writing the storybook. It is just a little package, that helps to reduce a boilerplate.
+There are simple classes, which provide all the logic to start writing the storybook. It is just a little package that helps to reduce a boilerplate.
 
 Pros:
 
