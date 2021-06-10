@@ -181,19 +181,36 @@ Summing up the consideration of approaches and given the above explanations, the
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-The first part of the storybook widgets is - base widgets, which change their appearance through properties. On the other hand, common Metrics widgets, which view is determined by the Metrics theme. So, to implement this functionality, we need to add a possibility to change the theme (e.g., using the [provider](https://pub.dev/packages/provider) state management) as well as different input fields to change widget properties.
+The Dart ecosystem uses [packages](https://dart.dev/guides/packages) to manage shared software. The `Metrics storybook` is such a package, so we can extract a list of widgets from the `Metrics Web Application` into the storybook and use the `export` directive to make them importable within the web application.
 
-Let's consider the following widgets:
+For example, we can move the `ColoredBar` widget from the application to the storybook and use the following directive to export it:
 
-- `ColoredBar`
+```dart
+export 'src/widgets/colored_bar.dart';
+```
 
-It is a base widget. This widget displays a rectangle bar of the graph painted in a specific color. As a base widget, it is highly customizable and we can use the input fields to change its padding, color, border-radius, width, and height.
+To use the exported widget we should add the storybook as a dependency to the application's `pubspec.yaml`:
 
-- `MetricsColoredBar`
+```yaml
+...
+dependencies:
+    metrics_storybook:
+        git: # url
+        ref: master
+...
+```
 
-It is a common Metrics widget. This widget displays the styled bar for the graphs. As a common widget, it allows us to change only a value to display within this bar, the height of the bar, and its hovered status. The other properties change through the toggle Metrics theme. 
+Now, we can use that widget through the `import` directive:
 
-As we want to create a widget docs tab, we can use the [flutter_markdown](https://pub.dev/packages/flutter_markdown) package that renders Markdown.
+```dart
+import 'packages:metrics_storybook/metrics_storybook';
+
+final coloredBar = ColoredBar(...);
+```
+
+The same principle of `export/import` we can apply to other widgets, and Metrics theme.
+
+With that, we can display a list of extracted widgets within the storybook, and at the same time make them accessible for the web application.
 
 ### System modeling
 > Create an abstract model of the system/feature.
