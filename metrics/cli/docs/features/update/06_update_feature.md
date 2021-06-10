@@ -1,4 +1,4 @@
-, # Update feature
+# Update feature
 > Feature description / User story.
 
 As a user, I want to have the opportunity to redeploy the updated Metrics Web application into an existing GCloud project, so I can get new available application features without creating a new GCloud project. Also, I want this feature to work without user interaction as I want to use it for continuous integration automatization.
