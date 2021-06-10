@@ -1,0 +1,139 @@
+@startuml
+package common.presentation {
+    package navigation {
+        class MetricsRouteInformationParser {
+            - _routeConfigurationFactory : RouteConfigurationFactory
+            - _routeConfigurationLocationConverter : RouteConfigurationLocationConverter
+
+            + parseRouteInformation(information: RouteInformation) : RouteConfiguration
+            + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
+        }
+
+        package metrics_page {
+            class MetricsPage<T> {
+                + arguments: RouteConfiguration
+
+                + restoreConfiguration() : RouteConfiguration
+                + copyWith(configuration: RouteConfiguration): MetricsPage
+            }
+
+            class MetricsPageFactory {
+                + create(configuration : RouteConfiguration)
+            }
+        }
+
+        package route_configuration {
+            class RouteConfiguration {
+                + name : RouteName
+                + path : String
+                + authorizationRequired : bool
+                + parameters : Map<String, dynamic>
+
+                - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+                {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
+                {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
+                {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
+                {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
+                {static} RouteConfiguration.loading(): RouteConfiguration
+
+                + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+            }
+
+            class RouteConfigurationFactory {
+                + create(uri: Uri) : RouteConfiguration
+            }
+
+            class RouteConfigurationLocationConverter {
+                + convert(configuration: RouteConfiguration): String
+            }
+        }
+
+        package state {
+            class NavigationNotifier {
+                + pageParametersStream: Stream<PageParameters>
+                - _currentConfiguration: RouteConfiguration
+                - _pageParametersFactory: PageParametersFactory
+                - _pageFactory: MetricsPageFactory
+
+                + pop(): void
+                + handleNewPageParameters(PageParameters pageParameters): void
+                - _updateCurrentPage(): void
+                - _getConfigurationFromPage(page: MetricsPage) : RouteConfiguration
+                - _setRouteConfiguration(routeConfiguration: RouteConfiguration): void
+                - _updatePageParameters(): void
+                - _addNewPage(routeConfiguration: RouteConfiguration): void
+            }
+        }
+
+        package models {
+            interface PageParameters {
+                + toQueryParameters() : Map<String, dynamic>
+            }
+        }
+
+        package widgets {
+            class PageParametersProxy {
+                + pageNotifiers : List<PageNotifier>
+                + child : Widget
+            }
+        }
+    }
+
+    package state as common_state {
+        interface PageNotifier {
+            + pageParametersUpdatesStream : Stream<PageParameters>
+            + handlePageParameters(PageParameters parameters) : void
+        }
+
+    }
+}
+
+package some_page.presentation {
+    package models as some_page_models {
+        class SomePageParameters {
+            + someParameter : String
+
+            {static} SomePageParameters.fromMap(map: Map<String, dynamic>): SomePageParameters
+            + toMap(): Map<String, dynamic>
+            + copyWith(someParameter: String): SomePageParameters
+        }
+    }
+
+   package state as some_page_state {
+       class SomePageNotifier {
+           + pageParametersUpdatesStream : Stream<PageParameters>
+           + handlePageParameters(PageParameters parameters) : void
+           - _applyPageParameters(SomePageParameters parameters): void
+       }
+   }
+}
+
+PageParametersProxy -up-> PageNotifier : uses
+PageParametersProxy --> NavigationNotifier : uses
+PageParametersProxy -right-> PageParameters : uses
+
+PageNotifier --> PageParameters : uses
+
+MetricsPageFactory --> MetricsPage : creates
+MetricsPageFactory --> RouteConfiguration : uses
+
+RouteConfigurationFactory --> RouteConfiguration : creates
+
+MetricsRouteInformationParser --> RouteConfiguration : uses
+MetricsRouteInformationParser --> RouteConfigurationLocationConverter : uses
+MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+
+RouteConfigurationLocationConverter --> RouteConfiguration : converts to location
+
+NavigationNotifier --> RouteConfigurationLocationConverter : uses
+NavigationNotifier --> RouteConfiguration : uses
+NavigationNotifier --> MetricsPageFactory : uses
+NavigationNotifier --> MetricsPage : uses
+NavigationNotifier -up-> PageParameters : uses
+
+SomePageParameters ..|> PageParameters
+
+SomePageNotifier ..|> PageNotifier
+SomePageNotifier -left-> SomePageParameters : uses
+
+@enduml
