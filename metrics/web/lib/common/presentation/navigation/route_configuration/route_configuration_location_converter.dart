@@ -13,9 +13,10 @@ class RouteConfigurationLocationConverter {
     if (routeConfiguration == null) return null;
 
     final path = routeConfiguration.path;
-
     final parameters = routeConfiguration.parameters;
-    final queryParameters = parameters.isNotEmpty ? parameters : null;
+
+    final hasParameters = parameters != null && parameters.isNotEmpty;
+    final queryParameters = hasParameters ? parameters : null;
 
     final uri = Uri(path: path, queryParameters: queryParameters);
 
