@@ -56,7 +56,7 @@ package common.presentation {
                 - _pageFactory: MetricsPageFactory
 
                 + pop(): void
-                + handleNewPageParameters(PageParameters pageParameters): void
+                + handlePageParametersUpdates(PageParameters pageParameters): void
                 - _updateCurrentPage(): void
                 - _getConfigurationFromPage(page: MetricsPage) : RouteConfiguration
                 - _setRouteConfiguration(routeConfiguration: RouteConfiguration): void

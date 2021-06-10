@@ -28,7 +28,7 @@ SomePageNotifier -> PageParametersProxy : pageParameters
 deactivate SomePageNotifier
 activate PageParametersProxy
 
-PageParametersProxy -> NavigationNotifier : handleNewPageParameters(currentDeepLinks)
+PageParametersProxy -> NavigationNotifier : handlePageParametersUpdates(currentDeepLinks)
 deactivate PageParametersProxy
 activate NavigationNotifier
 

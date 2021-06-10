@@ -478,18 +478,18 @@ Consider the following code snippet that demonstrates the `PageParametersFactory
 ```dart
 /// Returns the [PageParameters] based on the given [configuration].
 PageParameters create(RouteConfiguration configuration) {
-  final queryParameters = configuration.queryParameters;
+  final parameters = configuration.parameters;
   
   switch(configuration.name) {
     case RouteName.dashboard:
-      return DashboardPageParameters.fromMap(queryParameters);
+      return DashboardPageParameters.fromMap(parameters);
     case RouteName.parojectGroups:
       /// Other page parameters handling
   }
 }
 ```
 
-The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application and controls the deep linking of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this factory application.
+The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application and controls the deep linking of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this part of the application.
 
 ##### MetricsPage and MetricsPageFactory
 To be able to restore the `PageParameters` when the application, for example, pops a page, we should update the `MetricsPage` and `MetricsPageFactory` classes.
@@ -622,12 +622,12 @@ class NavigationNotifier extends ChangeNotifier {
 
 The `NavigationNotifier` should also provide a method to handle the `PageParameters` updates reported from the application, for example, when a user applies a filter on a `DashboardPage`.
 
-To handle that we should implement a `handleNewPageParameters()` method. This method should perform the following actions:
+To handle that we should implement a `handlePageParametersUpdates()` method. This method should perform the following actions:
 - Update the current `RouteConfiguration`'s `RouteConfiguration.parameters`;
 - Update the current page's `MetricsPage.arguments` using updated `RouteConfiguration`;
 - Update the current URL without changing the browser history using the `NavigationState` class.
 
-The following code snippet demonstrates the `handleNewPageParameters()` method implementation:
+The following code snippet demonstrates the `handlePageParametersUpdates()` method implementation:
 ```dart
 class NavigationNotifier {
   /// A stack of [MetricsPage]s to use by navigator.
@@ -636,7 +636,7 @@ class NavigationNotifier {
   /// A converter used to convert route configuration to Url.
   RouteConfigurationUrlConverter _urlConverter;
   
-  void handleNewPageParameters(PageParameters parameters) {
+  void handlePageParametersUpdates(PageParameters parameters) {
     final newQueryParameters = parameters.toMap();
 
     _currentConfiguration = _currentConfiguration.copyWith(parameters: newQueryParameters);
@@ -653,6 +653,7 @@ class NavigationNotifier {
     
     final updatedPage = currentPage.copyWith(arguments: _currentConfiguration);
     
+    _pages.removeLast();
     _pages.add(updatedPage);
   }
 }
@@ -732,9 +733,9 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   }
 
   /// Listens to the [PageParameters] updates provided by the [PageParametersProxy.pageNotifiers]
-  /// and delegates handling [pageParameters] to the [NavigationNotifier.handleNewPageParameters].
+  /// and delegates handling [pageParameters] to the [NavigationNotifier.handlePageParametersUpdates].
   void _pageParametersUpdatesListener(PageParameters pageParameters) {
-    _navigationNotifier.handleNewPageParameters(pageParameters);
+    _navigationNotifier.handlePageParametersUpdates(pageParameters);
   }
 }
 ```
@@ -770,7 +771,7 @@ Formally, the current behaviour of the `Back Button` can be unexpected to the us
 
 To improve the navigation experience here, we should introduce a new method to the `NavigationNotifier` - `tryPop(orElse: RouteConfiguration)`. This method should perform the following:
 - Remove the current page if there is an underlying page under it;
-- If there is no underlying page, push the given `orElse` route, which defaults to the `RouteConfiguration.dashboard()`.
+- If there is no underlying page, replaces the current route with the given `orElse` route, which defaults to the `RouteConfiguration.dashboard()`.
 
 Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParameters` to the previous page if any.
 
@@ -784,7 +785,7 @@ void tryPop({
     return;
   }
   
-  push(orElse ?? const RouteConfiguration.dashboard());
+  pushReplacement(orElse ?? const RouteConfiguration.dashboard());
 }
 ```
 
