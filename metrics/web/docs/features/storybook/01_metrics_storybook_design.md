@@ -195,8 +195,7 @@ To use the exported widget we should add the widgets as a dependency to the `pub
 ...
 dependencies:
     metrics_widgets:
-        git: # url
-        ref: master
+        path: ../widgets
 ...
 ```
 
