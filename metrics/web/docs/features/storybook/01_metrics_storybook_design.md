@@ -217,7 +217,7 @@ With that, we can display a list of extracted widgets within the storybook, and 
 
 As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` will be a separate Flutter web project inside the `Metrics Widgets` package.
 
-The interaction of the `Metrics Widgets` and `Metrics Storybook` will go through the provision of a list of widgets by the widgets package and their use by the storybook. The `Metrics Web Application` will also use widgets by importing them from `Metrics Widgets`. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
+The interaction of the `Metrics Widgets` and `Metrics Storybook` will go through the provision of a list of widgets by the widgets package and their use by the storybook. The `Metrics Web Application` will also use widgets by importing them from the `Metrics Widgets`. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
 
 The following diagram shows the described interaction:
 
