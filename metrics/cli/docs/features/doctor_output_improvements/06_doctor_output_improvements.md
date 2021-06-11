@@ -30,7 +30,7 @@ To admit that this is possible to implement the feature, let's take a look at th
      
      ![Flutter Doctor](images/flutter_doctor_example.png)
 
-- The Ci Integrations `validate` command consumes the configuration file and validates its fields resulting in a clear output with conclusions for each field.
+- The CI Integrations `validate` command consumes the configuration file and validates its fields resulting in a clear output with conclusions for each field.
 
      ![CI Integrations Validate](images/ci_integrations_validate_example.png)
 
