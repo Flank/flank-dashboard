@@ -1,0 +1,32 @@
+@startuml update_feature_integration_component_diagram
+
+skinparam componentStyle rectangle
+
+legend top left
+    | Color | Arrow type |
+    |<#B70033>| Existing relationship |
+    |<#Green>| New relationship |
+    |<#5B95BB>| Modified components |
+endlegend
+
+component "Metrics CLI" as CLI
+component UpdateCommand
+package services {
+component FirebaseService #5B95BB
+component SentryService #5B95BB
+component GitService
+component FlutterService
+component NpmService
+}
+
+
+component "File System" as FS
+
+CLI -[#Green]left-> FS : working with to receive the config file
+CLI *-[#Green]- UpdateCommand
+UpdateCommand -[#Green]-> FirebaseService : uses to redeploy \n the application
+UpdateCommand -[#Green]-> SentryService : uses to configure \n a new Sentry release
+UpdateCommand -[#Green]-> GitService : uses to clone \n the Metrics repository
+UpdateCommand -[#Green]-> FlutterService : uses to build \n the Metrics Web application
+UpdateCommand -[#Green]-> NpmService : uses to install \n necessary packages
+@enduml
