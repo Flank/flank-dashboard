@@ -3,7 +3,7 @@
 package common.presentation.navigation {
     class MetricsRouteInformationParser {
         - _routeConfigurationFactory : RouteConfigurationFactory
-        - _routeConfigurationLocationConverter : RouteConfigurationLocationConverter
+        - _locationConverter : RouteConfigurationLocationConverter
 
         + parseRouteInformation(information: RouteInformation) : RouteConfiguration
         + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation

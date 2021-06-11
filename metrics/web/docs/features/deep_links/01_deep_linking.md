@@ -380,7 +380,7 @@ class RouteConfigurationLocationConverter {
 When we've implemented the `RouteConfigurationLocationConverter` class, we can use it in the `MetricsRouteInformationParser.restoreRouteInformation()` method as the following:
 ```dart
 class MetricsRouteInformationParser {
-  final RouteConfigurationLocationConverter _routeConfigurationLocationConverter;
+  final RouteConfigurationLocationConverter _locationConverter;
   
   // Upper fields constructors..
 
@@ -388,7 +388,7 @@ class MetricsRouteInformationParser {
   RouteInformation restoreRouteInformation(RouteConfiguration configuration) {
     if (configuration == null) return null;
 
-    final location = _routeConfigurationLocationConverter.convert(configuration);
+    final location = _locationConverter.convert(configuration);
 
     return RouteInformation(location: location);
   }
