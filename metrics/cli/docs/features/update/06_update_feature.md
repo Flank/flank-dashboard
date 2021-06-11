@@ -140,51 +140,20 @@ The last one is redeploying the existing Metrics Web application to the same Fir
 
 Also let's highlight how we're going to resolve the edge cases of the `Update feature`.
 
-Consider the following code snippet which stops the redeploy process if the provided YAML file does not contain required attributes:
+The first one claims that we should stop the redeploy process if something went wrong during it. In other words, if at least one part of the redeploy process throws an exception, the whole process should stop and notify the user about the stop's reason.
+
+The next edge case about stopping the redeploy process when the configuration file argument is not specified.
+Consider the following code snippet that shows how to resolve the edge case described above:
 
 ```dart
-try {
-  const yamlParser = YamlMapParser();
-  final map = yamlParse.parse(configFilePath);
+Future<void> run() async {
+  final configFilePath = getArgumentValue(_configFileOptionName) as String;
   
-  if(map['requiredAttribute'] == null) {
-    throws MissingAttributeException();
+  if (configFilePath == null) {
+    throw SomeException();     // stops the redeploy process and notifies the user of the error's cause
   }
-} catch {
-  // stops the redeploy
-}
-```
-
-Here is a code snippet which stops the redeploy process if the provided file is not valid YAML.
-
-```dart
-try {
-  final map = yamlParse.parse(configFilePath); // throws if the YAML file is not valid
-} catch {
-  // stops the redeploy 
-}
-```
-
-The next code snippet which stops the redeploy process if the provided YAML does not exist.
-
-```dart
-final file = File(configFilePath);
-
-try {
-  final fileData = file.readAsStringSync() ; // throws if the YAML file does not exist
-} catch {
-  // stops the redeploy 
-}
-```
-
-The final code snippet which skips the optional configuration steps if attributes for these steps are missing in the `YAML` configuration
-
-```dart
-const yamlParser = YamlMapParser();
-final map = yamlParse.parse(configFilePath);
-
-if(map['optionalAttribute'] != null) {
-  // process the attribute
+  
+  // continues the redeploy process
 }
 ```
 

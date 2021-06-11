@@ -14,7 +14,6 @@ component UpdateCommand
 package services {
 component FirebaseService #5B95BB
 component SentryService #5B95BB
-component GCloudService
 component GitService
 component FlutterService
 component NpmService
@@ -25,6 +24,9 @@ component "File System" as FS
 
 CLI -[#Green]left-> FS : working with to receive the config file
 CLI *-[#Green]- UpdateCommand
-UpdateCommand -[#Green]-> services : uses to redeploy \n the Metrics Web app \n with the config data
-
+UpdateCommand -[#Green]-> FirebaseService : uses to redeploy \n the application
+UpdateCommand -[#Green]-> SentryService : uses to configure \n a new Sentry release
+UpdateCommand -[#Green]-> GitService : uses to clone \n the Metrics repository
+UpdateCommand -[#Green]-> FlutterService : uses to build \n the Metrics Web application
+UpdateCommand -[#Green]-> NpmService : uses to install \n necessary packages
 @enduml
