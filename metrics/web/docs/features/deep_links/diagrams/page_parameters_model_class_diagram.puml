@@ -1,0 +1,22 @@
+@startuml page_parameters_model_class_diagram
+
+package common.presentation.navigation.models {
+    interface PageParametersModel {
+        + toMap() : Map<String, dynamic>
+    }
+}
+
+package some_page.presentation.models {
+    class SomePageParametersModel {
+        + someField: String
+
+        {static} SomePageParameters(someField: String)
+        {static} SomePageParameters.fromMap(map: Map<String, dynamic>)
+        + copyWith(someField: String)
+        + toMap(): Map<String, dynamic>
+    }
+}
+
+SomePageParametersModel .up.|> PageParametersModel
+
+@enduml

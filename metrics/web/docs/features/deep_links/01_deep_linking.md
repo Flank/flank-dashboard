@@ -27,7 +27,7 @@ As a user, I want to pass direct links to project and/or project groups, so that
           - [RouteInformationParser](#routeinformationparser)
           - [Parsing Deep Links Summary](#parsing-deep-links-summary)
         - [Applying Deep Links](#applying-deep-links)
-          - [PageParameters](#pageparameters)
+          - [PageParametersModel](#pageparametersmodel)
           - [PageParametersFactory](#pageparametersfactory)
           - [MetricsPage and MetricsPageFactory](#metricspage-and-metricspagefactory)
           - [NavigationNotifier](#navigationnotifier)
@@ -413,63 +413,18 @@ Consider this class diagram that illustrates the required changes needed to pars
 ![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
 
 #### Applying Deep Links
+The following subsections describe the required changes needed to be able to restore the application state from the deep links and update the deep links from in response to application events.
 
-The following subsections describe the required changes needed to be able to apply the deep links in the Metrics Web application.
+##### PageParametersModel
+Once we're able to parse `query parameters`, we should have a way to represent them in the Metrics Web application. To do that, let's introduce a `PageParametersModel`. 
 
-##### PageParameters
-Once we're able to parse `query parameters`, we should have a way to represent them in the Metrics Web application. To do that, let's introduce a `PageParameters` abstract class.
+The `PageParametersModel` is an interface and does not store any data, however, it creates a general interface for all implementers including the `toMap() : Map<String, dynamic` method. 
 
-Now, to create page parameters that are specific to some `page` (e.g., `DashboardPage`, `ProjectGroupPage`), we should create a new class that implements a `PageParameters` class, implement all necessary methods, and create a `.fromMap` factory constructor.
+The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to, and implement the `PageParametersModel` interface.
 
-Consider the following code snippet that demonstrates the creation of specific page `PageParameters`:
-```dart
-/// An abstract class that represents the parameters of a specific page.
-abstract class PageParameters {
-  /// An abstract const constructor allowing the implementers to have
-  /// const constructors.
-  const PageParameters();
-  
-  /// Converts this page parameters instance to a [Map].
-  Map<String, dynamic> toMap();
-}
+The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `SomePageParametersModel` example:
 
-/// A class that represents page parameters of the [DashboardPage].
-class DashboardPageParameters implements PageParameters {
-  /// An id of the selected project group;
-  final String selectedProjectGroupId;
-  
-  /// Creates a new instance of the [DashboardPageParameters] with
-  /// the given parameters.
-  const DashboardPageParameters({
-    this.selectedProjectGroupId,
-  });
-  
-  /// Creates a new instance of the [DashboardPageParameters] from 
-  /// the given [map].
-  factory DashboardPageParameters.fromMap(Map<String, dynamic> map) {
-    return DashboardPageParameters(
-      selectedProjectGroupId: map['selectedProjectGroupId'] as String,
-    );
-  }
-  
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'selectedProjectGroupId' : selectedProjectGroupId,
-    };
-  }
-  
-  /// Creates a copy of this [DashboardPageParameters] but with
-  /// the given field replaced with the new value.
-  DashboardPageParameters copyWith({
-    String selectedProjectGroupId,
-  }) {
-    return DashboardPageParameters(
-      selectedProjectGroupId: selectedProjectGroupId ?? this.selectedProjectGroupId,
-    );
-  }
-}
-```
+![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
 
 ##### PageParametersFactory
 Once we've implemented the required `PageParameters`, we should create a `PageParametersFactory` that encapsulates the creation of specific `PageParameters` from the given `RouteConfiguration`.
