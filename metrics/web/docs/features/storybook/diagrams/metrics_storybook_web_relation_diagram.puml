@@ -2,6 +2,9 @@
 
 package "metrics" {
   package "widgets" {  
+    [Metrics Widgets]
+  }
+  package "storybook" {
     [Metrics Storybook UI] ..> [Metrics Widgets] : uses
   }
 

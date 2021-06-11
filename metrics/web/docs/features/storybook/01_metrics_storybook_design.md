@@ -181,20 +181,20 @@ Summing up the consideration of approaches and given the above explanations, the
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-The Dart ecosystem uses [packages](https://dart.dev/guides/packages) to manage shared software. The `Metrics storybook` is such a package, so we can extract a list of widgets from the `Metrics Web Application` into the storybook and use the `export` directive to make them importable within the web application.
+The Dart ecosystem uses [packages](https://dart.dev/guides/packages) to manage shared software. Thus, we can create separate packages for widgets extracted from the `Metrics Web Application` (`Metrics widgets`) and `Metrics storybook`. So we can use the `export` directive in the `Metrics widgets` to make them importable within the web application and storybook.
 
-For example, we can move the `ColoredBar` widget from the application to the storybook and use the following directive to export it:
+For example, we can move the `ColoredBar` widget from the application to the `Metrics widgets` and use the following directive to export it:
 
 ```dart
 export 'src/widgets/colored_bar.dart';
 ```
 
-To use the exported widget we should add the storybook as a dependency to the application's `pubspec.yaml`:
+To use the exported widget we should add the widgets as a dependency to the `pubspec.yaml`:
 
 ```yaml
 ...
 dependencies:
-    metrics_storybook:
+    metrics_widgets:
         git: # url
         ref: master
 ...
@@ -203,7 +203,7 @@ dependencies:
 Now, we can use that widget through the `import` directive:
 
 ```dart
-import 'packages:metrics_storybook/metrics_storybook';
+import 'packages:metrics_widgets/metrics_widgets';
 
 final coloredBar = ColoredBar(...);
 ```
@@ -215,9 +215,9 @@ With that, we can display a list of extracted widgets within the storybook, and 
 ### System modeling
 > Create an abstract model of the system/feature.
 
-As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` will be a separate Flutter web project inside the `Metrics Widgets` package.
+As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` and the `Metrics Widgets` will be separate Flutter projects inside the `metrics` folder.
 
-The interaction of the `Metrics Widgets` and `Metrics Storybook` will go through the provision of a list of widgets by the widgets package and their use by the storybook. The `Metrics Web Application` will also use widgets by importing them from the `Metrics Widgets`. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
+The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Application` will go through the provision of a list of widgets by the widgets package and their use by the storybook/application. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
 
 The following diagram shows the described interaction:
 
