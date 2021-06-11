@@ -84,7 +84,7 @@ The following package simple parses the given `YAML` file into the dart [Map](ht
 Consider the following pros and cons of the [`yaml_map`](https://github.com/Flank/flank-dashboard/tree/master/yaml_map) package:
 
 Pros:
-- was used in the `CI integrations` tool, here is an [example](https://github.com/Flank/flank-dashboard/blob/0fadf00685df2b335def8c5697d6a5aa973ff92c/metrics/ci_integrations/lib/cli/config/parser/raw_integration_config_parser.dart#L19-L21)
+- was used in the `CI integrations` tool, here is an [example](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/lib/cli/config/parser/raw_integration_config_parser.dart#L19-L21)
 - parses the `YAML` file in the dart [Map](https://api.dart.dev/stable/2.13.2/dart-core/Map-class.html)
 
 Cons:
@@ -134,9 +134,9 @@ class ExampleCommand extends Command {
 }
 ```
 
-The next one is populating the Metrics Web config variables. We can reuse that [implementation](https://github.com/Flank/flank-dashboard/blob/722a626c49594022fccda7af48c77be40cce1cef/metrics/cli/lib/cli/deployer/deployer.dart#L233-L239) from the Deployer.
+The next one is populating the Metrics Web config variables. We can reuse that [implementation](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/lib/cli/deployer/deployer.dart#L233-L239) from the Deployer.
 
-The last one is redeploying the existing Metrics Web application to the same Firebase project. We can reuse and modify the [implementation](https://github.com/Flank/flank-dashboard/blob/722a626c49594022fccda7af48c77be40cce1cef/metrics/cli/lib/cli/deployer/deployer.dart#L214-L231) for that from the Deployer.
+The last one is redeploying the existing Metrics Web application to the same Firebase project. We can reuse and modify the [implementation](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/lib/cli/deployer/deployer.dart#L214-L231) for that from the Deployer.
 
 Also let's highlight how we're going to resolve the edge cases of the `Update feature`.
 
