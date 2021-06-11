@@ -537,6 +537,7 @@ class NavigationNotifier extends ChangeNotifier {
     _currentConfiguration = newConfiguration;
     
     _updatePageParameters();
+    notifyListeners();
   }
   
   /// Creates a new instance of the [PageParameters] from the [_currentConfiguration]
@@ -730,100 +731,17 @@ To improve the navigation experience here, we should introduce a new method to t
 
 Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParameters` to the previous page if any.
 
-The following code snippet demonstrates how the method `NavigationNotifier.tryPop` can be implemented:
-```dart
-void tryPop({
-  RouteConfiguration orElse,
-}) {
-  if(_pages.length > 1) {
-    pop();
-    return;
-  }
-  
-  pushReplacement(orElse ?? const RouteConfiguration.dashboard());
-}
-```
-
 ##### Deep linking with authorization
 Currently, the application pushes the `DashboardPage` when the user logs in, however, it would be much more user-friendly if the application redirects the user to the requested resource.
 
 To improve this aspect of the navigation, we should modify the existing redirecting behaviour:
-1. Introduce a new field to the `NavigationNotifier`, that stores the redirect `RouteConfiguration` that requires authorization, let's call it an `_authorizationRedirect`.
-2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_authorizationRedirect`. If the route does not require authorization, clear the `_authorizationRedirect`.
-3. When the user logs in, redirect the user to the `_authorizationRedirect` and clear the `_authorizationRedirect`.
+1. Use the `_redirectRoute` field to stores the redirect `RouteConfiguration` that requires authorization.
+2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_redirectRoute`. If the route does not require authorization, clear the `_redirectRoute`.
+3. When the user logs in, redirect the user to the `_redirectRoute` and clear the `_redirectRoute`.
 
 To do that, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into 2 methods: `.handleLogOut()` and `.handleLogIn()`.
 
-The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_authorizationRedirect`, or to the `DashboardPage` if the `_authorizationRedirect` is `null`.
+The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
 
-```dart
-class NavigationNotifier extends ChangeNotifier {
-  /// A [RouteConfiguration] to redirect after the user logs in.
-  RouteConfiguration _authorizationRedirect;
-  
-  /// Processes the given [configuration] depending on [_isAppInitialized] state,
-  /// [configuration]'s authorization requirements and current
-  /// [_isUserLoggedIn] state.
-  RouteConfiguration _processConfiguration(
-    RouteConfiguration configuration,
-  ) {
-    final authorizationRequired = configuration.authorizationRequired;
-    
-    final addAuthorizationRedirect = authorizationRequired && !_isUserLoggedIn;
-    _authorizationRedirect = addAuthorizationRedirect ? configuration : null;
-      
-    if (!_isAppInitialized) {
-      _redirectRoute = configuration;
-
-      return MetricsRoutes.loading.copyWith(path: configuration.path);
-    }
-
-    if (!_isUserLoggedIn && authorizationRequired) return MetricsRoutes.login;
-
-    return configuration;
-  }
-  
-  /// Handles the user's log in.
-  void handleLogIn() {
-    _isUserLoggedIn = true;
-    
-    final redirect = _authorizationRedirect ?? MetricsRoutes.dashboard;
-    
-    pushStateReplacement(redirect);
-  }
-
-  /// Handles the user's log out.
-  void handleLogOut() {
-    _isUserLoggedIn = false;
-    final currentPageName = currentConfiguration?.name;
-
-    if (currentPageName != MetricsRoutes.login.name) {
-      _pages.clear();
-
-      push(MetricsRoutes.login);
-    }
-  }
-}
-```
-
-The `.handleLogIn()` should be called within the `Router.neglect` callback to avoid adding the `LoginPage` to the browser's history:
-```dart
-class _LoginPageState extends State<LoginPage> {
-  ///...
-
-  /// Navigates to the dashboard screen once the user becomes logged in.
-  void _loggedInListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
-    if (isLoggedIn != null && isLoggedIn) {
-      final navigationNotifier = Provider.of<NavigationNotifier>(
-        context,
-        listen: false,
-      );
-
-      Router.neglect(context, () {
-        navigationNotifier.handleLogIn();
-      });
-    }
-  }
-}
-```
+Consider the following sequence diagram that describes handling deep links that require authorization:
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_and_authorization_sequence_diagram.puml)
