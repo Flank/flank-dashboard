@@ -140,9 +140,7 @@ The last one is redeploying the existing Metrics Web application to the same Fir
 
 Also let's highlight how we're going to resolve the edge cases of the `Update feature`.
 
-The first one claims that we should stop the redeploy process if something went wrong during it. In other words, if at least one part of the redeploy process throws an exception, the whole process should fail and notify the user about the reason.
-
-The next edge case about stopping the redeploy process when the configuration file argument is not specified.
+The first edge case about stopping the redeploy process when the configuration file argument is not specified.
 
 Consider the following code snippet that shows how to resolve the edge case described above:
 
@@ -157,6 +155,8 @@ Future<void> run() async {
   // continues the redeploy process
 }
 ```
+
+The next one claims that we should stop the redeploy process if something went wrong during it. In other words, if at least one part of the redeploy process throws an exception, the whole process should fail and notify the user about the reason.
 
 Having considered all the complex points and edge cases, we conclude that the `Update feature` implementation is possible in compliance with the [requirements](#requirements).
 
