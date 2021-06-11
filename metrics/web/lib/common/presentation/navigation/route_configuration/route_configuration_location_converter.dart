@@ -3,7 +3,7 @@
 
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 
-/// A class that provides a method for converting the given [RouteConfiguration]
+/// A class that provides a method for converting the [RouteConfiguration]
 /// to a location [String].
 class RouteConfigurationLocationConverter {
   /// Creates a new instance of the [RouteConfigurationLocationConverter].

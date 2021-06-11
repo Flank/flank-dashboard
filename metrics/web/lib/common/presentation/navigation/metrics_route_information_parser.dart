@@ -18,15 +18,20 @@ class MetricsRouteInformationParser
   /// [RouteConfiguration].
   final RouteConfigurationLocationConverter _locationConverter;
 
-  /// Creates a new instance of the [MetricsRouteInformationParser].
+  /// Creates a new instance of the [MetricsRouteInformationParser] with
+  /// the given parameters.
   ///
-  /// Throws an [AssertionError] if the given [RouteConfigurationFactory] or
-  /// [RouteConfigurationLocationConverter] is `null`.
-  MetricsRouteInformationParser(
-    this._routeConfigurationFactory,
-    this._locationConverter,
-  )   : assert(_routeConfigurationFactory != null),
-        assert(_locationConverter != null);
+  /// If the given [routeConfigurationFactory] is `null`, an instance of the
+  /// [RouteConfigurationFactory] is used.
+  /// If the given [locationConverter] is `null`, an instance of the
+  /// [RouteConfigurationLocationConverter] is used.
+  MetricsRouteInformationParser({
+    RouteConfigurationFactory routeConfigurationFactory,
+    RouteConfigurationLocationConverter locationConverter,
+  })  : _routeConfigurationFactory =
+            routeConfigurationFactory ?? const RouteConfigurationFactory(),
+        _locationConverter =
+            locationConverter ?? const RouteConfigurationLocationConverter();
 
   @override
   Future<RouteConfiguration> parseRouteInformation(

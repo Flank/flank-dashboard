@@ -19,8 +19,8 @@ void main() {
     final routeConfigurationFactory = _RouteConfigurationFactoryMock();
     final locationConverter = _RouteConfigurationLocationConverterMock();
     final routeInformationParser = MetricsRouteInformationParser(
-      routeConfigurationFactory,
-      locationConverter,
+      routeConfigurationFactory: routeConfigurationFactory,
+      locationConverter: locationConverter,
     );
 
     tearDown(() {
@@ -29,21 +29,27 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if the given route configuration factory is null",
+      "successfully creates an instance if the given route configuration factory is null",
       () {
         expect(
-          () => MetricsRouteInformationParser(null, locationConverter),
-          throwsAssertionError,
+          () => MetricsRouteInformationParser(
+            routeConfigurationFactory: null,
+            locationConverter: locationConverter,
+          ),
+          returnsNormally,
         );
       },
     );
 
     test(
-      "throws an AssertionError if the given route configuration location converter is null",
+      "successfully creates an instance if the given route configuration location converter is null",
       () {
         expect(
-          () => MetricsRouteInformationParser(routeConfigurationFactory, null),
-          throwsAssertionError,
+          () => MetricsRouteInformationParser(
+            routeConfigurationFactory: routeConfigurationFactory,
+            locationConverter: null,
+          ),
+          returnsNormally,
         );
       },
     );
@@ -97,7 +103,7 @@ void main() {
     );
 
     test(
-      ".restoreRouteInformation() delegates converting the route configuration to a location to the route configuration location converter if it is not null",
+      ".restoreRouteInformation() delegates converting the route configuration to the route configuration location converter if the configuration is not null",
       () {
         routeInformationParser.restoreRouteInformation(routeConfiguration);
 

@@ -80,10 +80,7 @@ class _MetricsAppState extends State<MetricsApp> {
             ],
           );
 
-          final routeInformationParser = MetricsRouteInformationParser(
-            const RouteConfigurationFactory(),
-            const RouteConfigurationLocationConverter(),
-          );
+          final routeInformationParser = MetricsRouteInformationParser();
 
           return MetricsFPSMonitor(
             child: MetricsThemeBuilder(
