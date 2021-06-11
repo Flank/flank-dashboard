@@ -220,4 +220,4 @@ The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Ap
 
 The following diagram shows the described interaction:
 
-![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/fix_storybook_relation_diagram/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
+![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
