@@ -181,9 +181,9 @@ Summing up the consideration of approaches and given the above explanations, the
 ### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
-The Dart ecosystem uses [packages](https://dart.dev/guides/packages) to manage shared software. Thus, we can create separate packages for widgets extracted from the `Metrics Web Application` (`Metrics widgets`) and `Metrics storybook`. So we can use the `export` directive in the `Metrics widgets` to make them importable within the web application and storybook.
+The Dart ecosystem uses [packages](https://dart.dev/guides/packages) to manage shared software. Thus, we can create separate packages for widgets extracted from the `Metrics Web Application` - `Metrics Widgets`, and `Metrics Storybook`. So we can use the `export` directive in the `Metrics Widgets` to make them importable within the web application and storybook.
 
-For example, we can move the `ColoredBar` widget from the application to the `Metrics widgets` and use the following directive to export it:
+For example, we can move the `ColoredBar` widget from the application to the `Metrics Widgets` and use the following directive to export it:
 
 ```dart
 export 'src/widgets/colored_bar.dart';
@@ -215,7 +215,7 @@ With that, we can display a list of extracted widgets within the storybook, and 
 ### System modeling
 > Create an abstract model of the system/feature.
 
-As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics storybook` and the `Metrics Widgets` will be separate Flutter projects inside the `metrics` folder.
+As we [described earlier](#metrics-storybook), the purpose of a storybook, in general, is to show a list of widgets outside of the application context. Therefore, the `Metrics Storybook` and the `Metrics Widgets` will be separate Flutter projects inside the `metrics` folder.
 
 The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Application` will go through the provision of a list of widgets by the widgets package and their use by the storybook/application. This solution will unload the `Metrics Web Application` from a large set of components that are used in the project.
 
