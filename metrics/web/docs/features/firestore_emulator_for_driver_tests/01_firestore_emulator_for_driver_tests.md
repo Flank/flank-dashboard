@@ -1,12 +1,23 @@
 # Firestore emulator for driver tests
-
 > Feature description / User story.
 
-At the moment, integration tests run inside the production environment (e.g. using production Firestore). This approach carries the risk of accidental data loss or alteration. Therefore, we should use the test environment to run the tests.
+At the moment, integration tests run inside the production environment (e.g., using production Firestore). This approach carries the risk of accidental data loss or alteration. Therefore, we should use the test environment to run the tests.
+
+## Contents
+
+- [**Analysis**](#analysis)
+    - [Feasibility study](#feasibility-study)
+    - [Requirements](#requirements)
+    - [Prototyping](#prototyping)
+- [**Design**](#design)
+    - [User Interface](#user-interface)
+    - [Database](#database)
+    - [Program](#program)
+        - [Configure the test runner](#configure-the-test-runner)
+        - [Configure the application](#configure-the-application)
 
 # Analysis
-
-> Describe general analysis approach.
+> Describe a general analysis approach.
 
 To implement this feature, we've investigated the possibility of using the [Firebase Local Emulator](https://firebase.google.com/docs/emulator-suite).
 
@@ -15,7 +26,6 @@ The Firebase Local Emulator consists of individual service emulators built to ac
 One of the services of the emulator is a Firestore that allows creating a local instance of the Firestore and use it during testing.
 
 ### Feasibility study
-
 > A preliminary study of the feasibility of implementing this feature.
 
 The Firestore emulator allows us to run integration tests using the test environment, so that can ensure that the tests do not affect the production data.
@@ -26,13 +36,14 @@ _**Note:**
 We are not configuring the [Firebase Auth emulator](https://firebase.google.com/docs/emulator-suite/connect_auth) because it is not available in the version of the [firebase_auth](https://pub.dev/packages/firebase_auth) package we are using. So, during tests, we authenticate via the production Firebase Auth service._
 
 ### Requirements
-
 > Define requirements and make sure that they are complete.
+
+The `Firestore emulator for driver tests` feature should meet the following requirements: 
 
 1. A Firestore emulator, run using the imported test data.
 2. The web application uses the Firestore instance configured to use the emulator while running integration tests.
-### Prototyping
 
+### Prototyping
 > Create a simple prototype to confirm that implementing this feature is possible.
 
 To run the driver tests under the Firebase emulator we should follow the next steps:
@@ -100,9 +111,11 @@ setupAll(() {
 The specified port in the `host` argument must be equal to the emulator's port.
 
 # Design
+> Explain and diagram the technical design.
+
+The Firestore emulator for driver tests implementation requires changes in the classes related to driver tests. The design describes configuring the test runner and application. There is also information about creating necessary test data for the Firestore emulator. 
 
 ### User Interface
-
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
 The feature is introduced by adding an additional parameter - `use-firestore-emulator`(default to `true`) to the integration tests running command. It determines whether the tests should run with the `Firebase Emulator`.
@@ -118,7 +131,6 @@ Or, if you accept the default value, you can omit it.
 As described in the [Prototyping](#prototyping) section, we should run integration tests once the `Firebase Emulator` started.
 
 ### Database
-
 > How relevant data will be persisted.
 
 Integration tests interact with the application that uses data from the database. As we don't want to use the production environment, we should use the `Firebase local emulator`.
@@ -141,17 +153,10 @@ firebase emulators:start --import=emulators/firestore/data
 
 _**Note:** The command must be run inside the firebase folder to apply available Firestore rules._
 
-### Architecture
-
-> Fundamental structures of the feature and context (diagram).
-
-Consider the following class diagram showing the main classes and relationships needed to implement this feature:
-
-![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
-
 ### Program
-
 > Detailed solution description to class/method level.
+
+There are two steps, that need to be done to implement the feature - [configure the test runner](#configure-the-test-runner) and [the application](#configure-the-application).
 
 #### Configure the test runner
 
@@ -166,6 +171,10 @@ To pass the Firestore emulator configuration to the application under tests, we 
 In the application, before the integration tests have started, in the `setUpAll` method we can get the value, that represents the `use-firestore-emulator` parameter to determine whether we are using the local emulator. If so, we can use the `Firestore.instance.settings()` to connect the application to the running emulator using the default port from the `FirestoreEmulatorConfig`.
 
 With this, all requests to the `Firestore` database will point to the `Firestore emulator`.
+
+The following class diagram demonstrates the main classes and their relationships required to implement the feature:
+
+![Firestore emulator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/web/docs/features/firestore_emulator_for_driver_tests/diagrams/firestore_emulator_class_diagram.puml)
 
 The following sequence diagram demonstrate the process of running the integration tests with the emulator:
 
