@@ -50,7 +50,7 @@ package common.presentation {
 
         package state {
             class NavigationNotifier {
-                + pageParametersStream: Stream<PageParameters>
+                + pageParametersStream: Stream<PageParametersModel>
                 - _currentConfiguration: RouteConfiguration
                 - _pageParametersFactory: PageParametersFactory
                 - _pageFactory: MetricsPageFactory
@@ -66,8 +66,8 @@ package common.presentation {
         }
 
         package models {
-            interface PageParameters {
-                + toQueryParameters() : Map<String, dynamic>
+            interface PageParametersModel {
+                + toMap() : Map<String, dynamic>
             }
         }
 
@@ -81,7 +81,7 @@ package common.presentation {
 
     package state as common_state {
         interface PageNotifier {
-            + pageParametersUpdatesStream : Stream<PageParameters>
+            + pageParametersUpdatesStream : Stream<PageParametersModel>
             + handlePageParameters(PageParameters parameters) : void
         }
 
@@ -90,18 +90,19 @@ package common.presentation {
 
 package some_page.presentation {
     package models as some_page_models {
-        class SomePageParameters {
-            + someParameter : String
+        class SomePageParametersModel {
+            + someField : String
 
-            {static} SomePageParameters.fromMap(map: Map<String, dynamic>): SomePageParameters
+            {static} SomePageParameters(someField: String)
+            {static} SomePageParameters.fromMap(map: Map<String, dynamic>): SomePageParametersModel
             + toMap(): Map<String, dynamic>
-            + copyWith(someParameter: String): SomePageParameters
+            + copyWith(someParameter: String): SomePageParametersModel
         }
     }
 
    package state as some_page_state {
        class SomePageNotifier {
-           + pageParametersUpdatesStream : Stream<PageParameters>
+           + pageParametersUpdatesStream : Stream<PageParametersModel>
            + handlePageParameters(PageParameters parameters) : void
            - _applyPageParameters(SomePageParameters parameters): void
        }
@@ -110,9 +111,9 @@ package some_page.presentation {
 
 PageParametersProxy -up-> PageNotifier : uses
 PageParametersProxy --> NavigationNotifier : uses
-PageParametersProxy -right-> PageParameters : uses
+PageParametersProxy -right-> PageParametersModel : uses
 
-PageNotifier --> PageParameters : uses
+PageNotifier --> PageParametersModel : uses
 
 MetricsPageFactory --> MetricsPage : creates
 MetricsPageFactory --> RouteConfiguration : uses
@@ -129,11 +130,11 @@ NavigationNotifier --> RouteConfigurationLocationConverter : uses
 NavigationNotifier --> RouteConfiguration : uses
 NavigationNotifier --> MetricsPageFactory : uses
 NavigationNotifier --> MetricsPage : uses
-NavigationNotifier -up-> PageParameters : uses
+NavigationNotifier -up-> PageParametersModel : uses
 
-SomePageParameters ..|> PageParameters
+SomePageParametersModel ..|> PageParametersModel
 
 SomePageNotifier ..|> PageNotifier
-SomePageNotifier -left-> SomePageParameters : uses
+SomePageNotifier -left-> SomePageParametersModel : uses
 
 @enduml
