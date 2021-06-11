@@ -165,4 +165,4 @@ Having considered all the complex points and edge cases, we conclude that the `U
 
 The `Update feature` is a part of the Metrics CLI component and is to be integrated into the CLI. The following diagram demonstrates the `Update feature` integration:
 
-![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_command_analysis/metrics/cli/docs/features/diagrams/update_feature_integration_component_diagram.puml)
+![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/diagrams/update_feature_integration_component_diagram.puml)
