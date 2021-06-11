@@ -3,7 +3,7 @@
 package common.presentation.navigation {
     class MetricsRouteInformationParser {
         - _routeConfigurationFactory : RouteConfigurationFactory
-        + routeConfigurationLocationConverter : RouteConfigurationLocationConverter
+        - _routeConfigurationLocationConverter : RouteConfigurationLocationConverter
 
         + parseRouteInformation(information: RouteInformation) : RouteConfiguration
         + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
@@ -17,11 +17,11 @@ package common.presentation.navigation {
             + parameters : Map<String, dynamic>
 
             - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
-            {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
-            {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
-            {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
-            {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
-            {static} RouteConfiguration.loading(): RouteConfiguration
+            + {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
+            + {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
+            + {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
+            + {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
+            + {static} RouteConfiguration.loading(): RouteConfiguration
 
             + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
         }
