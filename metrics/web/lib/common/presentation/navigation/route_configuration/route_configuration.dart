@@ -16,7 +16,7 @@ class RouteConfiguration extends Equatable {
   /// A flag that indicates whether the authorization is required for this route.
   final bool authorizationRequired;
 
-  /// A [Map] containing this route parameters.
+  /// A [Map] containing parameters of this route.
   final Map<String, dynamic> parameters;
 
   @override

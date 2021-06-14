@@ -11,10 +11,11 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 /// into the [RouteConfiguration] and vice versa.
 class MetricsRouteInformationParser
     extends RouteInformationParser<RouteConfiguration> {
-  /// A factory needed to create a [RouteConfiguration] depending on the [Uri].
+  /// A factory this parser uses to create a [RouteConfiguration] depending
+  /// on the [Uri].
   final RouteConfigurationFactory _routeConfigurationFactory;
 
-  /// A converter needed to create a location [String] from the
+  /// A converter this parser uses to create a location [String] from the
   /// [RouteConfiguration].
   final RouteConfigurationLocationConverter _locationConverter;
 
