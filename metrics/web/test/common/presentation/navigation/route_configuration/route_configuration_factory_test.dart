@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("RouteConfigurationFactory", () {
     const baseUrl = 'https://test.uri';
-    final routeConfigurationFactory = RouteConfigurationFactory();
+    const routeConfigurationFactory = RouteConfigurationFactory();
 
     test(
       ".create() returns a loading route configuration if the given uri is null",
@@ -73,7 +73,6 @@ void main() {
         expect(configuration, equals(MetricsRoutes.debugMenu));
       },
     );
-
 
     test(
       ".create() returns a dashboard route configuration if the given uri contains an unknown path",

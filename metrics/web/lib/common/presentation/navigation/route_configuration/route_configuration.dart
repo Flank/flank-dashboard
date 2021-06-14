@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
@@ -16,8 +16,16 @@ class RouteConfiguration extends Equatable {
   /// A flag that indicates whether the authorization is required for this route.
   final bool authorizationRequired;
 
+  /// A [Map] containing parameters of this route.
+  final Map<String, dynamic> parameters;
+
   @override
-  List<Object> get props => [name, path, authorizationRequired];
+  List<Object> get props => [
+        name,
+        path,
+        authorizationRequired,
+        parameters,
+      ];
 
   /// Creates a new instance of the [RouteConfiguration].
   ///
@@ -26,6 +34,7 @@ class RouteConfiguration extends Equatable {
     @required this.name,
     @required this.authorizationRequired,
     this.path,
+    this.parameters,
   })  : assert(name != null),
         assert(authorizationRequired != null);
 
@@ -38,12 +47,14 @@ class RouteConfiguration extends Equatable {
     RouteName name,
     bool authorizationRequired,
     String path,
+    Map<String, dynamic> parameters,
   }) {
     return RouteConfiguration(
       name: name ?? this.name,
       authorizationRequired:
           authorizationRequired ?? this.authorizationRequired,
       path: path ?? this.path,
+      parameters: parameters ?? this.parameters,
     );
   }
 }

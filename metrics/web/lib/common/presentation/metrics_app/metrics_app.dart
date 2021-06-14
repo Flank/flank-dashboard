@@ -13,7 +13,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_th
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/navigation/metrics_route_information_parser.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/routes/observers/firebase_analytics_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
@@ -79,9 +78,7 @@ class _MetricsAppState extends State<MetricsApp> {
             ],
           );
 
-          final routeInformationParser = MetricsRouteInformationParser(
-            RouteConfigurationFactory(),
-          );
+          final routeInformationParser = MetricsRouteInformationParser();
 
           return MetricsFPSMonitor(
             child: MetricsThemeBuilder(
