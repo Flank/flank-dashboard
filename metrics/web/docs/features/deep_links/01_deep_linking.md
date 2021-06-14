@@ -414,7 +414,7 @@ Consider this class diagram that illustrates the required changes needed to pars
 ![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
 
 #### Applying Deep Links
-The following subsections describe the required changes needed to be able to restore the application state from the deep links and update the deep links from in response to application events.
+The following subsections describe the required changes needed to be able to restore the application state from the deep links and update the deep links in response to application events.
 
 ##### PageParametersModel
 Once we're able to parse `query parameters`, we should have a way to represent them in the Metrics Web application. To do that, let's introduce a `PageParametersModel`. 
@@ -475,7 +475,7 @@ The code snippet below demonstrates the `MetricsPageFactory.create` changes:
 The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application. The following subsections describe the main aspects needed to be able to implement the `deep linking` feature.
 
 ###### Updating page parameters
-When the `NavigationNotifier` gets a new `RouteConfiguration`, it should create new `PageParametersModel` from the received `RouteConfiguration` and notify any listeners about the `PageParametersModel` updates.
+When the `NavigationNotifier` gets a new `RouteConfiguration`, it should create a new `PageParametersModel` from the received `RouteConfiguration` and notify any listeners about the `PageParametersModel` updates.
 
 To do that, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
 
@@ -538,7 +538,7 @@ To handle that we should implement a `handlePageParametersUpdates()` method. Thi
 - Update the current URL without changing the browser history using the `NavigationState` class.
 
 ##### PageNotifier
-Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides interface for a `page` that uses `PageParametersModel`.
+Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides an interface for a `page` that uses `PageParametersModel`.
 
 The following code snippet demonstrates the `PageNotifier` interface:
 
@@ -554,7 +554,7 @@ abstract class PageNotifier extends ChangeNotifier {
 
 The `handlePageParameters()` method allows handling the new `PageParametersModel` provided by the `NavigationNotifier` (e.g., when the user opens a deep link, navigates back, etc.).
 
-Once we need to add new `PageParametersModel` to some page, we should update the corresponding `ChangeNotifier` of this page to implement the `PageNotifier` interface, implement the logic of applying the received `PageParametersModel`, and the logic of updating `PageParametersModel` of this page.
+Once we need to add a new `PageParametersModel` to some page, we should update the corresponding `ChangeNotifier` of this page to implement the `PageNotifier` interface, implement the logic of applying the received `PageParametersModel`, and the logic of updating the `PageParametersModel` of this page.
 
 Since applying the `PageParametersModel` is page-specific, the implementation details of applying the `PageParametersModel` by any `PageNotifier` are not considered in this design document.
 
