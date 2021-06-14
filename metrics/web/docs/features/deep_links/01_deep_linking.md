@@ -604,8 +604,8 @@ Formally, the current behaviour of the `Back Button` can be unexpected to the us
 To improve the navigation experience here, we should introduce a new method to the `NavigationNotifier` - `canPop()`, that returns if the current page can be popped.
 
 Now, when the `back button` is pressed, we should perform the following:
-- Pop the current page if the `NavigationNotifier.canPop` returns `true`;
-- If there is no underlying page, push and replace the current page with the `DashboardPage`.
+1. Pop the current page if the `NavigationNotifier.canPop` returns `true`;
+2. If there is no underlying page, push and replace the current page with the `DashboardPage`.
 
 Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParametersModel` to the previous page if any.
 
