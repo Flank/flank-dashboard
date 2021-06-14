@@ -1,6 +1,9 @@
 @startuml metrics_storybook_web_relation_diagram
 
 package "metrics" {
+  package "widgets" {  
+    [Metrics Widgets]
+  }
   package "storybook" {
     [Metrics Storybook UI] ..> [Metrics Widgets] : uses
   }
