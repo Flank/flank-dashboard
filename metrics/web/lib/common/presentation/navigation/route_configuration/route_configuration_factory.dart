@@ -21,7 +21,7 @@ class RouteConfigurationFactory {
     final pathSegments = uri?.pathSegments;
 
     if (pathSegments == null || pathSegments.isEmpty) {
-      return RouteConfiguration.loading();
+      return const RouteConfiguration.loading();
     }
 
     final routeName = pathSegments.first;

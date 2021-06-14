@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
@@ -47,7 +48,7 @@ class RouteConfiguration extends Equatable {
   const RouteConfiguration.loading()
       : name = RouteName.loading,
         authorizationRequired = false,
-        path = '${RouteName.loading}',
+        path = Navigator.defaultRouteName,
         parameters = null;
 
   /// Creates a new instance of the [RouteConfiguration] with the
@@ -60,7 +61,7 @@ class RouteConfiguration extends Equatable {
     this.parameters,
   })  : name = RouteName.login,
         authorizationRequired = false,
-        path = '${RouteName.login}';
+        path = '/${RouteName.login}';
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -72,7 +73,7 @@ class RouteConfiguration extends Equatable {
     this.parameters,
   })  : name = RouteName.dashboard,
         authorizationRequired = true,
-        path = '${RouteName.dashboard}';
+        path = '/${RouteName.dashboard}';
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -84,7 +85,7 @@ class RouteConfiguration extends Equatable {
     this.parameters,
   })  : name = RouteName.projectGroups,
         authorizationRequired = true,
-        path = '${RouteName.projectGroups}';
+        path = '/${RouteName.projectGroups}';
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -96,7 +97,7 @@ class RouteConfiguration extends Equatable {
     this.parameters,
   })  : name = RouteName.debugMenu,
         authorizationRequired = true,
-        path = '${RouteName.debugMenu}';
+        path = '/${RouteName.debugMenu}';
 
   /// Creates the new instance of the [RouteConfiguration]
   /// based on the current instance.
