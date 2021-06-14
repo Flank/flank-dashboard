@@ -24,15 +24,7 @@ The `doctor` command should provide clear and readable results, so the user can 
 
 According to the above, we can conclude that the feature makes sense and the Metrics CLI `doctor` command output is to be improved. If a user decided to use Metrics CLI for deployment, it is critical to provide this user with a validation command having a human-friendly output.
 
-To admit that this is possible to implement the feature, let's take a look at the existing examples:
-
-- Flutter provides a similar `doctor` command that validates the environment to be ready for development using Flutter SDK. The command output is clear and useful and provides the conclusion of the command run summarizing results.
-     
-     ![Flutter Doctor](images/flutter_doctor_example.png)
-
-- The CI Integrations `validate` command consumes the configuration file and validates its fields resulting in a clear output with conclusions for each field.
-
-     ![CI Integrations Validate](images/ci_integrations_validate_example.png)
+To admit that this is possible to implement the feature, we can state that there are existing solutions that we've already implemented for the CI Integrations `validate` command. This command consumes the configuration file and validates its fields providing clear and readable results. Moreover, the Flutter `doctor` command validates the environment, as the Metrics CLI `doctor`, and provides a great output.
 
 Therefore, the feature implementation is possible since the real-case examples exist.
 
@@ -49,9 +41,9 @@ The `doctor` command performs the set of checks that validates whether the machi
      - The validation that finishes successfully but has warnings should start with the exclamation sign in brackets: `[!]`.
      - The validation with an unknown result should start with the question mark in brackets: `[?]`.
 - Single check output should contain the validation item name or its description to define the target of validation.
-- Single check output should contain the validation result description (could be empty).
+- Single check output may contain the validation result description if any.
 - A single check should contain the additional output of the appropriate process. This output is optional by default for the successful checks and is required for fail, warning, and unknown results.
-- A single check additional output should be human-readable and highlighted from the main result according to the following rules:
+- A single check additional output should be human-readable and decoupled from the main result according to the following rules:
      - The output has a four-space indent. 
      - The output low-level details have the greater indent (plus four spaces for each indentation level).
 
@@ -59,10 +51,10 @@ The following table summarizes the above requirements into the validation result
 
 ||Indicator|Target|Description|Output|
 |---|---|---|---|---|
-|**Success**|`[✓]`|Name or description|The result description (e.g. version of the tool). Could be empty|Optional. May contain the human-readable check result|
-|**Fail**|`[✗]`|Name or description|Conclusion of validation (e.g. _Not installed_)|Required. Should contain the error message and its cause (e.g. command run)|
-|**Warning**|`[!]`|Name or description|The result description and a short explanation of warning (e.g. when optional tool is not installed)|Required. Should contain the human-readable description of the warning (e.g. explanation of versions mismatch)|
-|**Unknown**|`[?]`|Name or description|The short message (e.g. _Could not validate_)|Required. Should contain the explanation of why the check could not be performed|
+|**Success**|`[✓]`|Name or description|The result description (e.g., version of the tool). Could be empty|Optional. May contain the human-readable check result|
+|**Fail**|`[✗]`|Name or description|Conclusion of validation (e.g., _Not installed_)|Required. Should contain the error message and its cause (e.g., command run)|
+|**Warning**|`[!]`|Name or description|The result description and a short explanation of warning (e.g., when optional tool is not installed)|Required. Should contain the human-readable description of the warning (e.g., explanation of versions mismatch)|
+|**Unknown**|`[?]`|Name or description|The short message (e.g., _Could not validate_)|Required. Should contain the explanation of why the check could not be performed|
 
 Let's take a look at the example of how the improved `doctor` command output should look like:
 
@@ -71,7 +63,17 @@ Let's take a look at the example of how the improved `doctor` command output sho
 ### Landscape
 > Look for existing solutions in the area.
 
-As mentioned in the [Feasibility study](#feasibility-study) section, the Flutter CLI and CI Integrations tool provide similar to the desired output. However, the Flutter `doctor` command implementation looks a bit tricky and doesn't provide appropriate interfaces we might use. On the other hand, the CI Integrations tool `validate` command provides similar output as well as validation classes and interfaces we would like to use.
+As mentioned in the [Feasibility study](#feasibility-study) section, the Flutter CLI and CI Integrations tool provide similar to the desired output. Let's take a look at these examples:
+
+- The Flutter `doctor` command validates the environment to be ready for development using Flutter SDK. The command output is clear and useful and provides the conclusion of the command run summarizing results.
+     
+     ![Flutter Doctor](images/flutter_doctor_example.png)
+
+- The CI Integrations `validate` command consumes the configuration file and validates its fields resulting in a clear output with conclusions for each field.
+
+     ![CI Integrations Validate](images/ci_integrations_validate_example.png)
+
+However, the Flutter `doctor` command implementation looks a bit tricky and doesn't provide appropriate interfaces we might use. On the other hand, the CI Integrations tool `validate` command provides validation classes and interfaces we would like to use.
 
 As we've already implemented a similar output for the CI Integrations tool `validate` command, we'd like to use the existing code. Thus, the feature is preliminary custom and implies using the existing custom solution with general improvements.
 
