@@ -21,21 +21,22 @@ class RouteConfigurationFactory {
     final pathSegments = uri?.pathSegments;
 
     if (pathSegments == null || pathSegments.isEmpty) {
-      return MetricsRoutes.loading;
+      return RouteConfiguration.loading();
     }
 
     final routeName = pathSegments.first;
+    final queryParameters = uri?.queryParameters;
 
     if (routeName == RouteName.login.value) {
-      return MetricsRoutes.login;
+      return RouteConfiguration.login(parameters: queryParameters);
     } else if (routeName == RouteName.dashboard.value) {
-      return MetricsRoutes.dashboard;
+      return RouteConfiguration.dashboard(parameters: queryParameters);
     } else if (routeName == RouteName.projectGroups.value) {
-      return MetricsRoutes.projectGroups;
+      return RouteConfiguration.projectGroups(parameters: queryParameters);
     } else if (routeName == RouteName.debugMenu.value) {
-      return MetricsRoutes.debugMenu;
+      return RouteConfiguration.debugMenu(parameters: queryParameters);
     }
 
-    return MetricsRoutes.dashboard;
+    return RouteConfiguration.dashboard();
   }
 }
