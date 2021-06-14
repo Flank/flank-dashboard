@@ -10,8 +10,7 @@ package some_page.presentation.models {
     class SomePageParametersModel {
         + someField: String
 
-        {static} SomePageParametersModel(someField: String)
-        {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>)
+        + {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>)
         + copyWith(someField: String)
         + toMap(): Map<String, dynamic>
     }

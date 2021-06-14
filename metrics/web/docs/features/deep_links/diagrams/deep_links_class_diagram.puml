@@ -11,14 +11,14 @@ package common.presentation {
 
         package metrics_page {
             class MetricsPage<T> {
-                + arguments: RouteConfiguration
+                + arguments: PageParametersModel
 
                 + restoreConfiguration() : RouteConfiguration
-                + copyWith(configuration: RouteConfiguration): MetricsPage
+                + copyWith(arguments: RouteConfiguration): MetricsPage
             }
 
             class MetricsPageFactory {
-                + create(configuration : RouteConfiguration)
+                + create(routeName: RouteName, pageParameters: PageParametersModel) : MetricsPage
             }
         }
 
@@ -30,11 +30,11 @@ package common.presentation {
                 + parameters : Map<String, dynamic>
 
                 - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
-                {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
-                {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
-                {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
-                {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
-                {static} RouteConfiguration.loading(): RouteConfiguration
+                + {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.loading(): RouteConfiguration
 
                 + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
             }
@@ -46,17 +46,21 @@ package common.presentation {
             class RouteConfigurationLocationConverter {
                 + convert(configuration: RouteConfiguration): String
             }
+
+            class MetricsPageRouteConfigurationFactory {
+                + create(page: MetricsPage): RouteConfiguration
+            }
         }
 
         package state {
             class NavigationNotifier {
-                + pageParametersStream: Stream<PageParametersModel>
                 - _currentConfiguration: RouteConfiguration
+                - _currentPageParameters: PageParametersModel
                 - _pageParametersFactory: PageParametersFactory
                 - _pageFactory: MetricsPageFactory
 
                 + pop(): void
-                + handlePageParametersUpdates(PageParameters pageParameters): void
+                + handlePageParametersUpdates(PageParametersModel pageParameters): void
                 - _updateCurrentPage(): void
                 - _getConfigurationFromPage(page: MetricsPage) : RouteConfiguration
                 - _setRouteConfiguration(routeConfiguration: RouteConfiguration): void
@@ -69,20 +73,28 @@ package common.presentation {
             interface PageParametersModel {
                 + toMap() : Map<String, dynamic>
             }
+
+            package factory as page_parameters_factory {
+                class PageParametersFactory {
+                    + create(configuration: RouteConfiguration) : PageParametersModel
+                }
+            }
         }
 
         package widgets {
             class PageParametersProxy {
-                + pageNotifiers : List<PageNotifier>
+                + pageNotifier PageNotifier
                 + child : Widget
+
+                - _navigationNotifierListener(): void
+                - _pageNotifierListener(): void
             }
         }
     }
 
     package state as common_state {
         interface PageNotifier {
-            + pageParametersUpdatesStream : Stream<PageParametersModel>
-            + handlePageParameters(PageParameters parameters) : void
+            + handlePageParameters(parameters: PageParametersModel) : void
         }
 
     }
@@ -93,8 +105,7 @@ package some_page.presentation {
         class SomePageParametersModel {
             + someField : String
 
-            {static} SomePageParametersModel(someField: String)
-            {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>): SomePageParametersModel
+            + {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>): SomePageParametersModel
             + toMap(): Map<String, dynamic>
             + copyWith(someParameter: String): SomePageParametersModel
         }
@@ -102,9 +113,14 @@ package some_page.presentation {
 
    package state as some_page_state {
        class SomePageNotifier {
-           + pageParametersUpdatesStream : Stream<PageParametersModel>
-           + handlePageParameters(PageParameters parameters) : void
-           - _applyPageParameters(SomePageParameters parameters): void
+           + handlePageParameters(parameters: PageParametersModel) : void
+           - _applyPageParameters(parameters: SomePageParameters): void
+       }
+   }
+
+   package widgets as some_page_widgets {
+       class SomePage {
+           build(context: BuildContext): Widget
        }
    }
 }
@@ -131,10 +147,20 @@ NavigationNotifier --> RouteConfiguration : uses
 NavigationNotifier --> MetricsPageFactory : uses
 NavigationNotifier --> MetricsPage : uses
 NavigationNotifier -up-> PageParametersModel : uses
+NavigationNotifier --> PageParametersFactory : uses
+NavigationNotifier --> MetricsPageRouteConfigurationFactory : uses
+
+MetricsPageRouteConfigurationFactory -right-> RouteConfiguration : creates
+MetricsPageRouteConfigurationFactory --> MetricsPage : uses
+
+PageParametersFactory -left-> PageParametersModel : creates
 
 SomePageParametersModel ..|> PageParametersModel
 
 SomePageNotifier ..|> PageNotifier
 SomePageNotifier -left-> SomePageParametersModel : uses
+
+SomePage -up-> SomePageNotifier : uses
+SomePage --> PageParametersProxy : uses
 
 @enduml
