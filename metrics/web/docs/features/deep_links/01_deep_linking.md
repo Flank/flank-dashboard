@@ -428,7 +428,7 @@ The following class diagram demonstrates the general approach for creating new `
 ![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
 
 ##### PageParametersFactory
-The concrete `PageParametersModel` stores the data for concrete pages and knows how to convert this data from/into query parameters. However, the application should decide what implementation of `PageParametersModel` use for the current `RouteConfiguration`. The `PageParametersFactory` is to help here. This factory encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration` calling the specific model deserialization.
+The concrete `PageParametersModel` stores the data for concrete pages and knows how to convert this data from/into query parameters. However, the application should decide what implementation of `PageParametersModel` to use for the current `RouteConfiguration`. The `PageParametersFactory` is to help here. This factory encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration` calling the specific model deserialization.
 
 Consider the following code snippet that demonstrates the `PageParametersFactory.create` method:
 ```dart
