@@ -9,68 +9,26 @@ import '../../../../test_utils/matchers.dart';
 
 void main() {
   group("RouteConfiguration", () {
-    const name = RouteName.login;
-    const path = 'test_path';
-    const authorizationRequired = false;
     const parameters = {'test': 'test'};
 
     test(
-      "throws an AssertionError if the given name is null",
+      ".loading() creates an instance with the name equal to the loading route name",
       () {
-        expect(
-          () => RouteConfiguration(name: null, authorizationRequired: true),
-          throwsAssertionError,
-        );
-      },
-    );
+        const configuration = RouteConfiguration.loading();
+        const expectedName = RouteName.loading;
 
-    test(
-      "throws an AssertionError if the given authorization required is null",
-      () {
-        expect(
-          () => RouteConfiguration(
-            name: RouteName.login,
-            authorizationRequired: null,
-          ),
-          throwsAssertionError,
-        );
-      },
-    );
-
-    test(
-      "creates an instance with the given parameters",
-      () {
-        const configuration = RouteConfiguration(
-          name: name,
-          path: path,
-          authorizationRequired: authorizationRequired,
-          parameters: parameters,
-        );
-
-        expect(configuration.name, equals(name));
-        expect(configuration.path, equals(path));
-        expect(
-          configuration.authorizationRequired,
-          equals(authorizationRequired),
-        );
-        expect(configuration.parameters, equals(parameters));
+        expect(configuration.name, equals(expectedName));
       },
     );
 
     test(
       "equals to another RouteConfiguration with the same parameters",
       () {
-        const configuration = RouteConfiguration(
-          name: name,
-          path: path,
-          authorizationRequired: authorizationRequired,
+        final configuration = RouteConfiguration.dashboard(
           parameters: parameters,
         );
 
-        const anotherConfiguration = RouteConfiguration(
-          name: name,
-          path: path,
-          authorizationRequired: authorizationRequired,
+        final anotherConfiguration = RouteConfiguration.dashboard(
           parameters: parameters,
         );
 
@@ -81,10 +39,7 @@ void main() {
     test(
       ".copyWith() creates a new instance with the same fields if called without parameters",
       () {
-        const configuration = RouteConfiguration(
-          name: name,
-          path: path,
-          authorizationRequired: authorizationRequired,
+        final configuration = RouteConfiguration.dashboard(
           parameters: parameters,
         );
 
@@ -102,10 +57,7 @@ void main() {
         const newAuthorizationRequired = true;
         const newParameters = {'test2': 'test2'};
 
-        const configuration = RouteConfiguration(
-          name: name,
-          path: path,
-          authorizationRequired: authorizationRequired,
+        final configuration = RouteConfiguration.dashboard(
           parameters: parameters,
         );
 
