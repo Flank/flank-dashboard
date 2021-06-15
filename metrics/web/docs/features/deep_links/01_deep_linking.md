@@ -421,7 +421,7 @@ The following subsections describe the changes related to the following requirem
 ##### PageParametersModel
 As we already know how the parse `query parameters`, we should introduce a new model that would represent the deserialized data from a query. For this purpose, we introduce a `PageParametersModel`.
 
-The `PageParametersModel` is an interface for models that stores the application state parameters parsed from the query parameters. This interface provides the `.toMap()` method that the application uses to serialize appropriate models to the query parameters `Map`. The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to. Also, they should know how to serialize and deserialize their data using the `.toMap()` method and `.fromMap()` constructor respectively.
+The `PageParametersModel` is an interface for models that store the application state parameters parsed from the query parameters. This interface provides the `.toMap()` method that the application uses to serialize appropriate models to the query parameters `Map`. The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to. Also, they should know how to serialize and deserialize their data using the `.toMap()` method and `.fromMap()` constructor respectively.
 
 The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `CoolPageParametersModel` example:
 
@@ -511,76 +511,53 @@ class NavigationNotifier extends ChangeNotifier {
 ```
 
 ###### Pop method changes
-When the application pops a page, we should be able to restore a `RouteConfiguration` from the popped `MetricsPage`. To do that, let's implement a `MetricsPageRouteConfigurationFactory` that is responsible for creating a `RouteConfiguration` from the given `MetricsPage`.
+When the application pops a page, we should restore a `RouteConfiguration` from the new `MetricsPage` that precedes the popped one. To do that, let's implement a `MetricsPageRouteConfigurationFactory` that is responsible for creating a `RouteConfiguration` from the given `MetricsPage`.
 
-When we've implemented this factory, we should inject it into the `NavigationNotifier` and use it withing the `_getConfigurationFromPage` method.
-
+The `MetricsPageRouteConfigurationFactory` is to be injected into the `NavigationNotifier`. The notifier uses it withing the `_getConfigurationFromPage` method as follows:
 ```dart
-class NavigationNotifier extends ChangeNotifier {
-  /// A factory that allows creating a [RouteConfiguration]
-  /// from the given [MetricsPage].
-  final MetricsPageRouteConfigurationFactory metricsPageRouteConfigurationFactory;
-
-  /// Creates a [RouteConfiguration] using the given [page].
-  RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    return metricsPageRouteConfigurationFactory.create();
-  }
+/// Creates a [RouteConfiguration] using the given [page].
+RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
+  return metricsPageRouteConfigurationFactory.create(page);
 }
 ```
 
 ##### Handling page parameters
 The `NavigationNotifier` should also provide a method to handle the `PageParametersModel` updates reported from the application, for example, when a user applies a filter on a `DashboardPage`.
 
-To handle that we should implement a `handlePageParametersUpdates()` method. This method should perform the following actions:
-- Update the current `RouteConfiguration`'s `RouteConfiguration.parameters`;
-- Update the current `PageParametersModel` with the given one;
-- Update the current page using the updated `RouteConfiguration` and the new `PageParametersModel`; 
-- Update the current URL without changing the browser history using the `NavigationState` class.
+To handle the page parameters updates, we should implement a new `handlePageParametersUpdates()` method. This method triggers the following actions for the `NavigationNotifier`:
+1. Update the current `RouteConfiguration`'s `RouteConfiguration.parameters`.
+2. Update the current `PageParametersModel` with the given one.
+3. Update the current page using the updated `RouteConfiguration` and the new `PageParametersModel`.
+4. Update the current URL without changing the browser history using the `NavigationState` class.
 
 ##### PageNotifier
-Once we've updated the `NavigationNotifier` class, it's time to introduce the `PageNotifier` class that provides an interface for a `page` that uses `PageParametersModel`.
+Updates to the `NavigationNotifier` class, allow us to introduce the `PageNotifier` abstract class that parents all the notifiers to be used as a `page` notifier. More precisely, for the pages that use `PageParametersModel`, their notifier should inherit the `PageNotifier` and provide an appropriate implementation.    
 
-The following code snippet demonstrates the `PageNotifier` interface:
+The `PageNotifier` abstracts the `handlePageParameters()` method that allows handling a new `PageParametersModel` exposed by the `NavigationNotifier`. The page-specific notifiers that extend the `PageNotifier` should provide the logic of applying the received `PageParametersModel`, and updating the `PageParametersModel` for the page.
 
-```dart
-/// An abstract [ChangeNotifier] that provides methods for handling
-/// page parameters.
-abstract class PageNotifier extends ChangeNotifier {
-  /// Handles the given [parameters] depending on the 
-  /// specific [PageParametersModel] implementation.
-  void handlePageParameters(PageParametersModel parameters);
-}
-```
-
-The `handlePageParameters()` method allows handling the new `PageParametersModel` provided by the `NavigationNotifier` (e.g., when the user opens a deep link, navigates back, etc.).
-
-Once we need to add a new `PageParametersModel` to some page, we should update the corresponding `ChangeNotifier` of this page to implement the `PageNotifier` interface, implement the logic of applying the received `PageParametersModel`, and the logic of updating the `PageParametersModel` of this page.
-
-Since applying the `PageParametersModel` is page-specific, the implementation details of applying the `PageParametersModel` by any `PageNotifier` are not considered in this design document.
+Extending the `PageNotifier` is not mandatory for the page-specific notifiers. It is required only if the corresponding page uses the specific `PageParametersModel` and should expose parameters to the application URL.
 
 #### PageParametersProxy
-Once we've performed the `NavigationNotifier` required changes, and implemented the base `PageParametersModel` and `PageNotifier` classes with implementers, we should connect the `NavigationNotifier` with a specific `PageNotifier`.
+In the above sections, we discovered the required changes for the `NavigationNotifier` and examined the `PageNotifier` presenters with page-specific `PageParametersModel`s. However, the discovered changes lack the notes related to relationships between notifiers. More precisely, they don't review how to connect `NavigationNotifier` and `PageNotifier` but state that such a connection exists. Thus, let's talk about `PageParametersProxy`.
 
-To do that, we should implement a new widget that is responsible for creating a connection between the `NavigationNotifier` and a specific `PageNotifier`. Let's call it `PageParametersProxy`.
-
-The `PageParametersProxy` must perform the following:
+The `PageParametersProxy` is a widget that purposes to handle a connection between the `NavigationNotifier` and a specific `PageNotifier`. The proxy widget is responsible for the following:
 - Subscribe to `NavigationNofier` and provide the latest `PageParametersModel` to the given `pageNotifier`;
-- Subscribe to the given `pageNotifier` of the given `pageNotifiers` and provide the `PageParametersModel` updates to the `NavigationNotifier`;
-
-To use the `PageParametersProxy` widget, we should just wrap the whole page in this widget, and provide it with a `PageNotifier` responsible for this page's data.
+- Subscribe to the given `pageNotifier` and send the `PageParametersModel` updates to the `NavigationNotifier`. 
+  
+The `PageParametersProxy` widget should wrap the whole page and be provided with a `PageNotifier` responsible for the underlying page's data.
 
 The utilization of the `PageParametersProxy` is considered in the [next](#making-things-work) section.
 
 #### Making things work
-To improve the understanding of this feature implementation, consider the class diagram that illustrates the required classes and relationships between them needed to introduce the deep linking feature:
+The following class diagram demonstrates the class structure for the deep linking feature:
 
 ![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_class_diagram.puml)
 
-To understand how the feature works in terms of time, consider the following sequence diagrams:
+Similarly, the following sequence diagrams explain the feature algorithms details:
 - Applying deep links in the Metrics Web application:
   ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
 
-- Updating deep links in response to the UI state changes (e.g., when the user applies a filter, searches, etc.):
+- Updating deep links in response to the UI state changes:
   ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
 
 #### Internal app navigation
@@ -601,7 +578,7 @@ Formally, the current behaviour of the `Back Button` can be unexpected to the us
 - The user navigates to the `ProjectGroupPage` from the `DebugMenuPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage` instead of the `DebugMenuPage`;
 - The user applies some filtering or sorting parameters on the `DashboardPage`, navigates to the `ProjectGroupPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage`, however, does not restore the page parameters.
 
-To improve the navigation experience here, we should introduce a new method to the `NavigationNotifier` - `canPop()`, that returns if the current page can be popped.
+To improve the navigation experience here, we should introduce a new method to the `NavigationNotifier` - `canPop()`, that returns `true` if the current page can be popped.
 
 Now, when the `back button` is pressed, we should perform the following:
 1. Pop the current page if the `NavigationNotifier.canPop` returns `true`;
@@ -617,7 +594,7 @@ To improve this aspect of the navigation, we should modify the existing redirect
 2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_redirectRoute`. If the route does not require authorization, clear the `_redirectRoute`.
 3. When the user logs in, redirect the user to the `_redirectRoute` and clear the `_redirectRoute`.
 
-To do that, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into 2 methods: `.handleLogOut()` and `.handleLogIn()`.
+To implement such a behaviour, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into two different methods: `.handleLogOut()` and `.handleLogIn()`.
 
 The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
 
