@@ -564,17 +564,7 @@ Similarly, the following sequence diagrams explain the feature algorithms detail
 This section describes the changes we should introduce to improve the overall navigation experience in the Metrics Web application.
 
 ##### Back Button navigation
-Currently, the back button that is displayed on the `ProjectGroupPage` and on the `DebugMenuPage` navigates to the `DashboardPage` using the following code:
-```dart
-  /// Navigates to the [MetricsRoutes.dashboard] page.
-void _navigateHome(BuildContext context) {
-  final navigationNotifier = Provider.of<NavigationNotifier>(context, listen: false);
-
-  navigationNotifier.push(MetricsRoutes.dashboard);
-}
-```
-
-Formally, the current behaviour of the `Back Button` can be unexpected to the user. Consider the following examples describing why this behaviour may be unexpected:
+Currently, the back button that is displayed on the `ProjectGroupPage` and on the `DebugMenuPage` navigates directly to the `DashboardPage`. However, this behavior can be unexpected to the user. Consider the following cases that may be confusing for the user:
 - The user navigates to the `ProjectGroupPage` from the `DebugMenuPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage` instead of the `DebugMenuPage`;
 - The user applies some filtering or sorting parameters on the `DashboardPage`, navigates to the `ProjectGroupPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage`, however, does not restore the page parameters.
 
