@@ -10,8 +10,8 @@ participant MetricsRouterDelegate << (C,#ADD1B2) >>
 participant NavigationNotifier << (C,#ADD1B2) >>
 participant PageParametersFactory << (C,#ADD1B2) >>
 participant PageParametersProxy << (C,#ADD1B2) >>
-participant SomePageNotifier << (C,#ADD1B2) >>
-participant SomePage << (C,#ADD1B2) >>
+participant CoolPageNotifier << (C,#ADD1B2) >>
+participant CoolPage << (C,#ADD1B2) >>
 
 Bob -> Browser : opens a URL with a deep link
 activate Browser
@@ -26,7 +26,7 @@ MetricsRouterDelegate -> NavigationNotifier : handleInitialRoutePath(routeConfig
 activate NavigationNotifier
 
 NavigationNotifier --> NavigationNotifier : handles routeConfiguration
-NavigationNotifier --> NavigationNotifier : adds SomePage to `pages` stack
+NavigationNotifier --> NavigationNotifier : adds CoolPage to `pages` stack
 NavigationNotifier --> MetricsRouterDelegate : notifyListeners()
 
 MetricsRouterDelegate --> MetricsRouterDelegate : builds new Navigator with \n updated `pages` stack
@@ -38,7 +38,7 @@ deactivate MetricsRouteInformationParser
 
 Browser --> Bob : sees the URL
 
-MetricsRouterDelegate --> Bob : displays SomePage
+MetricsRouterDelegate --> Bob : displays CoolPage
 deactivate MetricsRouterDelegate
 
 NavigationNotifier -> PageParametersFactory : create(routeConfiguration)
@@ -51,18 +51,18 @@ NavigationNotifier -> PageParametersProxy : pageParameters
 deactivate NavigationNotifier
 activate PageParametersProxy
 
-PageParametersProxy -> SomePageNotifier : handlePageParameters(pageParameters)
+PageParametersProxy -> CoolPageNotifier : handlePageParameters(pageParameters)
 deactivate PageParametersProxy
-activate SomePageNotifier
+activate CoolPageNotifier
 
-SomePageNotifier --> SomePageNotifier : applies page parameters
+CoolPageNotifier --> CoolPageNotifier : applies page parameters
 
-SomePageNotifier -> SomePage : notifyListeners()
-deactivate SomePageNotifier
-activate SomePage
+CoolPageNotifier -> CoolPage : notifyListeners()
+deactivate CoolPageNotifier
+activate CoolPage
 
-SomePage --> Bob : displays updated data
-deactivate SomePage
+CoolPage --> Bob : displays updated data
+deactivate CoolPage
 deactivate Browser
 
 @enduml

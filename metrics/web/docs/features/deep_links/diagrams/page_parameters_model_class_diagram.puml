@@ -6,16 +6,16 @@ package common.presentation.navigation.models {
     }
 }
 
-package some_page.presentation.models {
-    class SomePageParametersModel {
+package cool_page.presentation.models {
+    class CoolPageParametersModel {
         + someField: String
 
-        + {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>)
-        + copyWith(someField: String)
+        + {static} CoolPageParametersModel.fromMap(map: Map<String, dynamic>) : CoolPageParametersModel
+        + copyWith(someField: String) : CoolPageParametersModel
         + toMap(): Map<String, dynamic>
     }
 }
 
-SomePageParametersModel .up.|> PageParametersModel
+CoolPageParametersModel .up.|> PageParametersModel
 
 @enduml

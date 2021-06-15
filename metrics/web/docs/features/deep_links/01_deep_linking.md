@@ -414,21 +414,21 @@ Consider this class diagram that illustrates the required changes needed to pars
 ![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
 
 #### Applying Deep Links
-The following subsections describe the required changes needed to be able to restore the application state from the deep links and update the deep links in response to application events.
+The following subsections describe the changes related to the following requirements:
+- restore the application state from deep links parameters;
+- update deep links in response to application events.
 
 ##### PageParametersModel
-Once we're able to parse `query parameters`, we should have a way to represent them in the Metrics Web application. To do that, let's introduce a `PageParametersModel`. 
+As we already know how the parse `query parameters`, we should introduce a new model that would represent the deserialized data from a query. For this purpose, we introduce a `PageParametersModel`.
 
-The `PageParametersModel` is an interface and does not store any data, however, it creates a general interface for all implementers including the `toMap() : Map<String, dynamic` method. 
+The `PageParametersModel` is an interface for models that stores the application state parameters parsed from the query parameters. This interface provides the `.toMap()` method that the application uses to serialize appropriate models to the query parameters `Map`. The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to. Also, they should know how to serialize and deserialize their data using the `.toMap()` method and `.fromMap()` constructor respectively.
 
-The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to, and implement the `PageParametersModel` interface.
-
-The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `SomePageParametersModel` example:
+The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `CoolPageParametersModel` example:
 
 ![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
 
 ##### PageParametersFactory
-Once we've implemented the required `PageParametersModel`, we should create a `PageParametersFactory` that encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration`.
+The concrete `PageParametersModel` stores the data for concrete pages and knows how to convert this data from/into query parameters. However, the application should decide what implementation of `PageParametersModel` use for the current `RouteConfiguration`. The `PageParametersFactory` is to help here. This factory encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration` calling the specific model deserialization.
 
 Consider the following code snippet that demonstrates the `PageParametersFactory.create` method:
 ```dart
@@ -440,19 +440,19 @@ PageParametersModel create(RouteConfiguration configuration) {
     case RouteName.dashboard:
       return DashboardPageParameters.fromMap(parameters);
     case RouteName.projectGroups:
-      /// Other page parameters handling
+      // Other page parameters handling
   }
 }
 ```
 
-The `PageParametersFactory` should be injected into `NavigationNotifier`, since the `NavigationNotifier` holds all the navigation-related logic of the application and controls the deep linking of the application. Consider the [`NavigationNotifier`](#navigationnotifier) section describing this part of the application.
+The `PageParametersFactory` should be injected into `NavigationNotifier` since the `NavigationNotifier` holds all the navigation-related logic of the application and controls its deep linking. Consider the [`NavigationNotifier`](#navigationnotifier) section to know more details in notifier-related changes.
 
 ##### MetricsPage and MetricsPageFactory
-To be able to restore the `PageParametersModel` when the application, for example, pops a page, we should update the `MetricsPage` and `MetricsPageFactory` classes.
+To make the application able to restore the `PageParametersModel` in response to navigation events (e.g., popping a page), we should update the `MetricsPage` and `MetricsPageFactory` classes.
 
-A `MetricsPage` should store a `RouteName` used to create this page and the `PageParametersModel` as an `arguments` field. The `MetricsPage` class should also provide an overridden `copyWith` method to copy a page with the updated parameters.
+A `MetricsPage` should store a `RouteName` that was used to create this page and the `PageParametersModel` as an `arguments` field. The `MetricsPage` class should also provide an overridden `copyWith` method to copy a page with the updated parameters.
 
-The `MetricsPageFactory` should be updated as well to create `MetricsPage`s with the given `RouteName` and `PageParametersModel`.
+We should also update the `MetricsPageFactory` to create `MetricsPage`s with the given `RouteName` and `PageParametersModel`.
 
 The code snippet below demonstrates the `MetricsPageFactory.create` changes:
 ```dart
@@ -472,10 +472,10 @@ The code snippet below demonstrates the `MetricsPageFactory.create` changes:
 ```
 
 ##### NavigationNotifier
-The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application. The following subsections describe the main aspects needed to be able to implement the `deep linking` feature.
+The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application. The following subsections describe the main changes to the`NavigationNotifier` related to the `deep linking` feature implementation.
 
 ###### Updating page parameters
-When the `NavigationNotifier` gets a new `RouteConfiguration`, it should create a new `PageParametersModel` from the received `RouteConfiguration` and notify any listeners about the `PageParametersModel` updates.
+When the `NavigationNotifier` receives a new `RouteConfiguration`, it should create a new `PageParametersModel` using a new `RouteConfiguration` instance and notify all listeners about the updates.
 
 To do that, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
 

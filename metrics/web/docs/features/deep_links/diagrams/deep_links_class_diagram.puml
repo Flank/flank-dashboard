@@ -100,26 +100,26 @@ package common.presentation {
     }
 }
 
-package some_page.presentation {
-    package models as some_page_models {
-        class SomePageParametersModel {
+package cool_page.presentation {
+    package models as cool_page_models {
+        class CoolPageParametersModel {
             + someField : String
 
-            + {static} SomePageParametersModel.fromMap(map: Map<String, dynamic>): SomePageParametersModel
+            + {static} CoolPageParametersModel.fromMap(map: Map<String, dynamic>): CoolPageParametersModel
             + toMap(): Map<String, dynamic>
-            + copyWith(someParameter: String): SomePageParametersModel
+            + copyWith(someParameter: String): CoolPageParametersModel
         }
     }
 
-   package state as some_page_state {
-       class SomePageNotifier {
+   package state as cool_page_state {
+       class CoolPageNotifier {
            + handlePageParameters(parameters: PageParametersModel) : void
-           - _applyPageParameters(parameters: SomePageParameters): void
+           - _applyPageParameters(parameters: CoolPageParametersModel): void
        }
    }
 
-   package widgets as some_page_widgets {
-       class SomePage {
+   package widgets as cool_page_widgets {
+       class CoolPage {
            build(context: BuildContext): Widget
        }
    }
@@ -155,12 +155,12 @@ MetricsPageRouteConfigurationFactory --> MetricsPage : uses
 
 PageParametersFactory -left-> PageParametersModel : creates
 
-SomePageParametersModel ..|> PageParametersModel
+CoolPageParametersModel ..|> PageParametersModel
 
-SomePageNotifier ..|> PageNotifier
-SomePageNotifier -left-> SomePageParametersModel : uses
+CoolPageNotifier ..|> PageNotifier
+CoolPageNotifier -left-> CoolPageParametersModel : uses
 
-SomePage -up-> SomePageNotifier : uses
-SomePage --> PageParametersProxy : uses
+CoolPage -up-> CoolPageNotifier : uses
+CoolPage --> PageParametersProxy : uses
 
 @enduml

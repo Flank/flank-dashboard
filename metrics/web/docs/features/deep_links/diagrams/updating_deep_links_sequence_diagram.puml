@@ -4,28 +4,28 @@ skinparam BoxPadding 10
 
 actor Bob
 
-participant SomePage << (C,#ADD1B2) >>
-participant SomePageNotifier << (C,#ADD1B2) >>
+participant CoolPage << (C,#ADD1B2) >>
+participant CoolPageNotifier << (C,#ADD1B2) >>
 participant PageParametersProxy << (C,#ADD1B2) >>
 participant NavigationNotifier << (C,#ADD1B2) >>
 participant BrowserHistory #A9DCDF
 
-Bob -> SomePage : applies filter value
-activate SomePage
+Bob -> CoolPage : applies filter value
+activate CoolPage
 
-SomePage -> SomePageNotifier : filterBySomeValue(value)
-activate SomePageNotifier
+CoolPage -> CoolPageNotifier : filterBySomeValue(value)
+activate CoolPageNotifier
 
-SomePageNotifier --> SomePageNotifier : applies filter value
-SomePageNotifier --> SomePage : notifyListeners()
-SomePageNotifier --> SomePage : updated data
-SomePage --> Bob : updated UI
-deactivate SomePage
+CoolPageNotifier --> CoolPageNotifier : applies filter value
+CoolPageNotifier --> CoolPage : notifyListeners()
+CoolPageNotifier --> CoolPage : updated data
+CoolPage --> Bob : updated UI
+deactivate CoolPage
 
-SomePageNotifier --> SomePageNotifier : updates page parameters
+CoolPageNotifier --> CoolPageNotifier : updates page parameters
 
-SomePageNotifier -> PageParametersProxy : pageParameters
-deactivate SomePageNotifier
+CoolPageNotifier -> PageParametersProxy : pageParameters
+deactivate CoolPageNotifier
 activate PageParametersProxy
 
 PageParametersProxy -> NavigationNotifier : handlePageParametersUpdates(currentDeepLinks)
