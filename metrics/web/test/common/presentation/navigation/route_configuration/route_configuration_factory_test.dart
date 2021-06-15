@@ -2,7 +2,9 @@
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -10,12 +12,28 @@ void main() {
     const baseUrl = 'https://test.uri';
     const routeConfigurationFactory = RouteConfigurationFactory();
 
+    final isLoadingPageRoute = predicate<RouteConfiguration>(
+      (route) => route.name == RouteName.loading,
+    );
+    final isLoginPageRoute = predicate<RouteConfiguration>(
+      (route) => route.name == RouteName.login,
+    );
+    final isProjectGroupPageRoute = predicate<RouteConfiguration>(
+      (route) => route.name == RouteName.projectGroups,
+    );
+    final isDashboardPageRoute = predicate<RouteConfiguration>(
+      (route) => route.name == RouteName.dashboard,
+    );
+    final isDebugMenuPageRoute = predicate<RouteConfiguration>(
+      (route) => route.name == RouteName.debugMenu,
+    );
+
     test(
       ".create() returns a loading route configuration if the given uri is null",
       () {
         final configuration = routeConfigurationFactory.create(null);
 
-        expect(configuration, equals(MetricsRoutes.loading));
+        expect(configuration, isLoadingPageRoute);
       },
     );
 
@@ -26,7 +44,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.loading));
+        expect(configuration, isLoadingPageRoute);
       },
     );
 
@@ -37,7 +55,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.login));
+        expect(configuration, isLoginPageRoute);
       },
     );
 
@@ -48,7 +66,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.dashboard));
+        expect(configuration, isDashboardPageRoute);
       },
     );
 
@@ -59,7 +77,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.projectGroups));
+        expect(configuration, isProjectGroupPageRoute);
       },
     );
 
@@ -70,7 +88,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.debugMenu));
+        expect(configuration, isDebugMenuPageRoute);
       },
     );
 
@@ -81,7 +99,7 @@ void main() {
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration, equals(MetricsRoutes.dashboard));
+        expect(configuration, isDashboardPageRoute);
       },
     );
   });

@@ -46,10 +46,12 @@ class RouteConfiguration extends Equatable {
   /// The [authorizationRequired] equals to `false`.
   /// The [path] equals to the [RouteName.loading].
   const RouteConfiguration.loading()
-      : name = RouteName.loading,
-        authorizationRequired = false,
-        path = Navigator.defaultRouteName,
-        parameters = null;
+      : this._(
+          name: RouteName.loading,
+          authorizationRequired: false,
+          path: Navigator.defaultRouteName,
+          parameters: null,
+        );
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -58,10 +60,13 @@ class RouteConfiguration extends Equatable {
   /// The [authorizationRequired] equals to `false`.
   /// The [path] equals to the [RouteName.login].
   const RouteConfiguration.login({
-    this.parameters,
-  })  : name = RouteName.login,
-        authorizationRequired = false,
-        path = '/${RouteName.login}';
+    Map<String, dynamic> parameters,
+  }) : this._(
+          name: RouteName.login,
+          path: '/${RouteName.login}',
+          authorizationRequired: false,
+          parameters: parameters,
+        );
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -70,10 +75,13 @@ class RouteConfiguration extends Equatable {
   /// The [authorizationRequired] equals to `true`.
   /// The [path] equals to the [RouteName.dashboard].
   const RouteConfiguration.dashboard({
-    this.parameters,
-  })  : name = RouteName.dashboard,
-        authorizationRequired = true,
-        path = '/${RouteName.dashboard}';
+    Map<String, dynamic> parameters,
+  }) : this._(
+          name: RouteName.dashboard,
+          authorizationRequired: true,
+          path: '/${RouteName.dashboard}',
+          parameters: parameters,
+        );
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -82,10 +90,13 @@ class RouteConfiguration extends Equatable {
   /// The [authorizationRequired] equals to `true`.
   /// The [path] equals to the [RouteName.projectGroups].
   const RouteConfiguration.projectGroups({
-    this.parameters,
-  })  : name = RouteName.projectGroups,
-        authorizationRequired = true,
-        path = '/${RouteName.projectGroups}';
+    Map<String, dynamic> parameters,
+  }) : this._(
+          name: RouteName.projectGroups,
+          authorizationRequired: true,
+          path: '/${RouteName.projectGroups}',
+          parameters: parameters,
+        );
 
   /// Creates a new instance of the [RouteConfiguration] with the
   /// given [parameters].
@@ -94,10 +105,13 @@ class RouteConfiguration extends Equatable {
   /// The [authorizationRequired] equals to `true`.
   /// The [path] equals to the [RouteName.debugMenu].
   const RouteConfiguration.debugMenu({
-    this.parameters,
-  })  : name = RouteName.debugMenu,
-        authorizationRequired = true,
-        path = '/${RouteName.debugMenu}';
+    Map<String, dynamic> parameters,
+  }) : this._(
+          name: RouteName.debugMenu,
+          authorizationRequired: true,
+          path: '/${RouteName.debugMenu}',
+          parameters: parameters,
+        );
 
   /// Creates the new instance of the [RouteConfiguration]
   /// based on the current instance.

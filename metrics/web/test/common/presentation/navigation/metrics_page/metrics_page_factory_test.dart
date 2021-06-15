@@ -12,11 +12,20 @@ import 'package:metrics/project_groups/presentation/pages/project_group_page.dar
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/route_configuration_stub.dart';
+import '../../../../test_utils/route_configuration_mock.dart';
 
 void main() {
   group("MetricsPageFactory", () {
+    const path = 'path';
+
     final metricsPageFactory = MetricsPageFactory();
+    final routeConfiguration = RouteConfigurationMock();
+    final routeName = _RouteNameMock();
+
+    tearDown(() {
+      reset(routeConfiguration);
+      reset(routeName);
+    });
 
     test(
       ".create() returns the dashboard metrics page if the given route configuration is null",
@@ -90,19 +99,13 @@ void main() {
     test(
       ".create() returns the dashboard metrics page with a name equals to the given route configuration path if the configuration name is unknown",
       () {
-        const testName = 'test';
-
-        final unknown = _RouteNameMock();
-        when(unknown.value).thenReturn('unknown');
-
-        final routeConfiguration = RouteConfigurationStub(
-          name: unknown,
-          path: testName,
-        );
+        when(routeName.value).thenReturn('unknown');
+        when(routeConfiguration.name).thenReturn(routeName);
+        when(routeConfiguration.path).thenReturn(path);
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(actualName, equals(testName));
+        expect(actualName, equals(path));
       },
     );
 
@@ -154,10 +157,9 @@ void main() {
     test(
       ".create() returns the project group metrics page if the given route configuration name is unknown",
       () {
-        final unknown = _RouteNameMock();
-        when(unknown.value).thenReturn('unknown');
+        when(routeName.value).thenReturn('unknown');
+        when(routeConfiguration.name).thenReturn(routeName);
 
-        final routeConfiguration = RouteConfigurationStub(name: unknown);
         final page = metricsPageFactory.create(routeConfiguration);
 
         expect(page.child, isA<DashboardPage>());
