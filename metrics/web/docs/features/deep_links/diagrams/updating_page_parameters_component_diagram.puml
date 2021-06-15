@@ -1,0 +1,21 @@
+@startuml navigation_notifier_approach_component_diagram
+
+skinparam componentStyle rectangle
+
+component Browser #A9DCDF
+
+package "Metrics Web" {
+    component "Navigator 2.0" as Navigator
+    component NavigationNotifier
+    component "Page ChangeNotifier" as PageNotifier
+    component Page
+}
+
+Browser --> Navigator : URL
+Navigator --> NavigationNotifier : routeConfiguration
+NavigationNotifier --> NavigationNotifier : creates new ""PageParametersModel"" \n and updates current page parameters
+NavigationNotifier --> PageNotifier : page parameters
+PageNotifier --> Page : updated data
+
+
+@enduml
