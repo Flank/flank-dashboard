@@ -1,0 +1,35 @@
+@startuml metrics_storybook_architecture_components_diagram
+
+skinparam componentStyle rectangle
+
+component "Metrics Storybook" as MS
+
+component "Story (e.g., Buttons)" as ButtonsStory
+component "Chapter (e.g., Positive Button)" as PositiveButtonChapter
+
+component "Story (e.g., Toasts)" as ToastsStory
+component "Chapter (e.g., Positive Toast)" as PositiveToastChapter
+component "Chapter Options" as PositiveToastChapterOptions
+component "Text Option (e.g., text input)" as FirstPositiveToastChapterTextOption
+component "Bool Option (e.g., checkbox)" as SecondPositiveToastChapterBoolOption
+component "Chapter (e.g., Negative Toast)" as NegativeToastChapter
+component "Chapter Options" as NegativeToastChapterOptions
+component "Text Option (e.g., text input)" as FirstNegativeToastChapterTextOption
+component "Bool Option (e.g., checkbox)" as SecondNegativeToastChapterBoolOption
+
+MS -down-> ButtonsStory
+MS -down-> ToastsStory
+
+ButtonsStory -down-> PositiveButtonChapter
+
+ToastsStory -down-> PositiveToastChapter
+PositiveToastChapter -down-> PositiveToastChapterOptions
+PositiveToastChapterOptions -down-> FirstPositiveToastChapterTextOption
+PositiveToastChapterOptions -down-> SecondPositiveToastChapterBoolOption
+
+ToastsStory -down-> NegativeToastChapter
+NegativeToastChapter -down-> NegativeToastChapterOptions
+NegativeToastChapterOptions -down-> FirstNegativeToastChapterTextOption
+NegativeToastChapterOptions -down-> SecondNegativeToastChapterBoolOption
+
+@enduml

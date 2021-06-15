@@ -18,6 +18,10 @@ The Storybook is a tool for UI development that allows building UI components in
         - [Decision](#decision)
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
+- [**Design**](#design)
+    - [Architecture](#architecture)
+    - [User Interface](#user-interface)
+    - [Program](#program)
 
 # Analysis
 > Describe a general analysis approach.
@@ -221,3 +225,67 @@ The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Ap
 The following diagram shows the described interaction:
 
 ![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
+
+# Design
+
+The section provides a high level structure of the feature, describes the UI for end-users and shows a class level implementation details.
+
+### Architecture
+> Fundamental structures of the feature and context (diagram).
+
+We can describe the structure of the feature through the following parts:
+
+- [Metrics Widgets package](#metrics-widgets-package)
+- [Metrics Storybook package](#metrics-storybook-package)
+
+#### Metrics Widgets package
+
+The `Metrics Widgets` is a package that contains a list of specific Metrics and base widgets, extracted from the Metrics Web Application. 
+
+As the Metrics specific widgets use the `Metrics theme` to determine their appearance, the package should contain all models/configs/widgets belong to the theme as well.
+
+Introducing a new package for widgets allows us to share them across multiple packages.
+
+The following diagram describes the structure of the `Metrics Widgets` package:
+
+![Metrics Widgets Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics_storybook_design/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
+
+#### Metrics Storybook package
+
+The `Metrics Storybook` is a package that responsible for showcasing widgets. 
+
+It consists of three main components:
+
+- **Story** - a class, that groups together a list of chapters.
+- **Chapter** - a part of the Story. It represents a specific widget we want to display within the storybook.
+- **Chapter Options** - at the end a list of inputs that control a visual view of the particular chapter (i.e. widget).
+
+Consider the following diagram, that describes the relation between the described parts:
+
+![Metrics Storybook Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_architecture_components_diagram.puml)
+
+The `Metrics Storybook` imports widgets from the [Metrics Widgets](#metrics-widgets) package to display them within the storybook.
+
+At this time, we want to show only Metrics specific widgets. 
+
+### User Interface
+> How users will interact with the feature (API, CLI, Graphical interface, etc.).
+
+Metrics Storybook is a separate Flutter web project. Its UI consists of the following parts:
+
+- **Sidebar** - a left panel with the Metrics logo and a list of Metrics specific widgets.
+
+- **Preview Field** - a zone in the middle of the screen, which displays an actual widget.
+
+- **Editing Panel** - a list of inputs, that allows changing widgets' appearance.
+
+- **Toggle theme** - a button that changes theme between dark and light variants.
+
+The following image shows all the described components together:
+
+![Storybook UI](images/storybook_components.png)
+
+So with that end-users will use the sidebar to choose an interesting widget, and change its appearance through a list of inputs in the editing panel.
+
+### Program
+> Detailed solution description to class/method level.

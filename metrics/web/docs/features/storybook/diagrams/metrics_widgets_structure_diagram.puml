@@ -1,0 +1,19 @@
+@startuml metrics_widgets_structure_diagram
+
+package "widgets" {
+  
+  package "theme" {
+    [Metrics Theme]
+  }
+
+  package "base" {  
+    [Base Widgets]
+  }
+
+  package "common" {
+    [Common Metrics Widgets] ..> [Base Widgets] : uses
+    [Common Metrics Widgets] ..> [Metrics Theme] : uses
+  }  
+}
+
+@enduml
