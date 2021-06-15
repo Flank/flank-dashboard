@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
@@ -8,6 +8,9 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 /// A factory that is responsible for creating the [RouteConfiguration]
 /// depending on the [Uri].
 class RouteConfigurationFactory {
+  /// Creates a new instance of the [RouteConfigurationFactory].
+  const RouteConfigurationFactory();
+
   /// Creates a [RouteConfiguration] from the given [uri].
   ///
   /// If the given [Uri] is null or does not contain any path segments,
