@@ -425,7 +425,7 @@ The `PageParametersModel` is an interface for models that store the application 
 
 The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `CoolPageParametersModel` example:
 
-![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
+![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
 
 ##### PageParametersFactory
 The concrete `PageParametersModel` stores the data for concrete pages and knows how to convert this data from/into query parameters. However, the application should decide what implementation of `PageParametersModel` to use for the current `RouteConfiguration`. The `PageParametersFactory` is to help here. This factory encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration` calling the specific model deserialization.
@@ -479,7 +479,7 @@ When the `NavigationNotifier` receives a new `RouteConfiguration`, it should cre
 
 The following diagram demonstrates the general concept for updating the `PageParametersModel` when the current `RouteConfiguration` changes:
 
-![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_sequence_diagram.puml)
+![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_sequence_diagram.puml)
 
 ###### Pop method changes
 When the application pops a page, we should restore a `RouteConfiguration` from the new `MetricsPage` that precedes the popped one. To do that, let's implement a `MetricsPageRouteConfigurationFactory` that is responsible for creating a `RouteConfiguration` from the given `MetricsPage`.
@@ -522,14 +522,14 @@ The utilization of the `PageParametersProxy` is considered in the [next](#making
 #### Making things work
 The following class diagram demonstrates the class structure for the deep linking feature:
 
-![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_class_diagram.puml)
+![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_class_diagram.puml)
 
 Similarly, the following sequence diagrams explain the feature algorithms details:
 - Applying deep links in the Metrics Web application:
-  ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
+  ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
 
 - Updating deep links in response to the UI state changes:
-  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
 
 #### Internal app navigation
 This section describes the changes we should introduce to improve the overall navigation experience in the Metrics Web application.
@@ -560,4 +560,4 @@ To implement such a behaviour, we should split the `.handleAuthenticationUpdates
 The `.handleLoggedOut()` should redirect the user to the `LoginPage`, and the `.handleLoggedIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
 
 Consider the following sequence diagram that describes handling deep links that require authorization:
-  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_and_authorization_sequence_diagram.puml)
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_and_authorization_sequence_diagram.puml)
