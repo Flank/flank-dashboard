@@ -1,4 +1,4 @@
-@startuml not_initialized_app_navigation_sequence_diagram.puml
+@startuml deep_links_and_authorization_sequence_diagram
 
 actor Bob
 
@@ -40,7 +40,7 @@ alt isAppInitialized == true
         Bob -> Browser : logs in to the app
         Browser -> LoginPage : performs login
         activate LoginPage
-        LoginPage -> NavigationNotifier : handleLogIn()
+        LoginPage -> NavigationNotifier : handleLoggedIn()
         deactivate LoginPage
     end
 
