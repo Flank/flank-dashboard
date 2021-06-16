@@ -1,0 +1,167 @@
+@startuml deep_links_class_diagram
+
+package common.presentation {
+    package navigation {
+        class MetricsRouteInformationParser {
+            - _routeConfigurationFactory: RouteConfigurationFactory
+            - _locationConverter: RouteConfigurationLocationConverter
+
+            + parseRouteInformation(information: RouteInformation): RouteConfiguration
+            + restoreRouteInformation(configuration: RouteConfiguration): RouteInformation
+        }
+
+        package metrics_page {
+            class MetricsPage<T> {
+                + arguments: PageParametersModel
+
+                + restoreConfiguration(): RouteConfiguration
+                + copyWith(arguments: RouteConfiguration): MetricsPage
+            }
+
+            class MetricsPageFactory {
+                + create(routeName: RouteName, pageParameters: PageParametersModel): MetricsPage
+            }
+        }
+
+        package route_configuration {
+            class RouteConfiguration {
+                + name: RouteName
+                + path: String
+                + authorizationRequired: bool
+                + parameters: Map<String, dynamic>
+
+                - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
+                + {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
+                + {static} RouteConfiguration.loading(): RouteConfiguration
+
+                + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
+            }
+
+            class RouteConfigurationFactory {
+                + create(uri: Uri): RouteConfiguration
+            }
+
+            class RouteConfigurationLocationConverter {
+                + convert(configuration: RouteConfiguration): String
+            }
+
+            class MetricsPageRouteConfigurationFactory {
+                + create(page: MetricsPage): RouteConfiguration
+            }
+        }
+
+        package state {
+            class NavigationNotifier {
+                - _currentConfiguration: RouteConfiguration
+                - _currentPageParameters: PageParametersModel
+                - _pageParametersFactory: PageParametersFactory
+                - _pageFactory: MetricsPageFactory
+
+                + pop(): void
+                + handlePageParametersUpdates(PageParametersModel pageParameters): void
+                - _updateCurrentPage(): void
+                - _getConfigurationFromPage(page: MetricsPage): RouteConfiguration
+                - _setRouteConfiguration(routeConfiguration: RouteConfiguration): void
+                - _updatePageParameters(): void
+                - _addNewPage(routeConfiguration: RouteConfiguration): void
+            }
+        }
+
+        package models {
+            interface PageParametersModel {
+                + toMap(): Map<String, dynamic>
+            }
+
+            package factory as page_parameters_factory {
+                class PageParametersFactory {
+                    + create(configuration: RouteConfiguration): PageParametersModel
+                }
+            }
+        }
+
+        package widgets {
+            class PageParametersProxy {
+                + pageNotifier PageNotifier
+                + child: Widget
+
+                - _navigationNotifierListener(): void
+                - _pageNotifierListener(): void
+            }
+        }
+    }
+
+    package state as common_state {
+        interface PageNotifier {
+            + handlePageParameters(parameters: PageParametersModel): void
+        }
+
+    }
+}
+
+package cool_page.presentation {
+    package models as cool_page_models {
+        class CoolPageParametersModel {
+            + someField: String
+
+            + {static} CoolPageParametersModel.fromMap(map: Map<String, dynamic>): CoolPageParametersModel
+            + toMap(): Map<String, dynamic>
+            + copyWith(someParameter: String): CoolPageParametersModel
+        }
+    }
+
+    package state as cool_page_state {
+        class CoolPageNotifier {
+            + handlePageParameters(parameters: PageParametersModel): void
+            - _applyPageParameters(parameters: CoolPageParametersModel): void
+        }
+    }
+
+    package widgets as cool_page_widgets {
+        class CoolPage {
+            build(context: BuildContext): Widget
+        }
+    }
+}
+
+PageParametersProxy -up-> PageNotifier: uses
+PageParametersProxy --> NavigationNotifier: uses
+PageParametersProxy -right-> PageParametersModel: uses
+
+PageNotifier --> PageParametersModel: uses
+
+MetricsPageFactory --> MetricsPage: creates
+MetricsPageFactory --> RouteConfiguration: uses
+
+RouteConfigurationFactory --> RouteConfiguration: creates
+
+MetricsRouteInformationParser --> RouteConfiguration: uses
+MetricsRouteInformationParser --> RouteConfigurationLocationConverter: uses
+MetricsRouteInformationParser --> RouteConfigurationFactory: uses
+
+RouteConfigurationLocationConverter --> RouteConfiguration: converts to location
+
+NavigationNotifier --> RouteConfigurationLocationConverter: uses
+NavigationNotifier --> RouteConfiguration: uses
+NavigationNotifier --> MetricsPageFactory: uses
+NavigationNotifier --> MetricsPage: uses
+NavigationNotifier -up-> PageParametersModel: uses
+NavigationNotifier --> PageParametersFactory: uses
+NavigationNotifier --> MetricsPageRouteConfigurationFactory: uses
+
+MetricsPageRouteConfigurationFactory -right-> RouteConfiguration: creates
+MetricsPageRouteConfigurationFactory --> MetricsPage: uses
+
+PageParametersFactory -left-> PageParametersModel: creates
+
+CoolPageParametersModel ..|> PageParametersModel
+
+CoolPageNotifier ..|> PageNotifier
+CoolPageNotifier -left-> CoolPageParametersModel: uses
+
+CoolPage -up-> CoolPageNotifier: uses
+CoolPage --> PageParametersProxy: uses
+
+@enduml
