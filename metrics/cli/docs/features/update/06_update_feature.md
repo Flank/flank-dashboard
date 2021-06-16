@@ -291,7 +291,7 @@ The `UpdateConfigFactory` is a class uses to create the [`UpdateConfig`](#update
 
 The following class diagram demonstrates the structure of the classes required for the `YAML` config parsing process:
 
-![YAML config parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/config_parser_class_diagram.puml)
+![YAML config parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/yaml_config_parser_class_diagram.puml)
 
 ### Redeploy process
 
