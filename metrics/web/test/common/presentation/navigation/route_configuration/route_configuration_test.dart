@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:test/test.dart';
@@ -11,7 +12,7 @@ void main() {
     const parameters = {'test': 'test'};
 
     test(
-      ".loading() creates an instance with the the correct name",
+      ".loading() creates an instance with the loading route name",
       () {
         const expectedName = RouteName.loading;
 
@@ -22,7 +23,7 @@ void main() {
     );
 
     test(
-      ".loading() creates an instance with the correct path",
+      ".loading() creates an instance with the loading route path",
       () {
         const expectedPath = Navigator.defaultRouteName;
 
@@ -56,7 +57,7 @@ void main() {
     );
 
     test(
-      ".login() creates an instance with the the correct name",
+      ".login() creates an instance with the login route name",
       () {
         const expectedName = RouteName.login;
 
@@ -67,7 +68,7 @@ void main() {
     );
 
     test(
-      ".login() creates an instance with the the correct path",
+      ".login() creates an instance with the login route path",
       () {
         final expectedPath = '/${RouteName.login}';
 
@@ -101,7 +102,7 @@ void main() {
     );
 
     test(
-      ".dashboard() creates an instance with the the correct name",
+      ".dashboard() creates an instance with the dashboard route name",
       () {
         const expectedName = RouteName.dashboard;
 
@@ -112,7 +113,7 @@ void main() {
     );
 
     test(
-      ".dashboard() creates an instance with the the correct path",
+      ".dashboard() creates an instance with the dashboard route path",
       () {
         final expectedPath = '/${RouteName.dashboard}';
 
@@ -148,7 +149,7 @@ void main() {
     );
 
     test(
-      ".projectGroups() creates an instance with the the correct name",
+      ".projectGroups() creates an instance with the project groups route name",
       () {
         const expectedName = RouteName.projectGroups;
 
@@ -159,7 +160,7 @@ void main() {
     );
 
     test(
-      ".projectGroups() creates an instance with the the correct path",
+      ".projectGroups() creates an instance with the project groups route path",
       () {
         final expectedPath = '/${RouteName.projectGroups}';
 
@@ -195,7 +196,7 @@ void main() {
     );
 
     test(
-      ".debugMenu() creates an instance with the the correct name",
+      ".debugMenu() creates an instance with the debug menu route name",
       () {
         const expectedName = RouteName.debugMenu;
 
@@ -206,7 +207,7 @@ void main() {
     );
 
     test(
-      ".debugMenu() creates an instance with the the correct path",
+      ".debugMenu() creates an instance with the debug menu route path",
       () {
         final expectedPath = '/${RouteName.debugMenu}';
 
@@ -238,6 +239,23 @@ void main() {
         );
 
         expect(configuration.parameters, equals(parameters));
+      },
+    );
+
+    test(
+      ".values contains all route configurations",
+      () {
+        final expectedValues = {
+          DefaultRoutes.loading,
+          DefaultRoutes.login,
+          DefaultRoutes.dashboard,
+          DefaultRoutes.projectGroups,
+          DefaultRoutes.debugMenu,
+        };
+
+        final values = RouteConfiguration.values;
+
+        expect(values, equals(expectedValues));
       },
     );
 

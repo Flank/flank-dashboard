@@ -3,8 +3,9 @@
 
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 
-/// A class that holds the [RouteConfiguration]s for Metrics application routes.
-class MetricsRoutes {
+/// A class that holds the default [RouteConfiguration]s used in the Metrics Web
+/// application.
+class DefaultRoutes {
   /// A [RouteConfiguration] for the loading page.
   static const RouteConfiguration loading = RouteConfiguration.loading();
 
@@ -20,13 +21,4 @@ class MetricsRoutes {
 
   /// A [RouteConfiguration] for the debug menu page.
   static final RouteConfiguration debugMenu = RouteConfiguration.debugMenu();
-
-  /// A [Set] that contains all available [RouteConfiguration]s.
-  static final Set<RouteConfiguration> values = {
-    loading,
-    login,
-    dashboard,
-    projectGroups,
-    debugMenu,
-  };
 }

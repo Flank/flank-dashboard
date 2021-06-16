@@ -1,9 +1,11 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 
 /// A class that represents the configuration of the route.
@@ -40,11 +42,8 @@ class RouteConfiguration extends Equatable {
   })  : assert(name != null),
         assert(authorizationRequired != null);
 
-  /// Creates a new instance of the [RouteConfiguration].
-  ///
-  /// The [name] equals to the [RouteName.loading].
-  /// The [authorizationRequired] equals to `false`.
-  /// The [path] equals to the [RouteName.loading].
+  /// Creates a new instance of the [RouteConfiguration] for the
+  /// [RouteName.loading] route.
   const RouteConfiguration.loading()
       : this._(
           name: RouteName.loading,
@@ -53,12 +52,8 @@ class RouteConfiguration extends Equatable {
           parameters: null,
         );
 
-  /// Creates a new instance of the [RouteConfiguration] with the
-  /// given [parameters].
-  ///
-  /// The [name] equals to the [RouteName.login].
-  /// The [authorizationRequired] equals to `false`.
-  /// The [path] equals to the [RouteName.login].
+  /// Creates a new instance of the [RouteConfiguration] for the
+  /// [RouteName.login] route with the given [parameters].
   const RouteConfiguration.login({
     Map<String, dynamic> parameters,
   }) : this._(
@@ -68,12 +63,8 @@ class RouteConfiguration extends Equatable {
           parameters: parameters,
         );
 
-  /// Creates a new instance of the [RouteConfiguration] with the
-  /// given [parameters].
-  ///
-  /// The [name] equals to the [RouteName.dashboard].
-  /// The [authorizationRequired] equals to `true`.
-  /// The [path] equals to the [RouteName.dashboard].
+  /// Creates a new instance of the [RouteConfiguration] for the
+  /// [RouteName.dashboard] route with the given [parameters].
   const RouteConfiguration.dashboard({
     Map<String, dynamic> parameters,
   }) : this._(
@@ -83,12 +74,8 @@ class RouteConfiguration extends Equatable {
           parameters: parameters,
         );
 
-  /// Creates a new instance of the [RouteConfiguration] with the
-  /// given [parameters].
-  ///
-  /// The [name] equals to the [RouteName.projectGroups].
-  /// The [authorizationRequired] equals to `true`.
-  /// The [path] equals to the [RouteName.projectGroups].
+  /// Creates a new instance of the [RouteConfiguration] for the
+  /// [RouteName.projectGroups] route with the given [parameters].
   const RouteConfiguration.projectGroups({
     Map<String, dynamic> parameters,
   }) : this._(
@@ -98,12 +85,8 @@ class RouteConfiguration extends Equatable {
           parameters: parameters,
         );
 
-  /// Creates a new instance of the [RouteConfiguration] with the
-  /// given [parameters].
-  ///
-  /// The [name] equals to the [RouteName.debugMenu].
-  /// The [authorizationRequired] equals to `true`.
-  /// The [path] equals to the [RouteName.debugMenu].
+  /// Creates a new instance of the [RouteConfiguration] for the
+  /// [RouteName.debugMenu] route with the given [parameters].
   const RouteConfiguration.debugMenu({
     Map<String, dynamic> parameters,
   }) : this._(
@@ -112,6 +95,15 @@ class RouteConfiguration extends Equatable {
           path: '/${RouteName.debugMenu}',
           parameters: parameters,
         );
+
+  /// An [UnmodifiableSetView] that contains all available [RouteConfiguration]s.
+  static final Set<RouteConfiguration> values = UnmodifiableSetView({
+    DefaultRoutes.loading,
+    DefaultRoutes.login,
+    DefaultRoutes.dashboard,
+    DefaultRoutes.projectGroups,
+    DefaultRoutes.debugMenu,
+  });
 
   /// Creates the new instance of the [RouteConfiguration]
   /// based on the current instance.

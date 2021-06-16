@@ -16,7 +16,7 @@ void main() {
 
     final routeConfiguration = RouteConfigurationMock();
 
-    tearDown((){
+    tearDown(() {
       reset(routeConfiguration);
     });
 
@@ -58,7 +58,6 @@ void main() {
         when(routeConfiguration.path).thenReturn(path);
         when(routeConfiguration.parameters).thenReturn(const {});
 
-
         final result = locationConverter.convert(routeConfiguration);
 
         expect(result, equals(path));
@@ -74,7 +73,6 @@ void main() {
 
         when(routeConfiguration.path).thenReturn(path);
         when(routeConfiguration.parameters).thenReturn(parameters);
-
 
         final result = locationConverter.convert(routeConfiguration);
 
