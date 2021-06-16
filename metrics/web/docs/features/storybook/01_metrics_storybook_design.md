@@ -339,8 +339,7 @@ The `Option` is deeply related to the `ChapterOptions` and is used to build a si
 
 The following diagram shows the relation between these classes:
 
-![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
-
+![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
 Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represent UI part of the storybook.
 
@@ -374,6 +373,6 @@ The purpose of these widgets is to edit a currently selected in the storybook  w
 
 The following diagram shows the relation between these classes and `ChangeNotifier`s:
 
-![Metrics Storybook UI widgets diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_ui_widgets_diagram.puml)
+![Metrics Storybook UI widgets diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_ui_widgets_class_diagram.puml)
 
 The following sequence diagram shows the 
