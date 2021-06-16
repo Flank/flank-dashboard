@@ -557,7 +557,7 @@ To improve this aspect of the navigation, we should modify the existing redirect
 
 To implement such a behaviour, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into two different methods: `.handleLoggedOut()` and `.handleLoggedIn()`.
 
-The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
+The `.handleLoggedOut()` should redirect the user to the `LoginPage`, and the `.handleLoggedIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
 
 Consider the following sequence diagram that describes handling deep links that require authorization:
   ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/deep_links_and_authorization_sequence_diagram.puml)
