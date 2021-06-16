@@ -1,0 +1,52 @@
+@startuml update_command_integration_class_diagram
+
+package args {
+    class CommandRunner{}
+    class Command {
+        + name : String
+        + description : String
+        + run() : Future<void>
+    }
+}
+
+package cli {
+    package updater {
+        package factory as updater.factory {
+            class UpdaterFactory {
+                - _servicesFactory : ServicesFactory
+                + create() : Updater
+            }
+        }
+    }
+
+    package config {
+        package factory as config.factory {
+            class UpdateConfigFactory {
+                - _fileHelper : FileHelper
+                - _updateConfigParser : UpdateConfigParser
+                + create(String configPath) : UpdateConfig
+            }
+        }
+    }
+
+    package runner {
+        class MetricsCliRunner {}
+    }
+
+    package command {
+        class UpdateCommand {
+            + updaterFactory : UpdaterFactory
+            + updateConfigFactory : UpdateConfigFactory
+        }
+    }
+}
+
+MetricsCliRunner --> UpdateCommand : uses
+UpdateCommand --> UpdaterFactory : uses
+UpdateCommand --> UpdateConfigFactory : uses
+
+UpdateCommand --|> Command
+
+MetricsCliRunner --|> CommandRunner
+
+@enduml
