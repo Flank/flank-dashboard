@@ -14,34 +14,34 @@ package common.presentation {
             class MetricsPage<T> {
                 + arguments: PageParametersModel
 
-                + restoreConfiguration() : RouteConfiguration
+                + restoreConfiguration(): RouteConfiguration
                 + copyWith(arguments: RouteConfiguration): MetricsPage
             }
 
             class MetricsPageFactory {
-                + create(routeName: RouteName, pageParameters: PageParametersModel) : MetricsPage
+                + create(routeName: RouteName, pageParameters: PageParametersModel): MetricsPage
             }
         }
 
         package route_configuration {
             class RouteConfiguration {
-                + name : RouteName
-                + path : String
-                + authorizationRequired : bool
-                + parameters : Map<String, dynamic>
+                + name: RouteName
+                + path: String
+                + authorizationRequired: bool
+                + parameters: Map<String, dynamic>
 
-                - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+                - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
                 + {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
                 + {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
                 + {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
                 + {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
                 + {static} RouteConfiguration.loading(): RouteConfiguration
 
-                + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+                + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
             }
 
             class RouteConfigurationFactory {
-                + create(uri: Uri) : RouteConfiguration
+                + create(uri: Uri): RouteConfiguration
             }
 
             class RouteConfigurationLocationConverter {
@@ -63,7 +63,7 @@ package common.presentation {
                 + pop(): void
                 + handlePageParametersUpdates(PageParametersModel pageParameters): void
                 - _updateCurrentPage(): void
-                - _getConfigurationFromPage(page: MetricsPage) : RouteConfiguration
+                - _getConfigurationFromPage(page: MetricsPage): RouteConfiguration
                 - _setRouteConfiguration(routeConfiguration: RouteConfiguration): void
                 - _updatePageParameters(): void
                 - _addNewPage(routeConfiguration: RouteConfiguration): void
@@ -72,12 +72,12 @@ package common.presentation {
 
         package models {
             interface PageParametersModel {
-                + toMap() : Map<String, dynamic>
+                + toMap(): Map<String, dynamic>
             }
 
             package factory as page_parameters_factory {
                 class PageParametersFactory {
-                    + create(configuration: RouteConfiguration) : PageParametersModel
+                    + create(configuration: RouteConfiguration): PageParametersModel
                 }
             }
         }
@@ -85,7 +85,7 @@ package common.presentation {
         package widgets {
             class PageParametersProxy {
                 + pageNotifier PageNotifier
-                + child : Widget
+                + child: Widget
 
                 - _navigationNotifierListener(): void
                 - _pageNotifierListener(): void
@@ -95,7 +95,7 @@ package common.presentation {
 
     package state as common_state {
         interface PageNotifier {
-            + handlePageParameters(parameters: PageParametersModel) : void
+            + handlePageParameters(parameters: PageParametersModel): void
         }
 
     }
@@ -104,7 +104,7 @@ package common.presentation {
 package cool_page.presentation {
     package models as cool_page_models {
         class CoolPageParametersModel {
-            + someField : String
+            + someField: String
 
             + {static} CoolPageParametersModel.fromMap(map: Map<String, dynamic>): CoolPageParametersModel
             + toMap(): Map<String, dynamic>
@@ -112,56 +112,56 @@ package cool_page.presentation {
         }
     }
 
-   package state as cool_page_state {
-       class CoolPageNotifier {
-           + handlePageParameters(parameters: PageParametersModel) : void
-           - _applyPageParameters(parameters: CoolPageParametersModel): void
-       }
-   }
+    package state as cool_page_state {
+        class CoolPageNotifier {
+            + handlePageParameters(parameters: PageParametersModel): void
+            - _applyPageParameters(parameters: CoolPageParametersModel): void
+        }
+    }
 
-   package widgets as cool_page_widgets {
-       class CoolPage {
-           build(context: BuildContext): Widget
-       }
-   }
+    package widgets as cool_page_widgets {
+        class CoolPage {
+            build(context: BuildContext): Widget
+        }
+    }
 }
 
-PageParametersProxy -up-> PageNotifier : uses
-PageParametersProxy --> NavigationNotifier : uses
-PageParametersProxy -right-> PageParametersModel : uses
+PageParametersProxy -up-> PageNotifier: uses
+PageParametersProxy --> NavigationNotifier: uses
+PageParametersProxy -right-> PageParametersModel: uses
 
-PageNotifier --> PageParametersModel : uses
+PageNotifier --> PageParametersModel: uses
 
-MetricsPageFactory --> MetricsPage : creates
-MetricsPageFactory --> RouteConfiguration : uses
+MetricsPageFactory --> MetricsPage: creates
+MetricsPageFactory --> RouteConfiguration: uses
 
-RouteConfigurationFactory --> RouteConfiguration : creates
+RouteConfigurationFactory --> RouteConfiguration: creates
 
-MetricsRouteInformationParser --> RouteConfiguration : uses
-MetricsRouteInformationParser --> RouteConfigurationLocationConverter : uses
-MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+MetricsRouteInformationParser --> RouteConfiguration: uses
+MetricsRouteInformationParser --> RouteConfigurationLocationConverter: uses
+MetricsRouteInformationParser --> RouteConfigurationFactory: uses
 
-RouteConfigurationLocationConverter --> RouteConfiguration : converts to location
+RouteConfigurationLocationConverter --> RouteConfiguration: converts to location
 
-NavigationNotifier --> RouteConfigurationLocationConverter : uses
-NavigationNotifier --> RouteConfiguration : uses
-NavigationNotifier --> MetricsPageFactory : uses
-NavigationNotifier --> MetricsPage : uses
-NavigationNotifier -up-> PageParametersModel : uses
-NavigationNotifier --> PageParametersFactory : uses
-NavigationNotifier --> MetricsPageRouteConfigurationFactory : uses
+NavigationNotifier --> RouteConfigurationLocationConverter: uses
+NavigationNotifier --> RouteConfiguration: uses
+NavigationNotifier --> MetricsPageFactory: uses
+NavigationNotifier --> MetricsPage: uses
+NavigationNotifier -up-> PageParametersModel: uses
+NavigationNotifier --> PageParametersFactory: uses
+NavigationNotifier --> MetricsPageRouteConfigurationFactory: uses
 
-MetricsPageRouteConfigurationFactory -right-> RouteConfiguration : creates
-MetricsPageRouteConfigurationFactory --> MetricsPage : uses
+MetricsPageRouteConfigurationFactory -right-> RouteConfiguration: creates
+MetricsPageRouteConfigurationFactory --> MetricsPage: uses
 
-PageParametersFactory -left-> PageParametersModel : creates
+PageParametersFactory -left-> PageParametersModel: creates
 
 CoolPageParametersModel ..|> PageParametersModel
 
 CoolPageNotifier ..|> PageNotifier
-CoolPageNotifier -left-> CoolPageParametersModel : uses
+CoolPageNotifier -left-> CoolPageParametersModel: uses
 
-CoolPage -up-> CoolPageNotifier : uses
-CoolPage --> PageParametersProxy : uses
+CoolPage -up-> CoolPageNotifier: uses
+CoolPage --> PageParametersProxy: uses
 
 @enduml

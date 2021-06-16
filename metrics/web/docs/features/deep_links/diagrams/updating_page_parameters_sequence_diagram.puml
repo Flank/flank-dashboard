@@ -9,23 +9,23 @@ participant PageParametersFactory << (C,#ADD1B2) >>
 participant Presentation << (C,#ADD1B2) >>
 
 activate MetricsRouterDelegate
-MetricsRouterDelegate -> NavigationNotifier : handleNewRoutePath(routeConfiguration)
+MetricsRouterDelegate -> NavigationNotifier: handleNewRoutePath(routeConfiguration)
 activate NavigationNotifier
 deactivate MetricsRouterDelegate
 
-NavigationNotifier --> NavigationNotifier : processes route configuration
+NavigationNotifier --> NavigationNotifier: processes route configuration
 
-NavigationNotifier -> PageParametersFactory : create(routeConfiguration)
+NavigationNotifier -> PageParametersFactory: create(routeConfiguration)
 activate PageParametersFactory
 
-PageParametersFactory --> NavigationNotifier : coolPageParametersModel
+PageParametersFactory --> NavigationNotifier: coolPageParametersModel
 deactivate PageParametersFactory
 
-NavigationNotifier --> NavigationNotifier : sets new page parameters
+NavigationNotifier --> NavigationNotifier: sets new page parameters
 
-NavigationNotifier -> Presentation : notifyListeners()
+NavigationNotifier -> Presentation: notifyListeners()
 activate Presentation
 
-Presentation --> Presentation : applies new page parameters
+Presentation --> Presentation: applies new page parameters
 
 @enduml

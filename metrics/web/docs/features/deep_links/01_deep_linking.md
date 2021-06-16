@@ -34,7 +34,7 @@ As a user, I want to pass direct links to project and/or project groups, so that
             - [Updating page parameters](#updating-page-parameters)
             - [Pop method changes](#pop-method-changes)
           - [PageNotifier](#pagenotifier)
-        - [PageParametersProxy](#pageparametersproxy)
+          - [PageParametersProxy](#pageparametersproxy)
         - [Making things work](#making-things-work)
         - [Internal app navigation](#internal-app-navigation)
           - [Back Button navigation](#back-button-navigation)
@@ -508,7 +508,7 @@ The `PageNotifier` abstracts the `handlePageParameters()` method that allows han
 
 Extending the `PageNotifier` is not mandatory for the page-specific notifiers. It is required only if the corresponding page uses the specific `PageParametersModel` and should expose parameters to the application URL.
 
-#### PageParametersProxy
+##### PageParametersProxy
 In the above sections, we discovered the required changes for the `NavigationNotifier` and examined the `PageNotifier` presenters with page-specific `PageParametersModel`s. However, the discovered changes lack the notes related to relationships between notifiers. More precisely, they don't review how to connect `NavigationNotifier` and `PageNotifier` but state that such a connection exists. Thus, let's talk about `PageParametersProxy`.
 
 The `PageParametersProxy` is a widget that purposes to handle a connection between the `NavigationNotifier` and a specific `PageNotifier`. The proxy widget is responsible for the following:

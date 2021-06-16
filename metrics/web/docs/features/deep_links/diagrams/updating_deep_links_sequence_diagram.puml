@@ -11,34 +11,34 @@ participant PageParametersProxy << (C,#ADD1B2) >>
 participant NavigationNotifier << (C,#ADD1B2) >>
 participant BrowserHistory #A9DCDF
 
-Bob -> CoolPage : applies filter value
+Bob -> CoolPage: applies filter value
 activate CoolPage
 
-CoolPage -> CoolPageNotifier : filterBySomeValue(value)
+CoolPage -> CoolPageNotifier: filterBySomeValue(value)
 activate CoolPageNotifier
 
-CoolPageNotifier --> CoolPageNotifier : applies filter value
-CoolPageNotifier --> CoolPage : notifyListeners()
-CoolPageNotifier --> CoolPage : updated data
-CoolPage --> Bob : updated UI
+CoolPageNotifier --> CoolPageNotifier: applies filter value
+CoolPageNotifier --> CoolPage: notifyListeners()
+CoolPageNotifier --> CoolPage: updated data
+CoolPage --> Bob: updated UI
 deactivate CoolPage
 
-CoolPageNotifier --> CoolPageNotifier : updates page parameters
+CoolPageNotifier --> CoolPageNotifier: updates page parameters
 
-CoolPageNotifier -> PageParametersProxy : pageParameters
+CoolPageNotifier -> PageParametersProxy: pageParameters
 deactivate CoolPageNotifier
 activate PageParametersProxy
 
-PageParametersProxy -> NavigationNotifier : handlePageParametersUpdates(currentDeepLinks)
+PageParametersProxy -> NavigationNotifier: handlePageParametersUpdates(currentDeepLinks)
 deactivate PageParametersProxy
 activate NavigationNotifier
 
-NavigationNotifier -> BrowserHistory : replaceState(location)
+NavigationNotifier -> BrowserHistory: replaceState(location)
 deactivate NavigationNotifier
 
 activate BrowserHistory
 
-BrowserHistory --> Bob : updates URL with query parameters
+BrowserHistory --> Bob: updates URL with query parameters
 deactivate BrowserHistory
 
 @enduml
