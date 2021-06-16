@@ -1,10 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/user_menu_button/widgets/metrics_user_menu_button.dart';
@@ -46,7 +46,7 @@ class MetricsAppBar extends StatelessWidget {
     );
   }
 
-  /// Navigates to the [MetricsRoutes.dashboard] page.
+  /// Navigates to the [DefaultRoutes.dashboard] page.
   void _navigateHome(BuildContext context) {
     final navigationNotifier = Provider.of<NavigationNotifier>(
       context,
@@ -54,7 +54,7 @@ class MetricsAppBar extends StatelessWidget {
     );
 
     navigationNotifier.pushAndRemoveUntil(
-      MetricsRoutes.dashboard,
+      DefaultRoutes.dashboard,
       (page) => page.name == Navigator.defaultRouteName,
     );
   }

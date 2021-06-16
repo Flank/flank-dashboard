@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
@@ -102,7 +102,7 @@ void main() {
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
 
         verify(navigationNotifier.push(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         )).called(once);
       },
     );

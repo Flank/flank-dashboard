@@ -1,11 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       Router.neglect(context, () {
-        navigationNotifier.pushStateReplacement(MetricsRoutes.dashboard);
+        navigationNotifier.pushStateReplacement(DefaultRoutes.dashboard);
       });
     }
   }

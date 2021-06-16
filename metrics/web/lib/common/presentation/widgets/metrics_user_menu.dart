@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
@@ -92,7 +92,7 @@ class MetricsUserMenu extends StatelessWidget {
                 padding: itemPadding,
                 child: TappableArea(
                   onTap: () => navigationNotifier.push(
-                    MetricsRoutes.projectGroups,
+                    DefaultRoutes.projectGroups,
                   ),
                   builder: (context, isHovered, child) => child,
                   child: Text(
@@ -111,7 +111,7 @@ class MetricsUserMenu extends StatelessWidget {
                       padding: itemPadding,
                       child: TappableArea(
                         onTap: () => navigationNotifier.push(
-                          MetricsRoutes.debugMenu,
+                          DefaultRoutes.debugMenu,
                         ),
                         builder: (context, isHovered, child) => child,
                         child: Text(

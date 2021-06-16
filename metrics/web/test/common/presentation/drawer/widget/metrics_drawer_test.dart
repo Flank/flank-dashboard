@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
@@ -74,7 +74,7 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(
-          MetricsRoutes.projectGroups,
+          DefaultRoutes.projectGroups,
         )).called(once);
       },
     );
