@@ -480,7 +480,7 @@ When the `NavigationNotifier` receives a new `RouteConfiguration`, it should cre
 To do that, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
 
 The following diagram demonstrates the general concept for updating the `PageParametersModel` when the current `RouteConfiguration` changes:
-![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_component_diagram.puml)
+![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_sequence_diagram.puml)
 
 ###### Pop method changes
 When the application pops a page, we should restore a `RouteConfiguration` from the new `MetricsPage` that precedes the popped one. To do that, let's implement a `MetricsPageRouteConfigurationFactory` that is responsible for creating a `RouteConfiguration` from the given `MetricsPage`.
