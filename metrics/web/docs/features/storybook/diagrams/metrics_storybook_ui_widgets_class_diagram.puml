@@ -1,4 +1,5 @@
 @startuml metrics_storybook_ui_widgets_class_diagram
+
 package storybook {
     package state {
         class ChaptersNotifier {
@@ -45,24 +46,26 @@ package storybook {
 
             class ChapterControlTextField {
                 + property : Option<String> 
+
                 + build(BuildContext context) : Widget
             }
             class ChapterControlCheckboxField {
                 + property : Option<Bool> 
+
                 + build(BuildContext context) : Widget
             }
             class ChapterControlColorField {
                 + property : Option<Color> 
+
                 + build(BuildContext context) : Widget
             }
             class ChapterControlSliderField {
                 + property : Option<Number> 
+
                 + build(BuildContext context) : Widget
             }
         }
     }
-
-
 }
 
 EditingPanel -up-> ChaptersNotifier : uses
