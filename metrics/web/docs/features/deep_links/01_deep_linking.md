@@ -419,7 +419,7 @@ The following subsections describe the changes related to the following requirem
 - update deep links in response to application events.
 
 ##### PageParametersModel
-As we already know how the parse `query parameters`, we should introduce a new model that would represent the deserialized data from a query. For this purpose, we introduce a `PageParametersModel`.
+As we already know how to parse `query parameters`, we should introduce a new model that would represent the deserialized data from a query. For this purpose, we introduce a `PageParametersModel`.
 
 The `PageParametersModel` is an interface for models that store the application state parameters parsed from the query parameters. This interface provides the `.toMap()` method that the application uses to serialize appropriate models to the query parameters `Map`. The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to. Also, they should know how to serialize and deserialize their data using the `.toMap()` method and `.fromMap()` constructor respectively.
 
@@ -475,11 +475,10 @@ The code snippet below demonstrates the `MetricsPageFactory.create` changes:
 The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application. The following subsections describe the main changes to the`NavigationNotifier` related to the `deep linking` feature implementation.
 
 ###### Updating page parameters
-When the `NavigationNotifier` receives a new `RouteConfiguration`, it should create a new `PageParametersModel` using a new `RouteConfiguration` instance and notify all listeners about the updates.
-
-To do that, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
+When the `NavigationNotifier` receives a new `RouteConfiguration`, it should create a new `PageParametersModel` using a new `RouteConfiguration` instance and notify all listeners about the updates. For this, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
 
 The following diagram demonstrates the general concept for updating the `PageParametersModel` when the current `RouteConfiguration` changes:
+
 ![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/deep_links_design_improvements/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_sequence_diagram.puml)
 
 ###### Pop method changes
@@ -556,7 +555,7 @@ To improve this aspect of the navigation, we should modify the existing redirect
 2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_redirectRoute`. If the route does not require authorization, clear the `_redirectRoute`.
 3. When the user logs in, redirect the user to the `_redirectRoute` and clear the `_redirectRoute`.
 
-To implement such a behaviour, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into two different methods: `.handleLogOut()` and `.handleLogIn()`.
+To implement such a behaviour, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into two different methods: `.handleLoggedOut()` and `.handleLoggedIn()`.
 
 The `.handleLogOut()` should redirect the user to the `LoginPage`, and the `.handleLogIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
 

@@ -1,4 +1,5 @@
 @startuml updating_deep_links_sequence_diagram
+
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
 

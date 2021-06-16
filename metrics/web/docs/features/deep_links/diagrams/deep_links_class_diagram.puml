@@ -1,12 +1,13 @@
 @startuml deep_links_class_diagram
+
 package common.presentation {
     package navigation {
         class MetricsRouteInformationParser {
-            - _routeConfigurationFactory : RouteConfigurationFactory
-            - _locationConverter : RouteConfigurationLocationConverter
+            - _routeConfigurationFactory: RouteConfigurationFactory
+            - _locationConverter: RouteConfigurationLocationConverter
 
-            + parseRouteInformation(information: RouteInformation) : RouteConfiguration
-            + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
+            + parseRouteInformation(information: RouteInformation): RouteConfiguration
+            + restoreRouteInformation(configuration: RouteConfiguration): RouteInformation
         }
 
         package metrics_page {
