@@ -1,0 +1,65 @@
+@startuml metrics_storybook_class_diagram
+package src {
+    package widgets {
+        class Storybook {
+            - _stories : List<Story>
+            + addStoryFor(String name)
+        }
+
+        class InjectorContainer {
+            + stories : List<Story>
+        }
+
+        ' add theme builder??
+    }
+
+    package state {
+        class StoriesNotifier {
+            + stories : List<Story>
+            + addStory(Story story) :void
+            + void setStories(List<Story> stories) : void
+        }
+        class ChaptersNotifier {
+            + currentChapter : Chapter;
+            + selectChapter(Chapter chapter) : void
+            + refreshChapter() : void
+        }
+        class ThemeNotifier {
+            + isDark : bool
+            + toggleTheme() : void
+        }
+    }
+
+    class Story {
+        + name : String
+        + chapters : List<Chapter>
+        + addChapter(String name, ChapterBuilder builder) : Story
+    }
+
+    class Chapter {
+        + name : String
+        + options : ChapterOptions
+        - _builder : ChapterBuilder
+
+        + build() : Widget
+    }
+
+    class ChapterOptions {
+        + options : Map<String, Option>
+        + textProperty(String name, String value) : String
+    }
+
+    class Option<T> {
+        + name : String
+        + value : T
+    }
+
+    Storybook -> InjectorContainer : creates and provides a list of stories
+    InjectorContainer -up-> StoriesNotifier : creates
+    InjectorContainer -up-> ChaptersNotifier : creates
+    InjectorContainer -up-> ThemeNotifier : creates
+    Storybook -down-> Story : uses
+    Story -right-> Chapter : uses
+    Chapter -right-> ChapterOptions : creates
+    ChapterOptions -> Option : creates
+    @enduml

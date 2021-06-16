@@ -1,0 +1,84 @@
+@startuml metrics_storybook_ui_widgets_class_diagram
+package storybook {
+    package state {
+        class ChaptersNotifier {
+            + currentChapter : Chapter
+
+            + selectChapter(Chapter chapter) : void
+            + refreshChapter() : void
+        }
+
+        class StoriesNotifier {
+            + stories : List<Story>
+
+            + addStory(Story story) : void
+            + void setStories(List<Story> stories) : void
+        }
+    }
+
+    package mappers {
+        class ChapterOptionMapper {
+            + map(Option<T> option) : Widget
+        }
+    }
+
+    package widgets {
+        class SideBar {
+            + build(BuildContext context) : Widget
+        }
+
+        class Preview {
+            + build(BuildContext context) : Widget
+        }
+
+        class EditingPanel {
+            - _widgets : List<Widget>
+
+            + build(BuildContext context) : Widget
+        }
+
+        package control_fields {
+            class ChapterControlField {
+                + label : String
+                + child : Widget
+            }
+
+            class ChapterControlTextField {
+                + property : Option<String> 
+                + build(BuildContext context) : Widget
+            }
+            class ChapterControlCheckboxField {
+                + property : Option<Bool> 
+                + build(BuildContext context) : Widget
+            }
+            class ChapterControlColorField {
+                + property : Option<Color> 
+                + build(BuildContext context) : Widget
+            }
+            class ChapterControlSliderField {
+                + property : Option<Number> 
+                + build(BuildContext context) : Widget
+            }
+        }
+    }
+
+
+}
+
+EditingPanel -up-> ChaptersNotifier : uses
+SideBar -up-> StoriesNotifier : uses
+Preview -up-> ChaptersNotifier : uses
+EditingPanel -up-> ChapterOptionMapper : uses
+ChapterControlField -> ChaptersNotifier : uses
+
+ChapterOptionMapper -> ChapterControlTextField : uses
+ChapterOptionMapper -> ChapterControlCheckboxField : uses
+ChapterOptionMapper -> ChapterControlColorField : uses
+ChapterOptionMapper -> ChapterControlSliderField : uses
+
+ChapterControlTextField -down-> ChapterControlField : uses
+ChapterControlCheckboxField -down-> ChapterControlField : uses
+ChapterControlColorField -down-> ChapterControlField : uses
+ChapterControlSliderField -down-> ChapterControlField : uses
+
+@enduml

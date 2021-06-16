@@ -224,7 +224,7 @@ The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Ap
 
 The following diagram shows the described interaction:
 
-![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
+![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
 
 # Design
 
@@ -248,7 +248,7 @@ Introducing a new package for widgets allows us to share them across multiple pa
 
 The following diagram describes the structure of the `Metrics Widgets` package:
 
-![Metrics Widgets Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics_storybook_design/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
+![Metrics Widgets Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
 
 #### Metrics Storybook package
 
@@ -285,7 +285,95 @@ The following image shows all the described components together:
 
 ![Storybook UI](images/storybook_components.png)
 
-So with that end-users will use the sidebar to choose an interesting widget, and change its appearance through a list of inputs in the editing panel.
+So with that end-users will use the sidebar to choose an interesting widget, change its appearance through a list of inputs in the editing panel, and view an actual result in the preview field.
 
 ### Program
 > Detailed solution description to class/method level.
+
+Once we've defined a high-level architecture of the `Metrics Storybook` and its visual view, we can provide a list of classes/widgets that need to be implemented for the feature.
+
+#### ***Metrics Storybook widget***
+
+First, let's start with the root widget - `MetricsStorybook`. The main purpose of the widget is to bootstrap an application and provide an interface to add stories, through the `storiesFor` method. The list of stories then is passed to the `InjectionContainer` widget where exposed to the whole application.
+
+_A few words about the `Injection Container`. As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#metrics-storybook-state)._
+
+#### Metrics storybook state
+
+There are a few `ChangeNotifier`s, that is making up the storybook's state:
+
+- ThemeNotifier
+
+As Metrics widgets' appearance depends on Metrics theme we should add functionality to change the theme. So, the notifier contains the `bool` value that controls the [ThemeMode](https://api.flutter.dev/flutter/material/MaterialApp/themeMode.html) of the application and `toggleTheme` method to change the theme. To provide the notifier to the `MaterialApp` for initialize the `themeMode` there is a `MetricsThemeBuilder` widget.
+
+- StoryNotifier - holds a list of stories and provides them to the application. 
+
+- ChapterNotifier - holds a `Chapter`'s data.
+
+#### Theme
+
+Once we've created the [state](#metrics-storybook-state) we use the `ThemeNotifier` and the `MetricsThemeBuilder` to provide an initial theme for the application using the `MetricsTheme` from the widgets package along with the light/dark theme data.
+
+Now, let's take a closer look at the main components of the storybook:
+
+#### ***Story***
+
+The `Story` is a class that groups together a list of `Chapter`s. To add a new chapter to the `Story` there is an `addChapter` method.
+
+#### ***Chapter***
+
+The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter, [builder function](#chapter-builder) and a [ChapterOptions](#chapter-options). There is, also, the `build` method, that is responsible to build the widget, represented by the `Chapter` and apply options, using the `ChapterBuilder` function. 
+
+##### Chapter builder
+
+The `ChapterBuilder` is a function that provides a [ChapterOptions](#chapter-options) instance to construct an editing panel for a concrete chapter, 
+to add an ability to change an appearance of the widget, that `Chapter` represents.
+
+#### ***Chapter Options***
+
+The `ChapterOptions` class contains options, that presentation widgets can use to build an editing panel for the widget. The options in fact is a `Map` with the name of the option as a key, and a `Option` class as a value.
+
+##### ***Option***
+
+The `Option` is deeply related to the `ChapterOptions` and is used to build a single editing field for the storybook widget.
+
+The following diagram shows the relation between these classes:
+
+![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
+
+
+Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represent UI part of the storybook.
+
+##### ***Sidebar***
+
+The `Sidebar` widget is responsible for building a left panel with a list of widgets, we want to display in the storybook. It uses the `StoriesNotifier` to get a list of `stories` with related `chapters`.
+
+##### ***Preview***
+
+The main purpose of the `Preview` widget is to display a widget that we've selected in the [Sidebar](#sidebar) using the data from the `ChaptersNotifier`.
+
+##### ***Editing Panel***
+
+The `EditingPanel` widget uses a [ChapterOptionsMapper](#chapteroptionsmapper) to provide a list of [controls](#chapter-control-field) to change the widgets' appearance. 
+
+##### ***ChapterOptionsMapper***
+
+The `ChapterOptionsMapper` maps the given [Option](#option) to the corresponding [ChapterControlField](#chapter-control-field).
+
+##### ***Chapter Control Field***
+
+The `ChapterControlField` is a base widget that is a template for the more specific fields, such as:
+
+- `ChapterControlTextField` - displays a text field.
+- `ChapterControlCheckboxField` - displays a checkbox.
+- `ChapterControlColorField` - displays a color palette.
+- `ChapterControlSliderField` - displays a slider.
+
+The purpose of these widgets is to edit a currently selected in the storybook  widget appearance.
+
+
+The following diagram shows the relation between these classes and `ChangeNotifier`s:
+
+![Metrics Storybook UI widgets diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/web/docs/features/storybook/diagrams/metrics_storybook_ui_widgets_diagram.puml)
+
+The following sequence diagram shows the 
