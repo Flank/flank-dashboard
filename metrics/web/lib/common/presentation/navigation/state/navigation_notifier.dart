@@ -1,9 +1,9 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
@@ -57,7 +57,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
-  /// Clears the pages stack and pushes the [MetricsRoutes.login]
+  /// Clears the pages stack and pushes the [DefaultRoutes.login]
   /// after the user logs out.
   void handleAuthenticationUpdates({
     bool isLoggedIn,
@@ -67,10 +67,10 @@ class NavigationNotifier extends ChangeNotifier {
     final currentPageName = currentConfiguration?.name;
     _isUserLoggedIn = isLoggedIn ?? false;
 
-    if (!_isUserLoggedIn && currentPageName != MetricsRoutes.login.name) {
+    if (!_isUserLoggedIn && currentPageName != DefaultRoutes.login.name) {
       _pages.clear();
 
-      push(MetricsRoutes.login);
+      push(DefaultRoutes.login);
     }
   }
 
@@ -169,11 +169,11 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Redirects to the redirect route and clears it.
   ///
-  /// If the redirect route is [MetricsRoutes.loading] or `null`,
-  /// redirects to the [MetricsRoutes.dashboard].
+  /// If the redirect route is [DefaultRoutes.loading] or `null`,
+  /// redirects to the [DefaultRoutes.dashboard].
   void _redirect() {
-    if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
-      _redirectRoute = MetricsRoutes.dashboard;
+    if (_redirectRoute == null || _redirectRoute == DefaultRoutes.loading) {
+      _redirectRoute = DefaultRoutes.dashboard;
     }
 
     _pages.clear();
@@ -185,9 +185,9 @@ class NavigationNotifier extends ChangeNotifier {
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
     final name = page?.name;
 
-    return MetricsRoutes.values.firstWhere(
+    return RouteConfiguration.values.firstWhere(
       (route) => route.name.value == name,
-      orElse: () => MetricsRoutes.dashboard,
+      orElse: () => DefaultRoutes.dashboard,
     );
   }
 
@@ -206,11 +206,11 @@ class NavigationNotifier extends ChangeNotifier {
   /// [configuration]'s authorization requirements and current
   /// [_isUserLoggedIn] state.
   ///
-  /// If the application is not initialized, returns [MetricsRoutes.loading]
+  /// If the application is not initialized, returns [DefaultRoutes.loading]
   /// and saves the [_redirectRoute].
   ///
   /// If the user is not logged in and the given [configuration]
-  /// requires authorization, returns [MetricsRoutes.login]
+  /// requires authorization, returns [DefaultRoutes.login]
   ///
   /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
@@ -219,12 +219,12 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isAppInitialized) {
       _redirectRoute = configuration;
 
-      return MetricsRoutes.loading.copyWith(path: configuration.path);
+      return DefaultRoutes.loading.copyWith(path: configuration.path);
     }
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) return MetricsRoutes.login;
+    if (!_isUserLoggedIn && authorizationRequired) return DefaultRoutes.login;
 
     return configuration;
   }

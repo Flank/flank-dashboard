@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/user_menu_button/widgets/metrics_user_menu_button.dart';
@@ -69,7 +69,7 @@ void main() {
         });
 
         verify(navigationNotifier.pushAndRemoveUntil(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
           any,
         )).called(once);
       },

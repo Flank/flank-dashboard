@@ -1,47 +1,70 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/analytics/domain/entities/page_name.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("PageName", () {
-    test(".loginPage value equals to the login route path", () {
-      const loginPage = PageName.loginPage;
+    test(
+      ".loginPage value equals to the login route path",
+      () {
+        final expected = DefaultRoutes.login.path;
 
-      expect(loginPage.value, equals(MetricsRoutes.login.path));
-    });
+        const loginPage = PageName.loginPage;
 
-    test(".dashboardPage value equals to the dashboard route path", () {
-      const dashboardPage = PageName.dashboardPage;
+        expect(loginPage.value, equals(expected));
+      },
+    );
 
-      expect(dashboardPage.value, equals(MetricsRoutes.dashboard.path));
-    });
+    test(
+      ".dashboardPage value equals to the dashboard route path",
+      () {
+        final expected = DefaultRoutes.dashboard.path;
 
-    test(".projectGroupPage value equals to the project groups route path", () {
-      const projectGroupPage = PageName.projectGroupsPage;
+        const dashboardPage = PageName.dashboardPage;
 
-      expect(projectGroupPage.value, equals(MetricsRoutes.projectGroups.path));
-    });
+        expect(dashboardPage.value, equals(expected));
+      },
+    );
 
-    test(".debugMenuPage value equals to the debug menu route path", () {
-      const debugMenuPage = PageName.debugMenuPage;
+    test(
+      ".projectGroupPage value equals to the project groups route path",
+      () {
+        final expected = DefaultRoutes.projectGroups.path;
 
-      expect(debugMenuPage.value, equals(MetricsRoutes.debugMenu.path));
-    });
+        const projectGroupPage = PageName.projectGroupsPage;
 
-    test(".values contains all page names", () {
-      const expectedValues = {
-        PageName.loginPage,
-        PageName.dashboardPage,
-        PageName.projectGroupsPage,
-        PageName.debugMenuPage,
-      };
+        expect(projectGroupPage.value, equals(expected));
+      },
+    );
 
-      const values = PageName.values;
+    test(
+      ".debugMenuPage value equals to the debug menu route path",
+      () {
+        final expected = DefaultRoutes.debugMenu.path;
 
-      expect(values, containsAll(expectedValues));
-    });
+        const debugMenuPage = PageName.debugMenuPage;
+
+        expect(debugMenuPage.value, equals(expected));
+      },
+    );
+
+    test(
+      ".values contains all page names",
+      () {
+        const expectedValues = {
+          PageName.loginPage,
+          PageName.dashboardPage,
+          PageName.projectGroupsPage,
+          PageName.debugMenuPage,
+        };
+
+        const values = PageName.values;
+
+        expect(values, containsAll(expectedValues));
+      },
+    );
   });
 }

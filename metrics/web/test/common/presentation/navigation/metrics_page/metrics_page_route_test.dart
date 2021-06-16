@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 import 'package:test/test.dart';
 
@@ -16,7 +16,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: null,
-            settings: RouteSettings(name: MetricsRoutes.login.path),
+            settings: RouteSettings(name: DefaultRoutes.login.path),
           ),
           throwsAssertionError,
         );
@@ -29,7 +29,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: (_) => Container(),
-            settings: RouteSettings(name: MetricsRoutes.login.path),
+            settings: RouteSettings(name: DefaultRoutes.login.path),
             maintainState: null,
           ),
           throwsAssertionError,
@@ -43,7 +43,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: (_) => Container(),
-            settings: RouteSettings(name: MetricsRoutes.login.path),
+            settings: RouteSettings(name: DefaultRoutes.login.path),
             fullscreenDialog: null,
           ),
           throwsAssertionError,

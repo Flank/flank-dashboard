@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
@@ -127,7 +127,7 @@ void main() {
         );
 
         when(navigationNotifier.currentConfiguration).thenReturn(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         );
 
         await tester.pumpWidget(
@@ -160,7 +160,7 @@ void main() {
       "replaces the navigation state path once the application finishes initialization",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
-        final configuration = MetricsRoutes.dashboard;
+        final configuration = DefaultRoutes.dashboard;
 
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
@@ -395,7 +395,7 @@ void main() {
         );
 
         when(navigationNotifier.currentConfiguration).thenReturn(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         );
 
         when(authNotifier.isLoggedIn).thenReturn(false);
@@ -432,7 +432,7 @@ void main() {
       "replaces the navigation state path on opened if the application is initialized",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
-        final configuration = MetricsRoutes.dashboard;
+        final configuration = DefaultRoutes.dashboard;
 
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
