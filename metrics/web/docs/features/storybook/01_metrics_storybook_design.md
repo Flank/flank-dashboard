@@ -374,5 +374,3 @@ The purpose of these widgets is to edit a currently selected in the storybook  w
 The following diagram shows the relation between these classes and `ChangeNotifier`s:
 
 ![Metrics Storybook UI widgets diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_ui_widgets_class_diagram.puml)
-
-The following sequence diagram shows the 
