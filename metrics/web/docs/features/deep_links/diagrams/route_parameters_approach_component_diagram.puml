@@ -11,11 +11,11 @@ package "Metrics Web" {
     component Page
 }
 
-History -left-> Browser : provides URLs
-Browser --> Navigator : URL
-Navigator --> Page : page parameters
-NavigationNotifier -up-> History : updates the URL \n and query parameters
+History -left-> Browser: provides URLs
+Browser --> Navigator: URL
+Navigator --> Page: page parameters
+NavigationNotifier -up-> History: updates the URL \n and query parameters
 
-Page --> NavigationNotifier : page parameters updates \n (e.g., sorting, filtering)
+Page --> NavigationNotifier: page parameters updates \n (e.g., sorting, filtering)
 
 @enduml

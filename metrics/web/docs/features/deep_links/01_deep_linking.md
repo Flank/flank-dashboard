@@ -26,6 +26,19 @@ As a user, I want to pass direct links to project and/or project groups, so that
           - [RouteConfigurationFactory](#routeconfigurationfactory)
           - [RouteInformationParser](#routeinformationparser)
           - [Parsing Deep Links Summary](#parsing-deep-links-summary)
+        - [Applying Deep Links](#applying-deep-links)
+          - [PageParametersModel](#pageparametersmodel)
+          - [PageParametersFactory](#pageparametersfactory)
+          - [MetricsPage and MetricsPageFactory](#metricspage-and-metricspagefactory)
+          - [NavigationNotifier](#navigationnotifier)
+            - [Updating page parameters](#updating-page-parameters)
+            - [Pop method changes](#pop-method-changes)
+          - [PageNotifier](#pagenotifier)
+          - [PageParametersProxy](#pageparametersproxy)
+        - [Making things work](#making-things-work)
+        - [Internal app navigation](#internal-app-navigation)
+          - [Back Button navigation](#back-button-navigation)
+          - [Deep linking with authorization](#deep-linking-with-authorization)
 
 # Analysis
 > Describe the general analysis approach.
@@ -203,7 +216,7 @@ Consider the following component diagram that briefly describes this approach:
 Let's sum up the pros and cons of this approach:
 
 Pros:
-- Well segregated responsibility between components;
+- Well-segregated responsibility between components;
 - Extensible approach - meaning that we can easily add new page-specific deep links or extend them;
 - Well-testable because of the responsibility segregation.
 
@@ -399,3 +412,152 @@ class MetricsRouteInformationParser {
 Consider this class diagram that illustrates the required changes needed to parse the deep links from the URL:
 
 ![Parsing deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/parsing_deep_links_class_diagram.puml)
+
+#### Applying Deep Links
+The following subsections describe the changes related to the following requirements:
+- restore the application state from deep links parameters;
+- update deep links in response to application events.
+
+##### PageParametersModel
+As we already know how to parse `query parameters`, we should introduce a new model that would represent the deserialized data from a query. For this purpose, we introduce a `PageParametersModel`.
+
+The `PageParametersModel` is an interface for models that store the application state parameters parsed from the query parameters. This interface provides the `.toMap()` method that the application uses to serialize appropriate models to the query parameters `Map`. The implementers of the `PageParametersModel` should include the parameters that are specific to a `page` they relate to. Also, they should know how to serialize and deserialize their data using the `.toMap()` method and `.fromMap()` constructor respectively.
+
+The following class diagram demonstrates the general approach for creating new `PageParametersModel`s on a `CoolPageParametersModel` example:
+
+![PageParametersModel class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/page_parameters_model_class_diagram.puml)
+
+##### PageParametersFactory
+The concrete `PageParametersModel` stores the data for concrete pages and knows how to convert this data from/into query parameters. However, the application should decide what implementation of `PageParametersModel` to use for the current `RouteConfiguration`. The `PageParametersFactory` is to help here. This factory encapsulates the creation of specific `PageParametersModel` from the given `RouteConfiguration` calling the specific model deserialization.
+
+Consider the following code snippet that demonstrates the `PageParametersFactory.create` method:
+```dart
+/// Returns the [PageParametersModel] based on the given [configuration].
+PageParametersModel create(RouteConfiguration configuration) {
+  final parameters = configuration.parameters;
+  
+  switch(configuration.name) {
+    case RouteName.dashboard:
+      return DashboardPageParameters.fromMap(parameters);
+    case RouteName.projectGroups:
+      // Other page parameters handling
+  }
+}
+```
+
+The `PageParametersFactory` should be injected into `NavigationNotifier` since the `NavigationNotifier` holds all the navigation-related logic of the application and controls its deep linking. Consider the [`NavigationNotifier`](#navigationnotifier) section to know more details in notifier-related changes.
+
+##### MetricsPage and MetricsPageFactory
+To make the application able to restore the `PageParametersModel` in response to navigation events (e.g., popping a page), we should update the `MetricsPage` and `MetricsPageFactory` classes.
+
+A `MetricsPage` should store a `RouteName` that was used to create this page and the `PageParametersModel` as an `arguments` field. The `MetricsPage` class should also provide an overridden `copyWith` method to copy a page with the updated parameters.
+
+We should also update the `MetricsPageFactory` to create `MetricsPage`s with the given `RouteName` and `PageParametersModel`.
+
+The code snippet below demonstrates the `MetricsPageFactory.create` changes:
+```dart
+  /// Creates the [MetricsPage] from the given [RouteConfiguration].
+  MetricsPage create({
+    RouteName routeName, 
+    PageParametersModel pageParameters,
+  }) {
+    switch (routeName) {
+      case RouteName.loading:
+        return MetricsPage(
+          child: const LoadingPage(),
+          routeName: routeName,
+          arguments: pageParameters,
+        );
+    /// Other MetricsPages creation...
+```
+
+##### NavigationNotifier
+The `NavigationNotifier` is a class that holds the navigation logic of the Metrics Web application. The following subsections describe the main changes to the`NavigationNotifier` related to the `deep linking` feature implementation.
+
+###### Updating page parameters
+When the `NavigationNotifier` receives a new `RouteConfiguration`, it should create a new `PageParametersModel` using a new `RouteConfiguration` instance and notify all listeners about the updates. For this, we should implement a new method `_updatePageParameters()` and call it whenever the current `RouteConfiguration` changes (in the `pop()` and the `_addNewPage()` methods).
+
+The following diagram demonstrates the general concept for updating the `PageParametersModel` when the current `RouteConfiguration` changes:
+
+![Updating page parameters diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/updating_page_parameters_sequence_diagram.puml)
+
+###### Pop method changes
+When the application pops a page, we should restore a `RouteConfiguration` from the new `MetricsPage` that precedes the popped one. To do that, let's implement a `MetricsPageRouteConfigurationFactory` that is responsible for creating a `RouteConfiguration` from the given `MetricsPage`.
+
+The `MetricsPageRouteConfigurationFactory` is to be injected into the `NavigationNotifier`. The notifier uses it withing the `_getConfigurationFromPage` method as follows:
+```dart
+/// Creates a [RouteConfiguration] using the given [page].
+RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
+  return metricsPageRouteConfigurationFactory.create(page);
+}
+```
+
+##### Handling page parameters
+The `NavigationNotifier` should also provide a method to handle the `PageParametersModel` updates reported from the application, for example, when a user applies a filter on a `DashboardPage`.
+
+To handle the page parameters updates, we should implement a new `handlePageParametersUpdates()` method. This method triggers the following actions for the `NavigationNotifier`:
+1. Update the current `RouteConfiguration`'s `RouteConfiguration.parameters`.
+2. Update the current `PageParametersModel` with the given one.
+3. Update the current page using the updated `RouteConfiguration` and the new `PageParametersModel`.
+4. Update the current URL without changing the browser history using the `NavigationState` class.
+
+##### PageNotifier
+Updates to the `NavigationNotifier` class, allow us to introduce the `PageNotifier` abstract class that parents all the notifiers to be used as a `page` notifier. More precisely, for the pages that use `PageParametersModel`, their notifier should inherit the `PageNotifier` and provide an appropriate implementation.    
+
+The `PageNotifier` abstracts the `handlePageParameters()` method that allows handling a new `PageParametersModel` exposed by the `NavigationNotifier`. The page-specific notifiers that extend the `PageNotifier` should provide the logic of applying the received `PageParametersModel`, and updating the `PageParametersModel` for the page.
+
+Extending the `PageNotifier` is not mandatory for the page-specific notifiers. It is required only if the corresponding page uses the specific `PageParametersModel` and should expose parameters to the application URL.
+
+##### PageParametersProxy
+In the above sections, we discovered the required changes for the `NavigationNotifier` and examined the `PageNotifier` presenters with page-specific `PageParametersModel`s. However, the discovered changes lack the notes related to relationships between notifiers. More precisely, they don't review how to connect `NavigationNotifier` and `PageNotifier` but state that such a connection exists. Thus, let's talk about `PageParametersProxy`.
+
+The `PageParametersProxy` is a widget that purposes to handle a connection between the `NavigationNotifier` and a specific `PageNotifier`. The proxy widget is responsible for the following:
+- Subscribe to `NavigationNofier` and provide the latest `PageParametersModel` to the given `pageNotifier`;
+- Subscribe to the given `pageNotifier` and send the `PageParametersModel` updates to the `NavigationNotifier`. 
+  
+The `PageParametersProxy` widget should wrap the whole page and be provided with a `PageNotifier` responsible for the underlying page's data.
+
+The utilization of the `PageParametersProxy` is considered in the [next](#making-things-work) section.
+
+#### Making things work
+The following class diagram demonstrates the class structure for the deep linking feature:
+
+![Deep links class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_class_diagram.puml)
+
+Similarly, the following sequence diagrams explain the feature algorithms details:
+- Applying deep links in the Metrics Web application:
+  ![Applying deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/applying_deep_links_sequence_diagram.puml)
+
+- Updating deep links in response to the UI state changes:
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/updating_deep_links_sequence_diagram.puml)
+
+#### Internal app navigation
+This section describes the changes we should introduce to improve the overall navigation experience in the Metrics Web application.
+
+##### Back Button navigation
+Currently, the back button that is displayed on the `ProjectGroupPage` and on the `DebugMenuPage` navigates directly to the `DashboardPage`. However, this behavior can be unexpected to the user. Consider the following cases that may be confusing for the user:
+- The user navigates to the `ProjectGroupPage` from the `DebugMenuPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage` instead of the `DebugMenuPage`;
+- The user applies some filtering or sorting parameters on the `DashboardPage`, navigates to the `ProjectGroupPage`, and presses the `Back Button`. The application navigates the user to the `DashboardPage`, however, does not restore the page parameters.
+
+To improve the navigation experience here, we should introduce a new method to the `NavigationNotifier` - `canPop()`, that returns `true` if the current page can be popped.
+
+Now, when the `back button` is pressed, we should perform the following:
+1. Pop the current page if the `NavigationNotifier.canPop` returns `true`;
+2. If there is no underlying page, push and replace the current page with the `DashboardPage`.
+
+Using such an approach allows users to navigate directly to the previous page if it exists, and to restore the applied `PageParametersModel` to the previous page if any.
+
+##### Deep linking with authorization
+Currently, the application pushes the `DashboardPage` when the user logs in, however, it would be much more user-friendly if the application redirects the user to the requested resource.
+
+To improve this aspect of the navigation, we should modify the existing redirecting behaviour:
+1. Use the `_redirectRoute` field to stores the redirect `RouteConfiguration` that requires authorization.
+2. When the application pushes a new route that requires authorization, and the user is unauthenticated, set the `_redirectRoute`. If the route does not require authorization, clear the `_redirectRoute`.
+3. When the user logs in, redirect the user to the `_redirectRoute` and clear the `_redirectRoute`.
+
+To implement such a behaviour, we should split the `.handleAuthenticationUpdates()` method of the `NavigationNotifier` into two different methods: `.handleLoggedOut()` and `.handleLoggedIn()`.
+
+The `.handleLoggedOut()` should redirect the user to the `LoginPage`, and the `.handleLoggedIn()` should redirect the user to the `_redirectRoute`, or to the `DashboardPage` if the `_redirectRoute` is `null`.
+
+Consider the following sequence diagram that describes handling deep links that require authorization:
+  ![Saving deep links diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/deep_links/diagrams/deep_links_and_authorization_sequence_diagram.puml)

@@ -1,0 +1,59 @@
+@startuml deep_links_and_authorization_sequence_diagram
+
+actor Bob
+
+participant Browser #A9DCDF
+participant LoadingPage
+participant LoginPage
+participant NavigationNotifier
+
+Bob -> Browser: opens a URL with a deep link \n that requires authorization
+activate Browser
+
+Browser -> NavigationNotifier: handleInitialRoutePath(routeConfiguration)
+activate NavigationNotifier
+
+NavigationNotifier -> NavigationNotifier: saves redirectRoute
+
+NavigationNotifier --> Browser: redirects to the Loading Page
+
+Browser --> Bob: shows Loading Page
+
+Browser -> LoadingPage: initialize all components
+
+activate LoadingPage
+
+LoadingPage -> LoadingPage: initialize all components
+
+LoadingPage -> NavigationNotifier: handleAppInitialized(isAppInitialized)
+
+deactivate LoadingPage
+
+NavigationNotifier -> NavigationNotifier: update isAppInitialized value
+
+alt isAppInitialized == true
+    NavigationNotifier -> NavigationNotifier: _redirect()
+
+    alt isUserLoggedIn == false && authorizationRequired == true
+        NavigationNotifier --> Browser: redirects to the Login
+        Browser --> Bob: shows Login page
+        Bob -> Browser: logs in to the app
+        Browser -> LoginPage: performs login
+        activate LoginPage
+        LoginPage -> NavigationNotifier: handleLoggedIn()
+        deactivate LoginPage
+    end
+
+    alt redirectRoute == Loading Page or redirectRoute == null
+        NavigationNotifier --> Browser: redirects to the Dashboard
+        Browser --> Bob: shows Dashboard page
+    else
+        NavigationNotifier --> Browser: redirects to the initial route
+        Browser --> Bob: shows page with the given URL
+    end
+end
+
+deactivate NavigationNotifier
+deactivate Browser
+
+@enduml

@@ -1,0 +1,69 @@
+@startuml applying_deep_links_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant Browser #A9DCDF
+participant MetricsRouteInformationParser << (C,#ADD1B2) >>
+participant MetricsRouterDelegate << (C,#ADD1B2) >>
+participant NavigationNotifier << (C,#ADD1B2) >>
+participant PageParametersFactory << (C,#ADD1B2) >>
+participant PageParametersProxy << (C,#ADD1B2) >>
+participant CoolPageNotifier << (C,#ADD1B2) >>
+participant CoolPage << (C,#ADD1B2) >>
+
+Bob -> Browser: opens a URL with a deep link
+activate Browser
+
+Browser -> MetricsRouteInformationParser: routeInformation
+activate MetricsRouteInformationParser
+
+MetricsRouteInformationParser -> MetricsRouterDelegate: routeConfiguration
+activate MetricsRouterDelegate
+
+MetricsRouterDelegate -> NavigationNotifier: handleInitialRoutePath(routeConfiguration)
+activate NavigationNotifier
+
+NavigationNotifier --> NavigationNotifier: handles routeConfiguration
+NavigationNotifier --> NavigationNotifier: adds CoolPage to `pages` stack
+NavigationNotifier --> MetricsRouterDelegate: notifyListeners()
+
+MetricsRouterDelegate --> MetricsRouterDelegate: builds new Navigator with \n updated `pages` stack
+MetricsRouterDelegate --> MetricsRouteInformationParser: reports new routeConfiguration
+
+MetricsRouteInformationParser --> MetricsRouteInformationParser: restoreRouteInformation(routeConfiguration)
+MetricsRouteInformationParser --> Browser: sets the URL
+deactivate MetricsRouteInformationParser
+
+Browser --> Bob: sees the URL
+
+MetricsRouterDelegate --> Bob: displays CoolPage
+deactivate MetricsRouterDelegate
+
+NavigationNotifier -> PageParametersFactory: create(routeConfiguration)
+activate PageParametersFactory
+
+PageParametersFactory --> NavigationNotifier: pageParameters
+deactivate PageParametersFactory
+
+NavigationNotifier -> PageParametersProxy: pageParameters
+deactivate NavigationNotifier
+activate PageParametersProxy
+
+PageParametersProxy -> CoolPageNotifier: handlePageParameters(pageParameters)
+deactivate PageParametersProxy
+activate CoolPageNotifier
+
+CoolPageNotifier --> CoolPageNotifier: applies page parameters
+
+CoolPageNotifier -> CoolPage: notifyListeners()
+deactivate CoolPageNotifier
+activate CoolPage
+
+CoolPage --> Bob: displays updated data
+deactivate CoolPage
+deactivate Browser
+
+@enduml

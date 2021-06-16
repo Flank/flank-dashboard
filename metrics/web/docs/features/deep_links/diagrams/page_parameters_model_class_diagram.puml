@@ -1,0 +1,21 @@
+@startuml page_parameters_model_class_diagram
+
+package common.presentation.navigation.models {
+    interface PageParametersModel {
+        + toMap(): Map<String, dynamic>
+    }
+}
+
+package cool_page.presentation.models {
+    class CoolPageParametersModel {
+        + someField: String
+
+        + {static} CoolPageParametersModel.fromMap(map: Map<String, dynamic>): CoolPageParametersModel
+        + copyWith(someField: String): CoolPageParametersModel
+        + toMap(): Map<String, dynamic>
+    }
+}
+
+CoolPageParametersModel .up.|> PageParametersModel
+
+@enduml
