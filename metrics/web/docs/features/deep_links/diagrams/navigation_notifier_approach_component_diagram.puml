@@ -12,14 +12,14 @@ package "Metrics Web" {
     component Page
 }
 
-History -left-> Browser : provides URLs
-Browser --> Navigator : URL
-Navigator --> NavigationNotifier : routeConfiguration \n (with query parameters)
-NavigationNotifier --> PageNotifier : page parameters
-PageNotifier --> Page : updated data \n with parameters \n (filtering, sorting, etc.)
-NavigationNotifier -up-> History : updates the URL \n and query parameters
+History -left-> Browser: provides URLs
+Browser --> Navigator: URL
+Navigator --> NavigationNotifier: routeConfiguration \n (with query parameters)
+NavigationNotifier --> PageNotifier: page parameters
+PageNotifier --> Page: updated data \n with parameters \n (filtering, sorting, etc.)
+NavigationNotifier -up-> History: updates the URL \n and query parameters
 
-Page --> PageNotifier : UI events \n (filtering, searching, etc.)
-PageNotifier --> NavigationNotifier : updated page parameters
+Page --> PageNotifier: UI events \n (filtering, searching, etc.)
+PageNotifier --> NavigationNotifier: updated page parameters
 
 @enduml

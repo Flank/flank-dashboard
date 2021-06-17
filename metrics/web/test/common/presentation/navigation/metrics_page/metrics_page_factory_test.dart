@@ -1,8 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/auth/presentation/pages/login_page.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
@@ -12,11 +12,20 @@ import 'package:metrics/project_groups/presentation/pages/project_group_page.dar
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/route_configuration_stub.dart';
+import '../../../../test_utils/route_configuration_mock.dart';
 
 void main() {
   group("MetricsPageFactory", () {
+    const path = 'path';
+
     final metricsPageFactory = MetricsPageFactory();
+    final routeConfiguration = RouteConfigurationMock();
+    final routeName = _RouteNameMock();
+
+    tearDown(() {
+      reset(routeConfiguration);
+      reset(routeName);
+    });
 
     test(
       ".create() returns the dashboard metrics page if the given route configuration is null",
@@ -30,7 +39,7 @@ void main() {
     test(
       ".create() returns the loading metrics page with a name equals to the given route configuration path",
       () {
-        const routeConfiguration = MetricsRoutes.loading;
+        const routeConfiguration = DefaultRoutes.loading;
         final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
@@ -42,7 +51,7 @@ void main() {
     test(
       ".create() returns the login metrics page with a name equals to the given route configuration path",
       () {
-        final routeConfiguration = MetricsRoutes.login;
+        final routeConfiguration = DefaultRoutes.login;
         final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
@@ -54,7 +63,7 @@ void main() {
     test(
       ".create() returns the dashboard metrics page with a name equals to the given route configuration path",
       () {
-        final routeConfiguration = MetricsRoutes.dashboard;
+        final routeConfiguration = DefaultRoutes.dashboard;
         final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
@@ -66,7 +75,7 @@ void main() {
     test(
       ".create() returns the project groups metrics page with a name equals to the given route configuration path",
       () {
-        final routeConfiguration = MetricsRoutes.projectGroups;
+        final routeConfiguration = DefaultRoutes.projectGroups;
         final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
@@ -78,7 +87,7 @@ void main() {
     test(
       ".create() returns the debug menu metrics page with a name equals to the given route configuration path",
       () {
-        final routeConfiguration = MetricsRoutes.debugMenu;
+        final routeConfiguration = DefaultRoutes.debugMenu;
         final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
@@ -90,26 +99,20 @@ void main() {
     test(
       ".create() returns the dashboard metrics page with a name equals to the given route configuration path if the configuration name is unknown",
       () {
-        const testName = 'test';
-
-        final unknown = _RouteNameMock();
-        when(unknown.value).thenReturn('unknown');
-
-        final routeConfiguration = RouteConfigurationStub(
-          name: unknown,
-          path: testName,
-        );
+        when(routeName.value).thenReturn('unknown');
+        when(routeConfiguration.name).thenReturn(routeName);
+        when(routeConfiguration.path).thenReturn(path);
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(actualName, equals(testName));
+        expect(actualName, equals(path));
       },
     );
 
     test(
       ".create() returns the loading metrics page if the given route configuration name is a loading",
       () {
-        final page = metricsPageFactory.create(MetricsRoutes.loading);
+        final page = metricsPageFactory.create(DefaultRoutes.loading);
 
         expect(page.child, isA<LoadingPage>());
       },
@@ -118,7 +121,7 @@ void main() {
     test(
       ".create() returns the login metrics page if the given route configuration name is a login",
       () {
-        final page = metricsPageFactory.create(MetricsRoutes.login);
+        final page = metricsPageFactory.create(DefaultRoutes.login);
 
         expect(page.child, isA<LoginPage>());
       },
@@ -127,7 +130,7 @@ void main() {
     test(
       ".create() returns the dashboard metrics page if the given route configuration name is a dashboard",
       () {
-        final page = metricsPageFactory.create(MetricsRoutes.dashboard);
+        final page = metricsPageFactory.create(DefaultRoutes.dashboard);
 
         expect(page.child, isA<DashboardPage>());
       },
@@ -136,7 +139,7 @@ void main() {
     test(
       ".create() returns the project group metrics page if the given route configuration name is project groups",
       () {
-        final page = metricsPageFactory.create(MetricsRoutes.projectGroups);
+        final page = metricsPageFactory.create(DefaultRoutes.projectGroups);
 
         expect(page.child, isA<ProjectGroupPage>());
       },
@@ -145,7 +148,7 @@ void main() {
     test(
       ".create() returns the debug menu metrics page if the given route configuration name is a debug menu",
       () {
-        final page = metricsPageFactory.create(MetricsRoutes.debugMenu);
+        final page = metricsPageFactory.create(DefaultRoutes.debugMenu);
 
         expect(page.child, isA<DebugMenuPage>());
       },
@@ -154,10 +157,9 @@ void main() {
     test(
       ".create() returns the project group metrics page if the given route configuration name is unknown",
       () {
-        final unknown = _RouteNameMock();
-        when(unknown.value).thenReturn('unknown');
+        when(routeName.value).thenReturn('unknown');
+        when(routeConfiguration.name).thenReturn(routeName);
 
-        final routeConfiguration = RouteConfigurationStub(name: unknown);
         final page = metricsPageFactory.create(routeConfiguration);
 
         expect(page.child, isA<DashboardPage>());

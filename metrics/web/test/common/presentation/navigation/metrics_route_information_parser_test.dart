@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_route_information_parser.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
@@ -15,7 +15,7 @@ import '../../../test_utils/matchers.dart';
 
 void main() {
   group("MetricsRouteInformationParser", () {
-    final routeConfiguration = MetricsRoutes.login;
+    final routeConfiguration = DefaultRoutes.login;
     final routeConfigurationFactory = _RouteConfigurationFactoryMock();
     final locationConverter = _RouteConfigurationLocationConverterMock();
     final routeInformationParser = MetricsRouteInformationParser(
@@ -77,7 +77,7 @@ void main() {
     test(
       ".parseRouteInformation() returns the route configuration created by the given route configuration factory",
       () async {
-        final expectedConfiguration = MetricsRoutes.dashboard;
+        final expectedConfiguration = DefaultRoutes.dashboard;
 
         when(
           routeConfigurationFactory.create(any),

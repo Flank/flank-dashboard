@@ -2,32 +2,32 @@
 
 package common.presentation.navigation {
     class MetricsRouteInformationParser {
-        - _routeConfigurationFactory : RouteConfigurationFactory
-        - _locationConverter : RouteConfigurationLocationConverter
+        - _routeConfigurationFactory: RouteConfigurationFactory
+        - _locationConverter: RouteConfigurationLocationConverter
 
-        + parseRouteInformation(information: RouteInformation) : RouteConfiguration
-        + restoreRouteInformation(configuration: RouteConfiguration) : RouteInformation
+        + parseRouteInformation(information: RouteInformation): RouteConfiguration
+        + restoreRouteInformation(configuration: RouteConfiguration): RouteInformation
     }
 
     package route_configuration {
         class RouteConfiguration {
-            + name : RouteName
-            + path : String
-            + authorizationRequired : bool
-            + parameters : Map<String, dynamic>
+            + name: RouteName
+            + path: String
+            + authorizationRequired: bool
+            + parameters: Map<String, dynamic>
 
-            - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+            - RouteConfiguration._(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
             + {static} RouteConfiguration.dashboard(parameters: Map<String, dynamic>): RouteConfiguration
             + {static} RouteConfiguration.projectGroups(parameters: Map<String, dynamic>): RouteConfiguration
             + {static} RouteConfiguration.login(parameters: Map<String, dynamic>): RouteConfiguration
             + {static} RouteConfiguration.debugMenu(parameters: Map<String, dynamic>): RouteConfiguration
             + {static} RouteConfiguration.loading(): RouteConfiguration
 
-            + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters) : RouteConfiguration
+            + copyWith(name: RouteName, path: String, authorizationRequired: bool, parameters: Map<String, dynamic> parameters): RouteConfiguration
         }
 
         class RouteConfigurationFactory {
-            + create(uri: Uri) : RouteConfiguration
+            + create(uri: Uri): RouteConfiguration
         }
 
         class RouteConfigurationLocationConverter {
@@ -43,13 +43,13 @@ package flutter.material {
     }
 }
 
-MetricsRouteInformationParser --> RouteConfiguration : uses
-MetricsRouteInformationParser -up-> RouteInformation : uses
-MetricsRouteInformationParser --> RouteConfigurationFactory : uses
-MetricsRouteInformationParser --> RouteConfigurationLocationConverter : uses
+MetricsRouteInformationParser --> RouteConfiguration: uses
+MetricsRouteInformationParser -up-> RouteInformation: uses
+MetricsRouteInformationParser --> RouteConfigurationFactory: uses
+MetricsRouteInformationParser --> RouteConfigurationLocationConverter: uses
 
-RouteConfigurationFactory --> RouteConfiguration : creates
+RouteConfigurationFactory --> RouteConfiguration: creates
 
-RouteConfigurationLocationConverter --> RouteConfiguration : uses
+RouteConfigurationLocationConverter --> RouteConfiguration: uses
 
 @enduml

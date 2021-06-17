@@ -69,6 +69,7 @@ dependency_overrides:
       url: https://github.com/platform-platform/universal_io
       ref: master
       path: packages/universal_io
+  vm_service: ^7.1.0
 
 dev_dependencies:
   args: ^1.5.2

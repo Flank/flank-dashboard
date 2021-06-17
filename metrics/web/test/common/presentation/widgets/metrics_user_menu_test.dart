@@ -9,7 +9,7 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
@@ -296,7 +296,7 @@ void main() {
         await tester.tap(find.text(CommonStrings.projectGroups));
 
         verify(
-          navigationNotifier.push(MetricsRoutes.projectGroups),
+          navigationNotifier.push(DefaultRoutes.projectGroups),
         ).called(once);
       },
     );
@@ -322,7 +322,7 @@ void main() {
         await tester.tap(find.text(CommonStrings.debugMenu));
 
         verify(navigationNotifier.push(
-          MetricsRoutes.debugMenu,
+          DefaultRoutes.debugMenu,
         )).called(once);
       },
     );

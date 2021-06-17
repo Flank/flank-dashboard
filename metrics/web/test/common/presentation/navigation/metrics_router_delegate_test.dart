@@ -6,25 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
 import '../../../test_utils/navigation_state_mock.dart';
-import '../../../test_utils/route_configuration_stub.dart';
+import '../../../test_utils/route_configuration_mock.dart';
 
 void main() {
   group("MetricsRouterDelegate", () {
-    const configuration = RouteConfigurationStub(name: RouteName.dashboard);
-
+    final configuration = RouteConfigurationMock();
     final navigationNotifierMock = _NavigationNotifierMock();
     final navigationState = NavigationStateMock();
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
     final pages = UnmodifiableListView<MetricsPage>([]);
 
     tearDown(() {
+      reset(configuration);
       reset(navigationNotifierMock);
     });
 

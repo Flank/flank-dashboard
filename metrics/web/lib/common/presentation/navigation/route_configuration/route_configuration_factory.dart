@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 
@@ -14,28 +14,28 @@ class RouteConfigurationFactory {
   /// Creates a [RouteConfiguration] from the given [uri].
   ///
   /// If the given [Uri] is null or does not contain any path segments,
-  /// returns [MetricsRoutes.loading].
+  /// returns [DefaultRoutes.loading].
   /// If the given [Uri] contains the route name that does not match any of
-  /// [RouteName]s, returns [MetricsRoutes.dashboard].
+  /// [RouteName]s, returns [DefaultRoutes.dashboard].
   RouteConfiguration create(Uri uri) {
     final pathSegments = uri?.pathSegments;
 
     if (pathSegments == null || pathSegments.isEmpty) {
-      return MetricsRoutes.loading;
+      return const RouteConfiguration.loading();
     }
 
     final routeName = pathSegments.first;
 
     if (routeName == RouteName.login.value) {
-      return MetricsRoutes.login;
+      return DefaultRoutes.login;
     } else if (routeName == RouteName.dashboard.value) {
-      return MetricsRoutes.dashboard;
+      return DefaultRoutes.dashboard;
     } else if (routeName == RouteName.projectGroups.value) {
-      return MetricsRoutes.projectGroups;
+      return DefaultRoutes.projectGroups;
     } else if (routeName == RouteName.debugMenu.value) {
-      return MetricsRoutes.debugMenu;
+      return DefaultRoutes.debugMenu;
     }
 
-    return MetricsRoutes.dashboard;
+    return DefaultRoutes.dashboard;
   }
 }

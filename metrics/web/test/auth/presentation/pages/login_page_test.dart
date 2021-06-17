@@ -11,7 +11,7 @@ import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
@@ -169,7 +169,7 @@ void main() {
         final navigationNotifier = NavigationNotifierMock();
 
         when(navigationNotifier.currentConfiguration).thenReturn(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         );
 
         await mockNetworkImagesFor(() {
@@ -194,7 +194,7 @@ void main() {
         });
 
         verify(navigationNotifier.pushStateReplacement(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         )).called(once);
       },
     );
@@ -206,7 +206,7 @@ void main() {
         final navigationNotifier = NavigationNotifierMock();
 
         when(navigationNotifier.currentConfiguration).thenReturn(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         );
 
         when(authNotifier.isLoading).thenReturn(false);
@@ -222,7 +222,7 @@ void main() {
         });
 
         verify(navigationNotifier.pushStateReplacement(
-          MetricsRoutes.dashboard,
+          DefaultRoutes.dashboard,
         )).called(once);
       },
     );
