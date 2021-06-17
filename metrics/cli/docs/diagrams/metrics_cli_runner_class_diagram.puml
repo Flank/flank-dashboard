@@ -3,9 +3,9 @@
 package args {
     class CommandRunner{}
     class Command {
-        + name : String
-        + description : String
-        + run() : Future<void>
+        + name: String
+        + description: String
+        + run(): Future<void>
     }
 }
 
@@ -13,8 +13,8 @@ package cli {
     package doctor {
         package factory as doctor.factory {
             class DoctorFactory {
-            - _servicesFactory : ServicesFactory
-            + create() : Doctor
+            - _servicesFactory: ServicesFactory
+            + create(): Doctor
             }
         }
     }
@@ -25,28 +25,28 @@ package cli {
 
     package command {
         class DeployCommand {
-            + deployerFactory : DeployerFactory
+            + deployerFactory: DeployerFactory
         }
 
         class DoctorCommand {
-            + doctorFactory : DoctorFactory
+            + doctorFactory: DoctorFactory
         }
     }
 
     package deploy {
         package factory as deploy.factory{
             class DeployerFactory {
-                - _servicesFactory : ServicesFactory
-                + create() : Deployer
+                - _servicesFactory: ServicesFactory
+                + create(): Deployer
             }
         }
     }
 }
 
-MetricsCliRunner --> DoctorCommand : uses
-MetricsCliRunner --> DeployCommand : uses
-DeployCommand -left-> DeployerFactory : uses
-DoctorCommand -right-> DoctorFactory : uses
+MetricsCliRunner --> DoctorCommand: uses
+MetricsCliRunner --> DeployCommand: uses
+DeployCommand -left-> DeployerFactory: uses
+DoctorCommand -right-> DoctorFactory: uses
 
 DeployCommand --|> Command
 DoctorCommand --|> Command

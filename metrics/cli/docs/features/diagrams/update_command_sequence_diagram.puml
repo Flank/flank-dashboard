@@ -20,13 +20,13 @@ end box
 
 participant FileHelper
 
-Bob -> MetricsCliRunner ++ : run update command
-MetricsCliRunner -> UpdateCommand ++ : run()
+Bob -> MetricsCliRunner ++: run update command
+MetricsCliRunner -> UpdateCommand ++: run()
 
-UpdateCommand -> UpdateConfigFactory ++ : create(configPath)
-UpdateConfigFactory --> UpdateCommand -- : parsed config
+UpdateCommand -> UpdateConfigFactory ++: create(configPath)
+UpdateConfigFactory --> UpdateCommand --: parsed config
 
-UpdateCommand -> Updater ++ : update(config)
+UpdateCommand -> Updater ++: update(config)
 
 Updater -> FileHelper ++: createTempDirectory()
 FileHelper --> Updater --: directory has been created
@@ -34,42 +34,42 @@ FileHelper --> Updater --: directory has been created
 Updater -> PathsFactory ++: create()
 PathsFactory --> Updater --: Paths has been created
 
-Updater -> GitService ++ : checkout(repoUrl, srcPath)
-GitService --> Updater -- : checkout finished
+Updater -> GitService ++: checkout(repoUrl, srcPath)
+GitService --> Updater --: checkout finished
 
-Updater -> NpmService ++ : installDependencies(firebasePath)
-NpmService --> Updater -- : dependencies have been installed
-
-Updater -> NpmService ++ : installDependencies(firebaseFunctionsPath)
+Updater -> NpmService ++: installDependencies(firebasePath)
 NpmService --> Updater --: dependencies have been installed
 
-Updater -> FlutterService ++ : build(appPath)
-FlutterService --> Updater -- : build finished
+Updater -> NpmService ++: installDependencies(firebaseFunctionsPath)
+NpmService --> Updater --: dependencies have been installed
 
-Updater --> Updater : check if the SentryConfig attribute is null
+Updater -> FlutterService ++: build(appPath)
+FlutterService --> Updater --: build finished
+
+Updater --> Updater: check if the SentryConfig attribute is null
 alt SentryConfig is null
-Updater --> Updater : Skip Sentry setup
+Updater --> Updater: Skip Sentry setup
 
 else SentryConfig is not null
 
-Updater -> SentryService ++ : createRelease(sentryRelease, sourceMaps, sentryAuthToken)
-SentryService --> Updater -- : SentryRelease has been created
+Updater -> SentryService ++: createRelease(sentryRelease, sourceMaps, sentryAuthToken)
+SentryService --> Updater --: SentryRelease has been created
 end
 
-Updater -> FileHelper ++ : getFile(metricsConfigPath)
-FileHelper --> Updater -- : config file
-Updater -> FileHelper ++ : replaceEnvironmentVariables(config, options)
-FileHelper --> Updater -- : config has been updated
+Updater -> FileHelper ++: getFile(metricsConfigPath)
+FileHelper --> Updater --: config file
+Updater -> FileHelper ++: replaceEnvironmentVariables(config, options)
+FileHelper --> Updater --: config has been updated
 
-Updater -> FirebaseService ++ : deployFirestore(firestorePath)
-FirebaseService --> Updater -- : firestore has been deployed
+Updater -> FirebaseService ++: deployFirestore(firestorePath)
+FirebaseService --> Updater --: firestore has been deployed
 
-Updater -> FirebaseService ++ : deployHosting(projectId, target, appPath)
-FirebaseService --> Updater -- : hosting has been deployed
+Updater -> FirebaseService ++: deployHosting(projectId, target, appPath)
+FirebaseService --> Updater --: hosting has been deployed
 
-Updater --> Updater : delete directory
+Updater --> Updater: delete directory
 Updater --> UpdateCommand --: update finished
 UpdateCommand --> MetricsCliRunner --: command finished
-MetricsCliRunner --> Bob -- : terminate
+MetricsCliRunner --> Bob --: terminate
 
 @enduml
