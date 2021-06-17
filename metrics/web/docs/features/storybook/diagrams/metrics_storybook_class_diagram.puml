@@ -1,9 +1,11 @@
 @startuml metrics_storybook_class_diagram
+
 package src {
     package widgets {
         class Storybook {
             - _stories : List<Story>
-            + addStoryFor(String name)
+
+            + addStoryFor(String name) : Story
         }
 
         class InjectionContainer {
@@ -21,16 +23,21 @@ package src {
     package state {
         class StoriesNotifier {
             + stories : List<Story>
-            + addStory(Story story) :void
+
+            + addStory(Story story) : void
             + void setStories(List<Story> stories) : void
         }
+
         class ChaptersNotifier {
-            + currentChapter : Chapter;
+            + currentChapter : Chapter
+
             + selectChapter(Chapter chapter) : void
             + refreshChapter() : void
         }
+
         class ThemeNotifier {
             + isDark : bool
+
             + toggleTheme() : void
         }
     }
@@ -38,6 +45,7 @@ package src {
     class Story {
         + name : String
         + chapters : List<Chapter>
+
         + addChapter(String name, ChapterBuilder builder) : Story
     }
 
