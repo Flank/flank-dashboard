@@ -304,6 +304,8 @@ Once we've defined a high-level architecture of the `Metrics Storybook` and its 
 
 #### ***Base components***
 
+The following classes/widgets stands for bootstrapping the application, setting up a list of stories and chapters along with the Metrics theme.
+
 #### *Storybook widget*
 
 First, let's start with the root widget - `Storybook`. The main purpose of the widget is to bootstrap an application and provide an interface to add [stories](#story), through the `storiesFor` method:
