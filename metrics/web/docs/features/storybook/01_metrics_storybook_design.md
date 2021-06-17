@@ -295,7 +295,7 @@ The following image shows all the described components together:
 
 ![Storybook UI](images/storybook_components.png)
 
-So with that end-users will use the sidebar to choose an interesting widget, change its appearance through a list of inputs in the editing panel, change the theme using the toggle theme button, and view an actual result in the preview.
+So with that end-users will use the sidebar to choose an interested widget, change its appearance through a list of inputs in the editing panel, change the theme using the toggle theme button, and view an actual result in the preview.
 
 ### Program
 > Detailed solution description to class/method level.
@@ -325,11 +325,11 @@ _A few words about the `Injection Container`. As we want to use the [provider](h
 
 There are a few `ChangeNotifier`s, that is making up the storybook's global state:
 
-- ThemeNotifier - contains the `bool` value that controls the [ThemeMode](https://api.flutter.dev/flutter/material/MaterialApp/themeMode.html) of the application and `toggleTheme` method to change the theme.
+- `ThemeNotifier` - contains the `bool` value that controls the [ThemeMode](https://api.flutter.dev/flutter/material/MaterialApp/themeMode.html) of the application and `toggleTheme` method to change the theme.
 
-- StoriesNotifier - holds a list of stories and provides them to the application. 
+- `StoriesNotifier` - holds a list of stories and provides them to the application. 
 
-- ChaptersNotifier - holds a [chapter](#chapter)'s data to show it in the [preview](#preview).
+- `ChaptersNotifier` - holds a [chapter](#chapter)'s data to show it in the [preview](#preview).
 
 #### *Theme*
 
@@ -372,7 +372,7 @@ The `ChapterBuilder` is a function that provides the [ChapterOptions](#chapter-o
 
 #### *Chapter Options*
 
-The `ChapterOptions` class contains options, that UI widgets can use to build an [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and an `Option` class as a value.
+The `ChapterOptions` class contains options, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and an `Option` class as a value.
 
 The `ChapterOptions` has several methods to add different `Options` to the chapter:
 
@@ -387,7 +387,7 @@ The `Option` is deeply related to the `ChapterOptions` and is used to build a si
 
 It is a [generic](https://dart.dev/guides/language/language-tour#generics) class, and its actual type is used to build a corresponding type of input.
 
-For example, `Option<String>` on the UI converts into the `TextField`, `Option<bool>` into `CheckboxField` and so on. The more information about these fields in the [Chapter Control Field subsection](#chapter-control-field).
+For example, `Option<String>` on the UI converts into the `TextField`, `Option<bool>` into `CheckboxField` and so on. The more information about these fields in the [Chapter Control Field section](#chapter-control-field).
 
 The diagram shows relations between the described classes:
 

@@ -81,4 +81,5 @@ Storybook -down-> Story : uses
 Story -right-> Chapter : uses
 Chapter -right-> ChapterOptions : creates
 ChapterOptions -> Option : creates
+
 @enduml

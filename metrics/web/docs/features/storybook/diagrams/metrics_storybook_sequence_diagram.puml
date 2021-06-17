@@ -1,45 +1,46 @@
 @startuml metrics_storybook_sequence_diagram
 
-    skinparam ParticipantPadding 20
-    skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
     
-    actor Bob
+actor Bob
 
-    box "Metrics Storybook"
-        participant UI
-        participant Storybook << (W,#ADD1B2) >>
-        participant InjectionContainer << (C,#ADD1B2) >>
-        participant StoriesNotifier << (C,#ADD1B2) >>
-        participant ChaptersNotifier << (C,#ADD1B2) >>
-        participant ThemeNotifier << (C,#ADD1B2) >>
-        participant Sidebar << (W,#ADD1B2) >>
-        participant Preview << (W,#ADD1B2) >>
-        participant "Editing Panel" as EP << (W,#ADD1B2) >>
-    end box
+box "Metrics Storybook"
+    participant UI
+    participant Storybook << (W,#ADD1B2) >>
+    participant InjectionContainer << (C,#ADD1B2) >>
+    participant StoriesNotifier << (C,#ADD1B2) >>
+    participant ChaptersNotifier << (C,#ADD1B2) >>
+    participant ThemeNotifier << (C,#ADD1B2) >>
+    participant Sidebar << (W,#ADD1B2) >>
+    participant Preview << (W,#ADD1B2) >>
+    participant "Editing Panel" as EP << (W,#ADD1B2) >>
+end box
 
-    Bob -> UI : enters the application
-    UI -> Storybook : creates stories(with chapters)
-    Storybook -> InjectionContainer : provides stories
-    InjectionContainer -> StoriesNotifier : registers and provides stories
-    InjectionContainer -> ChaptersNotifier : registers
-    StoriesNotifier -> Sidebar : provides stories
-    Sidebar -> UI : displays a list of stories and chapters
-    UI -> Bob : shows a UI with a list of storybook widgets
+Bob -> UI : enters the application
+UI -> Storybook : creates stories(with chapters)
+Storybook -> InjectionContainer : provides stories
+InjectionContainer -> StoriesNotifier : registers and provides stories
+InjectionContainer -> ChaptersNotifier : registers
+StoriesNotifier -> Sidebar : provides stories
+Sidebar -> UI : displays a list of stories and chapters
+UI -> Bob : shows a UI with a list of storybook widgets
 
-    alt Bob clicks on the chapter(widget) in the Sidebar:
-        Bob -> UI : clicks on the menu item in the sidebar
-        UI -> ChaptersNotifier : selects a chapter
-        ChaptersNotifier -> Preview : provides a chapter
-        ChaptersNotifier -> EP : provides a chapter
-        Preview -> UI : displays a selected chapter
-        EP -> UI : displays list of options to change a chapter's appearance
-        UI -> Bob : shows a UI with the selected widget\n and a list of options to change a chapter's appearance
-    end
+alt Bob clicks on the chapter(widget) in the Sidebar:
+    Bob -> UI : clicks on the menu item in the sidebar
+    UI -> ChaptersNotifier : selects a chapter
+    ChaptersNotifier -> Preview : provides a chapter
+    ChaptersNotifier -> EP : provides a chapter
+    Preview -> UI : displays a selected chapter
+    EP -> UI : displays list of options to change a chapter's appearance
+    UI -> Bob : shows a UI with the selected widget\n and a list of options to change a chapter's appearance
+end
 
-    alt Bob clicks the toggle theme button:
-        Bob -> UI : clicks the toggle theme button
-        UI -> ThemeNotifier : toggle theme
-        ThemeNotifier -> UI : notifies about theme changes
-        UI -> Bob : shows UI in the toggled theme
-    end
+alt Bob clicks the toggle theme button:
+    Bob -> UI : clicks the toggle theme button
+    UI -> ThemeNotifier : toggle theme
+    ThemeNotifier -> UI : notifies about theme changes
+    UI -> Bob : shows UI in the toggled theme
+end
+
 @enduml

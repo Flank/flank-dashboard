@@ -23,7 +23,7 @@ package storybook {
     }
 
     package widgets {
-        class SideBar {
+        class Sidebar {
             + build(BuildContext context) : Widget
         }
 
@@ -48,16 +48,19 @@ package storybook {
 
                 + build(BuildContext context) : Widget
             }
+
             class ChapterControlCheckboxField {
                 + property : Option<Bool> 
 
                 + build(BuildContext context) : Widget
             }
+
             class ChapterControlColorField {
                 + property : Option<Color> 
 
                 + build(BuildContext context) : Widget
             }
+            
             class ChapterControlSliderField {
                 + property : Option<Number> 
 
@@ -68,7 +71,7 @@ package storybook {
 }
 
 EditingPanel -up-> ChaptersNotifier : uses
-SideBar -up-> StoriesNotifier : uses
+Sidebar -up-> StoriesNotifier : uses
 Preview -up-> ChaptersNotifier : uses
 EditingPanel -up-> ChapterOptionMapper : uses
 ChapterControlField -> ChaptersNotifier : uses
