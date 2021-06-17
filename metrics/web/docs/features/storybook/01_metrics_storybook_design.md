@@ -24,6 +24,18 @@ The Storybook is a tool for UI development that allows building UI components in
         - [Metrics Storybook package](#metrics-storybook-package)
     - [User Interface](#user-interface)
     - [Program](#program)
+        - [Base components](#base-components)
+            - [Storybook widget](#storybook-widget)
+            - [Metrics storybook state](#metrics-storybook-state)
+            - [Theme](#theme)
+            - [Story](#story)
+            - [Chapter](#chapter)
+            - [Chapter Options](#chapter-options)
+        - [UI widgets](#ui-widgets)
+            - [Sidebar](#sidebar)
+            - [Preview](#preview)
+            - [Editing panel](#editing-panel)
+        - [How to add new widgets to the Metrics Storybook](#how-to-add-new-widgets-to-the-metrics-storybook)
 
 # Analysis
 > Describe a general analysis approach.
@@ -290,7 +302,9 @@ So with that end-users will use the sidebar to choose an interesting widget, cha
 
 Once we've defined a high-level architecture of the `Metrics Storybook` and its visual view, we can provide a list of classes/widgets that need to be implemented for this feature.
 
-#### ***Storybook widget***
+#### ***Base components***
+
+#### *Storybook widget*
 
 First, let's start with the root widget - `Storybook`. The main purpose of the widget is to bootstrap an application and provide an interface to add [stories](#story), through the `storiesFor` method:
 
@@ -305,7 +319,7 @@ The list of stories then is passed to the `InjectionContainer` widget where it i
 
 _A few words about the `Injection Container`. As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we should create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#metrics-storybook-state)._
 
-#### Metrics storybook state
+#### *Metrics storybook state*
 
 There are a few `ChangeNotifier`s, that is making up the storybook's global state:
 
@@ -315,17 +329,17 @@ There are a few `ChangeNotifier`s, that is making up the storybook's global stat
 
 - ChaptersNotifier - holds a [chapter](#chapter)'s data to show it in the [preview](#preview).
 
-#### Theme
+#### *Theme*
 
 Once we've created the [state](#metrics-storybook-state) we can use the `ThemeNotifier` and the `MetricsThemeBuilder` to provide an initial theme for the application using the `MetricsTheme` from the [widgets package](#metrics-widgets-package) along with the light/dark theme data.
 
-##### ***MetricsThemeBuilder***
+##### *MetricsThemeBuilder*
 
 The `MetricsThemeBuilder` is a widget that provides a `ThemeNotifier` to its child and the `Metrics Theme` to the application.
 
 Now, let's take a closer look at the main components of the storybook application:
 
-#### ***Story***
+#### *Story*
 
 The `Story` is a class that groups together a list of `Chapter`s. 
 
@@ -346,15 +360,15 @@ story.addChapter('Cool widget name', (chapterOptions) => CoolWidget());
 
 The main purpose of the stories is to visually separate chapters (i.e., widgets) in the [sidebar](#sidebar).
 
-#### ***Chapter***
+#### *Chapter*
 
 The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter, a [builder function](#chapter-builder) and a [ChapterOptions](#chapter-options). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying options, using the `ChapterBuilder` function. 
 
-##### Chapter builder
+##### *Chapter builder*
 
 The `ChapterBuilder` is a function that provides the [ChapterOptions](#chapter-options) instance to construct an [editing panel](#editing-panel) for a concrete chapter.
 
-#### ***Chapter Options***
+#### *Chapter Options*
 
 The `ChapterOptions` class contains options, that UI widgets can use to build an [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and an `Option` class as a value.
 
@@ -365,7 +379,7 @@ The `ChapterOptions` has several methods to add different `Options` to the chapt
 - ***colorOption()*** - adds the `Option<Color>` to the options Map.
 - ***numberOption()*** - adds the `Option<Number>` to the options Map.
 
-##### ***Option***
+##### *Option*
 
 The `Option` is deeply related to the `ChapterOptions` and is used to build a single editing field for the storybook widget.
 
@@ -377,6 +391,8 @@ The diagram shows relations between the described classes:
 
 ![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
+#### ***UI widgets***
+
 Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represents the UI part of the storybook:
 
 - [Sidebar](#sidebar)
@@ -385,23 +401,23 @@ Once we've defined classes that set up and prepare the list of [stories](#story)
 
 Let's take a closer look at them:
 
-##### ***Sidebar***
+##### *Sidebar*
 
 The `Sidebar` widget is responsible for building a left panel with a list of widgets, we want to display in the storybook. It uses the `StoriesNotifier` to get a list of `stories` with related `chapters`.
 
-##### ***Preview***
+##### *Preview*
 
 The main purpose of the `Preview` is to display a widget that we've selected in the [Sidebar](#sidebar) using the data from the `ChaptersNotifier`.
 
-##### ***Editing Panel***
+##### *Editing Panel*
 
 The `EditingPanel` widget uses a [ChapterOptionsMapper](#chapteroptionsmapper) to provide a list of [controls](#chapter-control-field) to change the widgets' appearance. 
 
-##### ***ChapterOptionsMapper***
+##### *ChapterOptionsMapper*
 
 The `ChapterOptionsMapper` maps the given [Option](#option) to the corresponding [ChapterControlField](#chapter-control-field) using the `map` method.
 
-##### ***Chapter Control Field***
+##### *Chapter Control Field*
 
 The `ChapterControlField` is a base widget that is a template for the more specific fields, such as:
 
