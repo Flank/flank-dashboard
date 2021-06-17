@@ -230,7 +230,7 @@ The following diagram shows the described interaction:
 
 # Design
 
-The section provides a high level structure of the feature, describes the UI for end-users and shows a class level implementation details.
+The section provides a high-level structure of the feature, describes the UI for end-users, and shows class-level implementation details.
 
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
@@ -244,7 +244,7 @@ We can describe the structure of the feature through the following parts:
 
 Before talking about the [Metrics Storybook](#metrics-storybook), we need to extract a list of specific Metrics widgets from the `Metrics Web Application` into a separate package, to share them across the web application and the storybook.
 
-As the Metrics specific widgets use the `Metrics theme` to determine their appearance, the package should contain all models/configs/widgets belong to the theme as well.
+As the Metrics specific widgets use the `Metrics theme` to determine their appearance, the package should contain all models/configs/widgets that belong to the theme as well.
 
 The following diagram describes the structure of the `Metrics Widgets` package:
 
@@ -260,24 +260,24 @@ In general, it consists of three main components:
 - **Chapter** - a class, that represents a specific widget we want to display within the storybook.
 - **Chapter Options** - a class, that holds a collection of properties, that UI widgets can use to build an [editing panel](#editing-panel) with a list of inputs to change the widget's appearance.
 
-Consider the following diagram, that describes the relation between the described parts:
+Consider the following diagram, that describes relations between the described parts:
 
 ![Metrics Storybook Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_architecture_components_diagram.puml)
 
-At this time, we want to show only Metrics specific widgets within the `Metrics Storybook`. 
+At this time, we want to show only Metrics-specific widgets within the `Metrics Storybook`. 
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
 Metrics Storybook is a separate Flutter web project. Its UI consists of the following parts:
 
-- **Sidebar** - a left panel with the Metrics logo and a list of Metrics specific widgets.
+- **Sidebar** - a left panel with the Metrics logo and a list of Metrics-specific widgets.
 
 - **Preview** - a zone in the middle of the screen, that displays an actual widget.
 
 - **Editing Panel** - a list of inputs, that allows changing widgets' appearance.
 
-- **Toggle theme** - a button that changes theme between the dark and light variants.
+- **Toggle theme** - a button that changes the theme between the dark and light variants.
 
 The following image shows all the described components together:
 
@@ -301,7 +301,7 @@ storybook.storiesFor('Story name 1');
 storybook.storiesFor('Story name 2');
 ```
 
-The list of stories then is passed to the `InjectionContainer` widget where exposed to the whole application.
+The list of stories then is passed to the `InjectionContainer` widget where it is exposed to the whole application.
 
 _A few words about the `Injection Container`. As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we should create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#metrics-storybook-state)._
 
@@ -332,7 +332,7 @@ The `Story` is a class that groups together a list of `Chapter`s.
 To add a new chapter to the `Story` there is an `addChapter` method, that takes two parameters:
 
 - `name` - a `String`, that represents the name of the Chapter;
-- `builder` - a [ChapterBuilder](#chapter-builder), that provides an ability to view chapter on the UI.
+- `builder` - a [ChapterBuilder](#chapter-builder), that provides an ability to view the chapter on the UI.
 
 Consider the following example:
 
@@ -348,7 +348,7 @@ The main purpose of the stories is to visually separate chapters (i.e., widgets)
 
 #### ***Chapter***
 
-The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter, a [builder function](#chapter-builder) and a [ChapterOptions](#chapter-options). There is, also, the `build` method, that is responsible for building the widget, represented by the `Chapter` and applying options, using the `ChapterBuilder` function. 
+The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter, a [builder function](#chapter-builder) and a [ChapterOptions](#chapter-options). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying options, using the `ChapterBuilder` function. 
 
 ##### Chapter builder
 
@@ -356,7 +356,7 @@ The `ChapterBuilder` is a function that provides the [ChapterOptions](#chapter-o
 
 #### ***Chapter Options***
 
-The `ChapterOptions` class contains options, that UI widgets can use to build an [editing panel](#editing-panel) for the widget. The options in fact is a `Map` with the name of the option as a key, and an `Option` class as a value.
+The `ChapterOptions` class contains options, that UI widgets can use to build an [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and an `Option` class as a value.
 
 The `ChapterOptions` has several methods to add different `Options` to the chapter:
 
@@ -373,11 +373,11 @@ It is a [generic](https://dart.dev/guides/language/language-tour#generics) class
 
 For example, `Option<String>` on the UI converts into the `TextField`, `Option<bool>` into `CheckboxField` and so on. The more information about these fields in the [Chapter Control Field subsection](#chapter-control-field).
 
-The diagram shows the relation between the described classes:
+The diagram shows relations between the described classes:
 
 ![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
-Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represent UI part of the storybook:
+Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represents the UI part of the storybook:
 
 - [Sidebar](#sidebar)
 - [Preview](#preview)
@@ -410,7 +410,7 @@ The `ChapterControlField` is a base widget that is a template for the more speci
 - `ChapterControlColorField` - displays a [color picker](https://pub.dev/packages/flutter_colorpicker) to change the chapter's property that accepts different color.
 - `ChapterControlSliderField` - displays a [slider](https://api.flutter.dev/flutter/material/Slider-class.html) to change the chapter's property between the range of values.
 
-The purpose of these widgets is to provide an ability to edit a currently selected chapter (widget) appearance.
+The purpose of these widgets is to provide the ability to edit a currently selected chapter (widget) appearance.
 
 The following diagram shows the relation between these classes and `ChangeNotifier`s:
 
@@ -426,7 +426,7 @@ If you want to display a new widget in the Metrics Storybook, you should follow 
 
 1. Create a new file that will represent a new story.
 
-_**Note**: For convenience there is a `stories` folder in the `Metrics Storybook` package, where you can place your stories._
+_**Note**: For convenience, there is a `stories` folder in the `Metrics Storybook` package, where you can place your stories._
 
 2. Add the top-level function that accepts the `Storybook` instance:
 
@@ -471,7 +471,7 @@ void addCoolWidgetStories(Storybook storybook) {
 }
 ```
 
-With that you will see the color picker in the [editing panel](#editing-panel) of the storybook.
+With that, you will see the color picker in the [editing panel](#editing-panel) of the storybook.
 
 5. Import the created function in the `main` file:
 
