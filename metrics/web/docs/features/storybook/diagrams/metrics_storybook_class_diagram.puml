@@ -6,11 +6,16 @@ package src {
             + addStoryFor(String name)
         }
 
-        class InjectorContainer {
+        class InjectionContainer {
             + stories : List<Story>
         }
 
-        ' add theme builder??
+        class MetricsThemeBuilder {
+            + lightTheme : MetricsThemeData
+            + darkTheme : MetricsThemeData
+            + builder : ThemeBuilder
+            + build(BuildContext context) : Widget
+        }
     }
 
     package state {
@@ -53,13 +58,15 @@ package src {
         + name : String
         + value : T
     }
+}
 
-    Storybook -> InjectorContainer : creates and provides a list of stories
-    InjectorContainer -up-> StoriesNotifier : creates
-    InjectorContainer -up-> ChaptersNotifier : creates
-    InjectorContainer -up-> ThemeNotifier : creates
-    Storybook -down-> Story : uses
-    Story -right-> Chapter : uses
-    Chapter -right-> ChapterOptions : creates
-    ChapterOptions -> Option : creates
-    @enduml
+Storybook -> InjectionContainer : creates and provides a list of stories
+Storybook -left-> MetricsThemeBuilder : creates
+InjectionContainer -up-> StoriesNotifier : creates
+InjectionContainer -up-> ChaptersNotifier : creates
+InjectionContainer -up-> ThemeNotifier : creates
+Storybook -down-> Story : uses
+Story -right-> Chapter : uses
+Chapter -right-> ChapterOptions : creates
+ChapterOptions -> Option : creates
+@enduml

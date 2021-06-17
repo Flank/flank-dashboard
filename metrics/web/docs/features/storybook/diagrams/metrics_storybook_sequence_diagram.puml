@@ -1,0 +1,38 @@
+@startuml metrics_storybook_sequence_diagram
+
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+    
+    actor Bob
+
+    box "Metrics Storybook"
+        participant UI
+        participant Storybook << (W,#ADD1B2) >>
+        participant InjectionContainer << (C,#ADD1B2) >>
+        participant StoriesNotifier << (C,#ADD1B2) >>
+        participant ChaptersNotifier << (C,#ADD1B2) >>
+        participant Sidebar << (W,#ADD1B2) >>
+        participant Preview << (W,#ADD1B2) >>
+        participant "Editing Panel" as EP << (W,#ADD1B2) >>
+    end box
+
+    Bob -> UI : enters the application
+    UI -> Storybook : creates stories(with chapters)
+    Storybook -> InjectionContainer : creates and provides stories
+    InjectionContainer -> StoriesNotifier : registers and provides stories
+    InjectionContainer -> ChaptersNotifier : registers
+    StoriesNotifier -> Sidebar : provides stories
+    Sidebar -> UI : display stories and chapters
+    UI -> Bob : shows a list of storybook widgets
+
+    alt Bob clicks on the chapter(widget) in the Sidebar:
+        Bob -> UI : clicks on the menu item in the sidebar
+        UI -> ChaptersNotifier : select chapter
+        ChaptersNotifier -> Preview : provides chapter
+        ChaptersNotifier -> EP : provides chapter
+        Preview -> UI : display selected chapter
+        EP -> UI : display list of options to change chapter's appearance
+        UI -> Bob : shows the selected widget on the screen
+        EP -> Bob : display list of options to change chapter's appearance
+    end
+@enduml
