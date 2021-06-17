@@ -16,6 +16,7 @@ package src {
             + lightTheme : MetricsThemeData
             + darkTheme : MetricsThemeData
             + builder : ThemeBuilder
+
             + build(BuildContext context) : Widget
         }
     }
@@ -24,7 +25,6 @@ package src {
         class StoriesNotifier {
             + stories : List<Story>
 
-            + addStory(Story story) : void
             + void setStories(List<Story> stories) : void
         }
 
@@ -59,7 +59,11 @@ package src {
 
     class ChapterOptions {
         + options : Map<String, Option>
-        + textProperty(String name, String value) : String
+
+        + textOption(String name, String value) : String
+        + boolOption(String name, bool value) : bool
+        + colorOption(String name, Color value) : Color
+        + numberOption(String name, Number value) : Number
     }
 
     class Option<T> {

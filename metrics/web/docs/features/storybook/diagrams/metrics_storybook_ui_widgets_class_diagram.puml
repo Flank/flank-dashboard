@@ -12,7 +12,6 @@ package storybook {
         class StoriesNotifier {
             + stories : List<Story>
 
-            + addStory(Story story) : void
             + void setStories(List<Story> stories) : void
         }
     }
