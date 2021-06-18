@@ -10,6 +10,11 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
     - [Landscape](#landscape)
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
+- [**Design**](#design)
+    - [Architecture](#architecture)
+    - [User Interface](#user-interface)
+    - [Database](#database)
+    - [Program](#program)
 
 ## Analysis
 
@@ -118,3 +123,43 @@ The validation output classes and models are a part of the Metrics project and s
 The following component diagram describes the desired approach:
 
 ![doctor output feature diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_feature_component_diagram.puml)
+
+# Design
+
+Let's review the implementation details in the next subsections.
+
+### Architecture
+> Fundamental structures of the feature and context (diagram).
+ 
+Since the validation output is similar for the `CI Integrations Config Validator` and for the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the `metrics_core` library.
+
+Consider the next sections describing the main classes of the `validation_output` package.
+
+#### ValidationTarget
+A `ValidationTarget` is an entity which value or attribute (e.g., it's a version of a CLI package) used in the validation process. 
+
+To represent a `ValidationTarget` in an output to a user, we should know its name and a description.
+
+#### ValidationConclusion
+A `ValidationConclusion` represents a possible conclusion of the validation process (e.g., 'valid', 'invalid', 'unknown', 'not installed', etc.).
+
+To represent a `ValidationConclusion` to a user, we should know its name, and a visual indicator (e.g., '[+]', '[-]', '[?]', etc.).
+
+#### TargetValidationResult
+A `TargetValidationResult` represents a result of a validation of some `ValidationTarget`.
+
+The `TargetValidationResult` should include the following fields:
+- A `ValidationTarget` used in the validation process;
+- A `ValidationConclusion` of the validation; 
+- A description of this conclusion;
+- An additional details of this conclusion;
+- A context of this conclusion (e.g., process output, additional recommendations, etc.).
+
+### User Interface
+> How users will interact with the feature (API, CLI, Graphical interface, etc.).
+
+### Database
+> How relevant data will be persisted.
+
+### Program
+> Detailed solution description to class/method level.
