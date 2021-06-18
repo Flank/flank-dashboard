@@ -19,11 +19,11 @@ As a user, I want to have the opportunity to redeploy the updated Metrics Web ap
   - [Architecture](#architecture)
   - [User Interface](#user-interface)
   - [Program](#program)
-    - [Parsing YAML configuration](#parsing-yaml-configuration)
+    - [Parsing YAML configuration file](#parsing-yaml-configuration-file)
       - [UpdateConfig](#updateconfig)
       - [UpdateConfigParser](#updateconfigparser)
       - [UpdateConfigFactory](#updateconfigfactory)
-    - [Redeploy process](#redeploy-process)
+    - [Redeploy Metrics components](#redeploy-metrics-components)
       - [UpdateCommand](#updatecommand)
       - [Updater](#updater)
 
@@ -191,7 +191,7 @@ First of all, we should implement the class that represents the top-level comman
 
 Moving next, we should implement an [`Updater`](#updater) class - a bridge that encapsulates the logic between the `UpdateCommand` and [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service).
 
-Also, don't forget that our feature should be able to parse the `YAML` configuration. The following [section](#parsing-yaml-configuration) describes classes in detail required for this purpose. The `UpdateCommand` should use these classes to parse the configuration file passed as an argument of this command.
+Also, don't forget that our feature should be able to parse the `YAML` configuration. The following [section](#parsing-yaml-configuration-file) describes classes in detail required for this purpose. The `UpdateCommand` should use these classes to parse the configuration file passed as an argument of this command.
 
 Finally, we should register the `UpdateCommand` in the `MetricsCliRunner` so the user can execute the command using the `Metrics CLI` tool.
 
@@ -245,26 +245,11 @@ The update feature implies two main actions we'd like to review in the below sub
 
 The YAML configuration file for the update feature has the following structure:
 
-```yaml
-firebase:
-  auth_token: firebase_auth_token
-  project_id: project_id
-  google_sign_in_client_id: google_sign_in_client_id
-sentry:
-  auth_token: sentry_auth_token
-  organization_slug: organization_slug
-  project_slug: project_slug
-  project_dsn: project_dsn
-  release_name: release_name
-```
+![Update config diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/update_config_diagram.puml)
 
-- The `firebase_auth_token` is required to access the Firebase account while deploying hosting, rules, and functions.
-- The `project_id` is required to associate with the Firebase project while deploying hosting, rules, and functions.
-- The `google_sign_in_client_id` is required to support the Google authentication.
-- The `sentry_auth_token` is used to access the Sentry account while creating Sentry releases.
-- The Sentry `organization_slug`, `project_slug`, `project_dsn`, and `release_name` are required to create Sentry releases.
+_**Note**: The `sentry` configurations are optional. A user can leave a `sentry` field empty (or omit it at all) if there is no need to create a new Sentry release for the updated version._
 
-_**Note**: The `sentry` configurations are optional. A user can leave a `sentry` field empty (or omit it at all) if they don't want to / need to create a new Sentry release for the updated version._
+See the [configuration template](https://github.com/Flank/flank-dashboard/tree/update_feature_design/metrics/cli/docs/features/update/config/configuration_template.yaml) for the details of the fields.
 
 Let's take a closer look at the structure of the configuration file parsing. The below subsections examine the related classes and their relationships we should implement.
 

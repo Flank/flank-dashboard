@@ -1,0 +1,80 @@
+# A template for Metrics update config.
+# Consider the following links to familiarize yourself with Sentry:
+# - https://docs.sentry.io/product/
+
+# The `firebase` key defines that the following source config stands for the Metrics components in the Firebase.
+firebase:
+
+  # A Firebase Access Token that is used to authenticate CLI requests.
+  #
+  # You can get an access token executes `firebase login:ci` in the console.
+  # Find details at the following link: https://firebase.google.com/docs/cli#cli-ci-systems.
+  auth_token: ...
+
+  # A unique identifier of the Firebase project.
+  #
+  # This is a user-defined unique identifier for the project across all of Firebase and Google Cloud.
+  #
+  # You can obtain the project id from the project settings page on Firebase Console.
+  # Browse to Firebase Console(https://console.firebase.google.com/) and choose the necessary project.
+  # Then open a project settings page. You can find the Project ID in the general tab.
+  project_id: ...
+
+  # An OAuth 2.0 client ID for your app.
+  #
+  # The tool uses this slug to perform HTTP calls in the scope of the defined organization.
+  # The defined pipeline must belong to the organization with the defined slug.
+  #
+  # You can obtain the google sign-in client id from the authentication page on Firebase Console.
+  # Browse to Firebase Console(https://console.firebase.google.com/) and choose the necessary project.
+  # Then open a authentication page. Move to the Sign-in method tab.
+  # Open the Google provider tab, move to the Web SDK configuration tab.
+  # The Web client ID field is exactly what you need.
+  google_sign_in_client_id: ...
+
+# The `sentry` key defines that the following source config stands for the Sentry configuration.
+sentry:
+
+  # A Sentry Access Token that is used to authenticate CLI requests.
+  #
+  # You can find an access token on the Auth Tokens page in Account Settings on Sentry.
+  # The following link leads to the required page: https://sentry.io/settings/account/api/auth-tokens/.
+  auth_token: ...
+
+  # A unique slug (identifier) of the organization on Sentry.
+  #
+  # The tool uses this slug to perform calls in the scope of the defined organization.
+  #
+  # You can obtain the organization slug using a link that leads to this organization on Sentry.
+  # Browse to Sentry (https://sentry.io/) and open, for example, projects tab.
+  # The link of the current page contains the organization slug.
+  # For example, `https://sentry.io/organizations/<organization-slug>/projects/`.
+  organization_slug: ...
+
+  # A unique slug (identifier) of the project on Sentry.
+  #
+  # This slug is used to define a project, in which the new release should be created.
+  # The defined project must belong to the organization with the defined slug.
+  #
+  # Similar to the organization slug, you can obtain the project one using a link.
+  # Browse to Sentry (https://sentry.io/) and open the project tab.
+  # Choose the necessary project.
+  # The link of the current page contains the project slug.
+  # For example, `https://sentry.io/organizations/<organization-slug>/projects/<project-slug>/`.
+  project_slug: ...
+
+  # A unique identifier is used to identify the location to which the Metrics web app should send events.
+  #
+  # The DSN must belong to the project with the defined slug.
+  #
+  # You can obtain the DSN from the project settings page.
+  # Browse to Sentry (https://sentry.io/) and open the project tab.
+  # Choose the necessary project.
+  # Open the setting page, move to the Client Keys (DSN) tab, and you will see the DSN field.
+  # More about the DSN you can find at the following link: https://docs.sentry.io/product/sentry-basics/dsn-explainer/
+  project_dsn: ...
+
+  # A user-defined name of the release to be created.
+  #
+  # Find details at the following link: https://docs.sentry.io/product/releases/
+  release_name: ...

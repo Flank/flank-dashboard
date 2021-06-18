@@ -1,7 +1,7 @@
 @startuml update_command_integration_class_diagram
 
 package args {
-    class CommandRunner{}
+    class CommandRunner {}
     class Command {
         + name: String
         + description: String
