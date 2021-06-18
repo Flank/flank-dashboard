@@ -155,6 +155,17 @@ The `TargetValidationResult` should include the following fields:
 - An additional details of this conclusion;
 - A context of this conclusion (e.g., process output, additional recommendations, etc.).
 
+#### ValidationResult
+A `ValidationResult` is a class that holds the validation results for each `ValidationTarget`.
+
+#### ValidationResultBuilder 
+A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult` and has the main build method that returns a `ValidationResult`.
+
+This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step.
+
+#### ValidationResultPrinter
+A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
+
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
