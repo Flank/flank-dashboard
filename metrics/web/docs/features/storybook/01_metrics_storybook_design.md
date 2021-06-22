@@ -330,17 +330,17 @@ Consider the following structure of the `Metrics Storybook`:
 >       * `stories_notifier.dart`
 >       * `chapters_notifier.dart`
 >    * `stories`
->       * `buttons`
->       * `toasts`
+>       * `buttons/`
+>       * `toasts/`
 >       * `...`
 >       * `chapter_options.dart`
 >       * `chapter_option.dart`
 >       * `chapter.dart`
 >       * `story.dart`
 >    * `widgets`
->       * `sidebar`
->       * `preview`
->       * `editing_panel`
+>       * `sidebar/`
+>       * `preview/`
+>       * `editing_panel/`
 >       * `control_fields`
 >           * `chapter_control_field.dart`
 >           * `chapter_control_text_field.dart`
@@ -405,17 +405,17 @@ There are a few `ChangeNotifier`s, that is making up the storybook's global stat
 
 ##### ***mappers***
 
-The `mappers` folder contains the `ChapterOptionMapper` class, that maps the given `Option` into the corresponding control widget.
+The `mappers` folder contains the `ChapterOptionMapper` class, which maps the given `ChapterOption` into the corresponding control widget.
 
 ##### ***stories***
 
-This folder contains interfaces for concrete stories and chapters, as well as chapters options. There are, also, a list of stories, that represents a specific `Metrics widgets`.
+This folder contains interfaces for concrete stories and chapters, as well as chapter options. There is, also, a list of stories, that represents specific `Metrics widgets`.
 
 The `Story` is a class that groups together a list of `Chapter`s. The main purpose of the stories is to visually separate chapters (i.e., widgets) in the [sidebar](#sidebar).
 
-The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterOptions](#chapter-options). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterOptions` options. 
+The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterOptions](#chapter-options). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterOptions`.
 
-The `ChapterOptions` class contains options property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and an `ChapterOption` class as a value.
+The `ChapterOptions` class contains options property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and a `ChapterOption` class as a value.
 
 The `ChapterOptions` has several methods to add different `options` to the chapter:
 
@@ -442,7 +442,7 @@ Consider the following sequence diagram, which shows the general flow of display
 
 #### ***How to add new widgets to the Metrics Storybook***
 
-Lets imagine, we want to add a new `input widget` to the storybook. 
+Let's imagine, we want to add a new `input widget` to the storybook. 
 
 You should follow the next steps:
 
@@ -452,7 +452,7 @@ For example, `lib/stories/inputs`.
 
 2. Create a new file, named `inputs_story` in the `inputs` folder, that will represent a new story.
 
-3. In the `inputs_story.dart` file you should create a class, let's say we named it `InputsStory` that should implement the base `Story` interface. Give your story a name(it is a name of the group in the sidebar in the storybook UI).
+3. In the `inputs_story.dart` file you should create a class, let's say we named it `InputsStory` that should implement the base `Story` interface. Give your story a name(it is the name of the group in the sidebar in the storybook UI).
 
 ```dart
 class InputsStory implements Story {
@@ -464,19 +464,17 @@ class InputsStory implements Story {
 }
 ```
 
-4. Create a new folder in the `inputs` folder, name it `chapters` and add a file with a name `my_input_widget_chapter.dart`.
+4. Create a new folder in the `inputs` folder, name it `chapters`, and add a file with the name `my_input_widget_chapter.dart`.
 
-In this file you should create a class, that implements the `Chapter` interface.
+In this file, you should create a class, that implements the `Chapter` interface.
 
 ```dart
 class MyInputWidgetChapter implements Chapter {
   @override
   String get name => 'My Input Widget';
 
-  ChapterOptions _options = ChapterOptions();
-
   @override
-  ChapterOptions get options => _options;
+  ChapterOptions get options => null;
 
   @override
   Widget build() {
