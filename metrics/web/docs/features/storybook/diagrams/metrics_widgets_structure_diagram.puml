@@ -10,10 +10,16 @@ package "widgets" {
     [Base Widgets]
   }
 
-  package "common" {
-    [Common Metrics Widgets] ..> [Base Widgets] : uses
-    [Common Metrics Widgets] ..> [Metrics Theme] : uses
-  }  
+  package "button" {
+    [Metrics Button] --> [Base Widgets] : use
+    [Metrics Button] --> [Metrics Theme] : use
+  }
+
+  package "toast" {
+    [Metrics Toast] -up-> [Base Widgets] : use
+    [Metrics Toast] -up-> [Metrics Theme] : use
+  }
+   
 }
 
 @enduml

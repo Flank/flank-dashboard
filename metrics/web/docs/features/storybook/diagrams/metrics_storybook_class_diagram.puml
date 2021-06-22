@@ -1,33 +1,7 @@
 @startuml metrics_storybook_class_diagram
 
-package src {
-    package widgets {
-        class Storybook {
-            - _stories : List<Story>
-
-            + addStoryFor(String name) : Story
-        }
-
-        class InjectionContainer {
-            + stories : List<Story>
-        }
-
-        class MetricsThemeBuilder {
-            + lightTheme : MetricsThemeData
-            + darkTheme : MetricsThemeData
-            + builder : ThemeBuilder
-
-            + build(BuildContext context) : Widget
-        }
-    }
-
+package storybook {
     package state {
-        class StoriesNotifier {
-            + stories : List<Story>
-
-            + void setStories(List<Story> stories) : void
-        }
-
         class ChaptersNotifier {
             + currentChapter : Chapter
 
@@ -35,51 +9,128 @@ package src {
             + refreshChapter() : void
         }
 
-        class ThemeNotifier {
-            + isDark : bool
+        class StoriesNotifier {
+            + stories : List<Story>
 
-            + toggleTheme() : void
+            + void setStories(List<Story> stories) : void
         }
     }
 
-    class Story {
-        + name : String
-        + chapters : List<Chapter>
+    package stories {
+        abstract class Story {
+            + name : String
+            + chapters : List<Chapter>
+        }
 
-        + addChapter(String name, ChapterBuilder builder) : Story
+        abstract class Chapter {
+            + name : String
+            + options : ChapterOptions
+
+            + build() : Widget
+        }
+
+        class ChapterOptions {
+            + options : Map<String, ChapterOption>
+
+            + textOption(String name, String value) : String
+            + boolOption(String name, bool value) : bool
+            + colorOption(String name, Color value) : Color
+            + numberOption(String name, Number value) : Number
+        }
+
+        class ChapterOption<T> {
+            + name : String
+            + value : T
+        }
     }
 
-    class Chapter {
-        + name : String
-        + options : ChapterOptions
-        - _builder : ChapterBuilder
-
-        + build() : Widget
+    package mappers {
+        class ChapterOptionMapper {
+            + map(ChapterOption<T> option) : Widget
+        }
     }
 
-    class ChapterOptions {
-        + options : Map<String, Option>
+    package widgets {
+        class Storybook {
+            + stories : List<Story>
+        }
 
-        + textOption(String name, String value) : String
-        + boolOption(String name, bool value) : bool
-        + colorOption(String name, Color value) : Color
-        + numberOption(String name, Number value) : Number
-    }
+        class InjectionContainer {
+            + stories : List<Story>
+        }
 
-    class Option<T> {
-        + name : String
-        + value : T
+        class Sidebar {
+            + build(BuildContext context) : Widget
+        }
+
+        class Preview {
+            + build(BuildContext context) : Widget
+        }
+
+        class EditingPanel {
+            - _widgets : List<Widget>
+
+            + build(BuildContext context) : Widget
+        }
+
+        package control_fields {
+            class ChapterControlField {
+                + label : String
+                + child : Widget
+            }
+
+            class ChapterControlTextField {
+                + property : ChapterOption<String> 
+
+                + build(BuildContext context) : Widget
+            }
+
+            class ChapterControlCheckboxField {
+                + property : ChapterOption<Bool> 
+
+                + build(BuildContext context) : Widget
+            }
+
+            class ChapterControlColorField {
+                + property : ChapterOption<Color> 
+
+                + build(BuildContext context) : Widget
+            }
+            
+            class ChapterControlSliderField {
+                + property : ChapterOption<Number> 
+
+                + build(BuildContext context) : Widget
+            }
+        }
     }
 }
 
-Storybook -> InjectionContainer : creates and provides a list of stories
-Storybook -left-> MetricsThemeBuilder : creates
+Storybook -up-> InjectionContainer : creates and provides a list of stories
+Storybook -up-> EditingPanel : creates
+Storybook -up-> Sidebar : creates
+Storybook -up-> Preview : creates
 InjectionContainer -up-> StoriesNotifier : creates
 InjectionContainer -up-> ChaptersNotifier : creates
-InjectionContainer -up-> ThemeNotifier : creates
 Storybook -down-> Story : uses
 Story -right-> Chapter : uses
 Chapter -right-> ChapterOptions : creates
-ChapterOptions -> Option : creates
+ChapterOptions -> ChapterOption : creates
+
+EditingPanel -up-> ChaptersNotifier : uses
+Sidebar -up-> StoriesNotifier : uses
+Preview -up-> ChaptersNotifier : uses
+EditingPanel -up-> ChapterOptionMapper : uses
+ChapterControlField -> ChaptersNotifier : uses
+
+ChapterOptionMapper -> ChapterControlTextField : uses
+ChapterOptionMapper -> ChapterControlCheckboxField : uses
+ChapterOptionMapper -> ChapterControlColorField : uses
+ChapterOptionMapper -> ChapterControlSliderField : uses
+
+ChapterControlTextField -down-> ChapterControlField : uses
+ChapterControlCheckboxField -down-> ChapterControlField : uses
+ChapterControlColorField -down-> ChapterControlField : uses
+ChapterControlSliderField -down-> ChapterControlField : uses
 
 @enduml
