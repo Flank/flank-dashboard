@@ -1,0 +1,36 @@
+@startuml update_command_components_diagram
+
+skinparam componentStyle rectangle
+
+component User #A9DCDF
+
+package "Metrics CLI" {
+    component UpdateCommand
+    component Updater
+    component UpdateConfigParser
+    component "File System" as FS
+
+    package services {
+        component FirebaseService
+        component SentryService
+        component GitService
+        component FlutterService
+        component NpmService
+    }
+}
+
+User -down-> UpdateCommand: runs the update command \n with the given config path
+
+UpdateCommand -right-> FS: working with to receive \n the raw config file data
+FS -left-> UpdateCommand: returns the raw config file data
+
+UpdateCommand -left-> UpdateConfigParser: working with to receive \n the parsed config data
+UpdateConfigParser -right-> UpdateCommand: returns the parsed config data
+
+UpdateCommand -down--> Updater: uses to update the Metrics Web app \n and its components using the parsed config data
+Updater --> FirebaseService: uses to redeploy \n the application
+Updater --> SentryService: uses to configure \n a new Sentry release
+Updater --> GitService: uses to clone \n the Metrics repository
+Updater --> FlutterService: uses to build \n the Metrics Web application
+Updater --> NpmService: uses to install \n necessary packages
+@enduml

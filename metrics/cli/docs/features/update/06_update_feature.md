@@ -51,7 +51,6 @@ As it is possible to perform the required actions, we admit that it is possible 
 > Define requirements and make sure that they are complete.
 
 The Feasibility study section defines the main actions the feature should perform. In this section, we should list the requirements and possible edge-cases that would cover the main actions of the `Update feature`.
-
 The `Update feature` has the following requirements:
 
 - for the parsing configuration action:
@@ -176,10 +175,13 @@ Having considered all the complex points and edge cases, we conclude that the `U
 
 The `Update feature` is a part of the Metrics CLI component and is to be integrated into the CLI. The following diagram demonstrates the `Update feature` integration:
 
-![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/diagrams/update_feature_integration_component_diagram.puml)
+![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_feature_integration_component_diagram.puml)
 
 
 # Design
+
+This section provides a high-level structure of the feature, describes the UI for end-users, and shows class-level implementation details.
+
 ## Architecture
 >Fundamental structures of the feature and context (diagram).
 
@@ -187,17 +189,17 @@ The general approach of the `Update feature` integration to the `Metrics CLI` to
 
 It's time to briefly review which classes the `Update feature` requires according to the structure mentioned in the previous paragraph.
 
-First of all, we should implement the class that represents the top-level command of the `Metrics CLI` tool, in our case, it's an [`UpdateCommand`](#updatecommand), the purpose of which is the redeploying a new version of the Metrics Web Application and its components.
+First of all, we should implement the class that represents the top-level `update command` of the `Metrics CLI` tool, the purpose of which is the redeploying a new version of the Metrics Web Application and its components.
 
-Moving next, we should implement an [`Updater`](#updater) class - a bridge that encapsulates the logic between the `UpdateCommand` and [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service).
+Moving next, we should implement a class that encapsulates the logic between the `update command` and [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service).
 
-Also, don't forget that our feature should be able to parse the `YAML` configuration. The following [section](#parsing-yaml-configuration-file) describes classes in detail required for this purpose. The `UpdateCommand` should use these classes to parse the configuration file passed as an argument of this command.
+Also, don't forget that our feature should be able to parse the `YAML` configuration. Therefore, we should implement a class for this purpose.
 
-Finally, we should register the `UpdateCommand` in the `MetricsCliRunner` so the user can execute the command using the `Metrics CLI` tool.
+Finally, we should register the `update command` in the `Metrics CLI` so the user can execute the command using the tool.
 
-Let's review the class diagram that shows how the classes required for the `Update feature` integration working together:
+Let's review the component diagram that shows how the main component interacts with each other:
 
-![Update command integration class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/update_command_integration_class_diagram.puml)
+![Update command component diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_command_components_diagram.puml)
 
 ## User Interface
 >How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -206,23 +208,24 @@ The `Update feature` implies adding a new command to the `Metrics CLI` applicati
 
 The following snippet demonstrates the Metrics command-line user interface for the `--help` option of the `Metrics CLI` tool after the `Update feature` integration into this CLI.
 
-```bash
+```diff
 Metrics CLI.
 
 Usage: metrics <command> [arguments]
 
 Global options:
--h, --help    Print this usage information.
-
+  -h, --help    Print this usage information.
+  
 Available commands:
   deploy   Creates GCloud and Firebase projects for Metrics components and deploys the Metrics Web Application.
   doctor   Shows the version information of the third-party dependencies.
-  update   Updates the Metrics components and redeploys the Metrics Web Application to the Firebase project.
++ update   Updates the Metrics components and redeploys the Metrics Web Application to the Firebase project.
 
 Run "metrics help <command>" for more information about a command.
 ```
 
-In the example above, we can notice that a new `update` command has been added with its description accordingly. For more information on how the `update` command works, the user can call it with the `--help` option. The following sample demonstrates the command-line user interface for this:
+In the example above, we can notice that a new `update` command has been added with its description accordingly. 
+For more information on how the `update` command works, the user can call it with the `--help` option. The following snippet demonstrates the command-line user interface for this:
 
 ```bash
 Usage: metrics update [arguments]
@@ -245,7 +248,7 @@ The update feature implies two main actions we'd like to review in the below sub
 
 The YAML configuration file for the update feature has the following structure:
 
-![Update config diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/update_config_diagram.puml)
+![Update config diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_config_yaml_diagram.puml)
 
 _**Note**: The `sentry` configurations are optional. A user can leave a `sentry` field empty (or omit it at all) if there is no need to create a new Sentry release for the updated version._
 
@@ -262,9 +265,13 @@ The `UpdateConfig` is a model that represents the `YAML` update config. The `Upd
 
 _**Note**: The `SentryConfig` field should be `null` if the `sentry` parameter of the update `YAML` config is empty._
 
+Let's review the detailed structure of the `UpdateConfig` by looking at the following class diagram:
+
+![Update config class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_config_class_diagram.puml)
+
 #### UpdateConfigParser
 
-The `UpdateConfigParser` is a class uses to read the `YAML` configuration file and parse it to the [`UpdateConfig`](#updateconfig) model. The `UpdateConfigParser` should use the [`yaml_map`](https://github.com/Flank/flank-dashboard/tree/master/yaml_map) package for parsing purposes, as was analyzed in the [YAML map parser section](#yaml-map-parser).
+The `UpdateConfigParser` is a class uses to parse the `YAML` configuration file data to the [`UpdateConfig`](#updateconfig) model. The `UpdateConfigParser` should use the [`yaml_map`](https://github.com/Flank/flank-dashboard/tree/master/yaml_map) package for parsing purposes, as was analyzed in the [YAML map parser section](#yaml-map-parser).
 
 #### UpdateConfigFactory
 
@@ -272,7 +279,7 @@ The `UpdateConfigFactory` is a class uses to create the [`UpdateConfig`](#update
 
 The following class diagram demonstrates the structure of the classes required for the `YAML` config parsing process:
 
-![YAML config parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/yaml_config_parser_class_diagram.puml)
+![Config YAML parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/config_yaml_parser_class_diagram.puml)
 
 ### Redeploy Metrics components
 
@@ -282,24 +289,25 @@ The following section describes the classes required for the redeploy process.
 
 The `UpdateCommand` is the `Metrics CLI` command that is responsible for the redeploying the last version of the Metrics Web Application to the Firebase using the data from the [`UpdateConfig`](#updateconfig).
 
-Let's review a top-level flow of the `UpdateCommand`:
+The `UpdateCommand` algorithm performs the following steps:
 
 1. Parse the YAML config.
-2. Build the Metrics Web Application.
-3. Configure Sentry using data from the config.
-4. Redeploy the Firebase components like Firestore rules and Firebase Functions using data from the config.
-5. Redeploy the Metrics Web Application to the Firebase Hosting using data from the config.
-6. Cleanup the created directories, etc.
+2. Checkout the Metrics Web Application source code.
+3. Build the Metrics Web Application.
+4. Configure Sentry using data from the config.
+5. Redeploy the Firebase components like Firestore rules and Firebase Functions using data from the config.
+6. Redeploy the Metrics Web Application to the Firebase Hosting using data from the config.
+7. Cleanup the created directories, etc.
 
 #### Updater
 
-The `Updater` class encapsulates the redeployment logic. The `UpdateCommand` uses the `Updater` with the parsed configurations. The `Updater` has the `update` method that interacts with the external [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service) and redeploys the latest version of the Metrics Web Application to the Firebase using the `UpdateConfig`.
+The `Updater` class encapsulates the redeployment logic. The `UpdateCommand` uses the `Updater` with the parsed configurations. The `Updater` has the `update` method that interacts with the external [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service) and redeploys the latest version of the Metrics Web Application to the Firebase using the `UpdateConfig`. Also, the `Updater` uses the `FileHelper` utility class to interact with the `File System`, aka `FS`. The FileHelper, in turn, works with the `FS` using the [`dart.io`](https://api.dart.dev/stable/2.13.3/dart-io/dart-io-library.html) package.
 
 To create an `Updater`, the `UpdateCommand` uses the `UpdaterFactory`. This factory provides the `Updater` instance with all the required services and returns the ready-to-use instance to the `Updater`.
 The following class diagram demonstrates how the classes described above interact:
 
-![Updater class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/updater_class_diagram.puml)
+![Updater class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/updater_class_diagram.puml)
 
-Consider the following sequence diagram that illustrates the process of the `UpdateCommand`:
+Consider the following sequence diagram that illustrates the whole process of the `UpdateCommand` and the interaction with the classes described above:
 
-![Update sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/diagrams/update_command_sequence_diagram.puml)
+![Update sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_command_sequence_diagram.puml)

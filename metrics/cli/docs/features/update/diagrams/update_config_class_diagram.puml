@@ -1,0 +1,32 @@
+@startuml update_config_class_diagram
+
+package cli.updater.config {
+    package model {
+        class UpdateConfig {
+            + firebaseConfig: FirebaseConfig
+            + sentryConfig: SentryConfig
+            + {static} fromJson(Map<String,dynamic> json): UpdateConfig
+        }
+
+        class FirebaseConfig {
+            + authToken: String
+            + projectId: String
+            + googleSignInClientId: String
+            + {static} fromJson(Map<String,dynamic> json): FirebaseConfig
+        }
+
+        class SentryConfig {
+            + authToken: String
+            + organizationSlug: String
+            + projectSlug: String
+            + projectDsn: String
+            + releaseName: String
+            + {static} fromJson(Map<String,dynamic> json): SentryConfig
+        }
+    }
+}
+
+FirebaseConfig "1" -up-* "1    " UpdateConfig
+SentryConfig "1   " -up-* " 1" UpdateConfig
+
+@enduml

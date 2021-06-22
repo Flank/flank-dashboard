@@ -1,14 +1,14 @@
-@startyaml update_config_example
+@startyaml update_config_yaml_diagram
 
 firebase:
     auth_token: "firebase-auth-token"
-    project_id: "metrics-cool"
+    project_id: "metrics-cool-id"
     google_sign_in_client_id: "google-sign-in-client-id"
 sentry:
-    auth_token: "sentry_auth_token"
+    auth_token: "sentry-auth-token"
     organization_slug: "my-organization"
     project_slug: "my-project"
-    project_dsn: "dsn"
-    release_name: "cool-release"
+    project_dsn: "my-project-dsn"
+    release_name: "my-cool-release"
 
 @endyaml

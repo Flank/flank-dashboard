@@ -139,6 +139,7 @@ package cli {
                 class UpdateConfig {
                     + firebaseConfig: FirebaseConfig
                     + sentryConfig: SentryConfig
+                    + {static} fromJson(Map<String,dynamic> json): UpdateConfig
                 }
             }
 
