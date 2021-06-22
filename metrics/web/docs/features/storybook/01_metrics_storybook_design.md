@@ -24,17 +24,11 @@ The Storybook is a tool for UI development that allows building UI components in
         - [Metrics Storybook package](#metrics-storybook-package)
     - [User Interface](#user-interface)
     - [Program](#program)
-        - [Base components](#base-components)
-            - [Storybook widget](#storybook-widget)
-            - [Metrics storybook state](#metrics-storybook-state)
-            - [Theme](#theme)
-            - [Story](#story)
-            - [Chapter](#chapter)
-            - [Chapter Options](#chapter-options)
-        - [UI widgets](#ui-widgets)
-            - [Sidebar](#sidebar)
-            - [Preview](#preview)
-            - [Editing panel](#editing-panel)
+        - [Package Structure](#package-structure)
+          - [widgets](#widgets)
+          - [state](#state)
+          - [mappers](#mappers)
+          - [stories](#stories)
         - [How to add new widgets to the Metrics Storybook](#how-to-add-new-widgets-to-the-metrics-storybook)
 
 # Analysis
@@ -360,13 +354,13 @@ Consider the following structure of the `Metrics Storybook`:
 
 The folder contains a list of widgets, that bootstraps the application, creates `ChangeNotifier`s and responsible for the UI part of the storybook.
 
-##### *Storybook widget*
+##### *Storybook*
 
 `Storybook` - is a root widget. The main purpose of the widget is to bootstrap an application and obtain a list of `stories`. The list of stories then is passed to the `InjectionContainer` widget where it is exposed to the whole application.
 
 ##### *InjectionContainer*
 
-A few words about the `Injection Container`. As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we should create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#state).
+As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we should create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#state).
 
 ##### *UI widgets*
 
