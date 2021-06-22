@@ -175,7 +175,7 @@ Having considered all the complex points and edge cases, we conclude that the `U
 
 The `Update feature` is a part of the Metrics CLI component and is to be integrated into the CLI. The following diagram demonstrates the `Update feature` integration:
 
-![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_feature_integration_component_diagram.puml)
+![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_feature_integration_component_diagram.puml)
 
 
 # Design
@@ -193,7 +193,7 @@ First of all, we should implement the class that represents the top-level `updat
 
 Moving next, we should implement a class that encapsulates the logic between the `update command` and [`Services`](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/docs/01_metrics_cli_design.md#service).
 
-Also, don't forget that our feature should be able to parse the `YAML` configuration. Therefore, we should implement a class for this purpose.
+Also, do not forget that our feature should be able to parse the `YAML` configuration. Therefore, we should implement a class for this purpose.
 
 Finally, we should register the `update command` in the `Metrics CLI` so the user can execute the command using the tool.
 
