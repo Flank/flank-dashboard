@@ -131,12 +131,12 @@ Let's review the implementation details in the next subsections.
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
  
-Since the validation output is similar for the `CI Integrations Config Validator` and for the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the `metrics_core` library.
+Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and for the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the [`metrics_core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
 
 Consider the next sections describing the main classes of the `validation_output` package.
 
 #### ValidationTarget
-A `ValidationTarget` is an entity which value or attribute (e.g., it's a version of a CLI package) used in the validation process. 
+A `ValidationTarget` is an entity which value used in the validation process (e.g., it's a version of a CLI package). 
 
 To represent a `ValidationTarget` in an output to a user, we should know its name and a description.
 
@@ -159,9 +159,13 @@ The `TargetValidationResult` should include the following fields:
 A `ValidationResult` is a class that holds the validation results for each `ValidationTarget`.
 
 #### ValidationResultBuilder 
-A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult` and has the main build method that returns a `ValidationResult`.
+A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult`. The `ValidationResultBuilder` has the main build method that returns a `ValidationResult`.
 
 This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step.
+
+Consider the following class diagram that describes the `validation_output` package structure:
+
+![Validation output diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_output_class_diagram.puml)
 
 #### ValidationResultPrinter
 A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
@@ -169,8 +173,16 @@ A `ValidationResultPrinter` is a class that is responsible for showing the valid
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-### Database
-> How relevant data will be persisted.
+The usage of the `doctor` command won't change for the end user. To run the `doctor` command use the following command in the directory containing the Metrics CLI tool:
+
+```bash 
+./metrics doctor
+```
+
+The improved output of the feature will contain the detailed validation result as described in the ["Requirements"](#requirements) section above. 
+
+After we clarified the general architecture and usage, let's proceed to the detailed implementation approach.
 
 ### Program
 > Detailed solution description to class/method level.
+
