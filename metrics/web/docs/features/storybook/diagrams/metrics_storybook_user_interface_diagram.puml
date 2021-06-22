@@ -1,0 +1,62 @@
+@startsalt metrics_storybook_user_interface_diagram
+{#
+  {-
+    Metrics Storybook
+    {!
+      {T
+        +
+        +Metrics Logo <&image>
+        +
+        + Buttons
+        ++ <color:green>Inactive Button
+        ++ Neutral Button
+        ++ Positive Button
+        + Toasts
+        ++ Negative Graph Indicator
+        ++ Positive Graph Indicator
+        + Graph Indicators
+        ++ Inactive Graph Indicator
+        ++ Neutral Graph Indicator
+        ++ Positive Graph Indicator
+        +
+        +
+        <color:red>Sidebar 
+      } | {-
+         <color:red>Toggle theme button <&sun>
+        {!
+          {
+            .
+            .
+            .
+            .
+            [Inactive button]
+            .
+            .
+            .
+            .
+            .
+            .
+            .
+            <color:red>Preview field
+          } | {
+            .
+            .
+            Label
+            "Inactive Button   "
+            .
+            .
+            .
+            .
+            .
+            .
+            .
+            .
+            .
+            <color:red>Editing panel
+          }
+        }
+      }
+    }
+  }
+}
+@endsalt

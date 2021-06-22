@@ -291,9 +291,9 @@ Metrics Storybook is a separate Flutter web project. Its UI consists of the foll
 
 - **Toggle theme** - a button that changes the theme between the dark and light variants.
 
-The following image shows all the described components together:
+The following diagram shows all the described components together:
 
-![Storybook UI](images/storybook_components.png)
+![Metrics Storybook User Interface Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_user_interface_diagram.puml)
 
 So with that end-users will use the sidebar to choose an interested widget, change its appearance through a list of inputs in the editing panel, change the theme using the toggle theme button, and view an actual result in the preview.
 
