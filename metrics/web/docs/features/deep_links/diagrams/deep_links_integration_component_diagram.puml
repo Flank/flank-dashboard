@@ -3,9 +3,9 @@
 skinparam componentStyle rectangle
 
 legend top left
-    | Color | Arrow type |
-    |<#B70033>| Existing relationship |
-    |<#Green>| New relationship |
+| Color | Arrow type |
+|<#B70033>| Existing relationship |
+|<#Green>| New relationship |
 endlegend
 
 component "Browser History" as History #A9DCDF
@@ -20,22 +20,22 @@ package "Metrics Web" {
     component ApplicationState
 }
 
-History -right-> Browser : provides URLs
+History -right-> Browser: provides URLs
 
-Browser -down-> RouteInformationProvider : URL
+Browser -down-> RouteInformationProvider: URL
 
-RouteInformationProvider -down-> RouteInformationParser : routeInformation
+RouteInformationProvider -down-> RouteInformationParser: routeInformation
 
-RouteInformationParser -down-> RouterDelegate : routeConfiguration
+RouteInformationParser -down-> RouterDelegate: routeConfiguration
 
-RouterDelegate -down-> NavigationNotifier : delegate handling\n new routeConfiguration
+RouterDelegate -down-> NavigationNotifier: delegate handling\n new routeConfiguration
 
-NavigationNotifier -right-> NavigationState : updates
+NavigationNotifier -right-> NavigationState: updates
 
-NavigationNotifier -[#Green]up-> ApplicationState : updates
+NavigationNotifier -[#Green]up-> ApplicationState: updates
 
-ApplicationState -[#Green]up-> NavigationNotifier : UI events \n (e.g. filtering, searching, \n back button pressed)
+ApplicationState -[#Green]up-> NavigationNotifier: UI events \n (e.g. filtering, searching, \n back button pressed)
 
-NavigationNotifier -[#Green]up-> History : updates URL query parameters
+NavigationNotifier -[#Green]up-> History: updates URL query parameters
 
 @enduml

@@ -1,0 +1,31 @@
+@startuml updating_page_parameters_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+participant MetricsRouterDelegate << (C,#ADD1B2) >>
+participant NavigationNotifier << (C,#ADD1B2) >>
+participant PageParametersFactory << (C,#ADD1B2) >>
+participant Listener << (C,#ADD1B2) >>
+
+activate MetricsRouterDelegate
+MetricsRouterDelegate -> NavigationNotifier: handleNewRoutePath(routeConfiguration)
+activate NavigationNotifier
+deactivate MetricsRouterDelegate
+
+NavigationNotifier --> NavigationNotifier: processes route configuration
+
+NavigationNotifier -> PageParametersFactory: create(routeConfiguration)
+activate PageParametersFactory
+
+PageParametersFactory --> NavigationNotifier: coolPageParametersModel
+deactivate PageParametersFactory
+
+NavigationNotifier --> NavigationNotifier: sets new page parameters
+
+NavigationNotifier -> Listener: notifyListeners()
+activate Listener
+
+Listener --> Listener: applies new page parameters
+
+@enduml

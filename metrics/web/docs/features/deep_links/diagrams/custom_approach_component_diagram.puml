@@ -10,12 +10,12 @@ package "Metrics Web" {
     component "User Interface" as UI
 }
 
-Browser -down-> Navigator : notifies about \n URL updates
-Navigator -down-> ApplicationState : opens new pages, \n provides deep links
-ApplicationState -down-> UI : data to display
+Browser -down-> Navigator: notifies about \n URL updates
+Navigator -down-> ApplicationState: opens new pages, \n provides deep links
+ApplicationState -down-> UI: data to display
 
-UI -up-> ApplicationState : UI events(sorting, filtering, etc.)
-ApplicationState -up-> Navigator : deep links updates
-Navigator -up-> Browser : updates URL
+UI -up-> ApplicationState: UI events(sorting, filtering, etc.)
+ApplicationState -up-> Navigator: deep links updates
+Navigator -up-> Browser: updates URL
 
 @enduml
