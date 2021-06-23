@@ -1,19 +1,19 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/cli/deployer/model/deploy_paths.dart';
+import 'package:cli/common/model/paths.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('DeployPaths', () {
+  group('Paths', () {
     const rootPath = 'rootPath';
 
-    final deployPaths = DeployPaths(rootPath);
+    final deployPaths = Paths(rootPath);
 
     test(
       "throws an ArgumentError if the given root path is null",
       () {
-        expect(() => DeployPaths(null), throwsArgumentError);
+        expect(() => Paths(null), throwsArgumentError);
       },
     );
 

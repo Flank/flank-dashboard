@@ -2,12 +2,12 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/deployer/deployer.dart';
-import 'package:cli/cli/deployer/model/deploy_paths.dart';
+import 'package:cli/common/model/paths.dart';
 
-/// A class providing method for creating a [DeployPaths] instance.
-class DeployPathsFactory {
+/// A class providing method for creating a [Paths] instance.
+class PathsFactory {
   /// Creates a new instance of the [Deployer] with the given [rootPath].
-  DeployPaths create(String rootPath) {
-    return DeployPaths(rootPath);
+  Paths create(String rootPath) {
+    return Paths(rootPath);
   }
 }

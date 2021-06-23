@@ -26,16 +26,29 @@ class FirebaseCli extends Cli {
 
   /// Sets the project with the [projectId] identifier as the default one
   /// for the Firebase project in the [workingDirectory].
-  Future<void> setFirebaseProject(String projectId, String workingDirectory) {
-    return run(['use', projectId], workingDirectory: workingDirectory);
+  Future<void> setFirebaseProject(
+    String projectId,
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final parameters = ['use', projectId];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   /// Clears the Firebase [target] in the given [workingDirectory].
-  Future<void> clearTarget(String target, String workingDirectory) {
-    return run(
-      ['target:clear', 'hosting', target],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> clearTarget(
+    String target,
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final parameters = ['target:clear', 'hosting', target];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   /// Associates the Firebase [target] with the given [hostingName]
@@ -43,38 +56,47 @@ class FirebaseCli extends Cli {
   Future<void> applyTarget(
     String hostingName,
     String target,
-    String workingDirectory,
-  ) {
-    return run(
-      ['target:apply', 'hosting', target, hostingName],
-      workingDirectory: workingDirectory,
-    );
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final parameters = ['target:apply', 'hosting', target, hostingName];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   /// Deploys a project's [target] from the given [workingDirectory]
   /// to the Firebase hosting.
-  Future<void> deployHosting(String target, String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'hosting:$target'],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> deployHosting(
+    String target,
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final parameters = ['deploy', '--only', 'hosting:$target'];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
-  Future<void> deployFirestore(String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'firestore'],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> deployFirestore(String workingDirectory, [String authToken]) {
+    final parameters = ['deploy', '--only', 'firestore'];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   /// Deploys functions from the given [workingDirectory] to the Firebase.
-  Future<void> deployFunctions(String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'functions'],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> deployFunctions(String workingDirectory, [String authToken]) {
+    final parameters = ['deploy', '--only', 'functions'];
+
+    if (authToken != null) parameters.add('--token=$authToken');
+
+    return run(parameters, workingDirectory: workingDirectory);
   }
 
   @override

@@ -37,14 +37,14 @@ class SentryCliServiceAdapter implements SentryService {
   }
 
   @override
-  Future<SentryRelease> createRelease(
-    List<SourceMap> sourceMaps,
-  ) async {
-    final sentryRelease = _promptSentryRelease();
-
-    await _sentryCli.createRelease(sentryRelease);
-    await _uploadSourceMaps(sentryRelease, sourceMaps);
-    await _sentryCli.finalizeRelease(sentryRelease);
+  Future<void> createRelease(
+    SentryRelease sentryRelease,
+    List<SourceMap> sourceMaps, [
+    String authToken,
+  ]) async {
+    await _sentryCli.createRelease(sentryRelease, authToken);
+    await _uploadSourceMaps(sentryRelease, sourceMaps, authToken);
+    await _sentryCli.finalizeRelease(sentryRelease, authToken);
 
     return sentryRelease;
   }
@@ -62,8 +62,8 @@ class SentryCliServiceAdapter implements SentryService {
     ));
   }
 
-  /// Prompts the [SentryRelease] from the user.
-  SentryRelease _promptSentryRelease() {
+  @override
+  SentryRelease getSentryRelease() {
     final sentryProject = _promptSentryProject();
     final releaseName = _prompter.prompt(SentryStrings.enterReleaseName);
 
@@ -88,10 +88,11 @@ class SentryCliServiceAdapter implements SentryService {
   /// Uploads the given [sourceMaps] to the given Sentry [release].
   Future<void> _uploadSourceMaps(
     SentryRelease release,
-    List<SourceMap> sourceMaps,
-  ) async {
+    List<SourceMap> sourceMaps, [
+    String authToken,
+  ]) async {
     for (final sourceMap in sourceMaps) {
-      await _sentryCli.uploadSourceMaps(release, sourceMap);
+      await _sentryCli.uploadSourceMaps(release, sourceMap, authToken);
     }
   }
 }

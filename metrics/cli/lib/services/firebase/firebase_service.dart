@@ -17,11 +17,20 @@ abstract class FirebaseService extends InfoService {
 
   /// Deploys the given Firebase hosting [target] from the given [appPath]
   /// to the Firebase project with the given [projectId] hosting.
-  Future<void> deployHosting(String projectId, String target, String appPath);
+  Future<void> deployHosting(
+    String projectId,
+    String target,
+    String appPath, [
+    String authToken,
+  ]);
 
   /// Deploys Firebase rules, indexes, and functions to the project
   /// with the given [projectId] from the given [firebasePath].
-  Future<void> deployFirebase(String projectId, String firebasePath);
+  Future<void> deployFirebase(
+    String projectId,
+    String firebasePath, [
+    String authToken,
+  ]);
 
   /// Upgrades the Firebase account billing plan of the Firebase project with
   /// the given [projectId].

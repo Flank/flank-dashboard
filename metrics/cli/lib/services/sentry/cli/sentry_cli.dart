@@ -18,18 +18,21 @@ class SentryCli extends Cli {
   /// Creates a Sentry release using the given [release].
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
-  Future<void> createRelease(SentryRelease release) {
+  Future<void> createRelease(SentryRelease release, [String authToken]) {
     ArgumentError.checkNotNull(release);
 
     final project = release.project;
-
-    return run([
+    final parameters = [
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'new',
       release.name,
-    ]);
+    ];
+
+    if (authToken != null) parameters.insert(0, '--auth-token=$authToken');
+
+    return run(parameters);
   }
 
   /// Uploads source maps of the files located in the [SourceMap.path] with
@@ -41,8 +44,9 @@ class SentryCli extends Cli {
   /// Throws an [ArgumentError] if the given [sourceMap] is `null`.
   Future<void> uploadSourceMaps(
     SentryRelease release,
-    SourceMap sourceMap,
-  ) {
+    SourceMap sourceMap, [
+    String authToken,
+  ]) {
     ArgumentError.checkNotNull(release);
     ArgumentError.checkNotNull(sourceMap);
 
@@ -59,6 +63,8 @@ class SentryCli extends Cli {
       '--rewrite',
     ];
 
+    if (authToken != null) parameters.insert(0, '--auth-token=$authToken');
+
     if (extensions != null) {
       for (final extension in extensions) {
         parameters.add('--ext=$extension');
@@ -71,17 +77,20 @@ class SentryCli extends Cli {
   /// Finalizes the given [release].
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
-  Future<void> finalizeRelease(SentryRelease release) {
+  Future<void> finalizeRelease(SentryRelease release, [String authToken]) {
     ArgumentError.checkNotNull(release);
     final project = release.project;
-
-    return run([
+    final args = [
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
       'finalize',
       release.name,
-    ]);
+    ];
+
+    if (authToken != null) args.insert(0, '--auth-token=$authToken');
+
+    return run(args);
   }
 
   @override
