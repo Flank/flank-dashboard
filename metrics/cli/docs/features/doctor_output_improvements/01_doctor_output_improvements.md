@@ -146,7 +146,7 @@ A `ValidationConclusion` represents a possible conclusion of the validation proc
 To represent a `ValidationConclusion` to a user, we should know its name, and a visual indicator (e.g., '[+]', '[-]', '[?]', etc.).
 
 #### TargetValidationResult
-A `TargetValidationResult` represents a result of a validation of some `ValidationTarget`.
+A `TargetValidationResult` represents a result of the validation of some `ValidationTarget`.
 
 The `TargetValidationResult` should include the following fields:
 - A `ValidationTarget` used in the validation process;
@@ -186,3 +186,34 @@ After we clarified the general architecture and usage, let's proceed to the deta
 ### Program
 > Detailed solution description to class/method level.
 
+The improvement of the doctor command output involves two main steps to implement:
+1. [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command);
+2. [Refactor the `CI Integrations Validate` command](#refactor-the-ci-integrations-validate-command).
+
+Consider the following subsections that describe each step in details.
+
+#### Update the `Metrics CLI Doctor` command
+
+In this subsection we will review changes needed to improve the `doctor` command output.
+
+##### DoctorCommand
+
+The `DoctorCommand` is the Metrics CLI command that verifies all required 3-rd party tools' versions against the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
+
+In the scope of this feature we need to update the `DoctorCommand` class to be responsible for printing the [`ValidationResult`](#validationresult) using the [`ValidationResultPrinter`](#validationresultprinter).
+
+##### DoctorFactory
+
+The `DoctorFactory` is a factory class used to create a `Doctor` inside the `DoctorCommand`.
+
+##### Doctor
+
+The `Doctor` is a class used to check whether all required third-party CLIs are installed and get their version. This class encapsulates the logic of the `DoctorCommand` and interacts with the 3-rd party CLIs.
+
+We need to update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult` that will be printed by the `DoctorCommand`.
+
+The `ValidationResult` will be composed out of the `TargetValidationResult`s returned by the `.checkVersion()` methods of each 3-rd party Service.
+
+#### Refactor the `CI Integrations Validate` command
+
+Refactor the `validate` command of the [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) tool to use the `validation_output` package from [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core)
