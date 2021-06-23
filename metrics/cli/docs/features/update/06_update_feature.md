@@ -175,7 +175,7 @@ Having considered all the complex points and edge cases, we conclude that the `U
 
 The `Update feature` is a part of the Metrics CLI component and is to be integrated into the CLI. The following diagram demonstrates the `Update feature` integration:
 
-![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_feature_integration_component_diagram.puml)
+![Update feature integration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_feature_integration_component_diagram.puml)
 
 
 # Design
@@ -199,7 +199,7 @@ Finally, we should register the `update command` in the `Metrics CLI` so the use
 
 Let's review the component diagram that shows how the main component interacts with each other:
 
-![Update command component diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_command_components_diagram.puml)
+![Update command component diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_command_components_diagram.puml)
 
 ## User Interface
 >How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -263,7 +263,7 @@ sentry:
 
 _**Note**: The `sentry` configurations are optional. A user can leave a `sentry` field empty (or omit it at all) if there is no need to create a new Sentry release for the updated version._
 
-See the [configuration template](https://github.com/Flank/flank-dashboard/tree/update_feature_design/metrics/cli/docs/features/update/config/configuration_template.yaml) for the details of the fields.
+See the [configuration template](https://github.com/Flank/flank-dashboard/tree/master/metrics/cli/docs/features/update/config/configuration_template.yaml) for the details of the fields.
 
 Let's take a closer look at the structure of the configuration file parsing. The below subsections examine the related classes and their relationships we should implement.
 
@@ -278,7 +278,7 @@ _**Note**: The `SentryConfig` field should be `null` if the `sentry` parameter o
 
 Let's review the detailed structure of the `UpdateConfig` by looking at the following class diagram:
 
-![Update config class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_config_class_diagram.puml)
+![Update config class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_config_class_diagram.puml)
 
 #### UpdateConfigParser
 
@@ -290,7 +290,7 @@ The `UpdateConfigFactory` is a class uses to create the [`UpdateConfig`](#update
 
 The following class diagram demonstrates the structure of the classes required for the `YAML` config parsing process:
 
-![Config YAML parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/config_yaml_parser_class_diagram.puml)
+![Config YAML parser class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/config_yaml_parser_class_diagram.puml)
 
 ### Redeploy Metrics components
 
@@ -312,7 +312,7 @@ The `Updater` class encapsulates the redeployment logic. The `UpdateCommand` use
 To create an `Updater`, the `UpdateCommand` uses the `UpdaterFactory`. This factory provides the `Updater` instance with all the required services and returns the ready-to-use instance to the `Updater`.
 The following class diagram demonstrates how the classes described above interact:
 
-![Updater class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/updater_class_diagram.puml)
+![Updater class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/updater_class_diagram.puml)
 
 The `Updater` performs the following main steps for the redeployment logic:
 
@@ -325,4 +325,4 @@ The `Updater` performs the following main steps for the redeployment logic:
 
 Consider the following sequence diagram that illustrates the interaction between the classes described above in details:
 
-![Update sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_command_sequence_diagram.puml)
+![Update sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/master/metrics/cli/docs/features/update/diagrams/update_command_sequence_diagram.puml)
