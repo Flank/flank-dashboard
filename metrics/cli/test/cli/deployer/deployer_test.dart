@@ -111,13 +111,13 @@ void main() {
       return when(prompter.promptConfirm(DeployStrings.setupSentry));
     }
 
-    PostExpectation<SentryRelease> whenPromptSentryRelease() {
+    PostExpectation<SentryRelease> whenGetSentryRelease() {
       whenPromptToSetupSentry().thenReturn(true);
 
       return when(sentryService.getSentryRelease());
     }
 
-    PostExpectation<Future<void>> whenCreateSentryRelease() {
+    PostExpectation<Future<void>> whenCreateRelease() {
       whenPromptToSetupSentry().thenReturn(true);
 
       return when(sentryService.createRelease(any, any));
@@ -1704,7 +1704,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1720,7 +1720,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1819,7 +1819,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1831,11 +1831,11 @@ void main() {
     );
 
     test(
-      ".deploy() prompts the Sentry release",
+      ".deploy() gets the new instance of the Sentry release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1844,10 +1844,10 @@ void main() {
     );
 
     test(
-      ".deploy() informs the user about the failed deployment if Sentry service throws during the release prompting",
+      ".deploy() informs the user about the failed deployment if Sentry service throws during the Sentry release getting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenThrow(stateError);
+        whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1859,10 +1859,10 @@ void main() {
     );
 
     test(
-      ".deploy() suggests deleting the GCloud project if Sentry service throws during the release prompting",
+      ".deploy() suggests deleting the GCloud project if Sentry service throws during the Sentry release getting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenThrow(stateError);
+        whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1874,10 +1874,10 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the GCloud project if Sentry service throws during the release prompting and the user agrees to delete the project",
+      ".deploy() deletes the GCloud project if Sentry service throws during the Sentry release getting and the user agrees to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenThrow(stateError);
+        whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
         await deployer.deploy();
@@ -1887,10 +1887,10 @@ void main() {
     );
 
     test(
-      ".deploy() does not delete the GCloud project if Sentry service throws during the release prompting and the user does not agree to delete the project",
+      ".deploy() does not delete the GCloud project if Sentry service throws during the Sentry release getting and the user does not agree to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenThrow(stateError);
+        whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1900,10 +1900,10 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the temporary directory if Sentry service throws during the release prompting",
+      ".deploy() deletes the temporary directory if Sentry service throws during the Sentry release getting",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenThrow(stateError);
+        whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1913,10 +1913,10 @@ void main() {
     );
 
     test(
-      ".deploy() prompts the Sentry release before creating a new one",
+      ".deploy() gets the a new instance of the Sentry release before creating a new one",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1932,7 +1932,7 @@ void main() {
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -1944,8 +1944,8 @@ void main() {
       ".deploy() informs the user about the failed deployment if Sentry service throws during the release creation",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
-        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenGetSentryRelease().thenReturn(sentryRelease);
+        whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1960,7 +1960,7 @@ void main() {
       ".deploy() suggests deleting the GCloud project if Sentry service throws during the release creation",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -1975,7 +1975,7 @@ void main() {
       ".deploy() deletes the GCloud project if Sentry service throws during the release creation and the user agrees to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(true);
 
         await deployer.deploy();
@@ -1988,7 +1988,7 @@ void main() {
       ".deploy() does not delete the GCloud project if Sentry service throws during the release creation and the user does not agree to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -2001,7 +2001,7 @@ void main() {
       ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenCreateSentryRelease().thenAnswer((_) => Future.error(stateError));
+        whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
@@ -2014,7 +2014,7 @@ void main() {
       ".deploy() requests the Sentry DSN of the created project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
 
@@ -2026,7 +2026,7 @@ void main() {
       ".deploy() informs the user about the failed deployment if prompter throws during requesting the Sentry DSN",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -2042,7 +2042,7 @@ void main() {
       ".deploy() suggests deleting the GCloud project if prompter throws during requesting the Sentry DSN",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -2058,7 +2058,7 @@ void main() {
       ".deploy() deletes the GCloud project if prompter throws during requesting the Sentry DSN and the user agrees to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -2072,7 +2072,7 @@ void main() {
       ".deploy() does not delete the GCloud project if prompter throws during requesting the Sentry DSN and the user does not agree to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -2086,7 +2086,7 @@ void main() {
       ".deploy() deletes the temporary directory if prompter throws during requesting the Sentry DSN",
       () async {
         whenDirectoryExist().thenReturn(true);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -2189,7 +2189,7 @@ void main() {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
-        whenPromptSentryRelease().thenReturn(sentryRelease);
+        whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(any)).thenReturn(file);
 

@@ -26,77 +26,101 @@ class FirebaseCli extends Cli {
 
   /// Sets the project with the [projectId] identifier as the default one
   /// for the Firebase project in the [workingDirectory].
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> setFirebaseProject(
     String projectId,
     String workingDirectory, [
     String authToken,
   ]) {
-    final parameters = ['use', projectId];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'use',
+      projectId,
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Clears the Firebase [target] in the given [workingDirectory].
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> clearTarget(
     String target,
     String workingDirectory, [
     String authToken,
   ]) {
-    final parameters = ['target:clear', 'hosting', target];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'target:clear',
+      'hosting',
+      target,
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Associates the Firebase [target] with the given [hostingName]
   /// in the given [workingDirectory].
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> applyTarget(
     String hostingName,
     String target,
     String workingDirectory, [
     String authToken,
   ]) {
-    final parameters = ['target:apply', 'hosting', target, hostingName];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'target:apply',
+      'hosting',
+      target,
+      hostingName,
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Deploys a project's [target] from the given [workingDirectory]
   /// to the Firebase hosting.
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> deployHosting(
     String target,
     String workingDirectory, [
     String authToken,
   ]) {
-    final parameters = ['deploy', '--only', 'hosting:$target'];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'deploy',
+      '--only',
+      'hosting:$target',
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> deployFirestore(String workingDirectory, [String authToken]) {
-    final parameters = ['deploy', '--only', 'firestore'];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'deploy',
+      '--only',
+      'firestore',
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Deploys functions from the given [workingDirectory] to the Firebase.
+  ///
+  /// The [authToken] is an optional parameter for direct
+  /// Firebase authentication.
   Future<void> deployFunctions(String workingDirectory, [String authToken]) {
-    final parameters = ['deploy', '--only', 'functions'];
-
-    if (authToken != null) parameters.add('--token=$authToken');
-
-    return run(parameters, workingDirectory: workingDirectory);
+    return run([
+      'deploy',
+      '--only',
+      'functions',
+      if (authToken != null) '--token=$authToken',
+    ], workingDirectory: workingDirectory);
   }
 
   @override

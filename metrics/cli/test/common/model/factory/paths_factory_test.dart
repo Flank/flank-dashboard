@@ -6,25 +6,25 @@ import 'package:cli/common/model/factory/paths_factory.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("DeployPathsFactory", () {
+  group("PathsFactory", () {
     const rootPath = 'rootPath';
-    final deployPathsFactory = PathsFactory();
+    final pathsFactory = PathsFactory();
 
     test(
-      ".create() successfully creates a DeployPaths instance",
+      ".create() successfully creates a Paths instance",
       () {
-        final deployPaths = deployPathsFactory.create(rootPath);
+        final paths = pathsFactory.create(rootPath);
 
-        expect(deployPaths, isA<Paths>());
+        expect(paths, isA<Paths>());
       },
     );
 
     test(
-      ".create() creates a DeployPaths instance with the given root path",
+      ".create() creates a Paths instance with the given root path",
       () {
-        final deployPaths = deployPathsFactory.create(rootPath);
+        final paths = pathsFactory.create(rootPath);
 
-        expect(deployPaths.rootPath, equals(rootPath));
+        expect(paths.rootPath, equals(rootPath));
       },
     );
   });

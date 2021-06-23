@@ -14,6 +14,8 @@ abstract class SentryService extends InfoService {
 
   /// Creates a new Sentry release with associated [sourceMaps]
   /// using the [release].
+  ///
+  /// The [authToken] is an optional parameter for direct Sentry authentication.
   Future<void> createRelease(
     SentryRelease release,
     List<SourceMap> sourceMaps, [
