@@ -1,0 +1,204 @@
+@startuml updater_class_diagram
+
+package services {
+    package firebase {
+        interface FirebaseService {
+            + login(): Future<void>
+            + createWebApp(String projectId): Future<void>
+            + deployHosting(String projectId, String target, String appPath, [String authToken]): Future<void>
+            + deployFirebase(String projectId, String firebasePath, [String authToken]): Future<void>
+            + upgradeBillingPlan(String projectId): FutureOr<void>
+            + initializeFirestoreData(String projectId): FutureOr<void>
+            + enableAnalytics(String projectId): FutureOr<void>
+            + configureAuthProviders(String projectId): FutureOr<String>
+            + acceptTermsOfService(): FutureOr<void>
+        }
+  }
+
+    package flutter {
+        interface FlutterService  {
+            + build(String appPath): Future<void>
+        }
+    }
+
+    package  git {
+        interface GitService {
+            + checkout(String repoUrl, String targetDirectory): Future<void>
+        }
+    }
+
+    package  npm {
+        interface NpmService {
+            + installDependencies(String path): Future<void>
+        }
+    }
+
+    package sentry {
+        interface SentryService {
+            + login(): Future<void>
+            + createRelease(SentryRelease release, List<SourceMap> sourceMaps, [String authToken]): Future<void>
+            + getRelease(): SentryRelease
+            + getProjectDsn(SentryProject project): String
+        }
+    }
+}
+
+package common {
+    package model as common.model {
+        package factory as model.factory {
+            class ServicesFactory {
+                + create(): Services
+            }
+
+            class PathsFactory {
+                + create(String rootPath): Paths
+            }
+        }
+
+        class Services {
+            + flutterService: FlutterService
+            + gcloudService: GCloudService
+            + npmService: NpmService
+            + gitService: GitService
+            + firebaseService: FirebaseService
+            + sentryService: SentryService
+        }
+
+        class Paths {
+            + rootPath: String
+            + webAppPath: String
+            + webAppBuildPath: String
+            + firebasePath: String
+            + firebaseFunctionsPath: String
+            + metricsConfigPath: String
+        }
+
+        class WebMetricsConfig {
+            + {static} googleSignInClientIdName: String
+            + {static} sentryDsnName: String
+            + {static} sentryEnvironmentName: String
+            + {static} sentryReleaseName: String
+            + sentryWebConfig: SentryWebConfig
+            + toMap(): Map<String, String>
+        }
+
+        class SentryWebConfig {
+            + dsn: String
+            + environment: String
+            + release: String
+        }
+    }
+}
+
+package core.domain.entities {
+    interface MetricsConfig {
+        + googleSignInClientId: String
+        + sentryDsn: String
+        + sentryEnvironment: String
+        + sentryRelease: String
+    }
+}
+
+package cli {
+    package command {
+        class UpdateCommand {
+            + name: String
+            + description: String
+            + updaterFactory: UpdaterFactory
+            + run(): Future<void>
+        }
+    }
+
+    package updater {
+        package constants {
+            class UpdateConstants {
+                + {static} repoURL: String
+                + {static} firebaseTarget: String
+                + {static} sentryEnvironment: String
+                + {static} tempDirectoryPrefix: String
+            }
+        }
+
+        package factory {
+            class UpdaterFactory {
+                - _servicesFactory: ServicesFactory
+                + create(): Updater
+            }
+        }
+
+        package config as updater.config {
+            package factory as updater.factory {
+                class UpdateConfigFactory {
+                    - _fileHelper: FileHelper
+                    - _configParser: UpdateConfigParser
+                    + create(String configPath): UpdateConfig
+                }
+            }
+
+            package model as  updater.model {
+                class UpdateConfig {
+                    + firebaseConfig: FirebaseConfig
+                    + sentryConfig: SentryConfig
+                    + {static} fromJson(Map<String,dynamic> json): UpdateConfig
+                }
+            }
+
+            package parser {
+                class UpdateConfigParser {
+                    - {static} _parser: YamlMapParser
+                    + parse(String configYaml): UpdateConfig
+                }
+            }
+        }
+
+
+
+        class Updater {
+            - _flutterService: FlutterService
+            - _npmService: NpmService
+            - _gitService: GitService
+            - _firebaseService: FirebaseService
+            - _sentryService: SentryService
+            - _fileHelper: FileHelper
+            - _deployPathsFactory: PathsFactory
+            + update(String configPath): Future<void>
+        }
+    }
+}
+
+package util.file {
+    class FileHelper {
+        + getFile(String path): File
+        + createTempDirectory(Directory directory, String prefix): Directory
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment): void
+    }
+}
+
+UpdateCommand --> Updater: uses
+UpdateCommand --> UpdaterFactory: uses
+UpdateCommand --> UpdateConfigFactory: uses
+
+Updater --> services: uses
+Updater -down---> FileHelper: uses
+Updater --> UpdateConstants: uses
+Updater -up-> common.model: uses
+
+UpdateConfigParser --> UpdateConfig: uses
+UpdateConfigFactory --> UpdateConfigParser: uses
+UpdateConfigFactory --> UpdateConfig: uses
+
+UpdaterFactory -right-> ServicesFactory: uses
+UpdaterFactory -right> Updater: creates
+
+Services -down--> services: uses
+ServicesFactory --> Services: creates
+PathsFactory --> Paths: creates
+WebMetricsConfig -left> SentryWebConfig: uses
+WebMetricsConfig .up.|> MetricsConfig
+
+UpdaterFactory -[hidden]down-> UpdateConstants
+SentryService -[hidden]down-> FirebaseService
+FlutterService -[hidden]down-> NpmService
+NpmService -[hidden]down-> GitService
+
+@enduml

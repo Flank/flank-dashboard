@@ -165,13 +165,11 @@ package cli {
     }
 }
 
-package util {
-    package file {
-        class FileHelper {
-            + getFile(String path) : File
-            + createTempDirectory(Directory directory, String prefix) : Directory
-            + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : void
-        }
+package util.file {
+    class FileHelper {
+        + getFile(String path) : File
+        + createTempDirectory(Directory directory, String prefix) : Directory
+        + replaceEnvironmentVariables(File file, Map<String, dynamic> environment) : void
     }
 }
 

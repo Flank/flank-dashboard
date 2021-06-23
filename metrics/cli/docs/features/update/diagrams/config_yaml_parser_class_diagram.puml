@@ -1,0 +1,32 @@
+@startuml config_yaml_parser_class_diagram
+
+package cli.updater.config {
+    package factory {
+        class UpdateConfigFactory {
+            - _fileHelper: FileHelper
+            - _configParser: UpdateConfigParser
+            + create(String configPath): UpdateConfig
+        }
+
+        package model {
+            class UpdateConfig {
+                + firebaseConfig: FirebaseConfig
+                + sentryConfig: SentryConfig
+                + {static} fromJson(Map<String,dynamic> json): UpdateConfig
+            }
+        }
+
+        package parser {
+            class UpdateConfigParser {
+                - {static} _parser: YamlMapParser
+                + parse(String configYaml): UpdateConfig
+            }
+        }
+    }
+}
+
+UpdateConfigParser --> UpdateConfig: uses
+UpdateConfigFactory --> UpdateConfigParser: uses
+UpdateConfigFactory --> UpdateConfig: creates
+
+@enduml
