@@ -28,7 +28,29 @@ activate NavigationNotifier
 
 NavigationNotifier --> NavigationNotifier: handles routeConfiguration
 NavigationNotifier --> NavigationNotifier: adds CoolPage to `pages` stack
+
+NavigationNotifier -> PageParametersFactory: create(routeConfiguration)
+activate PageParametersFactory
+
+PageParametersFactory --> NavigationNotifier: pageParameters
+deactivate PageParametersFactory
+
+NavigationNotifier -> PageParametersProxy: pageParameters
+
+activate PageParametersProxy
+
+PageParametersProxy -> CoolPageNotifier: handlePageParameters(pageParameters)
+deactivate PageParametersProxy
+activate CoolPageNotifier
+
+CoolPageNotifier --> CoolPageNotifier: applies page parameters
+
+CoolPageNotifier -> CoolPage: notifyListeners()
+deactivate CoolPageNotifier
+activate CoolPage
+
 NavigationNotifier --> MetricsRouterDelegate: notifyListeners()
+deactivate NavigationNotifier
 
 MetricsRouterDelegate --> MetricsRouterDelegate: builds new Navigator with \n updated `pages` stack
 MetricsRouterDelegate --> MetricsRouteInformationParser: reports new routeConfiguration
@@ -41,26 +63,6 @@ Browser --> Bob: sees the URL
 
 MetricsRouterDelegate --> Bob: displays CoolPage
 deactivate MetricsRouterDelegate
-
-NavigationNotifier -> PageParametersFactory: create(routeConfiguration)
-activate PageParametersFactory
-
-PageParametersFactory --> NavigationNotifier: pageParameters
-deactivate PageParametersFactory
-
-NavigationNotifier -> PageParametersProxy: pageParameters
-deactivate NavigationNotifier
-activate PageParametersProxy
-
-PageParametersProxy -> CoolPageNotifier: handlePageParameters(pageParameters)
-deactivate PageParametersProxy
-activate CoolPageNotifier
-
-CoolPageNotifier --> CoolPageNotifier: applies page parameters
-
-CoolPageNotifier -> CoolPage: notifyListeners()
-deactivate CoolPageNotifier
-activate CoolPage
 
 CoolPage --> Bob: displays updated data
 deactivate CoolPage
