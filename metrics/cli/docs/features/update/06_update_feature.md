@@ -248,7 +248,18 @@ The update feature implies two main actions we'd like to review in the below sub
 
 The YAML configuration file for the update feature has the following structure:
 
-![Update config diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_config_yaml_diagram.puml)
+```yaml
+firebase:
+  auth_token: firebase-auth-token
+  project_id: metrics-project-id
+  google_sign_in_client_id: google-sign-in-client-id
+sentry:
+  auth_token: sentry-auth-token
+  organization_slug: my-organization-slug
+  project_slug: my-project-slug
+  project_dsn: my-project-dsn
+  release_name: my-release-name
+```
 
 _**Note**: The `sentry` configurations are optional. A user can leave a `sentry` field empty (or omit it at all) if there is no need to create a new Sentry release for the updated version._
 
@@ -289,15 +300,10 @@ The following section describes the classes required for the redeploy process.
 
 The `UpdateCommand` is the `Metrics CLI` command that is responsible for the redeploying the last version of the Metrics Web Application to the Firebase using the data from the [`UpdateConfig`](#updateconfig).
 
-The `UpdateCommand` algorithm performs the following steps:
+The `UpdateCommand` flow performs the following main steps:
 
 1. Parse the YAML config.
-2. Checkout the Metrics Web Application source code.
-3. Build the Metrics Web Application.
-4. Configure Sentry using data from the config.
-5. Redeploy the Firebase components like Firestore rules and Firebase Functions using data from the config.
-6. Redeploy the Metrics Web Application to the Firebase Hosting using data from the config.
-7. Cleanup the created directories, etc.
+2. Uses `Updater` to perform the redeployment logic.
 
 #### Updater
 
@@ -308,6 +314,15 @@ The following class diagram demonstrates how the classes described above interac
 
 ![Updater class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/updater_class_diagram.puml)
 
-Consider the following sequence diagram that illustrates the whole process of the `UpdateCommand` and the interaction with the classes described above:
+The `Updater` performs the following main steps for the redeployment logic:
+
+1. Checkout the Metrics Web Application source code.
+2. Build the Metrics Web Application.
+3. Configure Sentry using data from the config.
+4. Redeploy the Firebase components like Firestore rules and Firebase Functions using data from the config.
+5. Redeploy the Metrics Web Application to the Firebase Hosting using data from the config.
+6. Cleanup the created directories, etc.
+
+Consider the following sequence diagram that illustrates the interaction between the classes described above in details:
 
 ![Update sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/Flank/flank-dashboard/raw/update_feature_design/metrics/cli/docs/features/update/diagrams/update_command_sequence_diagram.puml)

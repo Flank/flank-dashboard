@@ -1,8 +1,6 @@
 # A template for Metrics update config.
-# Consider the following links to familiarize yourself with Sentry:
-# - https://docs.sentry.io/product/
 
-# The `firebase` key defines that the following source config stands for the Metrics components in the Firebase.
+# The `firebase` key defines Firebase deployment configuration.
 firebase:
 
   # A Firebase Access Token that is used to authenticate CLI requests.
@@ -22,9 +20,6 @@ firebase:
 
   # An OAuth 2.0 client ID for your app.
   #
-  # The tool uses this slug to perform HTTP calls in the scope of the defined organization.
-  # The defined pipeline must belong to the organization with the defined slug.
-  #
   # You can obtain the google sign-in client id from the authentication page on Firebase Console.
   # Browse to Firebase Console(https://console.firebase.google.com/) and choose the necessary project.
   # Then open a authentication page. Move to the Sign-in method tab.
@@ -32,12 +27,17 @@ firebase:
   # The Web client ID field is exactly what you need.
   google_sign_in_client_id: ...
 
-# The `sentry` key defines that the following source config stands for the Sentry configuration.
+# The `sentry` key defines the Sentry configuration.
+#
+# This key is optional. You can leave a `sentry` key empty (or omit it at all) if there is no need
+# to create a new Sentry release for the updated version of the Metrics Web application.
+#
+# Consider the following link to familiarize yourself with the Sentry: https://docs.sentry.io/product/.
 sentry:
 
-  # A Sentry Access Token that is used to authenticate CLI requests.
+  # A Sentry Authentication Token that is used to authenticate CLI requests.
   #
-  # You can find an access token on the Auth Tokens page in Account Settings on Sentry.
+  # You can find an auth token on the Auth Tokens page in Account Settings on Sentry.
   # The following link leads to the required page: https://sentry.io/settings/account/api/auth-tokens/.
   auth_token: ...
 
