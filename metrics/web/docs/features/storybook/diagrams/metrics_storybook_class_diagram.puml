@@ -2,9 +2,14 @@
 
 package widgets/theme {
     class ThemeNotifier {
+        - _selectedTheme : ThemeType
         + isDark : bool
+        + selectedTheme : ThemeType
 
+        + changeTheme(ThemeType themeType) : void
         + toggleTheme() : void
+        + setTheme(Brightness brightness) : void
+        - _isBrightnessDark(Brightness brightness) : bool
     }
 }
 
