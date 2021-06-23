@@ -1,5 +1,13 @@
 @startuml metrics_storybook_class_diagram
 
+package widgets/theme {
+    class ThemeNotifier {
+        + isDark : bool
+
+        + toggleTheme() : void
+    }
+}
+
 package storybook {
     package state {
         class ChaptersNotifier {
@@ -110,6 +118,7 @@ Storybook -up-> Sidebar : creates
 Storybook -up-> Preview : creates
 InjectionContainer -up-> StoriesNotifier : creates
 InjectionContainer -up-> ChaptersNotifier : creates
+InjectionContainer -up-> ThemeNotifier : creates
 Storybook -down-> Story : uses
 Story -right-> Chapter : uses
 Chapter -right-> ChapterOptions : creates

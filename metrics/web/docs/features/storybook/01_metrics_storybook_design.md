@@ -452,7 +452,7 @@ For example, `lib/stories/inputs`.
 
 2. Create a new file, named `inputs_story` in the `inputs` folder, that will represent a new story.
 
-3. In the `inputs_story.dart` file you should create a class, let's say we named it `InputsStory` that should implement the base `Story` interface. Give your story a name(it is the name of the group in the sidebar in the storybook UI).
+3. In the `inputs_story.dart` file you should create a class, let's say we named it `InputsStory` that should implement the base `Story` interface. Give your story a name (it is the name of the group in the sidebar in the storybook UI).
 
 ```dart
 class InputsStory implements Story {
