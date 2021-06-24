@@ -1,0 +1,66 @@
+@startuml doctor_command_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant MetricsCliRunner
+participant DoctorCommand
+participant DoctorFactory
+participant Doctor
+participant CoolService
+participant OtherCoolService
+participant ValidationResultBuilder
+participant ValidationResultPrinter
+
+Bob -> MetricsCliRunner : run ""doctor"" command
+activate MetricsCliRunner
+
+MetricsCliRunner -> DoctorCommand : run()
+activate DoctorCommand
+
+DoctorCommand -> DoctorFactory : create()
+activate DoctorFactory
+
+DoctorFactory --> DoctorCommand : Doctor instance
+deactivate DoctorFactory
+
+DoctorCommand -> Doctor : checkVersions()
+activate Doctor
+
+Doctor -> CoolService : checkVersion()
+activate CoolService
+
+CoolService --> Doctor : TargetValidationResult instance
+deactivate CoolService
+
+Doctor -> ValidationResultBuilder : .setResult()
+activate ValidationResultBuilder
+
+Doctor -> OtherCoolService : checkVersion()
+activate OtherCoolService
+OtherCoolService --> Doctor : TargetValidationResult instance
+deactivate OtherCoolService
+
+Doctor -> ValidationResultBuilder : .setResult()
+Doctor -> ValidationResultBuilder : .build()
+ValidationResultBuilder --> Doctor :  ValidationResult instance
+deactivate ValidationResultBuilder
+
+Doctor -> ValidationResultPrinter : .print(ValidationResult)
+activate ValidationResultPrinter
+
+ValidationResultPrinter --> Bob : prints doctor command output
+deactivate ValidationResultPrinter
+
+Doctor --> DoctorCommand -- : doctor finished
+deactivate Doctor
+
+DoctorCommand --> MetricsCliRunner -- : command finished
+deactivate DoctorCommand
+
+MetricsCliRunner --> Bob -- : terminate
+deactivate MetricsCliRunner
+
+@enduml

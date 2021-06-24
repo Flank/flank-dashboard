@@ -222,15 +222,13 @@ To provide the extended information to the user (e.g., to compare the current se
 
 ##### Making things work
 
-Consider the following steps needed to be able to improve the doctor command output:
-1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
-
 Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output. Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement:
 
 - Class diagram:
-![Doctor output improvements](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
+![Doctor output improvements class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
 
-- Sequence diagram: 
+- Sequence diagram:
+![Doctor output improvements sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_sequence_diagram.puml)
 
 #### Refactor the `CI Integrations Validate` command
 
