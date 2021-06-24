@@ -136,9 +136,9 @@ Since the validation output is similar for the [`CI Integrations Config Validato
 Consider the next sections describing the main classes of the `validation_output` package.
 
 #### ValidationTarget
-A `ValidationTarget` is an entity which value used in the validation process (e.g., it's a version of a CLI package). 
+A `ValidationTarget` is an entity which value is used in the validation process (e.g., it's a version of a CLI package). 
 
-To represent a `ValidationTarget` in an output to a user, we should know its name and a description.
+To represent a `ValidationTarget` in output to the user, we should know its name and a description.
 
 #### ValidationConclusion
 A `ValidationConclusion` represents a possible conclusion of the validation process (e.g., 'valid', 'invalid', 'unknown', 'not installed', etc.).
@@ -173,7 +173,7 @@ Consider the following class diagram that describes the `validation_output` pack
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-The usage of the `doctor` command won't change for the end user. To run the `doctor` command use the following command in the directory containing the Metrics CLI tool:
+The usage of the `doctor` command won't change for the user. To run the `doctor` command use the following command in the directory containing the Metrics CLI tool:
 
 ```bash 
 ./metrics doctor
@@ -190,7 +190,7 @@ The improvement of the doctor command output involves two main steps to implemen
 1. [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command);
 2. [Refactor the `CI Integrations Validate` command](#refactor-the-ci-integrations-validate-command).
 
-Consider the following subsections that describe each step in more details.
+Consider the following subsections that describe each step in more detail.
 
 #### Update the `Metrics CLI Doctor` command
 
@@ -200,7 +200,7 @@ This subsection describes the changes needed to implement in the `Metrics CLI` t
 
 The `DoctorCommand` is the Metrics CLI command that verifies all required 3-rd party tools' versions against the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
 
-In the scope of this feature we need to update the `DoctorCommand` class to be responsible for printing the [`ValidationResult`](#validationresult) using the [`ValidationResultPrinter`](#validationresultprinter).
+In the scope of this feature, we need to update the `DoctorCommand` class to be responsible for printing the [`ValidationResult`](#validationresult) using the [`ValidationResultPrinter`](#validationresultprinter).
 
 ##### DoctorFactory
 
@@ -216,11 +216,19 @@ The `ValidationResult` contains the `TargetValidationResult`s returned by the `.
 
 ##### InfoService
 
-The `InfoService` is an interface that provides common methods for getting the information about the service.
+The `InfoService` is an interface that provides common methods for getting  information about the service.
 
-To provide the extended information to the user (e.g., to compare the current service's version on user machine against the recommended version) we need to update this interface with the `.getRecommendedVersion()` method.
+To provide the extended information to the user (e.g., to compare the current service's version on the user's machine against the recommended version) we need to update this interface with the `.getRecommendedVersion()` method.
 
 ##### Making things work
+
+Consider the following steps needed to be able to improve the doctor command output:
+1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+2. Update the `InfoService` interface, and the corresponding interfaces for all services.
+3. Update the `.version()` methods of each service cli to return the `ProcessResult`.
+3. Update the `.checkVersion()` methods of each service adapter to return the `TargetValidationResult`.
+4. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
+5. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
 Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output. Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement:
 
