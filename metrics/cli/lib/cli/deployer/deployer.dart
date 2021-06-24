@@ -7,7 +7,7 @@ import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
 import 'package:cli/common/model/factory/paths_factory.dart';
 import 'package:cli/common/model/paths.dart';
-import 'package:cli/common/model/sentry_config.dart';
+import 'package:cli/common/model/sentry_web_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/prompter/prompter.dart';
@@ -124,7 +124,7 @@ class Deployer {
 
       final metricsConfig = WebMetricsConfig(
         googleSignInClientId: googleClientId,
-        sentryConfig: sentryConfig,
+        sentryWebConfig: sentryConfig,
       );
 
       _applyMetricsConfig(metricsConfig, deployPaths.metricsConfigPath);
@@ -172,7 +172,7 @@ class Deployer {
 
   /// Sets up a Sentry for the application under deployment within
   /// the given [webPath] and the [buildWebPath].
-  Future<SentryConfig> _setupSentry(String webPath, String buildWebPath) async {
+  Future<SentryWebConfig> _setupSentry(String webPath, String buildWebPath) async {
     final shouldSetupSentry = _prompter.promptConfirm(
       DeployStrings.setupSentry,
     );
@@ -194,7 +194,7 @@ class Deployer {
 
     await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
 
-    return SentryConfig(
+    return SentryWebConfig(
       release: release.name,
       dsn: dsn,
       environment: DeployConstants.sentryEnvironment,

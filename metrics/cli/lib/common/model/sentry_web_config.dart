@@ -4,7 +4,7 @@
 import 'package:equatable/equatable.dart';
 
 /// A class that represents a Sentry configuration.
-class SentryConfig extends Equatable {
+class SentryWebConfig extends Equatable {
   /// A Sentry project DSN.
   final String dsn;
 
@@ -17,6 +17,6 @@ class SentryConfig extends Equatable {
   @override
   List<Object> get props => [dsn, environment, release];
 
-  /// Creates a new instance of the [SentryConfig] with the given parameters.
-  const SentryConfig({this.dsn, this.environment, this.release});
+  /// Creates a new instance of the [SentryWebConfig] with the given parameters.
+  const SentryWebConfig({this.dsn, this.environment, this.release});
 }

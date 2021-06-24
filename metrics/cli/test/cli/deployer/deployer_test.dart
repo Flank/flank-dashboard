@@ -9,7 +9,7 @@ import 'package:cli/cli/deployer/deployer.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
 import 'package:cli/common/model/paths.dart';
 import 'package:cli/common/model/factory/paths_factory.dart';
-import 'package:cli/common/model/sentry_config.dart';
+import 'package:cli/common/model/sentry_web_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
@@ -2193,14 +2193,14 @@ void main() {
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(any)).thenReturn(file);
 
-        final sentryConfig = SentryConfig(
+        final sentryConfig = SentryWebConfig(
           release: sentryRelease.name,
           dsn: sentryDsn,
           environment: DeployConstants.sentryEnvironment,
         );
         final config = WebMetricsConfig(
           googleSignInClientId: clientId,
-          sentryConfig: sentryConfig,
+          sentryWebConfig: sentryConfig,
         );
 
         await deployer.deploy();
