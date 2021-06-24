@@ -163,12 +163,12 @@ A `ValidationResultBuilder` is a class that simplifies the creation of the `Vali
 
 This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step.
 
+#### ValidationResultPrinter
+A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
+
 Consider the following class diagram that describes the `validation_output` package structure:
 
 ![Validation output diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_output_class_diagram.puml)
-
-#### ValidationResultPrinter
-A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -190,11 +190,11 @@ The improvement of the doctor command output involves two main steps to implemen
 1. [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command);
 2. [Refactor the `CI Integrations Validate` command](#refactor-the-ci-integrations-validate-command).
 
-Consider the following subsections that describe each step in details.
+Consider the following subsections that describe each step in more details.
 
 #### Update the `Metrics CLI Doctor` command
 
-In this subsection we will review changes needed to improve the `doctor` command output.
+This subsection describes the changes needed to implement in the `Metrics CLI` tool to improve the `doctor` command output.
 
 ##### DoctorCommand
 
@@ -208,11 +208,29 @@ The `DoctorFactory` is a factory class used to create a `Doctor` inside the `Doc
 
 ##### Doctor
 
-The `Doctor` is a class used to check whether all required third-party CLIs are installed and get their version. This class encapsulates the logic of the `DoctorCommand` and interacts with the 3-rd party CLIs.
+The `Doctor` is a class used to check whether all required third-party CLIs are installed and get their versions. This class encapsulates the logic of the `DoctorCommand` and interacts with the 3-rd party CLIs.
 
 We need to update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult` that will be printed by the `DoctorCommand`.
 
-The `ValidationResult` will be composed out of the `TargetValidationResult`s returned by the `.checkVersion()` methods of each 3-rd party Service.
+The `ValidationResult` contains the `TargetValidationResult`s returned by the `.checkVersion()` methods of each 3-rd party service.
+
+##### InfoService
+
+The `InfoService` is an interface that provides common methods for getting the information about the service.
+
+To provide the extended information to the user (e.g., to compare the current service's version on user machine against the recommended version) we need to update this interface with the `.getRecommendedVersion()` method.
+
+##### Making things work
+
+Consider the following steps needed to be able to improve the doctor command output:
+1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+
+Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output. Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement:
+
+- Class diagram:
+![Doctor output improvements](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
+
+- Sequence diagram: 
 
 #### Refactor the `CI Integrations Validate` command
 
