@@ -173,7 +173,7 @@ Consider the following class diagram that describes the `validation_output` pack
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-The usage of the `doctor` command won't change for the user. To run the `doctor` command use the following command in the directory containing the Metrics CLI tool:
+The usage of the `doctor` command will not change for the user. To run the `doctor` command, use the following command in the directory containing the Metrics CLI tool:
 
 ```bash 
 ./metrics doctor
@@ -244,4 +244,25 @@ As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Fl
 
 This section describes the modifications that should be made to the `CI Integrations` tool in order to reuse the common code from the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) package.
 
+Assume a `CoolIntegration` as a source party for which we want to provide the config validation. Consider the following subsections that describe the changes required to validate the config for the `CoolIntegration`.
 
+##### ConfigValidationConclusion
+
+The `ConfigValidationConclusion` (previous `FieldValidationConclusion`) is a class that represents a validation conclusion for a specific config field.
+
+In the scope of this feature, the `ConfigValidationConclusion` should accumulate the `ValidationConclusion`s that are necessary for the config validation.
+
+##### CoolIntegrationSourceValidationTarget
+
+The `CoolIntegrationSourceValidationTarget` (previous `CoolIntegrationSourceConfigField`) is a class that represents the config fields for the specific `CoolIntegration`.
+
+We need to update this class to contain the `ValidationTarget`s (previous `ConfigField`s) of the given `CoolIntegration`.
+
+##### CoolIntegrationSourceValidationDelegate
+
+The `CoolIntegrationSourceValidationDelegate` is a class that validates the specific fields with network calls. The methods of `CoolIntegrationSourceValidationDelegate` return the `TargetValidationResult`s which are then used to compose the `ValidationResult`.
+
+We need to update this class to utilize the `TargetValidationResult`s
+instead of the outdated `FieldValidationResult`s.
+
+##### CoolIntegrationSourceValidator
