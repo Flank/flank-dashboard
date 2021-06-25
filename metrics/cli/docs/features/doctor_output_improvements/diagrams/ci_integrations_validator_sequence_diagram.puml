@@ -1,0 +1,82 @@
+@startuml config_validator_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box CI Integrations #whiteSmoke
+
+participant "CI Integrations"
+participant CiIntegrationsRunner
+participant ValidateCommand
+participant CoolIntegrationValidatorFactory
+participant CoolIntegrationDestinationValidator
+participant CoolIntegrationDestinationValidationDelegate
+participant CoolIntegrationClient
+
+end box
+
+box Metrics Core #whiteSmoke
+
+participant ValidationResultBuilder
+participant ValidationResultPrinter
+
+end box
+
+Bob -> "CI Integrations" : runs ""validate"" command
+activate "CI Integrations"
+
+"CI Integrations" -> CiIntegrationsRunner: run(List<String> arguments)
+deactivate "CI Integrations"
+activate CiIntegrationsRunner
+
+CiIntegrationsRunner -> ValidateCommand: run()
+deactivate CiIntegrationsRunner
+activate ValidateCommand
+
+ValidateCommand -> ValidateCommand : creates source and destination parties
+ValidateCommand -> ValidateCommand : parses source and destination configs
+
+ValidateCommand -> CoolIntegrationValidatorFactory : create()
+activate CoolIntegrationValidatorFactory
+
+CoolIntegrationValidatorFactory -> ValidationResultBuilder : .createForTargets(List<ValidationTarget> targets)
+activate ValidationResultBuilder
+
+ValidationResultBuilder --> CoolIntegrationValidatorFactory : ValidationResultBuilder instance
+
+CoolIntegrationValidatorFactory --> ValidateCommand : ConfigValidator instance
+deactivate CoolIntegrationValidatorFactory
+
+ValidateCommand -> CoolIntegrationDestinationValidator : validate(config)
+activate CoolIntegrationDestinationValidator
+
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAuth(auth)
+activate CoolIntegrationDestinationValidationDelegate
+
+CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : TargetValidationResult
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
+
+CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAnotherField(anotherField)
+deactivate CoolIntegrationClient
+
+CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : TargetValidationResult
+deactivate CoolIntegrationDestinationValidationDelegate
+
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
+CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
+ValidationResultBuilder --> CoolIntegrationDestinationValidator : ValidationResult instance
+deactivate ValidationResultBuilder
+
+CoolIntegrationDestinationValidator --> ValidateCommand : ValidationResult
+deactivate CoolIntegrationDestinationValidator
+
+ValidateCommand -> ValidationResultPrinter : .print(ValidationResult)
+deactivate ValidateCommand
+activate ValidationResultPrinter
+
+ValidationResultPrinter --> Bob : prints ""validate"" command output
+deactivate ValidationResultPrinter
+
+@enduml
