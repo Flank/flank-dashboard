@@ -126,7 +126,7 @@ The following component diagram describes the desired approach:
 
 # Design
 
-Let's review the implementation details in the next subsections.
+The following subsections explain the implementation strategy in more detail.
 
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
@@ -194,7 +194,7 @@ Consider the following subsections that describe each step in more detail.
 
 #### Update the `Metrics CLI Doctor` command
 
-This subsection describes the changes needed to implement in the `Metrics CLI` tool to improve the `doctor` command output.
+This subsection describes the enhancements needed to implement in the `Metrics CLI` tool to improve the `doctor` command output.
 
 ##### DoctorCommand
 
@@ -240,4 +240,8 @@ Assume a `CoolService` as a 3-rd party service for which we want to improve `doc
 
 #### Refactor the `CI Integrations Validate` command
 
-Refactor the `validate` command of the [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) tool to use the `validation_output` package from [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core)
+As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) have a similar logic for the validation process. That's why we want to reuse the code across those tools to make it more DRY.
+
+This section describes the modifications that should be made to the `CI Integrations` tool in order to reuse the common code from the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) package.
+
+

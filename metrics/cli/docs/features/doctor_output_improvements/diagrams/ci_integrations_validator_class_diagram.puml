@@ -1,45 +1,11 @@
-@startuml code_reuse_across_metrics_cli_and_ci_integrations
+@startuml ci_integrations_validator_class_diagram
 
-package cli {
-    package command {
-        class DoctorCommand {
-            + name: String
-            + doctorFactory: DoctorFactory
-
-            + run(): Future<void>
-        }
-    }
-
-    package doctor {
-        package factory as doctor_factory {
-            class DoctorFactory {
-                - _serviceFactory: ServiceFactory
-
-                + create(): Doctor
-            }
-        }
-
-        class Doctor {
-            - _coolService: CoolService
-
-            + checkVersions(): Future<void>
-        }
-    }
-}
-
-package services.cool_service {
-    abstract class CoolService {
-        +
-    }
-}
-
-package validation_output {
+package core.lib.src.features.validation_output {
     package model {
         package builder {
             class ValidationResultBuilder {
                 - _results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
 
-                + forTargets(targets: List<ValidationTarget>): ValidationResultBuilder
                 + setResult(result: TargetValidationResult): void
                 + setEmptyResults(result: TargetValidationResult): void
                 + build(): ValidationResult
@@ -68,16 +34,18 @@ package validation_output {
 
             + copyWith(): TargetValidationResult
         }
+
+        class ValidationResult{
+            + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+        }
     }
 
-    class ValidationResult{
-        + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
-    }
+    package printer {
+        class ValidationResultPrinter{
+            - _sink: StringSink
 
-    class ValidationResultPrinter{
-        + sink: StringSink
-
-        + print(result: ValidationResult): void
+            + print(result: ValidationResult): void
+        }
     }
 }
 
@@ -92,7 +60,7 @@ package ci_integrations {
 
     package source.cool_integration {
         package config.model as cool_integration_config_model {
-            class CoolSourceValidationTarget {
+            class CoolIntegrationSourceValidationTarget {
                 + {static} accessToken: ValidationTarget
                 + {static} organizationSlug: ValidationTarget
                 + {static} pipelineSlug: ValidationTarget
@@ -101,24 +69,24 @@ package ci_integrations {
         }
 
         package validation_delegate {
-            class CoolSourceValidationDelegate {
-                + validateAccessToken(token: String): TargetValidationResult<CoolToken>
-                + validateOrganizationSlug(slug: String): TargetValidationResult<void>
-                + validatePipelineSlug(token: String): TargetValidationResult<void>
+            class CoolIntegrationSourceValidationDelegate {
+                - _client: CoolIntegrationClient
+
+                + validateAccessToken(token: String): Future<TargetValidationResult<CoolToken>>
+                + validateOrganizationSlug(slug: String): Future<TargetValidationResult<void>>
+                + validatePipelineSlug(token: String): Future<TargetValidationResult<void>>
             }
         }
 
         package validator {
-            class CoolSourceValidator {
-                + validationDelegate: CoolSourceValidationDelegate
+            class CoolIntegrationSourceValidator {
+                + validationDelegate: CoolIntegrationSourceValidationDelegate
 
                 + validate(config: CoolConfig): Future<ValidationResult>
             }
         }
     }
 }
-
-
 
 TargetValidationResult --> ValidationTarget : uses
 TargetValidationResult --> ValidationConclusion : uses
@@ -130,21 +98,17 @@ ValidationResultBuilder -up-> ValidationResult : builds
 ValidationResultBuilder --> ValidationTarget : uses
 ValidationResultBuilder -up-> TargetValidationResult : uses
 
-ValidationResultPrinter --> ValidationConclusion : uses
-ValidationResultPrinter --> ValidationTarget : uses
 ValidationResultPrinter --> ValidationResult : prints
 
-DoctorCommand --> DoctorFactory : uses
-DoctorFactory --> Doctor : creates
-Doctor --> CoolService : uses
+CoolIntegrationSourceValidator --> CoolIntegrationSourceValidationDelegate : uses
+CoolIntegrationSourceValidator --> ValidationResult : uses
 
-CoolCliServiceAdapter ..|> CoolService
+CoolIntegrationSourceValidationDelegate --> TargetValidationResult : uses
 
-CoolSourceValidator --> CoolSourceValidationDelegate : uses
-CoolSourceValidator --> ValidationResult : uses
+CoolIntegrationSourceValidationTarget --> ValidationTarget : uses
 
-CoolSourceValidationDelegate --> TargetValidationResult : uses
+ConfigValidationConclusion --> ValidationConclusion : uses
 
-CoolSourceValidationTarget --> ValidationTarget : uses
+CoolIntegrationSourceValidationDelegate -down-> ConfigValidationConclusion : uses
 
 @enduml
