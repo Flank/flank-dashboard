@@ -6,8 +6,7 @@ class Paths {
   /// A path to the root directory.
   final String rootPath;
 
-  /// Creates a new instance of the [Paths] with
-  /// the given [rootPath].
+  /// Creates a new instance of the [Paths] with the given [rootPath].
   ///
   /// Throws an [ArgumentError] if the given [rootPath] is `null`.
   Paths(this.rootPath) {

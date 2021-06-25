@@ -27,7 +27,7 @@ class FirebaseCli extends Cli {
   /// Sets the project with the [projectId] identifier as the default one
   /// for the Firebase project in the [workingDirectory].
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> setFirebaseProject(
     String projectId,
@@ -43,7 +43,7 @@ class FirebaseCli extends Cli {
 
   /// Clears the Firebase [target] in the given [workingDirectory].
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> clearTarget(
     String target,
@@ -61,7 +61,7 @@ class FirebaseCli extends Cli {
   /// Associates the Firebase [target] with the given [hostingName]
   /// in the given [workingDirectory].
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> applyTarget(
     String hostingName,
@@ -81,7 +81,7 @@ class FirebaseCli extends Cli {
   /// Deploys a project's [target] from the given [workingDirectory]
   /// to the Firebase hosting.
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> deployHosting(
     String target,
@@ -99,7 +99,7 @@ class FirebaseCli extends Cli {
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> deployFirestore(String workingDirectory, [String authToken]) {
     return run([
@@ -112,7 +112,7 @@ class FirebaseCli extends Cli {
 
   /// Deploys functions from the given [workingDirectory] to the Firebase.
   ///
-  /// The [authToken] is an optional parameter for direct
+  /// The [authToken] is an optional parameter for the direct
   /// Firebase authentication.
   Future<void> deployFunctions(String workingDirectory, [String authToken]) {
     return run([

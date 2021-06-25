@@ -84,7 +84,7 @@ class Deployer {
     ArgumentError.checkNotNull(_sentryService, 'sentryService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
     ArgumentError.checkNotNull(_prompter, 'prompter');
-    ArgumentError.checkNotNull(_pathsFactory, 'deployPathsFactory');
+    ArgumentError.checkNotNull(_pathsFactory, 'pathsFactory');
   }
 
   /// Deploys the Metrics Web Application.
@@ -94,7 +94,7 @@ class Deployer {
     final projectId = await _gcloudService.createProject();
 
     final tempDirectory = _createTempDirectory();
-    final deployPaths = _pathsFactory.create(tempDirectory.path);
+    final paths = _pathsFactory.create(tempDirectory.path);
 
     bool isDeploymentSuccessful = true;
 
@@ -104,12 +104,12 @@ class Deployer {
       _gcloudService.configureProjectOrganization(projectId);
       await _firebaseService.createWebApp(projectId);
 
-      await _gitService.checkout(DeployConstants.repoURL, deployPaths.rootPath);
+      await _gitService.checkout(DeployConstants.repoURL, paths.rootPath);
       await _installNpmDependencies(
-        deployPaths.firebasePath,
-        deployPaths.firebaseFunctionsPath,
+        paths.firebasePath,
+        paths.firebaseFunctionsPath,
       );
-      await _flutterService.build(deployPaths.webAppPath);
+      await _flutterService.build(paths.webAppPath);
       await _firebaseService.upgradeBillingPlan(projectId);
       await _firebaseService.enableAnalytics(projectId);
       await _firebaseService.initializeFirestoreData(projectId);
@@ -117,21 +117,21 @@ class Deployer {
       final googleClientId = await _firebaseService.configureAuthProviders(
         projectId,
       );
-      final sentryConfig = await _setupSentry(
-        deployPaths.webAppPath,
-        deployPaths.webAppBuildPath,
+      final sentryWebConfig = await _setupSentry(
+        paths.webAppPath,
+        paths.webAppBuildPath,
       );
 
       final metricsConfig = WebMetricsConfig(
         googleSignInClientId: googleClientId,
-        sentryWebConfig: sentryConfig,
+        sentryWebConfig: sentryWebConfig,
       );
 
-      _applyMetricsConfig(metricsConfig, deployPaths.metricsConfigPath);
+      _applyMetricsConfig(metricsConfig, paths.metricsConfigPath);
       await _deployToFirebase(
         projectId,
-        deployPaths.firebasePath,
-        deployPaths.webAppPath,
+        paths.firebasePath,
+        paths.webAppPath,
       );
 
       await _gcloudService.configureOAuthOrigins(projectId);

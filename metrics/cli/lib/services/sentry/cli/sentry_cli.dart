@@ -17,7 +17,8 @@ class SentryCli extends Cli {
 
   /// Creates a Sentry release using the given [release].
   ///
-  /// The [authToken] is an optional parameter for direct Sentry authentication.
+  /// The [authToken] is an optional parameter for the direct
+  /// Sentry authentication.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> createRelease(SentryRelease release, [String authToken]) {
@@ -40,7 +41,8 @@ class SentryCli extends Cli {
   /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.
   ///
-  /// The [authToken] is an optional parameter for direct Sentry authentication.
+  /// The [authToken] is an optional parameter for the direct
+  /// Sentry authentication.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   /// Throws an [ArgumentError] if the given [sourceMap] is `null`.
@@ -77,7 +79,8 @@ class SentryCli extends Cli {
 
   /// Finalizes the given [release].
   ///
-  /// The [authToken] is an optional parameter for direct Sentry authentication.
+  /// The [authToken] is an optional parameter for the direct
+  /// Sentry authentication.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> finalizeRelease(SentryRelease release, [String authToken]) {

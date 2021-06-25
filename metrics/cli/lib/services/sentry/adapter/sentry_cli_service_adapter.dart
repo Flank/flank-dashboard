@@ -45,8 +45,6 @@ class SentryCliServiceAdapter implements SentryService {
     await _sentryCli.createRelease(sentryRelease, authToken);
     await _uploadSourceMaps(sentryRelease, sourceMaps, authToken);
     await _sentryCli.finalizeRelease(sentryRelease, authToken);
-
-    return sentryRelease;
   }
 
   @override
@@ -87,7 +85,8 @@ class SentryCliServiceAdapter implements SentryService {
 
   /// Uploads the given [sourceMaps] to the given Sentry [release].
   ///
-  /// The [authToken] is an optional parameter for direct Sentry authentication.
+  /// The [authToken] is an optional parameter for the direct
+  /// Sentry authentication.
   Future<void> _uploadSourceMaps(
     SentryRelease release,
     List<SourceMap> sourceMaps, [

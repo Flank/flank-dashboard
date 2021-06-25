@@ -42,14 +42,14 @@ void main() {
     final enterProjectSlug = SentryStrings.enterProjectSlug(organizationSlug);
     final enterDsn = SentryStrings.enterDsn(organizationSlug, projectSlug);
 
-    PostExpectation<String> whenPromptOrganisationSlug() {
+    PostExpectation<String> whenPromptOrganizationSlug() {
       return when(prompter.prompt(enterOrganizationSlug));
     }
 
     PostExpectation<String> whenPromptProjectSlug({
       String withOrganizationSlug = organizationSlug,
     }) {
-      whenPromptOrganisationSlug().thenReturn(withOrganizationSlug);
+      whenPromptOrganizationSlug().thenReturn(withOrganizationSlug);
       return when(prompter.prompt(enterProjectSlug));
     }
 
@@ -111,7 +111,7 @@ void main() {
     );
 
     test(
-      ".getSentryRelease() prompts the user to enter the organisation slug",
+      ".getSentryRelease() prompts the user to enter the organization slug",
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
 
@@ -122,18 +122,18 @@ void main() {
     );
 
     test(
-      ".getSentryRelease() throws if prompter throws during the organisation slug prompting",
+      ".getSentryRelease() throws if prompter throws during the organization slug prompting",
       () {
-        whenPromptOrganisationSlug().thenThrow(stateError);
+        whenPromptOrganizationSlug().thenThrow(stateError);
 
         expect(sentryService.getSentryRelease, throwsStateError);
       },
     );
 
     test(
-      ".getSentryRelease() stops the config prompting process if prompter throws during the organisation slug prompting",
+      ".getSentryRelease() stops the getting release process if prompter throws during the organization slug prompting",
       () async {
-        whenPromptOrganisationSlug().thenThrow(stateError);
+        whenPromptOrganizationSlug().thenThrow(stateError);
 
         expect(
           () => sentryService.getSentryRelease(),

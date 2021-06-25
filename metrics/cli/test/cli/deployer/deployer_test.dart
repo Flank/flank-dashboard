@@ -53,7 +53,7 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
-    final deployPathsFactoryMock = _DeployPathsFactoryMock();
+    final pathsFactoryMock = _PathsFactoryMock();
     final pathsFactory = PathsFactory();
     final paths = Paths(tempDirectoryPath);
     final sentryProject = SentryProject(
@@ -143,7 +143,7 @@ void main() {
       reset(servicesMock);
       reset(prompter);
       reset(file);
-      reset(deployPathsFactoryMock);
+      reset(pathsFactoryMock);
     });
 
     test(
@@ -324,7 +324,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given DeployPathsFactory is null",
+      "throws an ArgumentError if the given PathsFactory is null",
       () {
         expect(
           () => Deployer(
@@ -799,47 +799,47 @@ void main() {
     );
 
     test(
-      ".deploy() creates a temporary directory before creating the DeployPaths instance",
+      ".deploy() creates a temporary directory before creating the Paths instance",
       () async {
         final deployer = Deployer(
           fileHelper: fileHelper,
-          pathsFactory: deployPathsFactoryMock,
+          pathsFactory: pathsFactoryMock,
           prompter: prompter,
           services: services,
         );
 
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPathsFactoryMock.create(tempDirectoryPath))
+        when(pathsFactoryMock.create(tempDirectoryPath))
             .thenReturn(paths);
 
         await deployer.deploy();
 
         verifyInOrder([
           fileHelper.createTempDirectory(any, any),
-          deployPathsFactoryMock.create(tempDirectoryPath),
+          pathsFactoryMock.create(tempDirectoryPath),
         ]);
       },
     );
 
     test(
-      ".deploy() creates a DeployPaths instance using the given factory",
+      ".deploy() creates a Paths instance using the given factory",
       () async {
         final deployer = Deployer(
           fileHelper: fileHelper,
-          pathsFactory: deployPathsFactoryMock,
+          pathsFactory: pathsFactoryMock,
           prompter: prompter,
           services: services,
         );
 
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(deployPathsFactoryMock.create(tempDirectoryPath))
+        when(pathsFactoryMock.create(tempDirectoryPath))
             .thenReturn(paths);
 
         await deployer.deploy();
 
-        verify(deployPathsFactoryMock.create(tempDirectoryPath)).called(once);
+        verify(pathsFactoryMock.create(tempDirectoryPath)).called(once);
       },
     );
 
@@ -1844,7 +1844,7 @@ void main() {
     );
 
     test(
-      ".deploy() informs the user about the failed deployment if Sentry service throws during the Sentry release getting",
+      ".deploy() informs the user about the failed deployment if Sentry service throws during getting a release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
@@ -1859,7 +1859,7 @@ void main() {
     );
 
     test(
-      ".deploy() suggests deleting the GCloud project if Sentry service throws during the Sentry release getting",
+      ".deploy() suggests deleting the GCloud project if Sentry service throws during getting a release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
@@ -1874,7 +1874,7 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the GCloud project if Sentry service throws during the Sentry release getting and the user agrees to delete the project",
+      ".deploy() deletes the GCloud project if Sentry service throws during getting a release, and the user agrees to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
@@ -1887,7 +1887,7 @@ void main() {
     );
 
     test(
-      ".deploy() does not delete the GCloud project if Sentry service throws during the Sentry release getting and the user does not agree to delete the project",
+      ".deploy() does not delete the GCloud project if Sentry service throws during getting a release, and the user does not agree to delete the project",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
@@ -1900,7 +1900,7 @@ void main() {
     );
 
     test(
-      ".deploy() deletes the temporary directory if Sentry service throws during the Sentry release getting",
+      ".deploy() deletes the temporary directory if Sentry service throws during getting a release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
@@ -2193,14 +2193,14 @@ void main() {
         when(sentryService.getProjectDsn(any)).thenReturn(sentryDsn);
         when(fileHelper.getFile(any)).thenReturn(file);
 
-        final sentryConfig = SentryWebConfig(
+        final sentryWebConfig = SentryWebConfig(
           release: sentryRelease.name,
           dsn: sentryDsn,
           environment: DeployConstants.sentryEnvironment,
         );
         final config = WebMetricsConfig(
           googleSignInClientId: clientId,
-          sentryWebConfig: sentryConfig,
+          sentryWebConfig: sentryWebConfig,
         );
 
         await deployer.deploy();
@@ -2698,4 +2698,4 @@ class _FileHelperMock extends Mock implements FileHelper {}
 
 class _FileMock extends Mock implements File {}
 
-class _DeployPathsFactoryMock extends Mock implements PathsFactory {}
+class _PathsFactoryMock extends Mock implements PathsFactory {}

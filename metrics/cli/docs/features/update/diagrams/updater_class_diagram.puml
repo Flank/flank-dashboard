@@ -160,7 +160,7 @@ package cli {
             - _firebaseService: FirebaseService
             - _sentryService: SentryService
             - _fileHelper: FileHelper
-            - _deployPathsFactory: PathsFactory
+            - _pathsFactory: PathsFactory
             + update(String configPath): Future<void>
         }
     }
