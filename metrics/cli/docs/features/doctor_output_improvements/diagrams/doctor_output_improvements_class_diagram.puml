@@ -1,0 +1,149 @@
+@startuml doctor_output_improvements_class_diagram
+
+package cli.lib as cli_lib {
+    package cli {
+        package command {
+            class DoctorCommand {
+                + name: String
+                + doctorFactory: DoctorFactory
+                + validationResultPrinter: ValidationResultPrinter
+
+                + run(): Future<void>
+            }
+        }
+
+        package doctor {
+            package factory as doctor_factory {
+                class DoctorFactory {
+                    - _serviceFactory: ServicesFactory
+
+                    + create(): Doctor
+                }
+            }
+
+            class Doctor {
+                - _coolService: CoolService
+                + validationResultBuilder: ValidationResultBuilder
+
+                + checkVersions(): Future<ValidationResult>
+            }
+        }
+    }
+
+    package services {
+        package common as services_common {
+            interface InfoService {
+                + checkVersion(): Future<TargetValidationResult>
+            }
+        }
+
+        package cool_service {
+            package adapter {
+                class CoolCliServiceAdapter {
+                    + versionHelper: VersionHelper
+                    - _coolServiceCli: CoolServiceCli
+
+                    + checkVersion(): Future<TargetValidationResult>
+                    - _getRecommendedVersion(): String
+                }
+            }
+
+            package cli as cool_service_cli {
+                class CoolServiceCli {
+                    + version(): Future<ProcessResult>
+                }
+            }
+
+            interface CoolService {
+                + serviceSpecificMethod(): Future<void>
+            }
+        }
+    }
+
+    package util.version_helper {
+        class VersionHelper {
+            + getRecommendedVersion(service: String): String
+        }
+    }
+}
+
+package core.lib.src.features.validation_output {
+    package model {
+        package builder {
+            class ValidationResultBuilder {
+                - _results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+
+                + setResult(result: TargetValidationResult): void
+                + setEmptyResults(result: TargetValidationResult): void
+                + build(): ValidationResult
+            }
+        }
+
+        class ValidationTarget<T> {
+            + data: T
+            + name: String
+            + description: String
+        }
+
+        class ValidationConclusion<T> {
+            + data: T
+            + name: String
+            + indicator: String
+        }
+
+        class TargetValidationResult<T> {
+            + data: T
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
+            + description: String
+            + details: Map<String, dynamic>
+            + context: Map<String, dynamic>
+
+            + copyWith(): TargetValidationResult
+        }
+
+        class ValidationResult{
+            + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+        }
+    }
+
+    package printer {
+        class ValidationResultPrinter{
+            - _sink: StringSink
+
+            + print(result: ValidationResult): void
+        }
+    }
+}
+
+TargetValidationResult --> ValidationTarget : uses
+TargetValidationResult --> ValidationConclusion : uses
+
+ValidationResult --> TargetValidationResult : uses
+ValidationResult --> ValidationTarget : uses
+
+ValidationResultBuilder -up-> ValidationResult : builds
+ValidationResultBuilder --> ValidationTarget : uses
+ValidationResultBuilder -up-> TargetValidationResult : uses
+
+ValidationResultPrinter --> ValidationResult : prints
+
+DoctorCommand --> DoctorFactory : uses
+DoctorCommand --> ValidationResultPrinter : uses
+DoctorCommand --> Doctor : uses
+
+DoctorFactory --> Doctor : creates
+
+Doctor --> ValidationResultBuilder : uses
+Doctor --> ValidationResult : provides
+Doctor -up-> CoolService : uses
+
+CoolCliServiceAdapter ..|> CoolService
+CoolCliServiceAdapter --> CoolServiceCli : uses
+CoolCliServiceAdapter -up-> VersionHelper : uses
+
+CoolService --|> InfoService
+
+DoctorCommand -[hidden]left-> CoolCliServiceAdapter
+
+@enduml
