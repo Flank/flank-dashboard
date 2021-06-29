@@ -1,0 +1,37 @@
+@startuml metrics_storybook_class_diagram
+
+package storybook {
+    package stories {
+        abstract class Story {
+            + name : String
+            + chapters : List<Chapter>
+        }
+
+        abstract class Chapter {
+            + name : String
+            + options : ChapterOptions
+
+            + build() : Widget
+        }
+
+        class ChapterOptions {
+            + options : Map<String, ChapterOption>
+
+            + textOption(String name, String value) : String
+            + boolOption(String name, bool value) : bool
+            + colorOption(String name, Color value) : Color
+            + numberOption(String name, Number value) : Number
+        }
+
+        class ChapterOption<T> {
+            + name : String
+            + value : T
+        }
+    }
+}
+
+Story -right-> Chapter : uses
+Chapter -right-> ChapterOptions : creates
+ChapterOptions -> ChapterOption : creates
+
+@enduml

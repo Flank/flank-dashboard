@@ -26,6 +26,13 @@ The Storybook is a tool for UI development that allows building UI components in
     - [Program](#program)
         - [Package Structure](#package-structure)
           - [widgets](#widgets)
+            - [Storybook](#storybook)
+            - [InjectionContainer](#injectioncontainer)
+            - [UI widgets](#ui-widgets)
+              - [Sidebar](#sidebar)
+              - [Preview](#preview)
+              - [Editing Panel](#editing-panel)
+            - [Chapter Control Field](#chapter-control-field)
           - [state](#state)
           - [mappers](#mappers)
           - [stories](#stories)
@@ -324,19 +331,6 @@ Once we've defined a high-level architecture of the `Metrics Storybook` and its 
 Consider the following structure of the `Metrics Storybook`:
 
 > * `lib/`
->    * `mappers`
->        * `chapter_option_mapper.dart`
->    * `state`
->       * `stories_notifier.dart`
->       * `chapters_notifier.dart`
->    * `stories`
->       * `buttons/`
->       * `toasts/`
->       * `...`
->       * `chapter_options.dart`
->       * `chapter_option.dart`
->       * `chapter.dart`
->       * `story.dart`
 >    * `widgets`
 >       * `sidebar/`
 >       * `preview/`
@@ -349,20 +343,35 @@ Consider the following structure of the `Metrics Storybook`:
 >           * `chapter_control_slider_field.dart`
 >       * `injection_container.dart`
 >       * `storybook.dart`
+>    * `state`
+>       * `stories_notifier.dart`
+>       * `chapters_notifier.dart`
+>    * `mappers`
+>        * `chapter_option_mapper.dart`
+>    * `stories`
+>       * `buttons/`
+>         * `chapters/`
+>           * `inactive_button_chapter.dart`
+>         * `buttons_story.dart`
+>       * `...`
+>       * `chapter_options.dart`
+>       * `chapter_option.dart`
+>       * `chapter.dart`
+>       * `story.dart`
 
 ##### ***widgets***
 
 The folder contains a list of widgets, that bootstraps the application, creates `ChangeNotifier`s and responsible for the UI part of the storybook.
 
-##### *Storybook*
+###### *Storybook*
 
 `Storybook` - is a root widget. The main purpose of the widget is to bootstrap an application and obtain a list of `stories`. The list of stories then is passed to the `InjectionContainer` widget where it is exposed to the whole application.
 
-##### *InjectionContainer*
+###### *InjectionContainer*
 
 As we want to use the [provider](https://pub.dev/packages/provider) package to manage the application state, we should create the `Injection Container` that is responsible for registering all needed `ChangeNotifier`s, so in fact - for creating the [state](#state).
 
-##### *UI widgets*
+###### *UI widgets*
 
 Once we've defined classes that set up and prepare the list of [stories](#story) with their [chapters](#chapter), we can describe a list of widgets, that represents the UI part of the storybook:
 
@@ -372,19 +381,19 @@ Once we've defined classes that set up and prepare the list of [stories](#story)
 
 Let's take a closer look at them:
 
-##### *Sidebar*
+###### *Sidebar*
 
 The `Sidebar` widget is responsible for building a left panel with a list of widgets, we want to display in the storybook. It uses the `StoriesNotifier` to get a list of `stories` with related `chapters`.
 
-##### *Preview*
+###### *Preview*
 
 The main purpose of the `Preview` is to display a widget that we've selected in the [Sidebar](#sidebar) using the data from the `ChaptersNotifier`.
 
-##### *Editing Panel*
+###### *Editing Panel*
 
 The `EditingPanel` widget uses a [ChapterOptionsMapper](#mappers) to provide a list of [controls](#chapter-control-field) to change the widgets' appearance. 
 
-##### *Chapter Control Field*
+###### *Chapter Control Field*
 
 The `ChapterControlField` is a base widget that is a template for the more specific fields, such as:
 
@@ -405,7 +414,7 @@ There are a few `ChangeNotifier`s, that is making up the storybook's global stat
 
 ##### ***mappers***
 
-The `mappers` folder contains the `ChapterOptionMapper` class, which maps the given `ChapterOption` into the corresponding control widget.
+The `mappers` folder contains the `ChapterOptionMapper` class, which maps the given `ChapterOption` into the corresponding [control widget](#chapter-control-field).
 
 ##### ***stories***
 
@@ -432,7 +441,11 @@ For example, `ChapterOption<String>` on the UI converts into the `TextField`, `C
 
 There `stories`, also, contains a list of folders, that represents specific stories according to the `Metrics widgets`(e.g., buttons, toasts).
 
-The following diagram shows the relations between the described classes:
+Consider the following diagram:
+
+![Metrics Storybook stories class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_stories_class_diagram.puml)
+
+The next diagram shows the relations between all described classes:
 
 ![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
