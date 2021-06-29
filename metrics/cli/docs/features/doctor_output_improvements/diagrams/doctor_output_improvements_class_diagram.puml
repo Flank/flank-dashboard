@@ -67,7 +67,7 @@ package cli.lib as cli_lib {
     }
 }
 
-package core.lib.src.features.validation_output {
+package core.lib.src.features.validation {
     package model {
         package builder {
             class ValidationResultBuilder {

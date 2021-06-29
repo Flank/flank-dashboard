@@ -147,9 +147,9 @@ The following subsections explain the implementation strategy in more detail.
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
  
-Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the [`metrics_core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
+Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation` package within the [`metrics_core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
 
-Consider the next sections describing the main classes of the `validation_output` package.
+Consider the next sections describing the main classes of the `validation` package.
 
 #### ValidationTarget
 A `ValidationTarget` is an entity which value is used in the validation process (e.g., it's a version of a CLI package). 
@@ -182,9 +182,9 @@ This class implements a `Builder` pattern, and its responsibility is to assemble
 #### ValidationResultPrinter
 A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
 
-Consider the following class diagram that describes the `validation_output` package structure:
+Consider the following class diagram that describes the `validation` package structure:
 
-![Validation output diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_output_class_diagram.puml)
+![Validation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_class_diagram.puml)
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).

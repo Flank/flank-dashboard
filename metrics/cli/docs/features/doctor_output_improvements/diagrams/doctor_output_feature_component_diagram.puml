@@ -1,5 +1,4 @@
 @startuml doctor_output_feature_component_diagram
-'https://plantuml.com/component-diagram
 
 legend top left
     | Color |  Description |
