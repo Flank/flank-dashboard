@@ -29,7 +29,7 @@ void main() {
 
     test(
       ".info() displays the given text",
-      () async {
+      () {
         prompter.info(promptText);
 
         verify(promptWriter.info(promptText)).called(once);
@@ -38,7 +38,7 @@ void main() {
 
     test(
       ".error() displays the given error",
-      () async {
+      () {
         prompter.error(errorText);
 
         verify(promptWriter.error(errorText)).called(once);
@@ -47,7 +47,7 @@ void main() {
 
     test(
       ".error() does nothing if the given error is null",
-      () async {
+      () {
         prompter.error(null);
 
         verifyNever(promptWriter.error(errorText));
@@ -56,7 +56,7 @@ void main() {
 
     test(
       ".prompt() requests an input from the user with the given description text",
-      () async {
+      () {
         prompter.prompt(promptText);
 
         verify(promptWriter.prompt(promptText)).called(once);
@@ -65,7 +65,7 @@ void main() {
 
     test(
       ".prompt() returns an input from the user",
-      () async {
+      () {
         const answer = 'userAnswer';
 
         when(promptWriter.prompt(promptText)).thenReturn(answer);
@@ -77,7 +77,7 @@ void main() {
 
     test(
       ".promptConfirm() requests a confirmation input from the user with the given description text",
-      () async {
+      () {
         prompter.promptConfirm(promptText, confirmInput: confirmInput);
 
         verify(
@@ -88,7 +88,7 @@ void main() {
 
     test(
       ".promptConfirm() returns a confirmation result",
-      () async {
+      () {
         const confirmInput = 'yes';
 
         when(

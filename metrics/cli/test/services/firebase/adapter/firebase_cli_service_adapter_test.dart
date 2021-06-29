@@ -411,7 +411,7 @@ void main() {
 
     test(
       ".configureAuthProviders() prompts the user to configure the authentication providers",
-      () async {
+      () {
         firebaseService.configureAuthProviders(projectId);
 
         verify(prompter.prompt(FirebaseStrings.configureAuthProviders(
@@ -422,7 +422,7 @@ void main() {
 
     test(
       ".configureAuthProviders() returns the Google sign client id entered by the user",
-      () async {
+      () {
         when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
             .thenReturn(clientId);
 
@@ -447,7 +447,7 @@ void main() {
 
     test(
       ".enableAnalytics() prompts the user to configure the Analytics service",
-      () async {
+      () {
         firebaseService.enableAnalytics(projectId);
 
         verify(prompter.prompt(FirebaseStrings.enableAnalytics(projectId)))
@@ -470,7 +470,7 @@ void main() {
 
     test(
       ".initializeFirestoreData() prompts the user to configure the initial Firestore data",
-      () async {
+      () {
         firebaseService.initializeFirestoreData(projectId);
 
         verify(prompter.prompt(FirebaseStrings.initializeData(projectId)))
@@ -493,7 +493,7 @@ void main() {
 
     test(
       ".upgradeBillingPlan() prompts the user to upgrade the billing plan",
-      () async {
+      () {
         firebaseService.upgradeBillingPlan(projectId);
 
         verify(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
@@ -516,7 +516,7 @@ void main() {
 
     test(
       ".acceptTermsOfService() prompts the user to accept the terms of the Firebase service",
-      () async {
+      () {
         firebaseService.acceptTermsOfService();
 
         verify(prompter.prompt(FirebaseStrings.acceptTerms)).called(once);

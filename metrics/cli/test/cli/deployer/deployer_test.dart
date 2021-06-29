@@ -1,7 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:cli/cli/deployer/constants/deploy_constants.dart';
@@ -810,8 +809,7 @@ void main() {
 
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(pathsFactoryMock.create(tempDirectoryPath))
-            .thenReturn(paths);
+        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
 
         await deployer.deploy();
 
@@ -834,8 +832,7 @@ void main() {
 
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
-        when(pathsFactoryMock.create(tempDirectoryPath))
-            .thenReturn(paths);
+        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
 
         await deployer.deploy();
 
@@ -1928,7 +1925,7 @@ void main() {
     );
 
     test(
-      ".deploy() creates the Sentry release",
+      ".deploy() gets the new instance of the Sentry release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);

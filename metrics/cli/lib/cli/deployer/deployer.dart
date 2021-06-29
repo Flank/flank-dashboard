@@ -172,7 +172,10 @@ class Deployer {
 
   /// Sets up a Sentry for the application under deployment within
   /// the given [webPath] and the [buildWebPath].
-  Future<SentryWebConfig> _setupSentry(String webPath, String buildWebPath) async {
+  Future<SentryWebConfig> _setupSentry(
+    String webPath,
+    String buildWebPath,
+  ) async {
     final shouldSetupSentry = _prompter.promptConfirm(
       DeployStrings.setupSentry,
     );

@@ -273,7 +273,7 @@ void main() {
 
     test(
       ".addFirebase() throws if GCloud CLI throws during the available regions showing",
-      () async {
+      () {
         when(gcloudCli.listRegions(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -486,7 +486,7 @@ void main() {
 
     test(
       ".acceptTermsOfService() prompts the user to accept the terms of the GCloud service",
-      () async {
+      () {
         gcloudService.acceptTermsOfService();
 
         verify(prompter.prompt(acceptTerms)).called(once);
@@ -525,7 +525,7 @@ void main() {
 
     test(
       ".configureProjectOrganization() prompts the user to configure organization for the GCloud project",
-      () async {
+      () {
         gcloudService.configureProjectOrganization(projectId);
 
         verify(prompter.prompt(configureOrganization)).called(once);

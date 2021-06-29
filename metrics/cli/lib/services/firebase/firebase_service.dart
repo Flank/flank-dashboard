@@ -18,8 +18,8 @@ abstract class FirebaseService extends InfoService {
   /// Deploys the given Firebase hosting [target] from the given [appPath]
   /// to the Firebase project with the given [projectId] hosting.
   ///
-  /// The [authToken] is an optional parameter for the direct
-  /// Firebase authentication.
+  /// Authenticates the deployment process using the given [authToken] if it
+  /// is not `null`. Otherwise, authenticates using the global Firebase user.
   Future<void> deployHosting(
     String projectId,
     String target,
@@ -30,8 +30,8 @@ abstract class FirebaseService extends InfoService {
   /// Deploys Firebase rules, indexes, and functions to the project
   /// with the given [projectId] from the given [firebasePath].
   ///
-  /// The [authToken] is an optional parameter for the direct
-  /// Firebase authentication.
+  /// Authenticates the deployment process using the given [authToken] if it
+  /// is not `null`. Otherwise, authenticates using the global Firebase user.
   Future<void> deployFirebase(
     String projectId,
     String firebasePath, [

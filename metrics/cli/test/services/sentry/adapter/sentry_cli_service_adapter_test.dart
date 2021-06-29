@@ -112,7 +112,7 @@ void main() {
 
     test(
       ".getSentryRelease() prompts the user to enter the organization slug",
-      () async {
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
         sentryService.getSentryRelease();
@@ -132,11 +132,11 @@ void main() {
 
     test(
       ".getSentryRelease() stops the getting release process if prompter throws during the organization slug prompting",
-      () async {
+      () {
         whenPromptOrganizationSlug().thenThrow(stateError);
 
         expect(
-          () => sentryService.getSentryRelease(),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
 
@@ -148,7 +148,7 @@ void main() {
 
     test(
       ".getSentryRelease() prompts the user to enter the project slug",
-      () async {
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
         sentryService.getSentryRelease();
@@ -163,7 +163,7 @@ void main() {
         whenPromptProjectSlug().thenThrow(stateError);
 
         expect(
-          () => sentryService.getSentryRelease(),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
       },
@@ -171,11 +171,11 @@ void main() {
 
     test(
       ".getSentryRelease() stops the config prompting process if prompter throws during the project slug prompting",
-      () async {
+      () {
         whenPromptProjectSlug().thenThrow(stateError);
 
         expect(
-          () => sentryService.getSentryRelease(),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
 
@@ -188,7 +188,7 @@ void main() {
 
     test(
       ".getSentryRelease() prompts the user to enter the release name",
-      () async {
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
         sentryService.getSentryRelease();
@@ -203,7 +203,7 @@ void main() {
         whenPromptReleaseName().thenThrow(stateError);
 
         expect(
-          () => sentryService.getSentryRelease(),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
       },
@@ -351,8 +351,8 @@ void main() {
     );
 
     test(
-      ".createProject() returns the DSN entered by the user",
-      () async {
+      ".getProjectDsn() returns the DSN entered by the user",
+      () {
         when(prompter.prompt(enterDsn)).thenReturn(dsn);
 
         final result = sentryService.getProjectDsn(sentryProject);
