@@ -218,17 +218,19 @@ The `ValidationResult` contains the `TargetValidationResult`s returned by the `.
 
 The `InfoService` is an interface that provides common methods for getting  information about the service.
 
-To provide the extended information to the user (e.g., to compare the current service's version on the user's machine against the recommended version) we need to update this interface with the `.getRecommendedVersion()` method.
+##### VersionHelper
+
+The `VersionHelper` is a new class that allows us to interact with the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml) using the `.getRecommenedVersion()` method.
 
 ##### Making things work
 
 Consider the following steps needed to be able to improve the doctor command output:
 1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
-2. Update the `InfoService` interface, and the corresponding interfaces for all services.
+2. Create the `VersionHepler` class to work with the recommended versions of each service.
 3. Update the `.version()` methods of each service cli to return the `ProcessResult`.
-3. Update the `.checkVersion()` methods of each service adapter to return the `TargetValidationResult`.
-4. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
-5. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
+4. Update the `.checkVersion()` methods of each service adapter to return the `TargetValidationResult`.
+5. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
+6. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
 Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output. Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement:
 
