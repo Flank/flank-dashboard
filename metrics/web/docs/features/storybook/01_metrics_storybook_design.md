@@ -261,11 +261,11 @@ The following table lists specific widgets we need to extract:
 
 | <!-- --> | <!-- --> | <!-- --> | <!-- --> |
 | :---: | :---: | :---: | :---: |
-| `BuildStatusView` | `Buttons` | `ColoredBar` | `Dropdown` |
-| `GraphIndicator` | `InProgressAnimatedBar` | `MetricsCard` | `MetricsCheckbox` |
-| `MetricsInputPlaceholder` | `MetricsTextFormField` | `MetricsThemeImage` | `PageTitle` |
-| `TextPlaceholder` | `Toasts` | `Toggle` | `TooltipIcon` |
-| `TooltipPopup` | `TooltipTitle` | `UserMenuButton` | `ValueNetworkImage` |
+| ***BuildStatusView*** | ***Buttons*** | ***ColoredBar*** | ***Dropdown*** |
+| ***GraphIndicator*** | ***InProgressAnimatedBar*** | ***MetricsCard*** | ***MetricsCheckbox*** |
+| ***MetricsInputPlaceholder*** | ***MetricsTextFormField*** | ***MetricsThemeImage*** | ***PageTitle*** |
+| ***TextPlaceholder*** | ***Toasts*** | ***Toggle*** | ***TooltipIcon*** |
+| ***TooltipPopup*** | ***TooltipTitle*** | ***UserMenuButton*** | ***ValueNetworkImage*** |
 
 As these widgets use the `Metrics theme` to determine their appearance, the package should contain all models/configs/widgets that belong to the theme as well.
 
