@@ -1,0 +1,22 @@
+@startuml cool_integration_source_validation_target_class_diagram
+
+package core.lib.src.features.validation_output.model {
+    class ValidationTarget<T> {
+        + data: T
+        + name: String
+        + description: String
+    }
+}
+
+package ci_integrations.source.cool_integration.config.model {
+    class CoolIntegrationSourceValidationTarget {
+        + {static} accessToken: ValidationTarget
+        + {static} organizationSlug: ValidationTarget
+        + {static} pipelineSlug: ValidationTarget
+        + {static} values: List<ValidationTarget>
+    }
+}
+
+ValidationTarget "1..*" -left-o "1" CoolIntegrationSourceValidationTarget
+
+@enduml

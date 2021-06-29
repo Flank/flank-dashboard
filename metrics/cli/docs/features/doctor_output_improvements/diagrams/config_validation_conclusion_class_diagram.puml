@@ -1,0 +1,21 @@
+@startuml ci_integrations_validator_class_diagram
+
+package core.lib.src.features.validation_output.model {
+    class ValidationConclusion<T> {
+        + data: T
+        + name: String
+        + indicator: String
+    }
+}
+
+package ci_integrations.integration.validation.model {
+    class ConfigValidationConclusion {
+        + {static} success: ValidationConclusion
+        + {static} failure: ValidationConclusion
+        + {static} unknown: ValidationConclusion
+    }
+}
+
+ValidationConclusion "1..*" -left-o "1" ConfigValidationConclusion
+
+@enduml
