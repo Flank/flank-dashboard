@@ -257,28 +257,15 @@ We can describe the structure of the feature through the following parts:
 
 Before talking about the [Metrics Storybook](#metrics-storybook), we need to extract a list of specific Metrics widgets from the `Metrics Web Application` into a separate package, to share them across the web application and the storybook. 
 
-The following list itemizes specific widgets we need to extract:
+The following table lists specific widgets we need to extract:
 
-- `BuildStatusView`
-- `Buttons`
-- `ColoredBar`
-- `Dropdown`
-- `GraphIndicator`
-- `InProgressAnimatedBar`
-- `MetricsCard`
-- `MetricsCheckbox`
-- `MetricsInputPlaceholder`
-- `MetricsTextFormField`
-- `MetricsThemeImage`
-- `PageTitle`
-- `TextPlaceholder`
-- `Toasts`
-- `Toggle`
-- `TooltipIcon`
-- `TooltipPopup`
-- `TooltipTitle`
-- `UserMenuButton`
-- `ValueNetworkImage`
+| <!-- --> | <!-- --> | <!-- --> | <!-- --> |
+| :---: | :---: | :---: | :---: |
+| `BuildStatusView` | `Buttons` | `ColoredBar` | `Dropdown` |
+| `GraphIndicator` | `InProgressAnimatedBar` | `MetricsCard` | `MetricsCheckbox` |
+| `MetricsInputPlaceholder` | `MetricsTextFormField` | `MetricsThemeImage` | `PageTitle` |
+| `TextPlaceholder` | `Toasts` | `Toggle` | `TooltipIcon` |
+| `TooltipPopup` | `TooltipTitle` | `UserMenuButton` | `ValueNetworkImage` |
 
 As these widgets use the `Metrics theme` to determine their appearance, the package should contain all models/configs/widgets that belong to the theme as well.
 
@@ -331,11 +318,11 @@ Once we've defined a high-level architecture of the `Metrics Storybook` and its 
 Consider the following structure of the `Metrics Storybook`:
 
 > * `lib/`
->    * `widgets`
+>    * `widgets/`
 >       * `sidebar/`
 >       * `preview/`
 >       * `editing_panel/`
->       * `control_fields`
+>       * `control_fields/`
 >           * `chapter_control_field.dart`
 >           * `chapter_control_text_field.dart`
 >           * `chapter_control_checkbox_field.dart`
@@ -343,12 +330,12 @@ Consider the following structure of the `Metrics Storybook`:
 >           * `chapter_control_slider_field.dart`
 >       * `injection_container.dart`
 >       * `storybook.dart`
->    * `state`
+>    * `state/`
 >       * `stories_notifier.dart`
 >       * `chapters_notifier.dart`
->    * `mappers`
+>    * `mappers/`
 >        * `chapter_option_mapper.dart`
->    * `stories`
+>    * `stories/`
 >       * `buttons/`
 >         * `chapters/`
 >           * `inactive_button_chapter.dart`
@@ -441,7 +428,7 @@ For example, `ChapterOption<String>` on the UI converts into the `TextField`, `C
 
 There `stories`, also, contains a list of folders, that represents specific stories according to the `Metrics widgets`(e.g., buttons, toasts).
 
-Consider the following diagram:
+Consider the following diagram, that describes relations between `stories` classes:
 
 ![Metrics Storybook stories class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_stories_class_diagram.puml)
 
@@ -455,93 +442,93 @@ Consider the following sequence diagram, which shows the general flow of display
 
 #### ***How to add new widgets to the Metrics Storybook***
 
-Let's imagine, we want to add a new `input widget` to the storybook. 
+Let's imagine, we want to add a new `inactive button widget` to the storybook. 
 
 You should follow the next steps:
 
-1. Create a new folder in the `stories` and name it according to the name of a new widget (e.g., inputs).
+1. Create a new folder in the `stories` and name it according to the name of a new widget (e.g., `buttons`).
 
-For example, `lib/stories/inputs`.
+For example, `lib/stories/buttons`.
 
-2. Create a new file, named `inputs_story` in the `inputs` folder, that will represent a new story.
+2. Create a new file, named `buttons_story` in the `buttons` folder, that will represent a new story.
 
-3. In the `inputs_story.dart` file you should create a class, let's say we named it `InputsStory` that should implement the base `Story` interface. Give your story a name (it is the name of the group in the sidebar in the storybook UI).
+3. In the `buttons_story.dart` file you should create a class, let's say we named it `ButtonsStory` that should implement the base `Story` interface. Give your story a name (it is the name of the group in the sidebar in the storybook UI).
 
 ```dart
-class InputsStory implements Story {
+class ButtonsStory implements Story {
   @override
-  String get name => 'Inputs';
+  String get name => 'Buttons';
 
   @override
   List<Chapter> get chapters => [];
 }
 ```
 
-4. Create a new folder in the `inputs` folder, name it `chapters`, and add a file with the name `my_input_widget_chapter.dart`.
+4. Create a new folder in the `buttons` folder, name it `chapters`, and add a file with the name `inactive_button_chapter.dart`.
 
 In this file, you should create a class, that implements the `Chapter` interface.
 
 ```dart
-class MyInputWidgetChapter implements Chapter {
+class InactiveButtonChapter implements Chapter {
   @override
-  String get name => 'My Input Widget';
+  String get name => 'Inactive Button';
 
   @override
   ChapterOptions get options => null;
 
   @override
   Widget build() {
-    return MyInputWidget();
+    return InactiveButton(label: 'Inactive Button');
   }
 }
 ```
 
 The `name` property holds the name you want to display in the sidebar of the storybook.
 
-The `build` method should return the widget, you want to add to the storybook, so in this case - `MyInputWidget`.
+The `build` method should return the widget, you want to add to the storybook, so in this case - `InactiveButton`.
 
-_**Note**: If you want to see the widget within the different appearance state, you can use the `ChapterOptions`. The following example shows how to change input's placeholder dynamically:_
+_**Note**: If you want to see the widget within the different appearance state, you can use the `ChapterOptions`. The following example shows how to change button's label dynamically:_
 
 ```dart
-class MyInputWidgetChapter implements Chapter {
+class InactiveButtonChapter implements Chapter {
   ChapterOptions _options = ChapterOptions();
 
   @override
-  String get name => 'My Input Widget';
+  String get name => 'Inactive Button';
 
   @override
   ChapterOptions get options => _options;
 
   @override
   Widget build() {
-    final placeholder = _options.textProperty('placeholder', name);
+    final label = _options.textProperty('label', 'Inactive Button');
 
-    return MyInputWidget(placeholder: placeholder);
+    return InactiveButton(label: label);
   }
 }
 ```
 
-5. Add the `MyInputWidgetChapter` to the `chapters` list in the `InputsStory` class.
+5. Add the `InactiveButtonChapter` to the `chapters` list in the `ButtonsStory` class.
 
 ```dart
-class InputsStory implements Story {
+class ButtonsStory implements Story {
   @override
-  String get name => 'Inputs';
+  String get name => 'Buttons';
 
   @override
   List<Chapter> get chapters => [
-      MyInputWidgetChapter()
+      InactiveButtonChapter()
   ];
 }
 ```
 
-5. With that in place, go to the `main.dart` file and add the `InputsStory` to the `stories` list of the `Storybook` widget:
+5. With that in place, go to the `main.dart` file and add the `ButtonsStory` to the `stories` list of the `Storybook` widget:
 
 ```dart
 void main() {
   final storybook = Storybook(
     stories: [
-      InputsStory(),
+      ButtonsStory(),
     ],
   );
 
@@ -549,4 +536,4 @@ void main() {
 }
 ```
 
-As a result, you will see a ***'My Input Widget'*** widget within the ***'Inputs'*** group in the sidebar of the storybook application.
+As a result, you will see a ***'Inactive Button'*** widget within the ***'Buttons'*** group in the sidebar of the storybook application.
