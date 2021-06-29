@@ -9,21 +9,21 @@ package storybook {
 
         abstract class Chapter {
             + name : String
-            + options : ChapterOptions
+            + controls : ChapterControls
 
             + build() : Widget
         }
 
-        class ChapterOptions {
-            + options : Map<String, ChapterOption>
+        class ChapterControls {
+            + controls : Map<String, ChapterControl>
 
-            + textOption(String name, String value) : String
-            + boolOption(String name, bool value) : bool
-            + colorOption(String name, Color value) : Color
-            + numberOption(String name, Number value) : Number
+            + textControl(String name, String value) : String
+            + boolControl(String name, bool value) : bool
+            + colorControl(String name, Color value) : Color
+            + numberControl(String name, Number value) : Number
         }
 
-        class ChapterOption<T> {
+        class ChapterControl<T> {
             + name : String
             + value : T
         }
@@ -31,7 +31,7 @@ package storybook {
 }
 
 Story -right-> Chapter : uses
-Chapter -right-> ChapterOptions : creates
-ChapterOptions -> ChapterOption : creates
+Chapter -right-> ChapterControls : creates
+ChapterControls -> ChapterControl : creates
 
 @enduml

@@ -281,7 +281,7 @@ In general, it consists of three main components:
 
 - **Story** - a class, that groups together a list of chapters.
 - **Chapter** - a class, that represents a specific widget we want to display within the storybook.
-- **Chapter Options** - a class, that holds a collection of properties, that UI widgets can use to build an [editing panel](#editing-panel) with a list of inputs to change the widget's appearance.
+- **Chapter Controls** - a class, that holds a collection of properties, that UI widgets can use to build an [editing panel](#editing-panel) with a list of inputs to change the widget's appearance.
 
 Consider the following diagram, that describes relations between the described parts:
 
@@ -333,16 +333,16 @@ Consider the following structure of the `Metrics Storybook`:
 >    * `state/`
 >       * `stories_notifier.dart`
 >       * `chapters_notifier.dart`
->    * `mappers/`
->        * `chapter_option_mapper.dart`
->    * `stories/`
+>    * `mappers`
+>        * `chapter_control_mapper.dart`
+>    * `stories`
 >       * `buttons/`
 >         * `chapters/`
 >           * `inactive_button_chapter.dart`
 >         * `buttons_story.dart`
 >       * `...`
->       * `chapter_options.dart`
->       * `chapter_option.dart`
+>       * `chapter_controls.dart`
+>       * `chapter_control.dart`
 >       * `chapter.dart`
 >       * `story.dart`
 
@@ -378,7 +378,7 @@ The main purpose of the `Preview` is to display a widget that we've selected in 
 
 ###### *Editing Panel*
 
-The `EditingPanel` widget uses a [ChapterOptionsMapper](#mappers) to provide a list of [controls](#chapter-control-field) to change the widgets' appearance. 
+The `EditingPanel` widget uses a [ChapterControlsMapper](#mappers) to provide a list of [controls](#chapter-control-field) to change the widgets' appearance. 
 
 ###### *Chapter Control Field*
 
@@ -401,30 +401,30 @@ There are a few `ChangeNotifier`s, that is making up the storybook's global stat
 
 ##### ***mappers***
 
-The `mappers` folder contains the `ChapterOptionMapper` class, which maps the given `ChapterOption` into the corresponding [control widget](#chapter-control-field).
+The `mappers` folder contains the `ChapterControlMapper` class, which maps the given `ChapterControl` into the corresponding [control widget](#chapter-control-field).
 
 ##### ***stories***
 
-This folder contains interfaces for concrete stories and chapters, as well as chapter options. There is, also, a list of stories, that represents specific `Metrics widgets`.
+This folder contains interfaces for concrete stories and chapters, as well as chapter controls. There is, also, a list of stories, that represents specific `Metrics widgets`.
 
 The `Story` is a class that groups together a list of `Chapter`s. The main purpose of the stories is to visually separate chapters (i.e., widgets) in the [sidebar](#sidebar).
 
-The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterOptions](#chapter-options). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterOptions`.
+The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterControls](#chapter-controls). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterControls`.
 
-The `ChapterOptions` class contains options property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `options` is a `Map` with the name of the option as a key, and a `ChapterOption` class as a value.
+The `ChapterControls` class contains controls property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `controls` is a `Map` with the name of the control as a key, and a `ChapterControl` class as a value.
 
-The `ChapterOptions` has several methods to add different `options` to the chapter:
+The `ChapterControls` has several methods to add different `controls` to the chapter:
 
-- ***textOption()*** - adds the `ChapterOption<String>` to the options Map.
-- ***boolOption()*** - adds the `ChapterOption<bool>` to the options Map.
-- ***colorOption()*** - adds the `ChapterOption<Color>` to the options Map.
-- ***numberOption()*** - adds the `ChapterOption<Number>` to the options Map.
+- ***textControl()*** - adds the `ChapterControl<String>` to the controls Map.
+- ***boolControl()*** - adds the `ChapterControl<bool>` to the controls Map.
+- ***colorControl()*** - adds the `ChapterControl<Color>` to the controls Map.
+- ***numberControl()*** - adds the `ChapterControl<Number>` to the controls Map.
 
-The `ChapterOption` is deeply related to the `ChapterOptions` and is used to build a single editing field for the storybook widget.
+The `ChapterControl` is deeply related to the `ChapterControls` and is used to build a single editing field for the storybook widget.
 
 It is a [generic](https://dart.dev/guides/language/language-tour#generics) class, and its actual type is used to build a corresponding type of input.
 
-For example, `ChapterOption<String>` on the UI converts into the `TextField`, `ChapterOption<bool>` into `CheckboxField` and so on. The more information about these fields in the [Chapter Control Field section](#chapter-control-field).
+For example, `ChapterControl<String>` on the UI converts into the `TextField`, `ChapterControl<bool>` into `CheckboxField` and so on. The more information about these fields in the [Chapter Control Field section](#chapter-control-field).
 
 There `stories`, also, contains a list of folders, that represents specific stories according to the `Metrics widgets`(e.g., buttons, toasts).
 
@@ -442,11 +442,11 @@ Consider the following sequence diagram, which shows the general flow of display
 
 #### ***How to add new widgets to the Metrics Storybook***
 
-Let's imagine, we want to add a new `inactive button widget` to the storybook. 
+Let's imagine, we want to add an `inactive button widget` to the storybook. 
 
 You should follow the next steps:
 
-1. Create a new folder in the `stories` and name it according to the name of a new widget (e.g., `buttons`).
+1. Create a new folder in the `stories` and name it according to the type of a new widget (e.g., buttons).
 
 For example, `lib/stories/buttons`.
 
@@ -474,11 +474,11 @@ class InactiveButtonChapter implements Chapter {
   String get name => 'Inactive Button';
 
   @override
-  ChapterOptions get options => null;
+  ChapterControls get controls => null;
 
   @override
   Widget build() {
-    return InactiveButton(label: 'Inactive Button');
+    return InactiveButton();
   }
 }
 ```
@@ -487,22 +487,24 @@ The `name` property holds the name you want to display in the sidebar of the sto
 
 The `build` method should return the widget, you want to add to the storybook, so in this case - `InactiveButton`.
 
-_**Note**: If you want to see the widget within the different appearance state, you can use the `ChapterOptions`. The following example shows how to change button's label dynamically:_
+_**Note**: If you want to see the widget within the different appearance state, you can use the `ChapterControls`. The following example shows how to change button's label dynamically:_
 
 ```dart
 class InactiveButtonChapter implements Chapter {
-  ChapterOptions _options = ChapterOptions();
+  ChapterControls _controls = ChapterControls();
+
+  InactiveButtonChapter() {
+    _controls.textProperty('label', 'Inactive Button Label');
+  }
 
   @override
   String get name => 'Inactive Button';
 
   @override
-  ChapterOptions get options => _options;
+  ChapterControls get controls => _controls;
 
   @override
   Widget build() {
-    final label = _options.textProperty('label', 'Inactive Button');
-
     return InactiveButton(label: label);
   }
 }

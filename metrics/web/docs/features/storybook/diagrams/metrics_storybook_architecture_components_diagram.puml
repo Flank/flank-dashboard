@@ -9,13 +9,13 @@ component "Chapter (e.g., Positive Button)" as PositiveButtonChapter
 
 component "Story (e.g., Toasts)" as ToastsStory
 component "Chapter (e.g., Positive Toast)" as PositiveToastChapter
-component "Chapter Options" as PositiveToastChapterOptions
-component "Text Option (e.g., text input)" as FirstPositiveToastChapterTextOption
-component "Bool Option (e.g., checkbox)" as SecondPositiveToastChapterBoolOption
+component "Chapter Controls" as PositiveToastChapterControls
+component "Text Control (e.g., text input)" as FirstPositiveToastChapterTextControl
+component "Bool Control (e.g., checkbox)" as SecondPositiveToastChapterBoolControl
 component "Chapter (e.g., Negative Toast)" as NegativeToastChapter
-component "Chapter Options" as NegativeToastChapterOptions
-component "Text Option (e.g., text input)" as FirstNegativeToastChapterTextOption
-component "Bool Option (e.g., checkbox)" as SecondNegativeToastChapterBoolOption
+component "Chapter Controls" as NegativeToastChapterControls
+component "Text Control (e.g., text input)" as FirstNegativeToastChapterTextControl
+component "Bool Control (e.g., checkbox)" as SecondNegativeToastChapterBoolControl
 
 MS -down-> ButtonsStory
 MS -down-> ToastsStory
@@ -23,13 +23,13 @@ MS -down-> ToastsStory
 ButtonsStory -down-> PositiveButtonChapter
 
 ToastsStory -down-> PositiveToastChapter
-PositiveToastChapter -down-> PositiveToastChapterOptions
-PositiveToastChapterOptions -down-> FirstPositiveToastChapterTextOption
-PositiveToastChapterOptions -down-> SecondPositiveToastChapterBoolOption
+PositiveToastChapter -down-> PositiveToastChapterControls
+PositiveToastChapterControls -down-> FirstPositiveToastChapterTextControl
+PositiveToastChapterControls -down-> SecondPositiveToastChapterBoolControl
 
 ToastsStory -down-> NegativeToastChapter
-NegativeToastChapter -down-> NegativeToastChapterOptions
-NegativeToastChapterOptions -down-> FirstNegativeToastChapterTextOption
-NegativeToastChapterOptions -down-> SecondNegativeToastChapterBoolOption
+NegativeToastChapter -down-> NegativeToastChapterControls
+NegativeToastChapterControls -down-> FirstNegativeToastChapterTextControl
+NegativeToastChapterControls -down-> SecondNegativeToastChapterBoolControl
 
 @enduml

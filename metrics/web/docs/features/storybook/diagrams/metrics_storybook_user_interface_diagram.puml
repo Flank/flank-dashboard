@@ -20,6 +20,9 @@
         ++ Positive Graph Indicator
         +
         +
+        +
+        +
+        +
         <color:red>Sidebar 
       } | {-
          <color:red>Toggle theme button <&sun>
@@ -37,8 +40,13 @@
             .
             .
             .
+            .
+            .
+            .
             <color:red>Preview field
           } | {
+            .
+            .
             .
             .
             Label

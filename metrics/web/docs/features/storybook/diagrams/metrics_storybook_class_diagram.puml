@@ -35,29 +35,29 @@ package storybook {
 
         abstract class Chapter {
             + name : String
-            + options : ChapterOptions
+            + controls : ChapterControls
 
             + build() : Widget
         }
 
-        class ChapterOptions {
-            + options : Map<String, ChapterOption>
+        class ChapterControls {
+            + controls : Map<String, ChapterControl>
 
-            + textOption(String name, String value) : String
-            + boolOption(String name, bool value) : bool
-            + colorOption(String name, Color value) : Color
-            + numberOption(String name, Number value) : Number
+            + textControl(String name, String value) : String
+            + boolControl(String name, bool value) : bool
+            + colorControl(String name, Color value) : Color
+            + numberControl(String name, Number value) : Number
         }
 
-        class ChapterOption<T> {
+        class ChapterControl<T> {
             + name : String
             + value : T
         }
     }
 
     package mappers {
-        class ChapterOptionMapper {
-            + map(ChapterOption<T> option) : Widget
+        class ChapterControlMapper {
+            + map(ChapterControl<T> control) : Widget
         }
     }
 
@@ -91,25 +91,25 @@ package storybook {
             }
 
             class ChapterControlTextField {
-                + property : ChapterOption<String> 
+                + property : ChapterControl<String> 
 
                 + build(BuildContext context) : Widget
             }
 
             class ChapterControlCheckboxField {
-                + property : ChapterOption<Bool> 
+                + property : ChapterControl<Bool> 
 
                 + build(BuildContext context) : Widget
             }
 
             class ChapterControlColorField {
-                + property : ChapterOption<Color> 
+                + property : ChapterControl<Color> 
 
                 + build(BuildContext context) : Widget
             }
             
             class ChapterControlSliderField {
-                + property : ChapterOption<Number> 
+                + property : ChapterControl<Number> 
 
                 + build(BuildContext context) : Widget
             }
@@ -126,19 +126,19 @@ InjectionContainer -up-> ChaptersNotifier : creates
 InjectionContainer -up-> ThemeNotifier : creates
 Storybook -down-> Story : uses
 Story -right-> Chapter : uses
-Chapter -right-> ChapterOptions : creates
-ChapterOptions -> ChapterOption : creates
+Chapter -right-> ChapterControls : creates
+ChapterControls -> ChapterControl : creates
 
 EditingPanel -up-> ChaptersNotifier : uses
 Sidebar -up-> StoriesNotifier : uses
 Preview -up-> ChaptersNotifier : uses
-EditingPanel -up-> ChapterOptionMapper : uses
+EditingPanel -up-> ChapterControlMapper : uses
 ChapterControlField -> ChaptersNotifier : uses
 
-ChapterOptionMapper -> ChapterControlTextField : uses
-ChapterOptionMapper -> ChapterControlCheckboxField : uses
-ChapterOptionMapper -> ChapterControlColorField : uses
-ChapterOptionMapper -> ChapterControlSliderField : uses
+ChapterControlMapper -> ChapterControlTextField : uses
+ChapterControlMapper -> ChapterControlCheckboxField : uses
+ChapterControlMapper -> ChapterControlColorField : uses
+ChapterControlMapper -> ChapterControlSliderField : uses
 
 ChapterControlTextField -down-> ChapterControlField : uses
 ChapterControlCheckboxField -down-> ChapterControlField : uses
