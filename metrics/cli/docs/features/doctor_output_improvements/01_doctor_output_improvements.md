@@ -147,7 +147,7 @@ The following subsections explain the implementation strategy in more detail.
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
  
-Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and for the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the [`metrics_core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
+Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to create a reusable API for the validation output for the components listed below. For that, let's add a `validation_output` package within the [`metrics_core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) library.
 
 Consider the next sections describing the main classes of the `validation_output` package.
 
@@ -254,7 +254,7 @@ Assume a `CoolService` as a 3-rd party service for which we want to improve `doc
 
 As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) have a similar logic for the validation process. That's why we want to reuse the code across those tools to make it more DRY.
 
-This section describes the modifications that should be made to the `CI Integrations` tool in order to reuse the common code from the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) package.
+This section describes the modifications that should be made to the `CI Integrations` tool to reuse the common code from the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) package.
 
 Assume a `CoolIntegration` as a source party for which we want to provide the config validation. Consider the following subsections that describe the changes required to validate the config for the `CoolIntegration`.
 
