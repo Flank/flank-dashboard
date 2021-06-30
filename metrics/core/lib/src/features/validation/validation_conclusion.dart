@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/src/domain/entities/enum.dart';
 
 /// A class that represents a possible conclusion of the validation process.
@@ -17,9 +18,13 @@ class ValidationConclusion<T> extends Enum<T> with EquatableMixin {
 
   /// Creates a new instance of the [ValidationConclusion] with the
   /// given parameters.
+  ///
+  /// Throws an [AssertionError] if the given [name] or [value] is null.
   const ValidationConclusion({
-    this.name,
+    @required this.name,
+    @required T value,
     this.indicator,
-    T value,
-  }) : super(value);
+  })  : assert(name != null),
+        assert(value != null),
+        super(value);
 }
