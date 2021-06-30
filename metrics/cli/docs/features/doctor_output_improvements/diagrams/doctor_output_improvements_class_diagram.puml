@@ -40,7 +40,7 @@ package cli.lib as cli_lib {
         package cool_service {
             package adapter {
                 class CoolCliServiceAdapter {
-                    + versionHelper: VersionHelper
+                    - _versionHelper: VersionHelper
                     - _coolServiceCli: CoolServiceCli
 
                     + checkVersion(): Future<TargetValidationResult>
@@ -80,21 +80,19 @@ package core.lib.src.features.validation {
         }
 
         class ValidationTarget<T> {
-            + data: T
             + name: String
             + description: String
         }
 
         class ValidationConclusion<T> {
-            + data: T
             + name: String
             + indicator: String
         }
 
         class TargetValidationResult<T> {
             + data: T
-            + target: ValidationTarget
-            + conclusion: ValidationConclusion
+            + target: ValidationTarget<T>
+            + conclusion: ValidationConclusion<T>
             + description: String
             + details: Map<String, dynamic>
             + context: Map<String, dynamic>
@@ -131,6 +129,7 @@ ValidationResultPrinter --> ValidationResult : prints
 DoctorCommand --> DoctorFactory : uses
 DoctorCommand --> ValidationResultPrinter : uses
 DoctorCommand --> Doctor : uses
+DoctorCommand --> ValidationResult : uses
 
 DoctorFactory --> Doctor : creates
 

@@ -2,7 +2,6 @@
 
 package core.lib.src.features.validation_output.model {
     class ValidationTarget<T> {
-        + data: T
         + name: String
         + description: String
     }

@@ -13,21 +13,19 @@ package core.lib.src.features.validation_output {
         }
 
         class ValidationTarget<T> {
-            + data: T
             + name: String
             + description: String
         }
 
         class ValidationConclusion<T> {
-            + data: T
             + name: String
             + indicator: String
         }
 
         class TargetValidationResult<T> {
             + data: T
-            + target: ValidationTarget
-            + conclusion: ValidationConclusion
+            + target: ValidationTarget<T>
+            + conclusion: ValidationConclusion<T>
             + description: String
             + details: Map<String, dynamic>
             + context: Map<String, dynamic>
