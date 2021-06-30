@@ -14,13 +14,10 @@ package storybook {
             + build() : Widget
         }
 
-        class ChapterControls {
+        abstract class ChapterControls {
+            - _controls : Map<String, ChapterControl>
             + controls : Map<String, ChapterControl>
 
-            + addTextControl(String name, String value) : void
-            + addBoolControl(String name, bool value) : void
-            + addColorControl(String name, Color value) : void
-            + addNumberControl(String name, Number value) : void
             + getControlValue(String name) : dynamic
         }
 

@@ -37,7 +37,7 @@ package storybook {
         package buttons {
             package chapters {
                 class InactiveButtonChapter {
-                    - _chapterControls : ChapterControls
+                    - _chapterControls : InactiveButtonChapterControls
                     + name : String
                     + controls : Map<String, ChapterControl>
 
@@ -46,11 +46,13 @@ package storybook {
             }
             package controls {
                 class InactiveButtonChapterControls {
-                    + addControls() : void
+                    - {static}  _controls : Map<String, ChapterControl>
+                    
+                    + controls : Map<String, ChapterControl>
                 }
                 class ButtonsChapterControlName {
                     + {static} const label : ButtonsChapterControlName
-                    + {static} const  values : Set<ButtonsChapterControlName>
+                    + {static} const values : Set<ButtonsChapterControlName>
                     + toString() : String
                 }
             }
@@ -72,13 +74,10 @@ package storybook {
             + build() : Widget
         }
 
-        class ChapterControls {
+        abstract class ChapterControls {
+            - _controls : Map<String, ChapterControl>
             + controls : Map<String, ChapterControl>
 
-            + addTextControl(String name, String value) : void
-            + addBoolControl(String name, bool value) : void
-            + addColorControl(String name, Color value) : void
-            + addNumberControl(String name, Number value) : void
             + getControlValue(String name) : dynamic
         }
 

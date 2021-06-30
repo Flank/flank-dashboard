@@ -414,18 +414,9 @@ The `Story` is a class that groups together a list of `Chapter`s. The main purpo
 
 The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterControls](#chapter-controls). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterControls`.
 
-The `ChapterControls` is an abstract class that contains controls property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `controls` is a `Map` with the name of the control as a key, and a `ChapterControl` class as a value.
+The `ChapterControls` is an abstract class that contains controls property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `controls` is an `unmodifiable Map` with the name of the control as a key, and a `ChapterControl` class as a value.
 
-There is an `addControls` abstract method, that inherited classes should define to add different controls for the specific widget in one place.
-
-The `ChapterControls` has several methods to add different `controls` to the chapter:
-
-- ***addTextControl()*** - adds the `ChapterControl<String>` to the controls Map.
-- ***addBoolControl()*** - adds the `ChapterControl<bool>` to the controls Map.
-- ***addColorControl()*** - adds the `ChapterControl<Color>` to the controls Map.
-- ***addNumberControl()*** - adds the `ChapterControl<Number>` to the controls Map.
-
-And the `getControlValueByName()` to get the `ChapterControl` by related name.
+The is, also, the `getControlValueByName()` to get the `ChapterControl` value by the related name.
 
 The `ChapterControl` is deeply related to the `ChapterControls` and is used to build a single editing field for the storybook widget.
 
@@ -449,15 +440,15 @@ Consider the following sequence diagram, which shows the general flow of display
 
 #### ***How to add new widgets to the Metrics Storybook***
 
-Let's imagine, we want to add an `inactive button widget` to the storybook. 
+Let's imagine, you want to add an `inactive button widget` to the storybook. 
 
-You should follow the next steps:
+So, you should follow the next steps:
 
 1. Create a new folder in the `stories` and name it according to the type of a new widget (e.g., buttons).
 
 For example, `lib/stories/buttons`.
 
-2. Create a new file, named `buttons_story` in the `buttons` folder, that will represent a new story.
+2. Create a new file, named `buttons_story.dart` in the `buttons` folder, that will represent a new story.
 
 3. In the `buttons_story.dart` file you should create a class, let's say we named it `ButtonsStory` that should implement the base `Story` interface. Give your story a name (it is the name of the group in the sidebar in the storybook UI).
 
@@ -473,19 +464,19 @@ class ButtonsStory implements Story {
 
 4. Create a new folder in the `buttons` folder, name it `chapters`, and add a file with the name `inactive_button_chapter.dart`.
 
-In this file, you should create a class, that implements the `Chapter` interface.
+In this file, you should create a class, that extends the `Chapter`.
 
 ```dart
-class InactiveButtonChapter implements Chapter {
+class InactiveButtonChapter extends Chapter {
   @override
   String get name => 'Inactive Button';
 
   @override
-  ChapterControls get controls => null;
+  Map<String, ChapterControl> get controls => null;
 
   @override
   Widget build() {
-    return InactiveButton();
+    return InactiveButton(label: 'label');
   }
 }
 ```
@@ -494,30 +485,73 @@ The `name` property holds the name you want to display in the sidebar of the sto
 
 The `build` method should return the widget, you want to add to the storybook, so in this case - `InactiveButton`.
 
-_**Note**: If you want to see the widget within the different appearance state, you can use the `ChapterControls`. The following example shows how to change button's label dynamically:_
+_**Note**: If you want to see the widget within the different appearance state, you can perform some extra steps:_
+
+1. Create the `ButtonsChapterControlName`, that is an `Enum` class and holds widget's properties' names, you want to control. 
+
+For this purpose, create a new file `buttons_chapter_control_name.dart` in the `controls` folder (if it does not exist, create it under the `buttons` one). As we want to change the widget's *label*, we should add the `static const label` value to the class:
+
+```dart
+class ButtonsChapterControlName extends Enum<String> {
+  static const label = ButtonsChapterControlName._('label');
+
+  const ButtonsChapterControlName._(String value) : super(value);
+
+  static const Set<ButtonsChapterControlName> values = {
+    label,
+  };
+
+  @override
+  String toString() => value;
+}
+```
+
+2. Next, create the `InactiveButtonChapterControls` class, that contains controls for the concrete `InactiveButton` widget. 
+
+So, in the `controls` folder add a file with the name, let's say `inactive_button_chapter_controls.dart`. In this file you should create a class, that extends the `ChapterControls`:
+
+```dart
+class InactiveButtonChapterControls extends ChapterControls {
+  static Map<String, ChapterControl> _controls = {
+    ButtonsChapterControlName.label.value: ChapterControl<String>(
+      ButtonsChapterControlName.label.value,
+      'default value',
+    )
+  };
+
+  InactiveButtonChapterControls() : super(_controls);
+
+  @override
+  Map<String, ChapterControl> get controls => _controls;
+}
+```
+
+3. Now, you can concentrate on the `InactiveButtonChapter` and use the created above classes:
 
 ```dart
 class InactiveButtonChapter implements Chapter {
-  ChapterControls _controls = ChapterControls();
-
-  InactiveButtonChapter() {
-    _controls.textProperty('label', 'Inactive Button Label');
-  }
+  final ChapterControls _chapterControls = InactiveButtonChapterControls();
 
   @override
   String get name => 'Inactive Button';
 
   @override
-  ChapterControls get controls => _controls;
+  Map<String, ChapterControl> get controls => _chapterControls.controls;
 
   @override
   Widget build() {
+    final label = _chapterControls.getControlValue(
+      ButtonsChapterControlName.label.value,
+      ) as String;
+
     return InactiveButton(label: label);
   }
 }
 ```
 
-5. Add the `InactiveButtonChapter` to the `chapters` list in the `ButtonsStory` class.
+Using the `getControlValue()` method provided by the `ChapterControls` we are getting a value of the widget's control by its name.
+
+5. With that you can move on to add the created `Chapter` to the `ButtonsStory`.
 
 ```dart
 class ButtonsStory implements Story {
@@ -531,7 +565,7 @@ class ButtonsStory implements Story {
 }
 ```
 
-5. With that in place, go to the `main.dart` file and add the `ButtonsStory` to the `stories` list of the `Storybook` widget:
+5. Go to the `main.dart` file and add the `ButtonsStory` to the `stories` list of the `Storybook` widget:
 
 ```dart
 void main() {
