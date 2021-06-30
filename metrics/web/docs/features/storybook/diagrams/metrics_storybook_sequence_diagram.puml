@@ -44,6 +44,7 @@ alt Bob changes a chapter's appearance using control
     ChaptersNotifier -> Preview : notifies about changing chapter's appearance
     Preview -> UI : displays changed chapter
     UI -> Bob : shows a UI with the changed widget\n and a list of controls
+end
 
 alt Bob clicks the toggle theme button:
     Bob -> UI : clicks the toggle theme button
