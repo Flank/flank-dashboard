@@ -71,7 +71,7 @@ package validation.lib.src.validation {
     package model {
         package builder {
             class ValidationResultBuilder {
-                - _results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+                - _results: Map<ValidationTarget, TargetValidationResult>
 
                 + setResult(result: TargetValidationResult): void
                 + setEmptyResults(result: TargetValidationResult): void
