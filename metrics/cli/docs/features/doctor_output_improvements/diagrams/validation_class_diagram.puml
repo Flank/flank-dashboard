@@ -1,6 +1,6 @@
 @startuml validation_output_class_diagram
 
-package validation.lib.src.validation {
+package validation.lib.src {
     package model {
         package builder {
             class ValidationResultBuilder {
@@ -12,20 +12,20 @@ package validation.lib.src.validation {
             }
         }
 
-        class ValidationTarget<T> {
+        class ValidationTarget {
             + name: String
             + description: String
         }
 
-        class ValidationConclusion<T> {
+        class ValidationConclusion {
             + name: String
             + indicator: String
         }
 
         class TargetValidationResult<T> {
             + data: T
-            + target: ValidationTarget<T>
-            + conclusion: ValidationConclusion<T>
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
             + description: String
             + details: Map<String, dynamic>
             + context: Map<String, dynamic>

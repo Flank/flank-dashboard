@@ -147,12 +147,12 @@ The following subsections explain the implementation strategy in more detail.
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
  
-Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to have a reusable API for the validation output for the components listed below. For that, let's create a `Validation` package to store the common abstractions of the validation functionality.
+Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to have a reusable API for the validation output for the components listed above. For that, let's create a `Validation` package to store the common abstractions of the validation functionality.
 
 Consider the next sections describing the main classes of the `Validation` package.
 
 #### ValidationTarget
-A `ValidationTarget` is an entity which value is used in the validation process (e.g., it's a version of a CLI package). 
+A `ValidationTarget` is an entity that represents the value under the validation (e.g., it's a version of a CLI package).
 
 To represent a `ValidationTarget` in output to the user, we should know its name and a description.
 
@@ -172,7 +172,7 @@ The `TargetValidationResult` should include the following fields:
 - A context of this conclusion (e.g., process output, additional recommendations, etc.).
 
 #### ValidationResult
-A `ValidationResult` is a class that holds the validation results for each `ValidationTarget`.
+A `ValidationResult` is a class that holds the `TargetValidationResult` for each `ValidationTarget`. In simple words, the `ValidationResult` is an overall result of the validation process that contains the validation result for all validated targets.
 
 #### ValidationResultBuilder 
 A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult`. The `ValidationResultBuilder` has the main build method that returns a `ValidationResult`.
@@ -212,7 +212,7 @@ Consider the following subsections that describe each step in more detail.
 
 As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) have a similar logic for the validation process. That's why we want to reuse the code across those tools to make it more DRY.
 
-This section describes the modifications that should be made to the `CI Integrations` tool to use the common code from the `Validation` package.
+This section describes the modifications that should be made to the `CI Integrations` tool to reuse the common code from the `Validation` package.
 
 Assume a `CoolIntegration` as a source party for which we want to provide the config validation. Consider the following subsections that describe the changes required to validate the config for the `CoolIntegration`.
 

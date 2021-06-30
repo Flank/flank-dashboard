@@ -67,7 +67,7 @@ package cli.lib as cli_lib {
     }
 }
 
-package validation.lib.src.validation {
+package validation.lib.src {
     package model {
         package builder {
             class ValidationResultBuilder {
@@ -79,20 +79,20 @@ package validation.lib.src.validation {
             }
         }
 
-        class ValidationTarget<T> {
+        class ValidationTarget {
             + name: String
             + description: String
         }
 
-        class ValidationConclusion<T> {
+        class ValidationConclusion {
             + name: String
             + indicator: String
         }
 
         class TargetValidationResult<T> {
             + data: T
-            + target: ValidationTarget<T>
-            + conclusion: ValidationConclusion<T>
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
             + description: String
             + details: Map<String, dynamic>
             + context: Map<String, dynamic>
@@ -126,23 +126,22 @@ ValidationResultBuilder -up-> TargetValidationResult : uses
 
 ValidationResultPrinter --> ValidationResult : prints
 
-DoctorCommand --> DoctorFactory : uses
+DoctorCommand -up-> DoctorFactory : uses
 DoctorCommand --> ValidationResultPrinter : uses
 DoctorCommand --> Doctor : uses
 DoctorCommand --> ValidationResult : uses
 
-DoctorFactory --> Doctor : creates
+DoctorFactory -up-> Doctor : creates
 
 Doctor --> ValidationResultBuilder : uses
 Doctor --> ValidationResult : provides
-Doctor -up-> CoolService : uses
+Doctor --> CoolService : uses
 
-CoolCliServiceAdapter ..|> CoolService
-CoolCliServiceAdapter --> CoolServiceCli : uses
+CoolCliServiceAdapter .up.|> CoolService
+CoolCliServiceAdapter -up-> CoolServiceCli : uses
 CoolCliServiceAdapter -up-> VersionHelper : uses
+CoolCliServiceAdapter --> TargetValidationResult : uses
 
-CoolService --|> InfoService
-
-DoctorCommand -[hidden]left-> CoolCliServiceAdapter
+CoolService -up-|> InfoService
 
 @enduml
