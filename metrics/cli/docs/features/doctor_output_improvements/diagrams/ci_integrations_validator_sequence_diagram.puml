@@ -17,7 +17,7 @@ participant CoolIntegrationClient
 
 end box
 
-box Metrics Core #whiteSmoke
+box Validation #whiteSmoke
 
 participant ValidationResultBuilder
 participant ValidationResultPrinter

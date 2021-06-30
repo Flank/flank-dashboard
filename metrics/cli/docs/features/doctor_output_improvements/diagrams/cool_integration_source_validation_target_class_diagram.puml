@@ -1,6 +1,6 @@
 @startuml cool_integration_source_validation_target_class_diagram
 
-package core.lib.src.features.validation_output.model {
+package validation.lib.src.validation.model {
     class ValidationTarget<T> {
         + name: String
         + description: String

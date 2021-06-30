@@ -1,6 +1,6 @@
 @startuml validation_output_class_diagram
 
-package core.lib.src.features.validation_output {
+package validation.lib.src.validation {
     package model {
         package builder {
             class ValidationResultBuilder {
