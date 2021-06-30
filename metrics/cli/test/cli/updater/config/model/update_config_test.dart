@@ -48,14 +48,14 @@ void main() {
       releaseName: releaseName,
     );
 
-    test("throws an ArgumentError if the given auth token is null", () {
+    test("throws an ArgumentError if the given firebase config is null", () {
       expect(
         () => UpdateConfig(firebaseConfig: null, sentryConfig: sentryConfig),
         throwsArgumentError,
       );
     });
 
-    test("creates an instance with the given values", () {
+    test("creates an instance with the given parameters", () {
       final config = UpdateConfig(
         firebaseConfig: firebaseConfig,
         sentryConfig: sentryConfig,
@@ -72,14 +72,14 @@ void main() {
     });
 
     test(".fromJson() creates an instance from a json map", () {
-      final expectedConfig = UpdateConfig(
+      final expected = UpdateConfig(
         firebaseConfig: firebaseConfig,
         sentryConfig: sentryConfig,
       );
 
       final config = UpdateConfig.fromJson(json);
 
-      expect(config, equals(expectedConfig));
+      expect(config, equals(expected));
     });
 
     test("equals to another UpdateConfig with the same parameters", () {

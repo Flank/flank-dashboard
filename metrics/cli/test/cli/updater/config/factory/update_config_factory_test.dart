@@ -3,8 +3,6 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/updater/config/model/firebase_config.dart';
-import 'package:cli/cli/updater/config/model/sentry_config.dart';
 import 'package:cli/cli/updater/config/model/update_config.dart';
 import 'package:cli/cli/updater/config/parser/update_config_parser.dart';
 import 'package:cli/cli/updater/config/factory/update_config_factory.dart';
@@ -17,17 +15,9 @@ import '../../../../test_utils/matchers.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group("RawIntegrationConfigFactory", () {
+  group("UpdateConfigFactory", () {
     const configPath = 'configPath';
     const content = 'content';
-    const firebaseAuthToken = 'firebaseAuthToken';
-    const projectId = 'projectId';
-    const googleSignInClientId = 'googleSignInClientId';
-    const sentryAuthToken = 'sentryAuthToken';
-    const organizationSlug = 'organizationSlug';
-    const projectSlug = 'projectSlug';
-    const projectDsn = 'projectDsn';
-    const releaseName = 'releaseName';
 
     final fileHelper = _FileHelperMock();
     final configParser = _UpdateConfigParserMock();
@@ -35,18 +25,6 @@ void main() {
     final configFactory = UpdateConfigFactory(
       fileHelper: fileHelper,
       configParser: configParser,
-    );
-    final firebaseConfig = FirebaseConfig(
-      authToken: firebaseAuthToken,
-      projectId: projectId,
-      googleSignInClientId: googleSignInClientId,
-    );
-    final sentryConfig = SentryConfig(
-      authToken: sentryAuthToken,
-      organizationSlug: organizationSlug,
-      projectSlug: projectSlug,
-      projectDsn: projectDsn,
-      releaseName: releaseName,
     );
 
     tearDown(() {
@@ -78,29 +56,29 @@ void main() {
     test(
       "creates an instance with the default file helper, if the given one is null",
       () {
-        final rawConfigFactory = UpdateConfigFactory(
+        final updateConfigFactory = UpdateConfigFactory(
           fileHelper: null,
           configParser: configParser,
         );
 
-        expect(rawConfigFactory.fileHelper, isNotNull);
+        expect(updateConfigFactory.fileHelper, isNotNull);
       },
     );
 
     test(
-      "creates an instance with the default raw config parser, if the given one is null",
+      "creates an instance with the default update config parser, if the given one is null",
       () {
-        final rawConfigFactory = UpdateConfigFactory(
+        final updateConfigFactory = UpdateConfigFactory(
           fileHelper: fileHelper,
           configParser: null,
         );
 
-        expect(rawConfigFactory.configParser, isNotNull);
+        expect(updateConfigFactory.configParser, isNotNull);
       },
     );
 
     test(
-      ".create() throws an ArgumentError if the given path is null",
+      ".create() throws an ArgumentError if the given config path is null",
       () {
         expect(() => configFactory.create(null), throwsArgumentError);
       },
@@ -140,15 +118,27 @@ void main() {
     );
 
     test(
-      ".create() returns the config parsed by the raw integration config parser",
+      ".create() returns the config parsed by the update config parser",
       () {
-        final expectedConfig = UpdateConfig(
-          firebaseConfig: firebaseConfig,
-          sentryConfig: sentryConfig,
-        );
+        const json = {
+          'firebase': {
+            'auth_token': 'token',
+            'project_id': 'projectId',
+            'google_sign_in_client_id': 'clientId',
+          },
+          'sentry': {
+            'auth_token': 'token',
+            'organization_slug': 'orgSlug',
+            'project_slug': 'projectSlug',
+            'project_dsn': 'projectDsn',
+            'release_name': 'releaseName'
+          },
+        };
 
-        when(configParser.parse(any)).thenReturn(expectedConfig);
+        final expectedConfig = UpdateConfig.fromJson(json);
+
         whenReadContent().thenReturn(content);
+        when(configParser.parse(content)).thenReturn(expectedConfig);
 
         final config = configFactory.create(configPath);
 

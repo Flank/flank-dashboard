@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 /// A class that represents a Firebase configuration.
 class FirebaseConfig extends Equatable {
@@ -22,8 +23,8 @@ class FirebaseConfig extends Equatable {
   /// Throws an [ArgumentError] if the given [authToken] is `null`.
   /// Throws an [ArgumentError] if the given [projectId] is `null`.
   FirebaseConfig({
-    this.authToken,
-    this.projectId,
+    @required this.authToken,
+    @required this.projectId,
     this.googleSignInClientId,
   }) {
     ArgumentError.checkNotNull(authToken, 'authToken');

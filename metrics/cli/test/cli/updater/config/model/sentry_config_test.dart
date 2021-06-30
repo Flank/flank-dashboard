@@ -109,7 +109,7 @@ void main() {
     });
 
     test(".fromJson() creates an instance from a json map", () {
-      final expectedConfig = SentryConfig(
+      final expected = SentryConfig(
         authToken: authToken,
         organizationSlug: organizationSlug,
         projectSlug: projectSlug,
@@ -119,10 +119,10 @@ void main() {
 
       final config = SentryConfig.fromJson(json);
 
-      expect(config, equals(expectedConfig));
+      expect(config, equals(expected));
     });
 
-    test("equals to another UpdateConfig with the same parameters", () {
+    test("equals to another SentryConfig with the same parameters", () {
       final expected = SentryConfig(
         authToken: authToken,
         organizationSlug: organizationSlug,

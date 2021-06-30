@@ -39,7 +39,7 @@ void main() {
       );
     });
 
-    test("creates an instance with the given values", () {
+    test("creates an instance with the given parameters", () {
       final config = FirebaseConfig(
         authToken: authToken,
         projectId: projectId,
@@ -58,7 +58,7 @@ void main() {
     });
 
     test(".fromJson() creates an instance from a json map", () {
-      final expectedConfig = FirebaseConfig(
+      final expected = FirebaseConfig(
         authToken: authToken,
         projectId: projectId,
         googleSignInClientId: googleSignInClientId,
@@ -66,10 +66,10 @@ void main() {
 
       final config = FirebaseConfig.fromJson(json);
 
-      expect(config, equals(expectedConfig));
+      expect(config, equals(expected));
     });
 
-    test("equals to another UpdateConfig with the same parameters", () {
+    test("equals to another FirebaseConfig with the same parameters", () {
       final expected = FirebaseConfig(
         authToken: authToken,
         projectId: projectId,

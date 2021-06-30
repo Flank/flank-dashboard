@@ -25,8 +25,9 @@ class DeployerFactory {
 
   /// Creates a new instance of the [Deployer].
   Deployer create() {
+    const fileHelper = FileHelper();
+
     final services = _servicesFactory.create();
-    final fileHelper = FileHelper();
     final promptWriter = IOPromptWriter();
     final prompter = Prompter(promptWriter);
     final deployPathsFactory = DeployPathsFactory();

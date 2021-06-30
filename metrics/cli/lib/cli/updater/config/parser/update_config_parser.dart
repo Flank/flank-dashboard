@@ -9,6 +9,9 @@ class UpdateConfigParser {
   /// The YAML parser used to convert YAML string to the [Map] instance.
   static const YamlMapParser _parser = YamlMapParser();
 
+  /// Create a new instance of the [UpdateConfigParser].
+  const UpdateConfigParser();
+
   /// Parses the given [configYaml] into the [UpdateConfig] instance.
   ///
   /// Throws an [ArgumentError] if the [configYaml] is `null`.

@@ -21,10 +21,10 @@ void main() {
       key1: value1,
       key2: value2,
     };
+    const helper = FileHelper();
 
     final file = _FileMock();
     final directory = DirectoryMock();
-    final helper = FileHelper();
 
     tearDown(() {
       reset(file);

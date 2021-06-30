@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 /// A class that represents a Sentry configuration.
 class SentryConfig extends Equatable {
@@ -37,11 +38,11 @@ class SentryConfig extends Equatable {
   /// Throws an [ArgumentError] if the given [projectDsn] is `null`.
   /// Throws an [ArgumentError] if the given [releaseName] is `null`.
   SentryConfig({
-    this.authToken,
-    this.organizationSlug,
-    this.projectSlug,
-    this.projectDsn,
-    this.releaseName,
+    @required this.authToken,
+    @required this.organizationSlug,
+    @required this.projectSlug,
+    @required this.projectDsn,
+    @required this.releaseName,
   }) {
     ArgumentError.checkNotNull(authToken, 'authToken');
     ArgumentError.checkNotNull(organizationSlug, 'organizationSlug');

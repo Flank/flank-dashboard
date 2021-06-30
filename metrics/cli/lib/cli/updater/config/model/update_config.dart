@@ -4,6 +4,7 @@
 import 'package:cli/cli/updater/config/model/firebase_config.dart';
 import 'package:cli/cli/updater/config/model/sentry_config.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 /// A class that represents an update configuration.
 class UpdateConfig extends Equatable {
@@ -19,7 +20,10 @@ class UpdateConfig extends Equatable {
   /// Creates a new instance of the [UpdateConfig] with the given parameters.
   ///
   /// Throws an [ArgumentError] if the given [firebaseConfig] is `null`.
-  UpdateConfig({this.firebaseConfig, this.sentryConfig}) {
+  UpdateConfig({
+    @required this.firebaseConfig,
+    this.sentryConfig,
+  }) {
     ArgumentError.checkNotNull(firebaseConfig, 'firebaseConfig');
   }
 
