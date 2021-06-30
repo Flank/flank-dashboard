@@ -32,9 +32,8 @@ alt Bob clicks on the chapter(widget) in the Sidebar:
     ChaptersNotifier -> Preview : provides a chapter
     ChaptersNotifier -> EP : provides a chapter
     Preview -> UI : displays a selected chapter
-    EP -> UI : displays list of options to change a chapter's appearance
-    UI -> Bob : shows a UI with the selected widget\n and a list of options to change a chapter's appearance
-end
+    EP -> UI : displays list of controls to change a chapter's appearance
+    UI -> Bob : shows a UI with the selected widget\n and a list of controls to change a chapter's appearanceend
 
 alt Bob clicks the toggle theme button:
     Bob -> UI : clicks the toggle theme button
