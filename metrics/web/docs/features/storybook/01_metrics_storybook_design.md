@@ -434,7 +434,7 @@ The next diagram shows the relations between all described classes:
 
 ![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
-Consider the following sequence diagram, which shows the general flow of displaying widgets and changing its appearance in the storybook application:
+Consider the following sequence diagram, which shows the general flow of displaying widgets and changing their appearance in the storybook application:
 
 ![Metrics Storybook sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_sequence_diagram.puml)
 
@@ -487,7 +487,7 @@ The `build` method should return the widget, you want to add to the storybook, s
 
 _**Note**: If you want to see the widget within the different appearance state, you can perform some extra steps:_
 
-1. Create the `ButtonsChapterControlName`, that is an `Enum` class and holds widget's properties' names, you want to control. 
+1. Create the `ButtonsChapterControlName`, which is an `Enum` class and holds widget's properties' names, you want to control. 
 
 For this purpose, create a new file `buttons_chapter_control_name.dart` in the `controls` folder (if it does not exist, create it under the `buttons` one). As we want to change the widget's *label*, we should add the `static const label` value to the class:
 
@@ -579,4 +579,4 @@ void main() {
 }
 ```
 
-As a result, you will see a ***'Inactive Button'*** widget within the ***'Buttons'*** group in the sidebar of the storybook application.
+As a result, you will see an ***'Inactive Button'*** widget within the ***'Buttons'*** group in the sidebar of the storybook application.
