@@ -38,22 +38,27 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> deployFirebase(String projectId, String firebasePath) async {
-    await _firebaseCli.setFirebaseProject(projectId, firebasePath);
-    await _firebaseCli.deployFirestore(firebasePath);
-    await _firebaseCli.deployFunctions(firebasePath);
+  Future<void> deployFirebase(
+    String projectId,
+    String firebasePath, [
+    String authToken,
+  ]) async {
+    await _firebaseCli.setFirebaseProject(projectId, firebasePath, authToken);
+    await _firebaseCli.deployFirestore(firebasePath, authToken);
+    await _firebaseCli.deployFunctions(firebasePath, authToken);
   }
 
   @override
   Future<void> deployHosting(
     String projectId,
     String target,
-    String appPath,
-  ) async {
-    await _firebaseCli.setFirebaseProject(projectId, appPath);
+    String appPath, [
+    String authToken,
+  ]) async {
+    await _firebaseCli.setFirebaseProject(projectId, appPath, authToken);
     await _firebaseCli.clearTarget(target, appPath);
     await _firebaseCli.applyTarget(projectId, target, appPath);
-    await _firebaseCli.deployHosting(target, appPath);
+    await _firebaseCli.deployHosting(target, appPath, authToken);
   }
 
   @override

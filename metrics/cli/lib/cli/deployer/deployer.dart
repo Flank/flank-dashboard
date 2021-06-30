@@ -4,9 +4,10 @@
 import 'dart:io';
 
 import 'package:cli/cli/deployer/constants/deploy_constants.dart';
-import 'package:cli/cli/deployer/model/deploy_paths.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
-import 'package:cli/common/model/sentry_config.dart';
+import 'package:cli/common/model/factory/paths_factory.dart';
+import 'package:cli/common/model/paths.dart';
+import 'package:cli/common/model/sentry_web_config.dart';
 import 'package:cli/common/model/services.dart';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:cli/prompter/prompter.dart';
@@ -19,8 +20,6 @@ import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/util/file/file_helper.dart';
-
-import 'model/factory/deploy_paths_factory.dart';
 
 /// A class providing method for deploying the Metrics Web Application.
 class Deployer {
@@ -48,8 +47,8 @@ class Deployer {
   /// A [Prompter] class this deployer uses to interact with a user.
   final Prompter _prompter;
 
-  /// A [DeployPathsFactory] class uses to create the [DeployPaths].
-  final DeployPathsFactory _deployPathsFactory;
+  /// A [PathsFactory] class uses to create the [Paths].
+  final PathsFactory _pathsFactory;
 
   /// Creates a new instance of the [Deployer] with the given services.
   ///
@@ -62,12 +61,12 @@ class Deployer {
   /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
   /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
   /// Throws an [ArgumentError] if the given [prompter] is `null`.
-  /// Throws an [ArgumentError] if the given [deployPathsFactory] is `null`.
+  /// Throws an [ArgumentError] if the given [pathsFactory] is `null`.
   Deployer({
     Services services,
     FileHelper fileHelper,
     Prompter prompter,
-    DeployPathsFactory deployPathsFactory,
+    PathsFactory pathsFactory,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
@@ -76,7 +75,7 @@ class Deployer {
         _sentryService = services?.sentryService,
         _fileHelper = fileHelper,
         _prompter = prompter,
-        _deployPathsFactory = deployPathsFactory {
+        _pathsFactory = pathsFactory {
     ArgumentError.checkNotNull(services, 'services');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
@@ -86,7 +85,7 @@ class Deployer {
     ArgumentError.checkNotNull(_sentryService, 'sentryService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
     ArgumentError.checkNotNull(_prompter, 'prompter');
-    ArgumentError.checkNotNull(_deployPathsFactory, 'deployPathsFactory');
+    ArgumentError.checkNotNull(_pathsFactory, 'pathsFactory');
   }
 
   /// Deploys the Metrics Web Application.
@@ -96,7 +95,7 @@ class Deployer {
     final projectId = await _gcloudService.createProject();
 
     final tempDirectory = _createTempDirectory();
-    final deployPaths = _deployPathsFactory.create(tempDirectory.path);
+    final paths = _pathsFactory.create(tempDirectory.path);
 
     bool isDeploymentSuccessful = true;
 
@@ -106,12 +105,12 @@ class Deployer {
       _gcloudService.configureProjectOrganization(projectId);
       await _firebaseService.createWebApp(projectId);
 
-      await _gitService.checkout(DeployConstants.repoURL, deployPaths.rootPath);
+      await _gitService.checkout(DeployConstants.repoURL, paths.rootPath);
       await _installNpmDependencies(
-        deployPaths.firebasePath,
-        deployPaths.firebaseFunctionsPath,
+        paths.firebasePath,
+        paths.firebaseFunctionsPath,
       );
-      await _flutterService.build(deployPaths.webAppPath);
+      await _flutterService.build(paths.webAppPath);
       await _firebaseService.upgradeBillingPlan(projectId);
       await _firebaseService.enableAnalytics(projectId);
       await _firebaseService.initializeFirestoreData(projectId);
@@ -119,21 +118,21 @@ class Deployer {
       final googleClientId = await _firebaseService.configureAuthProviders(
         projectId,
       );
-      final sentryConfig = await _setupSentry(
-        deployPaths.webAppPath,
-        deployPaths.webAppBuildPath,
+      final sentryWebConfig = await _setupSentry(
+        paths.webAppPath,
+        paths.webAppBuildPath,
       );
 
       final metricsConfig = WebMetricsConfig(
         googleSignInClientId: googleClientId,
-        sentryConfig: sentryConfig,
+        sentryWebConfig: sentryWebConfig,
       );
 
-      _applyMetricsConfig(metricsConfig, deployPaths.metricsConfigPath);
+      _applyMetricsConfig(metricsConfig, paths.metricsConfigPath);
       await _deployToFirebase(
         projectId,
-        deployPaths.firebasePath,
-        deployPaths.webAppPath,
+        paths.firebasePath,
+        paths.webAppPath,
       );
 
       await _gcloudService.configureOAuthOrigins(projectId);
@@ -174,7 +173,10 @@ class Deployer {
 
   /// Sets up a Sentry for the application under deployment within
   /// the given [webPath] and the [buildWebPath].
-  Future<SentryConfig> _setupSentry(String webPath, String buildWebPath) async {
+  Future<SentryWebConfig> _setupSentry(
+    String webPath,
+    String buildWebPath,
+  ) async {
     final shouldSetupSentry = _prompter.promptConfirm(
       DeployStrings.setupSentry,
     );
@@ -186,7 +188,7 @@ class Deployer {
     final release = await _createSentryRelease(webPath, buildWebPath);
     final dsn = _sentryService.getProjectDsn(release.project);
 
-    return SentryConfig(
+    return SentryWebConfig(
       release: release.name,
       dsn: dsn,
       environment: DeployConstants.sentryEnvironment,
@@ -197,18 +199,20 @@ class Deployer {
   Future<SentryRelease> _createSentryRelease(
     String webPath,
     String buildWebPath,
-  ) {
+  ) async {
+    final release = _sentryService.getSentryRelease();
     final webSourceMap = SourceMap(
       path: webPath,
       extensions: const ['dart'],
     );
-
     final buildSourceMap = SourceMap(
       path: buildWebPath,
       extensions: const ['map', 'js'],
     );
 
-    return _sentryService.createRelease([webSourceMap, buildSourceMap]);
+    await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
+
+    return release;
   }
 
   /// Deploys Firebase components and application to the Firebase project

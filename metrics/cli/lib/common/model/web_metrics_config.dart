@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/common/model/sentry_config.dart';
+import 'package:cli/common/model/sentry_web_config.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An implementation of the [MetricsConfig] for Metrics Web application.
@@ -19,24 +19,24 @@ class WebMetricsConfig implements MetricsConfig {
   static const String sentryReleaseName = "SENTRY_RELEASE";
 
   /// A Sentry configuration.
-  final SentryConfig sentryConfig;
+  final SentryWebConfig sentryWebConfig;
 
   @override
   final String googleSignInClientId;
 
   @override
-  String get sentryDsn => sentryConfig?.dsn;
+  String get sentryDsn => sentryWebConfig?.dsn;
 
   @override
-  String get sentryEnvironment => sentryConfig?.environment;
+  String get sentryEnvironment => sentryWebConfig?.environment;
 
   @override
-  String get sentryRelease => sentryConfig?.release;
+  String get sentryRelease => sentryWebConfig?.release;
 
   /// Creates a new instance of the [WebMetricsConfig] with the given parameters.
   WebMetricsConfig({
     this.googleSignInClientId,
-    this.sentryConfig,
+    this.sentryWebConfig,
   });
 
   /// Converts this [WebMetricsConfig] to the [Map].
