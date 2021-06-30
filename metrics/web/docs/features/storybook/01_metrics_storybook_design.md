@@ -339,6 +339,9 @@ Consider the following structure of the `Metrics Storybook`:
 >       * `buttons/`
 >         * `chapters/`
 >           * `inactive_button_chapter.dart`
+>         * `controls/`
+>           * `buttons_chapter_control_name.dart`
+>           * `inactive_button_chapter_controls.dart`
 >         * `buttons_story.dart`
 >       * `...`
 >       * `chapter_controls.dart`
@@ -411,14 +414,18 @@ The `Story` is a class that groups together a list of `Chapter`s. The main purpo
 
 The `Chapter` represents a specific widget we want to show in the storybook. The class contains a name of the specific chapter and a [ChapterControls](#chapter-controls). There is, also, the `build` method, which is responsible for building the widget, represented by the `Chapter` and applying the `ChapterControls`.
 
-The `ChapterControls` class contains controls property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `controls` is a `Map` with the name of the control as a key, and a `ChapterControl` class as a value.
+The `ChapterControls` is an abstract class that contains controls property, that UI widgets can use to build the [editing panel](#editing-panel) for the widget. The `controls` is a `Map` with the name of the control as a key, and a `ChapterControl` class as a value.
+
+There is an `addControls` abstract method, that inherited classes should define to add different controls for the specific widget in one place.
 
 The `ChapterControls` has several methods to add different `controls` to the chapter:
 
-- ***textControl()*** - adds the `ChapterControl<String>` to the controls Map.
-- ***boolControl()*** - adds the `ChapterControl<bool>` to the controls Map.
-- ***colorControl()*** - adds the `ChapterControl<Color>` to the controls Map.
-- ***numberControl()*** - adds the `ChapterControl<Number>` to the controls Map.
+- ***addTextControl()*** - adds the `ChapterControl<String>` to the controls Map.
+- ***addBoolControl()*** - adds the `ChapterControl<bool>` to the controls Map.
+- ***addColorControl()*** - adds the `ChapterControl<Color>` to the controls Map.
+- ***addNumberControl()*** - adds the `ChapterControl<Number>` to the controls Map.
+
+And the `getControlValueByName()` to get the `ChapterControl` by related name.
 
 The `ChapterControl` is deeply related to the `ChapterControls` and is used to build a single editing field for the storybook widget.
 

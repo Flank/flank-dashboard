@@ -17,10 +17,11 @@ package storybook {
         class ChapterControls {
             + controls : Map<String, ChapterControl>
 
-            + textControl(String name, String value) : String
-            + boolControl(String name, bool value) : bool
-            + colorControl(String name, Color value) : Color
-            + numberControl(String name, Number value) : Number
+            + addTextControl(String name, String value) : void
+            + addBoolControl(String name, bool value) : void
+            + addColorControl(String name, Color value) : void
+            + addNumberControl(String name, Number value) : void
+            + getControlValue(String name) : dynamic
         }
 
         class ChapterControl<T> {

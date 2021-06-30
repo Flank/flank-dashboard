@@ -13,6 +13,12 @@ package widgets/theme {
     }
 }
 
+package metrics/core/lib/src/domain/entities {
+    abstract class Enum<T> {
+        + value : T
+    }
+}
+
 package storybook {
     package state {
         class ChaptersNotifier {
@@ -28,6 +34,32 @@ package storybook {
     }
 
     package stories {
+        package buttons {
+            package chapters {
+                class InactiveButtonChapter {
+                    - _chapterControls : ChapterControls
+                    + name : String
+                    + controls : Map<String, ChapterControl>
+
+                    + build() : Widget
+                }
+            }
+            package controls {
+                class InactiveButtonChapterControls {
+                    + addControls() : void
+                }
+                class ButtonsChapterControlName {
+                    + {static} const label : ButtonsChapterControlName
+                    + {static} const  values : Set<ButtonsChapterControlName>
+                    + toString() : String
+                }
+            }
+            class ButtonsStory {
+                + name : String
+                + chapters : List<Chapter>
+            }
+        }
+
         abstract class Story {
             + name : String
             + chapters : List<Chapter>
@@ -43,10 +75,11 @@ package storybook {
         class ChapterControls {
             + controls : Map<String, ChapterControl>
 
-            + textControl(String name, String value) : String
-            + boolControl(String name, bool value) : bool
-            + colorControl(String name, Color value) : Color
-            + numberControl(String name, Number value) : Number
+            + addTextControl(String name, String value) : void
+            + addBoolControl(String name, bool value) : void
+            + addColorControl(String name, Color value) : void
+            + addNumberControl(String name, Number value) : void
+            + getControlValue(String name) : dynamic
         }
 
         class ChapterControl<T> {
@@ -91,25 +124,25 @@ package storybook {
             }
 
             class ChapterControlTextField {
-                + property : ChapterControl<String> 
+                + property : ChapterControl<String>
 
                 + build(BuildContext context) : Widget
             }
 
             class ChapterControlCheckboxField {
-                + property : ChapterControl<Bool> 
+                + property : ChapterControl<Bool>
 
                 + build(BuildContext context) : Widget
             }
 
             class ChapterControlColorField {
-                + property : ChapterControl<Color> 
+                + property : ChapterControl<Color>
 
                 + build(BuildContext context) : Widget
             }
-            
+
             class ChapterControlSliderField {
-                + property : ChapterControl<Number> 
+                + property : ChapterControl<Number>
 
                 + build(BuildContext context) : Widget
             }
@@ -124,10 +157,18 @@ Storybook -up-> Preview : creates
 InjectionContainer -up-> StoriesNotifier : creates
 InjectionContainer -up-> ChaptersNotifier : creates
 InjectionContainer -up-> ThemeNotifier : creates
-Storybook -down-> Story : uses
+Storybook -down-> ButtonsStory : uses
 Story -right-> Chapter : uses
 Chapter -right-> ChapterControls : creates
 ChapterControls -> ChapterControl : creates
+
+ButtonsStory -down-|> Story : extends
+ButtonsStory -> InactiveButtonChapter : creates
+InactiveButtonChapter -down-|> Chapter : extends
+InactiveButtonChapterControls -down-|> ChapterControls: extends
+InactiveButtonChapter -right-> InactiveButtonChapterControls : creates
+InactiveButtonChapterControls -right-> ButtonsChapterControlName : uses
+ButtonsChapterControlName -right-|> Enum : extends
 
 EditingPanel -up-> ChaptersNotifier : uses
 Sidebar -up-> StoriesNotifier : uses
