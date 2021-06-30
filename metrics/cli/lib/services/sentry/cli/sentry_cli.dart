@@ -26,15 +26,16 @@ class SentryCli extends Cli {
     ArgumentError.checkNotNull(release);
 
     final project = release.project;
-    final arguments = [
-      'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
-      'new',
-      release.name,
-    ];
-
-    _addAuthToken(arguments, authToken);
+    final arguments = _createArguments(
+      authToken,
+      [
+        'releases',
+        '--org=${project.organizationSlug}',
+        '--project=${project.projectSlug}',
+        'new',
+        release.name,
+      ],
+    );
 
     return run(arguments);
   }
@@ -60,24 +61,25 @@ class SentryCli extends Cli {
 
     final project = release.project;
     final extensions = sourceMap.extensions;
-    final arguments = [
-      'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
-      'files',
-      release.name,
-      'upload-sourcemaps',
-      sourceMap.path,
-      '--rewrite',
-    ];
+    final arguments = _createArguments(
+      authToken,
+      [
+        'releases',
+        '--org=${project.organizationSlug}',
+        '--project=${project.projectSlug}',
+        'files',
+        release.name,
+        'upload-sourcemaps',
+        sourceMap.path,
+        '--rewrite',
+      ],
+    );
 
     if (extensions != null) {
       for (final extension in extensions) {
         arguments.add('--ext=$extension');
       }
     }
-
-    _addAuthToken(arguments, authToken);
 
     return run(arguments);
   }
@@ -93,15 +95,16 @@ class SentryCli extends Cli {
     ArgumentError.checkNotNull(release);
 
     final project = release.project;
-    final arguments = [
-      'releases',
-      '--org=${project.organizationSlug}',
-      '--project=${project.projectSlug}',
-      'finalize',
-      release.name,
-    ];
-
-    _addAuthToken(arguments, authToken);
+    final arguments = _createArguments(
+      authToken,
+      [
+        'releases',
+        '--org=${project.organizationSlug}',
+        '--project=${project.projectSlug}',
+        'finalize',
+        release.name,
+      ],
+    );
 
     return run(arguments);
   }
@@ -111,13 +114,15 @@ class SentryCli extends Cli {
     return run(['--version']);
   }
 
-  /// Adds a token argument to the [arguments] list
-  /// if the given [authToken] is not `null`.
-  void _addAuthToken(List<String> arguments, String authToken) {
+  /// Creates a list of arguments from the given [arguments] with an auth token
+  /// argument if the given [authToken] is not `null`.
+  List<String> _createArguments(String authToken, List<String> arguments) {
     if (authToken != null) {
       final tokenArgumentList = ['--auth-token=$authToken'];
 
-      tokenArgumentList.addAll(arguments);
+      return tokenArgumentList..addAll(arguments);
     }
+
+    return arguments;
   }
 }

@@ -3,7 +3,7 @@
 
 import 'package:equatable/equatable.dart';
 
-/// A class that represents a Sentry configuration.
+/// A class that represents a Sentry Web configuration.
 class SentryWebConfig extends Equatable {
   /// A Sentry project DSN.
   final String dsn;

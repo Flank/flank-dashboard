@@ -31,7 +31,7 @@ abstract class FirebaseService extends InfoService {
   /// Deploys Firebase rules, indexes, and functions to the project
   /// with the given [projectId] from the given [firebasePath].
   ///
-  /// Authenticates the firebase deployment process using the given [authToken]
+  /// Authenticates the Firebase deployment process using the given [authToken]
   /// if it is not `null`. Otherwise, authenticates using
   /// the global Firebase user.
   Future<void> deployFirebase(

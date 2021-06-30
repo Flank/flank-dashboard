@@ -185,10 +185,7 @@ class Deployer {
 
     await _sentryService.login();
 
-    final release = _sentryService.getSentryRelease();
-
-    await _createSentryRelease(release, webPath, buildWebPath);
-
+    final release = await _createSentryRelease(webPath, buildWebPath);
     final dsn = _sentryService.getProjectDsn(release.project);
 
     return SentryWebConfig(
@@ -196,6 +193,26 @@ class Deployer {
       dsn: dsn,
       environment: DeployConstants.sentryEnvironment,
     );
+  }
+
+  /// Creates a new Sentry release within the [webPath] and the [buildWebPath].
+  Future<SentryRelease> _createSentryRelease(
+    String webPath,
+    String buildWebPath,
+  ) async {
+    final release = _sentryService.getSentryRelease();
+    final webSourceMap = SourceMap(
+      path: webPath,
+      extensions: const ['dart'],
+    );
+    final buildSourceMap = SourceMap(
+      path: buildWebPath,
+      extensions: const ['map', 'js'],
+    );
+
+    await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
+
+    return release;
   }
 
   /// Deploys Firebase components and application to the Firebase project
@@ -215,25 +232,6 @@ class Deployer {
       DeployConstants.firebaseTarget,
       webPath,
     );
-  }
-
-  /// Creates a new Sentry release using the [release] data within the [webPath]
-  /// and the [buildWebPath].
-  Future<void> _createSentryRelease(
-    SentryRelease release,
-    String webPath,
-    String buildWebPath,
-  ) async {
-    final webSourceMap = SourceMap(
-      path: webPath,
-      extensions: const ['dart'],
-    );
-    final buildSourceMap = SourceMap(
-      path: buildWebPath,
-      extensions: const ['map', 'js'],
-    );
-
-    await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
   }
 
   /// Applies the given [config] to the Metrics configuration file within

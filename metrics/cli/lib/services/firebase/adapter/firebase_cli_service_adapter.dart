@@ -56,8 +56,8 @@ class FirebaseCliServiceAdapter implements FirebaseService {
     String authToken,
   ]) async {
     await _firebaseCli.setFirebaseProject(projectId, appPath, authToken);
-    await _firebaseCli.clearTarget(target, appPath, authToken);
-    await _firebaseCli.applyTarget(projectId, target, appPath, authToken);
+    await _firebaseCli.clearTarget(target, appPath);
+    await _firebaseCli.applyTarget(projectId, target, appPath);
     await _firebaseCli.deployHosting(target, appPath, authToken);
   }
 

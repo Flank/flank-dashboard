@@ -43,39 +43,27 @@ class FirebaseCli extends Cli {
   }
 
   /// Clears the Firebase [target] in the given [workingDirectory].
-  ///
-  /// Authenticates the target clearing process using the given [authToken]
-  /// if it is not `null`. Otherwise, authenticates using
-  /// the global Firebase user.
   Future<void> clearTarget(
     String target,
-    String workingDirectory, [
-    String authToken,
-  ]) {
-    final arguments = ['target:clear', 'hosting', target];
-
-    _addAuthToken(arguments, authToken);
-
-    return run(arguments, workingDirectory: workingDirectory);
+    String workingDirectory,
+  ) {
+    return run(
+      ['target:clear', 'hosting', target],
+      workingDirectory: workingDirectory,
+    );
   }
 
   /// Associates the Firebase [target] with the given [hostingName]
   /// in the given [workingDirectory].
-  ///
-  /// Authenticates the target applying process using the given [authToken]
-  /// if it is not `null`. Otherwise, authenticates using
-  /// the global Firebase user.
   Future<void> applyTarget(
     String hostingName,
     String target,
-    String workingDirectory, [
-    String authToken,
-  ]) {
-    final arguments = ['target:apply', 'hosting', target, hostingName];
-
-    _addAuthToken(arguments, authToken);
-
-    return run(arguments, workingDirectory: workingDirectory);
+    String workingDirectory,
+  ) {
+    return run(
+      ['target:apply', 'hosting', target, hostingName],
+      workingDirectory: workingDirectory,
+    );
   }
 
   /// Deploys a project's [target] from the given [workingDirectory]
@@ -99,7 +87,7 @@ class FirebaseCli extends Cli {
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
   ///
-  /// Authenticates the firestore deployment process using the given [authToken]
+  /// Authenticates the Firestore deployment process using the given [authToken]
   /// if it is not `null`. Otherwise, authenticates using
   /// the global Firebase user.
   Future<void> deployFirestore(String workingDirectory, [String authToken]) {

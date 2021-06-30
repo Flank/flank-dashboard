@@ -1910,7 +1910,7 @@ void main() {
     );
 
     test(
-      ".deploy() gets the a new instance of the Sentry release before creating a new one",
+      ".deploy() gets the Sentry release before creating a new one",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
