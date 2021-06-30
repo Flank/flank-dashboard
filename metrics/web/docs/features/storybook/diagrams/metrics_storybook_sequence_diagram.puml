@@ -38,7 +38,7 @@ alt Bob clicks on the chapter (widget) in the Sidebar:
     UI -> Bob : shows a UI with the selected widget\n and a list of controls to change a chapter's appearance
 end
 
-alt Bob changes a chapter's appearance using control
+alt Bob changes a chapter's appearance using control:
     Bob -> EP : changes a chapter's control value
     EP -> ChaptersNotifier : refreshes a chapter
     ChaptersNotifier -> Preview : notifies about changing chapter's appearance
