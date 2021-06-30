@@ -11,10 +11,10 @@ class TargetValidationResult<T> {
   final T data;
 
   /// A [ValidationTarget] of this target validation result.
-  final ValidationTarget target;
+  final ValidationTarget<T> target;
 
   /// A [ValidationConclusion] of this target validation result.
-  final ValidationConclusion conclusion;
+  final ValidationConclusion<T> conclusion;
 
   /// A [String] containing short description of this target validation
   /// result.
@@ -44,4 +44,27 @@ class TargetValidationResult<T> {
   })  : assert(target != null),
         assert(conclusion != null),
         assert(description != null);
+
+  /// Creates a new instance of the [TargetValidationResult] based on current
+  /// instance.
+  ///
+  /// If any of the given parameters is null, or parameter isn't specified,
+  /// the value will be copied from the current instance.
+  TargetValidationResult<T> copyWith({
+    ValidationTarget<T> target,
+    ValidationConclusion<T> conclusion,
+    String description,
+    Map<String, dynamic> details,
+    Map<String, dynamic> context,
+    T data,
+  }) {
+    return TargetValidationResult(
+      target: target ?? this.target,
+      conclusion: conclusion ?? this.conclusion,
+      description: description ?? this.description,
+      details: details ?? this.details,
+      context: context ?? this.context,
+      data: data ?? this.data,
+    );
+  }
 }

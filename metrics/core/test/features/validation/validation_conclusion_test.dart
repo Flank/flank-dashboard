@@ -11,24 +11,13 @@ import '../../test_utils/matchers.dart';
 void main() {
   group("ValidationConclusion", () {
     const name = 'name';
-    const value = 'value';
     const indicator = '[+]';
 
     test(
       "throws an AssertionError if the given name is null",
       () {
         expect(
-          () => ValidationConclusion(name: null, value: value),
-          throwsAssertionError,
-        );
-      },
-    );
-
-    test(
-      "throws an AssertionError if the given value is null",
-      () {
-        expect(
-          () => ValidationConclusion(name: name, value: null),
+          () => ValidationConclusion(name: null),
           throwsAssertionError,
         );
       },
@@ -39,12 +28,10 @@ void main() {
       () {
         const conclusion = ValidationConclusion(
           name: name,
-          value: value,
           indicator: indicator,
         );
 
         expect(conclusion.name, equals(name));
-        expect(conclusion.value, equals(value));
         expect(conclusion.indicator, equals(indicator));
       },
     );

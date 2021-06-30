@@ -3,10 +3,9 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:metrics_core/src/domain/entities/enum.dart';
 
 /// A class that represents a single entity used in the validation process.
-class ValidationTarget<T> extends Enum<T> with EquatableMixin {
+class ValidationTarget<T> extends Equatable {
   /// A name of this validation target.
   final String name;
 
@@ -14,16 +13,13 @@ class ValidationTarget<T> extends Enum<T> with EquatableMixin {
   final String description;
 
   @override
-  List<Object> get props => [value, name, description];
+  List<Object> get props => [name, description];
 
   /// Creates a new instance of the [ValidationTarget] with the given parameters.
   ///
-  /// Throws an [AssertionError] if the given [name] or [value] is null.
+  /// Throws an [AssertionError] if the given [name] is null.
   const ValidationTarget({
     @required this.name,
-    @required T value,
     this.description,
-  })  : assert(name != null),
-        assert(value != null),
-        super(value);
+  }) : assert(name != null);
 }

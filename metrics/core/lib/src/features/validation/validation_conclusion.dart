@@ -3,10 +3,9 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:metrics_core/src/domain/entities/enum.dart';
 
 /// A class that represents a possible conclusion of the validation process.
-class ValidationConclusion<T> extends Enum<T> with EquatableMixin {
+class ValidationConclusion<T> extends Equatable {
   /// A name of this validation conclusion.
   final String name;
 
@@ -14,17 +13,14 @@ class ValidationConclusion<T> extends Enum<T> with EquatableMixin {
   final String indicator;
 
   @override
-  List<Object> get props => [value, name, indicator];
+  List<Object> get props => [name, indicator];
 
   /// Creates a new instance of the [ValidationConclusion] with the
   /// given parameters.
   ///
-  /// Throws an [AssertionError] if the given [name] or [value] is null.
+  /// Throws an [AssertionError] if the given [name] is null.
   const ValidationConclusion({
     @required this.name,
-    @required T value,
     this.indicator,
-  })  : assert(name != null),
-        assert(value != null),
-        super(value);
+  }) : assert(name != null);
 }
