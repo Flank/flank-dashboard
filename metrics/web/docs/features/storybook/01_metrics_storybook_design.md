@@ -443,7 +443,7 @@ The next diagram shows the relations between all described classes:
 
 ![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
 
-Consider the following sequence diagram, which shows the general flow of displaying widgets in the storybook application:
+Consider the following sequence diagram, which shows the general flow of displaying widgets and changing its appearance in the storybook application:
 
 ![Metrics Storybook sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_sequence_diagram.puml)
 
