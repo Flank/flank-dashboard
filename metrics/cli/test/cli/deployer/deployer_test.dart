@@ -1828,7 +1828,7 @@ void main() {
     );
 
     test(
-      ".deploy() gets the new instance of the Sentry release",
+      ".deploy() gets the Sentry release using the SentryService",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
@@ -1925,7 +1925,7 @@ void main() {
     );
 
     test(
-      ".deploy() gets the new instance of the Sentry release",
+      ".deploy() creates the Sentry release",
       () async {
         whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);

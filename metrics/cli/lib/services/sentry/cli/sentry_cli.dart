@@ -17,8 +17,9 @@ class SentryCli extends Cli {
 
   /// Creates a Sentry release using the given [release].
   ///
-  /// Authenticates the deployment process using the given [authToken] if it
-  /// is not `null`. Otherwise, authenticates using the global Sentry token.
+  /// Authenticates the release creation process using the given
+  /// [authToken] if it is not `null`. Otherwise, authenticates using
+  /// the global Sentry token.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> createRelease(SentryRelease release, [String authToken]) {
@@ -43,8 +44,9 @@ class SentryCli extends Cli {
   /// If the [SourceMap.extensions] are not specified, source maps of all files
   /// are uploaded.
   ///
-  /// Authenticates the deployment process using the given [authToken] if it
-  /// is not `null`. Otherwise, authenticates using the global Sentry token.
+  /// Authenticates the source maps uploading process using the given
+  /// [authToken] if it is not `null`. Otherwise, authenticates using
+  /// the global Sentry token.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   /// Throws an [ArgumentError] if the given [sourceMap] is `null`.
@@ -82,8 +84,9 @@ class SentryCli extends Cli {
 
   /// Finalizes the given [release].
   ///
-  /// Authenticates the deployment process using the given [authToken] if it
-  /// is not `null`. Otherwise, authenticates using the global Sentry token.
+  /// Authenticates the release finalizing process using the given
+  /// [authToken] if it is not `null`. Otherwise, authenticates using
+  /// the global Sentry token.
   ///
   /// Throws an [ArgumentError] if the given [release] is `null`.
   Future<void> finalizeRelease(SentryRelease release, [String authToken]) {
@@ -108,8 +111,13 @@ class SentryCli extends Cli {
     return run(['--version']);
   }
 
-  /// Adds an [authToken] to the [arguments] list if it is not `null`.
-  void _addAuthToken(List<String> arguments, authToken) {
-    if (authToken != null) arguments.insert(0, '--auth-token=$authToken');
+  /// Adds a token argument to the [arguments] list
+  /// if the given [authToken] is not `null`.
+  void _addAuthToken(List<String> arguments, String authToken) {
+    if (authToken != null) {
+      final tokenArgumentList = ['--auth-token=$authToken'];
+
+      tokenArgumentList.addAll(arguments);
+    }
   }
 }

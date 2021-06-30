@@ -85,8 +85,9 @@ class SentryCliServiceAdapter implements SentryService {
 
   /// Uploads the given [sourceMaps] to the given Sentry [release].
   ///
-  /// Authenticates the deployment process using the given [authToken] if it
-  /// is not `null`. Otherwise, authenticates using the global Sentry token.
+  /// Authenticates the source maps uploading process using the given
+  /// [authToken] if it is not `null`. Otherwise, authenticates using
+  /// the global Sentry token.
   Future<void> _uploadSourceMaps(
     SentryRelease release,
     List<SourceMap> sourceMaps, [

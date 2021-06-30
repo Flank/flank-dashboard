@@ -16,6 +16,7 @@ import 'package:cli/services/flutter/flutter_service.dart';
 import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/git/git_service.dart';
 import 'package:cli/services/npm/npm_service.dart';
+import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/util/file/file_helper.dart';
@@ -185,17 +186,10 @@ class Deployer {
     await _sentryService.login();
 
     final release = _sentryService.getSentryRelease();
-    final dsn = _sentryService.getProjectDsn(release.project);
-    final webSourceMap = SourceMap(
-      path: webPath,
-      extensions: const ['dart'],
-    );
-    final buildSourceMap = SourceMap(
-      path: buildWebPath,
-      extensions: const ['map', 'js'],
-    );
 
-    await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
+    await _createSentryRelease(release, webPath, buildWebPath);
+
+    final dsn = _sentryService.getProjectDsn(release.project);
 
     return SentryWebConfig(
       release: release.name,
@@ -221,6 +215,25 @@ class Deployer {
       DeployConstants.firebaseTarget,
       webPath,
     );
+  }
+
+  /// Creates a new Sentry release using the [release] data within the [webPath]
+  /// and the [buildWebPath].
+  Future<void> _createSentryRelease(
+    SentryRelease release,
+    String webPath,
+    String buildWebPath,
+  ) async {
+    final webSourceMap = SourceMap(
+      path: webPath,
+      extensions: const ['dart'],
+    );
+    final buildSourceMap = SourceMap(
+      path: buildWebPath,
+      extensions: const ['map', 'js'],
+    );
+
+    await _sentryService.createRelease(release, [webSourceMap, buildSourceMap]);
   }
 
   /// Applies the given [config] to the Metrics configuration file within
