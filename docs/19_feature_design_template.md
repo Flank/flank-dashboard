@@ -15,6 +15,8 @@ In this section, provide the contents for the document including all custom subs
     - [Architecture](#architecture)
     - [User Interface](#user-interface)
     - [Database](#database)
+    - [Privacy](#privacy)
+    - [Security](#security)
     - [Program](#program)
 
 # Analysis
@@ -88,7 +90,13 @@ The above questions are focused on one purpose: the place and role of the new fe
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
 ### Database
-> How relevant data will be persisted.
+> How relevant data will be persisted and protected.
+
+### Privacy
+> Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
+
+### Security
+> How relevant data will be secured (Data encryption at rest, etc.).
 
 ### Program
 > Detailed solution description to class/method level.
