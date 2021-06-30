@@ -15,10 +15,11 @@ box "Metrics Storybook"
     participant Sidebar << (W,#ADD1B2) >>
     participant Preview << (W,#ADD1B2) >>
     participant "Editing Panel" as EP << (W,#ADD1B2) >>
+    participant ChapterControls << (W,#ADD1B2) >>
 end box
 
 Bob -> UI : enters the application
-UI -> Storybook : creates stories(with chapters)
+UI -> Storybook : creates stories (with chapters)
 Storybook -> InjectionContainer : provides stories
 InjectionContainer -> StoriesNotifier : registers and provides stories
 InjectionContainer -> ChaptersNotifier : registers
@@ -26,14 +27,23 @@ StoriesNotifier -> Sidebar : provides stories
 Sidebar -> UI : displays a list of stories and chapters
 UI -> Bob : shows a UI with a list of storybook widgets
 
-alt Bob clicks on the chapter(widget) in the Sidebar:
+alt Bob clicks on the chapter (widget) in the Sidebar:
     Bob -> UI : clicks on the menu item in the sidebar
     UI -> ChaptersNotifier : selects a chapter
     ChaptersNotifier -> Preview : provides a chapter
     ChaptersNotifier -> EP : provides a chapter
+    EP -> ChapterControls : gets a chapter's controls
     Preview -> UI : displays a selected chapter
     EP -> UI : displays list of controls to change a chapter's appearance
-    UI -> Bob : shows a UI with the selected widget\n and a list of controls to change a chapter's appearanceend
+    UI -> Bob : shows a UI with the selected widget\n and a list of controls to change a chapter's appearance
+end
+
+alt Bob changes a chapter's appearance using control
+    Bob -> EP : changes a chapter's control value
+    EP -> ChaptersNotifier : refreshes a chapter
+    ChaptersNotifier -> Preview : notifies about changing chapter's appearance
+    Preview -> UI : displays changed chapter
+    UI -> Bob : shows a UI with the changed widget\n and a list of controls
 
 alt Bob clicks the toggle theme button:
     Bob -> UI : clicks the toggle theme button
