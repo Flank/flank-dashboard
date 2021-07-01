@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/doctor/doctor.dart';
-import 'package:cli/common/model/factory/services_factory.dart';
+import 'package:cli/common/model/services/factory/services_factory.dart';
 
 /// A class providing method for creating a [Doctor] instance.
 class DoctorFactory {

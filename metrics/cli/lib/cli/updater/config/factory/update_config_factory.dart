@@ -3,16 +3,16 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/updater/config/model/update_config.dart';
 import 'package:cli/cli/updater/config/parser/update_config_parser.dart';
+import 'package:cli/common/model/config/update_config.dart';
 import 'package:cli/util/file/file_helper.dart';
 
-/// A class providing methods for creating an [UpdateConfig] instance.
+/// A class that provides a method for creating an [UpdateConfig] instance.
 class UpdateConfigFactory {
   /// A [FileHelper] this factory uses to get the YAML configuration file.
   final FileHelper fileHelper;
 
-  /// A [UpdateConfigParser] this factory uses to parse the content
+  /// An [UpdateConfigParser] this factory uses to parse the content
   /// of the YAML configuration file to the [UpdateConfig].
   final UpdateConfigParser configParser;
 
@@ -20,8 +20,8 @@ class UpdateConfigFactory {
   ///
   /// If the given [fileHelper] is `null`, an instance of the [FileHelper]
   /// is used.
-  /// If the given [configParser] is `null`,
-  /// an instance of the [UpdateConfigParser] is used.
+  /// If the given [configParser] is `null`, an instance of the
+  /// [UpdateConfigParser] is used.
   const UpdateConfigFactory({
     FileHelper fileHelper,
     UpdateConfigParser configParser,

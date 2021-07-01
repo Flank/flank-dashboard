@@ -5,11 +5,11 @@ import 'dart:io';
 
 import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
-import 'package:cli/common/model/factory/paths_factory.dart';
-import 'package:cli/common/model/paths.dart';
-import 'package:cli/common/model/sentry_web_config.dart';
-import 'package:cli/common/model/services.dart';
-import 'package:cli/common/model/web_metrics_config.dart';
+import 'package:cli/common/model/config/sentry_web_config.dart';
+import 'package:cli/common/model/config/web_metrics_config.dart';
+import 'package:cli/common/model/paths/factory/paths_factory.dart';
+import 'package:cli/common/model/paths/paths.dart';
+import 'package:cli/common/model/services/services.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/flutter/flutter_service.dart';

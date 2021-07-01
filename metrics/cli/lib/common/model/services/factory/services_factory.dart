@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/common/model/services.dart';
+import 'package:cli/common/model/services/services.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/prompter/writer/io_prompt_writer.dart';
 import 'package:cli/services/firebase/adapter/firebase_cli_service_adapter.dart';

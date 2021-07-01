@@ -1,8 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/cli/updater/config/model/firebase_config.dart';
-import 'package:cli/cli/updater/config/model/sentry_config.dart';
+import 'package:cli/common/model/config/firebase_config.dart';
+import 'package:cli/common/model/config/sentry_config.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
