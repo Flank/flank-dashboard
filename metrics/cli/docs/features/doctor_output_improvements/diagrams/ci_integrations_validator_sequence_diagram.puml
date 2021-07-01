@@ -11,8 +11,8 @@ participant "CI Integrations"
 participant CiIntegrationsRunner
 participant ValidateCommand
 participant CoolIntegrationValidatorFactory
-participant CoolIntegrationDestinationValidator
-participant CoolIntegrationDestinationValidationDelegate
+participant CoolIntegrationSourceValidator
+participant CoolIntegrationSourceValidationDelegate
 participant CoolIntegrationClient
 
 end box
@@ -35,13 +35,13 @@ CiIntegrationsRunner -> ValidateCommand: run()
 deactivate CiIntegrationsRunner
 activate ValidateCommand
 
-ValidateCommand -> ValidateCommand : creates source and destination parties
-ValidateCommand -> ValidateCommand : parses source and destination configs
+ValidateCommand -> ValidateCommand : creates source and Source parties
+ValidateCommand -> ValidateCommand : parses source and Source configs
 
 ValidateCommand -> CoolIntegrationValidatorFactory : create()
 activate CoolIntegrationValidatorFactory
 
-CoolIntegrationValidatorFactory -> ValidationResultBuilder : .createForTargets(List<ValidationTarget> targets)
+CoolIntegrationValidatorFactory -> ValidationResultBuilder : createForTargets(List<ValidationTarget> targets)
 activate ValidationResultBuilder
 
 ValidationResultBuilder --> CoolIntegrationValidatorFactory : ValidationResultBuilder instance
@@ -49,28 +49,28 @@ ValidationResultBuilder --> CoolIntegrationValidatorFactory : ValidationResultBu
 CoolIntegrationValidatorFactory --> ValidateCommand : ConfigValidator instance
 deactivate CoolIntegrationValidatorFactory
 
-ValidateCommand -> CoolIntegrationDestinationValidator : validate(config)
-activate CoolIntegrationDestinationValidator
+ValidateCommand -> CoolIntegrationSourceValidator : validate(config)
+activate CoolIntegrationSourceValidator
 
-CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAuth(auth)
-activate CoolIntegrationDestinationValidationDelegate
+CoolIntegrationSourceValidator -> CoolIntegrationSourceValidationDelegate : validateAuth(auth)
+activate CoolIntegrationSourceValidationDelegate
 
-CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : TargetValidationResult
-CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
+CoolIntegrationSourceValidationDelegate --> CoolIntegrationSourceValidator : TargetValidationResult
+CoolIntegrationSourceValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
 
-CoolIntegrationDestinationValidator -> CoolIntegrationDestinationValidationDelegate : validateAnotherField(anotherField)
+CoolIntegrationSourceValidator -> CoolIntegrationSourceValidationDelegate : validateAnotherField(anotherField)
 deactivate CoolIntegrationClient
 
-CoolIntegrationDestinationValidationDelegate --> CoolIntegrationDestinationValidator : TargetValidationResult
-deactivate CoolIntegrationDestinationValidationDelegate
+CoolIntegrationSourceValidationDelegate --> CoolIntegrationSourceValidator : TargetValidationResult
+deactivate CoolIntegrationSourceValidationDelegate
 
-CoolIntegrationDestinationValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
-CoolIntegrationDestinationValidator -> ValidationResultBuilder : build()
-ValidationResultBuilder --> CoolIntegrationDestinationValidator : ValidationResult instance
+CoolIntegrationSourceValidator -> ValidationResultBuilder : setResult(TargetValidationResult)
+CoolIntegrationSourceValidator -> ValidationResultBuilder : build()
+ValidationResultBuilder --> CoolIntegrationSourceValidator : ValidationResult instance
 deactivate ValidationResultBuilder
 
-CoolIntegrationDestinationValidator --> ValidateCommand : ValidationResult
-deactivate CoolIntegrationDestinationValidator
+CoolIntegrationSourceValidator --> ValidateCommand : ValidationResult
+deactivate CoolIntegrationSourceValidator
 
 ValidateCommand -> ValidationResultPrinter : .print(ValidationResult)
 deactivate ValidateCommand

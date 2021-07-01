@@ -41,26 +41,28 @@ activate Doctor
 Doctor -> CoolService : checkVersion()
 activate CoolService
 
-CoolService --> Doctor : TargetValidationResult instance
+CoolService --> Doctor : ProcessResult instance
 deactivate CoolService
 
-Doctor -> ValidationResultBuilder : .setResult()
+Doctor -> Doctor : creates TargetValidationResult \n from the ProcessResult
+Doctor -> ValidationResultBuilder : setResult()
 activate ValidationResultBuilder
 
 Doctor -> OtherCoolService : checkVersion()
 activate OtherCoolService
-OtherCoolService --> Doctor : TargetValidationResult instance
+OtherCoolService --> Doctor : ProcessResult instance
 deactivate OtherCoolService
 
-Doctor -> ValidationResultBuilder : .setResult()
-Doctor -> ValidationResultBuilder : .build()
+Doctor -> Doctor : creates TargetValidationResult \n from the ProcessResult
+Doctor -> ValidationResultBuilder : setResult()
+Doctor -> ValidationResultBuilder : build()
 ValidationResultBuilder --> Doctor :  ValidationResult instance
 deactivate ValidationResultBuilder
 
-Doctor --> DoctorCommand : ValidationResult
+Doctor --> DoctorCommand : ValidationResult instance
 deactivate Doctor
 
-DoctorCommand -> ValidationResultPrinter : .print(ValidationResult)
+DoctorCommand -> ValidationResultPrinter : print(ValidationResult)
 activate ValidationResultPrinter
 
 ValidationResultPrinter --> Bob : prints doctor command output
