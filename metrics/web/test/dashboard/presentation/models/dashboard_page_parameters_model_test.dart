@@ -6,26 +6,26 @@ import 'package:test/test.dart';
 
 void main() {
   group("DashboardPageParametersModel", () {
-    const projectName = 'projectName';
+    const projectFilter = 'projectFilter';
     const projectGroupId = 'projectGroupId';
     const pageParametersMap = {
-      'projectName': projectName,
+      'projectFilter': projectFilter,
       'projectGroupId': projectGroupId,
     };
-    const pageParametersModel = DashboardPageParametersModel(
-      projectName: projectName,
+    final pageParametersModel = DashboardPageParametersModel(
+      projectFilter: projectFilter,
       projectGroupId: projectGroupId,
     );
 
     test(
       "creates an instance with the given parameters",
       () {
-        const pageParametersModel = DashboardPageParametersModel(
-          projectName: projectName,
+        final pageParametersModel = DashboardPageParametersModel(
+          projectFilter: projectFilter,
           projectGroupId: projectGroupId,
         );
 
-        expect(pageParametersModel.projectName, equals(projectName));
+        expect(pageParametersModel.projectFilter, equals(projectFilter));
         expect(
           pageParametersModel.projectGroupId,
           equals(projectGroupId),
@@ -38,28 +38,24 @@ void main() {
       () {
         final copiedPageParametersModel = pageParametersModel.copyWith();
 
-        expect(copiedPageParametersModel.projectName, equals(projectName));
-        expect(
-          copiedPageParametersModel.projectGroupId,
-          equals(projectGroupId),
-        );
+        expect(copiedPageParametersModel, equals(pageParametersModel));
       },
     );
 
     test(
       ".copyWith() creates a copy of an instance with the given fields replaced with the new values",
       () {
-        const updatedProjectName = 'updatedProjectName';
+        const updatedProjectFilter = 'updatedProjectFilter';
         const updatedProjectGroupId = 'updatedProjectGroupId';
 
         final copiedPageParametersModel = pageParametersModel.copyWith(
-          projectName: updatedProjectName,
+          projectFilter: updatedProjectFilter,
           projectGroupId: updatedProjectGroupId,
         );
 
         expect(
-          copiedPageParametersModel.projectName,
-          equals(updatedProjectName),
+          copiedPageParametersModel.projectFilter,
+          equals(updatedProjectFilter),
         );
         expect(
           copiedPageParametersModel.projectGroupId,
@@ -84,7 +80,7 @@ void main() {
           pageParametersMap,
         );
 
-        expect(actualPageParametersModel.projectName, equals(projectName));
+        expect(actualPageParametersModel.projectFilter, equals(projectFilter));
         expect(
           actualPageParametersModel.projectGroupId,
           equals(projectGroupId),

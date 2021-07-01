@@ -6,27 +6,28 @@ import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 
 /// A class, that represents [DashboardPage] parameters parsed from
 /// query parameters.
-class DashboardPageParametersModel implements PageParametersModel {
+class DashboardPageParametersModel extends PageParametersModel {
   /// A [String], that represents a name of the project.
-  final String projectName;
+  final String projectFilter;
 
-  /// A [String], that represents an identifier of the project group.
+  /// A [String], that represents an identifier of the selected project group.
   final String projectGroupId;
 
-  /// Creates a [DashboardPageParametersModel] with the given parameters.
-  const DashboardPageParametersModel({
-    this.projectName,
+  /// Creates a new instance of the [DashboardPageParametersModel]
+  /// with the given parameters.
+  DashboardPageParametersModel({
+    this.projectFilter,
     this.projectGroupId,
   });
 
   /// Creates a copy of this [DashboardPageParametersModel] but with
   /// the given fields replaced with the new values.
   DashboardPageParametersModel copyWith({
-    String projectName,
+    String projectFilter,
     String projectGroupId,
   }) {
     return DashboardPageParametersModel(
-      projectName: projectName ?? this.projectName,
+      projectFilter: projectFilter ?? this.projectFilter,
       projectGroupId: projectGroupId ?? this.projectGroupId,
     );
   }
@@ -38,7 +39,7 @@ class DashboardPageParametersModel implements PageParametersModel {
     if (map == null) return null;
 
     return DashboardPageParametersModel(
-      projectName: map['projectName'] as String,
+      projectFilter: map['projectFilter'] as String,
       projectGroupId: map['projectGroupId'] as String,
     );
   }
@@ -46,8 +47,11 @@ class DashboardPageParametersModel implements PageParametersModel {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'projectName': projectName,
+      'projectFilter': projectFilter,
       'projectGroupId': projectGroupId,
     };
   }
+
+  @override
+  List<Object> get props => [projectFilter, projectGroupId];
 }
