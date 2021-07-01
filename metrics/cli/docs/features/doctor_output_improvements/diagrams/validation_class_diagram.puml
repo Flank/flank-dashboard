@@ -6,6 +6,8 @@ package validation.lib.src {
             class ValidationResultBuilder {
                 - _results: Map<ValidationTarget, TargetValidationResult>
 
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
                 + setResult(result: TargetValidationResult): void
                 + setEmptyResults(result: TargetValidationResult): void
                 + build(): ValidationResult

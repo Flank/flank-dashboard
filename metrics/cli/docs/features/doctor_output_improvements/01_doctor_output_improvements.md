@@ -234,7 +234,7 @@ We need to update this class to aggregate the `ValidationTarget`s (previous `Con
 
 ##### CoolIntegrationSourceValidationDelegate
 
-The `CoolIntegrationSourceValidationDelegate` is a class that validates the specific fields with network calls. Currently, the methods of `CoolIntegrationSourceValidationDelegate` return the `FieldValidationResult`s which are then used to compose the `ValidationResult`.
+The `CoolIntegrationSourceValidationDelegate` is a class that validates the specific fields with network calls. Currently, the methods of the `CoolIntegrationSourceValidationDelegate` return the `FieldValidationResult`s which are then used to compose the `ValidationResult`.
 
 We need to update this class to utilize the `TargetValidationResult`s
 instead of the outdated `FieldValidationResult`s.
@@ -278,7 +278,7 @@ The `Doctor` is a class used to check whether all required third-party CLIs are 
 
 We need to update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult` that will be printed by the `DoctorCommand`.
 
-The `ValidationResult` contains the `TargetValidationResult`s returned by the `.checkVersion()` methods of each 3-rd party service.
+The `ValidationResult` contains the `TargetValidationResult`s for each 3-rd party service.
 
 ##### VersionHelper
 

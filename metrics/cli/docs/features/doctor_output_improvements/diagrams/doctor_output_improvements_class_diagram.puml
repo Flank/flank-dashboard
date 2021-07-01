@@ -29,7 +29,7 @@ package cli.lib as cli_lib {
                     - _versionHelper: VersionHelper
                     - _coolServiceCli: CoolServiceCli
 
-                    + checkVersion(): Future<TargetValidationResult>
+                    + checkVersion(): Future<ProcessResult>
                     - _getRecommendedVersion(): String
                 }
             }
@@ -59,6 +59,8 @@ package validation.lib.src {
             class ValidationResultBuilder {
                 - _results: Map<ValidationTarget, TargetValidationResult>
 
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
                 + setResult(result: TargetValidationResult): void
                 + setEmptyResults(result: TargetValidationResult): void
                 + build(): ValidationResult
@@ -124,6 +126,5 @@ Doctor -up-> CoolService : uses
 CoolCliServiceAdapter .up.|> CoolService
 CoolCliServiceAdapter -up-> CoolServiceCli : uses
 CoolCliServiceAdapter -up-> VersionHelper : uses
-CoolCliServiceAdapter --> TargetValidationResult : uses
 
 @enduml

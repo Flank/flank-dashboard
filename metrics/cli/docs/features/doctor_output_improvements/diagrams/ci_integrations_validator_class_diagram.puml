@@ -6,6 +6,8 @@ package validation.lib.src {
             class ValidationResultBuilder {
                 - _results: Map<ValidationTarget, TargetValidationResult>
 
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
                 + setResult(result: TargetValidationResult): void
                 + setEmptyResults(result: TargetValidationResult): void
                 + build(): ValidationResult
@@ -101,6 +103,8 @@ ValidationResultPrinter --> ValidationResult : prints
 CoolIntegrationSourceValidator --> CoolIntegrationSourceValidationDelegate : uses
 CoolIntegrationSourceValidator --> ValidationResult : provides
 CoolIntegrationSourceValidator -left-> CoolIntegrationSourceValidationTarget : uses
+CoolIntegrationSourceValidator --> TargetValidationResult : uses
+CoolIntegrationSourceValidator  --> ValidationResultBuilder : uses
 
 CoolIntegrationSourceValidationDelegate --> TargetValidationResult : uses
 
@@ -109,5 +113,7 @@ CoolIntegrationSourceValidationTarget --> ValidationTarget : uses
 ConfigFieldValidationConclusion --> ValidationConclusion : uses
 
 CoolIntegrationSourceValidationDelegate -down-> ConfigFieldValidationConclusion : uses
+
+ValidationConclusion -[hidden]down-> ValidationResultBuilder
 
 @enduml
