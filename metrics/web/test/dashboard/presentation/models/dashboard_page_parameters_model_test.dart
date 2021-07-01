@@ -6,8 +6,8 @@ import 'package:test/test.dart';
 
 void main() {
   group("DashboardPageParametersModel", () {
-    const projectName = 'test';
-    const projectGroupId = 'projectId';
+    const projectName = 'projectName';
+    const projectGroupId = 'projectGroupId';
     const pageParametersMap = {
       'projectName': projectName,
       'projectGroupId': projectGroupId,
@@ -17,18 +17,21 @@ void main() {
       projectGroupId: projectGroupId,
     );
 
-    test("creates an instance with the given parameters", () {
-      const pageParametersModel = DashboardPageParametersModel(
-        projectName: projectName,
-        projectGroupId: projectGroupId,
-      );
+    test(
+      "creates an instance with the given parameters",
+      () {
+        const pageParametersModel = DashboardPageParametersModel(
+          projectName: projectName,
+          projectGroupId: projectGroupId,
+        );
 
-      expect(pageParametersModel.projectName, equals(projectName));
-      expect(
-        pageParametersModel.projectGroupId,
-        equals(projectGroupId),
-      );
-    });
+        expect(pageParametersModel.projectName, equals(projectName));
+        expect(
+          pageParametersModel.projectGroupId,
+          equals(projectGroupId),
+        );
+      },
+    );
 
     test(
       ".copyWith() creates a new instance with the same fields if called without params",
@@ -65,19 +68,26 @@ void main() {
       },
     );
 
-    test(".fromMap() creates an instance from the given map", () {
-      final actualPageParametersModel = DashboardPageParametersModel.fromMap(
-        pageParametersMap,
-      );
+    test(
+      ".fromMap() creates an instance from the given map",
+      () {
+        final actualPageParametersModel = DashboardPageParametersModel.fromMap(
+          pageParametersMap,
+        );
 
-      expect(actualPageParametersModel.projectName, equals(projectName));
-      expect(actualPageParametersModel.projectGroupId, equals(projectGroupId));
-    });
+        expect(actualPageParametersModel.projectName, equals(projectName));
+        expect(
+            actualPageParametersModel.projectGroupId, equals(projectGroupId));
+      },
+    );
 
-    test(".toMap() converts an instance to the map", () {
-      final actualMap = pageParametersModel.toMap();
+    test(
+      ".toMap() converts an instance to the map",
+      () {
+        final actualMap = pageParametersModel.toMap();
 
-      expect(actualMap, equals(pageParametersMap));
-    });
+        expect(actualMap, equals(pageParametersMap));
+      },
+    );
   });
 }

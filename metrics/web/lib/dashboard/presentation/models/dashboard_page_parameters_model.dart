@@ -4,8 +4,8 @@
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 
-/// A class, that represents a [DashboardPage] parameters parsed from
-/// the query parameters.
+/// A class, that represents [DashboardPage] parameters parsed from
+/// query parameters.
 class DashboardPageParametersModel implements PageParametersModel {
   /// A [String], that represents a name of the project.
   final String projectName;

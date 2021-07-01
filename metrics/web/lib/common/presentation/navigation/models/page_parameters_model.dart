@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 /// An abstract class, that represents the deserialized page's data
-/// from a query parameters.
+/// from query parameters.
 abstract class PageParametersModel {
   /// Maps page's parameters to the [Map].
   Map<String, dynamic> toMap();
