@@ -69,6 +69,15 @@ void main() {
     );
 
     test(
+      ".fromMap() returns null if the given map is null",
+      () {
+        final pageParametersModel = DashboardPageParametersModel.fromMap(null);
+
+        expect(pageParametersModel, isNull);
+      },
+    );
+
+    test(
       ".fromMap() creates an instance from the given map",
       () {
         final actualPageParametersModel = DashboardPageParametersModel.fromMap(

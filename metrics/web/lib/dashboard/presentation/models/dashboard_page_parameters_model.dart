@@ -32,7 +32,11 @@ class DashboardPageParametersModel implements PageParametersModel {
   }
 
   /// Creates the [DashboardPageParametersModel] from the given [map].
+  ///
+  /// Returns `null` if the given [map] is `null`.
   factory DashboardPageParametersModel.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
     return DashboardPageParametersModel(
       projectName: map['projectName'] as String,
       projectGroupId: map['projectGroupId'] as String,
