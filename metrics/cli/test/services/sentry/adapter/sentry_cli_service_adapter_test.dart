@@ -42,14 +42,14 @@ void main() {
     final enterProjectSlug = SentryStrings.enterProjectSlug(organizationSlug);
     final enterDsn = SentryStrings.enterDsn(organizationSlug, projectSlug);
 
-    PostExpectation<String> whenPromptOrganisationSlug() {
+    PostExpectation<String> whenPromptOrganizationSlug() {
       return when(prompter.prompt(enterOrganizationSlug));
     }
 
     PostExpectation<String> whenPromptProjectSlug({
       String withOrganizationSlug = organizationSlug,
     }) {
-      whenPromptOrganisationSlug().thenReturn(withOrganizationSlug);
+      whenPromptOrganizationSlug().thenReturn(withOrganizationSlug);
       return when(prompter.prompt(enterProjectSlug));
     }
 
@@ -111,35 +111,32 @@ void main() {
     );
 
     test(
-      ".createRelease() prompts the user to enter the organisation slug",
-      () async {
+      ".getSentryRelease() prompts the user to enter the organization slug",
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        sentryService.getSentryRelease();
 
         verify(prompter.prompt(enterOrganizationSlug)).called(once);
       },
     );
 
     test(
-      ".createRelease() throws if prompter throws during the organisation slug prompting",
+      ".getSentryRelease() throws if prompter throws during the organization slug prompting",
       () {
-        whenPromptOrganisationSlug().thenThrow(stateError);
+        whenPromptOrganizationSlug().thenThrow(stateError);
 
-        expect(
-          sentryService.createRelease([sourceMap]),
-          throwsStateError,
-        );
+        expect(sentryService.getSentryRelease, throwsStateError);
       },
     );
 
     test(
-      ".createRelease() stops the release creation process if prompter throws during the organisation slug prompting",
-      () async {
-        whenPromptOrganisationSlug().thenThrow(stateError);
+      ".getSentryRelease() stops the getting release process if prompter throws during the organization slug prompting",
+      () {
+        whenPromptOrganizationSlug().thenThrow(stateError);
 
-        await expectLater(
-          sentryService.createRelease([sourceMap]),
+        expect(
+          sentryService.getSentryRelease,
           throwsStateError,
         );
 
@@ -150,35 +147,35 @@ void main() {
     );
 
     test(
-      ".createRelease() prompts the user to enter the project slug",
-      () async {
+      ".getSentryRelease() prompts the user to enter the project slug",
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        sentryService.getSentryRelease();
 
         verify(prompter.prompt(enterProjectSlug)).called(once);
       },
     );
 
     test(
-      ".createRelease() throws if prompter throws during the project slug prompting",
+      ".getSentryRelease() throws if prompter throws during the project slug prompting",
       () {
         whenPromptProjectSlug().thenThrow(stateError);
 
         expect(
-          sentryService.createRelease([sourceMap]),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
       },
     );
 
     test(
-      ".createRelease() stops the release creation process if prompter throws during the project slug prompting",
-      () async {
+      ".getSentryRelease() stops the config prompting process if prompter throws during the project slug prompting",
+      () {
         whenPromptProjectSlug().thenThrow(stateError);
 
-        await expectLater(
-          sentryService.createRelease([sourceMap]),
+        expect(
+          sentryService.getSentryRelease,
           throwsStateError,
         );
 
@@ -190,43 +187,25 @@ void main() {
     );
 
     test(
-      ".createRelease() prompts the user to enter the release name",
-      () async {
+      ".getSentryRelease() prompts the user to enter the release name",
+      () {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        sentryService.getSentryRelease();
 
         verify(prompter.prompt(enterReleaseName)).called(once);
       },
     );
 
     test(
-      ".createRelease() throws if prompter throws during the release name prompting",
+      ".getSentryRelease() throws if prompter throws during the release name prompting",
       () {
         whenPromptReleaseName().thenThrow(stateError);
 
         expect(
-          sentryService.createRelease([sourceMap]),
+          sentryService.getSentryRelease,
           throwsStateError,
         );
-      },
-    );
-
-    test(
-      ".createRelease() stops the release creation process if prompter throws during the release name prompting",
-      () async {
-        whenPromptReleaseName().thenThrow(stateError);
-
-        await expectLater(
-          sentryService.createRelease([sourceMap]),
-          throwsStateError,
-        );
-
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug)).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
-
-        checkNoMoreInteractions();
       },
     );
 
@@ -235,7 +214,7 @@ void main() {
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        await sentryService.createRelease(sentryRelease, [sourceMap]);
 
         verify(sentryCli.createRelease(sentryRelease)).called(once);
       },
@@ -249,7 +228,7 @@ void main() {
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease([sourceMap]),
+          sentryService.createRelease(sentryRelease, [sourceMap]),
           throwsStateError,
         );
       },
@@ -263,13 +242,10 @@ void main() {
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
-          sentryService.createRelease([sourceMap]),
+          sentryService.createRelease(sentryRelease, [sourceMap]),
           throwsStateError,
         );
 
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug)).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
         verify(sentryCli.createRelease(sentryRelease)).called(once);
 
         checkNoMoreInteractions();
@@ -281,7 +257,7 @@ void main() {
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        await sentryService.createRelease(sentryRelease, [sourceMap]);
 
         verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
             .called(once);
@@ -296,7 +272,7 @@ void main() {
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease([sourceMap]),
+          sentryService.createRelease(sentryRelease, [sourceMap]),
           throwsStateError,
         );
       },
@@ -310,13 +286,10 @@ void main() {
             .thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
-          sentryService.createRelease([sourceMap]),
+          sentryService.createRelease(sentryRelease, [sourceMap]),
           throwsStateError,
         );
 
-        verify(prompter.prompt(enterOrganizationSlug)).called(once);
-        verify(prompter.prompt(enterProjectSlug)).called(once);
-        verify(prompter.prompt(enterReleaseName)).called(once);
         verify(sentryCli.createRelease(sentryRelease)).called(once);
         verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
             .called(once);
@@ -330,7 +303,7 @@ void main() {
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
 
-        await sentryService.createRelease([sourceMap]);
+        await sentryService.createRelease(sentryRelease, [sourceMap]);
 
         verify(sentryCli.finalizeRelease(sentryRelease)).called(once);
       },
@@ -344,7 +317,7 @@ void main() {
             .thenAnswer((_) => Future.error(stateError));
 
         expect(
-          sentryService.createRelease([sourceMap]),
+          sentryService.createRelease(sentryRelease, [sourceMap]),
           throwsStateError,
         );
       },
@@ -378,8 +351,8 @@ void main() {
     );
 
     test(
-      ".createProject() returns the DSN entered by the user",
-      () async {
+      ".getProjectDsn() returns the DSN entered by the user",
+      () {
         when(prompter.prompt(enterDsn)).thenReturn(dsn);
 
         final result = sentryService.getProjectDsn(sentryProject);

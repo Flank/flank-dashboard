@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/common/model/sentry_config.dart';
+import 'package:cli/common/model/sentry_web_config.dart';
 import 'package:cli/common/model/web_metrics_config.dart';
 import 'package:test/test.dart';
 
@@ -11,7 +11,7 @@ void main() {
     const sentryDsn = 'sentryDsn';
     const sentryEnvironment = 'sentryEnvironment';
     const sentryRelease = 'sentryRelease';
-    const sentryConfig = SentryConfig(
+    const sentryWebConfig = SentryWebConfig(
       dsn: sentryDsn,
       environment: sentryEnvironment,
       release: sentryRelease,
@@ -22,11 +22,11 @@ void main() {
       () {
         final config = WebMetricsConfig(
           googleSignInClientId: clientId,
-          sentryConfig: sentryConfig,
+          sentryWebConfig: sentryWebConfig,
         );
 
         expect(config.googleSignInClientId, equals(clientId));
-        expect(config.sentryConfig, equals(sentryConfig));
+        expect(config.sentryWebConfig, equals(sentryWebConfig));
       },
     );
 
@@ -35,7 +35,7 @@ void main() {
       () {
         final config = WebMetricsConfig(
           googleSignInClientId: clientId,
-          sentryConfig: sentryConfig,
+          sentryWebConfig: sentryWebConfig,
         );
         final expectedMap = {
           WebMetricsConfig.googleSignInClientIdName: clientId,

@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/cli/deployer/deployer.dart';
-import 'package:cli/cli/deployer/model/factory/deploy_paths_factory.dart';
+import 'package:cli/common/model/factory/paths_factory.dart';
 import 'package:cli/common/model/factory/services_factory.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/prompter/writer/io_prompt_writer.dart';
@@ -30,13 +30,13 @@ class DeployerFactory {
     final services = _servicesFactory.create();
     final promptWriter = IOPromptWriter();
     final prompter = Prompter(promptWriter);
-    final deployPathsFactory = DeployPathsFactory();
+    final pathsFactory = PathsFactory();
 
     return Deployer(
       services: services,
       fileHelper: fileHelper,
       prompter: prompter,
-      deployPathsFactory: deployPathsFactory,
+      pathsFactory: pathsFactory,
     );
   }
 }

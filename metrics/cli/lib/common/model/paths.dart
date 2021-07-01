@@ -1,17 +1,15 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// A class that holds deploy paths based on the current root
-/// directory path.
-class DeployPaths {
+/// A class that holds common paths based on the current root directory path.
+class Paths {
   /// A path to the root directory.
   final String rootPath;
 
-  /// Creates a new instance of the [DeployPaths] with
-  /// the given [rootPath].
+  /// Creates a new instance of the [Paths] with the given [rootPath].
   ///
   /// Throws an [ArgumentError] if the given [rootPath] is `null`.
-  DeployPaths(this.rootPath) {
+  Paths(this.rootPath) {
     ArgumentError.checkNotNull(rootPath, 'rootPath');
   }
 

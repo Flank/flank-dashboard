@@ -26,12 +26,27 @@ class FirebaseCli extends Cli {
 
   /// Sets the project with the [projectId] identifier as the default one
   /// for the Firebase project in the [workingDirectory].
-  Future<void> setFirebaseProject(String projectId, String workingDirectory) {
-    return run(['use', projectId], workingDirectory: workingDirectory);
+  ///
+  /// Authenticates the firebase project setting process using the given
+  /// [authToken] if it is not `null`. Otherwise, authenticates using
+  /// the global Firebase user.
+  Future<void> setFirebaseProject(
+    String projectId,
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final arguments = ['use', projectId];
+
+    _addAuthToken(arguments, authToken);
+
+    return run(arguments, workingDirectory: workingDirectory);
   }
 
   /// Clears the Firebase [target] in the given [workingDirectory].
-  Future<void> clearTarget(String target, String workingDirectory) {
+  Future<void> clearTarget(
+    String target,
+    String workingDirectory,
+  ) {
     return run(
       ['target:clear', 'hosting', target],
       workingDirectory: workingDirectory,
@@ -53,32 +68,57 @@ class FirebaseCli extends Cli {
 
   /// Deploys a project's [target] from the given [workingDirectory]
   /// to the Firebase hosting.
-  Future<void> deployHosting(String target, String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'hosting:$target'],
-      workingDirectory: workingDirectory,
-    );
+  ///
+  /// Authenticates the hosting deployment process using the given [authToken]
+  /// if it is not `null`. Otherwise, authenticates using
+  /// the global Firebase user.
+  Future<void> deployHosting(
+    String target,
+    String workingDirectory, [
+    String authToken,
+  ]) {
+    final arguments = ['deploy', '--only', 'hosting:$target'];
+
+    _addAuthToken(arguments, authToken);
+
+    return run(arguments, workingDirectory: workingDirectory);
   }
 
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
-  Future<void> deployFirestore(String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'firestore'],
-      workingDirectory: workingDirectory,
-    );
+  ///
+  /// Authenticates the Firestore deployment process using the given [authToken]
+  /// if it is not `null`. Otherwise, authenticates using
+  /// the global Firebase user.
+  Future<void> deployFirestore(String workingDirectory, [String authToken]) {
+    final arguments = ['deploy', '--only', 'firestore'];
+
+    _addAuthToken(arguments, authToken);
+
+    return run(arguments, workingDirectory: workingDirectory);
   }
 
   /// Deploys functions from the given [workingDirectory] to the Firebase.
-  Future<void> deployFunctions(String workingDirectory) {
-    return run(
-      ['deploy', '--only', 'functions'],
-      workingDirectory: workingDirectory,
-    );
+  ///
+  /// Authenticates the functions deployment process using the given [authToken]
+  /// if it is not `null`. Otherwise, authenticates using
+  /// the global Firebase user.
+  Future<void> deployFunctions(String workingDirectory, [String authToken]) {
+    final arguments = ['deploy', '--only', 'functions'];
+
+    _addAuthToken(arguments, authToken);
+
+    return run(arguments, workingDirectory: workingDirectory);
   }
 
   @override
   Future<void> version() {
     return run(['--version']);
+  }
+
+  /// Adds a token argument to the [arguments] list
+  /// if the given [authToken] is not `null`.
+  void _addAuthToken(List<String> arguments, String authToken) {
+    if (authToken != null) arguments.add('--token=$authToken');
   }
 }

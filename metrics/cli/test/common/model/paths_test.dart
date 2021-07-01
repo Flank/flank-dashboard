@@ -1,40 +1,40 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/cli/deployer/model/deploy_paths.dart';
+import 'package:cli/common/model/paths.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('DeployPaths', () {
+  group('Paths', () {
     const rootPath = 'rootPath';
 
-    final deployPaths = DeployPaths(rootPath);
+    final paths = Paths(rootPath);
 
     test(
       "throws an ArgumentError if the given root path is null",
       () {
-        expect(() => DeployPaths(null), throwsArgumentError);
+        expect(() => Paths(null), throwsArgumentError);
       },
     );
 
     test(
       ".webAppPath returns a path that contains the root path",
       () {
-        expect(deployPaths.webAppPath, contains(rootPath));
+        expect(paths.webAppPath, contains(rootPath));
       },
     );
 
     test(
       ".webAppBuildPath returns a path to the Web project sources that contains the root path",
       () {
-        expect(deployPaths.webAppBuildPath, contains(rootPath));
+        expect(paths.webAppBuildPath, contains(rootPath));
       },
     );
 
     test(
       ".firebasePath returns a path to the Firebase sources that contains the root path",
       () {
-        expect(deployPaths.firebasePath, contains(rootPath));
+        expect(paths.firebasePath, contains(rootPath));
       },
     );
 
@@ -42,7 +42,7 @@ void main() {
       ".firebaseFunctionsPath returns a path to the Firebase functions sources that contains the root path",
       () {
         expect(
-          deployPaths.firebaseFunctionsPath,
+          paths.firebaseFunctionsPath,
           contains(rootPath),
         );
       },
@@ -51,7 +51,7 @@ void main() {
     test(
       ".metricsConfigPath returns a path to the Metrics configuration that contains the root path",
       () {
-        expect(deployPaths.metricsConfigPath, contains(rootPath));
+        expect(paths.metricsConfigPath, contains(rootPath));
       },
     );
   });
