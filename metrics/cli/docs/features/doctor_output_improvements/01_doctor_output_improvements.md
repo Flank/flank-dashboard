@@ -30,7 +30,7 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
         - [DoctorCommand](#doctorcommand)
         - [Doctor](#doctor)
         - [VersionHelper](#versionhelper)
-        - [Doctor. Making things work](#doctor-making-things-work)
+        - [Making things work](#doctor-making-things-work)
 
 ## Analysis
 
@@ -234,7 +234,7 @@ We need to update this class to aggregate the `ValidationTarget`s (previous `Con
 
 ##### CoolIntegrationSourceValidationDelegate
 
-The `CoolIntegrationSourceValidationDelegate` is a class that validates the specific fields with network calls. The methods of `CoolIntegrationSourceValidationDelegate` return the `TargetValidationResult`s which are then used to compose the `ValidationResult`.
+The `CoolIntegrationSourceValidationDelegate` is a class that validates the specific fields with network calls. Currently, the methods of `CoolIntegrationSourceValidationDelegate` return the `FieldValidationResult`s which are then used to compose the `ValidationResult`.
 
 We need to update this class to utilize the `TargetValidationResult`s
 instead of the outdated `FieldValidationResult`s.
