@@ -6,7 +6,7 @@ import 'package:yaml_map/yaml_map.dart';
 
 /// A class providing methods for parsing [UpdateConfig] from YAML string.
 class UpdateConfigParser {
-  /// The YAML parser used to convert YAML string to the [Map] instance.
+  /// The YAML parser used to convert YAML string to the JSON-encodable [Map].
   final YamlMapParser _parser;
 
   /// Create a new instance of the [UpdateConfigParser].

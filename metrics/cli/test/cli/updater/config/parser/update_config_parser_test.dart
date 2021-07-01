@@ -51,12 +51,13 @@ void main() {
     );
 
     test(
-      ".parse() parses the given content using the YAML map parser",
+      ".parse() parses the given content using the given parser",
       () {
+        const content = 'content';
+
         final configParser = UpdateConfigParser(
           parser: yamlMapParserMock,
         );
-        final content = json.toString();
 
         configParser.parse(content);
 
@@ -68,8 +69,13 @@ void main() {
       ".parse() creates an UpdateConfig from the given config yaml string",
       () {
         final expected = UpdateConfig.fromJson(json);
+        final configParser = UpdateConfigParser(
+          parser: yamlMapParserMock,
+        );
 
-        final config = configParser.parse(json.toString());
+        when(yamlMapParserMock.parse(any)).thenReturn(json);
+
+        final config = configParser.parse('content');
 
         expect(config, equals(expected));
       },
