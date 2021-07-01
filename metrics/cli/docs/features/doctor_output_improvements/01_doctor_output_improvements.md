@@ -286,7 +286,7 @@ The `VersionHelper` is a new class that allows us to interact with the [list of 
 
 The `.getRecommenedVersion()` method takes the name of the service and returns the recommended version for this service.
 
-##### Making things work <a name="Doctor. Making things work" ></a>
+##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
 
 Consider the following steps needed to be able to improve the doctor command output:
 1. Create the `VersionHepler` class to work with the recommended versions of each service.
