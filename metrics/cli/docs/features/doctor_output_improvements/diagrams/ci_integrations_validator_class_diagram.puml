@@ -99,7 +99,8 @@ ValidationResultBuilder -up-> TargetValidationResult : uses
 ValidationResultPrinter --> ValidationResult : prints
 
 CoolIntegrationSourceValidator --> CoolIntegrationSourceValidationDelegate : uses
-CoolIntegrationSourceValidator --> ValidationResult : uses
+CoolIntegrationSourceValidator --> ValidationResult : provides
+CoolIntegrationSourceValidator -left-> CoolIntegrationSourceValidationTarget : uses
 
 CoolIntegrationSourceValidationDelegate --> TargetValidationResult : uses
 

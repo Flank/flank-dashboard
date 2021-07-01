@@ -25,7 +25,7 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
         - [CoolIntegrationSourceValidationTarget](#coolintegrationsourcevalidationtarget)
         - [CoolIntegrationSourceValidationDelegate](#coolintegrationsourcevalidationdelegate)
         - [CoolIntegrationSourceValidator](#coolintegrationsourcevalidator)
-        - [CI Integrations. Making things work](#ci-integrations-making-things-work)
+        - [Making things work](#ci-integrations-making-things-work)
       - [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command)
         - [DoctorCommand](#doctorcommand)
         - [Doctor](#doctor)
@@ -245,7 +245,7 @@ The `CoolIntegrationSourceValidator` is a class responsible for the validation o
 
 The `.validate()` method of the `CoolIntegrationSourceValidator` should return the `ValidationResult` containing `TargetValidationResult` for each field of the `CoolIntegrationSourceValidationTarget`.
 
-##### CI Integrations. Making things work
+##### Making things work <a href="#ci-integrations-making-things-work" id="ci-integrations-making-things-work"></a>
 
 Consider the following steps needed to update the `CI Integrations Validate` command:
 1. Create the main abstractions in the `Validation` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
@@ -286,7 +286,7 @@ The `VersionHelper` is a new class that allows us to interact with the [list of 
 
 The `.getRecommenedVersion()` method takes the name of the service and returns the recommended version for this service.
 
-##### Doctor. Making things work
+##### Making things work <a name="Doctor. Making things work" ></a>
 
 Consider the following steps needed to be able to improve the doctor command output:
 1. Create the `VersionHepler` class to work with the recommended versions of each service.

@@ -13,14 +13,6 @@ package cli.lib as cli_lib {
         }
 
         package doctor {
-            package factory as doctor_factory {
-                class DoctorFactory {
-                    - _serviceFactory: ServicesFactory
-
-                    + create(): Doctor
-                }
-            }
-
             class Doctor {
                 - _coolService: CoolService
                 + validationResultBuilder: ValidationResultBuilder
@@ -31,12 +23,6 @@ package cli.lib as cli_lib {
     }
 
     package services {
-        package common as services_common {
-            interface InfoService {
-                + checkVersion(): Future<TargetValidationResult>
-            }
-        }
-
         package cool_service {
             package adapter {
                 class CoolCliServiceAdapter {
@@ -121,27 +107,23 @@ ValidationResult --> TargetValidationResult : uses
 ValidationResult --> ValidationTarget : uses
 
 ValidationResultBuilder -up-> ValidationResult : builds
-ValidationResultBuilder --> ValidationTarget : uses
+ValidationResultBuilder -up-> ValidationTarget : uses
 ValidationResultBuilder -up-> TargetValidationResult : uses
 
-ValidationResultPrinter --> ValidationResult : prints
+ValidationResultPrinter -left-> ValidationResult : prints
 
-DoctorCommand -up-> DoctorFactory : uses
 DoctorCommand --> ValidationResultPrinter : uses
 DoctorCommand --> Doctor : uses
 DoctorCommand --> ValidationResult : uses
 
-DoctorFactory -up-> Doctor : creates
-
 Doctor --> ValidationResultBuilder : uses
 Doctor --> ValidationResult : provides
-Doctor --> CoolService : uses
+Doctor --> TargetValidationResult : uses
+Doctor -up-> CoolService : uses
 
 CoolCliServiceAdapter .up.|> CoolService
 CoolCliServiceAdapter -up-> CoolServiceCli : uses
 CoolCliServiceAdapter -up-> VersionHelper : uses
 CoolCliServiceAdapter --> TargetValidationResult : uses
-
-CoolService -up-|> InfoService
 
 @enduml
