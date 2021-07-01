@@ -17,7 +17,7 @@ class ValidationResultBuilder<T extends ValidationTarget> {
   /// this builder assembles.
   ///
   /// Throws an [ArgumentError] if the given [targets] is `null`.
-  ValidationResultBuilder.forItems(List<T> targets) {
+  ValidationResultBuilder.forTargets(List<T> targets) {
     ArgumentError.checkNotNull(targets);
 
     for (final target in targets) {
