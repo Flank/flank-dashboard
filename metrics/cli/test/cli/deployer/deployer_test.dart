@@ -6,18 +6,19 @@ import 'dart:io';
 import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/deployer.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
-import 'package:cli/common/model/paths.dart';
-import 'package:cli/common/model/factory/paths_factory.dart';
-import 'package:cli/common/model/sentry_web_config.dart';
-import 'package:cli/common/model/services.dart';
-import 'package:cli/common/model/web_metrics_config.dart';
+import 'package:cli/common/model/config/sentry_web_config.dart';
+import 'package:cli/common/model/config/web_metrics_config.dart';
+import 'package:cli/common/model/paths/paths.dart';
+import 'package:cli/common/model/paths/factory/paths_factory.dart';
+import 'package:cli/common/model/services/services.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
-import 'package:cli/util/file/file_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/directory_mock.dart';
+import '../../test_utils/file_helper_mock.dart';
+import '../../test_utils/file_mock.dart';
 import '../../test_utils/firebase_service_mock.dart';
 import '../../test_utils/flutter_service_mock.dart';
 import '../../test_utils/gcloud_service_mock.dart';
@@ -48,7 +49,7 @@ void main() {
     final gitService = GitServiceMock();
     final firebaseService = FirebaseServiceMock();
     final sentryService = SentryServiceMock();
-    final fileHelper = _FileHelperMock();
+    final fileHelper = FileHelperMock();
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
@@ -64,7 +65,7 @@ void main() {
       project: sentryProject,
     );
 
-    final file = _FileMock();
+    final file = FileMock();
     final services = Services(
       flutterService: flutterService,
       gcloudService: gcloudService,
@@ -2690,9 +2691,5 @@ void main() {
     );
   });
 }
-
-class _FileHelperMock extends Mock implements FileHelper {}
-
-class _FileMock extends Mock implements File {}
 
 class _PathsFactoryMock extends Mock implements PathsFactory {}

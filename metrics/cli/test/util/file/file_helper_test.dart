@@ -1,13 +1,12 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:cli/util/file/file_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/directory_mock.dart';
+import '../../test_utils/file_mock.dart';
 import '../../test_utils/matchers.dart';
 
 void main() {
@@ -21,10 +20,10 @@ void main() {
       key1: value1,
       key2: value2,
     };
+    const helper = FileHelper();
 
-    final file = _FileMock();
+    final file = FileMock();
     final directory = DirectoryMock();
-    final helper = FileHelper();
 
     tearDown(() {
       reset(file);
@@ -132,5 +131,3 @@ void main() {
     );
   });
 }
-
-class _FileMock extends Mock implements File {}

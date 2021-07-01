@@ -7,20 +7,20 @@ package cli.updater.config {
             - _configParser: UpdateConfigParser
             + create(String configPath): UpdateConfig
         }
+    }
 
-        package model {
-            class UpdateConfig {
-                + firebaseConfig: FirebaseConfig
-                + sentryConfig: SentryConfig
-                + {static} fromJson(Map<String,dynamic> json): UpdateConfig
-            }
+    package model {
+        class UpdateConfig {
+            + firebaseConfig: FirebaseConfig
+            + sentryConfig: SentryConfig
+            + {static} fromJson(Map<String,dynamic> json): UpdateConfig
         }
+    }
 
-        package parser {
-            class UpdateConfigParser {
-                - {static} _parser: YamlMapParser
-                + parse(String configYaml): UpdateConfig
-            }
+    package parser {
+        class UpdateConfigParser {
+            - {static} _parser: YamlMapParser
+            + parse(String configYaml): UpdateConfig
         }
     }
 }

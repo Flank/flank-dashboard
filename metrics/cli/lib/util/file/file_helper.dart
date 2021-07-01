@@ -5,6 +5,9 @@ import 'dart:io';
 
 /// A class that provides methods for working with the file system.
 class FileHelper {
+  /// Creates a new instance of the [FileHelper].
+  const FileHelper();
+
   /// Returns a [File] by the given [path].
   File getFile(String path) {
     return File(path);

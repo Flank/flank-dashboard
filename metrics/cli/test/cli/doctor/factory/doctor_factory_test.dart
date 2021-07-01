@@ -3,7 +3,7 @@
 
 import 'package:cli/cli/doctor/doctor.dart';
 import 'package:cli/cli/doctor/factory/doctor_factory.dart';
-import 'package:cli/common/model/services.dart';
+import 'package:cli/common/model/services/services.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
