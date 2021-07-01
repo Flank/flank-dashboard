@@ -11,6 +11,7 @@ import '../../../../test_utils/matchers.dart';
 
 void main() {
   group("UpdateConfigParser", () {
+    const content = 'content';
     const firebaseAuthToken = 'firebaseAuthToken';
     const projectId = 'projectId';
     const googleSignInClientId = 'googleSignInClientId';
@@ -53,8 +54,6 @@ void main() {
     test(
       ".parse() parses the given content using the given parser",
       () {
-        const content = 'content';
-
         final configParser = UpdateConfigParser(
           parser: yamlMapParserMock,
         );
@@ -75,7 +74,7 @@ void main() {
 
         when(yamlMapParserMock.parse(any)).thenReturn(json);
 
-        final config = configParser.parse('content');
+        final config = configParser.parse(content);
 
         expect(config, equals(expected));
       },
