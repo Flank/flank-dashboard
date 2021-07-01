@@ -77,7 +77,9 @@ void main() {
 
         expect(actualPageParametersModel.projectName, equals(projectName));
         expect(
-            actualPageParametersModel.projectGroupId, equals(projectGroupId));
+          actualPageParametersModel.projectGroupId,
+          equals(projectGroupId),
+        );
       },
     );
 
