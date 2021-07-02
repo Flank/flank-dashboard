@@ -40,25 +40,23 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   @override
   Future<void> deployFirebase(
     String projectId,
-    String firebasePath, [
-    String authToken,
-  ]) async {
-    await _firebaseCli.setFirebaseProject(projectId, firebasePath, authToken);
-    await _firebaseCli.deployFirestore(firebasePath, authToken);
-    await _firebaseCli.deployFunctions(firebasePath, authToken);
+    String firebasePath,
+  ) async {
+    await _firebaseCli.setFirebaseProject(projectId, firebasePath);
+    await _firebaseCli.deployFirestore(firebasePath);
+    await _firebaseCli.deployFunctions(firebasePath);
   }
 
   @override
   Future<void> deployHosting(
     String projectId,
     String target,
-    String appPath, [
-    String authToken,
-  ]) async {
-    await _firebaseCli.setFirebaseProject(projectId, appPath, authToken);
+    String appPath,
+  ) async {
+    await _firebaseCli.setFirebaseProject(projectId, appPath);
     await _firebaseCli.clearTarget(target, appPath);
     await _firebaseCli.applyTarget(projectId, target, appPath);
-    await _firebaseCli.deployHosting(target, appPath, authToken);
+    await _firebaseCli.deployHosting(target, appPath);
   }
 
   @override
@@ -89,5 +87,10 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   @override
   void acceptTermsOfService() {
     _prompter.prompt(FirebaseStrings.acceptTerms);
+  }
+
+  @override
+  void initializeAuthToken(String authToken) {
+    _firebaseCli.setupAuth(authToken);
   }
 }
