@@ -27,9 +27,11 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
         - [CoolIntegrationSourceValidator](#coolintegrationsourcevalidator)
         - [Making things work](#ci-integrations-making-things-work)
       - [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command)
+        - [Dependency](#dependency)
+        - [Dependencies](#dependencies)
         - [DoctorCommand](#doctorcommand)
         - [Doctor](#doctor)
-        - [VersionHelper](#versionhelper)
+        - [CoolService and CoolServiceCli](#coolservice-and-coolservicecli)
         - [Making things work](#doctor-making-things-work)
 
 ## Analysis
@@ -266,6 +268,20 @@ Consider the following diagrams that demonstrate the updated config validation f
 
 This subsection describes the enhancements needed to implement in the `Metrics CLI` tool to improve the `doctor` command output.
 
+##### Dependency 
+
+The `Dependency` is a class that represents the information on some 3-rd party service from the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
+
+It contains two fields that are important for the `doctor` command:
+- `recommendedVersion` - a version of the corresponding 3-rd party service that is recommended to use along with the `Metrics CLI`;
+- `installUrl` - a URL that guides to the installation instruction of the corresponding 3-rd party service.
+
+Having this information, the `doctor` command is capable to compare the version of some cli installed on user's machine against the recommended version. In case that cli is not installed, the `doctor` command is able to show the installation link to the user.
+
+##### Dependencies
+
+The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party service. The `Dependencies` instance is injected into the `Doctor` class, so that the `Doctor` can retrieve the `Dependency` information on some 3-rd party service via the '.getFor(service: String)' method.
+
 ##### DoctorCommand
 
 The `DoctorCommand` is the Metrics CLI command that verifies all required 3-rd party tools' versions against the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
@@ -280,11 +296,20 @@ We need to update the `.checkVersions()` method of the `Doctor` class to return 
 
 The `ValidationResult` contains the `TargetValidationResult`s for each 3-rd party service.
 
-##### VersionHelper
+##### CoolService and CoolServiceCli
+Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output.
 
-The `VersionHelper` is a new class that allows us to interact with the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
+Currently, the `CoolService` has the `.version()` method that is implemented in the `CoolCliServiceAdapter`. In the current implementation, the `.version()` method runs the `version` command of some service cli and prints the output directly to the stdout.    
 
-The `.getRecommenedVersion()` method takes the name of the service and returns the recommended version for this service.
+To improve the `doctor` command output, we want to receive the `version` command output first, and then prettify it depending on the output. To handle that, we need to update the `.version()` methods of the following classes to return the `Future<ProcessResult>`: 
+1. `InfoService`;
+2. `CoolService`; 
+3. `CoolServiceCli`;
+4. `CoolCliServiceAdapter`.
+
+Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
+![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
+
 
 ##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
 
@@ -295,7 +320,7 @@ Consider the following steps needed to be able to improve the doctor command out
 4. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
 5. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
-Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output. Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement:
+ Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement with a `CoolService` used as an example of 3-rd party service:
 
 - Class diagram:
   ![Doctor output improvements class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)

@@ -1,0 +1,78 @@
+@startuml doctor_output_improvements_class_diagram
+
+package cli.lib as cli_lib {
+    package cli {
+        package command {
+            class DoctorCommand {
+                + name: String
+                + doctorFactory: DoctorFactory
+                + validationResultPrinter: ValidationResultPrinter
+
+                + run(): Future<void>
+            }
+        }
+
+        package doctor {
+            class Doctor {
+                - _coolService: CoolService
+                + validationResultBuilder: ValidationResultBuilder
+                + dependencies: Dependencies
+
+                + checkVersions(): Future<ValidationResult>
+            }
+        }
+    }
+
+    package services {
+        package cool_service {
+            package adapter {
+                class CoolCliServiceAdapter {
+                    - _coolServiceCli: CoolServiceCli
+
+                    + version(): Future<ProcessResult>
+                }
+            }
+
+            package cli as cool_service_cli {
+                class CoolServiceCli {
+                    + executable: String
+
+                    + version(): Future<ProcessResult>
+                }
+            }
+
+            interface CoolService {
+                + name: String
+                + version(): Future<ProcessResult>
+            }
+        }
+    }
+
+    package util.dependency {
+        class Dependency {
+            + recommendedVersion: String
+            + installUrl: String
+
+            + fromMap(map: Map<String, dynamic>): Dependency
+        }
+
+        class Dependencies {
+            - _dependencies: Map<String, Dependency>
+
+            + getFor(service: String): Dependency
+            + fromMap(map: Map<String, dynamic>): Dependencies
+        }
+    }
+}
+
+DoctorCommand --> Doctor : uses
+
+Doctor -up-> CoolService : uses
+Doctor --> Dependencies : uses
+
+CoolCliServiceAdapter .up.|> CoolService
+CoolCliServiceAdapter -up-> CoolServiceCli : uses
+
+Dependencies --> Dependency : uses
+
+@enduml
