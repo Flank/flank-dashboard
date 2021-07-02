@@ -3,8 +3,11 @@
 
 import 'package:equatable/equatable.dart';
 
-/// An abstract class, that represents the application page parameters.
+/// An abstract class that represents the application page parameters.
 abstract class PageParametersModel extends Equatable {
+  /// Creates a new instance of the [PageParametersModel].
+  const PageParametersModel();
+
   /// Converts the [PageParametersModel] to the [Map].
   Map<String, dynamic> toMap();
 }

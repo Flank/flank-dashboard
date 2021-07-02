@@ -4,21 +4,24 @@
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 
-/// A class, that represents [DashboardPage] parameters parsed from
+/// A class that represents [DashboardPage] parameters parsed from
 /// query parameters.
 class DashboardPageParametersModel extends PageParametersModel {
-  /// A [String], that represents a name of the project.
+  /// A [String] that represents a name of the project.
   final String projectFilter;
 
-  /// A [String], that represents an identifier of the selected project group.
+  /// A [String] that represents an identifier of the selected project group.
   final String projectGroupId;
 
   /// Creates a new instance of the [DashboardPageParametersModel]
   /// with the given parameters.
-  DashboardPageParametersModel({
+  const DashboardPageParametersModel({
     this.projectFilter,
     this.projectGroupId,
   });
+
+  @override
+  List<Object> get props => [projectFilter, projectGroupId];
 
   /// Creates a copy of this [DashboardPageParametersModel] but with
   /// the given fields replaced with the new values.
@@ -51,7 +54,4 @@ class DashboardPageParametersModel extends PageParametersModel {
       'projectGroupId': projectGroupId,
     };
   }
-
-  @override
-  List<Object> get props => [projectFilter, projectGroupId];
 }

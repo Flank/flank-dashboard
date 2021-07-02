@@ -12,7 +12,7 @@ void main() {
       'projectFilter': projectFilter,
       'projectGroupId': projectGroupId,
     };
-    final pageParametersModel = DashboardPageParametersModel(
+    const pageParametersModel = DashboardPageParametersModel(
       projectFilter: projectFilter,
       projectGroupId: projectGroupId,
     );
@@ -20,7 +20,7 @@ void main() {
     test(
       "creates an instance with the given parameters",
       () {
-        final pageParametersModel = DashboardPageParametersModel(
+        const pageParametersModel = DashboardPageParametersModel(
           projectFilter: projectFilter,
           projectGroupId: projectGroupId,
         );
@@ -29,6 +29,25 @@ void main() {
         expect(
           pageParametersModel.projectGroupId,
           equals(projectGroupId),
+        );
+      },
+    );
+
+    test(
+      "two instances with the equal fields are equal",
+      () {
+        const firstPageParametersModel = DashboardPageParametersModel(
+          projectFilter: projectFilter,
+          projectGroupId: projectGroupId,
+        );
+        const secondPageParametersModel = DashboardPageParametersModel(
+          projectFilter: projectFilter,
+          projectGroupId: projectGroupId,
+        );
+
+        expect(
+          firstPageParametersModel.props,
+          equals(secondPageParametersModel.props),
         );
       },
     );
