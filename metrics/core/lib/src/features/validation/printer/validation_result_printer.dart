@@ -10,7 +10,7 @@ import 'package:metrics_core/src/features/validation/validation_target.dart';
 /// A class that is responsible for printing the [ValidationResult].
 class ValidationResultPrinter {
   /// An instance of the [StringSink] this printer uses to print the result.
-  final StringSink _sink;
+  final StringSink sink;
 
   /// Create a new instance of the [ValidationResultPrinter] with the given
   /// [StringSink].
@@ -19,7 +19,7 @@ class ValidationResultPrinter {
   /// is used.
   ValidationResultPrinter({
     StringSink sink,
-  }) : _sink = sink ?? stdout;
+  }) : sink = sink ?? stdout;
 
   /// Prints the given [result] to the [StringSink].
   void print(ValidationResult result) {
@@ -33,7 +33,7 @@ class ValidationResultPrinter {
 
       final message = _buildFieldValidationOutput(field, result);
 
-      _sink.writeln(message);
+      sink.writeln(message);
     }
   }
 
@@ -46,7 +46,7 @@ class ValidationResultPrinter {
     final targetName = target.name;
     final targetDescription = target.description ?? '';
     final conclusion = validationResult.conclusion;
-    final conclusionIndicator = conclusion.indicator;
+    final conclusionIndicator = conclusion.indicator ?? '?';
     final validationDescription = validationResult.description != null
         ? ' - ${validationResult.description}'
         : '';
@@ -71,6 +71,7 @@ class ValidationResultPrinter {
     return resultMessage.join(', ');
   }
 
+  ///
   String _getValidationContext(TargetValidationResult validationResult) {
     final context = validationResult.context;
     const indent = '\n\t\t';
