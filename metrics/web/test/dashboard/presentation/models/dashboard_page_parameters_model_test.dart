@@ -45,10 +45,7 @@ void main() {
           projectGroupId: projectGroupId,
         );
 
-        expect(
-          firstPageParametersModel.props,
-          equals(secondPageParametersModel.props),
-        );
+        expect(firstPageParametersModel, equals(secondPageParametersModel));
       },
     );
 
