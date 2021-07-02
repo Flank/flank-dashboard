@@ -35,8 +35,8 @@ CiIntegrationsRunner -> ValidateCommand: run()
 deactivate CiIntegrationsRunner
 activate ValidateCommand
 
-ValidateCommand -> ValidateCommand : creates source and Source parties
-ValidateCommand -> ValidateCommand : parses source and Source configs
+ValidateCommand -> ValidateCommand : creates Destination and Source parties
+ValidateCommand -> ValidateCommand : parses Destination and Source configs
 
 ValidateCommand -> CoolIntegrationValidatorFactory : create()
 activate CoolIntegrationValidatorFactory

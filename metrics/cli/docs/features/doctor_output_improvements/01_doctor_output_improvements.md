@@ -290,8 +290,8 @@ The `.getRecommenedVersion()` method takes the name of the service and returns t
 
 Consider the following steps needed to be able to improve the doctor command output:
 1. Create the `VersionHepler` class to work with the recommended versions of each service.
-2. Update the `.version()` methods of each service cli to return the `ProcessResult`.
-3. Update the `.checkVersion()` methods of each service adapter to return the `TargetValidationResult`.
+2. For each service cli (e.g., `FlutterCli`, `GitCli`, etc.) update the `.version()` method to return the `ProcessResult`.
+3. For each cli service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.) update the `.checkVersion()` methods to return the `TargetValidationResult`.
 4. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
 5. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
