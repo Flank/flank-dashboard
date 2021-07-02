@@ -53,7 +53,7 @@ package cli.lib as cli_lib {
     }
 }
 
-package validation.lib.src {
+package core.lib.src.util.validation {
     package model {
         package builder {
             class ValidationResultBuilder {

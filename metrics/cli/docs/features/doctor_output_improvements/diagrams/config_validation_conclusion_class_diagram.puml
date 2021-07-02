@@ -1,6 +1,6 @@
 @startuml ci_integrations_validator_class_diagram
 
-package validation.lib.src.model {
+package core.lib.src.util.validation.model {
     class ValidationConclusion {
         + name: String
         + indicator: String

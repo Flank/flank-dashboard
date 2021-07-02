@@ -147,9 +147,9 @@ The following subsections explain the implementation strategy in more detail.
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
  
-Since the validation output is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to have a reusable API for the validation output for the components listed above. For that, let's create a `Validation` package to store the common abstractions of the validation functionality.
+Since the validation output logic is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to have a reusable API for the validation output for the components listed above. For that, let's create a `validation` package in the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) package to store the common abstractions of the validation functionality.
 
-Consider the next sections describing the main classes of the `Validation` package.
+Consider the next sections describing the main classes of the `validation` package.
 
 #### ValidationTarget
 A `ValidationTarget` is an entity that represents the value under the validation (e.g., it's a version of a CLI package).
@@ -182,7 +182,7 @@ This class implements a `Builder` pattern, and its responsibility is to assemble
 #### ValidationResultPrinter
 A `ValidationResultPrinter` is a class that is responsible for showing the validation result to the user.
 
-Consider the following class diagram that describes the `Validation` package structure:
+Consider the following class diagram that describes the `validation` package structure:
 
 ![Validation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_class_diagram.puml)
 
@@ -212,7 +212,7 @@ Consider the following subsections that describe each step in more detail.
 
 As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) have a similar logic for the validation process. That's why we want to reuse the code across those tools to make it more DRY.
 
-This section describes the modifications that should be made to the `CI Integrations` tool to reuse the common code from the `Validation` package.
+This section describes the modifications that should be made to the `CI Integrations` tool to reuse the common code from the `validation` package of the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core).
 
 Assume a `CoolIntegration` as a source party for which we want to provide the config validation. Consider the following subsections that describe the changes required to validate the config for the `CoolIntegration`.
 
@@ -248,11 +248,11 @@ The `.validate()` method of the `CoolIntegrationSourceValidator` should return t
 ##### Making things work <a href="#ci-integrations-making-things-work" id="ci-integrations-making-things-work"></a>
 
 Consider the following steps needed to update the `CI Integrations Validate` command:
-1. Create the main abstractions in the `Validation` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
 2. Update the `ConfigFieldValidationConclusion` and `CoolIntegrationSourceValidationTarget` to use the `ValidationConclusion` and `ValidationTarget` respectively.
 3. Update the validation methods of each integration's validation delegate to return the `TargetValidationResult`.
 4. Update the `.validate()` methods of each validator to return the updated `ValidationResult` containing the `ValidationTarget`s and `TargetValidationResult`s.
-5. Delete the outdated abstractions covered by the `Validation` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+5. Delete the outdated abstractions covered by the `validation` package of the `Metrics Core`: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
 
 Consider the following diagrams that demonstrate the updated config validation for the `CoolIntegration`:
 

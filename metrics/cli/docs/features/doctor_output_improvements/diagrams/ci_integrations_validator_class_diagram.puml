@@ -1,6 +1,6 @@
 @startuml ci_integrations_validator_class_diagram
 
-package validation.lib.src {
+package core.lib.src.util.validation {
     package model {
         package builder {
             class ValidationResultBuilder {

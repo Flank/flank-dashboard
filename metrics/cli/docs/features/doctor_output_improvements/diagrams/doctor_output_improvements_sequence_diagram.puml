@@ -16,7 +16,7 @@ participant OtherCoolService
 
 end box
 
-box Validation #whiteSmoke
+box Metrics Core #whiteSmoke
 
 participant ValidationResultBuilder
 participant ValidationResultPrinter
