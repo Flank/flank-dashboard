@@ -18,8 +18,10 @@ abstract class AuthCli extends Cli {
   /// Most commonly represents the value of the access token.
   String _authorization;
 
-  /// Returns the auth argument composed of the [authArgumentName] and
-  /// the [_authorization], this [Cli] uses to authorize its commands
+  /// Returns an auth argument composing of the [authArgumentName] and
+  /// the [_authorization].
+  ///
+  /// This [Cli] uses the auth argument to authorize its commands.
   String get _authArgument => '--$authArgumentName=$_authorization';
 
   /// Initializes the authorization for this [Cli] with
