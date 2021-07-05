@@ -13,6 +13,7 @@ participant DoctorFactory
 participant Doctor
 participant CoolService
 participant OtherCoolService
+participant Dependencies
 
 end box
 
@@ -38,22 +39,31 @@ deactivate DoctorFactory
 DoctorCommand -> Doctor : checkVersions()
 activate Doctor
 
-Doctor -> CoolService : checkVersion()
+Doctor -> CoolService : version()
 activate CoolService
 
 CoolService --> Doctor : ProcessResult instance
 deactivate CoolService
 
-Doctor -> Doctor : creates TargetValidationResult \n from the ProcessResult
+Doctor -> Dependencies : getFor(coolService)
+activate Dependencies
+Dependencies --> Doctor : Dependency instance
+
+Doctor -> Doctor : compares recommended version with the actual version \n and creates TargetValidationResult from the ProcessResult
 Doctor -> ValidationResultBuilder : setResult()
 activate ValidationResultBuilder
 
-Doctor -> OtherCoolService : checkVersion()
+Doctor -> OtherCoolService : version()
 activate OtherCoolService
 OtherCoolService --> Doctor : ProcessResult instance
 deactivate OtherCoolService
 
-Doctor -> Doctor : creates TargetValidationResult \n from the ProcessResult
+Doctor -> Dependencies : getFor(OtherCoolService)
+Dependencies --> Doctor : Dependency instance
+deactivate Dependencies
+
+Doctor -> Doctor : compares recommended version with the actual version \n and creates TargetValidationResult from the ProcessResult
+
 Doctor -> ValidationResultBuilder : setResult()
 Doctor -> ValidationResultBuilder : build()
 ValidationResultBuilder --> Doctor :  ValidationResult instance
