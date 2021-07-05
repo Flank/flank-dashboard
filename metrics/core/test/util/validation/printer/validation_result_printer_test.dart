@@ -17,10 +17,35 @@ import '../../../test_utils/matchers.dart';
 
 void main() {
   group("ValidationResultPrinter", () {
-    const target = ValidationTarget(name: 'service', description: 'test');
+    const target = ValidationTarget(name: 'service 1', description: 'test');
+    const secondTarget =
+        ValidationTarget(name: 'service 2', description: 'test');
+    const thirdTarget =
+        ValidationTarget(name: 'service 3', description: 'test');
     const conclusion = ValidationConclusion(name: 'success', indicator: '+');
     const details = {'test': 'details'};
     const context = {'test': 'context'};
+    const firstResult = TargetValidationResult(
+      target: target,
+      conclusion: conclusion,
+      description: 'description 1',
+      details: details,
+      context: context,
+    );
+    const secondResult = TargetValidationResult(
+      target: secondTarget,
+      conclusion: conclusion,
+      description: 'description 2',
+      details: details,
+      context: context,
+    );
+    const thirdResult = TargetValidationResult(
+      target: thirdTarget,
+      conclusion: conclusion,
+      description: 'description 3',
+      details: details,
+      context: context,
+    );
 
     final ioSink = IOSinkMock();
     final resultPrinter = ValidationResultPrinter(sink: ioSink);
@@ -33,6 +58,29 @@ void main() {
       });
 
       return stringContainsInOrder(entries);
+    }
+
+    Matcher validationResultMessageMatcher(
+      ValidationTarget target,
+      TargetValidationResult result,
+    ) {
+      final targetName = target.name;
+      final targetDescription = target.description ?? '';
+      final conclusion = result.conclusion;
+      final conclusionIndicator = conclusion.indicator ?? '?';
+      final validationDescription =
+          result.description != null ? ' - ${result.description}' : '';
+      final details = result.details;
+      final context = result.context;
+
+      return allOf(
+        startsWith('[$conclusionIndicator]'),
+        contains(targetName),
+        contains(targetDescription),
+        contains(validationDescription),
+        containsAllEntries(details),
+        containsAllEntries(context),
+      );
     }
 
     tearDown(() {
@@ -217,6 +265,55 @@ void main() {
         verify(
           ioSink.writeln(argThat(containsAllEntries(context))),
         ).called(once);
+      },
+    );
+
+    test(
+      ".print() prints validation result messages for all targets",
+      () {
+        final results = {
+          target: firstResult,
+          secondTarget: secondResult,
+          thirdTarget: thirdResult,
+        };
+        final validationResult = ValidationResult(results);
+
+        resultPrinter.print(validationResult);
+
+        results.forEach((target, result) {
+          verify(
+            ioSink.writeln(argThat(
+              validationResultMessageMatcher(target, result),
+            )),
+          ).called(once);
+        });
+      },
+    );
+
+    test(
+      ".print() prints the validation results in the given order",
+      () {
+        final results = {
+          target: firstResult,
+          secondTarget: secondResult,
+          thirdTarget: thirdResult,
+        };
+        final validationResult = ValidationResult(results);
+
+        resultPrinter.print(validationResult);
+
+        final expectedMessages = results.entries.map((entry) {
+          final target = entry.key;
+          final result = entry.value;
+
+          return argThat(
+            validationResultMessageMatcher(target, result),
+          );
+        });
+
+        verifyInOrder(
+          expectedMessages.map(ioSink.writeln).toList(),
+        );
       },
     );
   });
