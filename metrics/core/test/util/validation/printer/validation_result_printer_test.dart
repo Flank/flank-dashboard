@@ -11,6 +11,8 @@ import 'package:mockito/mockito.dart';
 
 import 'package:test/test.dart';
 
+import '../../../test_utils/matchers.dart';
+
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
@@ -19,16 +21,7 @@ void main() {
     const conclusion = ValidationConclusion(name: 'success', indicator: '+');
     const details = {'test': 'details'};
     const context = {'test': 'context'};
-    const result = TargetValidationResult(
-      target: target,
-      conclusion: conclusion,
-      description: 'success',
-      details: details,
-      context: context,
-    );
 
-    final results = {target: result};
-    final validationResult = ValidationResult(results);
     final ioSink = IOSinkMock();
     final resultPrinter = ValidationResultPrinter(sink: ioSink);
 
@@ -82,7 +75,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(startsWithDefaultIndicator)),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -108,7 +101,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(startsWithDefaultIndicator)),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -131,7 +124,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(contains(targetName))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -157,7 +150,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(contains(targetDescription))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -179,7 +172,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(contains(description))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -201,7 +194,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(containsAllEntries(details))),
-        ).called(1);
+        ).called(once);
       },
     );
 
@@ -223,7 +216,7 @@ void main() {
 
         verify(
           ioSink.writeln(argThat(containsAllEntries(context))),
-        ).called(1);
+        ).called(once);
       },
     );
   });
