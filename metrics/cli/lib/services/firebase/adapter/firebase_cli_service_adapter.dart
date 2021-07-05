@@ -2,13 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/prompter/prompter.dart';
+import 'package:cli/services/common/mixin/authorization.dart';
 import 'package:cli/services/firebase/cli/firebase_cli.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/firebase/strings/firebase_strings.dart';
 
 /// An adapter for the [FirebaseCli] to implement
 /// the [FirebaseService] interface.
-class FirebaseCliServiceAdapter implements FirebaseService {
+class FirebaseCliServiceAdapter with Authorization implements FirebaseService {
   /// A [FirebaseCli] class that provides an ability to interact
   /// with the Firebase CLI.
   final FirebaseCli _firebaseCli;
@@ -90,7 +91,12 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  void initializeAuthToken(String authToken) {
-    _firebaseCli.setupAuth(authToken);
+  void initializeAuthorization(String authorization) {
+    _firebaseCli.setupAuth(authorization);
+  }
+
+  @override
+  void resetAuthorization() {
+    _firebaseCli.resetAuth();
   }
 }

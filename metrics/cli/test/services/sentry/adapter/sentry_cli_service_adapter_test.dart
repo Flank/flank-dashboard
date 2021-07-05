@@ -16,7 +16,7 @@ import '../../../test_utils/prompter_mock.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group('SentryCliServiceAdapter', () {
+  group("SentryCliServiceAdapter", () {
     const path = 'path';
     const extensions = ['js'];
     const releaseName = 'releaseName';
@@ -25,6 +25,7 @@ void main() {
     const enterOrganizationSlug = SentryStrings.enterOrganizationSlug;
     const enterReleaseName = SentryStrings.enterReleaseName;
     const dsn = 'dsn';
+    const authorization = 'auth';
 
     final sentryCli = _SentryCliMock();
     final prompter = PrompterMock();
@@ -368,6 +369,48 @@ void main() {
 
         expect(
           () => sentryService.getProjectDsn(sentryProject),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".initializeAuthorization() initializes the authorization for the Sentry CLI",
+      () {
+        sentryService.initializeAuthorization(authorization);
+
+        verify(sentryCli.setupAuth(authorization)).called(once);
+      },
+    );
+
+    test(
+      ".initializeAuthorization() throws if Sentry CLI throws during the initializing authorization process",
+      () {
+        when(sentryCli.setupAuth(authorization)).thenThrow(stateError);
+
+        expect(
+          () => sentryService.initializeAuthorization(authorization),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".resetAuthorization() resets the authorization for the Sentry CLI",
+      () {
+        sentryService.resetAuthorization();
+
+        verify(sentryCli.resetAuth()).called(once);
+      },
+    );
+
+    test(
+      ".resetAuthorization() throws if Sentry CLI throws during the resetting authorization process",
+      () {
+        when(sentryCli.resetAuth()).thenThrow(stateError);
+
+        expect(
+          () => sentryService.resetAuthorization(),
           throwsStateError,
         );
       },

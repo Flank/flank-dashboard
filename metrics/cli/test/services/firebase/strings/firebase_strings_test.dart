@@ -5,7 +5,7 @@ import 'package:cli/services/firebase/strings/firebase_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('FirebaseStrings', () {
+  group("FirebaseStrings", () {
     const projectId = 'projectId';
 
     test(

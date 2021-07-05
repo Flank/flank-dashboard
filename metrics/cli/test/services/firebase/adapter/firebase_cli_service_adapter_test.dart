@@ -13,11 +13,12 @@ import '../../../test_utils/prompter_mock.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group('FirebaseCliServiceAdapter', () {
+  group("FirebaseCliServiceAdapter", () {
     const projectId = 'projectId';
     const workingDirectory = 'workingDirectory';
     const target = 'target';
     const clientId = 'clientId';
+    const authorization = 'auth';
 
     final firebaseCli = _FirebaseCliMock();
     final prompter = PrompterMock();
@@ -531,6 +532,48 @@ void main() {
 
         expect(
           () => firebaseService.acceptTermsOfService(),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".initializeAuthorization() initializes the authorization for the Firebase CLI",
+      () {
+        firebaseService.initializeAuthorization(authorization);
+
+        verify(firebaseCli.setupAuth(authorization)).called(once);
+      },
+    );
+
+    test(
+      ".initializeAuthorization() throws if Firebase CLI throws during the initializing authorization process",
+      () {
+        when(firebaseCli.setupAuth(authorization)).thenThrow(stateError);
+
+        expect(
+          () => firebaseService.initializeAuthorization(authorization),
+          throwsStateError,
+        );
+      },
+    );
+
+    test(
+      ".resetAuthorization() resets the authorization for the Firebase CLI",
+      () {
+        firebaseService.resetAuthorization();
+
+        verify(firebaseCli.resetAuth()).called(once);
+      },
+    );
+
+    test(
+      ".resetAuthorization() throws if Firebase CLI throws during the resetting authorization process",
+      () {
+        when(firebaseCli.resetAuth()).thenThrow(stateError);
+
+        expect(
+          () => firebaseService.resetAuthorization(),
           throwsStateError,
         );
       },

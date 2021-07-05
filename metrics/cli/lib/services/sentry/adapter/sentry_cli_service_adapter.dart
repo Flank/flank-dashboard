@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:cli/prompter/prompter.dart';
+import 'package:cli/services/common/mixin/authorization.dart';
 import 'package:cli/services/sentry/cli/sentry_cli.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
@@ -10,7 +11,7 @@ import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/services/sentry/strings/sentry_strings.dart';
 
 /// An adapter for the [SentryCli] to implement the [SentryService] interface.
-class SentryCliServiceAdapter implements SentryService {
+class SentryCliServiceAdapter with Authorization implements SentryService {
   /// A [SentryCli] class that provides an ability to interact
   /// with the Sentry CLI.
   final SentryCli _sentryCli;
@@ -90,5 +91,15 @@ class SentryCliServiceAdapter implements SentryService {
     for (final sourceMap in sourceMaps) {
       await _sentryCli.uploadSourceMaps(release, sourceMap);
     }
+  }
+
+  @override
+  void initializeAuthorization(String authorization) {
+    _sentryCli.setupAuth(authorization);
+  }
+
+  @override
+  void resetAuthorization() {
+    _sentryCli.resetAuth();
   }
 }

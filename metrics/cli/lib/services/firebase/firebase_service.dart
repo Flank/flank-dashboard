@@ -48,7 +48,4 @@ abstract class FirebaseService extends InfoService {
 
   /// Accepts the terms of the service.
   FutureOr<void> acceptTermsOfService();
-
-  /// Initializes the given [authToken] for this service.
-  void initializeAuthToken(String authToken);
 }

@@ -5,7 +5,7 @@ import 'package:cli/services/gcloud/strings/gcloud_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('GCloudStrings', () {
+  group("GCloudStrings", () {
     const projectId = 'projectId';
     const projectName = 'projectName';
 
