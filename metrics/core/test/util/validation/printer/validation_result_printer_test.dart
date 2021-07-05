@@ -32,6 +32,16 @@ void main() {
     final ioSink = IOSinkMock();
     final resultPrinter = ValidationResultPrinter(sink: ioSink);
 
+    Matcher containsAllEntries(Map<String, dynamic> fromMap) {
+      final entries = <String>[];
+      fromMap.forEach((key, value) {
+        entries.add(key);
+        entries.add(value.toString());
+      });
+
+      return stringContainsInOrder(entries);
+    }
+
     tearDown(() {
       reset(ioSink);
     });
@@ -190,7 +200,29 @@ void main() {
         resultPrinter.print(validationResult);
 
         verify(
-          ioSink.writeln(argThat(contains(details))),
+          ioSink.writeln(argThat(containsAllEntries(details))),
+        ).called(1);
+      },
+    );
+
+    test(
+      ".print() prints the validation result message to the sink with the given validation result context",
+      () {
+        const context = {'test': 'context'};
+        const result = TargetValidationResult(
+          target: target,
+          conclusion: conclusion,
+          description: 'description',
+          details: details,
+          context: context,
+        );
+        final results = {target: result};
+        final validationResult = ValidationResult(results);
+
+        resultPrinter.print(validationResult);
+
+        verify(
+          ioSink.writeln(argThat(containsAllEntries(context))),
         ).called(1);
       },
     );

@@ -59,7 +59,11 @@ class ValidationResultPrinter {
     ''';
   }
 
+  /// Returns the [String] representation of the given
+  /// [TargetValidationResult.details].
   ///
+  /// Returns an empty string If the given [TargetValidationResult.details] is
+  /// empty.
   String _getValidationDetails(TargetValidationResult validationResult) {
     final details = validationResult.details;
     final resultMessage = [];
@@ -71,7 +75,11 @@ class ValidationResultPrinter {
     return resultMessage.join(', ');
   }
 
+  /// Returns the [String] representation of the given
+  /// [TargetValidationResult.context].
   ///
+  /// Returns an empty string If the given [TargetValidationResult.context] is
+  /// empty.
   String _getValidationContext(TargetValidationResult validationResult) {
     final context = validationResult.context;
     const indent = '\n\t\t';
