@@ -1,33 +1,33 @@
 # Provides an ability to build the Flutter web application.
-#
-# Consider the following link to install: https://flutter.dev/docs/get-started/install
-flutter: 1.25.0-8.2.pre
+flutter:
+  recommended_version: 1.25.0-8.2.pre
+  install_url: https://flutter.dev/docs/get-started/install
 
 # Provides an ability to create and manage Google Cloud resources.
 # Used to create and configure a GCloud project.
-#
-# Consider the following link to install: https://cloud.google.com/sdk/docs/install
-gcloud: 341.0.0
+gcloud:
+  recommended_version: 341.0.0
+  install_url: https://cloud.google.com/sdk/docs/install
 
 # Provides an ability to adapt packages of code for applications, download standalone tools, etc.
 # Used to install npm dependencies.
-#
-# Consider the following link to install: https://www.npmjs.com/get-npm
-npm: 6.14.13
+npm:
+  recommended_version: 6.14.13
+  install_url: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 # Provides an ability to run Git commands.
 # Used to checkout the Metrics project from the remote repository.
-#
-# Consider the following link to install: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-git: 2.31.1
+git:
+  recommended_version: 2.31.1
+  install_url: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
 # Provides a variety of tools for managing, viewing, and deploying to Firebase projects.
 # Used to create a Firebase project and deploy the application components.
-#
-# Consider the following link to install: https://firebase.google.com/docs/cli
-firebase: 9.11.0
+firebase:
+  recommended_version: 9.11.0
+  install_url: https://firebase.google.com/docs/cli
 
 # Connects to the Sentry API and associates the Metrics Web application with a Sentry project.
-#
-# Consider the following link to install: https://docs.sentry.io/product/cli/installation/
-sentry-cli: 1.64.2
+sentry-cli:
+  recommended_version: 1.64.2
+  install_url: https://docs.sentry.io/product/cli/installation/
