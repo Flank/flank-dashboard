@@ -1,9 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics_core/src/features/validation/target_validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_target.dart';
+import 'package:metrics_core/src/util/validation/target_validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that provides methods for building the [ValidationResult].
 class ValidationResultBuilder<T extends ValidationTarget> {

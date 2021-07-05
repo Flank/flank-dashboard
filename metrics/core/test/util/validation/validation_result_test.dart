@@ -3,10 +3,10 @@
 
 import 'dart:collection';
 
-import 'package:metrics_core/src/features/validation/target_validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_conclusion.dart';
-import 'package:metrics_core/src/features/validation/validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_target.dart';
+import 'package:metrics_core/src/util/validation/target_validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
+import 'package:metrics_core/src/util/validation/validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';

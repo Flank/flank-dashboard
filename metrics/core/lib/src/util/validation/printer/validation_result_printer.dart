@@ -3,9 +3,9 @@
 
 import 'dart:io';
 
-import 'package:metrics_core/src/features/validation/target_validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_target.dart';
+import 'package:metrics_core/src/util/validation/target_validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that is responsible for printing the [ValidationResult].
 class ValidationResultPrinter {

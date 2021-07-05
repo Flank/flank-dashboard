@@ -2,11 +2,11 @@
 // that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'package:metrics_core/src/features/validation/printer/validation_result_printer.dart';
-import 'package:metrics_core/src/features/validation/target_validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_conclusion.dart';
-import 'package:metrics_core/src/features/validation/validation_result.dart';
-import 'package:metrics_core/src/features/validation/validation_target.dart';
+import 'package:metrics_core/src/util/validation/printer/validation_result_printer.dart';
+import 'package:metrics_core/src/util/validation/target_validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
+import 'package:metrics_core/src/util/validation/validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:test/test.dart';

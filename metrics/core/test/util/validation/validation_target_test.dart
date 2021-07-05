@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:metrics_core/src/features/validation/validation_target.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
