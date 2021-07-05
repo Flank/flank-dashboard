@@ -15,9 +15,19 @@ package cli.lib as cli_lib {
         package doctor {
             class Doctor {
                 - _coolService: CoolService
+                - _dependencies: Dependencies
                 + validationResultBuilder: ValidationResultBuilder
 
                 + checkVersions(): Future<ValidationResult>
+            }
+
+            package factory as doctor_factory {
+                class DoctorFactory {
+                    - _servicesFactory: ServicesFactory
+                    - _dependenciesFactory: DependenciesFactory
+
+                    + create(): Doctor
+                }
             }
         }
     }
@@ -26,29 +36,52 @@ package cli.lib as cli_lib {
         package cool_service {
             package adapter {
                 class CoolCliServiceAdapter {
-                    - _versionHelper: VersionHelper
                     - _coolServiceCli: CoolServiceCli
 
-                    + checkVersion(): Future<ProcessResult>
-                    - _getRecommendedVersion(): String
+                    + version(): Future<ProcessResult>
                 }
             }
 
             package cli as cool_service_cli {
                 class CoolServiceCli {
+                    + executable: String
+
                     + version(): Future<ProcessResult>
                 }
             }
 
             interface CoolService {
-                + serviceSpecificMethod(): Future<void>
+                + name: String
+                + version(): Future<ProcessResult>
             }
         }
     }
 
-    package util.version_helper {
-        class VersionHelper {
-            + getRecommendedVersion(service: String): String
+    package dependencies {
+        package factory as dependencies_factory {
+            class DependenciesFactory {
+                + create(): Dependencies
+            }
+        }
+
+        package constants {
+            class DependenciesConstants {
+                + {static} dependenciesPath: String
+            }
+        }
+
+        class Dependency {
+            + recommendedVersion: String
+            + installUrl: String
+
+            + fromMap(map: Map<String, dynamic>): Dependency
+        }
+
+        class Dependencies {
+            - _dependencies: Map<String, Dependency>
+
+            + getFor(service: String): Dependency
+            + fromMap(map: Map<String, dynamic>): Dependencies
         }
     }
 }
@@ -117,14 +150,24 @@ ValidationResultPrinter -left-> ValidationResult : prints
 DoctorCommand --> ValidationResultPrinter : uses
 DoctorCommand --> Doctor : uses
 DoctorCommand --> ValidationResult : uses
+DoctorCommand -left-> DoctorFactory : uses
+
+DoctorFactory --> Doctor : creates
+DoctorFactory -up-> DependenciesFactory : uses
 
 Doctor --> ValidationResultBuilder : uses
 Doctor --> ValidationResult : provides
 Doctor --> TargetValidationResult : uses
-Doctor -up-> CoolService : uses
+Doctor --> CoolService : uses
+Doctor -up-> Dependencies : uses
+Doctor --> Dependency : uses
+
+DependenciesFactory --> Dependencies : creates
+DependenciesFactory -left-> DependenciesConstants : uses
+
+Dependencies --> Dependency : uses
 
 CoolCliServiceAdapter .up.|> CoolService
 CoolCliServiceAdapter -up-> CoolServiceCli : uses
-CoolCliServiceAdapter -up-> VersionHelper : uses
 
 @enduml

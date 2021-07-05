@@ -15,10 +15,19 @@ package cli.lib as cli_lib {
         package doctor {
             class Doctor {
                 - _coolService: CoolService
+                - _dependencies: Dependencies
                 + validationResultBuilder: ValidationResultBuilder
-                + dependencies: Dependencies
 
                 + checkVersions(): Future<ValidationResult>
+            }
+
+            package factory as doctor_factory {
+                class DoctorFactory {
+                    - _servicesFactory: ServicesFactory
+                    - _dependenciesFactory: DependenciesFactory
+
+                    + create(): Doctor
+                }
             }
         }
     }
@@ -48,7 +57,19 @@ package cli.lib as cli_lib {
         }
     }
 
-    package util.dependency {
+    package dependencies {
+        package factory as dependencies_factory {
+            class DependenciesFactory {
+                + create(): Dependencies
+            }
+        }
+
+        package constants {
+            class DependenciesConstants {
+                + {static} dependenciesPath: String
+            }
+        }
+
         class Dependency {
             + recommendedVersion: String
             + installUrl: String
@@ -66,12 +87,20 @@ package cli.lib as cli_lib {
 }
 
 DoctorCommand --> Doctor : uses
+DoctorCommand --> DoctorFactory : uses
 
-Doctor -up-> CoolService : uses
+DoctorFactory --> Doctor : creates
+DoctorFactory --> DependenciesFactory : uses
+
+Doctor -left-> CoolService : uses
 Doctor --> Dependencies : uses
+Doctor --> Dependency : uses
 
 CoolCliServiceAdapter .up.|> CoolService
-CoolCliServiceAdapter -up-> CoolServiceCli : uses
+CoolCliServiceAdapter -down-> CoolServiceCli : uses
+
+DependenciesFactory --> Dependencies : creates
+DependenciesFactory --> DependenciesConstants : uses
 
 Dependencies --> Dependency : uses
 

@@ -270,21 +270,27 @@ This subsection describes the enhancements needed to implement in the `Metrics C
 
 ##### Dependency 
 
-The `Dependency` is a class that represents the information on some 3-rd party service from the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
+The `Dependency` is a class that represents the information on some 3-rd party dependency of `Metrics CLI` tool (e.g., Firebase CLI, Google CLI, etc.).
 
-It contains two fields that are important for the `doctor` command:
+It contains the following fields that are important for the `doctor` command:
 - `recommendedVersion` - a version of the corresponding 3-rd party service that is recommended to use along with the `Metrics CLI`;
 - `installUrl` - a URL that guides to the installation instruction of the corresponding 3-rd party service.
 
-Having this information, the `doctor` command is capable to compare the version of some cli installed on user's machine against the recommended version. In case that cli is not installed, the `doctor` command is able to show the installation link to the user.
+Having this information, the `doctor` command is capable to compare the version of some cli installed on user's machine against the recommended version listed in the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) document. In case that cli is not installed, the `doctor` command is able to show the installation link to the user.
 
 ##### Dependencies
 
 The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party service. The `Dependencies` instance is injected into the `Doctor` class, so that the `Doctor` can retrieve the `Dependency` information on some 3-rd party service via the '.getFor(service: String)' method.
 
+##### DependenciesFactory and DependenciesConstants
+
+The `DependenciesFactory` is a factory class responsible for `Dependencies` creation.
+
+The `DependenciesFactory` gets the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) document from the `DependenciesConstants` and then parses the document into a `Map`.
+
 ##### DoctorCommand
 
-The `DoctorCommand` is the Metrics CLI command that verifies all required 3-rd party tools' versions against the [list of recommended versions](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/recommended_versions.yaml).
+The `DoctorCommand` is the Metrics CLI command that verifies all required 3-rd party tools' versions against the recommended versions from the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) document.
 
 In the scope of this feature, we need to update the `DoctorCommand` class to be responsible for printing the [`ValidationResult`](#validationresult) using the [`ValidationResultPrinter`](#validationresultprinter).
 
@@ -292,9 +298,13 @@ In the scope of this feature, we need to update the `DoctorCommand` class to be 
 
 The `Doctor` is a class used to check whether all required third-party CLIs are installed and get their versions. This class encapsulates the logic of the `DoctorCommand` and interacts with the 3-rd party services.
 
-We need to update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult` that will be printed by the `DoctorCommand`.
+We need to update the `.checkVersions()` method of the `Doctor` class to return the [`ValidationResult`](#validationresult) that will be printed by the `DoctorCommand`.
 
-The `ValidationResult` contains the `TargetValidationResult`s for each 3-rd party service.
+The `ValidationResult` contains the [`TargetValidationResult`s](#targetvalidationresult) for each 3-rd party service. In order to create the `TargetValidationResult`s, the `Doctor` needs to know the recommended versions and installation URLs of the services. To provide this information to the `Doctor`, we need to inject [`Dependencies`](#dependencies) instance containing the [`Dependency`](#dependency) model for each service.
+
+##### DoctorFactory
+
+The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. As the `Doctor` class is updated to contain the instance [`Dependencies`](#dependencies), we need to inject the [`DependenciesFactory`](#dependenciesfactory-and-dependenciesconstants) to the `DoctorFactory`, so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
 
 ##### CoolService and CoolServiceCli
 Assume a `CoolService` as a 3-rd party service for which we want to improve `doctor` command output.
@@ -314,11 +324,12 @@ Consider the following class diagram that describes the structure of the updated
 ##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
 
 Consider the following steps needed to be able to improve the doctor command output:
-1. Create the `VersionHepler` class to work with the recommended versions of each service.
-2. For each service cli (e.g., `FlutterCli`, `GitCli`, etc.) update the `.version()` method to return the `ProcessResult`.
-3. For each cli service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.) update the `.checkVersion()` methods to return the `TargetValidationResult`.
-4. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
-5. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
+1. Create the `dependencies` package containing the following classes: `DependenciesConstants`, `Dependency`, `Dependencies`, `DependenciesFactory`.
+2. Update the `DoctorFactory` class to contain the instance of `DependenciesFactory`.
+3. For each service cli (e.g., `FlutterCli`, `GitCli`, etc.) update the `.version()` method to return the `ProcessResult`.
+4. For each cli service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.) update the `.version()` methods to return the `TargetValidationResult`.
+5. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
+6. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
  Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement with a `CoolService` used as an example of 3-rd party service:
 
