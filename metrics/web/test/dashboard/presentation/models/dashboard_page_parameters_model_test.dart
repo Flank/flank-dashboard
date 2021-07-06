@@ -34,12 +34,15 @@ void main() {
     );
 
     test(
-      "two instances with the equal fields are equal",
+      "equals to another instance with the same fields",
       () {
+        // ignore: prefer_const_constructors
         const firstPageParametersModel = DashboardPageParametersModel(
           projectFilter: projectFilter,
           projectGroupId: projectGroupId,
         );
+
+        // ignore: prefer_const_constructors
         const secondPageParametersModel = DashboardPageParametersModel(
           projectFilter: projectFilter,
           projectGroupId: projectGroupId,
