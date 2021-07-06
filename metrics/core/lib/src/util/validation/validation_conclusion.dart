@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// A class that represents a possible conclusion of the validation process.
-class ValidationConclusion<T> extends Equatable {
+class ValidationConclusion extends Equatable {
   /// A name of this validation conclusion.
   final String name;
 

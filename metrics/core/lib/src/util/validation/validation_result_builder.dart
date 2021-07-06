@@ -6,9 +6,9 @@ import 'package:metrics_core/src/util/validation/validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that provides methods for building the [ValidationResult].
-class ValidationResultBuilder<T extends ValidationTarget> {
+class ValidationResultBuilder {
   /// A [Map] that holds the [TargetValidationResult]s of [ValidationTarget]s.
-  final Map<T, TargetValidationResult> _results = {};
+  final Map<ValidationTarget, TargetValidationResult> _results = {};
 
   /// Creates a new instance of the [ValidationResultBuilder]
   /// for the given [targets].
@@ -17,7 +17,7 @@ class ValidationResultBuilder<T extends ValidationTarget> {
   /// this builder assembles.
   ///
   /// Throws an [ArgumentError] if the given [targets] is `null`.
-  ValidationResultBuilder.forTargets(List<T> targets) {
+  ValidationResultBuilder.forTargets(List<ValidationTarget> targets) {
     ArgumentError.checkNotNull(targets);
 
     for (final target in targets) {
@@ -32,7 +32,7 @@ class ValidationResultBuilder<T extends ValidationTarget> {
   ///
   /// Throws a [StateError] if the provided [target] already has the
   /// [TargetValidationResult].
-  void setResult(T target, TargetValidationResult result) {
+  void setResult(ValidationTarget target, TargetValidationResult result) {
     if (!_results.containsKey(target)) {
       throw ArgumentError('The provided field is not available to set.');
     }

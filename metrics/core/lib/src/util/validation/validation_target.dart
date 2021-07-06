@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// A class that represents a single entity used in the validation process.
-class ValidationTarget<T> extends Equatable {
+class ValidationTarget extends Equatable {
   /// A name of this validation target.
   final String name;
 

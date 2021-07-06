@@ -11,10 +11,10 @@ class TargetValidationResult<T> {
   final T data;
 
   /// A [ValidationTarget] of this target validation result.
-  final ValidationTarget<T> target;
+  final ValidationTarget target;
 
   /// A [ValidationConclusion] of this target validation result.
-  final ValidationConclusion<T> conclusion;
+  final ValidationConclusion conclusion;
 
   /// A [String] containing short description of this target validation
   /// result.
@@ -51,8 +51,8 @@ class TargetValidationResult<T> {
   /// If any of the given parameters is null, or parameter isn't specified,
   /// the value will be copied from the current instance.
   TargetValidationResult<T> copyWith({
-    ValidationTarget<T> target,
-    ValidationConclusion<T> conclusion,
+    ValidationTarget target,
+    ValidationConclusion conclusion,
     String description,
     Map<String, dynamic> details,
     Map<String, dynamic> context,
