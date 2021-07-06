@@ -37,13 +37,13 @@ void main() {
       "equals to another instance with the same fields",
       () {
         // ignore: prefer_const_constructors
-        const firstPageParametersModel = DashboardPageParametersModel(
+        final firstPageParametersModel = DashboardPageParametersModel(
           projectFilter: projectFilter,
           projectGroupId: projectGroupId,
         );
 
         // ignore: prefer_const_constructors
-        const secondPageParametersModel = DashboardPageParametersModel(
+        final secondPageParametersModel = DashboardPageParametersModel(
           projectFilter: projectFilter,
           projectGroupId: projectGroupId,
         );
