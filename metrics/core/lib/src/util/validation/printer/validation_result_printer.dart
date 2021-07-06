@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:metrics_core/src/util/validation/target_validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
 import 'package:metrics_core/src/util/validation/validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that is responsible for printing the [ValidationResult].
 class ValidationResultPrinter {
@@ -28,21 +29,22 @@ class ValidationResultPrinter {
     final validationResultEntries = validationResults.entries;
 
     for (final entry in validationResultEntries) {
+      final target = entry.key;
       final result = entry.value;
 
-      final message = _buildTargetValidationOutput(result);
+      final message = _buildTargetValidationOutput(target, result);
 
       sink.writeln(message);
     }
   }
 
   /// Builds the output that provides the information about
-  /// the given [validationResult].
+  /// the given [target] and [validationResult].
   String _buildTargetValidationOutput(
+    ValidationTarget target,
     TargetValidationResult validationResult,
   ) {
     final conclusion = _getConclusionIndicator(validationResult);
-    final target = validationResult.target;
     final targetName = target.name;
     final targetDescription = target.description ?? '';
     final validationDescription = _getValidationDescription(validationResult);
