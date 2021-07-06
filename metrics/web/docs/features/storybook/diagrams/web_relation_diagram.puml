@@ -1,4 +1,4 @@
-@startuml metrics_storybook_web_relation_diagram
+@startuml web_relation_diagram
 
 package "metrics" {
   package "widgets" {  

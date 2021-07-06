@@ -1,0 +1,18 @@
+@startuml architecture_components_diagram
+
+skinparam componentStyle rectangle
+
+component "Metrics Storybook" as MS
+
+component "Story" as Story
+component "Chapter" as Chapter
+
+component "Chapter Controls" as ChapterControls
+component "Chapter Control (e.g., text input)" as ChapterControl
+
+MS "1" -down-o "1..*" Story
+Story "1" -down-o "1..*" Chapter
+Chapter "1" -right-o "1" ChapterControls
+ChapterControls "1" -down-o "0..*" ChapterControl
+
+@enduml

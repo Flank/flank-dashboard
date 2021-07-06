@@ -1,4 +1,4 @@
-@startuml metrics_storybook_sequence_diagram
+@startuml sequence_diagram
 
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10

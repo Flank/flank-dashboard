@@ -1,4 +1,4 @@
-@startuml metrics_storybook_class_diagram
+@startuml stories_class_diagram
 
 package storybook {
     package stories {

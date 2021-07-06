@@ -239,7 +239,7 @@ The interaction of the `Metrics Widgets` and `Metrics Storybook`/`Metrics Web Ap
 
 The following diagram shows the described interaction:
 
-![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/metrics_storybook_web_relation_diagram.puml)
+![Metrics Storybook Web Relation Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/storybook/diagrams/web_relation_diagram.puml)
 
 # Design
 
@@ -271,7 +271,7 @@ As these widgets use the `Metrics theme` to determine their appearance, the pack
 
 The following diagram describes the structure of the `Metrics Widgets` package:
 
-![Metrics Widgets Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_widgets_structure_diagram.puml)
+![Metrics Widgets Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/widgets_structure_diagram.puml)
 
 #### Metrics Storybook package
 
@@ -279,13 +279,15 @@ The `Metrics Storybook` is a package that responsible for showcasing widgets.
 
 In general, it consists of three main components:
 
-- **Story** - a class, that groups together a list of chapters.
-- **Chapter** - a class, that represents a specific widget we want to display within the storybook.
-- **Chapter Controls** - a class, that holds a collection of properties, that UI widgets can use to build an [editing panel](#editing-panel) with a list of inputs to change the widget's appearance.
+| Component | Description|
+| :---: | :---: |
+| **Chapter** | A class, that represents a specific widget we want to display within the storybook. It shows a state of a UI component. Each `Story` can contain multiple `Chapter`s (e.g., `Buttons` story contains `PositiveButton` chapter, `NegativeButton` chapter, etc.) |
+| **Chapter Controls** | A class that holds a collection of properties that may be used to change the widget's appearance (e.g., `backgroundColor`, `label`).  |
+| **Story** | A class, that groups together a list of chapters (i.e., it's a common class for similar types of widgets - buttons, inputs, ect.). The `Storybook` can contain multiple `Stories`. |
 
 Consider the following diagram, that describes relations between the described parts:
 
-![Metrics Storybook Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_architecture_components_diagram.puml)
+![Metrics Storybook Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/architecture_components_diagram.puml)
 
 At this time, we want to show only Metrics-specific widgets within the `Metrics Storybook`. 
 
@@ -296,28 +298,99 @@ Metrics Storybook is a separate Flutter web project. Its UI consists of the foll
 
 - **Sidebar** - a left panel with the Metrics logo and a list of Metrics-specific widgets.
 
-- **Preview** - a zone in the middle of the screen, that displays an actual widget.
+- **Preview** - a zone in the middle of the screen, that displays an actual widget of the selected chapter.
 
-- **Editing Panel** - a list of inputs, that allows changing widgets' appearance.
+- **Editing Panel** - a list of inputs, that allows changing widget's appearance.
 
 - **Toggle theme** - a button that changes the theme between the dark and light variants.
 
 The following diagram shows all the described components together:
 
-![Metrics Storybook User Interface Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_user_interface_diagram.puml)
+![Metrics Storybook User Interface Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/user_interface_diagram.puml)
 
-So with that end-users will use the sidebar to choose an interested widget, change its appearance through a list of inputs in the editing panel, change the theme using the toggle theme button, and view an actual result in the preview.
+So with that, end-users will use the sidebar to choose a widget. Also, it will be able to change the chosen widget's appearance using the list of inputs in the editing panel and toggle the theme using the toggle theme button. The resulting widget will be displayed in the preview.
 
 ### Program
 > Detailed solution description to class/method level.
 
-Once we've defined a high-level architecture of the `Metrics Storybook` and its visual view, we can provide a package structure of the storybook and a list of classes/widgets that need to be implemented for this feature.
+Once we've chosen the desired implementation approach, let's review the packages we should create in a bit more detail.
+
+#### Metrics Widgets package
+
+According to the [Metrics widgets package](#metrics-widgets-package) architecture section, we can provide a structure of the package and an information about a list of classes/widgets that we've extracted from the `Metrics Web Applicaion`.
+
+#### Package Structure
+
+Consider the following structure of the `Metrics Widgets` package:
+
+> * `lib/src/`
+>   * `base/`
+>     * `base_popup.dart`
+>     * `circle_graph_indicator.dart`
+>     * `...`
+>   * `theme/`
+>     * `config/`
+>       * `dimensions_config.dart`
+>       * `metrics_colors.dart`
+>       * `text_field_config.dart`
+>       * `text_style_config.dart`
+>     * `model/`
+>       * `metrics_color/`
+>         * `metrics_color.dart`
+>       * `metrics_text/style/`
+>         * `metrics_text_style.dart`
+>       * `dark_metrics_theme_data.dart`
+>       * `light_metrics_theme_data.dart`
+>       * `metrics_theme_data.dart`
+>       * `metrics_widget_theme_data.dart`
+>     * `state/`
+>       * `theme_notifier.dart`
+>     * `attention_level_theme_data.dart`
+>     * `metrics_theme.dart`
+>   * `button/`
+>     * `theme/`
+>       * `attention_level/`
+>         * `metrics_button_attention_level.dart`
+>       * `style/`
+>         * `metrics_button_style.dart`
+>       * `theme_data/`
+>         * `metrics_button_theme_data.dart`
+>     * `widgets/`
+>       * `metrics_button.dart`
+>       * `metrics_inactive_button.dart`
+>       * `metrics_negative_button.dart`
+>       * `metrics_neutral_button.dart`
+>       * `metrics_positive_button.dart`
+>   * `colored_bar/`
+>     * `strategy/`
+>       * `metrics_colored_bar_appearance_strategy.dart`
+>     * `theme/`
+>       * `...`      
+>     * `widgets/`
+>       * `...`
+>   * `...`
+>   * `metrics_widgets.dart`
+
+
+Widgets under the `base` folder are widgets that are responsible for only displaying the given data. These widgets should be highly-configurable and usable out of the Metrics Web Application context.
+
+The `theme` folder contains models/config/widgets that provides and manipulates the `Metrics theme`. To get more information about the theme consider the following [link](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#metrics-theme-guidelines).
+
+Other folders, such as `button/colored_bar` contains widgets/classes for a concrete Metrics widgets types. They are used in the Metrics Web Application context. To get more information about Metrics widgets consider the following [link](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/03_widget_structure_organization.md#metrics-widget-creation).
+
+The `metrics_widgets` file includes exports of all `Metrics widgets` required in the `Metrics Storybook` and `Metrics Web Application`.
+
+#### Metrics Storybook package
+
+Once we've defined a high-level architecture of the `Metrics Storybook` and its visual view, we can provide a package structure of the storybook and a list of classes/widgets that we should implement for this feature.
 
 #### Package Structure
 
 Consider the following structure of the `Metrics Storybook`:
 
 > * `lib/`
+>    * `page/`
+>       * `storybook.dart`
 >    * `widgets/`
 >       * `sidebar/`
 >       * `preview/`
@@ -329,7 +402,6 @@ Consider the following structure of the `Metrics Storybook`:
 >           * `chapter_control_color_field.dart`
 >           * `chapter_control_slider_field.dart`
 >       * `injection_container.dart`
->       * `storybook.dart`
 >    * `state/`
 >       * `stories_notifier.dart`
 >       * `chapters_notifier.dart`
@@ -349,13 +421,48 @@ Consider the following structure of the `Metrics Storybook`:
 >       * `chapter.dart`
 >       * `story.dart`
 
+##### *Storybook*
+
+`Storybook` - is a root widget. The main purpose of the widget is to bootstrap an application with a list of `stories`.
+
+Consider the following example:
+
+```dart
+main.dart
+
+void main() {
+  final storybook = Storybook(
+    stories: [
+      ButtonsStory(),
+      AnotherStory(),
+    ],
+  );
+
+  runApp(storybook);
+}
+```
+
+Then, the `Storybook` passes the given stories to the `InjectionContainer` as it responsible for creating the application state:
+
+```dart
+class Storybook extends StatelessWidget {
+  final List<Story> stories;
+
+  const Storybook({Key key, this.stories}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InjectionContainer(
+      stories: stories,
+      child: ...
+    );
+  }
+}
+```
+
 ##### ***widgets***
 
 The folder contains a list of widgets, that bootstraps the application, creates `ChangeNotifier`s and responsible for the UI part of the storybook.
-
-###### *Storybook*
-
-`Storybook` - is a root widget. The main purpose of the widget is to bootstrap an application and obtain a list of `stories`. The list of stories then is passed to the `InjectionContainer` widget where it is exposed to the whole application.
 
 ###### *InjectionContainer*
 
@@ -408,7 +515,7 @@ The `mappers` folder contains the `ChapterControlMapper` class, which maps the g
 
 ##### ***stories***
 
-This folder contains interfaces for concrete stories and chapters, as well as chapter controls. There is, also, a list of stories, that represents specific `Metrics widgets`.
+This folder contains interfaces for stories and chapters, as well as chapter controls. There is, also, a list of stories, that represents specific `Metrics widgets`.
 
 The `Story` is a class that groups together a list of `Chapter`s. The main purpose of the stories is to visually separate chapters (i.e., widgets) in the [sidebar](#sidebar).
 
@@ -428,15 +535,15 @@ There `stories`, also, contains a list of folders, that represents specific stor
 
 Consider the following diagram, that describes relations between `stories` classes:
 
-![Metrics Storybook stories class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_stories_class_diagram.puml)
+![Metrics Storybook stories class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/stories_class_diagram.puml)
 
 The next diagram shows the relations between all described classes:
 
-![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_class_diagram.puml)
+![Metrics Storybook class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/class_diagram.puml)
 
 Consider the following sequence diagram, which shows the general flow of displaying widgets and changing their appearance in the storybook application:
 
-![Metrics Storybook sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/metrics_storybook_sequence_diagram.puml)
+![Metrics Storybook sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/metrics_storybook_design/metrics/web/docs/features/storybook/diagrams/sequence_diagram.puml)
 
 #### ***How to add new widgets to the Metrics Storybook***
 
@@ -580,3 +687,39 @@ void main() {
 ```
 
 As a result, you will see an ***'Inactive Button'*** widget within the ***'Buttons'*** group in the sidebar of the storybook application.
+
+
+
+<!-- additional context -->
+A `Storybook` in general means a collection of a stories. So first of all we should understand `what is a story` in our case?
+
+A `Story` is an abstract class, that represents a collection of similar by type widgets. Each story should contain its name and a list of widgets, that are parts of the story(we named it `Chapter`s).
+
+Consider the following example:
+
+```dart
+abstract class Story {
+  StoryName get name;
+
+  List<Chapter> get chapters;
+}
+```
+
+The `StoryName` is an `Enum`, that represents a concrete name of the widgets group(i.e. story).
+
+As we've described above, a story usually consist of multiple chapters. The `Chapter` is an abstract class, that represents a concrete widget, we want to display in the storybook.
+
+Consider the following example:
+
+```dart
+abstract class Chapter {
+  StoryName get storyName;
+
+  ChapterName get name;
+
+  ChapterControls get controls;
+
+  Widget toView(BaseViewModel viewModel);
+}
+
+```

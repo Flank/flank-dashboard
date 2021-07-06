@@ -1,4 +1,4 @@
-@startuml metrics_storybook_class_diagram
+@startuml class_diagram
 
 package widgets/theme {
     class ThemeNotifier {

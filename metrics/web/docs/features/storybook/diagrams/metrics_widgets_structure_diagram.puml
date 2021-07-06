@@ -11,13 +11,13 @@ package "widgets" {
   }
 
   package "button" {
-    [Metrics Button] --> [Base Widgets] : use
-    [Metrics Button] --> [Metrics Theme] : use
+    [Metrics Button] --> [Base Widgets] : uses
+    [Metrics Button] --> [Metrics Theme] : uses
   }
 
   package "toast" {
-    [Metrics Toast] -up-> [Base Widgets] : use
-    [Metrics Toast] -up-> [Metrics Theme] : use
+    [Metrics Toast] -up-> [Base Widgets] : uses
+    [Metrics Toast] -up-> [Metrics Theme] : uses
   }
    
 }
