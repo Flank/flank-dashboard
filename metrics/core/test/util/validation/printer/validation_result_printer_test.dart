@@ -68,8 +68,7 @@ void main() {
       final targetDescription = target.description ?? '';
       final conclusion = result.conclusion;
       final conclusionIndicator = conclusion.indicator ?? '?';
-      final validationDescription =
-          result.description != null ? ' - ${result.description}' : '';
+      final description = result.description;
       final details = result.details;
       final context = result.context;
 
@@ -77,7 +76,7 @@ void main() {
         startsWith('[$conclusionIndicator]'),
         contains(targetName),
         contains(targetDescription),
-        contains(validationDescription),
+        contains(description),
         containsAllEntries(details),
         containsAllEntries(context),
       );
@@ -112,7 +111,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'success',
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -138,7 +136,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'success',
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -161,9 +158,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'success',
-          details: details,
-          context: context,
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -187,9 +181,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'success',
-          details: details,
-          context: context,
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -210,8 +201,6 @@ void main() {
           target: target,
           conclusion: conclusion,
           description: description,
-          details: details,
-          context: context,
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -231,9 +220,7 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'description',
           details: details,
-          context: context,
         );
         final results = {target: result};
         final validationResult = ValidationResult(results);
@@ -253,8 +240,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: 'description',
-          details: details,
           context: context,
         );
         final results = {target: result};

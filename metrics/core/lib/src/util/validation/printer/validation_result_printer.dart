@@ -4,8 +4,8 @@
 import 'dart:io';
 
 import 'package:metrics_core/src/util/validation/target_validation_result.dart';
+import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
 import 'package:metrics_core/src/util/validation/validation_result.dart';
-import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that is responsible for printing the [ValidationResult].
 class ValidationResultPrinter {
@@ -28,64 +28,85 @@ class ValidationResultPrinter {
     final validationResultEntries = validationResults.entries;
 
     for (final entry in validationResultEntries) {
-      final field = entry.key;
       final result = entry.value;
 
-      final message = _buildFieldValidationOutput(field, result);
+      final message = _buildTargetValidationOutput(result);
 
       sink.writeln(message);
     }
   }
 
-  /// Builds the output that provides the information
-  /// about the [validationResult] for the given [target].
-  String _buildFieldValidationOutput(
-    ValidationTarget target,
+  /// Builds the output that provides the information about
+  /// the given [validationResult].
+  String _buildTargetValidationOutput(
     TargetValidationResult validationResult,
   ) {
+    final conclusion = _getConclusionIndicator(validationResult);
+    final target = validationResult.target;
     final targetName = target.name;
     final targetDescription = target.description ?? '';
-    final conclusion = validationResult.conclusion;
-    final conclusionIndicator = conclusion.indicator ?? '?';
-    final validationDescription = validationResult.description != null
-        ? ' - ${validationResult.description}'
-        : '';
+    final validationDescription = _getValidationDescription(validationResult);
     final details = _getValidationDetails(validationResult);
     final context = _getValidationContext(validationResult);
 
     return '''
-[$conclusionIndicator] $targetName $targetDescription $validationDescription ($details)
+$conclusion $targetName $targetDescription$validationDescription$details
 \t$context
     ''';
+  }
+
+  /// Returns a [String] representation of the
+  /// [TargetValidationResult.conclusion].
+  ///
+  /// Returns an empty string if the given [ValidationConclusion.indicator] is
+  /// empty or `null`.
+  String _getConclusionIndicator(TargetValidationResult validationResult) {
+    final conclusion = validationResult.conclusion;
+    final conclusionIndicator = conclusion.indicator ?? '?';
+
+    return '[$conclusionIndicator]';
+  }
+
+  /// Returns a [String] representation of the
+  /// [TargetValidationResult.description].
+  ///
+  /// Returns an empty string if the given [TargetValidationResult.description] is
+  /// empty or `null`.
+  String _getValidationDescription(TargetValidationResult validationResult) {
+    final description = validationResult.description;
+
+    if (description.isEmpty || description == null) return '';
+
+    return ' - $description';
   }
 
   /// Returns the [String] representation of the given
   /// [TargetValidationResult.details].
   ///
-  /// Returns an empty string If the given [TargetValidationResult.details] is
+  /// Returns an empty string if the given [TargetValidationResult.details] is
   /// empty.
   String _getValidationDetails(TargetValidationResult validationResult) {
     final details = validationResult.details;
     final resultMessage = [];
 
-    if (details.isEmpty) return '';
+    if (details.isEmpty || details == null) return '';
 
     details.forEach((key, value) => resultMessage.add('$key $value'));
 
-    return resultMessage.join(', ');
+    return ' (${resultMessage.join(', ')})';
   }
 
   /// Returns the [String] representation of the given
   /// [TargetValidationResult.context].
   ///
-  /// Returns an empty string If the given [TargetValidationResult.context] is
+  /// Returns an empty string if the given [TargetValidationResult.context] is
   /// empty.
   String _getValidationContext(TargetValidationResult validationResult) {
     final context = validationResult.context;
     const indent = '\n\t\t';
     final resultMessage = [];
 
-    if (context.isEmpty) return '';
+    if (context.isEmpty || context == null) return '';
 
     context.forEach((key, value) {
       final indentValue = value.toString().replaceAll('\n', indent);

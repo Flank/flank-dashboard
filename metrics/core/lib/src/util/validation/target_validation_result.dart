@@ -29,21 +29,21 @@ class TargetValidationResult<T> {
   /// Creates a new instance of the [TargetValidationResult] with the given
   /// parameters.
   ///
-  /// The [details] defaults to an empty map.
-  /// The [context] defaults to an empty map.
+  /// The [description] defaults to an empty [String],
+  /// The [details] defaults to an empty [Map].
+  /// The [context] defaults to an empty [Map].
   ///
   /// Throws an [AssertionError] if the given [target], [conclusion], or
   /// [description] is null.
   const TargetValidationResult({
     @required this.target,
     @required this.conclusion,
-    @required this.description,
+    this.description = '',
     this.details = const {},
     this.context = const {},
     this.data,
   })  : assert(target != null),
-        assert(conclusion != null),
-        assert(description != null);
+        assert(conclusion != null);
 
   /// Creates a new instance of the [TargetValidationResult] based on current
   /// instance.

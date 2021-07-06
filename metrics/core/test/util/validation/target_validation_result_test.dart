@@ -25,7 +25,6 @@ void main() {
           () => TargetValidationResult(
             target: null,
             conclusion: conclusion,
-            description: description,
           ),
           throwsAssertionError,
         );
@@ -39,21 +38,6 @@ void main() {
           () => TargetValidationResult(
             target: target,
             conclusion: null,
-            description: description,
-          ),
-          throwsAssertionError,
-        );
-      },
-    );
-
-    test(
-      "throws an AssertionError if the given description is null",
-      () {
-        expect(
-          () => TargetValidationResult(
-            target: target,
-            conclusion: conclusion,
-            description: null,
           ),
           throwsAssertionError,
         );
@@ -82,12 +66,23 @@ void main() {
     );
 
     test(
+      "creates an instance with an empty description if the given description is not specified",
+      () {
+        const result = TargetValidationResult(
+          target: target,
+          conclusion: conclusion,
+        );
+
+        expect(result.description, isEmpty);
+      },
+    );
+
+    test(
       "creates an instance with an empty details if the given details are not specified",
       () {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: description,
         );
 
         expect(result.details, isEmpty);
@@ -100,7 +95,6 @@ void main() {
         const result = TargetValidationResult(
           target: target,
           conclusion: conclusion,
-          description: description,
         );
 
         expect(result.context, isEmpty);
