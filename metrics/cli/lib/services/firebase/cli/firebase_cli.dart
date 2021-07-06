@@ -12,9 +12,6 @@ class FirebaseCli extends AuthCli {
   @override
   String get authArgumentName => 'token';
 
-  @override
-  bool get isAuthLeading => false;
-
   /// Logins into the Firebase CLI.
   Future<void> login() {
     return run(['login', '--interactive', '--reauth']);
@@ -37,7 +34,7 @@ class FirebaseCli extends AuthCli {
     String projectId,
     String workingDirectory,
   ) {
-    return runWithOptionalAuth(
+    return runWithAuth(
       ['use', projectId],
       workingDirectory: workingDirectory,
     );
@@ -73,7 +70,7 @@ class FirebaseCli extends AuthCli {
     String target,
     String workingDirectory,
   ) {
-    return runWithOptionalAuth(
+    return runWithAuth(
       ['deploy', '--only', 'hosting:$target'],
       workingDirectory: workingDirectory,
     );
@@ -82,7 +79,7 @@ class FirebaseCli extends AuthCli {
   /// Deploys Firestore rules and indexes from the given [workingDirectory]
   /// to the Firebase.
   Future<void> deployFirestore(String workingDirectory) {
-    return runWithOptionalAuth(
+    return runWithAuth(
       ['deploy', '--only', 'firestore'],
       workingDirectory: workingDirectory,
     );
@@ -90,7 +87,7 @@ class FirebaseCli extends AuthCli {
 
   /// Deploys functions from the given [workingDirectory] to the Firebase.
   Future<void> deployFunctions(String workingDirectory) {
-    return runWithOptionalAuth(
+    return runWithAuth(
       ['deploy', '--only', 'functions'],
       workingDirectory: workingDirectory,
     );

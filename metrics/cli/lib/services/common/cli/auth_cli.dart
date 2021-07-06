@@ -5,17 +5,26 @@ import 'dart:io';
 
 import 'package:cli/services/common/cli/cli.dart';
 
-/// A base class for [Cli]s with authorization.
+/// A base class for [Cli]s that support authorization.
 abstract class AuthCli extends Cli {
-  /// The name of the authorization flag.
+  /// A name of the authorization argument of this CLI.
+  ///
+  /// This name is used as the name of the option that is used to pass
+  /// the authorization value to the CLI.
   String get authArgumentName;
 
-  /// Indicates whether the [_authArgument] is leading.
-  bool get isAuthLeading;
+  /// Indicates whether the authorization should be a leading argument
+  /// for this CLI.
+  ///
+  /// If `true` the authorization argument is applied as the very first in
+  /// the list of arguments. Otherwise, it is added to the end of
+  /// the arguments list.
+  bool get isAuthLeading => false;
 
   /// An authorization value.
   ///
-  /// Most commonly represents the value of the access token.
+  /// This is specific to the concrete implementation but usually represents
+  /// the access token value to use for the authorization.
   String _authorization;
 
   /// Returns an auth argument composing of the [authArgumentName] and
@@ -44,7 +53,7 @@ abstract class AuthCli extends Cli {
   /// is not `null`.
   ///
   /// The [attachOutput] default value is `true`.
-  Future<ProcessResult> runWithOptionalAuth(
+  Future<ProcessResult> runWithAuth(
     List<String> arguments, {
     bool attachOutput = true,
     String workingDirectory,
@@ -60,21 +69,23 @@ abstract class AuthCli extends Cli {
     );
   }
 
-  /// Adds the [_authArgument] to the [arguments] list if the [_authorization]
-  /// is not `null`.
+  /// Adds the [_authArgument] to the given [arguments] list if
+  /// the [_authorization] value is not `null`.
   ///
-  /// If [isAuthLeading], adding the [_authArgument] at the beginning of
-  /// the [arguments] list. Otherwise, adding the [_authArgument] at the end of
+  /// If [isAuthLeading] is `true`, adds the [_authArgument] to the beginning of
+  /// the [arguments] list. Otherwise, adds the [_authArgument] to the end of
   /// the [arguments] list.
   List<String> _addAuthArgument(List<String> arguments) {
     if (_authorization == null) return arguments;
 
-    if (isAuthLeading) {
-      final authArgumentList = [_authArgument];
+    final newArgs = List<String>.from(arguments);
 
-      return authArgumentList..addAll(arguments);
+    if (isAuthLeading) {
+      newArgs.insert(0, _authArgument);
+    } else {
+      newArgs.add(_authArgument);
     }
 
-    return arguments..add(_authArgument);
+    return newArgs;
   }
 }

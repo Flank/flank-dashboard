@@ -3,11 +3,11 @@
 
 import 'dart:async';
 
-import 'package:cli/services/common/info_service.dart';
+import 'package:cli/services/common/auth_service.dart';
 
 /// An abstract class for Firebase service that provides methods
 /// for working with Firebase.
-abstract class FirebaseService extends InfoService {
+abstract class FirebaseService extends AuthService {
   /// Logins into the Firebase.
   Future<void> login();
 

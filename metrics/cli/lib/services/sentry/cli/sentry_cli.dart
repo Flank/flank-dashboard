@@ -30,7 +30,7 @@ class SentryCli extends AuthCli {
 
     final project = release.project;
 
-    return runWithOptionalAuth(
+    return runWithAuth(
       [
         'releases',
         '--org=${project.organizationSlug}',
@@ -71,7 +71,7 @@ class SentryCli extends AuthCli {
       }
     }
 
-    return runWithOptionalAuth(arguments);
+    return runWithAuth(arguments);
   }
 
   /// Finalizes the given [release].
@@ -82,7 +82,7 @@ class SentryCli extends AuthCli {
 
     final project = release.project;
 
-    return runWithOptionalAuth(
+    return runWithAuth(
       [
         'releases',
         '--org=${project.organizationSlug}',
