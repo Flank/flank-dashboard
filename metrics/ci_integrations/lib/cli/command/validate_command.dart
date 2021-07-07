@@ -11,8 +11,7 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/error/config_validation_error.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class representing a [CiIntegrationCommand] for [Config] file validation.
 class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
