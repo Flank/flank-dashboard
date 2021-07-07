@@ -61,6 +61,17 @@ void main() {
     );
 
     test(
+      ".create() returns null if the given route configuration parameters map is null",
+      () {
+        final routeConfiguration = RouteConfiguration.dashboard();
+
+        final pageParameters = pageParametersFactory.create(routeConfiguration);
+
+        expect(pageParameters, isNull);
+      },
+    );
+
+    test(
       ".create() returns null if the given route configuration name is unknown",
       () {
         when(routeName.value).thenReturn('unknown');
