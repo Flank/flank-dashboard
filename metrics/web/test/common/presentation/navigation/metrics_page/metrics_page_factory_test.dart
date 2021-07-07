@@ -4,7 +4,6 @@
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
@@ -13,6 +12,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/route_configuration_mock.dart';
+import '../../../../test_utils/route_name_mock.dart';
 
 void main() {
   group("MetricsPageFactory", () {
@@ -20,7 +20,7 @@ void main() {
 
     final metricsPageFactory = MetricsPageFactory();
     final routeConfiguration = RouteConfigurationMock();
-    final routeName = _RouteNameMock();
+    final routeName = RouteNameMock();
 
     tearDown(() {
       reset(routeConfiguration);
@@ -167,5 +167,3 @@ void main() {
     );
   });
 }
-
-class _RouteNameMock extends Mock implements RouteName {}

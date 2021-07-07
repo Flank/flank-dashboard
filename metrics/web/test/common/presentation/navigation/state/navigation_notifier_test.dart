@@ -4,9 +4,12 @@
 import 'package:collection/collection.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -15,8 +18,18 @@ import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
   group("NavigationNotifier", () {
+    const pageParametersModel = DashboardPageParametersModel(
+      projectGroupId: 'projectGroupId',
+      projectFilter: 'projectFilter',
+    );
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
+    final pageParametersFactory = PageParametersFactoryMock();
+
+    final parameters = pageParametersModel.toMap();
+    final configurationWithParameters = RouteConfiguration.dashboard(
+      parameters: parameters,
+    );
 
     NavigationNotifier notifier;
 
@@ -27,8 +40,13 @@ void main() {
     }
 
     setUp(() {
-      notifier = NavigationNotifier(pageFactory, navigationState);
+      notifier = NavigationNotifier(
+        pageFactory,
+        pageParametersFactory,
+        navigationState,
+      );
       prepareNotifier();
+      reset(pageParametersFactory);
     });
 
     final isLoginPageName = equals(DefaultRoutes.login.path);
@@ -40,7 +58,25 @@ void main() {
       "throws an AssertionError if the given page factory is null",
       () {
         expect(
-          () => NavigationNotifier(null, navigationState),
+          () => NavigationNotifier(
+            null,
+            pageParametersFactory,
+            navigationState,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws an AssertionError if the given page parameters factory is null",
+      () {
+        expect(
+          () => NavigationNotifier(
+            pageFactory,
+            null,
+            navigationState,
+          ),
           throwsAssertionError,
         );
       },
@@ -50,7 +86,7 @@ void main() {
       "throws an AssertionError if the given navigation state is null",
       () {
         expect(
-          () => NavigationNotifier(pageFactory, null),
+          () => NavigationNotifier(pageFactory, pageParametersFactory, null),
           throwsAssertionError,
         );
       },
@@ -60,7 +96,11 @@ void main() {
       "creates an instance with the given parameters",
       () {
         expect(
-          () => NavigationNotifier(pageFactory, navigationState),
+          () => NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            navigationState,
+          ),
           returnsNormally,
         );
       },
@@ -315,6 +355,22 @@ void main() {
     );
 
     test(
+      ".push() updates the current page parameters",
+      () {
+        when(pageParametersFactory.create(any)).thenReturn(
+          pageParametersModel,
+        );
+
+        notifier.push(configurationWithParameters);
+
+        expect(
+          notifier.currentPageParameters,
+          equals(pageParametersModel),
+        );
+      },
+    );
+
+    test(
       ".pushReplacement() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -360,7 +416,11 @@ void main() {
     test(
       ".pushReplacement() adds the new page if pages are empty",
       () {
-        final notifier = NavigationNotifier(pageFactory, navigationState);
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         final expectedLength = notifier.pages.length + 1;
@@ -474,7 +534,11 @@ void main() {
     test(
       ".pushStateReplacement() adds the new page if pages are empty",
       () {
-        final notifier = NavigationNotifier(pageFactory, navigationState);
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         final expectedLength = notifier.pages.length + 1;
@@ -813,6 +877,22 @@ void main() {
     );
 
     test(
+      ".handleInitialRoutePath() updates the current page parameters",
+      () {
+        when(pageParametersFactory.create(any)).thenReturn(
+          pageParametersModel,
+        );
+
+        notifier.handleInitialRoutePath(configurationWithParameters);
+
+        expect(
+          notifier.currentPageParameters,
+          equals(pageParametersModel),
+        );
+      },
+    );
+
+    test(
       ".handleNewRoutePath() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -907,3 +987,5 @@ void main() {
     );
   });
 }
+
+class PageParametersFactoryMock extends Mock implements PageParametersFactory {}

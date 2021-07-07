@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
+import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -21,6 +22,8 @@ void main() {
     final navigationState = NavigationStateMock();
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
     final pages = UnmodifiableListView<MetricsPage>([]);
+    final metricsPageFactory = MetricsPageFactory();
+    final pageParametersFactory = PageParametersFactory();
 
     tearDown(() {
       reset(configuration);
@@ -68,7 +71,8 @@ void main() {
       ".navigatorKey provides the global object key with a value equals to the given navigator notifier",
       () {
         final navigationNotifier = NavigationNotifier(
-          MetricsPageFactory(),
+          metricsPageFactory,
+          pageParametersFactory,
           navigationState,
         );
         final routerDelegate = MetricsRouterDelegate(navigationNotifier);
@@ -83,9 +87,9 @@ void main() {
     test(
       "notifies listeners once the given navigation notifier notifies listeners",
       () {
-        final metricsPageFactory = MetricsPageFactory();
         final navigationNotifier = NavigationNotifier(
           metricsPageFactory,
+          pageParametersFactory,
           navigationState,
         );
         final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifier);
