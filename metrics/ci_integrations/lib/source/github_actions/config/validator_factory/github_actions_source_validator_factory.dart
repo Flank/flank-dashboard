@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
-import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
+import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config_field.dart';
@@ -14,12 +14,12 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 /// A factory class that provides a method
 /// for creating [GithubActionsSourceValidator].
 class GithubActionsSourceValidatorFactory
-    implements ConfigValidatorFactory<GithubActionsSourceConfig> {
+    implements ConfigValidatorFactoryStub<GithubActionsSourceConfig> {
   /// Creates a new instance of the [GithubActionsSourceValidatorFactory].
   const GithubActionsSourceValidatorFactory();
 
   @override
-  ConfigValidator<GithubActionsSourceConfig> create(
+  ConfigValidatorStub<GithubActionsSourceConfig> create(
     GithubActionsSourceConfig config,
   ) {
     ArgumentError.checkNotNull(config, 'config');
