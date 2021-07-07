@@ -5,6 +5,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_organization.da
 import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -73,94 +74,98 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the interaction with the client is not successful",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the interaction with the client is not successful",
+      ".validateAuth() returns a target validation result with the 'token invalid' description, if the interaction with the client is not successful",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
-        expect(additionalContext, equals(BuildkiteStrings.tokenInvalid));
+        expect(description, equals(BuildkiteStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the result of an interaction with the client is null",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token invalid' additional context, if the result of an interaction with the client is null",
+      ".validateAuth() returns a target validation result with the 'token invalid' description, if the result of an interaction with the client is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
-        expect(additionalContext, equals(BuildkiteStrings.tokenInvalid));
+        expect(description, equals(BuildkiteStrings.tokenInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the fetched token does not have the read builds token scope",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the fetched token does not have the read builds token scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(
           const BuildkiteToken(scopes: []),
         );
 
         final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token does not have read builds scope' additional context, if the fetched token does not have the read builds token scope",
+      ".validateAuth() returns a target validation result with the 'token does not have read builds scope' description, if the fetched token does not have the read builds token scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(
           const BuildkiteToken(scopes: []),
         );
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
         expect(
-          additionalContext,
+          description,
           equals(BuildkiteStrings.tokenDoesNotHaveReadBuildsScope),
         );
       },
     );
 
     test(
-      ".validateAuth() returns a successful field validation result, if the fetched token is valid, but does not have the read artifacts scope",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the fetched token is valid, but does not have the read artifacts scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
         final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
 
-        expect(result.isSuccess, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the fetched Buildkite token data, if the fetched token is valid, but does not have the read artifacts scope",
+      ".validateAuth() returns a target validation result with the fetched Buildkite token data, if the fetched token is valid, but does not have the read artifacts scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
@@ -172,35 +177,36 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'token does not have read artifacts scope' additional context, if the fetched is valid, but token does not have the read artifacts token scope",
+      ".validateAuth() returns a target validation result with the 'token does not have read artifacts scope' description, if the fetched is valid, but token does not have the read artifacts token scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
         expect(
-          additionalContext,
+          description,
           equals(BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope),
         );
       },
     );
 
     test(
-      ".validateAuth() returns a successful field validation result, if the fetched Buildkite token has the read builds and read artifacts scopes",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(
           const BuildkiteToken(scopes: readBuildsAndArtifactsScopes),
         );
 
         final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
 
-        expect(result.isSuccess, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the fetched Buildkite token data, if the fetched Buildkite token has the read builds and read artifacts scopes",
+      ".validateAuth() returns a target validation result with the fetched Buildkite token data, if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
         const buildkiteToken = BuildkiteToken(
           scopes: readBuildsAndArtifactsScopes,
@@ -215,34 +221,35 @@ void main() {
     );
 
     test(
-      ".validatePipelineSlug() returns a failure field validation result, if the result of an interaction with the client is not successful",
+      ".validatePipelineSlug() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is not successful",
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
         final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns a field validation result with the 'pipeline not found' additional context, if the interaction with the client is not successful",
+      ".validatePipelineSlug() returns a target validation result with the 'pipeline not found' description, if the interaction with the client is not successful",
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
         final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
-        expect(additionalContext, equals(BuildkiteStrings.pipelineNotFound));
+        expect(description, equals(BuildkiteStrings.pipelineNotFound));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns a failure field validation result, if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -251,13 +258,14 @@ void main() {
         final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns a field validation result with the 'pipeline not found' additional context, if the result of an interaction with the client is null",
+      ".validatePipelineSlug() returns a target validation result with the 'pipeline not found' description, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -266,14 +274,14 @@ void main() {
         final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
-        expect(additionalContext, equals(BuildkiteStrings.pipelineNotFound));
+        expect(description, equals(BuildkiteStrings.pipelineNotFound));
       },
     );
 
     test(
-      ".validatePipelineSlug() returns a successful field validation result, if the given pipeline slug is valid",
+      ".validatePipelineSlug() returns a target validation result with a valid config field validation conclusion, if the given pipeline slug is valid",
       () async {
         when(
           client.fetchPipeline(pipelineSlug),
@@ -282,13 +290,14 @@ void main() {
         final result = await delegate.validatePipelineSlug(
           pipelineSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isSuccess, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a failure field validation result, if the interaction with the client is not successful",
+      ".validateOrganizationSlug() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -297,13 +306,14 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a field validation result with the 'organization not found' additional context, if the interaction with the client is not successful",
+      ".validateOrganizationSlug() returns a target validation result with the 'organization not found' description, if the interaction with the client is not successful",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -312,14 +322,14 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final additionalContext = result.additionalContext;
-        expect(
-            additionalContext, equals(BuildkiteStrings.organizationNotFound));
+        final description = result.description;
+
+        expect(description, equals(BuildkiteStrings.organizationNotFound));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a failure field validation result, if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -328,13 +338,14 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isFailure, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a field validation result with the 'organization not found' additional context, if the result of an interaction with the client is null",
+      ".validateOrganizationSlug() returns a target validation result with the 'organization not found' description, if the result of an interaction with the client is null",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -343,17 +354,14 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final additionalContext = result.additionalContext;
+        final description = result.description;
 
-        expect(
-          additionalContext,
-          equals(BuildkiteStrings.organizationNotFound),
-        );
+        expect(description, equals(BuildkiteStrings.organizationNotFound));
       },
     );
 
     test(
-      ".validateOrganizationSlug() returns a successful field validation result, if the given organization slug is valid",
+      ".validateOrganizationSlug() returns a target validation result with a valid config field validation conclusion, if the given organization slug is valid",
       () async {
         when(
           client.fetchOrganization(organizationSlug),
@@ -362,8 +370,9 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
+        final conclusion = result.conclusion;
 
-        expect(result.isSuccess, isTrue);
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
   });
