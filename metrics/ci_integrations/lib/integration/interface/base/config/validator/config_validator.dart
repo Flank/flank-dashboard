@@ -3,8 +3,7 @@
 
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class responsible for validating the [Config].
 abstract class ConfigValidator<T extends Config> {
