@@ -24,10 +24,10 @@ void main() {
     );
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
-    final pageParametersFactory = PageParametersFactoryMock();
+    final pageParametersFactory = _PageParametersFactoryMock();
 
     final parameters = pageParametersModel.toMap();
-    final configurationWithParameters = RouteConfiguration.dashboard(
+    final routeConfiguration = RouteConfiguration.dashboard(
       parameters: parameters,
     );
 
@@ -46,6 +46,9 @@ void main() {
         navigationState,
       );
       prepareNotifier();
+    });
+
+    tearDown(() {
       reset(pageParametersFactory);
     });
 
@@ -279,6 +282,35 @@ void main() {
     );
 
     test(
+      ".pop() updates the current page parameters",
+      () {
+        notifier.push(DefaultRoutes.projectGroups);
+        when(pageParametersFactory.create(any)).thenReturn(
+          pageParametersModel,
+        );
+
+        notifier.pop();
+
+        expect(
+          notifier.currentPageParameters,
+          equals(pageParametersModel),
+        );
+      },
+    );
+
+    test(
+      ".pop() updates the current page parameters using the given page parameters factory",
+      () {
+        notifier.push(DefaultRoutes.projectGroups);
+        reset(pageParametersFactory);
+
+        notifier.pop();
+
+        verify(pageParametersFactory.create(any)).called(once);
+      },
+    );
+
+    test(
       ".push() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -361,12 +393,23 @@ void main() {
           pageParametersModel,
         );
 
-        notifier.push(configurationWithParameters);
+        notifier.push(routeConfiguration);
 
         expect(
           notifier.currentPageParameters,
           equals(pageParametersModel),
         );
+      },
+    );
+
+    test(
+      ".push() updates the current page parameters using the given page parameters factory",
+      () {
+        reset(pageParametersFactory);
+
+        notifier.push(routeConfiguration);
+
+        verify(pageParametersFactory.create(any)).called(once);
       },
     );
 
@@ -883,12 +926,23 @@ void main() {
           pageParametersModel,
         );
 
-        notifier.handleInitialRoutePath(configurationWithParameters);
+        notifier.handleInitialRoutePath(routeConfiguration);
 
         expect(
           notifier.currentPageParameters,
           equals(pageParametersModel),
         );
+      },
+    );
+
+    test(
+      ".handleInitialRoutePath() updates the current page parameters using the given page parameters factory",
+      () {
+        reset(pageParametersFactory);
+
+        notifier.handleInitialRoutePath(routeConfiguration);
+
+        verify(pageParametersFactory.create(any)).called(once);
       },
     );
 
@@ -988,4 +1042,5 @@ void main() {
   });
 }
 
-class PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}

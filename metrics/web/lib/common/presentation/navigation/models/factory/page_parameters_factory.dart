@@ -13,7 +13,7 @@ class PageParametersFactory {
   /// the [RouteConfiguration].
   ///
   /// If the given [RouteConfiguration] is `null` or contains the route name that
-  /// does not match to any of [RouteName]s returns `null`.
+  /// does not match any [RouteName] returns `null`.
   /// 
   /// If the [RouteConfiguration]'s parameters [Map] is `null` returns `null`.
   PageParametersModel create(RouteConfiguration configuration) {

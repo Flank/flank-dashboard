@@ -20,8 +20,6 @@ void main() {
     };
 
     final pageParametersFactory = PageParametersFactory();
-    final routeConfiguration = RouteConfigurationMock();
-    final routeName = RouteNameMock();
 
     test(
       ".create() returns null if the given route configuration is null",
@@ -33,7 +31,7 @@ void main() {
     );
 
     test(
-      ".create() returns the dashboard page parameters model if the given route configuration name is a dashboard",
+      ".create() returns the dashboard page parameters model if the given route configuration points to the dashboard page",
       () {
         final routeConfiguration = RouteConfiguration.dashboard(
           parameters: pageParametersMap,
@@ -46,7 +44,7 @@ void main() {
     );
 
     test(
-      ".create() returns the dashboard page parameters model with parameters from the route configuration",
+      ".create() returns the dashboard page parameters model with parameters from the given route configuration",
       () {
         final routeConfiguration = RouteConfiguration.dashboard(
           parameters: pageParametersMap,
@@ -74,6 +72,9 @@ void main() {
     test(
       ".create() returns null if the given route configuration name is unknown",
       () {
+        final routeConfiguration = RouteConfigurationMock();
+        final routeName = RouteNameMock();
+
         when(routeName.value).thenReturn('unknown');
         when(routeConfiguration.name).thenReturn(routeName);
 
