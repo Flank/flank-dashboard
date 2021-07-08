@@ -60,7 +60,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     final token = authValidationResult.data;
     if (!_canValidateOrganization(token)) {
       _setUnknownFieldValidationResult(
-        BuildkiteSourceValidationTarget.accessToken,
+        BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.noScopesToValidateOrganization,
       );
 

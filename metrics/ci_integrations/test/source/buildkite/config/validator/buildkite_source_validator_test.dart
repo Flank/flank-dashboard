@@ -23,7 +23,8 @@ void main() {
     const organizationSlug = 'organization';
     const pipelineSlug = 'pipeline';
     const pipelineTarget = BuildkiteSourceValidationTarget.pipelineSlug;
-    const tokenTarget = BuildkiteSourceValidationTarget.accessToken;
+    const accessTokenTarget = BuildkiteSourceValidationTarget.accessToken;
+    const organizationTarget = BuildkiteSourceValidationTarget.organizationSlug;
     const validConclusion = ConfigFieldValidationConclusion.valid;
     const invalidConclusion = ConfigFieldValidationConclusion.invalid;
     const unknownConclusion = ConfigFieldValidationConclusion.unknown;
@@ -37,13 +38,18 @@ void main() {
     const pipelineScopeToken = BuildkiteToken(
       scopes: [BuildkiteTokenScope.readPipelines],
     );
-    const pipelineScopeTokenResult = TargetValidationResult(
+    const organizationScopeToken = BuildkiteToken(
+      scopes: [BuildkiteTokenScope.readOrganizations],
+    );
+    const accessTokenValidationResult = TargetValidationResult(
+      target: accessTokenTarget,
+      conclusion: invalidConclusion,
+      data: null,
+    );
+    const pipelineScopeValidationResult = TargetValidationResult(
       target: pipelineTarget,
       conclusion: validConclusion,
       data: pipelineScopeToken,
-    );
-    const organizationScopeToken = BuildkiteToken(
-      scopes: [BuildkiteTokenScope.readOrganizations],
     );
     const failureTargetValidationResult = TargetValidationResult(
       target: pipelineTarget,
@@ -115,7 +121,7 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given validation delegate is null",
+      "throws an ArgumentError if the given validation result builder is null",
       () {
         expect(
           () => BuildkiteSourceValidator(null, validationResultBuilder),
@@ -125,7 +131,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given validation result builder is null",
+      "throws an ArgumentError if the given validation delegate is null",
       () {
         expect(
           () => BuildkiteSourceValidator(validationDelegate, null),
@@ -135,7 +141,7 @@ void main() {
     );
 
     test(
-      "creates a new instance with the given parameters",
+      "creates an instance with the given parameters",
       () {
         final validator = BuildkiteSourceValidator(
           validationDelegate,
@@ -166,10 +172,10 @@ void main() {
     );
 
     test(
-      ".validate() sets the access token field validation result returned by the validation delegate",
+      ".validate() sets the access token target validation result returned by the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(accessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -177,29 +183,28 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             BuildkiteSourceValidationTarget.accessToken,
-            pipelineScopeTokenResult,
+            accessTokenValidationResult,
           ),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'token invalid' additional context if the access token validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'token invalid' description if the access token validation fails",
       () async {
+        const expectedResult = TargetValidationResult(
+          target: accessTokenTarget,
+          conclusion: unknownConclusion,
+          description: BuildkiteStrings.tokenInvalidInterruptReason,
+        );
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureTargetValidationResult),
+          (_) => Future.value(accessTokenValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setEmptyResults(
-            const TargetValidationResult(
-              target: tokenTarget,
-              conclusion: unknownConclusion,
-              description: BuildkiteStrings.tokenInvalidInterruptReason,
-            ),
-          ),
+          validationResultBuilder.setEmptyResults(expectedResult),
         ).called(once);
       },
     );
@@ -245,19 +250,19 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown organization slug field validation result with the 'no scopes to validate organization' additional context if the access token has no scope to validate the organization slug",
+      ".validate() sets the unknown organization slug target validation result with the 'no scopes to validate organization' description if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
-            BuildkiteSourceValidationTarget.organizationSlug,
+            organizationTarget,
             const TargetValidationResult(
-              target: pipelineTarget,
+              target: organizationTarget,
               conclusion: unknownConclusion,
               description: BuildkiteStrings.noScopesToValidateOrganization,
             ),
@@ -267,10 +272,10 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'organization can't be validated' additional context if the access token has no scope to validate the organization slug",
+      ".validate() sets empty results with the unknown target validation result with the 'organization can't be validated' description if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
 
         await validator.validate(config);
@@ -278,7 +283,7 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const TargetValidationResult(
-              target: pipelineTarget,
+              target: organizationTarget,
               conclusion: unknownConclusion,
               description:
                   BuildkiteStrings.organizationCantBeValidatedInterruptReason,
@@ -292,7 +297,7 @@ void main() {
       ".validate() does not validate the organization slug if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
 
         await validator.validate(config);
@@ -305,7 +310,7 @@ void main() {
       ".validate() does not validate the pipeline slug if the access token has no scope to validate the organization slug",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
         await validator.validate(config);
 
@@ -318,7 +323,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(pipelineScopeTokenResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -343,7 +348,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the organization slug field validation result returned by the validation delegate",
+      ".validate() sets the organization slug target validation result returned by the validation delegate",
       () async {
         whenValidateOrganizationSlug(
           accessToken: organizationScopeToken,
@@ -361,7 +366,7 @@ void main() {
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'organization slug is invalid' additional context after the organization slug validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'organization slug is invalid' description after the organization slug validation fails",
       () async {
         whenValidateOrganizationSlug(
           accessToken: allRequiredScopesToken,
@@ -372,7 +377,7 @@ void main() {
         verify(
           validationResultBuilder.setEmptyResults(
             const TargetValidationResult(
-              target: pipelineTarget,
+              target: organizationTarget,
               conclusion: unknownConclusion,
               description: BuildkiteStrings.organizationInvalidInterruptReason,
             ),
@@ -409,7 +414,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown pipeline slug field validation result with the 'no scopes to validate pipeline' if the access token hasn't scope to validate the pipeline slug",
+      ".validate() sets the unknown pipeline slug target validation result with the 'no scopes to validate pipeline' description if the access token hasn't scope to validate the pipeline slug",
       () async {
         whenValidateOrganizationSlug(
           accessToken: organizationScopeToken,
@@ -473,7 +478,7 @@ void main() {
     );
 
     test(
-      ".validate() sets the pipeline slug field validation result returned by the validation delegate",
+      ".validate() sets the pipeline slug target validation result returned by the validation delegate",
       () async {
         whenValidatePipelineSlug().thenAnswer(
           (_) => Future.value(successTargetValidationResult),
