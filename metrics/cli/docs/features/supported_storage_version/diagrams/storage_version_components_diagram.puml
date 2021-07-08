@@ -1,4 +1,4 @@
-@startuml storage_version_components
+@startuml storage_version_components_diagram
 
 skinparam defaultTextAlignment center
 
@@ -9,7 +9,6 @@ legend top left
 endlegend
 
 component "Flutter Service" as flutter_service
-' component "Firebase Service" as firebase_service
 component "Git Service" as git_service
 
 component "Metrics CLI" as metrics_cli
@@ -31,6 +30,6 @@ flutter_service ---> metrics_web_app : builds
 git_service ---> metrics_web_sources : checkouts source code
 metrics_web_app ---> hosting : deployed to
 
-metrics_cli -[#Green]--> metrics_web_sources : <color:green>gets the\n <color:green> storage version
+metrics_cli -[#Green]--> metrics_web_sources : <color:green>gets the supported\n <color:green> storage version
 
 @enduml
