@@ -2,6 +2,12 @@
 
 skinparam defaultTextAlignment center
 
+legend top left
+    | Color | Arrow type |
+    |<#B70033>| Existing relationship |
+    |<#Green>| New relationship |
+endlegend
+
 component "Flutter Service" as flutter_service
 ' component "Firebase Service" as firebase_service
 component "Git Service" as git_service
