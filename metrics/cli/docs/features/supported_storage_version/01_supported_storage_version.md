@@ -11,8 +11,6 @@ Improve Metrics Web application deployment process to include the supported stor
     - [Requirements](#requirements)
     - [Landscape](#landscape)
     - [Prototyping](#prototyping)
-        - [Metrics Web Supported Storage Version](#metrics-web-supported-storage-version)
-        - [Firestore Storage Version](#firestore-storage-version)
     - [System modeling](#system-modeling)
 
 # Analysis
@@ -31,7 +29,8 @@ Since the `Metrics Web` application would receive updates after the initial rele
 The Metrics CLI supported storage version feature has the following requirements:
 
 - The Metrics CLI should pass the supported storage version to the `Metrics Web` application during the building process.
-- The Metrics CLI application must handle the Firestore database storage version setting.
+- The Metrics CLI should set the supported storage version of the `Metrics Web` application into the application's environment variable named `SUPPORTED_STORAGE_VERSION`.
+- The Metrics CLI has to get the supported storage version from the `STORAGE_VERSION` file under the `metrics` project folder.
 
 ### Landscape
 > Look for existing solutions in the area.
