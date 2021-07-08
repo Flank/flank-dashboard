@@ -102,7 +102,31 @@ void main() {
     );
 
     test(
-      ",copyWith() creates a new instance from the existing one",
+      "equals to another TargetValidationResult instance with the same parameters",
+      () {
+        const result = TargetValidationResult(
+          target: target,
+          conclusion: conclusion,
+          description: description,
+          details: details,
+          context: context,
+          data: data,
+        );
+        const anotherResult = TargetValidationResult(
+          target: target,
+          conclusion: conclusion,
+          description: description,
+          details: details,
+          context: context,
+          data: data,
+        );
+
+        expect(result, equals(anotherResult));
+      },
+    );
+
+    test(
+      ".copyWith() creates a new instance from the existing one",
       () {
         const result = TargetValidationResult(
           target: target,
@@ -139,7 +163,7 @@ void main() {
     );
 
     test(
-      ",copyWith() creates a new instance with the same fields if called without parameters",
+      ".copyWith() creates a new instance with the same fields if called without parameters",
       () {
         const result = TargetValidationResult(
           target: target,

@@ -1,12 +1,13 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
 import 'package:metrics_core/src/util/validation/validation_target.dart';
 
 /// A class that represents a validation result for a single [ValidationTarget].
-class TargetValidationResult<T> {
+class TargetValidationResult<T> extends Equatable {
   /// A validated data of this target validation result.
   final T data;
 
@@ -25,6 +26,16 @@ class TargetValidationResult<T> {
 
   /// A [Map] containing context of the validation process.
   final Map<String, dynamic> context;
+
+  @override
+  List<Object> get props => [
+        data,
+        target,
+        conclusion,
+        description,
+        details,
+        context,
+      ];
 
   /// Creates a new instance of the [TargetValidationResult] with the given
   /// parameters.
