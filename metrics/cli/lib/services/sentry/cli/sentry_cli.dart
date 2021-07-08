@@ -61,8 +61,11 @@ class SentryCli extends AuthCli {
       'releases',
       '--org=${project.organizationSlug}',
       '--project=${project.projectSlug}',
-      'finalize',
+      'files',
       release.name,
+      'upload-sourcemaps',
+      sourceMap.path,
+      '--rewrite',
     ];
 
     if (extensions != null) {

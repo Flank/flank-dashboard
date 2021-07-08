@@ -3,12 +3,12 @@
 
 import 'package:cli/services/common/info_service.dart';
 
-/// A base class for services that support authorization, provides common
-/// methods for setting the authorization up.
+/// A base class for services that support authorization. Provides common
+/// methods for handling the authorization.
 abstract class AuthService extends InfoService {
   /// Initializes the given [authorization] for this service.
   void initializeAuthorization(String authorization);
 
-  /// Resets this service current authorization.
+  /// Resets the current authorization for this service.
   void resetAuthorization();
 }

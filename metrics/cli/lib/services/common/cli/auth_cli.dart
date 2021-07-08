@@ -49,8 +49,8 @@ abstract class AuthCli extends Cli {
   /// Starts a process running [executable] in the [workingDirectory]
   /// with the specified [arguments].
   ///
-  /// Adds the [_authArgument] to the [arguments] list if the [_authorization]
-  /// is not `null`.
+  /// Adds the authorization to the [arguments] list if the corresponding value
+  /// is not `null` for this CLI.
   ///
   /// The [attachOutput] default value is `true`.
   Future<ProcessResult> runWithAuth(

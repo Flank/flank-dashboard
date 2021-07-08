@@ -33,16 +33,14 @@ void main() {
       () async {
         final authCli = _AuthCliFake();
         final authArgumentName = authCli.authArgumentName;
-
-        authCli.setupAuth(authorization);
-
         final expected = composeAuthArgument(authArgumentName, authorization);
 
+        authCli.setupAuth(authorization);
         await authCli.runWithAuth(testArguments);
 
-        final authArgument = authCli.arguments.last;
+        final authArgument = authCli.lastArguments.last;
 
-        expect(authArgument, expected);
+        expect(authArgument, equals(expected));
       },
     );
 
@@ -51,14 +49,14 @@ void main() {
       () async {
         final authCli = _AuthCliFake(isAuthLeading: true);
         final authArgumentName = authCli.authArgumentName;
-
-        authCli.setupAuth(authorization);
-
         final expected = composeAuthArgument(authArgumentName, authorization);
 
+        authCli.setupAuth(authorization);
         await authCli.runWithAuth(testArguments);
 
-        expect(authCli.arguments.first, expected);
+        final arguments = authCli.lastArguments;
+
+        expect(arguments.first, equals(expected));
       },
     );
 
@@ -67,27 +65,26 @@ void main() {
       () async {
         final authCli = _AuthCliFake(isAuthLeading: false);
         final authArgumentName = authCli.authArgumentName;
-
-        authCli.setupAuth(authorization);
-
         final expected = composeAuthArgument(authArgumentName, authorization);
 
+        authCli.setupAuth(authorization);
         await authCli.runWithAuth(testArguments);
 
-        expect(authCli.arguments.last, expected);
+        final arguments = authCli.lastArguments;
+
+        expect(arguments.last, equals(expected));
       },
     );
 
     test(
-      ".runWithAuth() does nothing with arguments list if the authorization is null",
+      ".runWithAuth() does not add authorization to arguments if the authorization value is null",
       () async {
         final authCli = _AuthCliFake();
 
         authCli.resetAuth();
-
         await authCli.runWithAuth(testArguments);
 
-        expect(authCli.arguments, testArguments);
+        expect(authCli.lastArguments, equals(testArguments));
       },
     );
   });
@@ -99,12 +96,11 @@ class _AuthCliFake extends AuthCli {
   /// for this CLI.
   final bool _isAuthLeading;
 
-  /// Stores the arguments after adding the auth argument in them.
+  /// Stores the list of arguments the [run] method was called with last time.
   List<String> _arguments;
 
-  /// Provides a list of the arguments after adding the auth argument in them,
-  /// used in tests.
-  List<String> get arguments => _arguments;
+  /// Provides a list of last arguments used in tests.
+  List<String> get lastArguments => _arguments;
 
   @override
   String get authArgumentName => 'token';
