@@ -4,7 +4,6 @@
 Improve Metrics Web application deployment process to include the supported storage version passing and storage version saving. 
 
 ## Contents
-> In this section, provide the contents for the document, including all custom subsections created.
 
 - [**Analysis**](#analysis)
     - [Feasibility study](#feasibility-study)
