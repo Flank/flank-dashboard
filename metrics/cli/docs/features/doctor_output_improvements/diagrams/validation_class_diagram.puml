@@ -56,7 +56,7 @@ ValidationResult --> TargetValidationResult : uses
 ValidationResult --> ValidationTarget : uses
 
 ValidationResultBuilder -up-> ValidationResult : builds
-ValidationResultBuilder --> ValidationTarget : uses
+ValidationResultBuilder -up-> ValidationTarget : uses
 ValidationResultBuilder -up-> TargetValidationResult : uses
 
 ValidationResultPrinter --> ValidationConclusion : uses
