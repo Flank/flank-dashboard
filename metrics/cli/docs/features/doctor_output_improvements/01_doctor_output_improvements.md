@@ -34,6 +34,7 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
         - [Doctor](#doctor)
         - [DoctorFactory](#doctorfactory)
         - [CoolService and CoolServiceCli](#coolservice-and-coolservicecli)
+        - [ServiceName](#servicename)
         - [Making things work](#doctor-making-things-work)
 
 ## Analysis
@@ -310,7 +311,7 @@ The `ValidationResult` contains the [`TargetValidationResult`s](#targetvalidatio
 
 ##### DoctorFactory
 
-The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. We need to inject the [`DependenciesFactory`](#dependenciesfactory) to the `DoctorFactory`, so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
+The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. We need to inject the [`DependenciesFactory`](#dependenciesfactory) to the `DoctorFactory` so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
 
 To create the instance of the `Dependencies` via the `DependenciesFactory`, the `DoctorFactory` should know the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. The `DoctorFactory` takes this value from the new `DoctorConstants` class.
 
@@ -343,7 +344,7 @@ The `ServiceName` is a new enum that stores the names of the 3-rd party services
 
 As the `Doctor` class needs to know the `String` name of the service it validates to get the corresponding [`Dependency`](#dependency) instance for the specific `CoolService`, the `Doctor` class uses the new `ServiceNameMapper` class to unmap the `serviceName` value of the `CoolService`. 
 
-It is worth mentioning that currently the `CoolService` is an interface and should be updated to be an abstract class, so that there is no need to redefine the `serviceName` for each ancestor.
+It is worth mentioning that currently the `CoolService` is an interface and should be updated to be an abstract class so that there is no need to redefine the `serviceName` for each ancestor.
 
 Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
 ![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
