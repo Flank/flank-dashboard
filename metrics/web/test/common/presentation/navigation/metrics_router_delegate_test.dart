@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
+import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -18,7 +19,6 @@ void main() {
   group("MetricsRouterDelegate", () {
     final configuration = RouteConfigurationMock();
     final navigationNotifierMock = _NavigationNotifierMock();
-    final navigationState = NavigationStateMock();
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
     final pages = UnmodifiableListView<MetricsPage>([]);
 
@@ -67,13 +67,11 @@ void main() {
     test(
       ".navigatorKey provides the global object key with a value equals to the given navigator notifier",
       () {
-        final navigationNotifier = NavigationNotifier(
-          MetricsPageFactory(),
-          navigationState,
-        );
-        final routerDelegate = MetricsRouterDelegate(navigationNotifier);
+        final routerDelegate = MetricsRouterDelegate(navigationNotifierMock);
 
-        final expectedKey = GlobalObjectKey<NavigatorState>(navigationNotifier);
+        final expectedKey = GlobalObjectKey<NavigatorState>(
+          navigationNotifierMock,
+        );
         final actualKey = routerDelegate.navigatorKey;
 
         expect(actualKey, equals(expectedKey));
@@ -84,8 +82,12 @@ void main() {
       "notifies listeners once the given navigation notifier notifies listeners",
       () {
         final metricsPageFactory = MetricsPageFactory();
+        final pageParametersFactory = PageParametersFactory();
+        final navigationState = NavigationStateMock();
+
         final navigationNotifier = NavigationNotifier(
           metricsPageFactory,
+          pageParametersFactory,
           navigationState,
         );
         final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifier);

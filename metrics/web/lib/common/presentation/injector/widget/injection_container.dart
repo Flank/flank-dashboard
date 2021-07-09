@@ -23,6 +23,7 @@ import 'package:metrics/common/data/repositories/firestore_project_repository.da
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
@@ -233,6 +234,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _navigationNotifier = NavigationNotifier(
       MetricsPageFactory(),
+      PageParametersFactory(),
       BrowserNavigationState(window.history),
     );
 
