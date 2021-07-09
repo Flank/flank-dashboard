@@ -93,12 +93,12 @@ class SentryCliServiceAdapter implements SentryService {
   }
 
   @override
-  void initializeAuthorization(String authorization) {
-    _sentryCli.setupAuth(authorization);
+  void initializeAuth(String auth) {
+    _sentryCli.setupAuth(auth);
   }
 
   @override
-  void resetAuthorization() {
+  void resetAuth() {
     _sentryCli.resetAuth();
   }
 }

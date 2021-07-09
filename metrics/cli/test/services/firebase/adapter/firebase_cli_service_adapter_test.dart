@@ -18,7 +18,7 @@ void main() {
     const workingDirectory = 'workingDirectory';
     const target = 'target';
     const clientId = 'clientId';
-    const authorization = 'auth';
+    const auth = 'auth';
 
     final firebaseCli = _FirebaseCliMock();
     final prompter = PrompterMock();
@@ -538,42 +538,42 @@ void main() {
     );
 
     test(
-      ".initializeAuthorization() initializes the authorization for the Firebase CLI",
+      ".initializeAuth() initializes the authentication for the Firebase CLI",
       () {
-        firebaseService.initializeAuthorization(authorization);
+        firebaseService.initializeAuth(auth);
 
-        verify(firebaseCli.setupAuth(authorization)).called(once);
+        verify(firebaseCli.setupAuth(auth)).called(once);
       },
     );
 
     test(
-      ".initializeAuthorization() throws if Firebase CLI throws during the initializing authorization process",
+      ".initializeAuth() throws if Firebase CLI throws during the initializing authentication process",
       () {
-        when(firebaseCli.setupAuth(authorization)).thenThrow(stateError);
+        when(firebaseCli.setupAuth(auth)).thenThrow(stateError);
 
         expect(
-          () => firebaseService.initializeAuthorization(authorization),
+          () => firebaseService.initializeAuth(auth),
           throwsStateError,
         );
       },
     );
 
     test(
-      ".resetAuthorization() resets the authorization for the Firebase CLI",
+      ".resetAuth() resets the authentication for the Firebase CLI",
       () {
-        firebaseService.resetAuthorization();
+        firebaseService.resetAuth();
 
         verify(firebaseCli.resetAuth()).called(once);
       },
     );
 
     test(
-      ".resetAuthorization() throws if Firebase CLI throws during the resetting authorization process",
+      ".resetAuth() throws if Firebase CLI throws during the resetting authentication process",
       () {
         when(firebaseCli.resetAuth()).thenThrow(stateError);
 
         expect(
-          () => firebaseService.resetAuthorization(),
+          () => firebaseService.resetAuth(),
           throwsStateError,
         );
       },

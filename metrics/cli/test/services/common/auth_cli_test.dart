@@ -8,16 +8,16 @@ import 'package:test/test.dart';
 
 void main() {
   group("AuthCli", () {
-    const authorization = 'authorization';
+    const auth = 'auth';
 
     final testArguments = ['testArgument1', 'testArgument2'];
 
-    String composeAuthArgument(String authArgumentName, String authorization) {
-      return '--$authArgumentName=$authorization';
+    String composeAuthArgument(String authArgumentName, String authValue) {
+      return '--$authArgumentName=$authValue';
     }
 
     test(
-      ".setupAuth() throws an ArgumentError if the given authorization is null",
+      ".setupAuth() throws an ArgumentError if the given auth is null",
       () {
         final authCli = _AuthCliFake();
 
@@ -29,13 +29,13 @@ void main() {
     );
 
     test(
-      ".runWithAuth() composes an auth argument of the auth argument name and the authorization",
+      ".runWithAuth() composes an auth argument of the auth argument name and the auth value",
       () async {
         final authCli = _AuthCliFake();
         final authArgumentName = authCli.authArgumentName;
-        final expected = composeAuthArgument(authArgumentName, authorization);
+        final expected = composeAuthArgument(authArgumentName, auth);
 
-        authCli.setupAuth(authorization);
+        authCli.setupAuth(auth);
         await authCli.runWithAuth(testArguments);
 
         final authArgument = authCli.lastArguments.last;
@@ -45,13 +45,13 @@ void main() {
     );
 
     test(
-      ".runWithAuth() adds an auth argument to the beginning of the arguments list if the authorization is leading",
+      ".runWithAuth() adds an auth argument to the beginning of the arguments list if the authentication is leading",
       () async {
         final authCli = _AuthCliFake(isAuthLeading: true);
         final authArgumentName = authCli.authArgumentName;
-        final expected = composeAuthArgument(authArgumentName, authorization);
+        final expected = composeAuthArgument(authArgumentName, auth);
 
-        authCli.setupAuth(authorization);
+        authCli.setupAuth(auth);
         await authCli.runWithAuth(testArguments);
 
         final arguments = authCli.lastArguments;
@@ -61,13 +61,13 @@ void main() {
     );
 
     test(
-      ".runWithAuth() adds an auth argument to the end of the arguments list if the authorization is not leading",
+      ".runWithAuth() adds an auth argument to the end of the arguments list if the authentication is not leading",
       () async {
         final authCli = _AuthCliFake(isAuthLeading: false);
         final authArgumentName = authCli.authArgumentName;
-        final expected = composeAuthArgument(authArgumentName, authorization);
+        final expected = composeAuthArgument(authArgumentName, auth);
 
-        authCli.setupAuth(authorization);
+        authCli.setupAuth(auth);
         await authCli.runWithAuth(testArguments);
 
         final arguments = authCli.lastArguments;
@@ -77,7 +77,7 @@ void main() {
     );
 
     test(
-      ".runWithAuth() does not add authorization to arguments if the authorization value is null",
+      ".runWithAuth() does not add authentication to arguments if its value is null",
       () async {
         final authCli = _AuthCliFake();
 
@@ -92,7 +92,7 @@ void main() {
 
 /// A fake implementation of the [AuthCli] that is used for testing.
 class _AuthCliFake extends AuthCli {
-  /// Indicates whether the authorization should be a leading argument
+  /// Indicates whether the authentication should be a leading argument
   /// for this CLI.
   final bool _isAuthLeading;
 

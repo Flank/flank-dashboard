@@ -25,7 +25,7 @@ void main() {
     const enterOrganizationSlug = SentryStrings.enterOrganizationSlug;
     const enterReleaseName = SentryStrings.enterReleaseName;
     const dsn = 'dsn';
-    const authorization = 'auth';
+    const auth = 'auth';
 
     final sentryCli = _SentryCliMock();
     final prompter = PrompterMock();
@@ -375,42 +375,42 @@ void main() {
     );
 
     test(
-      ".initializeAuthorization() initializes the authorization for the Sentry CLI",
+      ".initializeAuth() initializes the authentication for the Sentry CLI",
       () {
-        sentryService.initializeAuthorization(authorization);
+        sentryService.initializeAuth(auth);
 
-        verify(sentryCli.setupAuth(authorization)).called(once);
+        verify(sentryCli.setupAuth(auth)).called(once);
       },
     );
 
     test(
-      ".initializeAuthorization() throws if Sentry CLI throws during the initializing authorization process",
+      ".initializeAuth() throws if Sentry CLI throws during the initializing authentication process",
       () {
-        when(sentryCli.setupAuth(authorization)).thenThrow(stateError);
+        when(sentryCli.setupAuth(auth)).thenThrow(stateError);
 
         expect(
-          () => sentryService.initializeAuthorization(authorization),
+          () => sentryService.initializeAuth(auth),
           throwsStateError,
         );
       },
     );
 
     test(
-      ".resetAuthorization() resets the authorization for the Sentry CLI",
+      ".resetAuth() resets the authentication for the Sentry CLI",
       () {
-        sentryService.resetAuthorization();
+        sentryService.resetAuth();
 
         verify(sentryCli.resetAuth()).called(once);
       },
     );
 
     test(
-      ".resetAuthorization() throws if Sentry CLI throws during the resetting authorization process",
+      ".resetAuth() throws if Sentry CLI throws during the resetting authentication process",
       () {
         when(sentryCli.resetAuth()).thenThrow(stateError);
 
         expect(
-          () => sentryService.resetAuthorization(),
+          () => sentryService.resetAuth(),
           throwsStateError,
         );
       },

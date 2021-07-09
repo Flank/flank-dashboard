@@ -90,12 +90,12 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  void initializeAuthorization(String authorization) {
-    _firebaseCli.setupAuth(authorization);
+  void initializeAuth(String auth) {
+    _firebaseCli.setupAuth(auth);
   }
 
   @override
-  void resetAuthorization() {
+  void resetAuth() {
     _firebaseCli.resetAuth();
   }
 }
