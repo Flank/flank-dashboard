@@ -203,7 +203,7 @@ The improved output of the feature is to contain the detailed machine validation
 
 #### Application
 
-This document describes the application of the `validation` package for the existing features: `Metrics CLI Doctor` command and `CI Integrations Validate` command. Let's also define the general steps that one should perform to use the `validation` packages for some other future features. Assume there is a `cool_package` for which we want to use the `validation` package from `Metrics Core`. Consider the following implementation flow:
+The [Program](#program) section below describes the application of the `validation` package for the existing features: `Metrics CLI Doctor` command and `CI Integrations Validate` command. Before diving deep into details, let's also define the high-level steps that one should perform to utilize the `validation` packages in the context of other future features. Assume there is a `cool_package` for which we want to use the `validation` package from `Metrics Core`. Consider the following implementation flow:
 1. Define the entities that the `ValidationTarget` abstraction represents (e.g., some 3-rd party service, config field, etc.).
 2. Define the entity(ies) that are responsible for the `TargetValidationResult`s creation.
 3. Define the entity(ies) that are responsible for the `ValidationResult` creation. To create the `ValidationResult`, they should receive the corresponding `TargetValidationResult`s and use the `ValidationResultBuilder` to build the result.
@@ -323,6 +323,17 @@ To improve the `doctor` command output, we want to suppress the `version` comman
 2. `CoolService`; 
 3. `CoolServiceCli`;
 4. `CoolCliServiceAdapter`.
+
+As described in the [Prototyping](#prototyping) section, to retrieve the resulting [ProcessResult](https://api.dart.dev/stable/dart-io/ProcessResult-class.html) instance, the one should pass the `verbose: false` and `commandVerbose: false` flags to the `.run()` method of `Cli` class. Consider the following code snippet that demonstrates the `ProcessResult` obtaining for the `flutter --version` command: 
+
+```dart
+final result = await runExecutableArguments(
+     'flutter',
+     ['--version'],
+     verbose: false,
+     commandVerbose: false,
+);
+```
 
 Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
 ![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
