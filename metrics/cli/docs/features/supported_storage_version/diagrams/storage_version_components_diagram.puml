@@ -5,31 +5,28 @@ skinparam defaultTextAlignment center
 legend top left
     | Color | Arrow type |
     |<#B70033>| Existing relationship |
-    |<#Green>| New relationship |
+    |<#Green>| New relationship/component |
+    |<#5B95BB>| Modified relationship/component |
 endlegend
 
-component "Flutter Service" as flutter_service
+
+package "Metrics CLI" {
+component "Flutter Service" as flutter_service #5B95BB
 component "Git Service" as git_service
 
-component "Metrics CLI" as metrics_cli
-
-component "Metrics Web application \l sources" as metrics_web_sources
-component "Metrics Web application" as metrics_web_app
-
-cloud "Firebase" {
-    component Hosting as hosting
+component "Metrics CLI" as metrics_cli #5B95BB
 }
 
-metrics_cli --> flutter_service : uses
-metrics_cli -[#Green]-> flutter_service : <color:green>provides supported \n <color:green>storage version
-metrics_cli --> git_service : uses
+component "Metrics Web application \l sources" as metrics_web_sources
+component "Metrics Web application" as metrics_web_app #5B95BB
 
-flutter_service --[#Green]-> metrics_web_app : <color:green>sets suppported\n <color:green>storage version
-flutter_service ---> metrics_web_sources : uses to build\n the Metrics Web app
-flutter_service ---> metrics_web_app : builds
-git_service ---> metrics_web_sources : checkouts source code
-metrics_web_app ---> hosting : deployed to
 
-metrics_cli -[#Green]--> metrics_web_sources : <color:green>gets the supported\n <color:green> storage version
+metrics_cli -left-> git_service : uses
+git_service --> metrics_web_sources : checkouts source code
+metrics_cli -[#Green]--> metrics_web_sources : <color:green>gets the supported \n<color:green>storage version
+metrics_cli -[#5B95BB]right-> flutter_service : <color:5B95BB>provides supported \n <color:5B95BB>storage version
+
+flutter_service --[#5B95BB]-> metrics_web_app : <color:5B95BB> builds and \n<color:5B95BB>sets suppported\n <color:5B95BB>storage version
+flutter_service --> metrics_web_sources : uses to build\n the Metrics Web app
 
 @enduml
