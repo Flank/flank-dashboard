@@ -29,7 +29,7 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
       - [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command)
         - [Dependency](#dependency)
         - [Dependencies](#dependencies)
-        - [DependenciesFactory and DependenciesConstants](#dependenciesfactory-and-dependenciesconstants)
+        - [DependenciesFactory](#dependenciesfactory)
         - [DoctorCommand](#doctorcommand)
         - [Doctor](#doctor)
         - [DoctorFactory](#doctorfactory)
@@ -288,11 +288,11 @@ Having this information, the `doctor` command can compare the version of some CL
 
 The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party services. The `Dependencies` instance is injected into the `Doctor` class to retrieve the `Dependency` information on some 3-rd party service via the `.getFor(service: String)` method, where `service` is the name of that service.
 
-##### DependenciesFactory and DependenciesConstants
+##### DependenciesFactory
 
 The `DependenciesFactory` is a factory class responsible for creating the `Dependencies` instances.
 
-The `DependenciesFactory` gets the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) document from the `DependenciesConstants` and then parses the document into a `Map`.
+The `.create(fromFile: String)` method of the `DependenciesFactory` takes the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file as a parameter and then parses the document into a `Map`.
 
 ##### DoctorCommand
 
@@ -310,7 +310,9 @@ The `ValidationResult` contains the [`TargetValidationResult`s](#targetvalidatio
 
 ##### DoctorFactory
 
-The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. We need to inject the [`DependenciesFactory`](#dependenciesfactory-and-dependenciesconstants) to the `DoctorFactory`, so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
+The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. We need to inject the [`DependenciesFactory`](#dependenciesfactory) to the `DoctorFactory`, so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
+
+To create the instance of the `Dependencies` via the `DependenciesFactory`, the `DoctorFactory` should know the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. The `DoctorFactory` takes this value from the new `DoctorConstants` class.
 
 ##### CoolService and CoolServiceCli
 
@@ -335,6 +337,14 @@ final result = await runExecutableArguments(
 );
 ```
 
+##### ServiceName
+
+The `ServiceName` is a new enum that stores the names of the 3-rd party services. The `CoolService` class contains the corresponding `ServiceName` value to be used during the validation process by the `Doctor`. 
+
+As the `Doctor` class needs to know the `String` name of the service it validates to get the corresponding [`Dependency`](#dependency) instance for the specific `CoolService`, the `Doctor` class uses the new `ServiceNameMapper` class to unmap the `serviceName` value of the `CoolService`. 
+
+It is worth mentioning that currently the `CoolService` is an interface and should be updated to be an abstract class, so that there is no need to redefine the `serviceName` for each ancestor.
+
 Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
 ![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
 
@@ -342,12 +352,15 @@ Consider the following class diagram that describes the structure of the updated
 ##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
 
 Consider the following steps needed to be able to improve the doctor command output:
-1. Create the `dependencies` package containing the following classes: `DependenciesConstants`, `Dependency`, `Dependencies`, `DependenciesFactory`.
-2. Update the `DoctorFactory` class to contain the instance of `DependenciesFactory`.
-3. Update the `.version()` method to return the `ProcessResult` for each service CLI (e.g., `FlutterCli`, `GitCli`, etc.)
-4. Update the `.version()` methods to return the `ProcessResult` for each CLI service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.)
-5. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
-6. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
+1. Create the `dependencies` package containing the following classes: `Dependency`, `Dependencies`, `DependenciesFactory`.
+2. Create the `DoctorConstants` class.
+3. Create the `ServiceName` enum and the `ServiceNameMapper`. 
+4. Update each service (e.g., `FlutterService`, `GitService`, etc.) to be an abstract class that stores the corresponding `ServiceName`.
+5. Update the `.version()` method to return the `ProcessResult` for each service CLI (e.g., `FlutterCli`, `GitCli`, etc.)
+6. Update the `DoctorFactory` class to contain the instance of `DependenciesFactory`.
+7. Update the `.version()` methods to return the `ProcessResult` for each CLI service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.)
+8. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
+9. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
 
  Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement with a `CoolService` used as an example of 3-rd party service:
 

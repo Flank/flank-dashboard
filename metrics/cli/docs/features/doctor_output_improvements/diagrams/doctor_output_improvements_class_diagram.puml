@@ -29,10 +29,41 @@ package cli.lib as cli_lib {
                     + create(): Doctor
                 }
             }
+
+            package constants {
+                class DoctorConstants {
+                    + {static} dependenciesPath: String
+                }
+            }
         }
     }
 
     package services {
+        package common.service.model {
+            enum ServiceName {
+                gcloud
+                git
+                firebase
+                flutter
+                npm
+                sentry
+            }
+
+            package mapper {
+                class ServiceNameMapper {
+                    + gcloud: String
+                    + git: String
+                    + firebase: String
+                    + flutter: String
+                    + npm: String
+                    + sentry: String
+
+                    + map(value: String): ServiceName
+                    + unmap(value: Service): String
+                }
+            }
+        }
+
         package cool_service {
             package adapter {
                 class CoolCliServiceAdapter {
@@ -50,23 +81,17 @@ package cli.lib as cli_lib {
                 }
             }
 
-            interface CoolService {
-                + name: String
+            abstract class CoolService {
+                + serviceName: ServiceName
                 + version(): Future<ProcessResult>
             }
         }
     }
 
-    package dependencies {
+    package util.dependencies {
         package factory as dependencies_factory {
             class DependenciesFactory {
-                + create(): Dependencies
-            }
-        }
-
-        package constants {
-            class DependenciesConstants {
-                + {static} dependenciesPath: String
+                + create(fromFile: String): Dependencies
             }
         }
 
@@ -154,6 +179,7 @@ DoctorCommand -left-> DoctorFactory : uses
 
 DoctorFactory --> Doctor : creates
 DoctorFactory -up-> DependenciesFactory : uses
+DoctorFactory -left-> DoctorConstants : uses
 
 Doctor --> ValidationResultBuilder : uses
 Doctor --> ValidationResult : provides
@@ -161,13 +187,17 @@ Doctor --> TargetValidationResult : uses
 Doctor --> CoolService : uses
 Doctor -up-> Dependencies : uses
 Doctor --> Dependency : uses
+Doctor --> ServiceNameMapper : uses
 
 DependenciesFactory --> Dependencies : creates
-DependenciesFactory -left-> DependenciesConstants : uses
 
 Dependencies --> Dependency : uses
 
 CoolCliServiceAdapter .up.|> CoolService
 CoolCliServiceAdapter -up-> CoolServiceCli : uses
+
+CoolService --> ServiceName : uses
+
+ServiceNameMapper --> ServiceName : uses
 
 @enduml

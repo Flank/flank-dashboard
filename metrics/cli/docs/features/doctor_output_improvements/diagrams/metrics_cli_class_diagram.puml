@@ -40,7 +40,7 @@ package cli.lib as cli_lib {
 
     package services {
         package common.service.model {
-            enum Service {
+            enum ServiceName {
                 gcloud
                 git
                 firebase
@@ -49,8 +49,8 @@ package cli.lib as cli_lib {
                 sentry
             }
 
-            package mappers {
-                class ServiceMapper {
+            package mapper {
+                class ServiceNameMapper {
                     + gcloud: String
                     + git: String
                     + firebase: String
@@ -58,7 +58,7 @@ package cli.lib as cli_lib {
                     + npm: String
                     + sentry: String
 
-                    + map(value: String): Service
+                    + map(value: String): ServiceName
                     + unmap(value: Service): String
                 }
             }
@@ -81,8 +81,8 @@ package cli.lib as cli_lib {
                 }
             }
 
-            interface CoolService {
-                + service: Service
+            abstract class CoolService {
+                + serviceName: ServiceName
                 + version(): Future<ProcessResult>
             }
         }
@@ -121,17 +121,17 @@ DoctorFactory -up-> DoctorConstants : uses
 Doctor --> CoolService : uses
 Doctor -right-> Dependencies : uses
 Doctor -right-> Dependency : uses
-Doctor --> ServiceMapper : uses
+Doctor --> ServiceNameMapper : uses
 
 CoolCliServiceAdapter .up.|> CoolService
 CoolCliServiceAdapter -down-> CoolServiceCli : uses
 
-CoolService --> Service : uses
+CoolService --> ServiceName : uses
 
 DependenciesFactory --> Dependencies : creates
 
 Dependencies --> Dependency : uses
 
-ServiceMapper --> Service : uses
+ServiceNameMapper --> ServiceName : uses
 
 @enduml
