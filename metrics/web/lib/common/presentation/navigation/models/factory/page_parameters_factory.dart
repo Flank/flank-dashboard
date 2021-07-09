@@ -9,8 +9,8 @@ import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_
 /// A factory that is responsible for creating the [PageParametersModel]
 /// depending on the [RouteConfiguration].
 class PageParametersFactory {
-  /// Creates a new instance of the [PageParametersModel] for
-  /// the [RouteConfiguration].
+  /// Creates a new instance of the [PageParametersModel] using the given
+  /// [configuration].
   ///
   /// If the given [RouteConfiguration] is `null` or contains the route name that
   /// does not match any [RouteName] returns `null`.

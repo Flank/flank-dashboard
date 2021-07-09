@@ -299,10 +299,12 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
+        final currentConfiguration = notifier.currentConfiguration;
+
         notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
-        verify(pageParametersFactory.create(any)).called(equals(2));
+        verify(pageParametersFactory.create(currentConfiguration)).called(once);
       },
     );
 
@@ -385,13 +387,15 @@ void main() {
     test(
       ".push() updates the current page parameters",
       () {
+        final initialPageParameters = notifier.currentPageParameters;
+
         when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
         notifier.push(routeConfiguration);
 
         expect(
           notifier.currentPageParameters,
-          equals(pageParametersModel),
+          isNot(equals(initialPageParameters)),
         );
       },
     );
@@ -914,13 +918,15 @@ void main() {
     test(
       ".handleInitialRoutePath() updates the current page parameters",
       () {
+        final initialPageParameters = notifier.currentPageParameters;
+
         when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
         notifier.handleInitialRoutePath(routeConfiguration);
 
         expect(
           notifier.currentPageParameters,
-          equals(pageParametersModel),
+          isNot(equals(initialPageParameters)),
         );
       },
     );
@@ -1030,4 +1036,5 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}
