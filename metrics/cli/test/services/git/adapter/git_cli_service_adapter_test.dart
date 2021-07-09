@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import '../../../test_utils/matchers.dart';
 
 void main() {
-  group('GitCliServiceAdapter', () {
+  group("GitCliServiceAdapter", () {
     const url = 'https://test.com';
     const path = 'test/path';
 

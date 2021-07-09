@@ -3,11 +3,12 @@
 
 import 'dart:async';
 
+import 'package:cli/services/common/auth_service.dart';
 import 'package:cli/services/common/info_service.dart';
 
 /// An abstract class for Firebase service that provides methods
 /// for working with Firebase.
-abstract class FirebaseService extends InfoService {
+abstract class FirebaseService implements AuthService, InfoService {
   /// Logins into the Firebase.
   Future<void> login();
 
@@ -17,28 +18,18 @@ abstract class FirebaseService extends InfoService {
 
   /// Deploys the given Firebase hosting [target] from the given [appPath]
   /// to the Firebase project with the given [projectId] hosting.
-  ///
-  /// Authenticates the hosting deployment process using the given [authToken]
-  /// if it is not `null`. Otherwise, authenticates using
-  /// the global Firebase user.
   Future<void> deployHosting(
     String projectId,
     String target,
-    String appPath, [
-    String authToken,
-  ]);
+    String appPath,
+  );
 
   /// Deploys Firebase rules, indexes, and functions to the project
   /// with the given [projectId] from the given [firebasePath].
-  ///
-  /// Authenticates the Firebase deployment process using the given [authToken]
-  /// if it is not `null`. Otherwise, authenticates using
-  /// the global Firebase user.
   Future<void> deployFirebase(
     String projectId,
-    String firebasePath, [
-    String authToken,
-  ]);
+    String firebasePath,
+  );
 
   /// Upgrades the Firebase account billing plan of the Firebase project with
   /// the given [projectId].
@@ -57,5 +48,5 @@ abstract class FirebaseService extends InfoService {
   FutureOr<String> configureAuthProviders(String projectId);
 
   /// Accepts the terms of the service.
-  FutureOr<void> acceptTermsOfService() {}
+  FutureOr<void> acceptTermsOfService();
 }

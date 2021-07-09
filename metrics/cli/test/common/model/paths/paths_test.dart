@@ -5,7 +5,7 @@ import 'package:cli/common/model/paths/paths.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Paths', () {
+  group("Paths", () {
     const rootPath = 'rootPath';
 
     final paths = Paths(rootPath);

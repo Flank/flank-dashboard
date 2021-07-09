@@ -39,12 +39,11 @@ class SentryCliServiceAdapter implements SentryService {
   @override
   Future<void> createRelease(
     SentryRelease sentryRelease,
-    List<SourceMap> sourceMaps, [
-    String authToken,
-  ]) async {
-    await _sentryCli.createRelease(sentryRelease, authToken);
-    await _uploadSourceMaps(sentryRelease, sourceMaps, authToken);
-    await _sentryCli.finalizeRelease(sentryRelease, authToken);
+    List<SourceMap> sourceMaps,
+  ) async {
+    await _sentryCli.createRelease(sentryRelease);
+    await _uploadSourceMaps(sentryRelease, sourceMaps);
+    await _sentryCli.finalizeRelease(sentryRelease);
   }
 
   @override
@@ -84,17 +83,22 @@ class SentryCliServiceAdapter implements SentryService {
   }
 
   /// Uploads the given [sourceMaps] to the given Sentry [release].
-  ///
-  /// Authenticates the source maps uploading process using the given
-  /// [authToken] if it is not `null`. Otherwise, authenticates using
-  /// the global Sentry token.
   Future<void> _uploadSourceMaps(
     SentryRelease release,
-    List<SourceMap> sourceMaps, [
-    String authToken,
-  ]) async {
+    List<SourceMap> sourceMaps,
+  ) async {
     for (final sourceMap in sourceMaps) {
-      await _sentryCli.uploadSourceMaps(release, sourceMap, authToken);
+      await _sentryCli.uploadSourceMaps(release, sourceMap);
     }
+  }
+
+  @override
+  void initializeAuth(String auth) {
+    _sentryCli.setupAuth(auth);
+  }
+
+  @override
+  void resetAuth() {
+    _sentryCli.resetAuth();
   }
 }
