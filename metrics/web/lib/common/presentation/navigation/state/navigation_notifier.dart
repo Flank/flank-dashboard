@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
+import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
 
@@ -22,11 +24,18 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
+  /// A [PageParametersFactory] used to create a [PageParametersModel] 
+  /// from the [RouteConfiguration].
+  final PageParametersFactory _pageParametersFactory;
+
   /// A stack of [MetricsPage]s to use by navigator.
   final List<MetricsPage> _pages = [];
 
   /// A [RouteConfiguration] that represents the current page route.
   RouteConfiguration _currentConfiguration;
+
+  /// A [PageParametersModel] that represents current page parameters.
+  PageParametersModel _currentPageParameters;
 
   /// A [RouteConfiguration] redirect to when the application finishes
   /// initialization.
@@ -44,14 +53,21 @@ class NavigationNotifier extends ChangeNotifier {
   /// Provides a [RouteConfiguration] that describes the navigation state.
   RouteConfiguration get currentConfiguration => _currentConfiguration;
 
+  /// Provides a [PageParametersModel] that describes the current page
+  /// parameters.
+  PageParametersModel get currentPageParameters => _currentPageParameters;
+
   /// Creates a new instance of the [NavigationNotifier]
   /// with the given [MetricsPageFactory].
   ///
   /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
+  /// Throws an [AssertionError] if the given [PageParametersFactory] is `null`.
   NavigationNotifier(
     this._pageFactory,
+    this._pageParametersFactory,
     NavigationState navigationState,
   )   : assert(_pageFactory != null),
+        assert(_pageParametersFactory != null),
         assert(navigationState != null),
         _navigationState = navigationState;
 
@@ -100,6 +116,8 @@ class NavigationNotifier extends ChangeNotifier {
     final newConfiguration = _getConfigurationFromPage(currentPage);
 
     _currentConfiguration = newConfiguration;
+
+    _updatePageParameters();
 
     notifyListeners();
   }
@@ -199,6 +217,8 @@ class NavigationNotifier extends ChangeNotifier {
 
     final newPage = _pageFactory.create(_currentConfiguration);
 
+    _updatePageParameters();
+
     _pages.add(newPage);
   }
 
@@ -227,5 +247,12 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isUserLoggedIn && authorizationRequired) return DefaultRoutes.login;
 
     return configuration;
+  }
+
+  /// Updates the [_currentPageParameters] based on the [_currentConfiguration].
+  void _updatePageParameters() {
+    final pageParameters = _pageParametersFactory.create(_currentConfiguration);
+
+    _currentPageParameters = pageParameters;
   }
 }
