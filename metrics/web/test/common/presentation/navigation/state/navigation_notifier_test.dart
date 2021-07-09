@@ -46,9 +46,6 @@ void main() {
         navigationState,
       );
       prepareNotifier();
-    });
-
-    tearDown(() {
       reset(pageParametersFactory);
     });
 
@@ -285,24 +282,24 @@ void main() {
       ".pop() updates the current page parameters",
       () {
         notifier.push(DefaultRoutes.projectGroups);
-        when(pageParametersFactory.create(any)).thenReturn(
-          pageParametersModel,
-        );
+
+        final initialPageParameters = notifier.currentPageParameters;
+
+        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
         notifier.pop();
 
         expect(
           notifier.currentPageParameters,
-          equals(pageParametersModel),
+          isNot(equals(initialPageParameters)),
         );
       },
     );
 
     test(
-      ".pop() updates the current page parameters using the given page parameters factory",
+      ".pop() uses the given page parameters factory to create a page parameters",
       () {
         notifier.push(DefaultRoutes.projectGroups);
-        reset(pageParametersFactory);
 
         notifier.pop();
 
@@ -389,9 +386,7 @@ void main() {
     test(
       ".push() updates the current page parameters",
       () {
-        when(pageParametersFactory.create(any)).thenReturn(
-          pageParametersModel,
-        );
+        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
         notifier.push(routeConfiguration);
 
@@ -403,10 +398,8 @@ void main() {
     );
 
     test(
-      ".push() updates the current page parameters using the given page parameters factory",
+      ".push() uses the given page parameters factory to create a page parameters",
       () {
-        reset(pageParametersFactory);
-
         notifier.push(routeConfiguration);
 
         verify(pageParametersFactory.create(any)).called(once);
@@ -922,9 +915,7 @@ void main() {
     test(
       ".handleInitialRoutePath() updates the current page parameters",
       () {
-        when(pageParametersFactory.create(any)).thenReturn(
-          pageParametersModel,
-        );
+        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
         notifier.handleInitialRoutePath(routeConfiguration);
 
@@ -936,10 +927,8 @@ void main() {
     );
 
     test(
-      ".handleInitialRoutePath() updates the current page parameters using the given page parameters factory",
+      ".handleInitialRoutePath() uses the given page parameters factory to create a page parameters",
       () {
-        reset(pageParametersFactory);
-
         notifier.handleInitialRoutePath(routeConfiguration);
 
         verify(pageParametersFactory.create(any)).called(once);
