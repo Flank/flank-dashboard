@@ -108,9 +108,9 @@ CoolIntegrationSourceValidator  --> ValidationResultBuilder : uses
 
 CoolIntegrationSourceValidationDelegate --> TargetValidationResult : uses
 
-CoolIntegrationSourceValidationTarget --> ValidationTarget : uses
+ValidationTarget "1..*" -left-o "1" CoolIntegrationSourceValidationTarget
 
-ConfigFieldValidationConclusion --> ValidationConclusion : uses
+ValidationConclusion "1..*" -left-o "1" ConfigFieldValidationConclusion
 
 CoolIntegrationSourceValidationDelegate -down-> ConfigFieldValidationConclusion : uses
 
