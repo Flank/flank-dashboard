@@ -282,11 +282,11 @@ It contains the following fields that are important for the `doctor` command:
 - `recommendedVersion` - a version of the corresponding 3-rd party service that is recommended to use along with the `Metrics CLI`;
 - `installUrl` - a URL that refers to the installation instruction of the corresponding 3-rd party service.
 
-Having this information, the `doctor` command can compare the version of some CLI installed on the user's machine with the recommended version listed in the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. In case that CLI is not installed, the `doctor` command is able to show the installation link to the user.
+Having this information, the `doctor` command can compare the version of some CLI installed on the user's machine with the recommended version listed in the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. In case that CLI is not installed, the `doctor` command shows the installation link to the user.
 
 ##### Dependencies
 
-The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party services. The `Dependencies` instance is injected into the `Doctor` class to retrieve the `Dependency` information on some 3-rd party service via the `.getFor(service: String)` method, where `service` is a name of that service.
+The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party services. The `Dependencies` instance is injected into the `Doctor` class to retrieve the `Dependency` information on some 3-rd party service via the `.getFor(service: String)` method, where `service` is the name of that service.
 
 ##### DependenciesFactory and DependenciesConstants
 
@@ -306,7 +306,7 @@ The `Doctor` is a class used to check whether all the required 3-rd party CLIs a
 
 We should update the `.checkVersions()` method of the `Doctor` class to return the [`ValidationResult`](#validationresult) that will be printed by the `DoctorCommand`.
 
-The `ValidationResult` contains the [`TargetValidationResult`s](#targetvalidationresult) for each 3-rd party service. In order to create the `TargetValidationResult`s, the `Doctor` should know the recommended versions and installation URLs of the services. To provide this information, we are to inject the [`Dependencies`](#dependencies) instance containing the corresponding [`Dependency`](#dependency) models for each service.
+The `ValidationResult` contains the [`TargetValidationResult`s](#targetvalidationresult) for each 3-rd party service. To create the `TargetValidationResult`s, the `Doctor` should know the recommended versions and installation URLs of the services. To provide this information, we are to inject the [`Dependencies`](#dependencies) instance containing the corresponding [`Dependency`](#dependency) models for each service.
 
 ##### DoctorFactory
 
@@ -356,3 +356,4 @@ Consider the following steps needed to be able to improve the doctor command out
 
 - Sequence diagram:
   ![Doctor output improvements sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_sequence_diagram.puml)
+  
