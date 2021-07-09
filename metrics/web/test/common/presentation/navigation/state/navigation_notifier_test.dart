@@ -300,10 +300,9 @@ void main() {
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
         notifier.push(DefaultRoutes.projectGroups);
-
         notifier.pop();
 
-        verify(pageParametersFactory.create(any)).called(once);
+        verify(pageParametersFactory.create(any)).called(equals(2));
       },
     );
 
