@@ -1,0 +1,84 @@
+@startuml doctor_command_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box Metric CLI #whiteSmoke
+
+participant MetricsCliRunner
+participant DoctorCommand
+participant DoctorFactory
+participant Doctor
+participant CoolService
+participant OtherCoolService
+participant Dependencies
+
+end box
+
+box Metrics Core #whiteSmoke
+
+participant ValidationResultBuilder
+participant ValidationResultPrinter
+
+end box
+
+Bob -> MetricsCliRunner : run ""doctor"" command
+activate MetricsCliRunner
+
+MetricsCliRunner -> DoctorCommand : run()
+activate DoctorCommand
+
+DoctorCommand -> DoctorFactory : create()
+activate DoctorFactory
+
+DoctorFactory --> DoctorCommand : Doctor instance
+deactivate DoctorFactory
+
+DoctorCommand -> Doctor : checkVersions()
+activate Doctor
+
+Doctor -> CoolService : version()
+activate CoolService
+
+CoolService --> Doctor : ProcessResult instance
+deactivate CoolService
+
+Doctor -> Dependencies : getFor(coolService)
+activate Dependencies
+Dependencies --> Doctor : Dependency instance
+
+Doctor -> Doctor : compares recommended version with the actual version \n and creates TargetValidationResult from the ProcessResult
+Doctor -> ValidationResultBuilder : setResult()
+activate ValidationResultBuilder
+
+Doctor -> OtherCoolService : version()
+activate OtherCoolService
+OtherCoolService --> Doctor : ProcessResult instance
+deactivate OtherCoolService
+
+Doctor -> Dependencies : getFor(OtherCoolService)
+Dependencies --> Doctor : Dependency instance
+deactivate Dependencies
+
+Doctor -> Doctor : compares recommended version with the actual version \n and creates TargetValidationResult from the ProcessResult
+
+Doctor -> ValidationResultBuilder : setResult()
+Doctor -> ValidationResultBuilder : build()
+ValidationResultBuilder --> Doctor :  ValidationResult instance
+deactivate ValidationResultBuilder
+
+Doctor --> DoctorCommand : ValidationResult instance
+deactivate Doctor
+
+DoctorCommand -> ValidationResultPrinter : print(ValidationResult)
+activate ValidationResultPrinter
+
+ValidationResultPrinter --> Bob : prints doctor command output
+deactivate ValidationResultPrinter
+
+deactivate DoctorCommand
+deactivate MetricsCliRunner
+
+@enduml

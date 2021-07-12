@@ -1,5 +1,4 @@
 @startuml doctor_output_feature_component_diagram
-'https://plantuml.com/component-diagram
 
 legend top left
     | Color |  Description |
@@ -15,7 +14,9 @@ package "CI Integrations" {
     component "Validate Command" as validate
 }
 
-component "Validation Output" as output #5B95BB
+package "Metrics Core" {
+    component "Validation Output" as output #5B95BB
+}
 
 doctor -[#green]down-> output : uses
 validate -[#5B95BB]down-> output : uses

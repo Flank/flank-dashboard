@@ -1,0 +1,119 @@
+@startuml ci_integrations_validator_class_diagram
+
+package core.lib.src.util.validation {
+    package model {
+        package builder {
+            class ValidationResultBuilder {
+                - _results: Map<ValidationTarget, TargetValidationResult>
+
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
+                + setResult(result: TargetValidationResult): void
+                + setEmptyResults(result: TargetValidationResult): void
+                + build(): ValidationResult
+            }
+        }
+
+        class ValidationTarget {
+            + name: String
+            + description: String
+        }
+
+        class ValidationConclusion {
+            + name: String
+            + indicator: String
+        }
+
+        class TargetValidationResult<T> {
+            + data: T
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
+            + description: String
+            + details: Map<String, dynamic>
+            + context: Map<String, dynamic>
+
+            + copyWith(): TargetValidationResult
+        }
+
+        class ValidationResult{
+            + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+        }
+    }
+
+    package printer {
+        class ValidationResultPrinter{
+            - _sink: StringSink
+
+            + print(result: ValidationResult): void
+        }
+    }
+}
+
+package ci_integrations {
+    package integration.validation.model {
+        class ConfigFieldValidationConclusion {
+            + {static} success: ValidationConclusion
+            + {static} failure: ValidationConclusion
+            + {static} unknown: ValidationConclusion
+        }
+    }
+
+    package source.cool_integration {
+        package config.model as cool_integration_config_model {
+            class CoolIntegrationSourceValidationTarget {
+                + {static} accessToken: ValidationTarget
+                + {static} organizationSlug: ValidationTarget
+                + {static} pipelineSlug: ValidationTarget
+                + {static} values: List<ValidationTarget>
+            }
+        }
+
+        package validation_delegate {
+            class CoolIntegrationSourceValidationDelegate {
+                - _client: CoolIntegrationClient
+
+                + validateAccessToken(token: String): Future<TargetValidationResult<CoolToken>>
+                + validateOrganizationSlug(slug: String): Future<TargetValidationResult<void>>
+                + validatePipelineSlug(token: String): Future<TargetValidationResult<void>>
+            }
+        }
+
+        package validator {
+            class CoolIntegrationSourceValidator {
+                + validationDelegate: CoolIntegrationSourceValidationDelegate
+
+                + validate(config: CoolConfig): Future<ValidationResult>
+            }
+        }
+    }
+}
+
+TargetValidationResult --> ValidationTarget : uses
+TargetValidationResult --> ValidationConclusion : uses
+
+ValidationResult --> TargetValidationResult : uses
+ValidationResult --> ValidationTarget : uses
+
+ValidationResultBuilder -up-> ValidationResult : builds
+ValidationResultBuilder --> ValidationTarget : uses
+ValidationResultBuilder -up-> TargetValidationResult : uses
+
+ValidationResultPrinter --> ValidationResult : prints
+
+CoolIntegrationSourceValidator --> CoolIntegrationSourceValidationDelegate : uses
+CoolIntegrationSourceValidator --> ValidationResult : provides
+CoolIntegrationSourceValidator -left-> CoolIntegrationSourceValidationTarget : uses
+CoolIntegrationSourceValidator --> TargetValidationResult : uses
+CoolIntegrationSourceValidator  --> ValidationResultBuilder : uses
+
+CoolIntegrationSourceValidationDelegate --> TargetValidationResult : uses
+
+ValidationTarget "1..*" -left-o "1" CoolIntegrationSourceValidationTarget
+
+ValidationConclusion "1..*" -left-o "1" ConfigFieldValidationConclusion
+
+CoolIntegrationSourceValidationDelegate -down-> ConfigFieldValidationConclusion : uses
+
+ValidationConclusion -[hidden]down-> ValidationResultBuilder
+
+@enduml
