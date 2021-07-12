@@ -81,4 +81,4 @@ Since we already have an application deployment feature working, including the p
 
 Consider the following diagram explaining this process in a bit more detail: 
 
-![Supported Storage Version Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/cli_versioning_analysis/metrics/cli/docs/features/supported_storage_version/diagrams/storage_version_components_diagram.puml)
+![Supported Storage Version Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/supported_storage_version/diagrams/storage_version_components_diagram.puml)
