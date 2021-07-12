@@ -59,8 +59,6 @@ ValidationResultBuilder -up-> ValidationResult : builds
 ValidationResultBuilder -up-> ValidationTarget : uses
 ValidationResultBuilder -up-> TargetValidationResult : uses
 
-ValidationResultPrinter --> ValidationConclusion : uses
-ValidationResultPrinter --> ValidationTarget : uses
 ValidationResultPrinter --> ValidationResult : prints
 
 @enduml
