@@ -1,5 +1,8 @@
-import 'package:cli/cli/deployer/constants/deploy_constants.dart';
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
+
 import 'package:cli/cli/updater/model/update_algorithm.dart';
+import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/firebase_config.dart';
 import 'package:cli/common/model/config/sentry_config.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';

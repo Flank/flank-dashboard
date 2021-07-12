@@ -1,6 +1,7 @@
-import 'package:meta/meta.dart';
+// Use of this source code is governed by the Apache License, Version 2.0
+// that can be found in the LICENSE file.
 
-import 'package:cli/cli/deployer/constants/deploy_constants.dart';
+import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/sentry_config.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';
 import 'package:cli/common/model/config/update_config.dart';
@@ -16,6 +17,7 @@ import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/util/file/file_helper.dart';
+import 'package:meta/meta.dart';
 
 /// A class providing algorithm for updating the Metrics Web Application.
 class UpdateAlgorithm {
