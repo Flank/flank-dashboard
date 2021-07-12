@@ -5,7 +5,7 @@ import 'package:cli/services/sentry/strings/sentry_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('SentryStrings', () {
+  group("SentryStrings", () {
     const organizationSlug = 'organizationSlug';
     const projectSlug = 'projectSlug';
 

@@ -14,7 +14,7 @@ import '../../../test_utils/prompter_mock.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
-  group('GCloudCliServiceAdapter', () {
+  group("GCloudCliServiceAdapter", () {
     const projectId = 'metrics-00000';
     const projectName = 'projectName';
     const region = 'testRegion';

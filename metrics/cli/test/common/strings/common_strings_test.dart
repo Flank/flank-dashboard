@@ -5,7 +5,7 @@ import 'package:cli/common/strings/common_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CommonStrings', () {
+  group("CommonStrings", () {
     test(
       ".executionWentWrong() returns an error message that contains the given executable",
       () {

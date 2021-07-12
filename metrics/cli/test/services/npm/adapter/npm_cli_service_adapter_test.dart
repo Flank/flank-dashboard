@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import '../../../test_utils/matchers.dart';
 
 void main() {
-  group('NpmCliServiceAdapter', () {
+  group("NpmCliServiceAdapter", () {
     const path = 'test/path';
 
     final npmCli = _NpmCliMock();
