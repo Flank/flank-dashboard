@@ -1,7 +1,7 @@
 # Supported Storage Version
 > Feature description / User story.
 
-Improve Metrics Web application deployment process to include the supported storage version passing and storage version saving. 
+Improve Metrics Web application deployment process to include the supported storage version passing and saving.
 
 ## Contents
 
@@ -20,7 +20,11 @@ During the analysis section, we are going to define the requirements for this fe
 ### Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-Since the `Metrics Web` application would receive updates after the initial release, we should have a convenient way of updating the `Metrics Web` application even if the database has any significant changes. To be able to update the application safely, we are going to introduce a storage version and a supported storage version for all `Metrics` applications. It will allow us to block the application from interaction with the persistent storage in case the application does not support the current storage version or the storage is currently updating. To simplify the `Metrics Web` application deployment process, we should update the `Metrics CLI` to make it set the supported storage version to the `Metrics Web` application.
+Since the `Metrics Web` application would receive updates after the initial release, we should have a convenient way of updating the `Metrics Web` application, even if the database has no significant changes.
+
+To be able to update the application safely, we are going to introduce a storage version and a supported storage version for all `Metrics` applications. This will allow us to block the application from interaction with the persistent storage in case the application does not support the current storage version or the storage is currently updating.
+
+To simplify the `Metrics Web` application deployment process, we should update the `Metrics CLI` to make it set the supported storage version to the `Metrics Web` application.
 
 ### Requirements
 > Define requirements and make sure that they are complete.
@@ -50,13 +54,13 @@ So, to provide a supported storage version to the `Metrics Web` application duri
 
 Let's consider the code snippets proving that this feature is possible to implement:
 
-To read the data from the file, we are going to use the [File](https://api.dart.dev/stable/2.13.1/dart-io/File-class.html) class, providing an ability to get the file content using the following code:
+To read the data from the file, we are going to use the [File](https://api.dart.dev/stable/dart-io/File-class.html) class, providing an ability to get the file content using the following code:
 
 ```dart
 final supportedStorageVersion = File('metrics/STORAGE_VERSION').readAsStringSync();
 ```
 
-Once we are able to get the storage version from the file, let's confirm that we can set this version to the `Metrics Web` application environment. Consider the following command that explains the way of adding any environment variables to the `Flutter` application environment during the building process:
+Once we are able to get the storage version from the file, let's clarify that we can set this version to the `Metrics Web` application environment. Consider the following command that explains the way of adding any environment variables to the `Flutter` application environment during the building process:
 
 ```bash
 flutter build web --release --dart-define=SUPPORTED_STORAGE_VERSION=$SUPPORTED_VERSION
