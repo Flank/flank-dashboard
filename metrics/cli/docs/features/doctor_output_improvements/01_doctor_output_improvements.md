@@ -194,7 +194,7 @@ A `ValidationResultPrinter` is a class that is responsible for displaying the va
 
 The following class diagram describes the `validation` package structure:
 
-![Validation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_class_diagram.puml)
+![Validation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_class_diagram.puml)
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -239,7 +239,7 @@ The `ConfigFieldValidationConclusion` (previous `FieldValidationConclusion`) is 
 
 In the scope of this feature, the `ConfigFieldValidationConclusion` aggregates the concrete values of `ValidationConclusion`s that make sense in the config validation process. More precisely, this class holds the possible values of `ValidationConclusion`.
 
-![Config field validation conclusion class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/config_validation_conclusion_class_diagram.puml)
+![Config field validation conclusion class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/config_validation_conclusion_class_diagram.puml)
 
 ##### CoolIntegrationSourceValidationTarget
 
@@ -247,7 +247,7 @@ The `CoolIntegrationSourceValidationTarget` (previous `CoolIntegrationSourceConf
 
 We need to update this class to aggregate the `ValidationTarget`s (previous `ConfigField`s) of the given `CoolIntegration`.
 
-![Cool source validation target class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/cool_integration_source_validation_target_class_diagram.puml)
+![Cool source validation target class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/cool_integration_source_validation_target_class_diagram.puml)
 
 ##### CoolIntegrationSourceValidationDelegate
 
@@ -273,10 +273,10 @@ To update the `CI Integrations Validate` command we should follow the next steps
 Consider the following diagrams that demonstrate the updated config validation for the `CoolIntegration`:
 
 - Class diagram:
-  ![CI integrations validator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_class_diagram.puml)
+  ![CI integrations validator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_class_diagram.puml)
 
 - Sequence diagram:
-  ![CI integrations validator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_sequence_diagram.puml)
+  ![CI integrations validator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_sequence_diagram.puml)
 
 #### Update the Metrics CLI `doctor` command
 
@@ -355,7 +355,7 @@ As the `Doctor` class needs to know the `String` name of the service it validate
 It is worth mentioning that currently the `CoolService` is an interface and should be updated to be an abstract class so that there is no need to redefine the `serviceName` for each ancestor.
 
 Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
-![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
+![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
 
 
 ##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
@@ -375,8 +375,8 @@ Consider the following steps needed to be able to improve the doctor command out
  Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement with a `CoolService` used as an example of 3-rd party service:
 
 - Class diagram:
-  ![Doctor output improvements class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
+  ![Doctor output improvements class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
 
 - Sequence diagram:
-  ![Doctor output improvements sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/doctor_output_design/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_sequence_diagram.puml)
+  ![Doctor output improvements sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_sequence_diagram.puml)
   
