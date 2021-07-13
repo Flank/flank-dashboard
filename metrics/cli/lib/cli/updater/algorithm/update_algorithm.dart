@@ -19,7 +19,7 @@ import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/util/file/file_helper.dart';
 import 'package:meta/meta.dart';
 
-/// A class providing algorithm for updating the Metrics Web Application.
+/// A class providing algorithm for updating the deployed components.
 class UpdateAlgorithm {
   /// A service that provides methods for working with Flutter.
   final FlutterService _flutterService;
@@ -56,7 +56,7 @@ class UpdateAlgorithm {
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
   }
 
-  /// Starts the updating of the Metrics Web Application using the
+  /// Starts the updating of the deployed Metrics components using the
   /// given [config] and [paths].
   ///
   /// Throws an [ArgumentError] if the given [config] is `null`.
@@ -93,6 +93,8 @@ class UpdateAlgorithm {
       paths.firebasePath,
       paths.webAppPath,
     );
+
+    _firebaseService.resetAuth();
   }
 
   /// Installs npm dependencies within the given [firebasePath] and
@@ -132,6 +134,8 @@ class UpdateAlgorithm {
       buildWebPath,
     );
 
+    _sentryService.resetAuth();
+
     return SentryWebConfig(
       release: release,
       dsn: config.projectDsn,
@@ -139,8 +143,8 @@ class UpdateAlgorithm {
     );
   }
 
-  /// Sets up a Sentry for the application under deployment within
-  /// the given [webPath] and the [buildWebPath].
+  /// Creates a new Sentry release using the given [release] within
+  /// the [webPath] and the [buildWebPath].
   Future<void> _createSentryRelease(
     SentryRelease release,
     String webPath,
