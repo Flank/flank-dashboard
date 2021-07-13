@@ -83,7 +83,9 @@ Cons:
 
 Another approach is to use the `Firebase` anonymous users if the public dashboard is enabled. It means that we will log in users anonymously on the application opening.
 
-Let's review what does anonymous log-in means. Once the user logs in anonymously, the `FirebaseAuth.onAuthStateChanged` emits a new anonymous user. The anonymous user has an identifier that allows us to create a user profile and save the user-specific data as if a user would log in as usual. Also, according to the [Firebase Authentication](https://firebase.flutter.dev/docs/auth/usage/#anonymous-sign-in) documentation, the user will be saved through application sessions. It means that the user won't lose its data, like selected theme, on application closing or browser page refresh. The initially created anonymous account will not persist on the next sign-in in the following cases: 
+Let's review what does anonymous log-in means. It means that we are creating a user record in the Firebase without having any information about the user like email, password, etc. Since there is no need for user interaction (like entering any email/password and so on) to log in anonymously, we can make it automatically on application startup. Once the user logs in anonymously, the `FirebaseAuth.onAuthStateChanged` emits a new anonymous user. The anonymous user has an identifier that allows us to create a user profile and save the user-specific data as if a user would log in as usual.
+
+Also, according to the [Firebase Authentication](https://firebase.flutter.dev/docs/auth/usage/#anonymous-sign-in) documentation, the user will be saved through application sessions. It means that the user won't lose its data, like selected theme, on application closing or browser page refresh. The initially created anonymous account will not persist on the next sign-in in the following cases: 
 
 - The user signed out from the anonymous account.
 - The user clears their browser storage.
