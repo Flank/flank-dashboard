@@ -1,0 +1,64 @@
+@startuml validation_output_class_diagram
+
+package core.lib.src.util.validation {
+    package model {
+        package builder {
+            class ValidationResultBuilder {
+                - _results: Map<ValidationTarget, TargetValidationResult>
+
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
+                + setResult(result: TargetValidationResult): void
+                + setEmptyResults(result: TargetValidationResult): void
+                + build(): ValidationResult
+            }
+        }
+
+        class ValidationTarget {
+            + name: String
+            + description: String
+        }
+
+        class ValidationConclusion {
+            + name: String
+            + indicator: String
+        }
+
+        class TargetValidationResult<T> {
+            + data: T
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
+            + description: String
+            + details: Map<String, dynamic>
+            + context: Map<String, dynamic>
+
+            + copyWith(): TargetValidationResult
+        }
+
+        class ValidationResult{
+            + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+        }
+    }
+
+    package printer {
+        class ValidationResultPrinter{
+            - _sink: StringSink
+
+            + print(result: ValidationResult): void
+        }
+    }
+}
+
+TargetValidationResult --> ValidationTarget : uses
+TargetValidationResult --> ValidationConclusion : uses
+
+ValidationResult --> TargetValidationResult : uses
+ValidationResult --> ValidationTarget : uses
+
+ValidationResultBuilder -up-> ValidationResult : builds
+ValidationResultBuilder -up-> ValidationTarget : uses
+ValidationResultBuilder -up-> TargetValidationResult : uses
+
+ValidationResultPrinter --> ValidationResult : prints
+
+@enduml

@@ -10,6 +10,32 @@ The Metrics CLI `doctor` command checks all third-party CLI tools that participa
     - [Landscape](#landscape)
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
+- [**Design**](#design)
+    - [Architecture](#architecture)
+      - [ValidationTarget](#validationtarget)
+      - [ValidationConclusion](#validationconclusion)
+      - [TargetValidationResult](#targetvalidationresult)
+      - [ValidationResult](#validationresult)
+      - [ValidationResultBuilder](#validationresultbuilder)
+      - [ValidationResultPrinter](#validationresultprinter)
+    - [User Interface](#user-interface)
+    - [Program](#program)
+      - [Refactor the `CI Integrations Validate` command](#refactor-the-ci-integrations-validate-command)
+        - [ConfigFieldValidationConclusion](#configfieldvalidationconclusion)
+        - [CoolIntegrationSourceValidationTarget](#coolintegrationsourcevalidationtarget)
+        - [CoolIntegrationSourceValidationDelegate](#coolintegrationsourcevalidationdelegate)
+        - [CoolIntegrationSourceValidator](#coolintegrationsourcevalidator)
+        - [Making things work](#ci-integrations-making-things-work)
+      - [Update the `Metrics CLI Doctor` command](#update-the-metrics-cli-doctor-command)
+        - [Dependency](#dependency)
+        - [Dependencies](#dependencies)
+        - [DependenciesFactory](#dependenciesfactory)
+        - [DoctorCommand](#doctorcommand)
+        - [Doctor](#doctor)
+        - [DoctorFactory](#doctorfactory)
+        - [CoolService and CoolServiceCli](#coolservice-and-coolservicecli)
+        - [ServiceName](#servicename)
+        - [Making things work](#doctor-making-things-work)
 
 ## Analysis
 
@@ -118,3 +144,239 @@ The validation output classes and models are a part of the Metrics project and s
 The following component diagram describes the desired approach:
 
 ![doctor output feature diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_feature_component_diagram.puml)
+
+# Design
+
+The following subsections explain the implementation strategy in more detail.
+
+### Architecture
+> Fundamental structures of the feature and context (diagram).
+ 
+Since the validation output logic is similar for the [`CI Integrations Config Validator`](https://github.com/Flank/flank-dashboard/blob/master/metrics/ci_integrations/docs/04_ci_integrations_config_validator.md) and the `Metrics CLI Doctor`, we want to have a reusable API for the validation output for the components listed above. For that, let's create a `validation` package within the [`Metrics Core`](https://github.com/Flank/flank-dashboard/tree/master/metrics/core) component to store the common abstractions of the validation functionality.
+
+The following subsections describe the main classes of the `validation` package.
+
+#### ValidationTarget
+
+A `ValidationTarget` is an entity that represents a value under the validation (e.g., it's a version of a CLI package). One can understand it as the description of an item to be validated.
+
+To represent a `ValidationTarget` in output to the user, we should know its name and a description.
+
+#### ValidationConclusion
+
+A `ValidationConclusion` represents a possible conclusion of the validation process (e.g., `valid`, `invalid`, etc.). The conclusion indicates the result of the validation process for an item (i.e., target) and defines how the result should be represented in output.
+
+To represent a `ValidationConclusion` to a user, we should know its name, and a visual indicator (e.g., `[+]`, `[-]`, `[?]`, etc.).
+
+#### TargetValidationResult
+
+A `TargetValidationResult` represents a result of the validation of some `ValidationTarget`. It should include the following fields:
+
+- A `ValidationTarget` that was used in the validation process - indicates that the `TargetValidationResult` instance is related to validating this target.
+- A `ValidationConclusion` of the validation - represents the result itself.
+- A description of this conclusion - defines a human-friendly and short description of what the conclusion means for the specified target (may vary from case to case).
+- An additional details - provides some additional details of the validation process for the specified target.
+- A context - provides details that may not be related to the validation process itself (e.g., output of the process under validation, additional recommendations, etc.).
+
+#### ValidationResult
+
+A `ValidationResult` is a class that holds `TargetValidationResult`s for each `ValidationTarget`. In other words, the `ValidationResult` is an overall result of the validation process that contains the validation result for all the validated targets.
+
+#### ValidationResultBuilder
+
+A `ValidationResultBuilder` is a class that simplifies the creation of the `ValidationResult`. The `ValidationResultBuilder` has the main build method that returns a ready-to-use `ValidationResult`.
+
+This class implements a `Builder` pattern, and its responsibility is to assemble the `ValidationResult` step by step.
+
+#### ValidationResultPrinter
+
+A `ValidationResultPrinter` is a class that is responsible for displaying the validation result to the user.
+
+The following class diagram describes the `validation` package structure:
+
+![Validation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/validation_class_diagram.puml)
+
+### User Interface
+> How users will interact with the feature (API, CLI, Graphical interface, etc.).
+
+The usage of the `doctor` command doesn't change for a user. To run the `doctor` command, one should use the following command in the directory containing the Metrics CLI tool:
+
+```bash 
+./metrics doctor
+```
+
+The improved output of the feature is to contain the detailed machine validation result as described in the [Requirements](#requirements) section above.
+
+#### Application
+
+The [Program](#program) section below describes the application of the `validation` package for the existing features: `Metrics CLI Doctor` command and `CI Integrations Validate` command. Before diving deep into details, let's also define the high-level steps that one should perform to utilize the `validation` packages in the context of other future features. Assume there is a `cool_package` for which we want to use the `validation` package from `Metrics Core`. Consider the following implementation flow:
+
+1. Define the entities that the `ValidationTarget` abstraction represents (e.g., some 3-rd party service, configuration field, etc.).
+2. Define the entity(ies) that are responsible for the `TargetValidationResult`s creation.
+3. Define the entity(ies) that are responsible for the `ValidationResult` creation. To create the `ValidationResult`, they should receive the corresponding `TargetValidationResult`s and use the `ValidationResultBuilder` to build the result.
+4. Define the entity(ies) that are responsible for operating with the obtained `ValidationResult` and printing it to some [`StringSink`](https://api.dart.dev/stable/dart-core/StringSink-class.html) (e.g., [`IOSink`](https://api.dart.dev/stable/dart-io/IOSink-class.html) or [`StringBuffer`](https://api.dart.dev/stable/dart-core/StringBuffer-class.html)) using the `ValidationResultPrinter`.
+
+After we clarified the general architecture and usage, let's proceed to the detailed implementation approach.
+
+### Program
+> Detailed solution description to class/method level.
+
+The improvement of the doctor command output involves the following stages:
+1. [Refactor the CI Integrations `validate` command](#refactor-the-ci-integrations-validate-command).
+2. [Update the Metrics CLI `doctor` command](#update-the-metrics-cli-doctor-command).
+
+Consider the following subsections that describe each step in more detail.
+
+#### Refactor the CI Integrations `validate` command
+
+As stated above, the `Metrics CLI` and [`CI Integrations`](https://github.com/Flank/flank-dashboard/tree/master/metrics/ci_integrations) have a similar output representation for the validation process results. That's why we want to reuse the code across those tools to make it DRYer.
+
+This section describes the changes to the `CI Integrations` tool we should perform to make the tool's validate command use the `validation` package and its abstractions. Let the `CoolIntegration` be the source party that we want to modify with the config validation. The following subsections describe the validation-related classes and their structure in a new manner that applies using the `validation` package.
+
+##### ConfigFieldValidationConclusion
+
+The `ConfigFieldValidationConclusion` (previous `FieldValidationConclusion`) is a class that represents a validation conclusion for a specific config field.
+
+In the scope of this feature, the `ConfigFieldValidationConclusion` aggregates the concrete values of `ValidationConclusion`s that make sense in the config validation process. More precisely, this class holds the possible values of `ValidationConclusion`.
+
+![Config field validation conclusion class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/config_validation_conclusion_class_diagram.puml)
+
+##### CoolIntegrationSourceValidationTarget
+
+The `CoolIntegrationSourceValidationTarget` (previous `CoolIntegrationSourceConfigField`) is a model that represents the config fields for the specific `CoolIntegration`.
+
+We need to update this class to aggregate the `ValidationTarget`s (previous `ConfigField`s) of the given `CoolIntegration`.
+
+![Cool source validation target class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/cool_integration_source_validation_target_class_diagram.puml)
+
+##### CoolIntegrationSourceValidationDelegate
+
+The `CoolIntegrationSourceValidationDelegate` is a class that validates concrete fields with network calls. Currently, the methods of the `CoolIntegrationSourceValidationDelegate` return the `FieldValidationResult`s, which are used then to compose the `ValidationResult`. As the `ValidationResult` is now composed with `TargetValidationResult` instances, we should update the delegate to return such instances instead of `FieldValidationResult`s.
+
+##### CoolIntegrationSourceValidator
+
+The `CoolIntegrationSourceValidator` is a class responsible for the validation of the corresponding config file.
+
+The `.validate()` method of the `CoolIntegrationSourceValidator` should return the `ValidationResult` containing `TargetValidationResult` for each field of the `CoolIntegrationSourceValidationTarget`.
+
+##### Making things work <a href="#ci-integrations-making-things-work" id="ci-integrations-making-things-work"></a>
+
+To update the `CI Integrations Validate` command we should follow the next steps:
+
+1. Create the main abstractions in the `Metrics Core` package: `ValidationTarget`, `ValidationConclusion`, `TargetValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+2. Replace the existing `FieldValidationConclusion` enum with the `ConfigFieldValidationConclusion` class that aggregates the `ValidationConclusion`s.
+3. Rename the existing integrations' config field classes to the integrations' validation target (e.g., the `BuildkiteSourceConfigField` class should be renamed to the `BuildkiteSourceValidationTarget`, etc.), and update them to use the `ValidationTarget`s respectively.
+4. Update the validation methods of each integration's validation delegate (e.g., `BuildkiteSourceValidationDelegate`, `FirestoreDestinationValidationDelegate`, etc.) to return the `TargetValidationResult`.
+5. Update the `.validate()` methods of each validator (e.g., `BuildkiteSourceValidator`, `FirestoreDestinationValidator`, etc.) to return the updated `ValidationResult` containing the `ValidationTarget`s and `TargetValidationResult`s.
+6. Delete the outdated abstractions in the `CI Integrations` tool that is now covered by the `validation` package of the `Metrics Core`: `ConfigField`, `FieldValidationConclusion`, `FieldValidationResult`, `ValidationResult`, `ValidationResultBuilder`, `ValidationResultPrinter`.
+
+Consider the following diagrams that demonstrate the updated config validation for the `CoolIntegration`:
+
+- Class diagram:
+  ![CI integrations validator class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_class_diagram.puml)
+
+- Sequence diagram:
+  ![CI integrations validator sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/ci_integrations_validator_sequence_diagram.puml)
+
+#### Update the Metrics CLI `doctor` command
+
+This subsection describes the enhancements for the `Metrics CLI` doctor command implementation that is required to improve the command's output.
+
+##### Dependency 
+
+The `Dependency` is a class that represents the information on some 3-rd party dependency of `Metrics CLI` tool (e.g., Firebase CLI, Google CLI, etc.).
+
+It contains the following fields that are important for the `doctor` command:
+- `recommendedVersion` - a version of the corresponding 3-rd party service that is recommended to use along with the `Metrics CLI`;
+- `installUrl` - a URL that refers to the installation instruction of the corresponding 3-rd party service.
+
+Having this information, the `doctor` command can compare the version of some CLI installed on the user's machine with the recommended version listed in the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. In case that CLI is not installed, the `doctor` command shows the installation link to the user.
+
+##### Dependencies
+
+The `Dependencies` is a class that aggregates the `Dependency`s for all 3-rd party services. The `Dependencies` instance is injected into the `Doctor` class to retrieve the `Dependency` information on some 3-rd party service via the `.getFor(service: String)` method, where `service` is the name of that service.
+
+##### DependenciesFactory
+
+The `DependenciesFactory` is a factory class responsible for creating the `Dependencies` instances.
+
+The `.create(fromFile: String)` method of the `DependenciesFactory` takes the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file as a parameter and then parses the document into a `Map`.
+
+##### DoctorCommand
+
+The `DoctorCommand` is the Metrics CLI command that is responsible for verification of all the required 3-rd party tools' versions against the recommended versions from the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) document.
+
+In the scope of this feature, we need to update the `DoctorCommand` class to be responsible for printing the [`ValidationResult`](#validationresult) using the [`ValidationResultPrinter`](#validationresultprinter).
+
+##### Doctor
+
+The `Doctor` is a class used to check whether all the required 3-rd party CLIs are installed and get their versions. This class encapsulates the logic of the `DoctorCommand` and interacts with the 3-rd party services.
+
+We should update the `.checkVersions()` method of the `Doctor` class to return the [`ValidationResult`](#validationresult) that will be printed by the `DoctorCommand`.
+
+The `ValidationResult` contains the [`TargetValidationResult`](#targetvalidationresult)s for each 3-rd party service. To create the `TargetValidationResult`s, the `Doctor` should know the recommended versions and installation URLs of the services. To provide this information, we are to inject the [`Dependencies`](#dependencies) instance containing the corresponding [`Dependency`](#dependency) models for each service.
+
+##### DoctorFactory
+
+The `DoctorFactory` is a factory class responsible for the `Doctor` instance creation. We need to inject the [`DependenciesFactory`](#dependenciesfactory) to the `DoctorFactory` so that the `DoctorFactory` can obtain the instance of `Dependencies` to be used during the `Doctor` instance creation.
+
+To create the instance of the `Dependencies` via the `DependenciesFactory`, the `DoctorFactory` should know the path to the [dependencies](https://github.com/Flank/flank-dashboard/blob/master/metrics/cli/dependencies.yaml) source file. The `DoctorFactory` takes this value from the new `DoctorConstants` class.
+
+##### CoolService and CoolServiceCli
+
+Let the `CoolService` be a 3-rd party service we want to improve the `doctor` command output for.
+
+Currently, the `CoolService` has the `.version()` method that is implemented in the `CoolCliServiceAdapter`. The `.version()` method runs the `version` command of some service CLI and prints the output directly to the `stdout` (e.g., user's terminal).    
+
+To improve the `doctor` command output, we want to suppress the `version` command output to the terminal and receive this output in the method result. Then, we can use this output to make a conclusion about the validation and prettify the output for the `doctor`. Therefore, we should update the `.version()` methods of the following classes to return the `Future<ProcessResult>`:
+
+1. `InfoService`;
+2. `CoolService`; 
+3. `CoolServiceCli`;
+4. `CoolCliServiceAdapter`.
+
+As described in the [Prototyping](#prototyping) section, to retrieve the resulting [ProcessResult](https://api.dart.dev/stable/dart-io/ProcessResult-class.html) instance, the one should pass the `verbose: false` and `commandVerbose: false` flags to the `.run()` method of `Cli` class. Consider the following code snippet that demonstrates the `ProcessResult` obtaining for the `flutter --version` command: 
+
+```dart
+final result = await runExecutableArguments(
+     'flutter',
+     ['--version'],
+     verbose: false,
+     commandVerbose: false,
+);
+```
+
+##### ServiceName
+
+The `ServiceName` is a new enum that stores the names of the 3-rd party services. The `CoolService` class contains the corresponding `ServiceName` value to be used during the validation process by the `Doctor`.
+
+As the `Doctor` class needs to know the `String` name of the service it validates to get the corresponding [`Dependency`](#dependency) instance for the specific `CoolService`, the `Doctor` class uses the new `ServiceNameMapper` class to unmap the `serviceName` value of the `CoolService`.
+
+It is worth mentioning that currently the `CoolService` is an interface and should be updated to be an abstract class so that there is no need to redefine the `serviceName` for each ancestor.
+
+Consider the following class diagram that describes the structure of the updated `Metrics CLI` package:
+![Metrics CLI class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/metrics_cli_class_diagram.puml)
+
+
+##### Making things work <a href="#doctor-making-things-work" id="doctor-making-things-work"></a>
+
+Consider the following steps needed to be able to improve the doctor command output:
+
+1. Create the `dependencies` package containing the following classes: `Dependency`, `Dependencies`, `DependenciesFactory`.
+2. Create the `DoctorConstants` class.
+3. Create the `ServiceName` enum and the `ServiceNameMapper`. 
+4. Update each service (e.g., `FlutterService`, `GitService`, etc.) to be an abstract class that stores the corresponding `ServiceName`.
+5. Update the `.version()` method to return the `ProcessResult` for each service CLI (e.g., `FlutterCli`, `GitCli`, etc.)
+6. Update the `DoctorFactory` class to contain the instance of `DependenciesFactory`.
+7. Update the `.version()` methods to return the `ProcessResult` for each CLI service adapter (e.g., `FlutterCliServiceAdapter`, `GitCliServiceAdapter`, etc.)
+8. Update the `.checkVersions()` method of the `Doctor` class to return the `ValidationResult`.
+9. Update the `DoctorCommand` to print the `ValidationResult` via the `ValidationResultPrinter`.
+
+ Consider the following diagrams that demonstrate the implementation of the `doctor` command output improvement with a `CoolService` used as an example of 3-rd party service:
+
+- Class diagram:
+  ![Doctor output improvements class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_class_diagram.puml)
+
+- Sequence diagram:
+  ![Doctor output improvements sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/cli/docs/features/doctor_output_improvements/diagrams/doctor_output_improvements_sequence_diagram.puml)
+  
