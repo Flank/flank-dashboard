@@ -15,6 +15,7 @@ package "Metrics Web" {
 
 cloud "Firebase" {
     component "Firestore" as firestore #5B95BB
+    component "Security Rules" as rules #5B95BB
     component "Firebase Auth" as firebase_auth #5B95BB
 }
 
@@ -22,5 +23,7 @@ feature_config --> firestore : loads configuration
 feature_config -[#Green]right-> auth : <color:green>provides configuration
 
 auth -[#Green]-> firebase_auth : <color:green>anonimously authenticates
+
+firestore --> rules : uses
 
 @enduml
