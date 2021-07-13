@@ -22,7 +22,7 @@ cloud "Firebase" {
 feature_config --> firestore : loads configuration
 feature_config -[#Green]right-> auth : <color:green>provides configuration
 
-auth -[#Green]-> firebase_auth : <color:green>anonimously authenticates
+auth -[#Green]-> firebase_auth : <color:green>anonymously authenticates
 
 firestore --> rules : uses
 
