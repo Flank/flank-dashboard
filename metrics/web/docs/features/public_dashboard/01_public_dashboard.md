@@ -19,23 +19,23 @@ As a user, I want to be able to enable public access to the dashboard page in my
 # Analysis
 > Describe a general analysis approach.
 
-During the analysis process, we are going to overview all approaches we can apply during the development and define requirements for this feature.
+During the analysis process, we are going to review all approaches we can apply during the development and define requirements for the Public Dashboard feature.
 
 ### Feasibility study
 > A preliminary study of the feasibility of implementing this feature.
 
-Since the `Metrics Web` application allows tracking the project metrics, it may be useful for users to be able to access the metrics without any authentication, for example, for open-source projects, to be able to leave a link to the project metrics in a readme file.
+Since the `Metrics Web` application allows tracking the project metrics, it may be useful for users to be able to access these metrics without any authentication. For example, authors of an open-source project can leave a link to the project metrics in a readme file and so the users can access the dashboard.
 
 ### Requirements
 > Define requirements and make sure that they are complete.
 
 This feature should accept the following requirements: 
 
-- There should be an ability to configure whether the public dashboard feature is enabled in the `Metrics Web` application instance.
-- If the public dashboard is enabled, the dashboard page should be opened on the application open, avoiding the login page.
-- If the user is not logged in, he should be able to view the information on the dashboard page. 
-- If the user is not logged in, he should not be able to open the project groups page.
-- The not-authenticated user should be able to sign in to the application by selecting the `Sign in` option in the user menu. 
+- The public dashboard feature should be configurable within the Metrics Web application instance.
+- The dashboard page should be opened without authentication if the public dashboard feature is enabled.
+- The information on the dashboard page should be available without authentication if the public dashboard feature is enabled.
+- The project groups page is not available for an unauthenticated user even if the public dashboard feature is enabled.
+- An unauthenticated user should be able to sign in to the Metrics Web application using the `Sign in` option in the user menu.
 
 ### Landscape
 > Look for existing solutions in the area.
@@ -70,13 +70,15 @@ The first approach implies the full disabling of the authentication feature and 
 Let's review the pros and cons of this approach: 
 
 Pros: 
-- Do not store any user information (like a selected theme) in the database if the user is not authenticated.
+- Does not store any user information (like a selected theme) in the database if the user is not authenticated.
 
 Cons: 
 - Requires significant changes in the Firebase security rules.
-- Requires more code to implement the feature.
+- Complexifies Firestore Security rules testing and maintaining.
+- Requires more boilerplate code to implement the feature.
 - Requires additional mechanism of saving the user-selected theme.
-- Do not allow using the Firebase analytics.
+- Requires additional changes to the code related to the app navigation.
+- Does not allow using Firebase Analytics.
 
 ##### Authenticate as an anonymous user
 > Describe the approach and provide its pros and cons.
@@ -85,22 +87,23 @@ Another approach is to use the `Firebase` anonymous users if the public dashboar
 
 Let's review what does anonymous log-in means. It means that we are creating a user record in the Firebase without having any information about the user like email, password, etc. Since there is no need for user interaction (like entering any email/password and so on) to log in anonymously, we can make it automatically on application startup. Once the user logs in anonymously, the `FirebaseAuth.onAuthStateChanged` emits a new anonymous user. The anonymous user has an identifier that allows us to create a user profile and save the user-specific data as if a user would log in as usual.
 
-Also, according to the [Firebase Authentication](https://firebase.flutter.dev/docs/auth/usage/#anonymous-sign-in) documentation, the user will be saved through application sessions. It means that the user won't lose its data, like selected theme, on application closing or browser page refresh. The initially created anonymous account will not persist on the next sign-in in the following cases: 
+Also, according to the [Firebase Authentication](https://firebase.flutter.dev/docs/auth/usage/#anonymous-sign-in) documentation, the user is saved through application sessions. It means that the user doesn't lose their data, like selected theme, on application closes or browser page refreshes. The initially created anonymous account will not persist on the next sign-in in the following cases:
 
 - The user signed out from the anonymous account.
 - The user clears their browser storage.
-- The user opens the application using the private browsing method, for example, using incognito mode in the Google Chrome browser.
+- The user opens the application using the private browsing method (for example, using incognito mode in the Google Chrome browser).
 
 Consider the pros and cons of this approach: 
 
 Pros: 
 - Requires minimal changes in Firebase security rules.
-- Do not require changes in saving the user-selected theme. 
+- Does not require changes in saving the user-selected theme.
 - Requires minimal changes in the currently existing codebase.
-- Leaves an ability to gather analytics for not authenticated users.
+- Leaves an ability to gather analytics for non-authenticated users (authenticated anonymously).
 
 Cons:
-- Still saving the user information to the Firestore. 
+- Still saves the user information to the Firestore.
+- May significantly increase the number of user profiles stored in the Firestore database.
 
 Since using the Firebase anonymous user allows us to not change the process of storing the user information like selected theme and requires minimal changes in the existing codebase, we are going to use an existing approach with the Firebase anonymous user.
 
