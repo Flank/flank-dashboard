@@ -10,6 +10,7 @@ import 'package:cli/common/model/config/web_metrics_config.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/flutter/flutter_service.dart';
@@ -147,8 +148,8 @@ class Deployer {
         _prompter.info(DeployStrings.successfulDeployment);
       }
 
-      _prompter.info(DeployStrings.deletingTempDirectory);
-      _deleteDirectory(tempDirectory);
+      _prompter.info(CommonStrings.deletingTempDirectory);
+      _fileHelper.deleteDirectory(tempDirectory);
     }
   }
 
@@ -266,14 +267,5 @@ class Deployer {
       directory,
       DeployConstants.tempDirectoryPrefix,
     );
-  }
-
-  /// Deletes the given [directory].
-  void _deleteDirectory(Directory directory) {
-    final directoryExist = directory.existsSync();
-
-    if (!directoryExist) return;
-
-    directory.deleteSync(recursive: true);
   }
 }
