@@ -91,13 +91,17 @@ void main() {
       return when(fileHelper.createTempDirectory(any, any));
     }
 
-    PostExpectation<String> whenDirectoryPath({
+    PostExpectation<bool> whenDirectoryExist({
       Directory withDirectory,
+      String withPath,
     }) {
       final currentDirectory = withDirectory ?? directory;
       whenCreateTempDirectory().thenReturn(currentDirectory);
 
-      return when(currentDirectory.path);
+      final currentPath = withPath ?? tempDirectoryPath;
+      when(currentDirectory.path).thenReturn(currentPath);
+
+      return when(currentDirectory.existsSync());
     }
 
     PostExpectation<Future<String>> whenCreateGCloudProject() {
@@ -338,7 +342,7 @@ void main() {
     test(
       ".deploy() logs in to the GCloud",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -350,7 +354,7 @@ void main() {
     test(
       ".deploy() logs in to the GCloud before accepting the terms of the GCloud service",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -365,7 +369,7 @@ void main() {
     test(
       ".deploy() accepts the terms of the GCloud service",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -377,7 +381,7 @@ void main() {
     test(
       ".deploy() accepts the terms of the GCloud service before creating the GCloud project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -392,7 +396,7 @@ void main() {
     test(
       ".deploy() logs in to the Firebase",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -404,7 +408,7 @@ void main() {
     test(
       ".deploy() logs in to the Firebase before accepting the terms of the Firebase service",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -419,7 +423,7 @@ void main() {
     test(
       ".deploy() accepts the terms of the Firebase service",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -431,7 +435,7 @@ void main() {
     test(
       ".deploy() accepts the terms of the Firebase service before creating the Firebase web app",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -446,7 +450,7 @@ void main() {
     test(
       ".deploy() creates the GCloud project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -458,7 +462,7 @@ void main() {
     test(
       ".deploy() creates the GCloud project before adding the Firebase for it",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -474,7 +478,7 @@ void main() {
     test(
       ".deploy() creates the GCloud project before creating the Firebase web app",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -489,7 +493,7 @@ void main() {
     test(
       ".deploy() adds Firebase to the GCloud project with the created project id",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -502,7 +506,7 @@ void main() {
     test(
       ".deploy() adds Firebase to the GCloud project before creating the Firebase web app",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -518,7 +522,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if GCloud service throws during the Firebase adding",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -535,7 +539,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if GCloud service throws during the Firebase adding",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -552,7 +556,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if GCloud service throws during the Firebase adding and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -567,7 +571,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if GCloud service throws during the Firebase adding and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -582,7 +586,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if GCloud service throws during the Firebase adding",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.addFirebase(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -590,14 +594,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() configures organization for the GCloud project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -612,7 +616,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if GCloud service throws during the organization configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
@@ -629,7 +633,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if GCloud service throws during the organization configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
@@ -646,7 +650,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if GCloud service throws during the organization configuration and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
@@ -661,7 +665,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if GCloud service throws during the organization configuration and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
@@ -676,7 +680,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if GCloud service throws during the organization configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           gcloudService.configureProjectOrganization(any),
         ).thenThrow(stateError);
@@ -684,14 +688,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() creates the Firebase web app for the created GCloud project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -704,7 +708,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase web app creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -721,7 +725,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Firebase service throws during the Firebase web app creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -738,7 +742,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Firebase service throws during the Firebase web app creation and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -753,7 +757,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Firebase service throws during the Firebase web app creation and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -768,7 +772,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase web app creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.createWebApp(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -776,14 +780,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() creates a temporary directory",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -805,7 +809,7 @@ void main() {
           services: services,
         );
 
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
 
@@ -828,7 +832,7 @@ void main() {
           services: services,
         );
 
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
 
@@ -841,7 +845,7 @@ void main() {
     test(
       ".deploy() clones the Git repository to the temporary directory",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -853,7 +857,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Git service throws during the checkout process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -870,7 +874,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Git service throws during the checkout process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -887,7 +891,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Git service throws during the checkout process and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -902,7 +906,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Git service throws during the checkout process and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -917,7 +921,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Git service throws during the checkout process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(gitService.checkout(any, any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -925,14 +929,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() clones the Git repository before building the Flutter application",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -947,7 +951,7 @@ void main() {
     test(
       ".deploy() clones the Git repository before installing the npm dependencies in the Firebase folder",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -962,7 +966,7 @@ void main() {
     test(
       ".deploy() clones the Git repository before installing the npm dependencies in the Firebase functions folder",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -977,7 +981,7 @@ void main() {
     test(
       ".deploy() installs the npm dependencies in the Firebase folder",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -989,7 +993,7 @@ void main() {
     test(
       ".deploy() installs the npm dependencies in the functions folder",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1003,7 +1007,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Npm service throws during the dependencies installing",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(npmService.installDependencies(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1020,7 +1024,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Npm service throws during the dependencies installing",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(npmService.installDependencies(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1037,7 +1041,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Npm service throws during the dependencies installing and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(npmService.installDependencies(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1052,7 +1056,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Npm service throws during the dependencies installing and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(npmService.installDependencies(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1067,7 +1071,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Npm service throws during the dependencies installing",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           npmService.installDependencies(any),
         ).thenAnswer((_) => Future.error(stateError));
@@ -1075,14 +1079,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() installs the npm dependencies in the Firebase folder before deploying Firebase components",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1097,7 +1101,7 @@ void main() {
     test(
       ".deploy() installs the npm dependencies in the functions folder before deploying Firebase components",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1112,7 +1116,7 @@ void main() {
     test(
       ".deploy() builds the Flutter application",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1124,7 +1128,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Flutter service throws during the web application building",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1141,7 +1145,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Flutter service throws during the web application building",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1158,7 +1162,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Flutter service throws during the web application building and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1173,7 +1177,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Flutter service throws during the web application building and the user does not agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1188,7 +1192,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Flutter service throws during the web application building",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(flutterService.build(any)).thenAnswer(
           (_) => Future.error(stateError),
         );
@@ -1196,14 +1200,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() builds the Flutter application before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1218,7 +1222,7 @@ void main() {
     test(
       ".deploy() upgrades the Firebase billing plan",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -1231,7 +1235,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase billing plan upgrading",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1246,7 +1250,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Firebase service throws during upgrading the Firebase billing plan",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1261,7 +1265,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Firebase service throws during upgrading the Firebase billing plan and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -1274,7 +1278,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Firebase service throws during upgrading the Firebase billing plan and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1287,20 +1291,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during upgrading the Firebase billing plan",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.upgradeBillingPlan(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() upgrades the Firebase billing plan before deploying the Firebase components",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1315,7 +1319,7 @@ void main() {
     test(
       ".deploy() enables the Firebase Analytics",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -1328,7 +1332,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if the Firebase service throws during enabling the Firebase Analytics",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1343,7 +1347,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if the Firebase service throws during enabling the Firebase Analytics",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1358,7 +1362,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if the Firebase service throws during enabling the Firebase Analytics and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -1371,7 +1375,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if the Firebase service throws during enabling the Firebase Analytics and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1384,20 +1388,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during enabling the Firebase Analytics",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.enableAnalytics(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() enables the Firebase Analytics before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1412,7 +1416,7 @@ void main() {
     test(
       ".deploy() initializes the Firestore data",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -1425,7 +1429,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if the Firebase service throws during initializing the Firestore data",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1442,7 +1446,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if the Firebase service throws during initializing the Firestore data",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1459,7 +1463,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if the Firebase service throws during initializing the Firestore data and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1474,7 +1478,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if the Firebase service throws during initializing the Firestore data and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1489,7 +1493,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during initializing the Firestore data",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(
           firebaseService.initializeFirestoreData(any),
         ).thenThrow(stateError);
@@ -1497,14 +1501,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() initializes the Firestore data before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1519,7 +1523,7 @@ void main() {
     test(
       ".deploy() configures the Firebase auth providers",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -1532,7 +1536,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if the Firebase service throws during the Firebase auth providers configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1547,7 +1551,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if the Firebase service throws during the Firebase auth providers configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1562,7 +1566,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if the Firebase service throws during the Firebase auth providers configuration and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -1575,7 +1579,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if the Firebase service throws during the Firebase auth providers configuration and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1588,20 +1592,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if the Firebase service throws during the Firebase auth providers configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() configures the Firebase auth providers before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1616,7 +1620,7 @@ void main() {
     test(
       ".deploy() prompts the user whether to configure Sentry",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1628,7 +1632,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if prompter throws during prompting the Sentry config",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1643,7 +1647,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if prompter throws during prompting the Sentry config",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1658,7 +1662,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if prompter throws during prompting the Sentry config and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -1671,7 +1675,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if prompter throws during prompting the Sentry config and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1684,20 +1688,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if prompter throws during prompting the Sentry config",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() prompts the user to configure the Sentry before logging in to the Sentry",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
@@ -1713,7 +1717,7 @@ void main() {
     test(
       ".deploy() logs in to the Sentry if the user agrees with the Sentry setup",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
@@ -1726,7 +1730,7 @@ void main() {
     test(
       ".deploy() does not log in to the Sentry if the user does not agree with the Sentry setup",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -1738,7 +1742,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Sentry service throws during the login process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
@@ -1754,7 +1758,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Sentry service throws during the login process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
@@ -1770,7 +1774,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Sentry service throws during the login process and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(true);
@@ -1784,7 +1788,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Sentry service throws during the login process and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
@@ -1798,21 +1802,21 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Sentry service throws during the login process",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(sentryService.login()).thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() logs in to the Sentry before creating the Sentry release",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
@@ -1828,7 +1832,7 @@ void main() {
     test(
       ".deploy() gets the Sentry release using the SentryService",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
@@ -1841,7 +1845,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Sentry service throws during getting a release",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1856,7 +1860,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Sentry service throws during getting a release",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1871,7 +1875,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Sentry service throws during getting a release, and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
 
@@ -1884,7 +1888,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Sentry service throws during getting a release, and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
@@ -1897,20 +1901,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Sentry service throws during getting a release",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() gets the Sentry release before creating a new one",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
@@ -1925,7 +1929,7 @@ void main() {
     test(
       ".deploy() creates the Sentry release",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
@@ -1938,7 +1942,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Sentry service throws during the release creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
@@ -1954,7 +1958,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Sentry service throws during the release creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
@@ -1969,7 +1973,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Sentry service throws during the release creation and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(true);
 
@@ -1982,7 +1986,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Sentry service throws during the release creation and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
@@ -1995,20 +1999,20 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Sentry service throws during the release creation",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenCreateRelease().thenAnswer((_) => Future.error(stateError));
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() requests the Sentry DSN of the created project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
 
         await deployer.deploy();
@@ -2020,7 +2024,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if prompter throws during requesting the Sentry DSN",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2036,7 +2040,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if prompter throws during requesting the Sentry DSN",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2052,7 +2056,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if prompter throws during requesting the Sentry DSN and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
@@ -2066,7 +2070,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if prompter throws during requesting the Sentry DSN and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2080,21 +2084,21 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if prompter throws during requesting the Sentry DSN",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenGetSentryRelease().thenReturn(sentryRelease);
         when(sentryService.getProjectDsn(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() gets the Metrics config file using the given FileHelper",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -2107,7 +2111,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if FileHelper throws during the Metrics config file getting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2123,7 +2127,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if FileHelper throws during the Metrics config file getting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2139,7 +2143,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if FileHelper throws during the Metrics config file getting and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
@@ -2153,7 +2157,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if FileHelper throws during the Metrics config file getting and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2167,21 +2171,21 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if FileHelper throws during the Metrics config file getting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(fileHelper.getFile(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() replaces the environment variables in the Metrics config file returned by FileHelper with the user-specified values",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(true);
         when(firebaseService.configureAuthProviders(any)).thenReturn(clientId);
         whenGetSentryRelease().thenReturn(sentryRelease);
@@ -2208,7 +2212,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if FileHelper throws during replacing variables in the Metrics config file",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
@@ -2226,7 +2230,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if FileHelper throws during replacing variables in the Metrics config file",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
@@ -2244,7 +2248,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if FileHelper throws during replacing variables in the Metrics config file and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
@@ -2260,7 +2264,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if FileHelper throws during replacing variables in the Metrics config file and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
@@ -2276,7 +2280,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if FileHelper throws during replacing variables in the Metrics config file",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           fileHelper.replaceEnvironmentVariables(any, any),
@@ -2285,14 +2289,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() updates the Metrics config file before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -2308,7 +2312,7 @@ void main() {
       ".deploy() deploys Firebase components to the Firebase",
       () async {
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -2323,7 +2327,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase components deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployFirebase(any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2341,7 +2345,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Firebase service throws during the Firebase components deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployFirebase(any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2359,7 +2363,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Firebase service throws during the Firebase components deployment and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployFirebase(any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2375,7 +2379,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Firebase service throws during the Firebase components deployment and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployFirebase(any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2391,7 +2395,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase components deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           firebaseService.deployFirebase(any, any),
@@ -2400,14 +2404,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() deploys Firebase components before deploying to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -2422,7 +2426,7 @@ void main() {
     test(
       ".deploy() deploys the target to the hosting",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -2439,7 +2443,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if Firebase service throws during the Firebase hosting deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2457,7 +2461,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if Firebase service throws during the Firebase hosting deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2475,7 +2479,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if Firebase service throws during the Firebase hosting deployment and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2491,7 +2495,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if Firebase service throws during the Firebase hosting deployment and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(firebaseService.deployHosting(any, any, any)).thenAnswer(
           (_) => Future.error(stateError),
@@ -2507,7 +2511,7 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if Firebase service throws during the Firebase hosting deployment",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(
           firebaseService.deployHosting(any, any, any),
@@ -2516,14 +2520,14 @@ void main() {
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() deploys a target to the hosting before configuring GCloud OAuth origins",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -2538,7 +2542,7 @@ void main() {
     test(
       ".deploy() configures GCloud OAuth Authorized JavaScript origins",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -2551,7 +2555,7 @@ void main() {
     test(
       ".deploy() informs the user about the failed deployment if GCloud service throws during the OAuth origins configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2567,7 +2571,7 @@ void main() {
     test(
       ".deploy() suggests deleting the GCloud project if GCloud service throws during the OAuth origins configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2583,7 +2587,7 @@ void main() {
     test(
       ".deploy() deletes the GCloud project if GCloud service throws during the OAuth origins configuration and the user agrees to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(true);
@@ -2597,7 +2601,7 @@ void main() {
     test(
       ".deploy() does not delete the GCloud project if GCloud service throws during the OAuth origins configuration and the user does not agree to delete the project",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
@@ -2611,21 +2615,21 @@ void main() {
     test(
       ".deploy() deletes the temporary directory if GCloud service throws during the OAuth origins configuration",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         when(gcloudService.configureOAuthOrigins(any)).thenThrow(stateError);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() configures GCloud OAuth origins before deleting the temporary directory",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenCreateGCloudProject().thenAnswer((_) => Future.value(projectId));
 
@@ -2633,28 +2637,28 @@ void main() {
 
         verifyInOrder([
           gcloudService.configureOAuthOrigins(any),
-          fileHelper.deleteDirectory(directory),
+          directory.deleteSync(recursive: true),
         ]);
       },
     );
 
     test(
-      ".deploy() deletes the temporary directory",
+      ".deploy() deletes the temporary directory if it exists",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
         whenDeleteProject().thenReturn(false);
 
         await deployer.deploy();
 
-        verify(fileHelper.deleteDirectory(directory)).called(once);
+        verify(directory.deleteSync(recursive: true)).called(once);
       },
     );
 
     test(
       ".deploy() informs about deleting the temporary directory",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(true);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();
@@ -2664,9 +2668,21 @@ void main() {
     );
 
     test(
+      ".deploy() does not delete the temporary directory if it does not exist",
+      () async {
+        whenDirectoryExist().thenReturn(false);
+        whenPromptToSetupSentry().thenReturn(false);
+
+        await deployer.deploy();
+
+        verifyNever(directory.delete(recursive: true));
+      },
+    );
+
+    test(
       ".deploy() informs about the successful deployment if deployment succeeds",
       () async {
-        whenDirectoryPath().thenReturn(tempDirectoryPath);
+        whenDirectoryExist().thenReturn(false);
         whenPromptToSetupSentry().thenReturn(false);
 
         await deployer.deploy();

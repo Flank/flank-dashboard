@@ -129,27 +129,5 @@ void main() {
         verify(file.writeAsStringSync(expected)).called(once);
       },
     );
-
-    test(
-      ".deleteDirectory() deletes the given directory if it exists",
-      () async {
-        when(directory.existsSync()).thenReturn(true);
-
-        helper.deleteDirectory(directory);
-
-        verify(directory.deleteSync(recursive: true)).called(once);
-      },
-    );
-
-    test(
-      ".deleteDirectory() does not delete the temporary directory if it does not exist",
-      () async {
-        when(directory.existsSync()).thenReturn(false);
-
-        helper.deleteDirectory(directory);
-
-        verifyNever(directory.deleteSync(recursive: true));
-      },
-    );
   });
 }

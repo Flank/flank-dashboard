@@ -23,15 +23,6 @@ class FileHelper {
     return directory.createTempSync(prefix);
   }
 
-  /// Deletes the given [directory] if it exists.
-  void deleteDirectory(Directory directory) {
-    final directoryExist = directory.existsSync();
-
-    if (!directoryExist) return;
-
-    directory.deleteSync(recursive: true);
-  }
-
   /// Replaces variables defined in the [environment] it's values
   /// in the given [file].
   ///

@@ -71,7 +71,7 @@ class Updater {
       }
 
       _prompter.info(CommonStrings.deletingTempDirectory);
-      _fileHelper.deleteDirectory(tempDirectory);
+      _deleteDirectory(tempDirectory);
     }
   }
 
@@ -83,5 +83,14 @@ class Updater {
       directory,
       DeployConstants.tempDirectoryPrefix,
     );
+  }
+
+  /// Deletes the given [directory].
+  void _deleteDirectory(Directory directory) {
+    final directoryExist = directory.existsSync();
+
+    if (!directoryExist) return;
+
+    directory.deleteSync(recursive: true);
   }
 }
