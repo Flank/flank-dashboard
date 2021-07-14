@@ -14,10 +14,12 @@ import 'package:cli/common/strings/common_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/directory_mock.dart';
-import '../../test_utils/file_helper_mock.dart';
+import '../../test_utils/extension/error_answer.dart';
 import '../../test_utils/matchers.dart';
-import '../../test_utils/prompter_mock.dart';
+import '../../test_utils/mock/directory_mock.dart';
+import '../../test_utils/mock/file_helper_mock.dart';
+import '../../test_utils/mock/path_factory_mock.dart';
+import '../../test_utils/mock/prompter_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values, avoid_implementing_value_types, must_be_immutable
 
@@ -32,7 +34,7 @@ void main() {
     final fileHelper = FileHelperMock();
     final prompter = PrompterMock();
     final pathsFactory = PathsFactory();
-    final pathsFactoryMock = _PathsFactoryMock();
+    final pathsFactoryMock = PathsFactoryMock();
     final directory = DirectoryMock();
     final updater = Updater(
       updateAlgorithm: updateAlgorithm,
@@ -139,7 +141,7 @@ void main() {
     );
 
     test(
-      ".deploy() creates a temporary directory before creating the Paths instance",
+      ".update() creates a temporary directory before creating the Paths instance",
       () async {
         final updater = Updater(
           updateAlgorithm: updateAlgorithm,
@@ -216,8 +218,8 @@ void main() {
       ".update() informs the user about the failed updating if the update algorithm throws",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(updateAlgorithm.start(config, paths)).thenAnswer(
-          (_) => Future.error(stateError),
+        when(updateAlgorithm.start(config, paths)).thenAnswerError(
+          stateError,
         );
 
         await updater.update(config);
@@ -232,9 +234,7 @@ void main() {
       ".update() informs about deleting the temporary directory if the update algorithm throws",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(updateAlgorithm.start(config, paths)).thenAnswer(
-          (_) => Future.error(stateError),
-        );
+        when(updateAlgorithm.start(config, paths)).thenAnswerError(stateError);
 
         await updater.update(config);
 
@@ -246,9 +246,7 @@ void main() {
       ".update() deletes the temporary directory if the update algorithm throws",
       () async {
         whenDirectoryExist().thenReturn(true);
-        when(updateAlgorithm.start(config, paths)).thenAnswer(
-          (_) => Future.error(stateError),
-        );
+        when(updateAlgorithm.start(config, paths)).thenAnswerError(stateError);
 
         await updater.update(config);
 
@@ -305,5 +303,3 @@ void main() {
 class _UpdateAlgorithmMock extends Mock implements UpdateAlgorithm {}
 
 class _UpdateConfigMock extends Mock implements UpdateConfig {}
-
-class _PathsFactoryMock extends Mock implements PathsFactory {}

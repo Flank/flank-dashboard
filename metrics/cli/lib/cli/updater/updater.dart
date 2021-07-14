@@ -13,7 +13,7 @@ import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/util/file/file_helper.dart';
 
-/// A class providing method for deploying the Metrics Web Application.
+/// A class providing method for updating the deployed Metrics components.
 class Updater {
   /// A class that provides method for the updating.
   final UpdateAlgorithm _updateAlgorithm;

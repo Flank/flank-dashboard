@@ -165,9 +165,9 @@ class Deployer {
   /// Installs npm dependencies within the given [firebasePath] and
   /// the [functionsPath].
   Future<void> _installNpmDependencies(
-      String firebasePath,
-      String functionsPath,
-      ) async {
+    String firebasePath,
+    String functionsPath,
+  ) async {
     await _npmService.installDependencies(firebasePath);
     await _npmService.installDependencies(functionsPath);
   }
@@ -175,9 +175,9 @@ class Deployer {
   /// Sets up a Sentry for the application under deployment within
   /// the given [webPath] and the [buildWebPath].
   Future<SentryWebConfig> _setupSentry(
-      String webPath,
-      String buildWebPath,
-      ) async {
+    String webPath,
+    String buildWebPath,
+  ) async {
     final shouldSetupSentry = _prompter.promptConfirm(
       DeployStrings.setupSentry,
     );
@@ -198,9 +198,9 @@ class Deployer {
 
   /// Creates a new Sentry release within the [webPath] and the [buildWebPath].
   Future<SentryRelease> _createSentryRelease(
-      String webPath,
-      String buildWebPath,
-      ) async {
+    String webPath,
+    String buildWebPath,
+  ) async {
     final release = _sentryService.getSentryRelease();
     final webSourceMap = SourceMap(
       path: webPath,
@@ -220,10 +220,10 @@ class Deployer {
   /// with the given [projectId] within the given [firebasePath] and
   /// the [webPath].
   Future<void> _deployToFirebase(
-      String projectId,
-      String firebasePath,
-      String webPath,
-      ) async {
+    String projectId,
+    String firebasePath,
+    String webPath,
+  ) async {
     await _firebaseService.deployFirebase(
       projectId,
       firebasePath,
