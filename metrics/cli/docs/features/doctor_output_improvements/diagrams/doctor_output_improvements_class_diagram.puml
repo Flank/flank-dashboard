@@ -1,0 +1,203 @@
+@startuml doctor_output_improvements_class_diagram
+
+package cli.lib as cli_lib {
+    package cli {
+        package command {
+            class DoctorCommand {
+                + name: String
+                + doctorFactory: DoctorFactory
+                + validationResultPrinter: ValidationResultPrinter
+
+                + run(): Future<void>
+            }
+        }
+
+        package doctor {
+            class Doctor {
+                - _coolService: CoolService
+                - _dependencies: Dependencies
+                + validationResultBuilder: ValidationResultBuilder
+
+                + checkVersions(): Future<ValidationResult>
+            }
+
+            package factory as doctor_factory {
+                class DoctorFactory {
+                    - _servicesFactory: ServicesFactory
+                    - _dependenciesFactory: DependenciesFactory
+
+                    + create(): Doctor
+                }
+            }
+
+            package constants {
+                class DoctorConstants {
+                    + {static} dependenciesPath: String
+                }
+            }
+        }
+    }
+
+    package services {
+        package common.service.model {
+            enum ServiceName {
+                gcloud
+                git
+                firebase
+                flutter
+                npm
+                sentry
+            }
+
+            package mapper {
+                class ServiceNameMapper {
+                    + gcloud: String
+                    + git: String
+                    + firebase: String
+                    + flutter: String
+                    + npm: String
+                    + sentry: String
+
+                    + map(value: String): ServiceName
+                    + unmap(value: Service): String
+                }
+            }
+        }
+
+        package cool_service {
+            package adapter {
+                class CoolCliServiceAdapter {
+                    - _coolServiceCli: CoolServiceCli
+
+                    + version(): Future<ProcessResult>
+                }
+            }
+
+            package cli as cool_service_cli {
+                class CoolServiceCli {
+                    + executable: String
+
+                    + version(): Future<ProcessResult>
+                }
+            }
+
+            abstract class CoolService {
+                + serviceName: ServiceName
+                + version(): Future<ProcessResult>
+            }
+        }
+    }
+
+    package util.dependencies {
+        package factory as dependencies_factory {
+            class DependenciesFactory {
+                + create(fromFile: String): Dependencies
+            }
+        }
+
+        class Dependency {
+            + recommendedVersion: String
+            + installUrl: String
+
+            + fromMap(map: Map<String, dynamic>): Dependency
+        }
+
+        class Dependencies {
+            - _dependencies: Map<String, Dependency>
+
+            + getFor(service: String): Dependency
+            + fromMap(map: Map<String, dynamic>): Dependencies
+        }
+    }
+}
+
+package core.lib.src.util.validation {
+    package model {
+        package builder {
+            class ValidationResultBuilder {
+                - _results: Map<ValidationTarget, TargetValidationResult>
+
+                - ValidationResultBuilder._(results: Map<ValidationTarget, TargetValidationResult>): ValidationResultBuilder
+                + {static} ValidationResultBuilder.createForTargets(targets: List<ValidationTarget>): ValidationResultBuilder
+                + setResult(result: TargetValidationResult): void
+                + setEmptyResults(result: TargetValidationResult): void
+                + build(): ValidationResult
+            }
+        }
+
+        class ValidationTarget {
+            + name: String
+            + description: String
+        }
+
+        class ValidationConclusion {
+            + name: String
+            + indicator: String
+        }
+
+        class TargetValidationResult<T> {
+            + data: T
+            + target: ValidationTarget
+            + conclusion: ValidationConclusion
+            + description: String
+            + details: Map<String, dynamic>
+            + context: Map<String, dynamic>
+
+            + copyWith(): TargetValidationResult
+        }
+
+        class ValidationResult{
+            + results: UnmodifiableMapView<ValidationTarget, TargetValidationResult>
+        }
+    }
+
+    package printer {
+        class ValidationResultPrinter{
+            - _sink: StringSink
+
+            + print(result: ValidationResult): void
+        }
+    }
+}
+
+TargetValidationResult --> ValidationTarget : uses
+TargetValidationResult --> ValidationConclusion : uses
+
+ValidationResult --> TargetValidationResult : uses
+ValidationResult --> ValidationTarget : uses
+
+ValidationResultBuilder -up-> ValidationResult : builds
+ValidationResultBuilder -up-> ValidationTarget : uses
+ValidationResultBuilder -up-> TargetValidationResult : uses
+
+ValidationResultPrinter -left-> ValidationResult : prints
+
+DoctorCommand --> ValidationResultPrinter : uses
+DoctorCommand --> Doctor : uses
+DoctorCommand --> ValidationResult : uses
+DoctorCommand -left-> DoctorFactory : uses
+
+DoctorFactory --> Doctor : creates
+DoctorFactory -up-> DependenciesFactory : uses
+DoctorFactory -left-> DoctorConstants : uses
+
+Doctor --> ValidationResultBuilder : uses
+Doctor --> ValidationResult : provides
+Doctor --> TargetValidationResult : uses
+Doctor --> CoolService : uses
+Doctor -up-> Dependencies : uses
+Doctor --> Dependency : uses
+Doctor --> ServiceNameMapper : uses
+
+DependenciesFactory --> Dependencies : creates
+
+Dependencies --> Dependency : uses
+
+CoolCliServiceAdapter .up.|> CoolService
+CoolCliServiceAdapter -up-> CoolServiceCli : uses
+
+CoolService --> ServiceName : uses
+
+ServiceNameMapper --> ServiceName : uses
+
+@enduml
