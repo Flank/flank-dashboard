@@ -41,7 +41,7 @@ void main() {
     const sentryOrgSlug = 'sentryOrgSlug';
     const tempDirectoryPath = 'tempDirectoryPath';
     const firebaseTarget = DeployConstants.firebaseTarget;
-    const repoURL = DeployConstants.repoURL;
+    const repoUrl = DeployConstants.repoUrl;
 
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -849,7 +849,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(gitService.checkout(repoURL, tempDirectoryPath)).called(once);
+        verify(gitService.checkout(repoUrl, tempDirectoryPath)).called(once);
       },
     );
 
@@ -941,7 +941,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirectoryPath),
+          gitService.checkout(repoUrl, tempDirectoryPath),
           flutterService.build(any),
         ]);
       },
@@ -956,7 +956,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirectoryPath),
+          gitService.checkout(repoUrl, tempDirectoryPath),
           npmService.installDependencies(any),
         ]);
       },
@@ -971,7 +971,7 @@ void main() {
         await deployer.deploy();
 
         verifyInOrder([
-          gitService.checkout(repoURL, tempDirectoryPath),
+          gitService.checkout(repoUrl, tempDirectoryPath),
           npmService.installDependencies(any),
         ]);
       },

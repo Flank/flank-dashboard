@@ -65,7 +65,7 @@ class UpdateAlgorithm {
     ArgumentError.checkNotNull(config, 'config');
     ArgumentError.checkNotNull(paths, 'paths');
 
-    await _gitService.checkout(DeployConstants.repoURL, paths.rootPath);
+    await _gitService.checkout(DeployConstants.repoUrl, paths.rootPath);
     await _installNpmDependencies(
       paths.firebasePath,
       paths.firebaseFunctionsPath,
@@ -73,8 +73,6 @@ class UpdateAlgorithm {
     await _flutterService.build(paths.webAppPath);
 
     final firebaseConfig = config.firebaseConfig;
-
-    _firebaseService.initializeAuth(firebaseConfig.authToken);
 
     final sentryWebConfig = await _setupSentry(
       config.sentryConfig,
@@ -87,14 +85,17 @@ class UpdateAlgorithm {
     );
 
     _applyMetricsConfig(metricsConfig, paths.metricsConfigPath);
+    _firebaseService.initializeAuth(firebaseConfig.authToken);
 
-    await _deployToFirebase(
-      firebaseConfig.projectId,
-      paths.firebasePath,
-      paths.webAppPath,
-    );
-
-    _firebaseService.resetAuth();
+    try {
+      await _deployToFirebase(
+        firebaseConfig.projectId,
+        paths.firebasePath,
+        paths.webAppPath,
+      );
+    } finally {
+      _firebaseService.resetAuth();
+    }
   }
 
   /// Installs npm dependencies within the given [firebasePath] and
@@ -116,8 +117,6 @@ class UpdateAlgorithm {
   ) async {
     if (config == null) return null;
 
-    _sentryService.initializeAuth(config.authToken);
-
     final release = config.releaseName;
     final sentryProject = SentryProject(
       organizationSlug: config.organizationSlug,
@@ -128,13 +127,17 @@ class UpdateAlgorithm {
       project: sentryProject,
     );
 
-    await _createSentryRelease(
-      sentryRelease,
-      webPath,
-      buildWebPath,
-    );
+    _sentryService.initializeAuth(config.authToken);
 
-    _sentryService.resetAuth();
+    try {
+      await _createSentryRelease(
+        sentryRelease,
+        webPath,
+        buildWebPath,
+      );
+    } finally {
+      _sentryService.resetAuth();
+    }
 
     return SentryWebConfig(
       release: release,

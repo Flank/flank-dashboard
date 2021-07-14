@@ -30,7 +30,7 @@ import '../../../test_utils/sentry_service_mock.dart';
 
 void main() {
   group("UpdateAlgorithm", () {
-    const repoURL = DeployConstants.repoURL;
+    const repoUrl = DeployConstants.repoUrl;
 
     final stateError = StateError('test');
     final paths = Paths('root');
@@ -111,10 +111,6 @@ void main() {
       fileHelper: fileHelper,
     );
 
-    Future<void> errorAnswer(Invocation invocation, [Object withError]) {
-      return Future.error(withError ?? stateError);
-    }
-
     tearDown(() {
       reset(fileHelper);
       reset(flutterService);
@@ -177,18 +173,20 @@ void main() {
       () async {
         await updateAlgorithm.start(updateConfig, paths);
 
-        verify(gitService.checkout(repoURL, rootPath)).called(once);
+        verify(gitService.checkout(repoUrl, rootPath)).called(once);
       },
     );
 
     test(
       ".start() throws if the Git service throws during the checkout process",
       () {
-        when(gitService.checkout(repoURL, rootPath)).thenAnswer(errorAnswer);
+        when(gitService.checkout(repoUrl, rootPath)).thenAnswerError(
+          stateError,
+        );
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -199,7 +197,7 @@ void main() {
         await updateAlgorithm.start(updateConfig, paths);
 
         verifyInOrder([
-          gitService.checkout(repoURL, rootPath),
+          gitService.checkout(repoUrl, rootPath),
           npmService.installDependencies(firebasePath),
         ]);
       },
@@ -211,7 +209,7 @@ void main() {
         await updateAlgorithm.start(updateConfig, paths);
 
         verifyInOrder([
-          gitService.checkout(repoURL, rootPath),
+          gitService.checkout(repoUrl, rootPath),
           npmService.installDependencies(functionsPath),
         ]);
       },
@@ -238,13 +236,13 @@ void main() {
     test(
       ".start() throws if the npm service throws during the installing npm dependencies in the Firebase folder",
       () {
-        when(npmService.installDependencies(firebasePath)).thenAnswer(
-          errorAnswer,
+        when(npmService.installDependencies(firebasePath)).thenAnswerError(
+          stateError,
         );
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -252,13 +250,13 @@ void main() {
     test(
       ".start() throws if the npm service throws during the installing npm dependencies in the functions folder",
       () {
-        when(npmService.installDependencies(functionsPath)).thenAnswer(
-          errorAnswer,
+        when(npmService.installDependencies(functionsPath)).thenAnswerError(
+          stateError,
         );
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -305,11 +303,11 @@ void main() {
     test(
       ".start() throws if the Flutter service throws during the web application building",
       () {
-        when(flutterService.build(webAppPath)).thenAnswer(errorAnswer);
+        when(flutterService.build(webAppPath)).thenAnswerError(stateError);
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -343,60 +341,6 @@ void main() {
     );
 
     test(
-      ".start() initializes the Firebase service's authentication",
-      () async {
-        await updateAlgorithm.start(updateConfig, paths);
-
-        verify(firebaseService.initializeAuth(firebaseAuthToken)).called(once);
-      },
-    );
-
-    test(
-      ".start() throws if the Firebase service throws during initializing authentication",
-      () {
-        when(firebaseService.initializeAuth(firebaseAuthToken)).thenThrow(
-          stateError,
-        );
-
-        expect(
-          () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
-        );
-      },
-    );
-
-    test(
-      ".start() initializes the Firebase service's authentication before deploying Firebase components",
-      () async {
-        await updateAlgorithm.start(updateConfig, paths);
-
-        verifyInOrder([
-          firebaseService.initializeAuth(firebaseAuthToken),
-          firebaseService.deployFirebase(
-            projectId,
-            firebasePath,
-          ),
-        ]);
-      },
-    );
-
-    test(
-      ".start() initializes the Firebase service's authentication before deploying to the hosting",
-      () async {
-        await updateAlgorithm.start(updateConfig, paths);
-
-        verifyInOrder([
-          firebaseService.initializeAuth(firebaseAuthToken),
-          firebaseService.deployHosting(
-            projectId,
-            DeployConstants.firebaseTarget,
-            webAppPath,
-          ),
-        ]);
-      },
-    );
-
-    test(
       ".start() does not initialize the Sentry service's authentication if the sentry config is null",
       () async {
         final config = UpdateConfig(
@@ -406,7 +350,7 @@ void main() {
 
         await updateAlgorithm.start(config, paths);
 
-        verifyNever(sentryService.initializeAuth(sentryConfig.authToken));
+        verifyNever(sentryService.initializeAuth(sentryAuthToken));
       },
     );
 
@@ -456,7 +400,7 @@ void main() {
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -488,14 +432,32 @@ void main() {
     test(
       ".start() throws if the Sentry service throws during Sentry release creation",
       () {
-        when(sentryService.createRelease(sentryRelease, sourceMaps)).thenAnswer(
-          errorAnswer,
-        );
+        when(sentryService.createRelease(
+          sentryRelease,
+          sourceMaps,
+        )).thenAnswerError(stateError);
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
+      },
+    );
+
+    test(
+      ".start() resets the Sentry service's authentication if the Sentry service throws during release creation",
+      () async {
+        when(sentryService.createRelease(
+          sentryRelease,
+          sourceMaps,
+        )).thenAnswerError(stateError);
+
+        await expectLater(
+          () => updateAlgorithm.start(updateConfig, paths),
+          throwsA(stateError),
+        );
+
+        verify(sentryService.resetAuth()).called(once);
       },
     );
 
@@ -515,7 +477,7 @@ void main() {
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -536,7 +498,7 @@ void main() {
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -568,11 +530,11 @@ void main() {
     test(
       ".start() replaces the environment variables in the Metrics config file",
       () async {
+        final environmentMap = config.toMap();
+
         when(fileHelper.getFile(metricsConfigPath)).thenReturn(file);
 
         await updateAlgorithm.start(updateConfig, paths);
-
-        final environmentMap = config.toMap();
 
         verify(fileHelper.replaceEnvironmentVariables(
           file,
@@ -594,7 +556,7 @@ void main() {
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -602,14 +564,68 @@ void main() {
     test(
       ".start() updates the Metrics config file before deploying to the hosting",
       () async {
+        final environmentMap = config.toMap();
+
         when(fileHelper.getFile(metricsConfigPath)).thenReturn(file);
 
         await updateAlgorithm.start(updateConfig, paths);
 
-        final environmentMap = config.toMap();
-
         verifyInOrder([
           fileHelper.replaceEnvironmentVariables(file, environmentMap),
+          firebaseService.deployHosting(
+            projectId,
+            DeployConstants.firebaseTarget,
+            webAppPath,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      ".start() initializes the Firebase service's authentication",
+      () async {
+        await updateAlgorithm.start(updateConfig, paths);
+
+        verify(firebaseService.initializeAuth(firebaseAuthToken)).called(once);
+      },
+    );
+
+    test(
+      ".start() throws if the Firebase service throws during initializing authentication",
+      () {
+        when(firebaseService.initializeAuth(firebaseAuthToken)).thenThrow(
+          stateError,
+        );
+
+        expect(
+          () => updateAlgorithm.start(updateConfig, paths),
+          throwsA(stateError),
+        );
+      },
+    );
+
+    test(
+      ".start() initializes the Firebase service's authentication before deploying Firebase components",
+      () async {
+        await updateAlgorithm.start(updateConfig, paths);
+
+        verifyInOrder([
+          firebaseService.initializeAuth(firebaseAuthToken),
+          firebaseService.deployFirebase(
+            projectId,
+            firebasePath,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      ".start() initializes the Firebase service's authentication before deploying to the hosting",
+      () async {
+        await updateAlgorithm.start(updateConfig, paths);
+
+        verifyInOrder([
+          firebaseService.initializeAuth(firebaseAuthToken),
           firebaseService.deployHosting(
             projectId,
             DeployConstants.firebaseTarget,
@@ -637,12 +653,29 @@ void main() {
         when(firebaseService.deployFirebase(
           projectId,
           firebasePath,
-        )).thenAnswer(errorAnswer);
+        )).thenAnswerError(stateError);
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
+      },
+    );
+
+    test(
+      ".start() resets the Firebase service's authentication if the Firebase service throws during Firebase components deployment",
+      () async {
+        when(firebaseService.deployFirebase(
+          projectId,
+          firebasePath,
+        )).thenAnswerError(stateError);
+
+        await expectLater(
+          () => updateAlgorithm.start(updateConfig, paths),
+          throwsA(stateError),
+        );
+
+        verify(firebaseService.resetAuth()).called(once);
       },
     );
 
@@ -685,11 +718,11 @@ void main() {
           projectId,
           DeployConstants.firebaseTarget,
           webAppPath,
-        )).thenAnswer(errorAnswer);
+        )).thenAnswerError(stateError);
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
@@ -710,9 +743,33 @@ void main() {
 
         expect(
           () => updateAlgorithm.start(updateConfig, paths),
-          throwsStateError,
+          throwsA(stateError),
         );
       },
     );
+
+    test(
+      ".start() resets the Firebase service's authentication if the Firebase service throws during hosting deployment",
+      () async {
+        when(firebaseService.deployHosting(
+          projectId,
+          DeployConstants.firebaseTarget,
+          webAppPath,
+        )).thenAnswerError(stateError);
+
+        await expectLater(
+          () => updateAlgorithm.start(updateConfig, paths),
+          throwsA(stateError),
+        );
+
+        verify(firebaseService.resetAuth()).called(once);
+      },
+    );
   });
+}
+
+extension _ErrorAnswer on PostExpectation {
+  void thenAnswerError(Object error) {
+    thenAnswer((_) => Future.error(error));
+  }
 }

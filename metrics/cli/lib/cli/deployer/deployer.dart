@@ -105,7 +105,7 @@ class Deployer {
       _gcloudService.configureProjectOrganization(projectId);
       await _firebaseService.createWebApp(projectId);
 
-      await _gitService.checkout(DeployConstants.repoURL, paths.rootPath);
+      await _gitService.checkout(DeployConstants.repoUrl, paths.rootPath);
       await _installNpmDependencies(
         paths.firebasePath,
         paths.firebaseFunctionsPath,
