@@ -135,5 +135,5 @@ Since we can log in users without any user interaction and check whether the use
 
 Once we've chosen the implementation approach, let's consider the components diagram displaying the components that should be added/modified to implement this feature: 
 
-![Auth Feature Disabling Components](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_analysis/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_components.puml)
+![Auth Feature Disabling Components](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_components.puml)
 
