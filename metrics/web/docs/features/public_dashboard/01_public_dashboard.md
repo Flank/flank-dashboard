@@ -15,6 +15,13 @@ As a user, I want to be able to enable public access to the dashboard page in my
             - [Authenticate as an anonymous user](#Authenticate-as-an-anonymous-user)
     - [Prototyping](#prototyping)
     - [System modeling](#system-modeling)
+- [**Design**](#design)
+    - [Architecture](#architecture)
+    - [User Interface](#user-interface)
+    - [Database](#database)
+    - [Privacy](#privacy)
+    - [Security](#security)
+    - [Program](#program)
 
 # Analysis
 > Describe a general analysis approach.
@@ -137,3 +144,98 @@ Once we've chosen the implementation approach, let's consider the components dia
 
 ![Auth Feature Disabling Components](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_components.puml)
 
+# Design
+
+The following sections explains the implementation details of the public dashboard feature.
+
+### Architecture
+> Fundamental structures of the feature and context (diagram).
+
+Once we've chosen the implementation approach of the public dashboard, let's consider the top-level class diagram explaining the main classes and their relationships needed to implement this feature.
+
+![Public Dashboard Architecture Class Diagram]()
+
+As we can see on the diagram, we need to implement the following classes: 
+- [PublicDashboardFeatureConfigModel](#PublicDashboardFeatureConfigModel)
+- [UserProfileViewModel](#UserProfileViewModel)
+- [SignInAnonymouslyUseCase](#SignInAnonymouslyUseCase)
+
+Let's consider each class in a bit more detail: 
+
+#### PublicDashboardFeatureConfigModel
+> Explain the purpose and responsibility of the class.
+
+Since we are going to store the public dashboard configuration in the Firestore database and the `FeatureConfigNotifier` manages the application state related to the feature configuration, we should be able to transfer the configuration of the public dashboard feature between different states. According to the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#model) document, to transfer the data between the states, we should use the `model` classes. So, for this purpose, we should create a `PublicDashboardFeatureConfigModel` that will be used to transfer the public dashboard feature configuration from the `FeatureConfigNotifier` to any other state in the application. 
+
+#### UserProfileViewModel
+> Explain the purpose and responsibility of the class.
+
+Since we want to disable some features on the UI if the user is anonymous, we should be able to access the user profile from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, we should create a view model representing a user profile to disable the `Project Groups` page and provide the ability to `Sign In` to the application for the anonymous users.
+
+#### SignInAnonymouslyUseCase
+> Explain the purpose and responsibility of the class.
+
+Since the public dashboard feature implies logging in as an anonymous user, we should create a use case needed to log in to the application using the anonymous user. 
+
+### User Interface
+> How users will interact with the feature (API, CLI, Graphical interface, etc.).
+
+Since the non-authorized users should not be able to access the `Project Groups` page, it should be hidden from the user menu for such users. Also, there should be an ability to sign in for anonymous users, so we should change the `Logout` button from the user menu to `Sign in` one. 
+
+Let's consider the user menu UI in case we are using an anonymous user: 
+
+![Anonymous User Menu](images/menu.png)
+
+### Database
+> How relevant data will be persisted and protected.
+
+The public dashboard menu requires changes in the `Firestore` database that can be divided into two different parts:
+
+- [Storing the public dashboard configuration](#Storing-the-public-dashboard-configuration).
+- [Accessing the data using the anonymous user](#Accessing-the-data-using-the-anonymous-user).
+
+Let's consider each of them in more detail: 
+
+#### Storing the public dashboard configuration
+> Explain the way we are going to store the public dashboard configuration.
+
+As we've mentioned above, we are going to store the public dashboard configuration as a [Feature Config](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) - in the `feature_config` document, under the `feature_config` collection. So, let's review the `feature_config` document structure, including the `public dashboard` configuration: 
+
+```json
+{
+    isDebugMenuEnabled: bool,
+    isPasswordSignInOptionEnabled: bool,
+    isPublicDashboardEnabled: bool
+}
+```
+
+Since these changes do not require creating any new collections/documents, the Firestore Security rules should not be changed. 
+
+#### Accessing the data using the anonymous user
+> Explain the changes required to make the data accessible for anonymous users.
+
+There is no need to change the `Firestore` database structure to access the data using the anonymous user. But we should change the `Firestore` security rules for these purposes. So, we should allow access to the data that requires authentication for users logged in anonymously. 
+
+Let's review the security rules for anonymous users in more detail: 
+
+- The user logged in anonymously should be able to read the `projects` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is `true`. 
+- The user logged in anonymously should not be able to write to the `projects` collection.
+- The anonymous user should be able to read the `builds` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is true.
+- The anonymous user should not be able to write to the `builds` collection. 
+- The user logged in anonymously should be able to read the `project_groups` collection if the public dashboard feature is enabled.
+- The anonymous user should not be able to write to the `project_groups` collection. 
+- The user logged in anonymously should be able to read only their profile document (document with the user identifier as document identifier) from the `user_profiles` collection if the public dashboard feature is enabled.
+- The user logged in anonymously should be able to create/update their profile (document with the user identifier as document identifier) in the `user_profiles` collection if the public dashboard feature is enabled.
+- The anonymous user should be able to read the data from the `build_days` collection if the public dashboard feature is enabled. 
+- The anonymous user should not be able to write to the `build_days` collection.
+
+Please, note that if the collection is not mentioned in the list above, the collection rules should stay as is.
+
+### Privacy
+> Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
+
+### Security
+> How relevant data will be secured (Data encryption at rest, etc.).
+
+### Program
+> Detailed solution description to class/method level.

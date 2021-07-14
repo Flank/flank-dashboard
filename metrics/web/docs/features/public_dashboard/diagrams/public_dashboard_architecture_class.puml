@@ -1,0 +1,63 @@
+@startuml public_dashboard_architecture_class
+
+package feature_config.presentation {
+    package models {
+        class PublicDashboardFeatureConfigModel {}
+    }
+
+    package state {
+        class FeatureConfigNotifier {}
+    }
+}
+
+package auth {
+    package domain {
+        package usecases {
+            class SignInAnomymouslyUseCase {}
+        }
+
+        package repositories {
+            interface UserRepository {}
+        }
+    }
+
+    package presentation as auth.presentation {
+        package models as auth.presentation.models {
+            class UserProfileModel {}
+        }
+
+
+        package state as auth.presentation.state {
+            class AuthNotifier {}
+        }
+
+        package view_models as auth.presentation.view_models {
+            class UserProfileViewModel {}
+        }
+    }
+}
+
+package common.presentation {
+    package widgets as common.presentation.widgets {
+        class MetricsUserMenu {}
+    }
+
+    package navigation.state {
+        class NavigationNotifier {}
+    }
+}
+
+
+FeatureConfigNotifier --> PublicDashboardFeatureConfigModel : provides
+
+AuthNotifier --> PublicDashboardFeatureConfigModel : uses
+AuthNotifier -left-> UserProfileViewModel : provides
+AuthNotifier --> SignInAnomymouslyUseCase : uses
+AuthNotifier -right-> UserProfileModel : provides
+
+SignInAnomymouslyUseCase --> UserRepository : uses
+
+MetricsUserMenu --> UserProfileViewModel : uses
+NavigationNotifier --> UserProfileModel : uses
+
+@enduml
