@@ -153,7 +153,7 @@ The following sections explains the implementation details of the public dashboa
 
 Once we've chosen the implementation approach of the public dashboard, let's consider the top-level class diagram explaining the main classes and their relationships needed to implement this feature.
 
-![Public Dashboard Architecture Class Diagram]()
+![Public Dashboard Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_class.puml)
 
 As we can see on the diagram, we need to implement the following classes: 
 - [PublicDashboardFeatureConfigModel](#PublicDashboardFeatureConfigModel)
