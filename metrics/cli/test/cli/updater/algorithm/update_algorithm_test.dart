@@ -152,7 +152,7 @@ void main() {
       ".start() throws an ArgumentError if the given config is null",
       () {
         expect(
-          () => updateAlgorithm.start(null, paths),
+          updateAlgorithm.start(null, paths),
           throwsArgumentError,
         );
       },
@@ -162,7 +162,7 @@ void main() {
       ".start() throws an ArgumentError if the given paths is null",
       () {
         expect(
-          () => updateAlgorithm.start(updateConfig, null),
+          updateAlgorithm.start(updateConfig, null),
           throwsArgumentError,
         );
       },
@@ -185,7 +185,7 @@ void main() {
         );
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -241,7 +241,7 @@ void main() {
         );
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -255,7 +255,7 @@ void main() {
         );
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -306,7 +306,7 @@ void main() {
         when(flutterService.build(webAppPath)).thenAnswerError(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -399,7 +399,7 @@ void main() {
         );
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -438,7 +438,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -453,7 +453,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         await expectLater(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
 
@@ -476,7 +476,7 @@ void main() {
         when(sentryService.resetAuth()).thenThrow(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -497,7 +497,7 @@ void main() {
         when(fileHelper.getFile(metricsConfigPath)).thenThrow(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -555,7 +555,7 @@ void main() {
         )).thenThrow(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -598,7 +598,7 @@ void main() {
         );
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -656,7 +656,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -671,7 +671,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         await expectLater(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
 
@@ -721,7 +721,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -742,7 +742,7 @@ void main() {
         when(firebaseService.resetAuth()).thenThrow(stateError);
 
         expect(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
       },
@@ -758,7 +758,7 @@ void main() {
         )).thenAnswerError(stateError);
 
         await expectLater(
-          () => updateAlgorithm.start(updateConfig, paths),
+          updateAlgorithm.start(updateConfig, paths),
           throwsA(stateError),
         );
 
