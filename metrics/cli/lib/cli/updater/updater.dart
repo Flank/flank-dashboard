@@ -15,7 +15,7 @@ import 'package:cli/util/file/file_helper.dart';
 
 /// A class providing method for updating the deployed Metrics components.
 class Updater {
-  /// A class that provides method for the updating.
+  /// A class that provides an update algorithm.
   final UpdateAlgorithm _updateAlgorithm;
 
   /// A class that provides methods for working with the file system.

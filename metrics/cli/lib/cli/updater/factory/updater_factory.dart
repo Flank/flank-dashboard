@@ -9,7 +9,7 @@ import 'package:cli/prompter/prompter.dart';
 import 'package:cli/prompter/writer/io_prompt_writer.dart';
 import 'package:cli/util/file/file_helper.dart';
 
-/// A class providing method for creating a [Updater] instance.
+/// A class providing method for creating an [Updater] instance.
 class UpdaterFactory {
   /// A [ServicesFactory] class this factory uses to create the services.
   final ServicesFactory _servicesFactory;
