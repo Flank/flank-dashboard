@@ -3,8 +3,8 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
+import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';
 import 'package:cli/common/model/config/web_metrics_config.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
@@ -105,7 +105,7 @@ class Deployer {
       _gcloudService.configureProjectOrganization(projectId);
       await _firebaseService.createWebApp(projectId);
 
-      await _gitService.checkout(DeployConstants.repoURL, paths.rootPath);
+      await _gitService.checkout(DeployConstants.repoUrl, paths.rootPath);
       await _installNpmDependencies(
         paths.firebasePath,
         paths.firebaseFunctionsPath,
