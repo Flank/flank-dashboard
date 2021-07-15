@@ -143,6 +143,8 @@ The Security section purposes to describe how users data is secured. This is rel
 - how a user can gain access to their data (authentication/authorization, user's scope, etc.);
 - how data is encrypted and what exactly the stored information is encrypted (consider the same data described in both [Database](#database) and [Privacy](#privacy) sections).
 
+To provide a full security review, one should consider performing the [threat modeling](https://en.wikipedia.org/wiki/Threat_model). This section may use the existing threat model or create and use a new one.
+
 ### Program
 > Detailed solution description to class/method level.
 
