@@ -86,7 +86,7 @@ The above questions are focused on one purpose: the place and role of the new fe
 The design section purposes to discover the implementation details for the feature. What is the structure of the feature? How is the feature to be integrated to the project/component(s)? And many other details covered by the subsections below. But before we dive into explanations for the design parts, one should consider the following rules that hold for the whole design section:
 
 - The design acts within the requirements examined in the [Requirements](#requirements) section.
-- The design details all the [Analysis]($analysis) section describes/touches.
+- The design details all the [Analysis](#analysis) section describes/touches.
 - The design's subsections must not leave open questions about the selected implementation approach. Each section ends with a clear and definitive details about exactly one implementation approach.
 
 ### Architecture
@@ -140,7 +140,7 @@ This section discovers how users privacy is protected. One should cover the foll
 The Security section purposes to describe how users data is secured. This is related to all data that users provide and application then stores in the [Database](#database) or using 3rd-party services. This section should contain the following information:
 
 - how data is secured from the insufficient access;
-- how a user can gain an access to their data (authentication/authorization, user's scope, etc.);
+- how a user can gain access to their data (authentication/authorization, user's scope, etc.);
 - how data is encrypted and what exactly the stored information is encrypted (consider the same data described in both [Database](#database) and [Privacy](#privacy) sections).
 
 ### Program
