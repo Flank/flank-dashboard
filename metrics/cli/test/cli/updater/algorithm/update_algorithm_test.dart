@@ -18,14 +18,14 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/extension/error_answer.dart';
 import '../../../test_utils/matchers.dart';
-import '../../../test_utils/mock/file_helper_mock.dart';
-import '../../../test_utils/mock/file_mock.dart';
-import '../../../test_utils/mock/firebase_service_mock.dart';
-import '../../../test_utils/mock/flutter_service_mock.dart';
-import '../../../test_utils/mock/gcloud_service_mock.dart';
-import '../../../test_utils/mock/git_service_mock.dart';
-import '../../../test_utils/mock/npm_service_mock.dart';
-import '../../../test_utils/mock/sentry_service_mock.dart';
+import '../../../test_utils/mocks/file_helper_mock.dart';
+import '../../../test_utils/mocks/file_mock.dart';
+import '../../../test_utils/mocks/firebase_service_mock.dart';
+import '../../../test_utils/mocks/flutter_service_mock.dart';
+import '../../../test_utils/mocks/gcloud_service_mock.dart';
+import '../../../test_utils/mocks/git_service_mock.dart';
+import '../../../test_utils/mocks/npm_service_mock.dart';
+import '../../../test_utils/mocks/sentry_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

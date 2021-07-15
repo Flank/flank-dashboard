@@ -6,8 +6,8 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
-import '../../test_utils/mock/directory_mock.dart';
-import '../../test_utils/mock/file_mock.dart';
+import '../../test_utils/mocks/directory_mock.dart';
+import '../../test_utils/mocks/file_mock.dart';
 
 void main() {
   group("FileHelper", () {

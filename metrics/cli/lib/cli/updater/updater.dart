@@ -12,6 +12,7 @@ import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/util/file/file_helper.dart';
+import 'package:meta/meta.dart';
 
 /// A class providing method for updating the deployed Metrics components.
 class Updater {
@@ -21,23 +22,20 @@ class Updater {
   /// A class that provides methods for working with the file system.
   final FileHelper _fileHelper;
 
-  /// A [Prompter] class this deployer uses to interact with a user.
+  /// A [Prompter] class this updater uses to interact with a user.
   final Prompter _prompter;
 
-  /// A [PathsFactory] class uses to create the [Paths].
+  /// A [PathsFactory] class this updater uses to create the [Paths].
   final PathsFactory _pathsFactory;
 
   /// Creates a new instance of the [Updater] with the given services.
   ///
-  /// Throws an [ArgumentError] if the given [updateAlgorithm] is `null`.
-  /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
-  /// Throws an [ArgumentError] if the given [prompter] is `null`.
-  /// Throws an [ArgumentError] if the given [pathsFactory] is `null`.
+  /// Throws an [ArgumentError] if any of the given parameters is `null`.
   Updater({
-    UpdateAlgorithm updateAlgorithm,
-    FileHelper fileHelper,
-    Prompter prompter,
-    PathsFactory pathsFactory,
+    @required UpdateAlgorithm updateAlgorithm,
+    @required FileHelper fileHelper,
+    @required Prompter prompter,
+    @required PathsFactory pathsFactory,
   })  : _updateAlgorithm = updateAlgorithm,
         _fileHelper = fileHelper,
         _prompter = prompter,
@@ -57,19 +55,15 @@ class Updater {
     final tempDirectory = _createTempDirectory();
     final paths = _pathsFactory.create(tempDirectory.path);
 
-    bool isUpdateSuccessful = true;
-
     try {
       await _updateAlgorithm.start(config, paths);
+
+      _prompter.info(UpdateStrings.successfulUpdating);
     } catch (error) {
-      isUpdateSuccessful = false;
+      final errorMessage = error.message as String;
 
-      _prompter.error(UpdateStrings.failedUpdating(error));
+      _prompter.error(UpdateStrings.failedUpdating(errorMessage));
     } finally {
-      if (isUpdateSuccessful) {
-        _prompter.info(UpdateStrings.successfulUpdating);
-      }
-
       _prompter.info(CommonStrings.deletingTempDirectory);
       _deleteDirectory(tempDirectory);
     }

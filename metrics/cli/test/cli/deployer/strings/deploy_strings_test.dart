@@ -7,28 +7,24 @@ import 'package:test/test.dart';
 void main() {
   group("DeployStrings", () {
     test(
-      ".failedDeployment() returns a text that contains the given error message",
+      ".failedDeployment() returns a message that contains the given error message",
       () {
         const errorMessage = 'errorMessage';
 
-        final error = Exception(errorMessage);
+        final message = DeployStrings.failedDeployment(errorMessage);
 
-        expect(
-          DeployStrings.failedDeployment(error),
-          contains(errorMessage),
-        );
+        expect(message, contains(errorMessage));
       },
     );
 
     test(
-      ".deleteProject() returns a text that contains the given project id",
+      ".deleteProject() returns a message that contains the given project id",
       () {
         const projectId = 'projectId';
 
-        expect(
-          DeployStrings.deleteProject(projectId),
-          contains(projectId),
-        );
+        final message = DeployStrings.deleteProject(projectId);
+
+        expect(message, contains(projectId));
       },
     );
   });

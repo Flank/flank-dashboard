@@ -8,7 +8,6 @@ import 'package:cli/cli/updater/strings/update_strings.dart';
 import 'package:cli/cli/updater/updater.dart';
 import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/update_config.dart';
-import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/strings/common_strings.dart';
 import 'package:mockito/mockito.dart';
@@ -16,10 +15,10 @@ import 'package:test/test.dart';
 
 import '../../test_utils/extension/error_answer.dart';
 import '../../test_utils/matchers.dart';
-import '../../test_utils/mock/directory_mock.dart';
-import '../../test_utils/mock/file_helper_mock.dart';
-import '../../test_utils/mock/path_factory_mock.dart';
-import '../../test_utils/mock/prompter_mock.dart';
+import '../../test_utils/mocks/directory_mock.dart';
+import '../../test_utils/mocks/file_helper_mock.dart';
+import '../../test_utils/mocks/path_factory_mock.dart';
+import '../../test_utils/mocks/prompter_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values, avoid_implementing_value_types, must_be_immutable
 
@@ -28,45 +27,42 @@ void main() {
     const tempDirectoryPath = 'tempDirectoryPath';
     const prefix = DeployConstants.tempDirectoryPrefix;
 
+    final directoryMatcher = isA<Directory>();
     final stateError = StateError('stateError');
     final paths = Paths(tempDirectoryPath);
+
+    final config = _UpdateConfigMock();
     final updateAlgorithm = _UpdateAlgorithmMock();
     final fileHelper = FileHelperMock();
     final prompter = PrompterMock();
-    final pathsFactory = PathsFactory();
-    final pathsFactoryMock = PathsFactoryMock();
     final directory = DirectoryMock();
+    final pathsFactory = PathsFactoryMock();
     final updater = Updater(
       updateAlgorithm: updateAlgorithm,
       fileHelper: fileHelper,
-      pathsFactory: pathsFactory,
       prompter: prompter,
+      pathsFactory: pathsFactory,
     );
-    final config = _UpdateConfigMock();
 
-    PostExpectation<Directory> whenCreateTempDirectory() {
-      return when(fileHelper.createTempDirectory(any, any));
-    }
-
-    PostExpectation<bool> whenDirectoryExist({
-      Directory withDirectory,
-      String withPath,
+    PostExpectation<Directory> whenCreateTempDirectory({
+      bool directoryExists = true,
     }) {
-      final currentDirectory = withDirectory ?? directory;
-      whenCreateTempDirectory().thenReturn(currentDirectory);
+      when(directory.existsSync()).thenReturn(directoryExists);
+      when(directory.path).thenReturn(tempDirectoryPath);
 
-      final currentPath = withPath ?? tempDirectoryPath;
-      when(currentDirectory.path).thenReturn(currentPath);
-
-      return when(currentDirectory.existsSync());
+      return when(fileHelper.createTempDirectory(
+        argThat(directoryMatcher),
+        prefix,
+      ));
     }
 
     tearDown(() {
+      reset(config);
       reset(updateAlgorithm);
       reset(fileHelper);
       reset(prompter);
-      reset(pathsFactoryMock);
       reset(directory);
+      reset(pathsFactory);
     });
 
     test(
@@ -132,32 +128,30 @@ void main() {
     test(
       ".update() creates a temporary directory",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 
-        verify(fileHelper.createTempDirectory(any, prefix)).called(once);
+        verify(fileHelper.createTempDirectory(
+          argThat(directoryMatcher),
+          prefix,
+        )).called(once);
       },
     );
 
     test(
       ".update() creates a temporary directory before creating the Paths instance",
       () async {
-        final updater = Updater(
-          updateAlgorithm: updateAlgorithm,
-          fileHelper: fileHelper,
-          pathsFactory: pathsFactoryMock,
-          prompter: prompter,
-        );
-
-        whenDirectoryExist().thenReturn(true);
-        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 
         verifyInOrder([
-          fileHelper.createTempDirectory(any, any),
-          pathsFactoryMock.create(tempDirectoryPath),
+          fileHelper.createTempDirectory(
+            argThat(directoryMatcher),
+            prefix,
+          ),
+          pathsFactory.create(tempDirectoryPath),
         ]);
       },
     );
@@ -165,39 +159,24 @@ void main() {
     test(
       ".update() creates a Paths instance using the given factory",
       () async {
-        final updater = Updater(
-          updateAlgorithm: updateAlgorithm,
-          fileHelper: fileHelper,
-          pathsFactory: pathsFactoryMock,
-          prompter: prompter,
-        );
-
-        whenDirectoryExist().thenReturn(true);
-        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 
-        verify(pathsFactoryMock.create(tempDirectoryPath)).called(once);
+        verify(pathsFactory.create(tempDirectoryPath)).called(once);
       },
     );
 
     test(
       ".update() creates a Paths instance before starting the update algorithm",
       () async {
-        final updater = Updater(
-          updateAlgorithm: updateAlgorithm,
-          fileHelper: fileHelper,
-          pathsFactory: pathsFactoryMock,
-          prompter: prompter,
-        );
-
-        whenDirectoryExist().thenReturn(true);
-        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
+        whenCreateTempDirectory().thenReturn(directory);
+        when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);
 
         await updater.update(config);
 
         verifyInOrder([
-          pathsFactoryMock.create(tempDirectoryPath),
+          pathsFactory.create(tempDirectoryPath),
           updateAlgorithm.start(config, paths),
         ]);
       },
@@ -206,7 +185,8 @@ void main() {
     test(
       ".update() starts the update algorithm",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
+        when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);
 
         await updater.update(config);
 
@@ -217,23 +197,24 @@ void main() {
     test(
       ".update() informs the user about the failed updating if the update algorithm throws",
       () async {
-        whenDirectoryExist().thenReturn(true);
-        when(updateAlgorithm.start(config, paths)).thenAnswerError(
-          stateError,
-        );
+        final errorMessage = stateError.message;
+        final expectedMessage = UpdateStrings.failedUpdating(errorMessage);
+
+        whenCreateTempDirectory().thenReturn(directory);
+        when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);
+        when(updateAlgorithm.start(config, paths)).thenAnswerError(stateError);
 
         await updater.update(config);
 
-        verify(prompter.error(
-          UpdateStrings.failedUpdating(stateError),
-        )).called(once);
+        verify(prompter.error(expectedMessage)).called(once);
       },
     );
 
     test(
       ".update() informs about deleting the temporary directory if the update algorithm throws",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
+        when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);
         when(updateAlgorithm.start(config, paths)).thenAnswerError(stateError);
 
         await updater.update(config);
@@ -245,7 +226,8 @@ void main() {
     test(
       ".update() deletes the temporary directory if the update algorithm throws",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
+        when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);
         when(updateAlgorithm.start(config, paths)).thenAnswerError(stateError);
 
         await updater.update(config);
@@ -257,7 +239,7 @@ void main() {
     test(
       ".update() deletes the temporary directory if it exists",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 
@@ -268,7 +250,7 @@ void main() {
     test(
       ".update() does not delete the temporary directory if it does not exist",
       () async {
-        whenDirectoryExist().thenReturn(false);
+        whenCreateTempDirectory(directoryExists: false).thenReturn(directory);
 
         await updater.update(config);
 
@@ -279,7 +261,7 @@ void main() {
     test(
       ".update() informs about deleting the temporary directory",
       () async {
-        whenDirectoryExist().thenReturn(true);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 
@@ -290,7 +272,7 @@ void main() {
     test(
       ".update() informs about the successful deployment if deployment succeeds",
       () async {
-        whenDirectoryExist().thenReturn(false);
+        whenCreateTempDirectory().thenReturn(directory);
 
         await updater.update(config);
 

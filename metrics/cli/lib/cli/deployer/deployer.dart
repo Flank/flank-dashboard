@@ -21,6 +21,7 @@ import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/util/file/file_helper.dart';
+import 'package:meta/meta.dart';
 
 /// A class providing method for deploying the Metrics Web Application.
 class Deployer {
@@ -48,26 +49,17 @@ class Deployer {
   /// A [Prompter] class this deployer uses to interact with a user.
   final Prompter _prompter;
 
-  /// A [PathsFactory] class uses to create the [Paths].
+  /// A [PathsFactory] class this deployer uses to create the [Paths].
   final PathsFactory _pathsFactory;
 
   /// Creates a new instance of the [Deployer] with the given services.
   ///
-  /// Throws an [ArgumentError] if the given [services] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.firebaseService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
-  /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
-  /// Throws an [ArgumentError] if the given [prompter] is `null`.
-  /// Throws an [ArgumentError] if the given [pathsFactory] is `null`.
+  /// Throws an [ArgumentError] if any of the given parameters is `null`.
   Deployer({
-    Services services,
-    FileHelper fileHelper,
-    Prompter prompter,
-    PathsFactory pathsFactory,
+    @required Services services,
+    @required FileHelper fileHelper,
+    @required Prompter prompter,
+    @required PathsFactory pathsFactory,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
@@ -78,12 +70,6 @@ class Deployer {
         _prompter = prompter,
         _pathsFactory = pathsFactory {
     ArgumentError.checkNotNull(services, 'services');
-    ArgumentError.checkNotNull(_flutterService, 'flutterService');
-    ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
-    ArgumentError.checkNotNull(_npmService, 'npmService');
-    ArgumentError.checkNotNull(_gitService, 'gitService');
-    ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
-    ArgumentError.checkNotNull(_sentryService, 'sentryService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
     ArgumentError.checkNotNull(_prompter, 'prompter');
     ArgumentError.checkNotNull(_pathsFactory, 'pathsFactory');
@@ -97,8 +83,6 @@ class Deployer {
 
     final tempDirectory = _createTempDirectory();
     final paths = _pathsFactory.create(tempDirectory.path);
-
-    bool isDeploymentSuccessful = true;
 
     try {
       await _gcloudService.addFirebase(projectId);
@@ -137,17 +121,15 @@ class Deployer {
       );
 
       await _gcloudService.configureOAuthOrigins(projectId);
-    } catch (error) {
-      isDeploymentSuccessful = false;
 
-      _prompter.error(DeployStrings.failedDeployment(error));
+      _prompter.info(DeployStrings.successfulDeployment);
+    } catch (error) {
+      final errorMessage = error.message as String;
+
+      _prompter.error(DeployStrings.failedDeployment(errorMessage));
 
       await _deleteProject(projectId);
     } finally {
-      if (isDeploymentSuccessful) {
-        _prompter.info(DeployStrings.successfulDeployment);
-      }
-
       _prompter.info(CommonStrings.deletingTempDirectory);
       _deleteDirectory(tempDirectory);
     }

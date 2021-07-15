@@ -8,46 +8,18 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
-import '../../../test_utils/mock/firebase_service_mock.dart';
-import '../../../test_utils/mock/flutter_service_mock.dart';
-import '../../../test_utils/mock/gcloud_service_mock.dart';
-import '../../../test_utils/mock/git_service_mock.dart';
-import '../../../test_utils/mock/npm_service_mock.dart';
-import '../../../test_utils/mock/sentry_service_mock.dart';
-import '../../../test_utils/mock/services_factory_mock.dart';
+import '../../../test_utils/mocks/services_factory_mock.dart';
 
 void main() {
   group("UpdaterFactory", () {
     final servicesFactory = ServicesFactoryMock();
+    final services = _ServicesMock();
     final updaterFactory = UpdaterFactory(servicesFactory);
-    final gcloudService = GCloudServiceMock();
-    final flutterService = FlutterServiceMock();
-    final gitService = GitServiceMock();
-    final npmService = NpmServiceMock();
-    final firebaseService = FirebaseServiceMock();
-    final sentryService = SentryServiceMock();
-    final services = Services(
-      flutterService: flutterService,
-      gcloudService: gcloudService,
-      gitService: gitService,
-      npmService: npmService,
-      firebaseService: firebaseService,
-      sentryService: sentryService,
-    );
 
     tearDown(() {
       reset(servicesFactory);
-      reset(gcloudService);
-      reset(flutterService);
-      reset(gitService);
-      reset(npmService);
-      reset(firebaseService);
-      reset(sentryService);
+      reset(services);
     });
-
-    PostExpectation<Services> whenCreateServices() {
-      return when(servicesFactory.create());
-    }
 
     test(
       "throws an ArgumentError if the given services factory is null",
@@ -62,7 +34,7 @@ void main() {
     test(
       ".create() creates a Services instance using the given services factory",
       () {
-        whenCreateServices().thenReturn(services);
+        when(servicesFactory.create()).thenReturn(services);
 
         updaterFactory.create();
 
@@ -73,7 +45,7 @@ void main() {
     test(
       ".create() successfully creates an Updater instance",
       () {
-        whenCreateServices().thenReturn(services);
+        when(servicesFactory.create()).thenReturn(services);
 
         final updater = updaterFactory.create();
 
@@ -82,3 +54,5 @@ void main() {
     );
   });
 }
+
+class _ServicesMock extends Mock implements Services {}

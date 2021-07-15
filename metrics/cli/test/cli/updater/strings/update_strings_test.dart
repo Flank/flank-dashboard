@@ -7,16 +7,13 @@ import 'package:test/test.dart';
 void main() {
   group("UpdateStrings", () {
     test(
-      ".failedUpdating() returns a text that contains the error message",
+      ".failedUpdating() returns a message that contains the error message",
       () {
         const errorMessage = 'errorMessage';
 
-        final error = Exception(errorMessage);
+        final message = UpdateStrings.failedUpdating(errorMessage);
 
-        expect(
-          UpdateStrings.failedUpdating(error),
-          contains(errorMessage),
-        );
+        expect(message, contains(errorMessage));
       },
     );
   });
