@@ -16,15 +16,16 @@ import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/file_helper_mock.dart';
-import '../../../test_utils/file_mock.dart';
-import '../../../test_utils/firebase_service_mock.dart';
-import '../../../test_utils/flutter_service_mock.dart';
-import '../../../test_utils/gcloud_service_mock.dart';
-import '../../../test_utils/git_service_mock.dart';
+import '../../../test_utils/extension/error_answer.dart';
 import '../../../test_utils/matchers.dart';
-import '../../../test_utils/npm_service_mock.dart';
-import '../../../test_utils/sentry_service_mock.dart';
+import '../../../test_utils/mocks/file_helper_mock.dart';
+import '../../../test_utils/mocks/file_mock.dart';
+import '../../../test_utils/mocks/firebase_service_mock.dart';
+import '../../../test_utils/mocks/flutter_service_mock.dart';
+import '../../../test_utils/mocks/gcloud_service_mock.dart';
+import '../../../test_utils/mocks/git_service_mock.dart';
+import '../../../test_utils/mocks/npm_service_mock.dart';
+import '../../../test_utils/mocks/sentry_service_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -766,10 +767,4 @@ void main() {
       },
     );
   });
-}
-
-extension _ErrorAnswer on PostExpectation {
-  void thenAnswerError(Object error) {
-    thenAnswer((_) => Future.error(error));
-  }
 }
