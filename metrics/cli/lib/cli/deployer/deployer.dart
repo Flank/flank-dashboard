@@ -124,9 +124,7 @@ class Deployer {
 
       _prompter.info(DeployStrings.successfulDeployment);
     } catch (error) {
-      final errorMessage = error.message as String;
-
-      _prompter.error(DeployStrings.failedDeployment(errorMessage));
+      _prompter.error(DeployStrings.failedDeployment(error));
 
       await _deleteProject(projectId);
     } finally {

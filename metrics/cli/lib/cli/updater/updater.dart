@@ -60,9 +60,7 @@ class Updater {
 
       _prompter.info(UpdateStrings.successfulUpdating);
     } catch (error) {
-      final errorMessage = error.message as String;
-
-      _prompter.error(UpdateStrings.failedUpdating(errorMessage));
+      _prompter.error(UpdateStrings.failedUpdating(error));
     } finally {
       _prompter.info(CommonStrings.deletingTempDirectory);
       _deleteDirectory(tempDirectory);
