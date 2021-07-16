@@ -5,9 +5,9 @@
 
 /// A class that holds the strings used within the update process.
 class UpdateStrings {
-  static String failedUpdating(String errorMessage) => '''
+  static String failedUpdating(Object error) => '''
 The updating has failed due to the following error:
-$errorMessage''';
+$error''';
 
   static const String successfulUpdating =
       'The updating has finished successfully!';

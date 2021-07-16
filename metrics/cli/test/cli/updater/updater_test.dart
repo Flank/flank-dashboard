@@ -197,8 +197,7 @@ void main() {
     test(
       ".update() informs the user about the failed updating if the update algorithm throws",
       () async {
-        final errorMessage = stateError.message;
-        final expectedMessage = UpdateStrings.failedUpdating(errorMessage);
+        final expectedMessage = UpdateStrings.failedUpdating(stateError);
 
         whenCreateTempDirectory().thenReturn(directory);
         when(pathsFactory.create(tempDirectoryPath)).thenReturn(paths);

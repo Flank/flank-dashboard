@@ -8,9 +8,9 @@ class DeployStrings {
   static const String setupSentry =
       'Would you like to set up a Sentry for the Metrics project?(y/n): ';
 
-  static String failedDeployment(String errorMessage) => '''
+  static String failedDeployment(Object error) => '''
 The deployment has failed due to the following error:
-$errorMessage''';
+$error''';
 
   static const String successfulDeployment =
       'The deployment has finished successfully!';
