@@ -98,7 +98,9 @@ This section examines the overall, top-level architecture of the feature. This a
 - The section explains the implementation approach to the feature. If there are several implementation approaches:
     - the section examines each approach and reviews its pros and cons;
     - the section selects one approach and explains the choice providing clear reasoning.
-- The section represents the architecture with the components diagram demonstrating responsibilities and the overall algorithm.
+- The section represents the architecture with a diagram(s) demonstrating responsibilities and the overall algorithm.
+
+One should notice that the presented diagrams should differ from one presented in the [System modeling](#system-modeling) section. In this section, diagram(s) should be more detailed and explain the architecture of the feature rather than its place in a system. To know more about the possible diagrams for this section and how to create them effectively, consider [this article](https://www.alibabacloud.com/blog/how-to-create-an-effective-technical-architectural-diagram_596100).
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
