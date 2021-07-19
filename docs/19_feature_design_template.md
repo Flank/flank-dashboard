@@ -14,10 +14,11 @@ In this section, provide the contents for the document including all custom subs
 - [**Design**](#design)
     - [Architecture](#architecture)
     - [User Interface](#user-interface)
-    - [Database](#database)
+    - [Data Storage](#data-storage)
     - [Privacy](#privacy)
     - [Security](#security)
     - [Program](#program)
+    - [Testing](#testing)
 
 # Analysis
 > Describe a general analysis approach.
@@ -86,7 +87,7 @@ The above questions are focused on one purpose: the place and role of the new fe
 The design section purposes discovering the implementation details for the feature. What is the structure of the feature? How is the feature to be integrated into the project/component(s)? And many other details are covered by the subsections below. But before we dive into explanations for the design parts, one should consider the following rules that hold for the whole design section:
 
 - The design acts within the requirements defined in the [Requirements](#requirements) section.
-- The design details all the [Analysis]($analysis) section describes/touches.
+- The design details all the [Analysis](#analysis) section describes/touches.
 - The design's subsections must not leave open questions about the selected implementation approach. Each section ends with clear and definitive details about exactly one implementation approach.
 
 ### Architecture
@@ -139,7 +140,7 @@ This section discovers how users' privacy is protected. One should cover the fol
 ### Security
 > How relevant data will be secured (Data encryption at rest, etc.).
 
-The Security section's purpose is to describe how users' data is secured. This is related to all data that users provide, and the application then stores in the [Database](#database) or using 3rd-party services. This section should highlight:
+The Security section's purpose is to describe how users' data is secured. This is related to all data that users provide, and the application then stores in the [Data Storage](#data-storage) or using 3rd-party services. This section should highlight:
 
 - how data is secured from unauthorized access;
 - how a user can gain access to their data (authentication/authorization, user's scope, etc.);
