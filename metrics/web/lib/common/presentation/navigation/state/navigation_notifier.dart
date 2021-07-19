@@ -206,10 +206,10 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    final name = page?.name;
+    final name = page?.name?.replaceAll('/', '');
 
     return RouteConfiguration.values.firstWhere(
-      (route) => "/${route.name.value}" == name,
+      (route) => route.name.value == name,
       orElse: () => DefaultRoutes.dashboard,
     );
   }
