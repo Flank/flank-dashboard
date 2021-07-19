@@ -106,20 +106,26 @@ class NavigationNotifier extends ChangeNotifier {
     if (_isAppInitialized) _redirect();
   }
 
+  /// Determines whether the current page can be popped.
+  bool canPop() {
+    return _pages.length > 1;
+  }
+
   /// Removes the current page and navigates to the previous one.
   void pop() {
-    if (_pages.length <= 1) return;
+    if (canPop()) {
+      _pages.removeLast();
 
-    _pages.removeLast();
+      final currentPage = _pages.last;
 
-    final currentPage = _pages.last;
-    final newConfiguration = _getConfigurationFromPage(currentPage);
+      final newConfiguration = _getConfigurationFromPage(currentPage);
 
-    _currentConfiguration = newConfiguration;
+      _currentConfiguration = newConfiguration;
 
-    _updatePageParameters();
+      _updatePageParameters();
 
-    notifyListeners();
+      notifyListeners();
+    }
   }
 
   /// Pushes the route created from the given [configuration].
@@ -204,7 +210,7 @@ class NavigationNotifier extends ChangeNotifier {
     final name = page?.name;
 
     return RouteConfiguration.values.firstWhere(
-      (route) => route.name.value == name,
+      (route) => "/${route.name.value}" == name,
       orElse: () => DefaultRoutes.dashboard,
     );
   }

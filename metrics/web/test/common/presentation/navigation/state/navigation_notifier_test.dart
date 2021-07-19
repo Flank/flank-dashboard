@@ -299,12 +299,33 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
-        final currentConfiguration = notifier.currentConfiguration;
-
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
+        final currentConfiguration = notifier.currentConfiguration;
+
         verify(pageParametersFactory.create(currentConfiguration)).called(once);
+      },
+    );
+
+    test(
+      ".canPop() returns true if count of pages is more than 1",
+      () {
+        notifier.push(DefaultRoutes.projectGroups);
+
+        final expected = notifier.canPop();
+
+        expect(expected, isTrue);
+      },
+    );
+
+    test(
+      ".canPop() returns false if count of pages is less or equals to 1",
+      () {
+        final expected = notifier.canPop();
+
+        expect(expected, isFalse);
       },
     );
 
