@@ -35,5 +35,21 @@ void main() {
         expect(target.description, equals(description));
       },
     );
+
+    test(
+      "equals to another ValidationTarget with the same parameters",
+      () {
+        const target = ValidationTarget(
+          name: name,
+          description: description,
+        );
+        const anotherTarget = ValidationTarget(
+          name: name,
+          description: description,
+        );
+
+        expect(target, equals(anotherTarget));
+      },
+    );
   });
 }

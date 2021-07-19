@@ -9,7 +9,8 @@ class ValidationConclusion extends Equatable {
   /// A name of this validation conclusion.
   final String name;
 
-  /// A visual indicator of this validation conclusion.
+  /// A visual indicator of this validation conclusion used in the validation
+  /// process output.
   final String indicator;
 
   @override
@@ -18,7 +19,7 @@ class ValidationConclusion extends Equatable {
   /// Creates a new instance of the [ValidationConclusion] with the
   /// given parameters.
   ///
-  /// Throws an [AssertionError] if the given [name] is null.
+  /// The given [name] must not be `null`.
   const ValidationConclusion({
     @required this.name,
     this.indicator,

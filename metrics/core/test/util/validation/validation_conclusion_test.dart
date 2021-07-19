@@ -35,5 +35,21 @@ void main() {
         expect(conclusion.indicator, equals(indicator));
       },
     );
+
+    test(
+      "equals to another ValidationConclusion with the same parameters",
+      () {
+        const conclusion = ValidationConclusion(
+          name: name,
+          indicator: indicator,
+        );
+        const anotherConclusion = ValidationConclusion(
+          name: name,
+          indicator: indicator,
+        );
+
+        expect(conclusion, equals(anotherConclusion));
+      },
+    );
   });
 }
