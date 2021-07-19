@@ -117,7 +117,6 @@ class NavigationNotifier extends ChangeNotifier {
       _pages.removeLast();
 
       final currentPage = _pages.last;
-
       final newConfiguration = _getConfigurationFromPage(currentPage);
 
       _currentConfiguration = newConfiguration;
