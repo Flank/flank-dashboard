@@ -4,8 +4,10 @@
 import 'package:args/command_runner.dart';
 import 'package:cli/cli/command/deploy_command.dart';
 import 'package:cli/cli/command/doctor_command.dart';
+import 'package:cli/cli/command/update_command.dart';
 import 'package:cli/cli/deployer/factory/deployer_factory.dart';
 import 'package:cli/cli/doctor/factory/doctor_factory.dart';
+import 'package:cli/cli/updater/factory/updater_factory.dart';
 
 /// A [CommandRunner] implementation for the Metrics CLI.
 class MetricsCliRunner extends CommandRunner<void> {
@@ -15,10 +17,13 @@ class MetricsCliRunner extends CommandRunner<void> {
   MetricsCliRunner() : super('metrics', 'Metrics CLI.') {
     final deployerFactory = DeployerFactory();
     final doctorFactory = DoctorFactory();
+    final updaterFactory = UpdaterFactory();
     final deployCommand = DeployCommand(deployerFactory);
     final doctorCommand = DoctorCommand(doctorFactory);
+    final updateCommand = UpdateCommand(updaterFactory);
 
     addCommand(deployCommand);
     addCommand(doctorCommand);
+    addCommand(updateCommand);
   }
 }

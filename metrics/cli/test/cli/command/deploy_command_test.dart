@@ -35,15 +35,6 @@ void main() {
     );
 
     test(
-      "creates an instance with the given deployer factory",
-      () {
-        final command = DeployCommand(deployerFactory);
-
-        expect(command.deployerFactory, equals(deployerFactory));
-      },
-    );
-
-    test(
       ".name equals to the 'deploy'",
       () {
         expect(deployCommand.name, equals('deploy'));

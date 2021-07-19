@@ -10,11 +10,11 @@ import 'package:cli/util/file/file_helper.dart';
 /// A class that provides a method for creating an [UpdateConfig] instance.
 class UpdateConfigFactory {
   /// A [FileHelper] this factory uses to get the YAML configuration file.
-  final FileHelper fileHelper;
+  final FileHelper _fileHelper;
 
   /// An [UpdateConfigParser] this factory uses to parse the content
   /// of the YAML configuration file to the [UpdateConfig].
-  final UpdateConfigParser configParser;
+  final UpdateConfigParser _configParser;
 
   /// Creates a new instance of the [UpdateConfigFactory].
   ///
@@ -25,8 +25,8 @@ class UpdateConfigFactory {
   const UpdateConfigFactory({
     FileHelper fileHelper,
     UpdateConfigParser configParser,
-  })  : fileHelper = fileHelper ?? const FileHelper(),
-        configParser = configParser ?? const UpdateConfigParser();
+  })  : _fileHelper = fileHelper ?? const FileHelper(),
+        _configParser = configParser ?? const UpdateConfigParser();
 
   /// Creates a new instance of the [UpdateConfig] using the [configPath].
   ///
@@ -36,9 +36,9 @@ class UpdateConfigFactory {
   UpdateConfig create(String configPath) {
     ArgumentError.checkNotNull(configPath, 'configPath');
 
-    final configFile = fileHelper.getFile(configPath);
+    final configFile = _fileHelper.getFile(configPath);
     final configContent = configFile.readAsStringSync();
 
-    return configParser.parse(configContent);
+    return _configParser.parse(configContent);
   }
 }

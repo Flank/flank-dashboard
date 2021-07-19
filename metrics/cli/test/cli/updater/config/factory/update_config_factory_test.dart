@@ -42,43 +42,6 @@ void main() {
     });
 
     test(
-      "creates an instance with the given parameters",
-      () {
-        final configFactory = UpdateConfigFactory(
-          fileHelper: fileHelper,
-          configParser: configParser,
-        );
-
-        expect(configFactory.fileHelper, equals(fileHelper));
-        expect(configFactory.configParser, equals(configParser));
-      },
-    );
-
-    test(
-      "creates an instance with the default file helper, if the given one is null",
-      () {
-        final updateConfigFactory = UpdateConfigFactory(
-          fileHelper: null,
-          configParser: configParser,
-        );
-
-        expect(updateConfigFactory.fileHelper, isNotNull);
-      },
-    );
-
-    test(
-      "creates an instance with the default update config parser, if the given one is null",
-      () {
-        final updateConfigFactory = UpdateConfigFactory(
-          fileHelper: fileHelper,
-          configParser: null,
-        );
-
-        expect(updateConfigFactory.configParser, isNotNull);
-      },
-    );
-
-    test(
       ".create() throws an ArgumentError if the given config path is null",
       () {
         expect(() => configFactory.create(null), throwsArgumentError);
