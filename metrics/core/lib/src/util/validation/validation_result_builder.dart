@@ -13,8 +13,8 @@ class ValidationResultBuilder {
   /// Creates a new instance of the [ValidationResultBuilder]
   /// for the given [targets].
   ///
-  /// A [targets] represents all [ValidationTarget]s of the [ValidationResult]
-  /// this builder assembles.
+  /// A [targets] list represents all [ValidationTarget]s of the [ValidationResult]
+  ///  this builder assembles.
   ///
   /// Throws an [ArgumentError] if the given [targets] is `null`.
   ValidationResultBuilder.forTargets(List<ValidationTarget> targets) {

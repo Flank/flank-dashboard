@@ -9,8 +9,6 @@ import 'package:metrics_core/src/util/validation/validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_target.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/matchers.dart';
-
 void main() {
   group("ValidationResult", () {
     const name = 'name';
@@ -29,9 +27,9 @@ void main() {
     final result = ValidationResult(results);
 
     test(
-      "throws an AssertionError if the given results is null",
+      "throws an ArgumentError if the given results is null",
       () {
-        expect(() => ValidationResult(null), throwsAssertionError);
+        expect(() => ValidationResult(null), throwsArgumentError);
       },
     );
 
