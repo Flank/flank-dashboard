@@ -14,7 +14,7 @@ class ValidationResultBuilder {
   /// for the given [targets].
   ///
   /// A [targets] list represents all [ValidationTarget]s of the [ValidationResult]
-  ///  this builder assembles.
+  /// this builder assembles.
   ///
   /// Throws an [ArgumentError] if the given [targets] is `null`.
   ValidationResultBuilder.forTargets(List<ValidationTarget> targets) {
