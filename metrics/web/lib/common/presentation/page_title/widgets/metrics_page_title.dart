@@ -35,7 +35,7 @@ class MetricsPageTitle extends StatelessWidget {
           child: Tooltip(
             message: CommonStrings.navigateBack,
             child: TappableArea(
-              onTap: () => _navigatesBack(context),
+              onTap: () => _navigateBack(context),
               builder: (context, isHovered, child) => child,
               child: SvgImage(
                 'icons/arrow-back.svg',
@@ -55,9 +55,9 @@ class MetricsPageTitle extends StatelessWidget {
     );
   }
 
-  /// Navigates to the previous page if [NavigationNotifier.canPop], 
-  /// otherwise navigates to the [DefaultRoutes.dashboard] page.
-  void _navigatesBack(BuildContext context) {
+  /// Navigates to the previous page, if [NavigationNotifier.canPop].
+  /// Otherwise, navigates to the [DefaultRoutes.dashboard] page.
+  void _navigateBack(BuildContext context) {
     final navigationNotifier =
         Provider.of<NavigationNotifier>(context, listen: false);
 

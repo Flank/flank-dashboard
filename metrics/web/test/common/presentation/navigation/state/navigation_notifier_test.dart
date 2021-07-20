@@ -310,22 +310,39 @@ void main() {
     );
 
     test(
-      ".canPop() returns true if count of pages is more than 1",
+      ".canPop() returns true if there are more than one page in the pages list",
       () {
         notifier.push(DefaultRoutes.projectGroups);
 
-        final expected = notifier.canPop();
+        final actualValue = notifier.canPop();
 
-        expect(expected, isTrue);
+        expect(actualValue, isTrue);
       },
     );
 
     test(
-      ".canPop() returns false if count of pages is less or equals to 1",
+      ".canPop() returns false if there is one page in the pages list",
       () {
-        final expected = notifier.canPop();
+        final actualValue = notifier.canPop();
 
-        expect(expected, isFalse);
+        expect(actualValue, isFalse);
+      },
+    );
+
+    test(
+      ".canPop() returns false if the pages list is empty",
+      () {
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isFalse);
       },
     );
 

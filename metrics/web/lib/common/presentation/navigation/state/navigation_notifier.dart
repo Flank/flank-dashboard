@@ -113,18 +113,18 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Removes the current page and navigates to the previous one.
   void pop() {
-    if (canPop()) {
-      _pages.removeLast();
+    if (_pages.length <= 1) return;
 
-      final currentPage = _pages.last;
-      final newConfiguration = _getConfigurationFromPage(currentPage);
+    _pages.removeLast();
 
-      _currentConfiguration = newConfiguration;
+    final currentPage = _pages.last;
+    final newConfiguration = _getConfigurationFromPage(currentPage);
 
-      _updatePageParameters();
+    _currentConfiguration = newConfiguration;
 
-      notifyListeners();
-    }
+    _updatePageParameters();
+
+    notifyListeners();
   }
 
   /// Pushes the route created from the given [configuration].

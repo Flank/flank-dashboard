@@ -89,7 +89,7 @@ void main() {
     });
 
     testWidgets(
-      "navigates to the dashboard page on tap on the back button if the navigation notifier can't pop the current page",
+      "navigates to the dashboard page on tap on the back button if the navigation notifier cannot pop the current page",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
         when(navigationNotifier.canPop()).thenReturn(false);
