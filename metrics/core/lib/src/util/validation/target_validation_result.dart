@@ -55,27 +55,4 @@ class TargetValidationResult<T> extends Equatable {
     this.data,
   })  : assert(target != null),
         assert(conclusion != null);
-
-  /// Creates a new instance of the [TargetValidationResult] based on current
-  /// instance.
-  ///
-  /// If any of the given parameters is null, or parameter isn't specified,
-  /// the value will be copied from the current instance.
-  TargetValidationResult<T> copyWith({
-    ValidationTarget target,
-    ValidationConclusion conclusion,
-    String description,
-    Map<String, dynamic> details,
-    Map<String, dynamic> context,
-    T data,
-  }) {
-    return TargetValidationResult(
-      target: target ?? this.target,
-      conclusion: conclusion ?? this.conclusion,
-      description: description ?? this.description,
-      details: details ?? this.details,
-      context: context ?? this.context,
-      data: data ?? this.data,
-    );
-  }
 }
