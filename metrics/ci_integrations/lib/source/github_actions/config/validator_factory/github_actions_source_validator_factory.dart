@@ -2,24 +2,24 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
-import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
-import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
-import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config_field.dart';
+import 'package:ci_integration/source/github_actions/config/model/github_actions_source_validation_target.dart';
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/config/validator/github_actions_source_validator.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A factory class that provides a method
 /// for creating [GithubActionsSourceValidator].
 class GithubActionsSourceValidatorFactory
-    implements ConfigValidatorFactoryStub<GithubActionsSourceConfig> {
+    implements ConfigValidatorFactory<GithubActionsSourceConfig> {
   /// Creates a new instance of the [GithubActionsSourceValidatorFactory].
   const GithubActionsSourceValidatorFactory();
 
   @override
-  ConfigValidatorStub<GithubActionsSourceConfig> create(
+  ConfigValidator<GithubActionsSourceConfig> create(
     GithubActionsSourceConfig config,
   ) {
     ArgumentError.checkNotNull(config, 'config');
@@ -36,8 +36,8 @@ class GithubActionsSourceValidatorFactory
       githubActionsClient,
     );
 
-    final validationResultBuilder = ValidationResultBuilder.forFields(
-      GithubActionsSourceConfigField.values,
+    final validationResultBuilder = ValidationResultBuilder.forTargets(
+      GithubActionsSourceValidationTarget.values,
     );
 
     return GithubActionsSourceValidator(
