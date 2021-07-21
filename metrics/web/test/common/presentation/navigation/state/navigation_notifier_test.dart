@@ -1185,8 +1185,7 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
-}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
 
 class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}
 

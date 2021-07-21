@@ -16,7 +16,7 @@ class MetricsPageRouteConfigurationFactory {
   /// Creates the [RouteConfiguration] using the given [page].
   ///
   /// If the given [page] is `null` or its [MetricsPage.routeName] does not
-  /// match to any of [RouteName]s returns the [DefaultRoutes.loading].
+  /// match to any of [RouteName]s, returns the [DefaultRoutes.loading].
   RouteConfiguration create(MetricsPage page) {
     final routeName = page?.routeName;
     final parameters = page?.arguments as PageParametersModel;
