@@ -13,7 +13,7 @@ import '../../../../test_utils/matchers.dart';
 import '../../../../test_utils/mocks/file_helper_mock.dart';
 import '../../../../test_utils/mocks/file_mock.dart';
 
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, prefer_const_constructors
 
 void main() {
   group("UpdateConfigFactory", () {
@@ -40,6 +40,20 @@ void main() {
       reset(configParser);
       reset(file);
     });
+
+    test(
+      "successfully creates an instance if the given config parser is null",
+      () {
+        expect(() => UpdateConfigFactory(configParser: null), returnsNormally);
+      },
+    );
+
+    test(
+      "successfully creates an instance if the given file helper is null",
+      () {
+        expect(() => UpdateConfigFactory(fileHelper: null), returnsNormally);
+      },
+    );
 
     test(
       ".create() throws an ArgumentError if the given config path is null",

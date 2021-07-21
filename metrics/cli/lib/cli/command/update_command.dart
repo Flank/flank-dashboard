@@ -18,7 +18,7 @@ class UpdateCommand extends Command {
   @override
   final description = 'Updates the deployed Metrics components.';
 
-  /// An [UpdaterFactory] this command uses to create a [Updater].
+  /// An [UpdaterFactory] this command uses to create an [Updater].
   final UpdaterFactory _updaterFactory;
 
   /// An [UpdateConfigFactory] this command uses to create an [UpdateConfig].

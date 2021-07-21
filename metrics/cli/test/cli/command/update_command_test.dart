@@ -1,8 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:args/args.dart';
-import 'package:cli/cli/command/doctor_command.dart';
+import 'package:args/command_runner.dart';
 import 'package:cli/cli/command/update_command.dart';
 import 'package:cli/cli/updater/config/factory/update_config_factory.dart';
 import 'package:cli/cli/updater/factory/updater_factory.dart';
@@ -13,25 +12,29 @@ import 'package:test/test.dart';
 import '../../test_utils/matchers.dart';
 import '../../test_utils/mocks/update_config_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("UpdateCommand", () {
     const configPath = 'configPath';
+    const configArgument = '--config-file=$configPath';
 
-    final updaterFactory = _UpdaterFactoryMock();
     final updateConfigFactory = _UpdateConfigFactoryMock();
     final updater = _UpdaterMock();
-    final updateCommand = _UpdateCommandStub(
-      updaterFactory,
-      updateConfigFactory,
-      configPath: configPath,
-    );
+    final updaterFactory = _UpdaterFactoryStub(updater);
 
-    PostExpectation<Updater> whenCreateUpdater() {
-      return when(updaterFactory.create());
-    }
+    final runner = CommandRunner('test', 'test');
+    final updateCommand = UpdateCommand(
+      updaterFactory,
+      updateConfigFactory: updateConfigFactory,
+    );
+    final commandName = updateCommand.name;
+
+    setUpAll(() {
+      runner.addCommand(updateCommand);
+    });
 
     tearDown(() {
-      reset(updaterFactory);
       reset(updateConfigFactory);
       reset(updater);
     });
@@ -40,8 +43,21 @@ void main() {
       "throws an ArgumentError if the given updater factory is null",
       () {
         expect(
-          () => DoctorCommand(null),
+          () => UpdateCommand(null),
           throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "successfully creates an instance if the given update config factory is null",
+      () {
+        expect(
+          () => UpdateCommand(
+            updaterFactory,
+            updateConfigFactory: null,
+          ),
+          returnsNormally,
         );
       },
     );
@@ -96,9 +112,17 @@ void main() {
     test(
       ".run() creates updater using the given updater factory",
       () async {
-        whenCreateUpdater().thenReturn(updater);
+        final runner = CommandRunner('test', 'test');
+        final updaterFactory = _UpdaterFactoryMock();
+        final updateCommand = UpdateCommand(
+          updaterFactory,
+          updateConfigFactory: updateConfigFactory,
+        );
 
-        await updateCommand.run();
+        runner.addCommand(updateCommand);
+        when(updaterFactory.create()).thenReturn(updater);
+
+        await runner.run([updateCommand.name, configArgument]);
 
         verify(updaterFactory.create()).called(once);
       },
@@ -107,9 +131,7 @@ void main() {
     test(
       ".run() uses the update config factory to create the update config",
       () async {
-        whenCreateUpdater().thenReturn(updater);
-
-        await updateCommand.run();
+        await runner.run([commandName, configArgument]);
 
         verify(updateConfigFactory.create(configPath)).called(once);
       },
@@ -120,10 +142,9 @@ void main() {
       () async {
         final updateConfig = UpdateConfigMock();
 
-        whenCreateUpdater().thenReturn(updater);
         when(updateConfigFactory.create(configPath)).thenReturn(updateConfig);
 
-        await updateCommand.run();
+        await runner.run([commandName, configArgument]);
 
         verify(updater.update(updateConfig)).called(once);
       },
@@ -131,55 +152,19 @@ void main() {
   });
 }
 
-/// A stub class for an [UpdateCommand] class providing test implementation
+/// A stub class for an [UpdaterFactory] class providing test implementation
 /// for methods.
-class _UpdateCommandStub extends UpdateCommand {
-  /// A path to the configuration file to use in tests.
-  final String configPath;
+class _UpdaterFactoryStub extends UpdaterFactory {
+  /// An [Updater] class this stub creates.
+  final Updater updater;
+
+  /// Creates an instance of the [_UpdaterFactoryStub].
+  _UpdaterFactoryStub(this.updater);
 
   @override
-  ArgResults get argResults => _ArgResultsStub(configPath);
-
-  /// Creates an instance of the [_UpdateCommandStub]
-  /// with the given parameters.
-  _UpdateCommandStub(
-    UpdaterFactory updaterFactory,
-    UpdateConfigFactory updateConfigFactory, {
-    this.configPath,
-  }) : super(updaterFactory, updateConfigFactory: updateConfigFactory);
-}
-
-/// A stub class for an [ArgResults] class providing test implementation
-/// for methods.
-class _ArgResultsStub implements ArgResults {
-  /// A path to the configuration file to use in tests.
-  final String configPath;
-
-  /// Creates an instance of the [_ArgResultsStub] with the given [configPath].
-  _ArgResultsStub(this.configPath);
-
-  @override
-  String operator [](String name) {
-    return configPath;
+  Updater create() {
+    return updater;
   }
-
-  @override
-  List<String> get arguments => throw UnimplementedError();
-
-  @override
-  ArgResults get command => throw UnimplementedError();
-
-  @override
-  String get name => throw UnimplementedError();
-
-  @override
-  Iterable<String> get options => throw UnimplementedError();
-
-  @override
-  List<String> get rest => throw UnimplementedError();
-
-  @override
-  bool wasParsed(String name) => throw UnimplementedError();
 }
 
 class _UpdateConfigFactoryMock extends Mock implements UpdateConfigFactory {}
