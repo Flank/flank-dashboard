@@ -50,10 +50,12 @@ void main() {
       ".create() returns a loading route configuration if the given page route name is unknown",
       () {
         final routeName = RouteNameMock();
-        final page = MetricsPageMock();
+        final page = MetricsPage(
+          child: const Text('test'),
+          routeName: routeName,
+        );
 
         when(routeName.value).thenReturn('unknown');
-        when(page.routeName).thenReturn(routeName);
 
         final configuration = pageRouteConfigurationFactory.create(page);
 
@@ -173,5 +175,3 @@ void main() {
     );
   });
 }
-
-class MetricsPageMock extends Mock implements MetricsPage {}
