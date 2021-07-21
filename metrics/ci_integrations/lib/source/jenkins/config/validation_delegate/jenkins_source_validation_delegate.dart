@@ -3,9 +3,11 @@
 
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/strings/jenkins_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A [ValidationDelegate] for the Jenkins source integration.
 class JenkinsSourceValidationDelegate implements ValidationDelegate {
@@ -21,7 +23,7 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [jenkinsUrl].
-  Future<FieldValidationResult<void>> validateJenkinsUrl(
+  Future<TargetValidationResult<void>> validateJenkinsUrl(
       String jenkinsUrl) async {
     final instanceInfoInteraction = await _client.fetchJenkinsInstanceInfo(
       jenkinsUrl,
@@ -32,23 +34,30 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
     if (instanceInfoInteraction.isError ||
         instanceInfo == null ||
         instanceInfo.version == null) {
-      return const FieldValidationResult.failure(
-        additionalContext: JenkinsStrings.notAJenkinsUrl,
+      return const TargetValidationResult(
+        target: JenkinsSourceValidationTarget.url,
+        conclusion: ConfigFieldValidationConclusion.invalid,
+        description: JenkinsStrings.notAJenkinsUrl,
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: JenkinsSourceValidationTarget.url,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Validates the given [auth].
-  Future<FieldValidationResult<void>> validateAuth(
+  Future<TargetValidationResult<void>> validateAuth(
     AuthorizationBase auth,
   ) async {
     final userInteraction = await _client.fetchJenkinsUser(auth);
 
     if (userInteraction.isError || userInteraction.result == null) {
-      return const FieldValidationResult.failure(
-        additionalContext: JenkinsStrings.authInvalid,
+      return const TargetValidationResult(
+        target: JenkinsSourceValidationTarget.apiKey,
+        conclusion: ConfigFieldValidationConclusion.invalid,
+        description: JenkinsStrings.authInvalid,
       );
     }
 
@@ -68,26 +77,36 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
     }
 
     if (authenticationInfo.isNotEmpty) {
-      final additionalContext = 'Note: $authenticationInfo';
+      final description = 'Note: $authenticationInfo';
 
-      return FieldValidationResult.success(
-        additionalContext: additionalContext,
+      return TargetValidationResult(
+        target: JenkinsSourceValidationTarget.apiKey,
+        conclusion: ConfigFieldValidationConclusion.valid,
+        description: description,
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: JenkinsSourceValidationTarget.apiKey,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Validates the given [jobName].
-  Future<FieldValidationResult<void>> validateJobName(String jobName) async {
+  Future<TargetValidationResult<void>> validateJobName(String jobName) async {
     final jobInteraction = await _client.fetchJob(jobName);
 
     if (jobInteraction.isError || jobInteraction.result == null) {
-      return const FieldValidationResult.failure(
-        additionalContext: JenkinsStrings.jobDoesNotExist,
+      return const TargetValidationResult(
+        target: JenkinsSourceValidationTarget.jobName,
+        conclusion: ConfigFieldValidationConclusion.invalid,
+        description: JenkinsStrings.jobDoesNotExist,
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: JenkinsSourceValidationTarget.jobName,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 }
