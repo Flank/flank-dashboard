@@ -1,8 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:metrics_core/src/util/validation/target_validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
 import 'package:metrics_core/src/util/validation/validation_result.dart';
@@ -13,14 +11,15 @@ class ValidationResultPrinter {
   /// An instance of the [StringSink] this printer uses to print the result.
   final StringSink sink;
 
-  /// Create a new instance of the [ValidationResultPrinter] with the given
+  /// Creates a new instance of the [ValidationResultPrinter] with the given
   /// [StringSink].
   ///
-  /// If the [StringSink] is `null`, an instance of the standard output stream
-  /// is used.
+  /// Throws an [ArgumentError] if the given [sink] is `null`;
   ValidationResultPrinter({
-    StringSink sink,
-  }) : sink = sink ?? stdout;
+    this.sink,
+  }) {
+    ArgumentError.checkNotNull(sink, 'sink');
+  }
 
   /// Prints the given [result] to the [sink].
   void print(ValidationResult result) {
@@ -61,21 +60,22 @@ $conclusion $targetName$targetDescription$validationDescription$details
   /// [TargetValidationResult.conclusion].
   ///
   /// Returns the `[?]` indicator if the given [ValidationConclusion.indicator]
-  /// is empty or `null`.
+  /// is `null` or empty.
   String _getConclusionIndicator(TargetValidationResult validationResult) {
     final conclusion = validationResult.conclusion;
-    final conclusionIndicator =
-        conclusion.indicator == null || conclusion.indicator.isEmpty
-            ? '?'
-            : conclusion.indicator;
+    final indicator = conclusion.indicator;
 
-    return '[$conclusionIndicator]';
+    if (indicator == null || indicator.isEmpty) {
+      return '[?]';
+    }
+
+    return '[$indicator]';
   }
 
   /// Returns a [String] representation of the [ValidationTarget.description].
   ///
   /// Returns an empty string if the given [ValidationTarget.description] is
-  /// empty or `null`.
+  /// `null` or empty.
   String _getDescription(ValidationTarget target) {
     final description = target.description;
 
@@ -88,11 +88,11 @@ $conclusion $targetName$targetDescription$validationDescription$details
   /// [TargetValidationResult.description].
   ///
   /// Returns an empty string if the given [TargetValidationResult.description]
-  /// is empty or `null`.
+  /// is `null` or empty.
   String _getValidationDescription(TargetValidationResult validationResult) {
     final description = validationResult.description;
 
-    if (description.isEmpty || description == null) return '';
+    if (description == null || description.isEmpty) return '';
 
     return ' - $description';
   }
@@ -101,12 +101,12 @@ $conclusion $targetName$targetDescription$validationDescription$details
   /// [TargetValidationResult.details].
   ///
   /// Returns an empty string if the given [TargetValidationResult.details] is
-  /// empty or `null`.
+  /// `null` or empty.
   String _getValidationDetails(TargetValidationResult validationResult) {
     final details = validationResult.details;
     final resultMessage = [];
 
-    if (details.isEmpty || details == null) return '';
+    if (details == null || details.isEmpty) return '';
 
     details.forEach((key, value) => resultMessage.add('$key $value'));
 
@@ -117,13 +117,13 @@ $conclusion $targetName$targetDescription$validationDescription$details
   /// [TargetValidationResult.context].
   ///
   /// Returns an empty string if the given [TargetValidationResult.context] is
-  /// empty or `null`.
+  /// `null` or empty.
   String _getValidationContext(TargetValidationResult validationResult) {
     final context = validationResult.context;
     const indent = '\n\t\t';
     final resultMessage = [];
 
-    if (context.isEmpty || context == null) return '';
+    if (context == null || context.isEmpty) return '';
 
     context.forEach((key, value) {
       final indentValue = value.toString().replaceAll('\n', indent);

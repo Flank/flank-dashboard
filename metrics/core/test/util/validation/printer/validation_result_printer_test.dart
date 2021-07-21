@@ -1,17 +1,13 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'dart:io';
 import 'package:metrics_core/src/util/validation/printer/validation_result_printer.dart';
 import 'package:metrics_core/src/util/validation/target_validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_conclusion.dart';
 import 'package:metrics_core/src/util/validation/validation_result.dart';
 import 'package:metrics_core/src/util/validation/validation_target.dart';
-import 'package:mockito/mockito.dart';
 
 import 'package:test/test.dart';
-
-import '../../../test_utils/matchers.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -20,10 +16,6 @@ void main() {
     const target = ValidationTarget(name: 'service 1', description: 'test');
     const secondTarget = ValidationTarget(
       name: 'service 2',
-      description: 'test',
-    );
-    const thirdTarget = ValidationTarget(
-      name: 'service 3',
       description: 'test',
     );
     const conclusion = ValidationConclusion(name: 'success', indicator: '+');
@@ -43,16 +35,9 @@ void main() {
       details: details,
       context: context,
     );
-    const thirdResult = TargetValidationResult(
-      target: thirdTarget,
-      conclusion: conclusion,
-      description: 'description 3',
-      details: details,
-      context: context,
-    );
 
-    final ioSink = IOSinkMock();
-    final resultPrinter = ValidationResultPrinter(sink: ioSink);
+    StringSink sink;
+    ValidationResultPrinter resultPrinter;
 
     Matcher containsAllEntries(Map<String, dynamic> fromMap) {
       final entries = <String>[];
@@ -86,25 +71,24 @@ void main() {
       );
     }
 
-    tearDown(() {
-      reset(ioSink);
+    setUp(() {
+      sink = StringBuffer();
+      resultPrinter = ValidationResultPrinter(sink: sink);
     });
 
     test(
-      "creates an instance with the default stdout iosink, if the given one is null",
+      "throws an ArgumentError if the given sink is null",
       () {
-        final resultPrinter = ValidationResultPrinter(sink: null);
-
-        expect(resultPrinter.sink, equals(stdout));
+        expect(() => ValidationResultPrinter(sink: null), throwsArgumentError);
       },
     );
 
     test(
       "creates an instance with the given sink",
       () {
-        final resultPrinter = ValidationResultPrinter(sink: ioSink);
+        final resultPrinter = ValidationResultPrinter(sink: sink);
 
-        expect(resultPrinter.sink, equals(ioSink));
+        expect(resultPrinter.sink, equals(sink));
       },
     );
 
@@ -123,9 +107,7 @@ void main() {
 
         final startsWithDefaultIndicator = startsWith('[?]');
 
-        verify(
-          ioSink.writeln(argThat(startsWithDefaultIndicator)),
-        ).called(once);
+        expect(sink.toString(), startsWithDefaultIndicator);
       },
     );
 
@@ -146,11 +128,9 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        final startsWithDefaultIndicator = startsWith('[$indicator]');
+        final startsWithExpectedIndicator = startsWith('[$indicator]');
 
-        verify(
-          ioSink.writeln(argThat(startsWithDefaultIndicator)),
-        ).called(once);
+        expect(sink.toString(), startsWithExpectedIndicator);
       },
     );
 
@@ -168,9 +148,7 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        verify(
-          ioSink.writeln(argThat(contains(targetName))),
-        ).called(once);
+        expect(sink.toString(), contains(targetName));
       },
     );
 
@@ -191,9 +169,7 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        verify(
-          ioSink.writeln(argThat(contains(targetDescription))),
-        ).called(once);
+        expect(sink.toString(), contains(targetDescription));
       },
     );
 
@@ -211,9 +187,7 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        verify(
-          ioSink.writeln(argThat(contains(description))),
-        ).called(once);
+        expect(sink.toString(), contains(description));
       },
     );
 
@@ -231,9 +205,7 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        verify(
-          ioSink.writeln(argThat(containsAllEntries(details))),
-        ).called(once);
+        expect(sink.toString(), containsAllEntries(details));
       },
     );
 
@@ -251,9 +223,7 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        verify(
-          ioSink.writeln(argThat(containsAllEntries(context))),
-        ).called(once);
+        expect(sink.toString(), containsAllEntries(context));
       },
     );
 
@@ -263,18 +233,16 @@ void main() {
         final results = {
           target: firstResult,
           secondTarget: secondResult,
-          thirdTarget: thirdResult,
         };
         final validationResult = ValidationResult(results);
 
         resultPrinter.print(validationResult);
 
         results.forEach((target, result) {
-          verify(
-            ioSink.writeln(argThat(
-              validationResultMessageMatcher(target, result),
-            )),
-          ).called(once);
+          expect(
+            sink.toString(),
+            validationResultMessageMatcher(target, result),
+          );
         });
       },
     );
@@ -285,7 +253,6 @@ void main() {
         final results = {
           target: firstResult,
           secondTarget: secondResult,
-          thirdTarget: thirdResult,
         };
         final validationResult = ValidationResult(results);
 
@@ -295,17 +262,18 @@ void main() {
           final target = entry.key;
           final result = entry.value;
 
-          return argThat(
-            validationResultMessageMatcher(target, result),
-          );
+          return validationResultMessageMatcher(target, result);
         });
 
-        verifyInOrder(
-          expectedMessages.map(ioSink.writeln).toList(),
+        expect(
+          sink.toString(),
+          validationResultMessageMatcher(target, firstResult),
+        );
+        expect(
+          sink.toString(),
+          validationResultMessageMatcher(secondTarget, secondResult),
         );
       },
     );
   });
 }
-
-class IOSinkMock extends Mock implements IOSink {}
