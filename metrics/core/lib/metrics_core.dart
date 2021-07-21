@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 library metrics_core;
@@ -23,3 +23,9 @@ export 'src/domain/value_objects/password.dart';
 export 'src/domain/value_objects/percent.dart';
 export 'src/domain/value_objects/value_object.dart';
 export 'src/util/date.dart';
+export 'src/util/validation/printer/validation_result_printer.dart';
+export 'src/util/validation/target_validation_result.dart';
+export 'src/util/validation/validation_conclusion.dart';
+export 'src/util/validation/validation_result.dart';
+export 'src/util/validation/validation_result_builder.dart';
+export 'src/util/validation/validation_target.dart';
