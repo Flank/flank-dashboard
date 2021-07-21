@@ -6,6 +6,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -74,6 +75,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a buildkite access token validation target, if the interaction with the client is not successful",
+      () async {
+        when(client.fetchToken(auth)).thenErrorWith();
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
@@ -98,6 +111,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a buildkite access token validation target, if the result of an interaction with the client is null",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(null);
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
@@ -118,6 +143,20 @@ void main() {
         final description = result.description;
 
         expect(description, equals(BuildkiteStrings.tokenInvalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a buildkite access token validation target, if the fetched token does not have the read builds token scope",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(
+          const BuildkiteToken(scopes: []),
+        );
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.accessToken));
       },
     );
 
@@ -149,6 +188,18 @@ void main() {
           description,
           equals(BuildkiteStrings.tokenDoesNotHaveReadBuildsScope),
         );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a buildkite access token validation target, if the fetched token is valid, but does not have the read artifacts scope",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.accessToken));
       },
     );
 
@@ -192,6 +243,20 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a buildkite access token validation target, if the fetched Buildkite token has the read builds and read artifacts scopes",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(
+          const BuildkiteToken(scopes: readBuildsAndArtifactsScopes),
+        );
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the fetched Buildkite token has the read builds and read artifacts scopes",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(
@@ -221,6 +286,20 @@ void main() {
     );
 
     test(
+      ".validatePipelineSlug() returns a target validation result with a buildkite pipeline slug validation target, if the result of an interaction with the client is not successful",
+      () async {
+        when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
+
+        final result = await delegate.validatePipelineSlug(
+          pipelineSlug,
+        );
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
+      },
+    );
+
+    test(
       ".validatePipelineSlug() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is not successful",
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
@@ -245,6 +324,22 @@ void main() {
         final description = result.description;
 
         expect(description, equals(BuildkiteStrings.pipelineNotFound));
+      },
+    );
+
+    test(
+      ".validatePipelineSlug() returns a target validation result with a buildkite pipeline slug validation target, if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchPipeline(pipelineSlug),
+        ).thenSuccessWith(null);
+
+        final result = await delegate.validatePipelineSlug(
+          pipelineSlug,
+        );
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
       },
     );
 
@@ -281,6 +376,22 @@ void main() {
     );
 
     test(
+      ".validatePipelineSlug() returns a target validation result with a buildkite pipeline slug validation target, if the given pipeline slug is valid",
+      () async {
+        when(
+          client.fetchPipeline(pipelineSlug),
+        ).thenSuccessWith(buildkitePipeline);
+
+        final result = await delegate.validatePipelineSlug(
+          pipelineSlug,
+        );
+        final target = result.target;
+
+        expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
+      },
+    );
+
+    test(
       ".validatePipelineSlug() returns a target validation result with a valid config field validation conclusion, if the given pipeline slug is valid",
       () async {
         when(
@@ -293,6 +404,25 @@ void main() {
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateOrganizationSlug() returns a target validation result with a buildkite organization slug validation target, if the interaction with the client is not successful",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenErrorWith();
+
+        final result = await delegate.validateOrganizationSlug(
+          organizationSlug,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(BuildkiteSourceValidationTarget.organizationSlug),
+        );
       },
     );
 
@@ -329,6 +459,25 @@ void main() {
     );
 
     test(
+      ".validateOrganizationSlug() returns a target validation result with a buildkite organization slug validation target, if the result of an interaction with the client is null",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenSuccessWith(null);
+
+        final result = await delegate.validateOrganizationSlug(
+          organizationSlug,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(BuildkiteSourceValidationTarget.organizationSlug),
+        );
+      },
+    );
+
+    test(
       ".validateOrganizationSlug() returns a target validation result with an invalid config field validation conclusion, if the result of an interaction with the client is null",
       () async {
         when(
@@ -357,6 +506,25 @@ void main() {
         final description = result.description;
 
         expect(description, equals(BuildkiteStrings.organizationNotFound));
+      },
+    );
+
+    test(
+      ".validateOrganizationSlug() returns a target validation result with a buildkite organization slug validation target, if the given organization slug is valid",
+      () async {
+        when(
+          client.fetchOrganization(organizationSlug),
+        ).thenSuccessWith(buildkiteOrganization);
+
+        final result = await delegate.validateOrganizationSlug(
+          organizationSlug,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(BuildkiteSourceValidationTarget.organizationSlug),
+        );
       },
     );
 
