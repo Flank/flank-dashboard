@@ -4,6 +4,8 @@
 import 'package:ci_integration/client/jenkins/model/jenkins_instance_info.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_user.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
 import 'package:ci_integration/source/jenkins/strings/jenkins_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -63,211 +65,335 @@ void main() {
     );
 
     test(
-      ".validateJenkinsUrl() returns a failure field validation result, if the interaction with the client is not successful",
+      ".validateJenkinsUrl() returns a target validation result with a jenkins url validation target, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
 
         final result = await delegate.validateJenkinsUrl(url);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.url));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a field validation result with the 'not a jenkins url' additional context, if the interaction with the client is not successful",
+      ".validateJenkinsUrl() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
 
         final result = await delegate.validateJenkinsUrl(url);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.notAJenkinsUrl));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a failure field validation result, if the result of the interaction with the client is null",
+      ".validateJenkinsUrl() returns a target validation result with the 'not a jenkins url' description, if the interaction with the client is not successful",
+      () async {
+        when(client.fetchJenkinsInstanceInfo(url)).thenErrorWith();
+
+        final result = await delegate.validateJenkinsUrl(url);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.notAJenkinsUrl));
+      },
+    );
+
+    test(
+      ".validateJenkinsUrl() returns a target validation result with a jenkins url validation target, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
 
         final result = await delegate.validateJenkinsUrl(url);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.url));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a field validation result with the 'not a jenkins url' additional context, if the result of interaction with the client is null",
+      ".validateJenkinsUrl() returns a target validation result with an invalid config field validation conclusion, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
 
         final result = await delegate.validateJenkinsUrl(url);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.notAJenkinsUrl));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a failure field validation result, if the fetched instance info has the version equal to null",
+      ".validateJenkinsUrl() returns a target validation result with the 'not a jenkins url' description, if the result of interaction with the client is null",
+      () async {
+        when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(null);
+
+        final result = await delegate.validateJenkinsUrl(url);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.notAJenkinsUrl));
+      },
+    );
+
+    test(
+      ".validateJenkinsUrl() returns a target validation result with a jenkins url validation target, if the fetched instance info has the version equal to null",
       () async {
         when(
           client.fetchJenkinsInstanceInfo(url),
         ).thenSuccessWith(nullVersionInstanceInfo);
 
         final result = await delegate.validateJenkinsUrl(url);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.url));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a field validation result with the 'not a jenkins url' additional context, if the fetched instance info has the version equal to null",
+      ".validateJenkinsUrl() returns a target validation result with an invalid config field validation conclusion, if the fetched instance info has the version equal to null",
       () async {
         when(
           client.fetchJenkinsInstanceInfo(url),
         ).thenSuccessWith(nullVersionInstanceInfo);
 
         final result = await delegate.validateJenkinsUrl(url);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.notAJenkinsUrl));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateJenkinsUrl() returns a successful field validation result, if the given jenkins url is valid",
+      ".validateJenkinsUrl() returns a target validation result with the 'not a jenkins url' description, if the fetched instance info has the version equal to null",
+      () async {
+        when(
+          client.fetchJenkinsInstanceInfo(url),
+        ).thenSuccessWith(nullVersionInstanceInfo);
+
+        final result = await delegate.validateJenkinsUrl(url);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.notAJenkinsUrl));
+      },
+    );
+
+    test(
+      ".validateJenkinsUrl() returns a target validation result with a jenkins url validation target, if the given jenkins url is valid",
       () async {
         const info = JenkinsInstanceInfo(version: '1.0');
         when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(info);
 
         final result = await delegate.validateJenkinsUrl(url);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.url));
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the interaction with the client is not successful",
+      ".validateJenkinsUrl() returns a target validation result with a valid config field validation conclusion, if the given jenkins url is valid",
+      () async {
+        const info = JenkinsInstanceInfo(version: '1.0');
+        when(client.fetchJenkinsInstanceInfo(url)).thenSuccessWith(info);
+
+        final result = await delegate.validateJenkinsUrl(url);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsUser(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'auth invalid' additional context, if the interaction with the client is not successful",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsUser(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.authInvalid));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result, if the result of the interaction with the client is null",
+      ".validateAuth() returns a target validation result with the 'auth invalid' description, if the interaction with the client is not successful",
+      () async {
+        when(client.fetchJenkinsUser(auth)).thenErrorWith();
+
+        final result = await delegate.validateAuth(auth);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.authInvalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'auth invalid' additional context, if the result of the interaction with the client is null",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.authInvalid));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateAuth() returns a success field validation result, if the user associated with the given auth is anonymous",
+      ".validateAuth() returns a target validation result with the 'auth invalid' description, if the result of the interaction with the client is null",
+      () async {
+        when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
+
+        final result = await delegate.validateAuth(auth);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.authInvalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is anonymous",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'anonymous user' additional context, if the fetched user is anonymous",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is anonymous",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, contains(JenkinsStrings.anonymousUser));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
     test(
-      ".validateAuth() returns a success field validation result, if the user associated with the given auth is unauthenticated",
+      ".validateAuth() returns a target validation result with the 'anonymous user' description, if the fetched user is anonymous",
+      () async {
+        when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
+
+        final result = await delegate.validateAuth(auth);
+        final description = result.description;
+
+        expect(description, contains(JenkinsStrings.anonymousUser));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is unauthenticated",
       () async {
         when(
           client.fetchJenkinsUser(auth),
         ).thenSuccessWith(unauthenticatedUser);
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'unauthenticated user' additional context, if the fetched user is unauthenticated",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is unauthenticated",
       () async {
         when(
           client.fetchJenkinsUser(auth),
         ).thenSuccessWith(unauthenticatedUser);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, contains(JenkinsStrings.unauthenticatedUser));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
     test(
-      ".validateAuth() returns a successful field validation result, if the user associated with the given auth is unauthenticated and anonymous",
+      ".validateAuth() returns a target validation result with the 'unauthenticated user' description, if the fetched user is unauthenticated",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(unauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final description = result.description;
+
+        expect(description, contains(JenkinsStrings.unauthenticatedUser));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is unauthenticated and anonymous",
       () async {
         when(
           client.fetchJenkinsUser(auth),
         ).thenSuccessWith(anonymousUnauthenticatedUser);
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'unauthenticated user' and 'anonymous user' additional contexts, if the fetched user is unauthenticated and anonymous",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is unauthenticated and anonymous",
       () async {
         when(
           client.fetchJenkinsUser(auth),
         ).thenSuccessWith(anonymousUnauthenticatedUser);
 
         final result = await delegate.validateAuth(auth);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with the 'unauthenticated user' and 'anonymous user' descriptions, if the fetched user is unauthenticated and anonymous",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(anonymousUnauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final description = result.description;
 
         expect(
-          additionalContext,
+          description,
           stringContainsInOrder([
             JenkinsStrings.anonymousUser,
             JenkinsStrings.unauthenticatedUser,
@@ -277,71 +403,124 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a successful field validation result, if the given auth is valid",
+      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the given auth is valid",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
 
         final result = await delegate.validateAuth(auth);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
       },
     );
 
     test(
-      ".validateJobName() returns a failure field validation result, if the interaction with the client is not successful",
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the given auth is valid",
+      () async {
+        when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
+
+        final result = await delegate.validateAuth(auth);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a jenkins job name validation target, if the interaction with the client is not successful",
       () async {
         when(client.fetchJob(jobName)).thenErrorWith();
 
         final result = await delegate.validateJobName(jobName);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.jobName));
       },
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'job does not exist' additional context, if the interaction with the client is not successful",
+      ".validateJobName() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
       () async {
         when(client.fetchJob(jobName)).thenErrorWith();
 
         final result = await delegate.validateJobName(jobName);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.jobDoesNotExist));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateJobName() returns a failure field validation result, if the result of the interaction with the client is null",
+      ".validateJobName() returns a target validation result with the 'job does not exist' description, if the interaction with the client is not successful",
+      () async {
+        when(client.fetchJob(jobName)).thenErrorWith();
+
+        final result = await delegate.validateJobName(jobName);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.jobDoesNotExist));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a jenkins job name validation target, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJob(jobName)).thenSuccessWith(null);
 
         final result = await delegate.validateJobName(jobName);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.jobName));
       },
     );
 
     test(
-      ".validateJobName() returns a field validation result with the 'job does not exist' additional context, if the result of the interaction with the client is null",
+      ".validateJobName() returns a target validation result with an invalid config field validation conclusion, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJob(jobName)).thenSuccessWith(null);
 
         final result = await delegate.validateJobName(jobName);
-        final additionalContext = result.additionalContext;
+        final conclusion = result.conclusion;
 
-        expect(additionalContext, equals(JenkinsStrings.jobDoesNotExist));
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
       },
     );
 
     test(
-      ".validateJobName() returns a successful field validation result, if the given job name is valid",
+      ".validateJobName() returns a target validation result with the 'job does not exist' description, if the result of the interaction with the client is null",
+      () async {
+        when(client.fetchJob(jobName)).thenSuccessWith(null);
+
+        final result = await delegate.validateJobName(jobName);
+        final description = result.description;
+
+        expect(description, equals(JenkinsStrings.jobDoesNotExist));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a jenkins job name validation target, if the given job name is valid",
       () async {
         const job = JenkinsJob(name: 'job');
         when(client.fetchJob(jobName)).thenSuccessWith(job);
 
         final result = await delegate.validateJobName(jobName);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(target, equals(JenkinsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a valid config field validation conclusion, if the given job name is valid",
+      () async {
+        const job = JenkinsJob(name: 'job');
+        when(client.fetchJob(jobName)).thenSuccessWith(job);
+
+        final result = await delegate.validateJobName(jobName);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
   });
