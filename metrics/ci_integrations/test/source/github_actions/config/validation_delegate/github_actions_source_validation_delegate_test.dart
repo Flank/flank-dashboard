@@ -12,6 +12,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/github_actions/config/model/github_actions_source_validation_target.dart';
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -193,6 +194,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a github access token validation target if the token fetching failed",
+      () async {
+        when(client.fetchToken(auth)).thenErrorWith();
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the token fetching failed",
       () async {
         when(client.fetchToken(auth)).thenErrorWith();
@@ -217,6 +230,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a github access token validation target if the token fetching result is null",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(null);
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the token fetching result is null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(null);
@@ -237,6 +262,20 @@ void main() {
         final description = result.description;
 
         expect(description, equals(GithubActionsStrings.tokenInvalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a github access token validation target if the fetched token does not have the required scope",
+      () async {
+        when(
+          client.fetchToken(auth),
+        ).thenSuccessWith(const GithubToken(scopes: []));
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.accessToken));
       },
     );
 
@@ -274,6 +313,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a github access token validation target if the fetched token scopes are null",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the fetched token scopes are null",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(const GithubToken());
@@ -303,6 +354,18 @@ void main() {
     );
 
     test(
+      ".validateAuth() returns a target validation result with a github access token validation target if the fetched Github token has required scope",
+      () async {
+        when(client.fetchToken(auth)).thenSuccessWith(githubToken);
+
+        final result = await delegate.validateAuth(auth);
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.accessToken));
+      },
+    );
+
+    test(
       ".validateAuth() returns a target validation result with a valid config field validation conclusion if the fetched Github token has required scope",
       () async {
         when(client.fetchToken(auth)).thenSuccessWith(githubToken);
@@ -315,13 +378,26 @@ void main() {
     );
 
     test(
+      ".validateRepositoryOwner() returns a target validation result with a github repository owner validation target if the repository owner fetching failed",
+      () async {
+        when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
+
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryOwner),
+        );
+      },
+    );
+
+    test(
       ".validateRepositoryOwner() returns a target validation result with an invalid config field validation conclusion if the repository owner fetching failed",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
-        final result = await delegate.validateRepositoryOwner(
-          repositoryOwner,
-        );
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
@@ -333,9 +409,7 @@ void main() {
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenErrorWith();
 
-        final result = await delegate.validateRepositoryOwner(
-          repositoryOwner,
-        );
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
         final description = result.description;
 
         expect(
@@ -346,13 +420,26 @@ void main() {
     );
 
     test(
+      ".validateRepositoryOwner() returns a target validation result with a github repository owner validation target if the repository owner fetching result is null",
+      () async {
+        when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
+
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryOwner),
+        );
+      },
+    );
+
+    test(
       ".validateRepositoryOwner() returns a target validation result with an invalid config field validation conclusion if the repository owner fetching result is null",
       () async {
         when(client.fetchGithubUser(repositoryOwner)).thenSuccessWith(null);
 
-        final result = await delegate.validateRepositoryOwner(
-          repositoryOwner,
-        );
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
@@ -377,18 +464,56 @@ void main() {
     );
 
     test(
+      ".validateRepositoryOwner() returns a target validation result with a github repository owner validation target if the given repository owner is valid",
+      () async {
+        when(
+          client.fetchGithubUser(repositoryOwner),
+        ).thenSuccessWith(githubUser);
+
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryOwner),
+        );
+      },
+    );
+
+    test(
       ".validateRepositoryOwner() returns a target validation result with a valid config field validation conclusion if the given repository owner is valid",
       () async {
         when(
           client.fetchGithubUser(repositoryOwner),
         ).thenSuccessWith(githubUser);
 
-        final result = await delegate.validateRepositoryOwner(
-          repositoryOwner,
-        );
+        final result = await delegate.validateRepositoryOwner(repositoryOwner);
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateRepositoryName() returns a target validation result with a github repository name validation target if the github repository fetching failed",
+      () async {
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenErrorWith();
+
+        final result = await delegate.validateRepositoryName(
+          repositoryName: repositoryName,
+          repositoryOwner: repositoryOwner,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryName),
+        );
       },
     );
 
@@ -436,6 +561,29 @@ void main() {
     );
 
     test(
+      ".validateRepositoryName() returns a target validation result with a github repository name validation target if the github repository fetching result is null",
+      () async {
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenSuccessWith(null);
+
+        final result = await delegate.validateRepositoryName(
+          repositoryName: repositoryName,
+          repositoryOwner: repositoryOwner,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryName),
+        );
+      },
+    );
+
+    test(
       ".validateRepositoryName() returns a target validation result with an invalid config field validation conclusion if the github repository fetching result is null",
       () async {
         when(
@@ -476,6 +624,29 @@ void main() {
     );
 
     test(
+      ".validateRepositoryName() returns a target validation result with a github repository name validation target if the given repository name is valid",
+      () async {
+        when(
+          client.fetchGithubRepository(
+            repositoryName: repositoryName,
+            repositoryOwner: repositoryOwner,
+          ),
+        ).thenSuccessWith(githubRepository);
+
+        final result = await delegate.validateRepositoryName(
+          repositoryName: repositoryName,
+          repositoryOwner: repositoryOwner,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.repositoryName),
+        );
+      },
+    );
+
+    test(
       ".validateRepositoryName() returns a target validation result with a valid config field validation conclusion if the given repository name is valid",
       () async {
         when(
@@ -492,6 +663,21 @@ void main() {
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateWorkflowId() returns a target validation result with a github workflow identifier validation target if the workflow fetching failed",
+      () async {
+        when(client.fetchWorkflow(workflowId)).thenErrorWith();
+
+        final result = await delegate.validateWorkflowId(workflowId);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.workflowIdentifier),
+        );
       },
     );
 
@@ -523,6 +709,21 @@ void main() {
     );
 
     test(
+      ".validateWorkflowId() returns a target validation result with a github workflow identifier validation target if the workflow fetching result is null",
+      () async {
+        when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
+
+        final result = await delegate.validateWorkflowId(workflowId);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.workflowIdentifier),
+        );
+      },
+    );
+
+    test(
       ".validateWorkflowId() returns a target validation result with an invalid config field validation conclusion if the workflow fetching result is null",
       () async {
         when(client.fetchWorkflow(workflowId)).thenSuccessWith(null);
@@ -549,6 +750,23 @@ void main() {
     );
 
     test(
+      ".validateWorkflowId() returns a target validation result with a github workflow identifier validation target if the given workflow identifier is valid",
+      () async {
+        when(
+          client.fetchWorkflow(workflowId),
+        ).thenSuccessWith(githubActionsWorkflow);
+
+        final result = await delegate.validateWorkflowId(workflowId);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.workflowIdentifier),
+        );
+      },
+    );
+
+    test(
       ".validateWorkflowId() returns a target validation result with a valid config field validation conclusion if the given workflow identifier is valid",
       () async {
         when(
@@ -559,6 +777,21 @@ void main() {
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the workflow runs fetching failed",
+      () async {
+        whenFetchWorkflowRuns(workflowId).thenErrorWith();
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
       },
     );
 
@@ -597,6 +830,21 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the workflow runs fetching result is null",
+      () async {
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
       ".validateJobName() returns a target validation result with an unknown config field validation conclusion if the workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRuns(workflowId).thenSuccessWith(null);
@@ -627,6 +875,21 @@ void main() {
           description,
           equals(GithubActionsStrings.workflowIdentifierInvalid),
         );
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a github job name validation target if there are no completed workflow runs",
+      () async {
+        whenFetchWorkflowRuns(workflowId).thenSuccessWith(emptyRunsPage);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
       },
     );
 
@@ -665,6 +928,21 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the workflow run jobs page fetching failed",
+      () async {
+        whenFetchRunJobs().thenErrorWith();
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
       ".validateJobName() returns a target validation result with an unknown config field validation conclusion if the workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenErrorWith();
@@ -692,6 +970,21 @@ void main() {
         final description = result.description;
 
         expect(description, equals(GithubActionsStrings.jobsFetchingFailed));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the workflow run jobs page fetching result is null",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(null);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
       },
     );
 
@@ -741,6 +1034,24 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the next workflow run jobs page fetching failed",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
+        when(
+          client.fetchRunJobsNext(workflowRunsPageHasNext),
+        ).thenErrorWith();
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
       ".validateJobName() returns a target validation result with an unknown config field validation conclusion if the next workflow run jobs page fetching failed",
       () async {
         whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
@@ -774,6 +1085,24 @@ void main() {
         final description = result.description;
 
         expect(description, equals(GithubActionsStrings.jobsFetchingFailed));
+      },
+    );
+
+    test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the next workflow run jobs page fetching result is null",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(workflowRunsPageHasNext);
+        when(
+          client.fetchRunJobsNext(workflowRunsPageHasNext),
+        ).thenSuccessWith(null);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
       },
     );
 
@@ -815,6 +1144,21 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a target validation result with a github job name validation target if there is no job with the given job name",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(emptyJobsPage);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
       ".validateJobName() returns a target validation result with an invalid config field validation conclusion if there is no job with the given job name",
       () async {
         whenFetchRunJobs().thenSuccessWith(emptyJobsPage);
@@ -845,6 +1189,21 @@ void main() {
     );
 
     test(
+      ".validateJobName() returns a target validation result with a github job name validation target if the given job name is valid",
+      () async {
+        whenFetchRunJobs().thenSuccessWith(jobsPage);
+
+        final result = await delegate.validateJobName(
+          workflowId: workflowId,
+          jobName: jobName,
+        );
+        final target = result.target;
+
+        expect(target, equals(GithubActionsSourceValidationTarget.jobName));
+      },
+    );
+
+    test(
       ".validateJobName() returns a target validation result with a valid config field validation conclusion if the given job name is valid",
       () async {
         whenFetchRunJobs().thenSuccessWith(jobsPage);
@@ -856,6 +1215,24 @@ void main() {
         final conclusion = result.conclusion;
 
         expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the workflow runs fetching failed",
+      () async {
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenErrorWith();
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
+        );
       },
     );
 
@@ -894,6 +1271,24 @@ void main() {
     );
 
     test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the successful workflow runs fetching result is null",
+      () async {
+        whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
+        );
+      },
+    );
+
+    test(
       ".validateCoverageArtifactName() returns a target validation result with an unknown config field validation conclusion if the successful workflow runs fetching result is null",
       () async {
         whenFetchWorkflowRunsWithConclusion(workflowId).thenSuccessWith(null);
@@ -923,6 +1318,26 @@ void main() {
         expect(
           description,
           equals(GithubActionsStrings.workflowIdentifierInvalid),
+        );
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if there are no successful workflow runs",
+      () async {
+        whenFetchWorkflowRunsWithConclusion(
+          workflowId,
+        ).thenSuccessWith(emptyRunsPage);
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
         );
       },
     );
@@ -966,6 +1381,24 @@ void main() {
     );
 
     test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the workflow run artifacts page fetching failed",
+      () async {
+        whenFetchRunArtifacts().thenErrorWith();
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
+        );
+      },
+    );
+
+    test(
       ".validateCoverageArtifactName() returns a target validation result with an unknown config field validation conclusion if the workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenErrorWith();
@@ -995,6 +1428,24 @@ void main() {
         expect(
           description,
           equals(GithubActionsStrings.artifactsFetchingFailed),
+        );
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the successful workflow run artifacts page fetching result is null",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(null);
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
         );
       },
     );
@@ -1048,6 +1499,27 @@ void main() {
     );
 
     test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the next workflow run artifacts page fetching failed",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
+        when(
+          client.fetchRunArtifactsNext(artifactsPageHasNext),
+        ).thenErrorWith();
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
+        );
+      },
+    );
+
+    test(
       ".validateCoverageArtifactName() returns a target validation result with an unknown config field validation conclusion if the next workflow run artifacts page fetching failed",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
@@ -1083,6 +1555,27 @@ void main() {
         expect(
           description,
           equals(GithubActionsStrings.artifactsFetchingFailed),
+        );
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the successful next workflow run artifacts page fetching result is null",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPageHasNext);
+        when(
+          client.fetchRunArtifactsNext(artifactsPageHasNext),
+        ).thenSuccessWith(null);
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
         );
       },
     );
@@ -1128,6 +1621,24 @@ void main() {
     );
 
     test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if there is no artifact with the given coverage artifact name",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(emptyArtifactsPage);
+
+        final result = await delegate.validateCoverageArtifactName(
+          workflowId: workflowId,
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
+        );
+      },
+    );
+
+    test(
       ".validateCoverageArtifactName() returns a target validation result with an invalid config field validation conclusion if there is no artifact with the given coverage artifact name",
       () async {
         whenFetchRunArtifacts().thenSuccessWith(emptyArtifactsPage);
@@ -1156,6 +1667,23 @@ void main() {
         expect(
           description,
           equals(GithubActionsStrings.coverageArtifactNameInvalid),
+        );
+      },
+    );
+
+    test(
+      ".validateCoverageArtifactName() returns a target validation result with a github coverage artifact validation target if the given coverage artifact name is valid",
+      () async {
+        whenFetchRunArtifacts().thenSuccessWith(artifactsPage);
+
+        final result = await delegate.validateCoverageArtifactName(
+          coverageArtifactName: coverageArtifactName,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(GithubActionsSourceValidationTarget.coverageArtifactName),
         );
       },
     );
