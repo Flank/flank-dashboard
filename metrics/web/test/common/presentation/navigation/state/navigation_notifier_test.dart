@@ -299,12 +299,50 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
-        final currentConfiguration = notifier.currentConfiguration;
-
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
+        final currentConfiguration = notifier.currentConfiguration;
+
         verify(pageParametersFactory.create(currentConfiguration)).called(once);
+      },
+    );
+
+    test(
+      ".canPop() returns true if there are more than one page in the pages list",
+      () {
+        notifier.push(DefaultRoutes.projectGroups);
+
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isTrue);
+      },
+    );
+
+    test(
+      ".canPop() returns false if there is one page in the pages list",
+      () {
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isFalse);
+      },
+    );
+
+    test(
+      ".canPop() returns false if the pages list is empty",
+      () {
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isFalse);
       },
     );
 

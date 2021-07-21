@@ -106,6 +106,11 @@ class NavigationNotifier extends ChangeNotifier {
     if (_isAppInitialized) _redirect();
   }
 
+  /// Determines whether the current page can be popped.
+  bool canPop() {
+    return _pages.length > 1;
+  }
+
   /// Removes the current page and navigates to the previous one.
   void pop() {
     if (_pages.length <= 1) return;
@@ -201,7 +206,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    final name = page?.name;
+    final name = page?.name?.replaceAll('/', '');
 
     return RouteConfiguration.values.firstWhere(
       (route) => route.name.value == name,
