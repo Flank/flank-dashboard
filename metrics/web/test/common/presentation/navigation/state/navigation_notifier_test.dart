@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
@@ -25,6 +26,8 @@ void main() {
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
     final pageParametersFactory = _PageParametersFactoryMock();
+    final pageRouteConfigurationFactory =
+        _MetricsPageRouteConfigurationFactoryMock();
 
     final parameters = pageParametersModel.toMap();
     final routeConfiguration = RouteConfiguration.dashboard(
@@ -43,10 +46,12 @@ void main() {
       notifier = NavigationNotifier(
         pageFactory,
         pageParametersFactory,
+        pageRouteConfigurationFactory,
         navigationState,
       );
       prepareNotifier();
       reset(pageParametersFactory);
+      reset(pageRouteConfigurationFactory);
     });
 
     final isLoginPageName = equals(DefaultRoutes.login.path);
@@ -61,6 +66,7 @@ void main() {
           () => NavigationNotifier(
             null,
             pageParametersFactory,
+            pageRouteConfigurationFactory,
             navigationState,
           ),
           throwsAssertionError,
@@ -75,6 +81,22 @@ void main() {
           () => NavigationNotifier(
             pageFactory,
             null,
+            pageRouteConfigurationFactory,
+            navigationState,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws an AssertionError if the given page route configuration factory is null",
+      () {
+        expect(
+          () => NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            null,
             navigationState,
           ),
           throwsAssertionError,
@@ -86,7 +108,12 @@ void main() {
       "throws an AssertionError if the given navigation state is null",
       () {
         expect(
-          () => NavigationNotifier(pageFactory, pageParametersFactory, null),
+          () => NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            pageRouteConfigurationFactory,
+            null,
+          ),
           throwsAssertionError,
         );
       },
@@ -99,6 +126,7 @@ void main() {
           () => NavigationNotifier(
             pageFactory,
             pageParametersFactory,
+            pageRouteConfigurationFactory,
             navigationState,
           ),
           returnsNormally,
@@ -266,8 +294,17 @@ void main() {
     test(
       ".pop() sets the previous rote configuration to current configuration",
       () {
-        final expectedConfiguration = DefaultRoutes.dashboard;
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          const MetricsPageRouteConfigurationFactory(),
+          navigationState,
+        );
+
+        notifier.handleAppInitialized(isAppInitialized: true);
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final expectedConfiguration = DefaultRoutes.dashboard;
 
         notifier.push(expectedConfiguration);
         notifier.push(DefaultRoutes.projectGroups);
@@ -310,6 +347,20 @@ void main() {
     );
 
     test(
+      ".pop() uses the given page route configuration factory to create a route configuration",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.projectGroups);
+
+        notifier.pop();
+
+        final currentPage = notifier.pages.last;
+
+        verify(pageRouteConfigurationFactory.create(currentPage)).called(once);
+      },
+    );
+
+    test(
       ".canPop() returns true if there are more than one page in the pages list",
       () {
         notifier.push(DefaultRoutes.projectGroups);
@@ -335,6 +386,7 @@ void main() {
         final notifier = NavigationNotifier(
           pageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
           navigationState,
         );
 
@@ -454,6 +506,26 @@ void main() {
         final notifier = NavigationNotifier(
           pageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
+          navigationState,
+        );
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.push(routeConfiguration);
+
+        verify(pageFactory.create(routeConfiguration, null)).called(once);
+      },
+    );
+
+    test(
+      ".push() uses the given metrics page factory to create a metrics page",
+      () {
+        final pageFactory = _MetricsPageFactoryMock();
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          pageRouteConfigurationFactory,
           navigationState,
         );
         notifier.handleAppInitialized(isAppInitialized: true);
@@ -514,6 +586,7 @@ void main() {
         final notifier = NavigationNotifier(
           pageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
           navigationState,
         );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
@@ -632,6 +705,7 @@ void main() {
         final notifier = NavigationNotifier(
           pageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
           navigationState,
         );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
@@ -1003,6 +1077,7 @@ void main() {
         final notifier = NavigationNotifier(
           pageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
           navigationState,
         );
         notifier.handleAppInitialized(isAppInitialized: true);
@@ -1110,6 +1185,10 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}
 
 class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}
+
+class _MetricsPageRouteConfigurationFactoryMock extends Mock
+    implements MetricsPageRouteConfigurationFactory {}
