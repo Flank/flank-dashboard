@@ -7,7 +7,6 @@ import 'package:cli/cli/updater/algorithm/update_algorithm.dart';
 import 'package:cli/cli/updater/strings/update_strings.dart';
 import 'package:cli/cli/updater/updater.dart';
 import 'package:cli/common/constants/deploy_constants.dart';
-import 'package:cli/common/model/config/update_config.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/strings/common_strings.dart';
 import 'package:mockito/mockito.dart';
@@ -19,8 +18,9 @@ import '../../test_utils/mocks/directory_mock.dart';
 import '../../test_utils/mocks/file_helper_mock.dart';
 import '../../test_utils/mocks/path_factory_mock.dart';
 import '../../test_utils/mocks/prompter_mock.dart';
+import '../../test_utils/mocks/update_config_mock.dart';
 
-// ignore_for_file: avoid_redundant_argument_values, avoid_implementing_value_types, must_be_immutable
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("Updater", () {
@@ -31,7 +31,7 @@ void main() {
     final stateError = StateError('stateError');
     final paths = Paths(tempDirectoryPath);
 
-    final config = _UpdateConfigMock();
+    final config = UpdateConfigMock();
     final updateAlgorithm = _UpdateAlgorithmMock();
     final fileHelper = FileHelperMock();
     final prompter = PrompterMock();
@@ -282,5 +282,3 @@ void main() {
 }
 
 class _UpdateAlgorithmMock extends Mock implements UpdateAlgorithm {}
-
-class _UpdateConfigMock extends Mock implements UpdateConfig {}

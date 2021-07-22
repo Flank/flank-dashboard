@@ -3,20 +3,16 @@
 
 import 'package:cli/cli/command/deploy_command.dart';
 import 'package:cli/cli/command/doctor_command.dart';
+import 'package:cli/cli/command/update_command.dart';
 import 'package:cli/cli/deployer/factory/deployer_factory.dart';
 import 'package:cli/cli/doctor/factory/doctor_factory.dart';
 import 'package:cli/cli/runner/metrics_cli_runner.dart';
+import 'package:cli/cli/updater/factory/updater_factory.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("MetricsCliRunner", () {
     final runner = MetricsCliRunner();
-    final deployerFactory = DeployerFactory();
-    final doctorFactory = DoctorFactory();
-    final deployCommand = DeployCommand(deployerFactory);
-    final doctorCommand = DoctorCommand(doctorFactory);
-    final deployCommandName = deployCommand.name;
-    final doctorCommandName = doctorCommand.name;
 
     test(
       ".executableName equals to the 'metrics'",
@@ -39,6 +35,10 @@ void main() {
     test(
       "registers a deploy command on create",
       () {
+        final deployerFactory = DeployerFactory();
+        final deployCommand = DeployCommand(deployerFactory);
+        final deployCommandName = deployCommand.name;
+
         final commands = runner.argParser.commands;
 
         expect(commands, contains(deployCommandName));
@@ -48,6 +48,10 @@ void main() {
     test(
       "registers a doctor command on create",
       () {
+        final doctorFactory = DoctorFactory();
+        final doctorCommand = DoctorCommand(doctorFactory);
+        final doctorCommandName = doctorCommand.name;
+
         final commands = runner.argParser.commands;
 
         expect(commands, contains(doctorCommandName));
@@ -55,20 +59,15 @@ void main() {
     );
 
     test(
-      "creates a deploy command with the deployer factory",
+      "registers an update command on create",
       () {
-        final command = runner.commands[deployCommandName] as DeployCommand;
+        final updateFactory = UpdaterFactory();
+        final updateCommand = UpdateCommand(updateFactory);
+        final updateCommandName = updateCommand.name;
 
-        expect(command?.deployerFactory, isNotNull);
-      },
-    );
+        final commands = runner.argParser.commands;
 
-    test(
-      "creates a doctor command with the doctor factory",
-      () {
-        final command = runner.commands[doctorCommandName] as DoctorCommand;
-
-        expect(command?.doctorFactory, isNotNull);
+        expect(commands, contains(updateCommandName));
       },
     );
   });

@@ -15,19 +15,19 @@ class DoctorCommand extends Command {
       'Shows the version information of the third-party dependencies.';
 
   /// A [DoctorFactory] this command uses to create a [Doctor].
-  final DoctorFactory doctorFactory;
+  final DoctorFactory _doctorFactory;
 
   /// Creates a new instance of the [DoctorCommand]
   /// with the given [DoctorFactory].
   ///
   /// Throws an [ArgumentError] if the given [DoctorFactory] is `null`.
-  DoctorCommand(this.doctorFactory) {
-    ArgumentError.checkNotNull(doctorFactory, 'doctorFactory');
+  DoctorCommand(this._doctorFactory) {
+    ArgumentError.checkNotNull(_doctorFactory, 'doctorFactory');
   }
 
   @override
   Future<void> run() async {
-    final doctor = doctorFactory.create();
+    final doctor = _doctorFactory.create();
 
     return doctor.checkVersions();
   }
