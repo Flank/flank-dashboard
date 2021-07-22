@@ -299,12 +299,50 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
-        final currentConfiguration = notifier.currentConfiguration;
-
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
+        final currentConfiguration = notifier.currentConfiguration;
+
         verify(pageParametersFactory.create(currentConfiguration)).called(once);
+      },
+    );
+
+    test(
+      ".canPop() returns true if there are more than one page in the pages list",
+      () {
+        notifier.push(DefaultRoutes.projectGroups);
+
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isTrue);
+      },
+    );
+
+    test(
+      ".canPop() returns false if there is one page in the pages list",
+      () {
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isFalse);
+      },
+    );
+
+    test(
+      ".canPop() returns false if the pages list is empty",
+      () {
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final actualValue = notifier.canPop();
+
+        expect(actualValue, isFalse);
       },
     );
 
@@ -406,6 +444,24 @@ void main() {
         notifier.push(routeConfiguration);
 
         verify(pageParametersFactory.create(any)).called(once);
+      },
+    );
+
+    test(
+      ".push() uses the given metrics page factory to create a metrics page",
+      () {
+        final pageFactory = _MetricsPageFactoryMock();
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.push(routeConfiguration);
+
+        verify(pageFactory.create(routeConfiguration, null)).called(once);
       },
     );
 
@@ -941,6 +997,24 @@ void main() {
     );
 
     test(
+      ".handleInitialRoutePath() uses the given metrics page factory to create a metrics page",
+      () {
+        final pageFactory = _MetricsPageFactoryMock();
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(routeConfiguration);
+
+        verify(pageFactory.create(routeConfiguration, null)).called(once);
+      },
+    );
+
+    test(
       ".handleNewRoutePath() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -1037,3 +1111,5 @@ void main() {
 }
 
 class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+
+class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}

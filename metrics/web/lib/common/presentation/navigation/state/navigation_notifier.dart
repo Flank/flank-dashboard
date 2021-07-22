@@ -24,7 +24,7 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
-  /// A [PageParametersFactory] used to create a [PageParametersModel] 
+  /// A [PageParametersFactory] used to create a [PageParametersModel]
   /// from the [RouteConfiguration].
   final PageParametersFactory _pageParametersFactory;
 
@@ -104,6 +104,11 @@ class NavigationNotifier extends ChangeNotifier {
     _isAppInitialized = isAppInitialized;
 
     if (_isAppInitialized) _redirect();
+  }
+
+  /// Determines whether the current page can be popped.
+  bool canPop() {
+    return _pages.length > 1;
   }
 
   /// Removes the current page and navigates to the previous one.
@@ -201,7 +206,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    final name = page?.name;
+    final name = page?.name?.replaceAll('/', '');
 
     return RouteConfiguration.values.firstWhere(
       (route) => route.name.value == name,
@@ -215,9 +220,12 @@ class NavigationNotifier extends ChangeNotifier {
 
     _currentConfiguration = newConfiguration;
 
-    final newPage = _pageFactory.create(_currentConfiguration);
-
     _updatePageParameters();
+
+    final newPage = _pageFactory.create(
+      _currentConfiguration,
+      _currentPageParameters,
+    );
 
     _pages.add(newPage);
   }

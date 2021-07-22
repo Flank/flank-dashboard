@@ -14,10 +14,11 @@ In this section, provide the contents for the document including all custom subs
 - [**Design**](#design)
     - [Architecture](#architecture)
     - [User Interface](#user-interface)
-    - [Database](#database)
+    - [Data Storage](#data-storage)
     - [Privacy](#privacy)
     - [Security](#security)
     - [Program](#program)
+    - [Testing](#testing)
 
 # Analysis
 > Describe a general analysis approach.
@@ -83,20 +84,92 @@ The above questions are focused on one purpose: the place and role of the new fe
 
 # Design
 
+The design section purposes discovering the implementation details for the feature. What is the structure of the feature? How is the feature to be integrated into the project/component(s)? And many other details are covered by the subsections below. But before we dive into explanations for the design parts, one should consider the following rules that hold for the whole design section:
+
+- The design acts within the requirements defined in the [Requirements](#requirements) section.
+- The design details all the [Analysis](#analysis) section describes/touches.
+- The design's subsections must not leave open questions about the selected implementation approach. Each section ends with clear and definitive details about exactly one implementation approach.
+
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
+
+This section examines the overall, top-level architecture of the feature. This architecture defines the approach to the feature implementation discussed in more detail in the next section. The following points hold for the section:
+
+- The section provides and examines the fundamental architecture of the feature with no details (classes, methods, etc.).
+- The section explains the implementation approach to the feature. If there are several implementation approaches:
+    - the section examines each approach and reviews its pros and cons;
+    - the section selects one approach and explains the choice providing clear reasoning.
+- The section represents the architecture with a diagram(s) demonstrating responsibilities and the overall algorithm.
+
+One should notice that the presented diagrams should differ from one presented in the [System modeling](#system-modeling) section. In this section, diagram(s) should be more detailed and explain the architecture of the feature rather than its place in a system. To know more about the possible diagrams for this section and how to create them effectively, consider [this article](https://www.alibabacloud.com/blog/how-to-create-an-effective-technical-architectural-diagram_596100).
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-### Database
+In this section, one should explain how users interact with the feature. The important note here is that a user is an abstraction that represents an interaction participant. These could be an end-user, developer, another component, etc. The general purpose is to describe the usage of the feature.
+
+Consider the following examples:
+
+- If the feature is related to the CLI tool, the usage can be described as the feature command executing example or the `help` command output that includes the feature-related points.
+- If the feature is related to the web application, the usage can be described as the User Interface [wireframes](https://plantuml.com/en/salt).
+- If the feature is related to the core (internal) component, it could be a Class Interface.
+
+### Data Storage
 > How relevant data will be persisted and protected.
+
+This section covers all the data persisting the feature implies. If the feature does not involve storing the user's data, one should state this fact and proceed to the next section.
+
+One should consider covering the following topics in this section:
+
+- Describe data the feature would persist in detail (data structure, storing format, etc.).
+- Describe the data storage (structure, relationships, format, etc.):
+    - If the data storage is defined by the project-specific storage, one may omit the details.
+    - If there are several possible storages the feature can use, one should review options with their pros and cons and select the one storage to use.
+- Describe how the feature interacts with the storage (e.g., CRUD operations, possible scopes, queries).
+- Describe the limitations, quotes, if there are any that make sense for the feature.
 
 ### Privacy
 > Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
 
+This section discovers how users' privacy is protected. One should cover the following points:
+
+- Describe what user's data is collected and how this data is processed and protected. If data is sent to 3rd-party services, it should properly be reflected in the Privacy Policy and known by the users.
+- Define privacy regulations the feature or related component act according to (GDPR, CCPA, HIPAA, etc.).
+- Consider a possibility of disabling data collection (opt-out).
+
 ### Security
 > How relevant data will be secured (Data encryption at rest, etc.).
 
+The Security section's purpose is to describe how users' data is secured. This is related to all data that users provide, and the application then stores in the [Data Storage](#data-storage) or using 3rd-party services. This section should highlight:
+
+- how data is secured from unauthorized access;
+- how a user can gain access to their data (authentication/authorization, user's scope, etc.);
+- what data encryption methods are used.
+
+To provide a full security review, one should consider performing the [threat modeling](https://en.wikipedia.org/wiki/Threat_model). This section may use the existing threat model or create and use a new one.
+
 ### Program
 > Detailed solution description to class/method level.
+
+In this section, one should dive into implementation details according to the feature architecture. One should consider visualizing all the given information, if possible, to simplify the understanding of how the feature is working. To archive the great and clear visualization, the classes/sequence/activity/etc. diagrams may be used along with the tables and lists. The general idea is to clearly define the feature architecture design, so it's ready for implementation.
+
+One should keep the following guide:
+
+- Describe the feature structure as precisely as possible with classes, their methods, and fields (this should match the described abstractions in the [Architecture](#architecture) section).
+- Describe all classes and their responsibilities.
+- Describe changes in the existing classes, if any.
+- Provide code snippets to clarify complex parts in the feature implementation (these snippets are to be short and not reveal the context they belong to - as short as possible to demonstrate the idea).
+
+### Testing
+> Describe an approach on how the feature should be tested.
+
+This section concerns the feature testing process. Depending on the implementation, one should state what tests the feature implies, for example: 
+
+- unit tests;
+- widget (component) tests;
+- integration tests;
+- e2e tests;
+- performance tests;
+- etc.
+
+Also, the section should cover the feature testing challenges. More precisely, this means that if the feature testing is not obvious, one should consider describing the most complex test cases.
