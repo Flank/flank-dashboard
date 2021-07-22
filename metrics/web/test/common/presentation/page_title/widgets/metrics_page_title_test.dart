@@ -89,9 +89,10 @@ void main() {
     });
 
     testWidgets(
-      "navigates to the dashboard page on tap on the back button",
+      "navigates to the dashboard page on tap on the back button if the navigation notifier cannot pop the current page",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
+        when(navigationNotifier.canPop()).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_MetricsPageTitleTestbed(
@@ -101,9 +102,27 @@ void main() {
 
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
 
-        verify(navigationNotifier.push(
+        verify(navigationNotifier.pushStateReplacement(
           DefaultRoutes.dashboard,
         )).called(once);
+      },
+    );
+
+    testWidgets(
+      "navigates to the previous page on tap on the back button if the navigation notifier can pop the current page",
+      (WidgetTester tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+        when(navigationNotifier.canPop()).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsPageTitleTestbed(
+            navigationNotifier: navigationNotifier,
+          ));
+        });
+
+        await tester.tap(find.byTooltip(CommonStrings.navigateBack));
+
+        verify(navigationNotifier.pop()).called(once);
       },
     );
 
