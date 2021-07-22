@@ -1,10 +1,10 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
 import 'package:ci_integration/source/jenkins/config/validator_factory/jenkins_source_validator_factory.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
