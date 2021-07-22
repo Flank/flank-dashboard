@@ -3,12 +3,12 @@
 
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
-import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config_field.dart';
+import 'package:ci_integration/destination/firestore/config/model/firestore_destination_validation_target.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
 import 'package:ci_integration/destination/firestore/config/validator/firestore_destination_validator.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -22,9 +22,26 @@ void main() {
     const firebaseUserPassword = 'password';
     const firebaseProjectId = 'id';
     const metricsProjectId = 'metrics_id';
-    const successResult = FieldValidationResult.success();
-    const failureResult = FieldValidationResult.failure();
-    const unknownResult = FieldValidationResult.unknown();
+    const apiKeyTarget =
+        FirestoreDestinationValidationTarget.firebasePublicApiKey;
+    const emailTarget = FirestoreDestinationValidationTarget.firebaseUserEmail;
+    const projectIdTarget =
+        FirestoreDestinationValidationTarget.firebaseProjectId;
+    const validConclusion = ConfigFieldValidationConclusion.valid;
+    const invalidConclusion = ConfigFieldValidationConclusion.invalid;
+    const unknownConclusion = ConfigFieldValidationConclusion.unknown;
+    const successResult = TargetValidationResult(
+      target: apiKeyTarget,
+      conclusion: validConclusion,
+    );
+    const failureResult = TargetValidationResult(
+      target: apiKeyTarget,
+      conclusion: invalidConclusion,
+    );
+    const unknownResult = TargetValidationResult(
+      target: apiKeyTarget,
+      conclusion: unknownConclusion,
+    );
 
     final config = FirestoreDestinationConfig(
       firebaseProjectId: firebaseProjectId,
@@ -50,11 +67,11 @@ void main() {
       validationResultBuilder,
     );
 
-    PostExpectation<Future<FieldValidationResult>> whenValidatePublicApiKey() {
+    PostExpectation<Future<TargetValidationResult>> whenValidatePublicApiKey() {
       return when(validationDelegate.validatePublicApiKey(firebaseApiKey));
     }
 
-    PostExpectation<Future<FieldValidationResult>> whenValidateAuth() {
+    PostExpectation<Future<TargetValidationResult>> whenValidateAuth() {
       whenValidatePublicApiKey().thenAnswer(
         (_) => Future.value(successResult),
       );
@@ -62,7 +79,7 @@ void main() {
       return when(validationDelegate.validateAuth(firebaseAuthCredentials));
     }
 
-    PostExpectation<Future<FieldValidationResult>>
+    PostExpectation<Future<TargetValidationResult>>
         whenValidateFirebaseProjectId() {
       whenValidateAuth().thenAnswer((_) => Future.value(successResult));
 
@@ -72,7 +89,7 @@ void main() {
       ));
     }
 
-    PostExpectation<Future<FieldValidationResult>>
+    PostExpectation<Future<TargetValidationResult>>
         whenValidateMetricsProjectId() {
       whenValidateFirebaseProjectId().thenAnswer(
         (_) => Future.value(successResult),
@@ -151,7 +168,7 @@ void main() {
         await validator.validate(config);
 
         verify(validationResultBuilder.setResult(
-          FirestoreDestinationConfigField.firebasePublicApiKey,
+          FirestoreDestinationValidationTarget.firebasePublicApiKey,
           failureResult,
         )).called(once);
       },
@@ -160,9 +177,10 @@ void main() {
     test(
       ".validate() sets empty result with the unknown field validation result with the 'firebase public api key invalid' additional context if the public api key validation result is failure",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
-              FirestoreStrings.publicApiKeyInvalidInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: apiKeyTarget,
+          conclusion: unknownConclusion,
+          description: FirestoreStrings.publicApiKeyInvalidInterruptReason,
         );
         whenValidatePublicApiKey().thenAnswer(
           (_) => Future.value(failureResult),
@@ -254,7 +272,7 @@ void main() {
         await validator.validate(config);
 
         verify(validationResultBuilder.setResult(
-          FirestoreDestinationConfigField.firebaseUserEmail,
+          FirestoreDestinationValidationTarget.firebaseUserEmail,
           failureResult,
         )).called(once);
       },
@@ -270,7 +288,7 @@ void main() {
         await validator.validate(config);
 
         verify(validationResultBuilder.setResult(
-          FirestoreDestinationConfigField.firebaseUserPassword,
+          FirestoreDestinationValidationTarget.firebaseUserPassword,
           failureResult,
         )).called(once);
       },
@@ -279,8 +297,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation result with the 'auth invalid' additional context if the auth validation result is failure",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext: FirestoreStrings.authInvalidInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: emailTarget,
+          conclusion: unknownConclusion,
+          description: FirestoreStrings.authInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
 
@@ -295,9 +315,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation result with the 'auth validation failed' additional context if the auth validation result is unknown",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
-              FirestoreStrings.authValidationFailedInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: emailTarget,
+          conclusion: unknownConclusion,
+          description: FirestoreStrings.authValidationFailedInterruptReason,
         );
         whenValidateAuth().thenAnswer((_) => Future.value(unknownResult));
 
@@ -406,7 +427,7 @@ void main() {
 
         verify(
           validationResultBuilder.setResult(
-            FirestoreDestinationConfigField.firebaseProjectId,
+            FirestoreDestinationValidationTarget.firebaseProjectId,
             failureResult,
           ),
         ).called(once);
@@ -416,9 +437,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation result is failure",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
-              FirestoreStrings.firebaseProjectIdInvalidInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: projectIdTarget,
+          conclusion: unknownConclusion,
+          description: FirestoreStrings.firebaseProjectIdInvalidInterruptReason,
         );
         whenValidateFirebaseProjectId().thenAnswer(
           (_) => Future.value(failureResult),
@@ -435,8 +457,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation result with the 'firebase project id validation failed' additional context if the firebase project id validation result is unknown",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
+        const expectedResult = TargetValidationResult(
+          target: projectIdTarget,
+          conclusion: unknownConclusion,
+          description:
               FirestoreStrings.firebaseProjectIdValidationFailedInterruptReason,
         );
         whenValidateFirebaseProjectId().thenAnswer(
@@ -532,7 +556,7 @@ void main() {
         await validator.validate(config);
 
         verify(validationResultBuilder.setResult(
-          FirestoreDestinationConfigField.metricsProjectId,
+          FirestoreDestinationValidationTarget.metricsProjectId,
           failureResult,
         )).called(once);
       },
