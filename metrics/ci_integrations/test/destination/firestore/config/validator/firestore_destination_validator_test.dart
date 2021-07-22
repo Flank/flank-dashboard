@@ -13,7 +13,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
-import '../../../../test_utils/mock/validation_result_builder_mock.dart';
+import '../../../../test_utils/mock/validation_result_builder_stub_mock.dart';
 
 void main() {
   group("FirestoreDestinationValidator", () {
@@ -43,7 +43,7 @@ void main() {
     final validationResult = ValidationResult(const {});
 
     final validationDelegate = _FirestoreDestinationValidationDelegateMock();
-    final validationResultBuilder = ValidationResultBuilderMock();
+    final validationResultBuilder = ValidationResultBuilderStubMock();
 
     final validator = FirestoreDestinationValidator(
       validationDelegate,
