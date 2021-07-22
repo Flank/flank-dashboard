@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
-import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
@@ -28,12 +27,12 @@ void main() {
 
     MetricsPage createMetricsPage({
       RouteName routeName,
-      PageParametersModel pageParameters,
+      Object arguments,
     }) {
       return MetricsPage(
         child: const Text('test'),
         routeName: routeName,
-        arguments: pageParameters,
+        arguments: arguments,
       );
     }
 
@@ -50,16 +49,27 @@ void main() {
       ".create() returns a loading route configuration if the given page route name is unknown",
       () {
         final routeName = RouteNameMock();
-        final page = MetricsPage(
-          child: const Text('test'),
-          routeName: routeName,
-        );
+        final page = createMetricsPage(routeName: routeName);
 
         when(routeName.value).thenReturn('unknown');
 
         final configuration = pageRouteConfigurationFactory.create(page);
 
         expect(configuration, equals(loadingRouteConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a route configuration with parameters equal to null if the given page arguments is not an instance of the page parameters model",
+      () {
+        final page = createMetricsPage(
+          routeName: RouteName.dashboard,
+          arguments: Object(),
+        );
+
+        final configuration = pageRouteConfigurationFactory.create(page);
+
+        expect(configuration.parameters, isNull);
       },
     );
 
@@ -86,20 +96,6 @@ void main() {
     );
 
     test(
-      ".create() returns a route configuration with the parameters equal to the given page parameters if the page route name is a login",
-      () {
-        final page = createMetricsPage(
-          routeName: loginRouteName,
-          pageParameters: pageParameters,
-        );
-
-        final configuration = pageRouteConfigurationFactory.create(page);
-
-        expect(configuration.parameters, equals(pageParametersMap));
-      },
-    );
-
-    test(
       ".create() returns a dashboard route configuration if the given page route name is a dashboard",
       () {
         final page = createMetricsPage(routeName: dashboardRouteName);
@@ -107,20 +103,6 @@ void main() {
         final configuration = pageRouteConfigurationFactory.create(page);
 
         expect(configuration, equals(DefaultRoutes.dashboard));
-      },
-    );
-
-    test(
-      ".create() returns a route configuration with the parameters equal to the given page parameters if the page route name is a dashboard",
-      () {
-        final page = createMetricsPage(
-          routeName: dashboardRouteName,
-          pageParameters: pageParameters,
-        );
-
-        final configuration = pageRouteConfigurationFactory.create(page);
-
-        expect(configuration.parameters, equals(pageParametersMap));
       },
     );
 
@@ -136,20 +118,6 @@ void main() {
     );
 
     test(
-      ".create() returns a route configuration with the parameters equal to the given page parameters if the page route name is project groups",
-      () {
-        final page = createMetricsPage(
-          routeName: projectGroupsRouteName,
-          pageParameters: pageParameters,
-        );
-
-        final configuration = pageRouteConfigurationFactory.create(page);
-
-        expect(configuration.parameters, equals(pageParametersMap));
-      },
-    );
-
-    test(
       ".create() returns a debug menu route configuration if the given page route name is a debug menu",
       () {
         final page = createMetricsPage(routeName: debugMenuRouteName);
@@ -161,11 +129,11 @@ void main() {
     );
 
     test(
-      ".create() returns a route configuration with the parameters equal to the given page parameters if the page route name is a debug menu",
+      ".create() returns a route configuration with the parameters equal to the given page parameters",
       () {
         final page = createMetricsPage(
           routeName: debugMenuRouteName,
-          pageParameters: pageParameters,
+          arguments: pageParameters,
         );
 
         final configuration = pageRouteConfigurationFactory.create(page);

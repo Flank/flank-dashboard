@@ -3,6 +3,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
@@ -294,17 +295,17 @@ void main() {
     test(
       ".pop() sets the previous rote configuration to current configuration",
       () {
-        final notifier = NavigationNotifier(
-          pageFactory,
-          pageParametersFactory,
-          const MetricsPageRouteConfigurationFactory(),
-          navigationState,
+        final expectedConfiguration = DefaultRoutes.dashboard;
+
+        final pageMatcher = predicate<MetricsPage>(
+          (page) => page.routeName == RouteName.dashboard,
         );
+
+        when(pageRouteConfigurationFactory.create(captureThat(pageMatcher)))
+            .thenReturn(expectedConfiguration);
 
         notifier.handleAppInitialized(isAppInitialized: true);
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
-
-        final expectedConfiguration = DefaultRoutes.dashboard;
 
         notifier.push(expectedConfiguration);
         notifier.push(DefaultRoutes.projectGroups);
@@ -496,25 +497,6 @@ void main() {
         notifier.push(routeConfiguration);
 
         verify(pageParametersFactory.create(any)).called(once);
-      },
-    );
-
-    test(
-      ".push() uses the given metrics page factory to create a metrics page",
-      () {
-        final pageFactory = _MetricsPageFactoryMock();
-        final notifier = NavigationNotifier(
-          pageFactory,
-          pageParametersFactory,
-          pageRouteConfigurationFactory,
-          navigationState,
-        );
-        notifier.handleAppInitialized(isAppInitialized: true);
-        notifier.handleAuthenticationUpdates(isLoggedIn: true);
-
-        notifier.push(routeConfiguration);
-
-        verify(pageFactory.create(routeConfiguration, null)).called(once);
       },
     );
 
@@ -1185,7 +1167,8 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}
 
 class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}
 

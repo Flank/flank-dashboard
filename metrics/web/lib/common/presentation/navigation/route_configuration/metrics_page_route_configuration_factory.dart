@@ -16,11 +16,16 @@ class MetricsPageRouteConfigurationFactory {
   /// Creates the [RouteConfiguration] using the given [page].
   ///
   /// If the given [page] is `null` or its [MetricsPage.routeName] does not
-  /// match to any of [RouteName]s, returns the [DefaultRoutes.loading].
+  /// match any of [RouteName]s, returns the [DefaultRoutes.loading].
   RouteConfiguration create(MetricsPage page) {
     final routeName = page?.routeName;
-    final parameters = page?.arguments as PageParametersModel;
-    final parametersMap = parameters?.toMap();
+    final pageArguments = page?.arguments;
+
+    Map<String, dynamic> parametersMap;
+
+    if (pageArguments is PageParametersModel) {
+      parametersMap = pageArguments?.toMap();
+    }
 
     switch (routeName) {
       case RouteName.login:
