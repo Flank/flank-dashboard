@@ -1,14 +1,14 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
-import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config_field.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
 import 'package:ci_integration/source/jenkins/config/validator/jenkins_source_validator.dart';
 import 'package:ci_integration/source/jenkins/strings/jenkins_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -21,8 +21,19 @@ void main() {
     const username = 'username';
     const jobName = 'job_name';
     const apiKey = 'api_key';
-    const successResult = FieldValidationResult.success();
-    const failureResult = FieldValidationResult.failure();
+    const validConclusion = ConfigFieldValidationConclusion.valid;
+    const invalidConclusion = ConfigFieldValidationConclusion.invalid;
+    const unknownConclusion = ConfigFieldValidationConclusion.unknown;
+    const urlTarget = JenkinsSourceValidationTarget.url;
+    const apiTarget = JenkinsSourceValidationTarget.apiKey;
+    const successResult = TargetValidationResult(
+      target: urlTarget,
+      conclusion: validConclusion,
+    );
+    const failureResult = TargetValidationResult(
+      target: urlTarget,
+      conclusion: invalidConclusion,
+    );
 
     final config = JenkinsSourceConfig(
       url: url,
@@ -58,18 +69,19 @@ void main() {
     final noUsernameConfig = createConfig(username: null);
     final noApiKeyConfig = createConfig(apiKey: null);
     final noAuthConfig = createConfig(username: null, apiKey: null);
-    
-    PostExpectation<Future<FieldValidationResult<void>>> whenValidateUrl() {
+
+    PostExpectation<Future<TargetValidationResult<void>>> whenValidateUrl() {
       return when(validationDelegate.validateJenkinsUrl(url));
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>> whenValidateAuth() {
+    PostExpectation<Future<TargetValidationResult<void>>> whenValidateAuth() {
       whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
       return when(validationDelegate.validateAuth(auth));
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>> whenValidateJobName() {
+    PostExpectation<Future<TargetValidationResult<void>>>
+        whenValidateJobName() {
       whenValidateAuth().thenAnswer((_) => Future.value(successResult));
 
       return when(validationDelegate.validateJobName(jobName));
@@ -136,7 +148,7 @@ void main() {
 
         verify(
           validationResultBuilder.setResult(
-            JenkinsSourceConfigField.url,
+            JenkinsSourceValidationTarget.url,
             failureResult,
           ),
         ).called(once);
@@ -146,8 +158,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation result with the 'jenkins url invalid' additional context if the url validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext: JenkinsStrings.jenkinsUrlInvalidInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: urlTarget,
+          conclusion: unknownConclusion,
+          description: JenkinsStrings.jenkinsUrlInvalidInterruptReason,
         );
         whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
 
@@ -196,13 +210,15 @@ void main() {
     test(
       ".validate() sets empty results with the 'missing auth credentials' additional context if the username is missing in the config",
       () async {
-        final missingCredentials = JenkinsSourceConfigField.username.value;
+        final missingCredentials = JenkinsSourceValidationTarget.username.name;
         final expectedInterruptReason =
             JenkinsStrings.missingAuthCredentialsInterruptReason(
           missingCredentials,
         );
-        final expectedResult = FieldValidationResult.unknown(
-          additionalContext: expectedInterruptReason,
+        final expectedResult = TargetValidationResult(
+          target: apiTarget,
+          conclusion: unknownConclusion,
+          description: expectedInterruptReason,
         );
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
@@ -251,13 +267,15 @@ void main() {
     test(
       ".validate() sets empty results with the 'missing auth credentials' additional context if the api key is missing in the config",
       () async {
-        final missingCredentials = JenkinsSourceConfigField.apiKey.value;
+        final missingCredentials = JenkinsSourceValidationTarget.apiKey.name;
         final expectedInterruptReason =
             JenkinsStrings.missingAuthCredentialsInterruptReason(
           missingCredentials,
         );
-        final expectedResult = FieldValidationResult.unknown(
-          additionalContext: expectedInterruptReason,
+        final expectedResult = TargetValidationResult(
+          target: apiTarget,
+          conclusion: unknownConclusion,
+          description: expectedInterruptReason,
         );
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
@@ -307,15 +325,17 @@ void main() {
       ".validate() sets empty results with the 'missing auth credentials' additional context if the api key and username are missing in the config",
       () async {
         final missingCredentials = [
-          JenkinsSourceConfigField.username,
-          JenkinsSourceConfigField.apiKey
-        ].map((field) => field.value).join(', ');
+          JenkinsSourceValidationTarget.username,
+          JenkinsSourceValidationTarget.apiKey
+        ].map((field) => field.name).join(', ');
         final expectedInterruptReason =
             JenkinsStrings.missingAuthCredentialsInterruptReason(
           missingCredentials,
         );
-        final expectedResult = FieldValidationResult.unknown(
-          additionalContext: expectedInterruptReason,
+        final expectedResult = TargetValidationResult(
+          target: apiTarget,
+          conclusion: unknownConclusion,
+          description: expectedInterruptReason,
         );
         whenValidateUrl().thenAnswer((_) => Future.value(successResult));
 
@@ -381,7 +401,7 @@ void main() {
 
         verify(
           validationResultBuilder.setResult(
-            JenkinsSourceConfigField.username,
+            JenkinsSourceValidationTarget.username,
             failureResult,
           ),
         ).called(once);
@@ -397,7 +417,7 @@ void main() {
 
         verify(
           validationResultBuilder.setResult(
-            JenkinsSourceConfigField.apiKey,
+            JenkinsSourceValidationTarget.apiKey,
             failureResult,
           ),
         ).called(once);
@@ -407,8 +427,10 @@ void main() {
     test(
       ".validate() sets empty results with the unknown field validation results with the 'auth invalid' additional context if the auth credentials validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext: JenkinsStrings.authInvalidInterruptReason,
+        const expectedResult = TargetValidationResult(
+          target: apiTarget,
+          conclusion: unknownConclusion,
+          description: JenkinsStrings.authInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
 
@@ -463,7 +485,7 @@ void main() {
 
         verify(
           validationResultBuilder.setResult(
-            JenkinsSourceConfigField.jobName,
+            JenkinsSourceValidationTarget.jobName,
             failureResult,
           ),
         ).called(once);
