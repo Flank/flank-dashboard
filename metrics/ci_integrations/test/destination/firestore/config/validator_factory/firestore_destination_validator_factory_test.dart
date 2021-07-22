@@ -4,7 +4,7 @@
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
 import 'package:ci_integration/destination/firestore/config/validator_factory/firestore_destination_validator_factory.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
