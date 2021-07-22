@@ -3,10 +3,12 @@
 
 import 'package:ci_integration/client/firestore/mappers/firestore_exception_reason_mapper.dart';
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
+import 'package:ci_integration/destination/firestore/config/model/firestore_destination_validation_target.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
 import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/factory/firestore_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:firedart/firedart.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -216,7 +218,7 @@ void main() {
     );
 
     test(
-      ".validatePublicApiKey() returns a failure field validation result if the auth throws a firebase auth exception with the 'invalid api key' code",
+      ".validatePublicApiKey() returns a target validation result with a firestore public api key validation target if the auth throws a firebase auth exception with the 'invalid api key' code",
       () async {
         whenSignIn(
           withEmail: '',
@@ -226,13 +228,34 @@ void main() {
         );
 
         final result = await delegate.validatePublicApiKey(apiKey);
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebasePublicApiKey),
+        );
       },
     );
 
     test(
-      ".validatePublicApiKey() returns a result with the 'api key invalid' additional context if the auth throws a firebase auth exception with the 'invalid api key' code",
+      ".validatePublicApiKey() returns a target validation result with an invalid config field validation conclusion if the auth throws a firebase auth exception with the 'invalid api key' code",
+      () async {
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer(
+          (_) => Future.error(invalidApiKeyAuthException),
+        );
+
+        final result = await delegate.validatePublicApiKey(apiKey);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validatePublicApiKey() returns a target validation result with the 'api key invalid' description if the auth throws a firebase auth exception with the 'invalid api key' code",
       () async {
         whenSignIn(
           withEmail: '',
@@ -244,14 +267,14 @@ void main() {
         final result = await delegate.validatePublicApiKey(apiKey);
 
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.apiKeyInvalid),
         );
       },
     );
 
     test(
-      ".validatePublicApiKey() returns a successful field validation result if the auth throws a firebase auth exception with the code does not indicate that the api key is invalid",
+      ".validatePublicApiKey() returns a target validation result with a firestore public api key validation target if the auth throws a firebase auth exception with the code does not indicate that the api key is invalid",
       () async {
         whenSignIn(
           withEmail: '',
@@ -259,13 +282,32 @@ void main() {
         ).thenAnswer((_) => Future.error(emailNotFoundAuthException));
 
         final result = await delegate.validatePublicApiKey(apiKey);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebasePublicApiKey),
+        );
       },
     );
 
     test(
-      ".validatePublicApiKey() returns a successful field validation result if the sign-in process finishes successfully",
+      ".validatePublicApiKey() returns a target validation result with a valid config field validation conclusion if the auth throws a firebase auth exception with the code does not indicate that the api key is invalid",
+      () async {
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer((_) => Future.error(emailNotFoundAuthException));
+
+        final result = await delegate.validatePublicApiKey(apiKey);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validatePublicApiKey() returns a target validation result with a firestore public api key validation target if the sign-in process finishes successfully",
       () async {
         whenSignIn(
           withEmail: '',
@@ -273,8 +315,27 @@ void main() {
         ).thenAnswer((_) => Future.value(user));
 
         final result = await delegate.validatePublicApiKey(apiKey);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebasePublicApiKey),
+        );
+      },
+    );
+
+    test(
+      ".validatePublicApiKey() returns a target validation result with a valid config field validation conclusion if the sign-in process finishes successfully",
+      () async {
+        whenSignIn(
+          withEmail: '',
+          withPassword: '',
+        ).thenAnswer((_) => Future.value(user));
+
+        final result = await delegate.validatePublicApiKey(apiKey);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
@@ -305,7 +366,38 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'email not found' code",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the auth throws a firebase auth exception with the 'email not found' code",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(emailNotFoundAuthException),
+        );
+
+        final result = await delegate.validateAuth(credentials);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the auth throws a firebase auth exception with the 'email not found' code",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(emailNotFoundAuthException),
+        );
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result containing the exception message if the auth throws a firebase auth exception with the 'email not found' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -313,25 +405,43 @@ void main() {
 
         final result = await delegate.validateAuth(credentials);
 
-        expect(result.isFailure, isTrue);
+        expect(result.description, equals(message));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'email not found' code",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the auth throws a firebase auth exception with the 'invalid password' code",
       () async {
         whenSignIn().thenAnswer(
-          (_) => Future.error(emailNotFoundAuthException),
+          (_) => Future.error(invalidPasswordAuthException),
         );
 
         final result = await delegate.validateAuth(credentials);
+        final target = result.target;
 
-        expect(result.additionalContext, equals(message));
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
+        );
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'invalid password' code",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the auth throws a firebase auth exception with the 'invalid password' code",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(invalidPasswordAuthException),
+        );
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result containing the exception message if the auth throws a firebase auth exception with the 'invalid password' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(invalidPasswordAuthException),
@@ -339,25 +449,43 @@ void main() {
 
         final result = await delegate.validateAuth(credentials);
 
-        expect(result.isFailure, isTrue);
+        expect(result.description, equals(message));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'invalid password' code",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the auth throws a firebase auth exception with the 'password login disabled' code",
       () async {
         whenSignIn().thenAnswer(
-          (_) => Future.error(invalidPasswordAuthException),
+          (_) => Future.error(passwordLoginDisabledAuthException),
         );
 
         final result = await delegate.validateAuth(credentials);
+        final target = result.target;
 
-        expect(result.additionalContext, equals(message));
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
+        );
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'password login disabled' code",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the auth throws a firebase auth exception with the 'password login disabled' code",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(passwordLoginDisabledAuthException),
+        );
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result containing the exception message if the auth throws a firebase auth exception with the 'password login disabled' code",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(passwordLoginDisabledAuthException),
@@ -365,83 +493,120 @@ void main() {
 
         final result = await delegate.validateAuth(credentials);
 
-        expect(result.isFailure, isTrue);
+        expect(result.description, equals(message));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'password login disabled' code",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the auth throws a firebase auth exception with the 'user disabled' code",
       () async {
-        whenSignIn().thenAnswer(
-          (_) => Future.error(passwordLoginDisabledAuthException),
+        whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
+
+        final result = await delegate.validateAuth(credentials);
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
         );
-
-        final result = await delegate.validateAuth(credentials);
-
-        expect(result.additionalContext, equals(message));
       },
     );
 
     test(
-      ".validateAuth() returns a failure field validation result if the auth throws a firebase auth exception with the 'user disabled' code",
+      ".validateAuth() returns a target validation result with an invalid config field validation conclusion if the auth throws a firebase auth exception with the 'user disabled' code",
+      () async {
+        whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result containing the exception message if the auth throws a firebase auth exception with the 'user disabled' code",
       () async {
         whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
 
         final result = await delegate.validateAuth(credentials);
 
-        expect(result.isFailure, isTrue);
+        expect(result.description, equals(message));
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result containing the exception message if the auth throws a firebase auth exception with the 'user disabled' code",
-      () async {
-        whenSignIn().thenAnswer((_) => Future.error(userDisabledAuthException));
-
-        final result = await delegate.validateAuth(credentials);
-
-        expect(result.additionalContext, equals(message));
-      },
-    );
-
-    test(
-      ".validateAuth() returns an unknown field validation result if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(invalidApiKeyAuthException),
         );
 
         final result = await delegate.validateAuth(credentials);
+        final target = result.target;
 
-        expect(result.isUnknown, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
+        );
       },
     );
 
     test(
-      ".validateAuth() returns a field validation result with the 'auth validation failed' additional context containing the exception code and message if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
+      ".validateAuth() returns a target validation result with an unknown config field validation conclusion if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(invalidApiKeyAuthException),
         );
-        final expectedAdditionalContext = FirestoreStrings.authValidationFailed(
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.unknown));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with the 'auth validation failed' description containing the exception code and message if the auth throws a firebase auth exception with the code does not indicate that the auth is invalid",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(invalidApiKeyAuthException),
+        );
+        final expectedDescription = FirestoreStrings.authValidationFailed(
           '${invalidApiKeyAuthException.code}',
           invalidApiKeyAuthException.message,
         );
 
         final result = await delegate.validateAuth(credentials);
 
-        expect(result.additionalContext, equals(expectedAdditionalContext));
+        expect(result.description, equals(expectedDescription));
       },
     );
 
     test(
-      ".validateAuth() returns a successful field validation result if the sign-in process finishes successfully",
+      ".validateAuth() returns a target validation result with a firestore user email validation target if the sign-in process finishes successfully",
       () async {
         whenSignIn().thenAnswer((_) => Future.value(user));
 
         final result = await delegate.validateAuth(credentials);
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseUserEmail),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a target validation result with a valid config field validation conclusion if the sign-in process finishes successfully",
+      () async {
+        whenSignIn().thenAnswer((_) => Future.value(user));
+
+        final result = await delegate.validateAuth(credentials);
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
@@ -504,7 +669,44 @@ void main() {
     );
 
     test(
-      ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(consumerInvalidFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with an invalid config field validation conclusion if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(consumerInvalidFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with the 'invalid firebase project id' description if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
       () async {
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(consumerInvalidFirestoreException),
@@ -515,31 +717,52 @@ void main() {
           projectId,
         );
 
-        expect(result.isFailure, isTrue);
-      },
-    );
-
-    test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'consumer invalid' exception reason",
-      () async {
-        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
-          (_) => Future.error(consumerInvalidFirestoreException),
-        );
-
-        final result = await delegate.validateFirebaseProjectId(
-          credentials,
-          projectId,
-        );
-
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.projectIdInvalid),
         );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'not found' exception reason",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with the 'not found' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(notFoundFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with an invalid config field validation conclusion if the Firestore throws a Firestore exception with the 'not found' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(notFoundFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with the 'invalid firebase project id' description if the Firestore throws a Firestore exception with the 'not found' exception reason",
       () async {
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(notFoundFirestoreException),
@@ -550,31 +773,52 @@ void main() {
           projectId,
         );
 
-        expect(result.isFailure, isTrue);
-      },
-    );
-
-    test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'not found' exception reason",
-      () async {
-        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
-          (_) => Future.error(notFoundFirestoreException),
-        );
-
-        final result = await delegate.validateFirebaseProjectId(
-          credentials,
-          projectId,
-        );
-
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.projectIdInvalid),
         );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(projectDeletedFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with an invalid config field validation conclusion if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(projectDeletedFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with the 'invalid firebase project id' description if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
       () async {
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectDeletedFirestoreException),
@@ -585,31 +829,52 @@ void main() {
           projectId,
         );
 
-        expect(result.isFailure, isTrue);
-      },
-    );
-
-    test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'project deleted' exception reason",
-      () async {
-        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
-          (_) => Future.error(projectDeletedFirestoreException),
-        );
-
-        final result = await delegate.validateFirebaseProjectId(
-          credentials,
-          projectId,
-        );
-
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.projectIdInvalid),
         );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a failure field validation result if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(projectInvalidFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final target = result.target;
+
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with an invalid config field validation conclusion if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
+      () async {
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(projectInvalidFirestoreException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with the 'invalid firebase project id' description if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
       () async {
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
           (_) => Future.error(projectInvalidFirestoreException),
@@ -620,31 +885,15 @@ void main() {
           projectId,
         );
 
-        expect(result.isFailure, isTrue);
-      },
-    );
-
-    test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'invalid firebase project id' additional context if the Firestore throws a Firestore exception with the 'project invalid' exception reason",
-      () async {
-        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
-          (_) => Future.error(projectInvalidFirestoreException),
-        );
-
-        final result = await delegate.validateFirebaseProjectId(
-          credentials,
-          projectId,
-        );
-
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.projectIdInvalid),
         );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns an unknown field validation result if the Firebase auth throws during signing in",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -654,13 +903,34 @@ void main() {
           credentials,
           projectId,
         );
+        final target = result.target;
 
-        expect(result.isUnknown, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the Firebase auth throws during signing in",
+      ".validateFirebaseProjectId() returns a target validation result with an unknown config field validation conclusion if the Firebase auth throws during signing in",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(emailNotFoundAuthException),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.unknown));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with the 'unknown error when signing in' description if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -672,14 +942,14 @@ void main() {
         );
 
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.unknownErrorWhenSigningIn),
         );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a success field validation result if the Firestore throws a Firestore exception with empty exception reasons",
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with empty exception reasons",
       () async {
         final exception = createFirestoreException(reasons: []);
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
@@ -690,13 +960,35 @@ void main() {
           credentials,
           projectId,
         );
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a success field validation result if the Firestore throws a Firestore exception with null exception reasons",
+      ".validateFirebaseProjectId() returns a target validation result with a valid config field validation conclusion if the Firestore throws a Firestore exception with empty exception reasons",
+      () async {
+        final exception = createFirestoreException(reasons: []);
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(exception),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if the Firestore throws a Firestore exception with null exception reasons",
       () async {
         final exception = createFirestoreException(reasons: null);
         whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
@@ -707,13 +999,35 @@ void main() {
           credentials,
           projectId,
         );
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
       },
     );
 
     test(
-      ".validateFirebaseProjectId() returns a success field validation result if reading documents process succeeds",
+      ".validateFirebaseProjectId() returns a target validation result with a valid config field validation conclusion if the Firestore throws a Firestore exception with null exception reasons",
+      () async {
+        final exception = createFirestoreException(reasons: null);
+        whenGetMetricsProject(withName: stubDocumentName).thenAnswer(
+          (_) => Future.error(exception),
+        );
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with a firestore project id validation target if reading documents process succeeds",
       () async {
         whenGetMetricsProject(
           withName: stubDocumentName,
@@ -723,8 +1037,29 @@ void main() {
           credentials,
           projectId,
         );
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.firebaseProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateFirebaseProjectId() returns a target validation result with a valid config field validation conclusion if reading documents process succeeds",
+      () async {
+        whenGetMetricsProject(
+          withName: stubDocumentName,
+        ).thenAnswer((_) => Future.value());
+
+        final result = await delegate.validateFirebaseProjectId(
+          credentials,
+          projectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
 
@@ -810,7 +1145,7 @@ void main() {
     );
 
     test(
-      ".validateMetricsProjectId() returns a failure field validation result if a project with the given metrics project id does not exist",
+      ".validateMetricsProjectId() returns a target validation result with a metrics project id validation target if a project with the given metrics project id does not exist",
       () async {
         whenMetricsProjectExists().thenReturn(false);
 
@@ -819,13 +1154,33 @@ void main() {
           projectId,
           metricsProjectId,
         );
+        final target = result.target;
 
-        expect(result.isFailure, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.metricsProjectId),
+        );
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns a field validation result with the 'project does not exist' additional context if a project with the given metrics project id does not exist",
+      ".validateMetricsProjectId() returns a target validation result with an invalid config field validation conclusion if a project with the given metrics project id does not exist",
+      () async {
+        whenMetricsProjectExists().thenReturn(false);
+
+        final result = await delegate.validateMetricsProjectId(
+          credentials,
+          projectId,
+          metricsProjectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+      },
+    );
+
+    test(
+      ".validateMetricsProjectId() returns a target validation result with the 'project does not exist' description if a project with the given metrics project id does not exist",
       () async {
         whenMetricsProjectExists().thenReturn(false);
 
@@ -836,14 +1191,14 @@ void main() {
         );
 
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.metricsProjectIdDoesNotExist),
         );
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns an unknown field validation result if a Firestore throws a Firestore exception when reading a document",
+      ".validateMetricsProjectId() returns a target validation result with a metrics project id validation target if a Firestore throws a Firestore exception when reading a document",
       () async {
         whenGetMetricsProject().thenAnswer(
           (_) => Future.error(projectInvalidFirestoreException),
@@ -854,13 +1209,35 @@ void main() {
           projectId,
           metricsProjectId,
         );
+        final target = result.target;
 
-        expect(result.isUnknown, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.metricsProjectId),
+        );
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns a field validation result with the 'metrics project id validation failed' message with the exception code and message if a Firestore throws a Firestore exception when reading a document",
+      ".validateMetricsProjectId() returns a target validation result with an unknown config field validation conclusion if a Firestore throws a Firestore exception when reading a document",
+      () async {
+        whenGetMetricsProject().thenAnswer(
+          (_) => Future.error(projectInvalidFirestoreException),
+        );
+
+        final result = await delegate.validateMetricsProjectId(
+          credentials,
+          projectId,
+          metricsProjectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.unknown));
+      },
+    );
+
+    test(
+      ".validateMetricsProjectId() returns a target validation result with the 'metrics project id validation failed' message with the exception code and message if a Firestore throws a Firestore exception when reading a document",
       () async {
         const code = FirestoreExceptionCode.aborted;
         final exception = createFirestoreException(
@@ -880,12 +1257,12 @@ void main() {
           metricsProjectId,
         );
 
-        expect(result.additionalContext, equals(expectedMessage));
+        expect(result.description, equals(expectedMessage));
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns an unknown field validation result if the Firebase auth throws during signing in",
+      ".validateMetricsProjectId() returns a target validation result with a metrics project id validation target if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -896,13 +1273,35 @@ void main() {
           projectId,
           metricsProjectId,
         );
+        final target = result.target;
 
-        expect(result.isUnknown, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.metricsProjectId),
+        );
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns a field validation result with the 'unknown error when signing in' additional context if the Firebase auth throws during signing in",
+      ".validateMetricsProjectId() returns a target validation result with an unknown config field validation conclusion if the Firebase auth throws during signing in",
+      () async {
+        whenSignIn().thenAnswer(
+          (_) => Future.error(emailNotFoundAuthException),
+        );
+
+        final result = await delegate.validateMetricsProjectId(
+          credentials,
+          projectId,
+          metricsProjectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.unknown));
+      },
+    );
+
+    test(
+      ".validateMetricsProjectId() returns a target validation result with the 'unknown error when signing in' description if the Firebase auth throws during signing in",
       () async {
         whenSignIn().thenAnswer(
           (_) => Future.error(emailNotFoundAuthException),
@@ -915,14 +1314,14 @@ void main() {
         );
 
         expect(
-          result.additionalContext,
+          result.description,
           equals(FirestoreStrings.unknownErrorWhenSigningIn),
         );
       },
     );
 
     test(
-      ".validateMetricsProjectId() returns a success field validation result if the given metrics project id is valid",
+      ".validateMetricsProjectId() returns a target validation result with a metrics project id validation target if the given metrics project id is valid",
       () async {
         whenMetricsProjectExists().thenReturn(true);
 
@@ -931,8 +1330,28 @@ void main() {
           projectId,
           metricsProjectId,
         );
+        final target = result.target;
 
-        expect(result.isSuccess, isTrue);
+        expect(
+          target,
+          equals(FirestoreDestinationValidationTarget.metricsProjectId),
+        );
+      },
+    );
+
+    test(
+      ".validateMetricsProjectId() returns a target validation result with a valid config field validation conclusion if the given metrics project id is valid",
+      () async {
+        whenMetricsProjectExists().thenReturn(true);
+
+        final result = await delegate.validateMetricsProjectId(
+          credentials,
+          projectId,
+          metricsProjectId,
+        );
+        final conclusion = result.conclusion;
+
+        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
       },
     );
   });
