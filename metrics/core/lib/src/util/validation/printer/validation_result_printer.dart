@@ -43,93 +43,84 @@ class ValidationResultPrinter {
     ValidationTarget target,
     TargetValidationResult validationResult,
   ) {
-    final conclusion = _getConclusionIndicator(validationResult);
-    final targetName = target.name;
-    final targetDescription = _getDescription(target);
-    final validationDescription = _getValidationDescription(validationResult);
-    final details = _getValidationDetails(validationResult);
-    final context = _getValidationContext(validationResult);
+    final buffer = StringBuffer();
 
-    return '''
-$conclusion $targetName$targetDescription$validationDescription$details
-\t$context
-    ''';
+    _addConclusion(buffer, validationResult.conclusion);
+    buffer.write(' ${target.name}');
+    _addDescription(buffer, target.description);
+    _addResultDescription(buffer, validationResult.description);
+    _addDetails(buffer, validationResult.details);
+    buffer.write('\n');
+    _addContext(buffer, validationResult.context);
+
+    return buffer.toString();
   }
 
-  /// Returns a [String] representation of the
-  /// [TargetValidationResult.conclusion].
+  /// Adds the [String] representation of the given [conclusion] to the
+  /// given [buffer].
   ///
-  /// Returns the `[?]` indicator if the given [ValidationConclusion.indicator]
-  /// is `null` or empty.
-  String _getConclusionIndicator(TargetValidationResult validationResult) {
-    final conclusion = validationResult.conclusion;
+  /// Records `[?]` if the given [ValidationConclusion.indicator]
+  /// is empty or `null`.
+  void _addConclusion(StringBuffer buffer, ValidationConclusion conclusion) {
     final indicator = conclusion.indicator;
 
     if (indicator == null || indicator.isEmpty) {
-      return '[?]';
+      buffer.write('[?]');
+    } else {
+      buffer.write('[$indicator]');
     }
-
-    return '[$indicator]';
   }
 
-  /// Returns a [String] representation of the [ValidationTarget.description].
+  /// Adds the [String] representation of the given [description] to the
+  /// given [buffer].
   ///
-  /// Returns an empty string if the given [ValidationTarget.description] is
-  /// `null` or empty.
-  String _getDescription(ValidationTarget target) {
-    final description = target.description;
+  /// Adds nothing if the given [description] is empty or `null`.
+  void _addDescription(StringBuffer buffer, String description) {
+    if (description == null || description.isEmpty) return;
 
-    if (description == null || description.isEmpty) return '';
-
-    return ' $description';
+    buffer.write(' $description');
   }
 
-  /// Returns a [String] representation of the
-  /// [TargetValidationResult.description].
+  /// Adds the [String] representation of the given [resultDescription] to the
+  /// given [buffer].
   ///
-  /// Returns an empty string if the given [TargetValidationResult.description]
-  /// is `null` or empty.
-  String _getValidationDescription(TargetValidationResult validationResult) {
-    final description = validationResult.description;
+  /// Adds nothing if the given [resultDescription] is empty or `null`.
+  void _addResultDescription(StringBuffer buffer, String resultDescription) {
+    if (resultDescription == null || resultDescription.isEmpty) return;
 
-    if (description == null || description.isEmpty) return '';
-
-    return ' - $description';
+    buffer.write(' - $resultDescription');
   }
 
-  /// Returns the [String] representation of the given
-  /// [TargetValidationResult.details].
+  /// Adds the [String] representation of the given [details] to the
+  /// given [buffer].
   ///
-  /// Returns an empty string if the given [TargetValidationResult.details] is
-  /// `null` or empty.
-  String _getValidationDetails(TargetValidationResult validationResult) {
-    final details = validationResult.details;
-    final resultMessage = [];
+  /// Adds nothing if the given [details] is empty or `null`.
+  void _addDetails(StringBuffer buffer, Map<String, dynamic> details) {
+    if (details == null || details.isEmpty) return;
 
-    if (details == null || details.isEmpty) return '';
+    final messages = <String>[];
+    details.forEach((key, value) => messages.add('$key $value'));
+    final detailsMessage = messages.join(', ');
 
-    details.forEach((key, value) => resultMessage.add('$key $value'));
-
-    return ' (${resultMessage.join(', ')})';
+    buffer.write(' ($detailsMessage)');
   }
 
-  /// Returns the [String] representation of the given
-  /// [TargetValidationResult.context].
+  /// Adds the [String] representation of the given [context] to the
+  /// given [buffer].
   ///
-  /// Returns an empty string if the given [TargetValidationResult.context] is
-  /// `null` or empty.
-  String _getValidationContext(TargetValidationResult validationResult) {
-    final context = validationResult.context;
+  /// Adds nothing if the given [context] is empty or `null`.
+  void _addContext(StringBuffer buffer, Map<String, dynamic> context) {
+    if (context == null || context.isEmpty) return;
+
     const indent = '\n\t\t';
     final resultMessage = [];
-
-    if (context == null || context.isEmpty) return '';
 
     context.forEach((key, value) {
       final indentValue = value.toString().replaceAll('\n', indent);
       resultMessage.add('$key$indent$indentValue');
     });
 
-    return resultMessage.join('\n\t');
+    buffer.write('\t');
+    buffer.write(resultMessage.join('\n\t'));
   }
 }

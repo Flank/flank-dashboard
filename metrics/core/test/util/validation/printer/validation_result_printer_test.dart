@@ -258,13 +258,6 @@ void main() {
 
         resultPrinter.print(validationResult);
 
-        final expectedMessages = results.entries.map((entry) {
-          final target = entry.key;
-          final result = entry.value;
-
-          return validationResultMessageMatcher(target, result);
-        });
-
         expect(
           sink.toString(),
           validationResultMessageMatcher(target, firstResult),
@@ -272,6 +265,10 @@ void main() {
         expect(
           sink.toString(),
           validationResultMessageMatcher(secondTarget, secondResult),
+        );
+        expect(
+          sink.toString(),
+          stringContainsInOrder(['service 1', 'service 2']),
         );
       },
     );
