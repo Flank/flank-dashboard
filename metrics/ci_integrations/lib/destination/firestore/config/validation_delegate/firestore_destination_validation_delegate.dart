@@ -5,12 +5,14 @@ import 'package:ci_integration/client/firestore/firestore.dart' as fs;
 import 'package:ci_integration/client/firestore/mappers/firestore_exception_reason_mapper.dart';
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
 import 'package:ci_integration/client/firestore/models/firestore_exception_reason.dart';
+import 'package:ci_integration/destination/firestore/config/model/firestore_destination_validation_target.dart';
 import 'package:ci_integration/destination/firestore/factory/firebase_auth_factory.dart';
 import 'package:ci_integration/destination/firestore/factory/firestore_factory.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:firedart/firedart.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A [ValidationDelegate] for the Firestore destination integration.
 class FirestoreDestinationValidationDelegate implements ValidationDelegate {
@@ -60,7 +62,7 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [firebaseApiKey].
-  Future<FieldValidationResult> validatePublicApiKey(
+  Future<TargetValidationResult> validatePublicApiKey(
     String firebaseApiKey,
   ) async {
     try {
@@ -71,17 +73,22 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       final exceptionCode = e.code;
 
       if (exceptionCode == FirebaseAuthExceptionCode.invalidApiKey) {
-        return const FieldValidationResult.failure(
-          additionalContext: FirestoreStrings.apiKeyInvalid,
+        return const TargetValidationResult(
+          target: FirestoreDestinationValidationTarget.firebasePublicApiKey,
+          conclusion: ConfigFieldValidationConclusion.invalid,
+          description: FirestoreStrings.apiKeyInvalid,
         );
       }
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: FirestoreDestinationValidationTarget.firebasePublicApiKey,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Validates the given Firebase authentication [credentials].
-  Future<FieldValidationResult> validateAuth(
+  Future<TargetValidationResult> validateAuth(
     FirebaseAuthCredentials credentials,
   ) async {
     try {
@@ -92,22 +99,31 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       if (_invalidAuthExceptionCodes.contains(exceptionCode)) {
         final message = e.message;
 
-        return FieldValidationResult.failure(additionalContext: message);
+        return TargetValidationResult(
+          target: FirestoreDestinationValidationTarget.firebaseUserEmail,
+          conclusion: ConfigFieldValidationConclusion.invalid,
+          description: message,
+        );
       }
 
-      return FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.authValidationFailed(
+      return TargetValidationResult(
+        target: FirestoreDestinationValidationTarget.firebaseUserEmail,
+        conclusion: ConfigFieldValidationConclusion.unknown,
+        description: FirestoreStrings.authValidationFailed(
           '${e.code}',
           e.message,
         ),
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: FirestoreDestinationValidationTarget.firebaseUserEmail,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Validates the given [firebaseProjectId].
-  Future<FieldValidationResult> validateFirebaseProjectId(
+  Future<TargetValidationResult> validateFirebaseProjectId(
     FirebaseAuthCredentials credentials,
     String firebaseProjectId,
   ) async {
@@ -130,21 +146,28 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
       );
 
       if (isProjectIdInvalid) {
-        return const FieldValidationResult.failure(
-          additionalContext: FirestoreStrings.projectIdInvalid,
+        return const TargetValidationResult(
+          target: FirestoreDestinationValidationTarget.firebaseProjectId,
+          conclusion: ConfigFieldValidationConclusion.invalid,
+          description: FirestoreStrings.projectIdInvalid,
         );
       }
     } on FirebaseAuthException {
-      return const FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.unknownErrorWhenSigningIn,
+      return const TargetValidationResult(
+        target: FirestoreDestinationValidationTarget.firebaseProjectId,
+        conclusion: ConfigFieldValidationConclusion.unknown,
+        description: FirestoreStrings.unknownErrorWhenSigningIn,
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: FirestoreDestinationValidationTarget.firebaseProjectId,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Validates the given [metricsProjectId].
-  Future<FieldValidationResult> validateMetricsProjectId(
+  Future<TargetValidationResult> validateMetricsProjectId(
     FirebaseAuthCredentials credentials,
     String firebaseProjectId,
     String metricsProjectId,
@@ -161,24 +184,33 @@ class FirestoreDestinationValidationDelegate implements ValidationDelegate {
           .get();
 
       if (!metricsProject.exists) {
-        return const FieldValidationResult.failure(
-          additionalContext: FirestoreStrings.metricsProjectIdDoesNotExist,
+        return const TargetValidationResult(
+          target: FirestoreDestinationValidationTarget.metricsProjectId,
+          conclusion: ConfigFieldValidationConclusion.invalid,
+          description: FirestoreStrings.metricsProjectIdDoesNotExist,
         );
       }
     } on FirestoreException catch (e) {
-      return FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.metricsProjectIdValidationFailed(
+      return TargetValidationResult(
+        target: FirestoreDestinationValidationTarget.metricsProjectId,
+        conclusion: ConfigFieldValidationConclusion.unknown,
+        description: FirestoreStrings.metricsProjectIdValidationFailed(
           '${e.code}',
           e.message,
         ),
       );
     } on FirebaseAuthException {
-      return const FieldValidationResult.unknown(
-        additionalContext: FirestoreStrings.unknownErrorWhenSigningIn,
+      return const TargetValidationResult(
+        target: FirestoreDestinationValidationTarget.metricsProjectId,
+        conclusion: ConfigFieldValidationConclusion.unknown,
+        description: FirestoreStrings.unknownErrorWhenSigningIn,
       );
     }
 
-    return const FieldValidationResult.success();
+    return const TargetValidationResult(
+      target: FirestoreDestinationValidationTarget.metricsProjectId,
+      conclusion: ConfigFieldValidationConclusion.valid,
+    );
   }
 
   /// Creates a new authenticated [FirebaseAuth] using the given [credentials].
