@@ -15,9 +15,7 @@ class ValidationResultPrinter {
   /// [StringSink].
   ///
   /// Throws an [ArgumentError] if the given [sink] is `null`;
-  ValidationResultPrinter({
-    this.sink,
-  }) {
+  ValidationResultPrinter(this.sink) {
     ArgumentError.checkNotNull(sink, 'sink');
   }
 
@@ -60,7 +58,7 @@ class ValidationResultPrinter {
   /// given [buffer].
   ///
   /// Records `[?]` if the given [ValidationConclusion.indicator]
-  /// is empty or `null`.
+  /// is `null` or empty.
   void _addConclusion(StringBuffer buffer, ValidationConclusion conclusion) {
     final indicator = conclusion.indicator;
 
@@ -74,7 +72,7 @@ class ValidationResultPrinter {
   /// Adds the [String] representation of the given [description] to the
   /// given [buffer].
   ///
-  /// Adds nothing if the given [description] is empty or `null`.
+  /// Adds nothing if the given [description] is `null` or empty.
   void _addDescription(StringBuffer buffer, String description) {
     if (description == null || description.isEmpty) return;
 
@@ -84,7 +82,7 @@ class ValidationResultPrinter {
   /// Adds the [String] representation of the given [resultDescription] to the
   /// given [buffer].
   ///
-  /// Adds nothing if the given [resultDescription] is empty or `null`.
+  /// Adds nothing if the given [resultDescription] is `null` or empty.
   void _addResultDescription(StringBuffer buffer, String resultDescription) {
     if (resultDescription == null || resultDescription.isEmpty) return;
 
@@ -94,7 +92,7 @@ class ValidationResultPrinter {
   /// Adds the [String] representation of the given [details] to the
   /// given [buffer].
   ///
-  /// Adds nothing if the given [details] is empty or `null`.
+  /// Adds nothing if the given [details] is `null` or empty.
   void _addDetails(StringBuffer buffer, Map<String, dynamic> details) {
     if (details == null || details.isEmpty) return;
 
@@ -108,16 +106,18 @@ class ValidationResultPrinter {
   /// Adds the [String] representation of the given [context] to the
   /// given [buffer].
   ///
-  /// Adds nothing if the given [context] is empty or `null`.
+  /// Adds nothing if the given [context] is `null` or empty.
   void _addContext(StringBuffer buffer, Map<String, dynamic> context) {
     if (context == null || context.isEmpty) return;
 
-    const indent = '\n\t\t';
+    const primaryIndent = '\n\t';
+    const secondaryIndent = '\n\t\t';
     final resultMessage = [];
 
     context.forEach((key, value) {
-      final indentValue = value.toString().replaceAll('\n', indent);
-      resultMessage.add('$key$indent$indentValue');
+      final indentKey = key.toString().replaceAll('\n', primaryIndent);
+      final indentValue = value.toString().replaceAll('\n', secondaryIndent);
+      resultMessage.add('$indentKey$secondaryIndent$indentValue');
     });
 
     buffer.write('\t');

@@ -36,8 +36,8 @@ void main() {
       context: context,
     );
 
-    StringSink sink;
-    ValidationResultPrinter resultPrinter;
+    final sink = StringBuffer();
+    final resultPrinter = ValidationResultPrinter(sink);
 
     Matcher containsAllEntries(Map<String, dynamic> fromMap) {
       final entries = <String>[];
@@ -49,7 +49,7 @@ void main() {
       return stringContainsInOrder(entries);
     }
 
-    Matcher validationResultMessageMatcher(
+    Matcher matchesValidationResultMessage(
       ValidationTarget target,
       TargetValidationResult result,
     ) {
@@ -71,22 +71,21 @@ void main() {
       );
     }
 
-    setUp(() {
-      sink = StringBuffer();
-      resultPrinter = ValidationResultPrinter(sink: sink);
+    tearDown(() {
+      sink.clear();
     });
 
     test(
       "throws an ArgumentError if the given sink is null",
       () {
-        expect(() => ValidationResultPrinter(sink: null), throwsArgumentError);
+        expect(() => ValidationResultPrinter(null), throwsArgumentError);
       },
     );
 
     test(
       "creates an instance with the given sink",
       () {
-        final resultPrinter = ValidationResultPrinter(sink: sink);
+        final resultPrinter = ValidationResultPrinter(sink);
 
         expect(resultPrinter.sink, equals(sink));
       },
@@ -241,7 +240,7 @@ void main() {
         results.forEach((target, result) {
           expect(
             sink.toString(),
-            validationResultMessageMatcher(target, result),
+            matchesValidationResultMessage(target, result),
           );
         });
       },
@@ -260,11 +259,11 @@ void main() {
 
         expect(
           sink.toString(),
-          validationResultMessageMatcher(target, firstResult),
+          matchesValidationResultMessage(target, firstResult),
         );
         expect(
           sink.toString(),
-          validationResultMessageMatcher(secondTarget, secondResult),
+          matchesValidationResultMessage(secondTarget, secondResult),
         );
         expect(
           sink.toString(),
