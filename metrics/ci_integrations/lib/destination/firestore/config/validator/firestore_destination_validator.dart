@@ -3,17 +3,16 @@
 
 import 'package:ci_integration/client/firestore/models/firebase_auth_credentials.dart';
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
-import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config_field.dart';
+import 'package:ci_integration/destination/firestore/config/model/firestore_destination_validation_target.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
-import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class responsible for validating the [FirestoreDestinationConfig].
 class FirestoreDestinationValidator
-    implements ConfigValidatorStub<FirestoreDestinationConfig> {
+    implements ConfigValidator<FirestoreDestinationConfig> {
   @override
   final FirestoreDestinationValidationDelegate validationDelegate;
 
@@ -43,12 +42,14 @@ class FirestoreDestinationValidator
         await validationDelegate.validatePublicApiKey(apiKey);
 
     validationResultBuilder.setResult(
-      FirestoreDestinationConfigField.firebasePublicApiKey,
+      FirestoreDestinationValidationTarget.firebasePublicApiKey,
       apiKeyValidationResult,
     );
 
-    if (apiKeyValidationResult.isFailure) {
+    if (apiKeyValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
+        FirestoreDestinationValidationTarget.firebasePublicApiKey,
         FirestoreStrings.publicApiKeyInvalidInterruptReason,
       );
     }
@@ -64,22 +65,26 @@ class FirestoreDestinationValidator
     );
 
     validationResultBuilder.setResult(
-      FirestoreDestinationConfigField.firebaseUserEmail,
+      FirestoreDestinationValidationTarget.firebaseUserEmail,
       authValidationResult,
     );
 
     validationResultBuilder.setResult(
-      FirestoreDestinationConfigField.firebaseUserPassword,
+      FirestoreDestinationValidationTarget.firebaseUserPassword,
       authValidationResult,
     );
 
-    if (authValidationResult.isFailure) {
+    if (authValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
+        FirestoreDestinationValidationTarget.firebaseUserEmail,
         FirestoreStrings.authInvalidInterruptReason,
       );
     }
-    if (authValidationResult.isUnknown) {
+    if (authValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.unknown) {
       return _finalizeValidationResult(
+        FirestoreDestinationValidationTarget.firebaseUserEmail,
         FirestoreStrings.authValidationFailedInterruptReason,
       );
     }
@@ -89,17 +94,21 @@ class FirestoreDestinationValidator
         .validateFirebaseProjectId(firebaseAuthCredentials, firebaseProjectId);
 
     validationResultBuilder.setResult(
-      FirestoreDestinationConfigField.firebaseProjectId,
+      FirestoreDestinationValidationTarget.firebaseProjectId,
       firebaseProjectIdValidationResult,
     );
 
-    if (firebaseProjectIdValidationResult.isFailure) {
+    if (firebaseProjectIdValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
+        FirestoreDestinationValidationTarget.firebaseProjectId,
         FirestoreStrings.firebaseProjectIdInvalidInterruptReason,
       );
     }
-    if (firebaseProjectIdValidationResult.isUnknown) {
+    if (firebaseProjectIdValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.unknown) {
       return _finalizeValidationResult(
+        FirestoreDestinationValidationTarget.firebaseProjectId,
         FirestoreStrings.firebaseProjectIdValidationFailedInterruptReason,
       );
     }
@@ -113,28 +122,34 @@ class FirestoreDestinationValidator
     );
 
     validationResultBuilder.setResult(
-      FirestoreDestinationConfigField.metricsProjectId,
+      FirestoreDestinationValidationTarget.metricsProjectId,
       metricsProjectIdValidationResult,
     );
 
     return validationResultBuilder.build();
   }
 
-  /// Sets the empty results of the [validationResultBuilder] using the given
-  /// [interruptReason] and builds the [ValidationResult]
-  /// using the [validationResultBuilder].
-  ValidationResult _finalizeValidationResult(String interruptReason) {
-    _setEmptyFields(interruptReason);
+  /// Builds the [ValidationResult] using the [validationResultBuilder], where
+  /// the [TargetValidationResult]s of empty fields contain the given [target]
+  /// and [interruptReason].
+  ValidationResult _finalizeValidationResult(
+    ValidationTarget target,
+    String interruptReason,
+  ) {
+    _setEmptyFields(target, interruptReason);
 
     return validationResultBuilder.build();
   }
 
   /// Sets empty results of the [validationResultBuilder] to the
-  /// [FieldValidationResult.unknown] with the given [interruptReason] as
-  /// a [FieldValidationResult.additionalContext].
-  void _setEmptyFields(String interruptReason) {
-    final emptyFieldResult = FieldValidationResult.unknown(
-      additionalContext: interruptReason,
+  /// [TargetValidationResult] with the given [target] and [interruptReason],
+  /// and [ConfigFieldValidationConclusion.unknown] as a
+  /// [TargetValidationResult.conclusion].
+  void _setEmptyFields(ValidationTarget target, String interruptReason) {
+    final emptyFieldResult = TargetValidationResult(
+      target: target,
+      conclusion: ConfigFieldValidationConclusion.unknown,
+      description: interruptReason,
     );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);
