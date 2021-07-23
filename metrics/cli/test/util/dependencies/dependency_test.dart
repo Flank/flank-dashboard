@@ -14,6 +14,19 @@ void main() {
     };
 
     test(
+      "creates a new instance with the given parameters",
+      () {
+        const dependency = Dependency(
+          recommendedVersion: recommendedVersion,
+          installUrl: installUrl,
+        );
+
+        expect(dependency.recommendedVersion, equals(recommendedVersion));
+        expect(dependency.installUrl, equals(installUrl));
+      },
+    );
+
+    test(
       ".fromMap() returns null if the given json is null",
       () {
         final dependency = Dependency.fromMap(null);

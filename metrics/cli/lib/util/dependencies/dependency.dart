@@ -1,10 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/services/common/info_service.dart';
 import 'package:equatable/equatable.dart';
 
-/// A class that represents the information on a specific [InfoService].
+/// A class that represents the system dependency information.
 class Dependency extends Equatable {
   /// A [String] representing the recommended version of this dependency.
   final String recommendedVersion;
@@ -15,9 +14,9 @@ class Dependency extends Equatable {
   @override
   List<Object> get props => [recommendedVersion, installUrl];
 
-  /// Creates a new instance of [Dependency] with the given [recommendedVersion]
+  /// Creates a new instance of the [Dependency] with the given [recommendedVersion]
   /// and [installUrl].
-  const Dependency._({
+  const Dependency({
     this.recommendedVersion,
     this.installUrl,
   });
@@ -28,7 +27,7 @@ class Dependency extends Equatable {
   factory Dependency.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
 
-    return Dependency._(
+    return Dependency(
       recommendedVersion: map['recommended_version'] as String,
       installUrl: map['install_url'] as String,
     );
