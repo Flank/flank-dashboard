@@ -7,7 +7,7 @@ import 'package:ci_integration/integration/stub/base/config/validation_delegate/
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 
-/// An abstract class responsible for validating the [Config].
+/// A stub class responsible for validating the [Config].
 class ConfigValidatorStub<T extends Config> {
   /// A [ValidationResultBuilder] this validator uses to build
   /// the [ValidationResult].
