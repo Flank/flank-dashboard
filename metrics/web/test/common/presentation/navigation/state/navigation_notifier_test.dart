@@ -22,7 +22,7 @@ import '../../../../test_utils/navigation_state_mock.dart';
 void main() {
   group("NavigationNotifier", () {
     final routeConfigurationLocationConverter =
-        RouteConfigurationLocationConverterMock();
+        _RouteConfigurationLocationConverterMock();
     const pageParametersModel = DashboardPageParametersModel(
       projectGroupId: 'projectGroupId',
       projectFilter: 'projectFilter',
@@ -33,9 +33,8 @@ void main() {
     final pageRouteConfigurationFactory =
         _MetricsPageRouteConfigurationFactoryMock();
 
-    final parameters = pageParametersModel.toMap();
     final routeConfiguration = RouteConfiguration.dashboard(
-      parameters: parameters,
+      parameters: pageParametersModel.toMap(),
     );
 
     NavigationNotifier notifier;
@@ -274,7 +273,7 @@ void main() {
     );
 
     test(
-      ".handlePageParametersUpdates() does nothing if the given page parameters model is null",
+      ".handlePageParametersUpdates() does not change the current page parameters if the given page parameters model is null",
       () {
         when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
 
@@ -286,6 +285,58 @@ void main() {
         notifier.handlePageParametersUpdates(null);
 
         expect(notifier.currentPageParameters, equals(initialPageParameters));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not change the current route configuration if the given page parameters model is null",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final currentConfiguration = notifier.currentConfiguration;
+
+        notifier.handlePageParametersUpdates(null);
+
+        expect(notifier.currentConfiguration, equals(currentConfiguration));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not update the last page if the given page parameters model is null",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final lastPage = notifier.pages.last;
+
+        notifier.handlePageParametersUpdates(null);
+
+        expect(notifier.pages.last, equals(lastPage));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not convert the given parameters to the location if the given page parameters model is null",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        notifier.handlePageParametersUpdates(null);
+
+        verifyNever(routeConfigurationLocationConverter.convert(any));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not update the browser URL if the given page parameters model is null",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        notifier.handlePageParametersUpdates(null);
+
+        verifyNever(navigationState.replaceState(any, any, any));
       },
     );
 
@@ -302,6 +353,64 @@ void main() {
     );
 
     test(
+      ".handlePageParametersUpdates() does not change the current route configuration if the given page parameters model is equal to the current page parameters",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final currentPageParameters = notifier.currentPageParameters;
+        final currentConfiguration = notifier.currentConfiguration;
+
+        notifier.handlePageParametersUpdates(currentPageParameters);
+
+        expect(notifier.currentConfiguration, equals(currentConfiguration));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not update the last page if the given page parameters model is equal to the current page parameters",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final currentPageParameters = notifier.currentPageParameters;
+        final lastPage = notifier.pages.last;
+
+        notifier.handlePageParametersUpdates(currentPageParameters);
+
+        expect(notifier.pages.last, equals(lastPage));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not convert the given parameters to the location if the given page parameters model is equal to the current page parameters",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final currentPageParameters = notifier.currentPageParameters;
+
+        notifier.handlePageParametersUpdates(currentPageParameters);
+
+        verifyNever(routeConfigurationLocationConverter.convert(any));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does not update the browser URL if the given page parameters model is equal to the current page parameters",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final currentPageParameters = notifier.currentPageParameters;
+
+        notifier.handlePageParametersUpdates(currentPageParameters);
+
+        verifyNever(navigationState.replaceState(any, any, any));
+      },
+    );
+
+    test(
       ".handlePageParametersUpdates() updates a current page parameters model with the given one",
       () {
         notifier.handlePageParametersUpdates(pageParametersModel);
@@ -314,7 +423,7 @@ void main() {
       ".handlePageParametersUpdates() updates a current configuration with the given page parameters",
       () {
         final expectedConfiguration = notifier.currentConfiguration.copyWith(
-          parameters: parameters,
+          parameters: pageParametersModel.toMap(),
         );
 
         notifier.handlePageParametersUpdates(pageParametersModel);
@@ -1292,5 +1401,5 @@ class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}
 class _MetricsPageRouteConfigurationFactoryMock extends Mock
     implements MetricsPageRouteConfigurationFactory {}
 
-class RouteConfigurationLocationConverterMock extends Mock
+class _RouteConfigurationLocationConverterMock extends Mock
     implements RouteConfigurationLocationConverter {}

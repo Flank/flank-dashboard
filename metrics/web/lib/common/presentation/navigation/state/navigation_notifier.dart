@@ -126,7 +126,10 @@ class NavigationNotifier extends ChangeNotifier {
     if (_isAppInitialized) _redirect();
   }
 
-  /// Handles the [PageParametersModel] updates.
+  /// Updates the current [PageParametersModel], [RouteConfiguration]
+  /// and [MetricsPage] using the given [pageParameters].
+  ///
+  /// Replaces the navigation state using the updated [RouteConfiguration].
   ///
   /// Does nothing if the given [pageParameters] model is `null` or equal
   /// to the current [PageParametersModel].
@@ -141,8 +144,8 @@ class NavigationNotifier extends ChangeNotifier {
       parameters: _currentPageParameters.toMap(),
     );
 
-    final updatedPage = _pages.last.copyWith(arguments: _currentPageParameters);
-    _pages.replaceRange(_pages.length, _pages.length, [updatedPage]);
+    final lastPage = _pages.removeLast();
+    _pages.add(lastPage.copyWith(arguments: _currentPageParameters));
 
     final path = _routeConfigurationLocationConverter.convert(
       _currentConfiguration,
