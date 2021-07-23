@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/navigation/models/factory/page_param
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
@@ -33,6 +34,11 @@ class NavigationNotifier extends ChangeNotifier {
   /// the [RouteConfiguration] from the [MetricsPage].
   final MetricsPageRouteConfigurationFactory
       _metricsPageRouteConfigurationFactory;
+
+  /// A [RouteConfigurationLocationConverter] used to convert
+  /// the [RouteConfiguration] to a location [String].
+  final RouteConfigurationLocationConverter
+      _routeConfigurationLocationConverter;
 
   /// A stack of [MetricsPage]s to use by navigator.
   final List<MetricsPage> _pages = [];
@@ -70,14 +76,18 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [AssertionError] if the given [PageParametersFactory] is `null`.
   /// Throws an [AssertionError] if the given
   /// [MetricsPageRouteConfigurationFactory] is `null`.
+  /// Throws an [AssertionError] if the given
+  /// [RouteConfigurationLocationConverter] is `null`.
   NavigationNotifier(
     this._pageFactory,
     this._pageParametersFactory,
     this._metricsPageRouteConfigurationFactory,
+    this._routeConfigurationLocationConverter,
     NavigationState navigationState,
   )   : assert(_pageFactory != null),
         assert(_pageParametersFactory != null),
         assert(_metricsPageRouteConfigurationFactory != null),
+        assert(_routeConfigurationLocationConverter != null),
         assert(navigationState != null),
         _navigationState = navigationState;
 
@@ -114,6 +124,31 @@ class NavigationNotifier extends ChangeNotifier {
     _isAppInitialized = isAppInitialized;
 
     if (_isAppInitialized) _redirect();
+  }
+
+  /// Handles the [PageParametersModel] updates.
+  ///
+  /// Does nothing if the given [pageParameters] model is `null` or equal
+  /// to the current [PageParametersModel].
+  void handlePageParametersUpdates(PageParametersModel pageParameters) {
+    if (pageParameters == null || pageParameters == _currentPageParameters) {
+      return;
+    }
+
+    _currentPageParameters = pageParameters;
+
+    _currentConfiguration = _currentConfiguration.copyWith(
+      parameters: _currentPageParameters.toMap(),
+    );
+
+    final updatedPage = _pages.last.copyWith(arguments: _currentPageParameters);
+    _pages.replaceRange(_pages.length, _pages.length, [updatedPage]);
+
+    final path = _routeConfigurationLocationConverter.convert(
+      _currentConfiguration,
+    );
+
+    replaceState(path: path);
   }
 
   /// Determines whether the current page can be popped.

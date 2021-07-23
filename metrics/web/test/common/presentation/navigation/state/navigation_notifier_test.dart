@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
@@ -20,6 +21,8 @@ import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
   group("NavigationNotifier", () {
+    final routeConfigurationLocationConverter =
+        RouteConfigurationLocationConverterMock();
     const pageParametersModel = DashboardPageParametersModel(
       projectGroupId: 'projectGroupId',
       projectFilter: 'projectFilter',
@@ -48,11 +51,13 @@ void main() {
         pageFactory,
         pageParametersFactory,
         pageRouteConfigurationFactory,
+        routeConfigurationLocationConverter,
         navigationState,
       );
       prepareNotifier();
       reset(pageParametersFactory);
       reset(pageRouteConfigurationFactory);
+      reset(routeConfigurationLocationConverter);
     });
 
     final isLoginPageName = equals(DefaultRoutes.login.path);
@@ -68,6 +73,7 @@ void main() {
             null,
             pageParametersFactory,
             pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
             navigationState,
           ),
           throwsAssertionError,
@@ -83,6 +89,7 @@ void main() {
             pageFactory,
             null,
             pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
             navigationState,
           ),
           throwsAssertionError,
@@ -97,6 +104,23 @@ void main() {
           () => NavigationNotifier(
             pageFactory,
             pageParametersFactory,
+            null,
+            routeConfigurationLocationConverter,
+            navigationState,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws an AssertionError if the given route configuration location converter is null",
+      () {
+        expect(
+          () => NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            pageRouteConfigurationFactory,
             null,
             navigationState,
           ),
@@ -113,6 +137,7 @@ void main() {
             pageFactory,
             pageParametersFactory,
             pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
             null,
           ),
           throwsAssertionError,
@@ -128,6 +153,7 @@ void main() {
             pageFactory,
             pageParametersFactory,
             pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
             navigationState,
           ),
           returnsNormally,
@@ -244,6 +270,92 @@ void main() {
         final pages = notifier.pages;
 
         expect(pages, hasLength(equals(1)));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does nothing if the given page parameters model is null",
+      () {
+        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
+
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        final initialPageParameters = notifier.currentPageParameters;
+
+        notifier.handlePageParametersUpdates(null);
+
+        expect(notifier.currentPageParameters, equals(initialPageParameters));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() does nothing if the given page parameters model is equal to the current page parameters",
+      () {
+        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
+
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.dashboard);
+
+        verifyNever(routeConfigurationLocationConverter.convert(any));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() updates a current page parameters model with the given one",
+      () {
+        notifier.handlePageParametersUpdates(pageParametersModel);
+
+        expect(notifier.currentPageParameters, equals(pageParametersModel));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() updates a current configuration with the given page parameters",
+      () {
+        final expectedConfiguration = notifier.currentConfiguration.copyWith(
+          parameters: parameters,
+        );
+
+        notifier.handlePageParametersUpdates(pageParametersModel);
+
+        expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() updates the current page arguments to the given page parameters",
+      () {
+        notifier.handlePageParametersUpdates(pageParametersModel);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.arguments, equals(pageParametersModel));
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() uses the given route configuration location converter to create an updated path",
+      () {
+        notifier.handlePageParametersUpdates(pageParametersModel);
+
+        final currentConfiguration = notifier.currentConfiguration;
+
+        verify(
+          routeConfigurationLocationConverter.convert(currentConfiguration),
+        ).called(once);
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() replaces the current navigation state using the given page parameters",
+      () {
+        const path = 'test';
+        when(routeConfigurationLocationConverter.convert(any)).thenReturn(path);
+
+        notifier.handlePageParametersUpdates(pageParametersModel);
+
+        verify(navigationState.replaceState(any, any, path)).called(once);
       },
     );
 
@@ -388,6 +500,7 @@ void main() {
           pageFactory,
           pageParametersFactory,
           pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
 
@@ -508,6 +621,7 @@ void main() {
           pageFactory,
           pageParametersFactory,
           pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
         notifier.handleAppInitialized(isAppInitialized: true);
@@ -569,6 +683,7 @@ void main() {
           pageFactory,
           pageParametersFactory,
           pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
@@ -688,6 +803,7 @@ void main() {
           pageFactory,
           pageParametersFactory,
           pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
@@ -1060,6 +1176,7 @@ void main() {
           pageFactory,
           pageParametersFactory,
           pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
         notifier.handleAppInitialized(isAppInitialized: true);
@@ -1167,9 +1284,13 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}
 
 class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}
 
 class _MetricsPageRouteConfigurationFactoryMock extends Mock
     implements MetricsPageRouteConfigurationFactory {}
+
+class RouteConfigurationLocationConverterMock extends Mock
+    implements RouteConfigurationLocationConverter {}
