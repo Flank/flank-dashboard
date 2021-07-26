@@ -3,19 +3,17 @@
 
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
-import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
+import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class responsible for validating the [BuildkiteSourceConfig].
-class BuildkiteSourceValidator
-    implements ConfigValidatorStub<BuildkiteSourceConfig> {
+class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   @override
   final BuildkiteSourceValidationDelegate validationDelegate;
 
@@ -47,12 +45,14 @@ class BuildkiteSourceValidator
 
     final authValidationResult = await validationDelegate.validateAuth(auth);
     validationResultBuilder.setResult(
-      BuildkiteSourceConfigField.accessToken,
+      BuildkiteSourceValidationTarget.accessToken,
       authValidationResult,
     );
 
-    if (authValidationResult.isFailure) {
+    if (authValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
+        BuildkiteSourceValidationTarget.accessToken,
         BuildkiteStrings.tokenInvalidInterruptReason,
       );
     }
@@ -60,11 +60,12 @@ class BuildkiteSourceValidator
     final token = authValidationResult.data;
     if (!_canValidateOrganization(token)) {
       _setUnknownFieldValidationResult(
-        BuildkiteSourceConfigField.organizationSlug,
+        BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.noScopesToValidateOrganization,
       );
 
       return _finalizeValidationResult(
+        BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.organizationCantBeValidatedInterruptReason,
       );
     }
@@ -74,19 +75,21 @@ class BuildkiteSourceValidator
     final organizationSlugValidationResult =
         await validationDelegate.validateOrganizationSlug(organizationSlug);
     validationResultBuilder.setResult(
-      BuildkiteSourceConfigField.organizationSlug,
+      BuildkiteSourceValidationTarget.organizationSlug,
       organizationSlugValidationResult,
     );
 
-    if (organizationSlugValidationResult.isFailure) {
+    if (organizationSlugValidationResult.conclusion ==
+        ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
+        BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.organizationInvalidInterruptReason,
       );
     }
 
     if (!_canValidatePipeline(token)) {
       _setUnknownFieldValidationResult(
-        BuildkiteSourceConfigField.pipelineSlug,
+        BuildkiteSourceValidationTarget.pipelineSlug,
         BuildkiteStrings.noScopesToValidatePipeline,
       );
 
@@ -96,59 +99,66 @@ class BuildkiteSourceValidator
     final pipelineSlug = config.pipelineSlug;
 
     final pipelineSlugValidationResult =
-        await validationDelegate.validatePipelineSlug(
-      pipelineSlug,
-    );
+        await validationDelegate.validatePipelineSlug(pipelineSlug);
     validationResultBuilder.setResult(
-      BuildkiteSourceConfigField.pipelineSlug,
+      BuildkiteSourceValidationTarget.pipelineSlug,
       pipelineSlugValidationResult,
     );
 
     return validationResultBuilder.build();
   }
 
-  /// Sets the empty results of the [validationResultBuilder] using the given
-  /// [interruptReason] and builds the [ValidationResult]
-  /// using the [validationResultBuilder].
-  ValidationResult _finalizeValidationResult(String interruptReason) {
-    _setEmptyFields(interruptReason);
+  /// Builds the [ValidationResult] using the [validationResultBuilder], where
+  /// the [TargetValidationResult]s of empty fields contain the given [target]
+  /// and [interruptReason].
+  ValidationResult _finalizeValidationResult(
+    ValidationTarget target,
+    String interruptReason,
+  ) {
+    _setEmptyFields(target, interruptReason);
 
     return validationResultBuilder.build();
   }
 
   /// Sets empty results of the [validationResultBuilder] to the
-  /// [FieldValidationResult.unknown] with the given [interruptReason] as
-  /// a [FieldValidationResult.additionalContext].
-  void _setEmptyFields(String interruptReason) {
-    final emptyFieldResult = FieldValidationResult.unknown(
-      additionalContext: interruptReason,
+  /// [TargetValidationResult] with the given [target] and [interruptReason],
+  /// and [ConfigFieldValidationConclusion.unknown] as a
+  /// [TargetValidationResult.conclusion].
+  void _setEmptyFields(ValidationTarget target, String interruptReason) {
+    final emptyFieldResult = TargetValidationResult(
+      target: target,
+      conclusion: ConfigFieldValidationConclusion.unknown,
+      description: interruptReason,
     );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }
 
-  /// Sets the [FieldValidationResult.unknown] with the given
-  /// [additionalContext] to the given [field] using
+  /// Sets the [TargetValidationResult] with the
+  /// [ConfigFieldValidationConclusion.unknown]conclusion and the given
+  /// [description] to the given [target] using
   /// the [validationResultBuilder].
   void _setUnknownFieldValidationResult(
-    BuildkiteSourceConfigField field,
-    String additionalContext,
+    ValidationTarget target,
+    String description,
   ) {
-    final validationResult = FieldValidationResult.unknown(
-      additionalContext: additionalContext,
+    final validationResult = TargetValidationResult(
+      target: target,
+      conclusion: ConfigFieldValidationConclusion.unknown,
+      description: description,
     );
 
-    validationResultBuilder.setResult(field, validationResult);
+    validationResultBuilder.setResult(target, validationResult);
   }
 
   /// Checks that the given [token] has enough scopes for
-  /// [BuildkiteSourceConfigField.organizationSlug] validation.
+  /// [BuildkiteSourceValidationTarget.organizationSlug] validation.
   bool _canValidateOrganization(BuildkiteToken token) {
     return _hasScope(token, BuildkiteTokenScope.readOrganizations);
   }
 
   /// Checks that the given [token] has enough scopes for
-  /// [BuildkiteSourceConfigField.pipelineSlug] validation.
+  /// [BuildkiteSourceValidationTarget.pipelineSlug] validation.
   bool _canValidatePipeline(BuildkiteToken token) {
     return _hasScope(token, BuildkiteTokenScope.readPipelines);
   }
