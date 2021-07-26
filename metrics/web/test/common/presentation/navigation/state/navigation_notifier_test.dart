@@ -428,11 +428,15 @@ void main() {
     test(
       ".handlePageParametersUpdates() updates the current page arguments to the given page parameters",
       () {
+        final initialPagesLength = notifier.pages.length;
+
         notifier.handlePageParametersUpdates(pageParametersModel);
 
         final currentPage = notifier.pages.last;
+        final actualPagesLength = notifier.pages.length;
 
         expect(currentPage.arguments, equals(pageParametersModel));
+        expect(actualPagesLength, equals(initialPagesLength));
       },
     );
 
