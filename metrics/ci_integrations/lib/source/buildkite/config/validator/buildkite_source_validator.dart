@@ -59,7 +59,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
 
     final token = authValidationResult.data;
     if (!_canValidateOrganization(token)) {
-      _setUnknownFieldValidationResult(
+      _setUnknownTargetValidationResult(
         BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.noScopesToValidateOrganization,
       );
@@ -88,7 +88,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     }
 
     if (!_canValidatePipeline(token)) {
-      _setUnknownFieldValidationResult(
+      _setUnknownTargetValidationResult(
         BuildkiteSourceValidationTarget.pipelineSlug,
         BuildkiteStrings.noScopesToValidatePipeline,
       );
@@ -115,7 +115,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     ValidationTarget target,
     String interruptReason,
   ) {
-    _setEmptyFields(target, interruptReason);
+    _setEmptyTargets(target, interruptReason);
 
     return validationResultBuilder.build();
   }
@@ -124,7 +124,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   /// [TargetValidationResult] with the given [target] and [interruptReason],
   /// and [ConfigFieldValidationConclusion.unknown] as a
   /// [TargetValidationResult.conclusion].
-  void _setEmptyFields(ValidationTarget target, String interruptReason) {
+  void _setEmptyTargets(ValidationTarget target, String interruptReason) {
     final emptyFieldResult = TargetValidationResult(
       target: target,
       conclusion: ConfigFieldValidationConclusion.unknown,
@@ -135,10 +135,10 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   }
 
   /// Sets the [TargetValidationResult] with the
-  /// [ConfigFieldValidationConclusion.unknown]conclusion and the given
+  /// [ConfigFieldValidationConclusion.unknown] conclusion and the given
   /// [description] to the given [target] using
   /// the [validationResultBuilder].
-  void _setUnknownFieldValidationResult(
+  void _setUnknownTargetValidationResult(
     ValidationTarget target,
     String description,
   ) {
