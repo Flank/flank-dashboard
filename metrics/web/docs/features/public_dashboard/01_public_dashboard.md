@@ -214,28 +214,75 @@ Since these changes do not require creating any new collections/documents, the F
 #### Accessing the data using the anonymous user
 > Explain the changes required to make the data accessible for anonymous users.
 
-There is no need to change the `Firestore` database structure to access the data using the anonymous user. But we should change the `Firestore` security rules for these purposes. So, we should allow access to the data that requires authentication for users logged in anonymously. 
-
-Let's review the security rules for anonymous users in more detail: 
-
-- The user logged in anonymously should be able to read the `projects` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is `true`. 
-- The user logged in anonymously should not be able to write to the `projects` collection.
-- The anonymous user should be able to read the `builds` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is true.
-- The anonymous user should not be able to write to the `builds` collection. 
-- The user logged in anonymously should be able to read the `project_groups` collection if the public dashboard feature is enabled.
-- The anonymous user should not be able to write to the `project_groups` collection. 
-- The user logged in anonymously should be able to read only their profile document (document with the user identifier as document identifier) from the `user_profiles` collection if the public dashboard feature is enabled.
-- The user logged in anonymously should be able to create/update their profile (document with the user identifier as document identifier) in the `user_profiles` collection if the public dashboard feature is enabled.
-- The anonymous user should be able to read the data from the `build_days` collection if the public dashboard feature is enabled. 
-- The anonymous user should not be able to write to the `build_days` collection.
-
-Please, note that if the collection is not mentioned in the list above, the collection rules should stay as is.
+There is no need to change the `Firestore` database structure to access the data using the anonymous user. 
+But we should change the `Firestore` security rules for managing anonymous users' data access. Please consider, the following [section](#Security) to learn more about these `Firestore` security rules. 
 
 ### Privacy
 > Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
 
+Implementation of the public dashboard feature will change the privacy of data in the following way: 
+ - if the public dashboard feature is enabled in the Firestore config, the dashboard page will become available for reading by all users who visit this page;
+ - if the public dashboard feature is disabled in the Firestore config, the privacy of the data will remain unchanged.
+
 ### Security
 > How relevant data will be secured (Data encryption at rest, etc.).
 
+The relevant data will be secured by `Firestore` security rules, so let's review them for anonymous users in more detail:
+
+- The user logged in anonymously should be able to read the `projects` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is `true`.
+- The user logged in anonymously should not be able to write to the `projects` collection.
+- The anonymous user should be able to read the `builds` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is true.
+- The anonymous user should not be able to write to the `builds` collection.
+- The user logged in anonymously should be able to read the `project_groups` collection if the public dashboard feature is enabled.
+- The anonymous user should not be able to write to the `project_groups` collection.
+- The user logged in anonymously should be able to read only their profile document (document with the user identifier as document identifier) from the `user_profiles` collection if the public dashboard feature is enabled.
+- The user logged in anonymously should be able to create/update their profile (document with the user identifier as document identifier) in the `user_profiles` collection if the public dashboard feature is enabled.
+- The anonymous user should be able to read the data from the `build_days` collection if the public dashboard feature is enabled.
+- The anonymous user should not be able to write to the `build_days` collection.
+
+Please, note that if the collection is not mentioned in the list above, the collection rules should stay as is.
+
 ### Program
 > Detailed solution description to class/method level.
+ 
+The implementation of the public dashboard feature involves the changes in the following modules:
+
+- [the `feature config` module;](#featureConfig-module)
+- [the `auth` module;](#auth-module)
+- [the `navigation` module;](#navigation-module)
+
+Consider the following subsections that describe each module changes in more detail.
+
+#### FeatureConfig module
+
+The first important part is adding the ability to track the feature state, so that we can change the behavior of our application correspondingly.
+To implement this, we should follow the next steps:
+- add the `isPublicDashboardFeatureEnabled` boolean field to the `FeatureConfig` model;
+- change the `FeatureConfigData`'s `fromJson()` and `toJson()` methods, so they include handling the new added field;
+- create the [`PublicDashboardFeatureConfigViewModel`](#PublicDashboardFeatureConfigModel) and initialize it in the `FeatureConfigNotifier` as the other ones.
+
+Let's review the following class diagram, which describes the relationship between the classes in this module:
+
+![Feature Config Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_feature_config_class_diagram.puml)
+
+#### Auth module
+
+The next one, we should add the ability to sign-in anonymously. Also, we should know whether the user sign-in anonymously. For these purposes, we should make the following changes in the `auth` module:
+- add the `signInAnonymously()` method to the `UserRepository` abstract class;
+- add the implementation of the `signInAnonymously()` method to the `FirebaseUserRepository` class;
+- create the [`SignInAnonymouslyUseCase`](#SignInAnonymouslyUseCase) class, which calls the `signInAnonymously()` method of the `UserRepository`;
+- create the `UserProfileModel` class;
+- create the [`UserProfileViewModel`](#UserProfileViewModel) class;
+- integrate the use case, the model, and the view model described above into the `AuthNotifier`.
+
+Let's review the following class diagram, which describes the relationship between the classes in this module:
+
+![Auth Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_auth_class_diagram.puml)
+
+#### Navigation module
+
+The last thing, we should have the ability to manage the navigation of the anonymous user, that is, to know which pages they can visit and which they can't. Following the next steps, helps to achieve this purpose:
+- add the field of the `UserProfileModel` type to the `NavigationNotifier`;
+- change the `handleAuthenticationUpdates()` method of the `NavigationNotifier` to take an argument of the type `UserProfileModel`;
+- create a set of the pages' `RouteName`, which the anonymous user can visit (at the moment, it is only the `dashboard` route name);
+- add the additional condition to the `_processConfiguration()` method, which should state the following, if the user is sign-in anonymously and visits the page, whose `RouteName` is not in the anonymous `RouteName` set, then redirect to the `login` page;
