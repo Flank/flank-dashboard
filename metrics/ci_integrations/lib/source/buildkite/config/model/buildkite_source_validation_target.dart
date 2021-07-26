@@ -3,36 +3,25 @@
 
 import 'dart:collection';
 
-import 'package:ci_integration/integration/interface/base/config/model/config_field.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class that represents the [BuildkiteSourceConfig]'s fields.
-class BuildkiteSourceConfigField extends ConfigField {
+class BuildkiteSourceValidationTarget {
   /// An access token field of the [BuildkiteSourceConfig].
-  static final BuildkiteSourceConfigField accessToken =
-      BuildkiteSourceConfigField._('access_token');
+  static const accessToken = ValidationTarget(name: 'access_token');
 
   /// An organization slug field of the [BuildkiteSourceConfig].
-  static final BuildkiteSourceConfigField organizationSlug =
-      BuildkiteSourceConfigField._('organization_slug');
+  static const organizationSlug = ValidationTarget(name: 'organization_slug');
 
   /// A source project ID field of the [BuildkiteSourceConfig].
-  static final BuildkiteSourceConfigField pipelineSlug =
-      BuildkiteSourceConfigField._('pipeline_slug');
+  static const pipelineSlug = ValidationTarget(name: 'pipeline_slug');
 
-  /// A list containing all [BuildkiteSourceConfigField]s of
+  /// A list containing all [BuildkiteSourceValidationTarget]s of
   /// the [BuildkiteSourceConfig].
-  static final List<BuildkiteSourceConfigField> values = UnmodifiableListView([
+  static final List<ValidationTarget> values = UnmodifiableListView([
     accessToken,
     organizationSlug,
     pipelineSlug,
   ]);
-
-  /// Creates an instance of the [BuildkiteSourceConfigField] with the
-  /// given value.
-  ///
-  /// Throws an [ArgumentError] if the given [value] is `null`.
-  BuildkiteSourceConfigField._(
-    String value,
-  ) : super(value);
 }

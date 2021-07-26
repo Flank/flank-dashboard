@@ -7,25 +7,26 @@ import 'package:ci_integration/source/buildkite/config/model/buildkite_source_va
 import 'package:test/test.dart';
 
 void main() {
-  group("BuildkiteSourceConfigField", () {
+  group("BuildkiteSourceValidationTarget", () {
     test(
       ".values is unmodifiable list view",
       () {
-        expect(BuildkiteSourceConfigField.values, isA<UnmodifiableListView>());
+        expect(BuildkiteSourceValidationTarget.values,
+            isA<UnmodifiableListView>());
       },
     );
 
     test(
-      ".values contains all buildkite source config fields",
+      ".values contains all buildkite source validation targets",
       () {
         final expectedConfigFields = [
-          BuildkiteSourceConfigField.accessToken,
-          BuildkiteSourceConfigField.organizationSlug,
-          BuildkiteSourceConfigField.pipelineSlug,
+          BuildkiteSourceValidationTarget.accessToken,
+          BuildkiteSourceValidationTarget.organizationSlug,
+          BuildkiteSourceValidationTarget.pipelineSlug,
         ];
 
         expect(
-          BuildkiteSourceConfigField.values,
+          BuildkiteSourceValidationTarget.values,
           containsAll(expectedConfigFields),
         );
       },
