@@ -19,10 +19,7 @@ import 'package:ci_integration/integration/interface/destination/client/destinat
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/integration/interface/source/config/model/source_config.dart';
 import 'package:ci_integration/integration/interface/destination/config/model/destination_config.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
-import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -44,13 +41,15 @@ void main() {
       sourceConfigMap: const {},
       destinationConfigMap: const {},
     );
-    const successfulResult = FieldValidationResult.success();
-    final sourceValidationResult = ValidationResult({
-      BuildkiteSourceConfigField.accessToken: successfulResult,
-    });
-    final destinationValidationResult = ValidationResult({
-      BuildkiteSourceConfigField.pipelineSlug: successfulResult,
-    });
+    const target = ValidationTarget(name: 'target');
+    const conclusion = ValidationConclusion(name: 'conclusion');
+    const result = TargetValidationResult(
+      target: target,
+      conclusion: conclusion,
+    );
+    final results = {target: result};
+    final sourceValidationResult = ValidationResult(results);
+    final destinationValidationResult = ValidationResult(results);
 
     final rawIntegrationConfigFactory = _RawIntegrationConfigFactoryMock();
     final configuredPartiesFactory = _ConfiguredPartiesFactoryMock();
