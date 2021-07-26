@@ -5,44 +5,79 @@ import 'package:cli/util/dependencies/dependencies.dart';
 import 'package:cli/util/dependencies/factory/dependencies_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-import 'package:yaml_map/yaml_map.dart';
 
+import '../../../cli/updater/config/parser/update_config_parser_test.dart';
+import '../../../test_utils/matchers.dart';
 import '../../../test_utils/mocks/file_helper_mock.dart';
 import '../../../test_utils/mocks/file_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DependenciesFactory", () {
+    const path = 'path';
     const service = 'service';
     const recommendedVersion = 'version';
     const installUrl = 'url';
-    const yamlFile = '''
-$service:
-    recommended_version: $recommendedVersion
-    install_url: $installUrl
-    ''';
 
+    final dependenciesMap = {
+      service: {
+        'recommended_version': recommendedVersion,
+        'install_url': installUrl,
+      }
+    };
     final file = FileMock();
     final fileHelper = FileHelperMock();
-    final dependenciesFactory = DependenciesFactoryStub(
-      file,
-      fileHelper,
+    final yamlMapParser = YamlMapParserMock();
+
+    final dependenciesFactory = DependenciesFactory(
+      fileHelper: fileHelper,
+      yamlMapParser: yamlMapParser,
     );
 
     tearDown(() {
       reset(file);
       reset(fileHelper);
+      reset(yamlMapParser);
     });
 
     test(
-      "creates a new instance",
+      "successfully creates an instance if the given file helper is null",
       () {
-        expect(() => const DependenciesFactory(), returnsNormally);
+        expect(
+          () => DependenciesFactory(
+            fileHelper: null,
+            yamlMapParser: yamlMapParser,
+          ),
+          returnsNormally,
+        );
+      },
+    );
+
+    test(
+      "successfully creates an instance if the given yaml map parser is null",
+      () {
+        expect(
+          () => DependenciesFactory(
+            fileHelper: fileHelper,
+            yamlMapParser: null,
+          ),
+          returnsNormally,
+        );
+      },
+    );
+
+    test(
+      ".create() throws an ArgumentError if the given path is null",
+      () {
+        expect(() => dependenciesFactory.create(null), throwsArgumentError);
       },
     );
 
     test(
       ".create() return null if the given file does not exist",
       () {
+        when(fileHelper.getFile(path)).thenReturn(file);
         when(file.existsSync()).thenReturn(false);
 
         final dependencies = dependenciesFactory.create('path');
@@ -52,57 +87,40 @@ $service:
     );
 
     test(
-      ".create() successfully creates a Dependencies from the given file",
+      ".create() uses the given file helper to get the file by the given path",
       () {
+        when(fileHelper.getFile(path)).thenReturn(file);
         when(file.existsSync()).thenReturn(true);
-        when(file.readAsStringSync()).thenReturn(yamlFile);
+
+        dependenciesFactory.create(path);
+
+        verify(fileHelper.getFile(path)).called(once);
+      },
+    );
+
+    test(
+      ".create() uses the given YAML map parser to parse the file content",
+      () {
+        when(fileHelper.getFile(path)).thenReturn(file);
+        when(file.existsSync()).thenReturn(true);
+
+        dependenciesFactory.create('path');
+
+        verify(yamlMapParser.parse(any)).called(once);
+      },
+    );
+
+    test(
+      ".create() creates a dependencies instance from the map returned by the given YAML map parser",
+      () {
+        when(fileHelper.getFile(path)).thenReturn(file);
+        when(file.existsSync()).thenReturn(true);
+        when(yamlMapParser.parse(any)).thenReturn(dependenciesMap);
 
         final dependencies = dependenciesFactory.create('path');
 
         expect(dependencies, isA<Dependencies>());
       },
     );
-
-    test(
-      ".create() correctly parses the given file",
-      () {
-        when(file.existsSync()).thenReturn(true);
-        when(file.readAsStringSync()).thenReturn(yamlFile);
-
-        final dependencies = dependenciesFactory.create('path');
-        final dependency = dependencies.getFor(service);
-
-        expect(dependency.recommendedVersion, equals(recommendedVersion));
-        expect(dependency.installUrl, equals(installUrl));
-      },
-    );
   });
-}
-
-/// A stub class for a [DependenciesFactory] class providing test
-/// implementation for methods.
-class DependenciesFactoryStub extends DependenciesFactory {
-  /// A file mock to use for testing purposes.
-  final FileMock fileMock;
-
-  /// A file helper mock to use for testing purposes.
-  final FileHelperMock fileHelperMock;
-
-  /// Creates a new instance of the [DependenciesFactoryStub].
-  DependenciesFactoryStub(
-    this.fileMock,
-    this.fileHelperMock,
-  );
-
-  @override
-  Dependencies create(String path) {
-    if (fileMock?.existsSync() == false) {
-      return null;
-    }
-
-    const parser = YamlMapParser();
-    final parsedYaml = parser.parse(fileMock.readAsStringSync());
-
-    return Dependencies.fromMap(parsedYaml);
-  }
 }

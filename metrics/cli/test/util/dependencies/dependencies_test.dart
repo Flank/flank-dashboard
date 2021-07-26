@@ -10,18 +10,25 @@ void main() {
     const recommendedVersion = '1';
     const installUrl = 'url.com';
     const service = 'service';
-    const dependencyMap = {
-      'recommended_version': recommendedVersion,
-      'install_url': installUrl,
-    };
-    const dependenciesMap = {
+    const dependency = Dependency(
+      recommendedVersion: recommendedVersion,
+      installUrl: installUrl,
+    );
+
+    final dependenciesMap = {
       service: {
-        'recommended_version': recommendedVersion,
-        'install_url': installUrl,
+        'recommended_version': dependency.recommendedVersion,
+        'install_url': dependency.installUrl,
       }
     };
-    final dependency = Dependency.fromMap(dependencyMap);
     final dependencies = <String, Dependency>{'service': dependency};
+
+    test(
+      "throws an ArgumentError if the given map is null",
+      () {
+        expect(() => Dependencies(null), throwsArgumentError);
+      },
+    );
 
     test(
       "creates a new instance with the given parameters",
@@ -31,7 +38,7 @@ void main() {
     );
 
     test(
-      ".fromMap() returns null if the given json is null",
+      ".fromMap() returns null if the given map is null",
       () {
         final dependencies = Dependencies.fromMap(null);
 
@@ -64,7 +71,6 @@ void main() {
         final dependencies = Dependencies.fromMap(dependenciesMap);
         final dependency = dependencies.getFor(service);
 
-        expect(dependency, isA<Dependency>());
         expect(dependency.recommendedVersion, equals(recommendedVersion));
         expect(dependency.installUrl, equals(installUrl));
       },

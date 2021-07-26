@@ -4,17 +4,21 @@
 import 'package:cli/util/dependencies/dependency.dart';
 import 'package:equatable/equatable.dart';
 
-/// A class that represents the [Dependency]s for all 3-rd party services.
+/// A class that holds [Dependency]s for all 3-rd party services.
 class Dependencies extends Equatable {
-  /// A [Map] representing the [Dependency] for each service.
+  /// A [Map] containing the [Dependency] for each service.
   final Map<String, Dependency> _dependencies;
 
   @override
   List<Object> get props => [_dependencies];
 
-  /// Creates a new instance of [Dependencies] from the
+  /// Creates a new instance of [Dependencies] using the
   /// given [Map].
-  const Dependencies(this._dependencies);
+  ///
+  /// Throws an [ArgumentError] if the given [Map] is `null`.
+  Dependencies(this._dependencies) {
+    ArgumentError.checkNotNull(_dependencies, 'dependencies');
+  }
 
   /// Creates a new instance of [Dependencies] from the given [map].
   ///
