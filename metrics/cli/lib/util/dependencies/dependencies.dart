@@ -19,11 +19,13 @@ class Dependencies extends Equatable {
   /// Creates a new instance of [Dependencies] from the given [map].
   ///
   /// Returns `null` if the given [map] is `null`.
-  factory Dependencies.fromMap(Map<String, Map<String, dynamic>> map) {
+  factory Dependencies.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
 
     final dependencies = <String, Dependency>{};
-    map.forEach((key, value) => dependencies[key] = Dependency.fromMap(value));
+    map.forEach((key, value) {
+      dependencies[key] = Dependency.fromMap(value as Map<String, dynamic>);
+    });
 
     return Dependencies(dependencies);
   }
