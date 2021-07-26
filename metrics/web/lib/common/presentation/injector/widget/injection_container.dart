@@ -25,6 +25,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
@@ -237,6 +238,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       MetricsPageFactory(),
       PageParametersFactory(),
       const MetricsPageRouteConfigurationFactory(),
+      const RouteConfigurationLocationConverter(),
       BrowserNavigationState(window.history),
     );
 
