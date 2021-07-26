@@ -309,10 +309,12 @@ void main() {
         notifier.push(DefaultRoutes.dashboard);
 
         final lastPage = notifier.pages.last;
+        final initialPagesLength = notifier.pages.length;
 
         notifier.handlePageParametersUpdates(null);
 
         expect(notifier.pages.last, equals(lastPage));
+        expect(notifier.pages.length, equals(initialPagesLength));
       },
     );
 
@@ -341,18 +343,6 @@ void main() {
     );
 
     test(
-      ".handlePageParametersUpdates() does nothing if the given page parameters model is equal to the current page parameters",
-      () {
-        when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
-
-        notifier.handleAuthenticationUpdates(isLoggedIn: true);
-        notifier.push(DefaultRoutes.dashboard);
-
-        verifyNever(routeConfigurationLocationConverter.convert(any));
-      },
-    );
-
-    test(
       ".handlePageParametersUpdates() does not change the current route configuration if the given page parameters model is equal to the current page parameters",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
@@ -375,10 +365,13 @@ void main() {
 
         final currentPageParameters = notifier.currentPageParameters;
         final lastPage = notifier.pages.last;
+        final initialPagesLength = notifier.pages.length;
+        
 
         notifier.handlePageParametersUpdates(currentPageParameters);
 
         expect(notifier.pages.last, equals(lastPage));
+        expect(notifier.pages.length, equals(initialPagesLength));
       },
     );
 
