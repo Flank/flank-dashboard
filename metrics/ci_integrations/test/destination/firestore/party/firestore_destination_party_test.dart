@@ -3,8 +3,8 @@
 
 import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
 import 'package:ci_integration/destination/firestore/config/parser/firestore_destination_config_parser.dart';
-import 'package:ci_integration/destination/firestore/config/validator_factory/firestore_destination_validator_factory.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/validator_factory_stub.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -20,17 +20,23 @@ void main() {
       },
     );
 
-    test("uses FirestoreConfigParser as a config parser", () {
-      final configParser = firestoreDestinationParty.configParser;
+    test(
+      "uses FirestoreConfigParser as a config parser",
+      () {
+        final configParser = firestoreDestinationParty.configParser;
 
-      expect(configParser, isA<FirestoreDestinationConfigParser>());
-    });
+        expect(configParser, isA<FirestoreDestinationConfigParser>());
+      },
+    );
 
-    test("uses FirestoreDestinationValidatorFactory as a validator factory",
-        () {
-      final validatorFactory = firestoreDestinationParty.configValidatorFactory;
+    test(
+      "uses ValidatorFactoryStub as a validator factory",
+      () {
+        final validatorFactory =
+            firestoreDestinationParty.configValidatorFactory;
 
-      expect(validatorFactory, isA<FirestoreDestinationValidatorFactory>());
-    });
+        expect(validatorFactory, isA<ValidatorFactoryStub>());
+      },
+    );
   });
 }

@@ -6,14 +6,14 @@ import 'package:ci_integration/destination/firestore/config/model/firestore_dest
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config_field.dart';
 import 'package:ci_integration/destination/firestore/config/validation_delegate/firestore_destination_validation_delegate.dart';
 import 'package:ci_integration/destination/firestore/strings/firestore_strings.dart';
-import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 
 /// A class responsible for validating the [FirestoreDestinationConfig].
 class FirestoreDestinationValidator
-    implements ConfigValidator<FirestoreDestinationConfig> {
+    implements ConfigValidatorStub<FirestoreDestinationConfig> {
   @override
   final FirestoreDestinationValidationDelegate validationDelegate;
 
