@@ -121,7 +121,7 @@ void main() {
     });
 
     test(
-      "throws an ArgumentError if the given validation result builder is null",
+      "throws an ArgumentError if the given validation delegate is null",
       () {
         expect(
           () => BuildkiteSourceValidator(null, validationResultBuilder),
@@ -131,7 +131,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given validation delegate is null",
+      "throws an ArgumentError if the given validation result builder is null",
       () {
         expect(
           () => BuildkiteSourceValidator(validationDelegate, null),
