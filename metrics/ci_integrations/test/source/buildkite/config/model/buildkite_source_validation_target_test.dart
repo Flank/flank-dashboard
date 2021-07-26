@@ -3,7 +3,7 @@
 
 import 'dart:collection';
 
-import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
+import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:test/test.dart';
 
 void main() {
