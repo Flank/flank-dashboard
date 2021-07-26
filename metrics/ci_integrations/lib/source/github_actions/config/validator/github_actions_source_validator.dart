@@ -1,7 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
@@ -13,7 +13,7 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 
 /// A class responsible for validating the [GithubActionsSourceConfig].
 class GithubActionsSourceValidator
-    extends ConfigValidator<GithubActionsSourceConfig> {
+    implements ConfigValidatorStub<GithubActionsSourceConfig> {
   @override
   final GithubActionsSourceValidationDelegate validationDelegate;
 
@@ -54,7 +54,7 @@ class GithubActionsSourceValidator
     final auth = BearerAuthorization(accessToken);
 
     final authValidationResult = await validationDelegate.validateAuth(auth);
-    
+
     validationResultBuilder.setResult(
       GithubActionsSourceConfigField.accessToken,
       authValidationResult,
