@@ -1,9 +1,9 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/stub/base/config/validator_factory/validator_factory_stub.dart';
 import 'package:ci_integration/source/buildkite/client_factory/buildkite_source_client_factory.dart';
 import 'package:ci_integration/source/buildkite/config/parser/buildkite_source_config_parser.dart';
+import 'package:ci_integration/source/buildkite/config/validator_factory/buildkite_source_validator_factory.dart';
 import 'package:ci_integration/source/buildkite/party/buildkite_source_party.dart';
 import 'package:test/test.dart';
 
@@ -23,10 +23,10 @@ void main() {
       expect(configParser, isA<BuildkiteSourceConfigParser>());
     });
 
-    test("uses ValidatorFactoryStub as a validator factory", () {
+    test("uses BuildkiteSourceValidatorFactory as a validator factory", () {
       final validatorFactory = party.configValidatorFactory;
 
-      expect(validatorFactory, isA<ValidatorFactoryStub>());
+      expect(validatorFactory, isA<BuildkiteSourceValidatorFactory>());
     });
   });
 }
