@@ -3,7 +3,7 @@
 
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
 import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
@@ -14,7 +14,8 @@ import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 
 /// A class responsible for validating the [BuildkiteSourceConfig].
-class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
+class BuildkiteSourceValidator
+    implements ConfigValidatorStub<BuildkiteSourceConfig> {
   @override
   final BuildkiteSourceValidationDelegate validationDelegate;
 
