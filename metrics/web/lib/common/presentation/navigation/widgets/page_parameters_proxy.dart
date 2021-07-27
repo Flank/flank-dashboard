@@ -16,9 +16,11 @@ class PageParametersProxy extends StatefulWidget {
   /// A [Widget] below the [PageParametersProxy] in the tree.
   final Widget child;
 
-  /// Creates a new instance of the [PageParametersProxy] with the given parameters.
+  /// Creates a new instance of the [PageParametersProxy] with the given
+  /// parameters.
   ///
-  /// Throws an `AssertionError` if the given [pageNotifier] or [child] is `null`.
+  /// Throws an `AssertionError` if the given [pageNotifier] or [child]
+  /// is `null`.
   const PageParametersProxy({
     Key key,
     @required this.pageNotifier,
@@ -77,5 +79,12 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  @override
+  void dispose() {
+    _navigationNotifier.removeListener(_navigationNotifierListener);
+    widget.pageNotifier.removeListener(_pageNotifierListener);
+    super.dispose();
   }
 }
