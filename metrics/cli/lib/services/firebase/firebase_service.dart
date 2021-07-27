@@ -5,10 +5,14 @@ import 'dart:async';
 
 import 'package:cli/services/common/auth_service.dart';
 import 'package:cli/services/common/info_service.dart';
+import 'package:cli/services/common/service/model/service_name.dart';
 
 /// An abstract class for Firebase service that provides methods
 /// for working with Firebase.
 abstract class FirebaseService implements AuthService, InfoService {
+  @override
+  ServiceName get serviceName => ServiceName.firebase;
+
   /// Logins into the Firebase.
   Future<void> login();
 

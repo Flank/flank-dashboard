@@ -8,7 +8,7 @@ import 'package:cli/services/firebase/strings/firebase_strings.dart';
 
 /// An adapter for the [FirebaseCli] to implement
 /// the [FirebaseService] interface.
-class FirebaseCliServiceAdapter implements FirebaseService {
+class FirebaseCliServiceAdapter extends FirebaseService {
   /// A [FirebaseCli] class that provides an ability to interact
   /// with the Firebase CLI.
   final FirebaseCli _firebaseCli;

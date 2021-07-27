@@ -5,7 +5,7 @@ import 'package:cli/services/git/cli/git_cli.dart';
 import 'package:cli/services/git/git_service.dart';
 
 /// An adapter for the [GitCli] to implement the [GitService] interface.
-class GitCliServiceAdapter implements GitService {
+class GitCliServiceAdapter extends GitService {
   /// A [GitCli] class that provides an ability to interact with the Git CLI.
   final GitCli _gitCli;
 

@@ -10,7 +10,7 @@ import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/services/sentry/strings/sentry_strings.dart';
 
 /// An adapter for the [SentryCli] to implement the [SentryService] interface.
-class SentryCliServiceAdapter implements SentryService {
+class SentryCliServiceAdapter extends SentryService {
   /// A [SentryCli] class that provides an ability to interact
   /// with the Sentry CLI.
   final SentryCli _sentryCli;
