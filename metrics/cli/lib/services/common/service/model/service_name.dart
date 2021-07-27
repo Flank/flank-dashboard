@@ -1,23 +1,23 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-/// Represents a third-party service name.
+/// An enum that represents a third-party service name.
 enum ServiceName {
-  /// Represents a Firebase service name.
+  /// A [ServiceName] that represents a Firebase service name.
   firebase,
 
-  /// Represents a Flutter service name.
+  /// A [ServiceName] that represents a Flutter service name.
   flutter,
 
-  /// Represents a GCloud service name.
+  /// A [ServiceName] that represents a GCloud service name.
   gcloud,
 
-  /// Represents a Git service name.
+  /// A [ServiceName] that represents a Git service name.
   git,
 
-  /// Represents an npm service name.
+  /// A [ServiceName] that represents an npm service name.
   npm,
 
-  /// Represents a Sentry service name.
+  /// A [ServiceName] that represents a Sentry service name.
   sentry,
 }

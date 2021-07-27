@@ -29,7 +29,7 @@ class ServiceNameMapper {
   /// A [SentryService] name.
   static const String sentry = 'sentry';
 
-  /// Creates a new instance of the [ServiceNameMapper]
+  /// Creates a new instance of the [ServiceNameMapper].
   const ServiceNameMapper();
 
   /// Maps the given [name] to the [ServiceName].
