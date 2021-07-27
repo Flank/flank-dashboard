@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/git/adapter/git_cli_service_adapter.dart';
 import 'package:cli/services/git/cli/git_cli.dart';
 import 'package:mockito/mockito.dart';
@@ -14,7 +16,7 @@ void main() {
     const path = 'test/path';
 
     final gitCli = _GitCliMock();
-    final gitAdapter = GitCliServiceAdapter(gitCli);
+    final gitService = GitCliServiceAdapter(gitCli);
     final stateError = StateError('test');
 
     tearDown(() {
@@ -34,33 +36,38 @@ void main() {
     test(
       ".checkout() clones the repository from the given repo URL into the given directory",
       () async {
-        await gitAdapter.checkout(url, path);
+        await gitService.checkout(url, path);
 
         verify(gitCli.clone(url, path)).called(once);
       },
     );
 
     test(
-      ".version() shows the version information",
-      () async {
-        await gitAdapter.version();
-
-        verify(gitCli.version()).called(once);
-      },
-    );
-
-    test(
       ".installDependencies() throws if Git CLI throws during the cloning",
       () {
-        when(gitCli.clone(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          gitCli.clone(any, any),
+        ).thenAnswer((_) => Future.error(stateError));
 
-        expect(gitAdapter.checkout(url, path), throwsStateError);
+        expect(gitService.checkout(url, path), throwsStateError);
       },
     );
 
     test(
-      ".version() throws if Git CLI throws during the version showing",
+      ".version() returns the version information",
+      () async {
+        final expected = ProcessResult(0, 0, null, null);
+
+        when(gitCli.version()).thenAnswer((_) => Future.value(expected));
+
+        final result = await gitService.version();
+
+        expect(result, equals(expected));
+      },
+    );
+
+    test(
+      ".version() throws if Git CLI throws during the version retrieving",
       () {
         when(gitCli.version()).thenAnswer((_) => Future.error(stateError));
 

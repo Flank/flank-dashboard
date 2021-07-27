@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/sentry/cli/sentry_cli.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
@@ -48,7 +50,7 @@ class SentryCliServiceAdapter extends SentryService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _sentryCli.version();
   }
 

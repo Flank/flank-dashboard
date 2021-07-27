@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/npm/cli/npm_cli.dart';
 import 'package:cli/services/npm/npm_service.dart';
 
@@ -23,7 +25,7 @@ class NpmCliServiceAdapter extends NpmService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _npmCli.version();
   }
 }

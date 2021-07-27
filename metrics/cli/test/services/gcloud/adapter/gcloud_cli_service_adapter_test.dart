@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/gcloud/adapter/gcloud_cli_service_adapter.dart';
 import 'package:cli/services/gcloud/cli/gcloud_cli.dart';
 import 'package:cli/services/gcloud/strings/gcloud_strings.dart';
@@ -328,7 +330,9 @@ void main() {
         when(prompter.prompt(enterRegion)).thenThrow(stateError);
 
         await expectLater(
-            gcloudService.addFirebase(projectId), throwsStateError);
+          gcloudService.addFirebase(projectId),
+          throwsStateError,
+        );
 
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
@@ -415,7 +419,9 @@ void main() {
         );
 
         await expectLater(
-            gcloudService.addFirebase(projectId), throwsStateError);
+          gcloudService.addFirebase(projectId),
+          throwsStateError,
+        );
 
         verify(gcloudCli.listRegions(any)).called(once);
         verify(prompter.prompt(any)).called(once);
@@ -467,16 +473,20 @@ void main() {
     );
 
     test(
-      ".version() shows the version information",
+      ".version() returns the version information",
       () async {
-        await gcloudService.version();
+        final expected = ProcessResult(0, 0, null, null);
 
-        verify(gcloudCli.version()).called(once);
+        when(gcloudCli.version()).thenAnswer((_) => Future.value(expected));
+
+        final result = await gcloudService.version();
+
+        expect(result, equals(expected));
       },
     );
 
     test(
-      ".version() throws if GCloud CLI throws during the version showing",
+      ".version() throws if GCloud CLI throws during the version retrieving",
       () {
         when(gcloudCli.version()).thenAnswer((_) => Future.error(stateError));
 

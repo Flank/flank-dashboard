@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/flutter/cli/flutter_cli.dart';
 import 'package:cli/services/flutter/flutter_service.dart';
 
@@ -26,7 +28,7 @@ class FlutterCliServiceAdapter extends FlutterService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _flutterCli.version();
   }
 }

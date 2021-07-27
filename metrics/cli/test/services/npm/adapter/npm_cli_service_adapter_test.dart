@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/npm/adapter/npm_cli_service_adapter.dart';
 import 'package:cli/services/npm/cli/npm_cli.dart';
 import 'package:mockito/mockito.dart';
@@ -40,15 +42,6 @@ void main() {
     );
 
     test(
-      ".version() shows the version information",
-      () async {
-        await npmService.version();
-
-        verify(npmCli.version()).called(once);
-      },
-    );
-
-    test(
       ".installDependencies() throws if Npm CLI throws during the dependencies installing",
       () {
         when(npmCli.install(any)).thenAnswer((_) => Future.error(stateError));
@@ -58,7 +51,20 @@ void main() {
     );
 
     test(
-      ".version() throws if Npm CLI throws during the version showing",
+      ".version() returns the version information",
+      () async {
+        final expected = ProcessResult(0, 0, null, null);
+
+        when(npmCli.version()).thenAnswer((_) => Future.value(expected));
+
+        final result = await npmService.version();
+
+        expect(result, equals(expected));
+      },
+    );
+
+    test(
+      ".version() throws if Npm CLI throws during the version retrieving",
       () {
         when(npmCli.version()).thenAnswer((_) => Future.error(stateError));
 

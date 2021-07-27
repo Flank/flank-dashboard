@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/sentry/adapter/sentry_cli_service_adapter.dart';
 import 'package:cli/services/sentry/cli/sentry_cli.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
@@ -58,8 +60,9 @@ void main() {
       String withOrganizationSlug = organizationSlug,
       String withProjectSlug = projectSlug,
     }) {
-      whenPromptProjectSlug(withOrganizationSlug: withOrganizationSlug)
-          .thenReturn(withProjectSlug);
+      whenPromptProjectSlug(
+        withOrganizationSlug: withOrganizationSlug,
+      ).thenReturn(withProjectSlug);
       return when(prompter.prompt(enterReleaseName));
     }
 
@@ -225,8 +228,9 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the release creation",
       () {
         whenPromptReleaseName().thenReturn(releaseName);
-        when(sentryCli.createRelease(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryCli.createRelease(any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           sentryService.createRelease(sentryRelease, [sourceMap]),
@@ -239,8 +243,9 @@ void main() {
       ".createRelease() stops the release creation process if Sentry CLI throws during the release creation",
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
-        when(sentryCli.createRelease(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryCli.createRelease(any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           sentryService.createRelease(sentryRelease, [sourceMap]),
@@ -260,8 +265,9 @@ void main() {
 
         await sentryService.createRelease(sentryRelease, [sourceMap]);
 
-        verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
-            .called(once);
+        verify(
+          sentryCli.uploadSourceMaps(sentryRelease, sourceMap),
+        ).called(once);
       },
     );
 
@@ -269,8 +275,9 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the source maps uploading",
       () {
         whenPromptReleaseName().thenReturn(releaseName);
-        when(sentryCli.uploadSourceMaps(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryCli.uploadSourceMaps(any, any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           sentryService.createRelease(sentryRelease, [sourceMap]),
@@ -283,8 +290,9 @@ void main() {
       ".createRelease() stops the release creation process if Sentry CLI throws during the source maps uploading",
       () async {
         whenPromptReleaseName().thenReturn(releaseName);
-        when(sentryCli.uploadSourceMaps(any, any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryCli.uploadSourceMaps(any, any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           sentryService.createRelease(sentryRelease, [sourceMap]),
@@ -292,8 +300,9 @@ void main() {
         );
 
         verify(sentryCli.createRelease(sentryRelease)).called(once);
-        verify(sentryCli.uploadSourceMaps(sentryRelease, sourceMap))
-            .called(once);
+        verify(
+          sentryCli.uploadSourceMaps(sentryRelease, sourceMap),
+        ).called(once);
 
         checkNoMoreInteractions();
       },
@@ -314,8 +323,9 @@ void main() {
       ".createRelease() throws if Sentry CLI throws during the release finalizing",
       () {
         whenPromptReleaseName().thenReturn(releaseName);
-        when(sentryCli.finalizeRelease(any))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryCli.finalizeRelease(any),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           sentryService.createRelease(sentryRelease, [sourceMap]),
@@ -325,16 +335,20 @@ void main() {
     );
 
     test(
-      ".version() shows the version information",
+      ".version() returns the version information",
       () async {
-        await sentryService.version();
+        final expected = ProcessResult(0, 0, null, null);
 
-        verify(sentryCli.version()).called(once);
+        when(sentryCli.version()).thenAnswer((_) => Future.value(expected));
+
+        final result = await sentryService.version();
+
+        expect(result, equals(expected));
       },
     );
 
     test(
-      ".version() throws if Sentry CLI throws during the version showing",
+      ".version() throws if Sentry CLI throws during the version retrieving",
       () {
         when(sentryCli.version()).thenAnswer((_) => Future.error(stateError));
 

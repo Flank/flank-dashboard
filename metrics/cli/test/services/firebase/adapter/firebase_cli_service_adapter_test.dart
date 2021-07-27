@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/firebase/adapter/firebase_cli_service_adapter.dart';
 import 'package:cli/services/firebase/cli/firebase_cli.dart';
 import 'package:cli/services/firebase/strings/firebase_strings.dart';
@@ -130,16 +132,18 @@ void main() {
       () async {
         await firebaseService.deployFirebase(projectId, workingDirectory);
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
       },
     );
 
     test(
       ".deployFirebase() throws if Firebase CLI throws during the default Firebase project setting",
       () {
-        when(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           firebaseService.deployFirebase(projectId, workingDirectory),
@@ -151,16 +155,18 @@ void main() {
     test(
       ".deployFirebase() stops the Firebase deployment process if Firebase CLI throws during the default Firebase project setting",
       () async {
-        when(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           firebaseService.deployFirebase(projectId, workingDirectory),
           throwsStateError,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
     );
@@ -200,8 +206,9 @@ void main() {
           throwsStateError,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
         verify(firebaseCli.deployFirestore(workingDirectory)).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
@@ -239,16 +246,18 @@ void main() {
           workingDirectory,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
       },
     );
 
     test(
       ".deployHosting() throws if Firebase CLI throws during the default Firebase project setting",
       () {
-        when(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           firebaseService.deployHosting(projectId, target, workingDirectory),
@@ -260,16 +269,18 @@ void main() {
     test(
       ".deployHosting() stops the hosting deployment process if Firebase CLI throws during the default Firebase project setting",
       () async {
-        when(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           firebaseService.deployHosting(projectId, target, workingDirectory),
           throwsStateError,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
     );
@@ -290,8 +301,9 @@ void main() {
     test(
       ".deployHosting() throws if Firebase CLI throws during the target clearing",
       () {
-        when(firebaseCli.clearTarget(target, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.clearTarget(target, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           firebaseService.deployHosting(projectId, target, workingDirectory),
@@ -303,16 +315,18 @@ void main() {
     test(
       ".deployHosting() stops the hosting deployment process if Firebase CLI throws during the target clearing",
       () async {
-        when(firebaseCli.clearTarget(target, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.clearTarget(target, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           firebaseService.deployHosting(projectId, target, workingDirectory),
           throwsStateError,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
         verify(firebaseCli.clearTarget(target, workingDirectory)).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
@@ -327,16 +341,18 @@ void main() {
           workingDirectory,
         );
 
-        verify(firebaseCli.applyTarget(projectId, target, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.applyTarget(projectId, target, workingDirectory),
+        ).called(once);
       },
     );
 
     test(
       ".deployHosting() throws if Firebase CLI throws during the target applying",
       () {
-        when(firebaseCli.applyTarget(projectId, target, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.applyTarget(projectId, target, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           firebaseService.deployHosting(projectId, target, workingDirectory),
@@ -348,19 +364,22 @@ void main() {
     test(
       ".deployHosting() stops the hosting deployment process if Firebase CLI throws during the target applying",
       () async {
-        when(firebaseCli.applyTarget(projectId, target, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.applyTarget(projectId, target, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await expectLater(
           firebaseService.deployHosting(projectId, target, workingDirectory),
           throwsStateError,
         );
 
-        verify(firebaseCli.setFirebaseProject(projectId, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.setFirebaseProject(projectId, workingDirectory),
+        ).called(once);
         verify(firebaseCli.clearTarget(target, workingDirectory)).called(once);
-        verify(firebaseCli.applyTarget(projectId, target, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.applyTarget(projectId, target, workingDirectory),
+        ).called(once);
         verifyNoMoreInteractions(firebaseCli);
       },
     );
@@ -374,16 +393,18 @@ void main() {
           workingDirectory,
         );
 
-        verify(firebaseCli.deployHosting(target, workingDirectory))
-            .called(once);
+        verify(
+          firebaseCli.deployHosting(target, workingDirectory),
+        ).called(once);
       },
     );
 
     test(
       ".deployHosting() throws if Firebase CLI throws during the project's target deployment",
       () {
-        when(firebaseCli.deployHosting(target, workingDirectory))
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseCli.deployHosting(target, workingDirectory),
+        ).thenAnswer((_) => Future.error(stateError));
 
         expect(
           firebaseService.deployHosting(projectId, target, workingDirectory),
@@ -393,16 +414,20 @@ void main() {
     );
 
     test(
-      ".version() shows the version information",
+      ".version() returns the version information",
       () async {
-        await firebaseService.version();
+        final expected = ProcessResult(0, 0, null, null);
 
-        verify(firebaseCli.version()).called(once);
+        when(firebaseCli.version()).thenAnswer((_) => Future.value(expected));
+
+        final result = await firebaseService.version();
+
+        expect(result, equals(expected));
       },
     );
 
     test(
-      ".version() throws if Firebase CLI throws during the version showing",
+      ".version() throws if Firebase CLI throws during the version retrieving",
       () {
         when(firebaseCli.version()).thenAnswer((_) => Future.error(stateError));
 
@@ -415,17 +440,18 @@ void main() {
       () {
         firebaseService.configureAuthProviders(projectId);
 
-        verify(prompter.prompt(FirebaseStrings.configureAuthProviders(
-          projectId,
-        ))).called(once);
+        verify(
+          prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)),
+        ).called(once);
       },
     );
 
     test(
       ".configureAuthProviders() returns the Google sign client id entered by the user",
       () {
-        when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
-            .thenReturn(clientId);
+        when(
+          prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)),
+        ).thenReturn(clientId);
 
         final result = firebaseService.configureAuthProviders(projectId);
 
@@ -436,8 +462,9 @@ void main() {
     test(
       ".configureAuthProviders() throws if prompter throws during the authentication providers configuring",
       () {
-        when(prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)))
-            .thenThrow(stateError);
+        when(
+          prompter.prompt(FirebaseStrings.configureAuthProviders(projectId)),
+        ).thenThrow(stateError);
 
         expect(
           () => firebaseService.configureAuthProviders(projectId),
@@ -451,16 +478,18 @@ void main() {
       () {
         firebaseService.enableAnalytics(projectId);
 
-        verify(prompter.prompt(FirebaseStrings.enableAnalytics(projectId)))
-            .called(once);
+        verify(
+          prompter.prompt(FirebaseStrings.enableAnalytics(projectId)),
+        ).called(once);
       },
     );
 
     test(
       ".enableAnalytics() throws if prompter throws during the Analytics service config prompting",
       () {
-        when(prompter.prompt(FirebaseStrings.enableAnalytics(projectId)))
-            .thenThrow(stateError);
+        when(
+          prompter.prompt(FirebaseStrings.enableAnalytics(projectId)),
+        ).thenThrow(stateError);
 
         expect(
           () => firebaseService.enableAnalytics(projectId),
@@ -474,16 +503,18 @@ void main() {
       () {
         firebaseService.initializeFirestoreData(projectId);
 
-        verify(prompter.prompt(FirebaseStrings.initializeData(projectId)))
-            .called(once);
+        verify(
+          prompter.prompt(FirebaseStrings.initializeData(projectId)),
+        ).called(once);
       },
     );
 
     test(
       ".initializeFirestoreData() throws if prompter throws during the initial Firestore data prompting",
       () {
-        when(prompter.prompt(FirebaseStrings.initializeData(projectId)))
-            .thenThrow(stateError);
+        when(
+          prompter.prompt(FirebaseStrings.initializeData(projectId)),
+        ).thenThrow(stateError);
 
         expect(
           () => firebaseService.initializeFirestoreData(projectId),
@@ -497,16 +528,18 @@ void main() {
       () {
         firebaseService.upgradeBillingPlan(projectId);
 
-        verify(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
-            .called(once);
+        verify(
+          prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)),
+        ).called(once);
       },
     );
 
     test(
       ".upgradeBillingPlan() throws if prompter throws during the billing plan prompting",
       () {
-        when(prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)))
-            .thenThrow(stateError);
+        when(
+          prompter.prompt(FirebaseStrings.upgradeBillingPlan(projectId)),
+        ).thenThrow(stateError);
 
         expect(
           () => firebaseService.upgradeBillingPlan(projectId),
@@ -527,8 +560,9 @@ void main() {
     test(
       ".acceptTermsOfService() throws if prompter throws during the terms prompting",
       () {
-        when(prompter.prompt(FirebaseStrings.acceptTerms))
-            .thenThrow(stateError);
+        when(
+          prompter.prompt(FirebaseStrings.acceptTerms),
+        ).thenThrow(stateError);
 
         expect(
           () => firebaseService.acceptTermsOfService(),
