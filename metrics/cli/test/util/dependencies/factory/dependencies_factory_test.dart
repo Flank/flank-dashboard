@@ -74,18 +74,6 @@ void main() {
     );
 
     test(
-      ".create() return null if the given file does not exist",
-      () {
-        when(fileHelper.getFile(path)).thenReturn(file);
-        when(file.existsSync()).thenReturn(false);
-
-        final dependencies = dependenciesFactory.create('path');
-
-        expect(dependencies, isNull);
-      },
-    );
-
-    test(
       ".create() uses the given file helper to get the file by the given path",
       () {
         when(fileHelper.getFile(path)).thenReturn(file);
@@ -98,14 +86,28 @@ void main() {
     );
 
     test(
-      ".create() uses the given YAML map parser to parse the file content",
+      ".create() return null if the given file does not exist",
       () {
         when(fileHelper.getFile(path)).thenReturn(file);
+        when(file.existsSync()).thenReturn(false);
+
+        final dependencies = dependenciesFactory.create('path');
+
+        expect(dependencies, isNull);
+      },
+    );
+
+    test(
+      ".create() uses the given YAML map parser to parse the file content",
+      () {
+        const fileContents = 'contents';
+        when(fileHelper.getFile(path)).thenReturn(file);
         when(file.existsSync()).thenReturn(true);
+        when(file.readAsStringSync()).thenReturn(fileContents);
 
         dependenciesFactory.create('path');
 
-        verify(yamlMapParser.parse(any)).called(once);
+        verify(yamlMapParser.parse(fileContents)).called(once);
       },
     );
 

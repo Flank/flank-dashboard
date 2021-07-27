@@ -69,10 +69,9 @@ void main() {
       ".getFor() returns a dependency for the given service",
       () {
         final dependencies = Dependencies.fromMap(dependenciesMap);
-        final dependency = dependencies.getFor(service);
+        final actualDependency = dependencies.getFor(service);
 
-        expect(dependency.recommendedVersion, equals(recommendedVersion));
-        expect(dependency.installUrl, equals(installUrl));
+        expect(actualDependency, equals(dependency));
       },
     );
   });
