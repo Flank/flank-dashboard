@@ -57,7 +57,8 @@ class Doctor {
     ArgumentError.checkNotNull(_sentryService, 'sentryService');
   }
 
-  /// Checks versions of the required third-party services.
+  /// Returns the [ValidationResult] of versions checking for the required
+  /// third-party services.
   Future<ValidationResult> checkVersions() async {
     await _checkVersion(_flutterService);
     await _checkVersion(_gcloudService);

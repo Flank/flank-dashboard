@@ -8,9 +8,10 @@ import 'package:cli/services/common/service/model/service_name.dart';
 /// A base class for info services that provides common methods
 /// for getting information about service.
 abstract class InfoService {
+  /// Returns the [ProcessResult] with the version information of this service.
   /// A [ServiceName] that represents the name of this service.
   ServiceName get serviceName;
 
-  /// Shows the version information of this service.
+  /// Returns the [ProcessResult] with the version information of this service.
   Future<ProcessResult> version();
 }
