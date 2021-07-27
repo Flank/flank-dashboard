@@ -15,7 +15,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
-import '../../../../test_utils/mock/validation_result_builder_mock.dart';
+import '../../../../test_utils/mock/core_validation_result_builder_mock.dart';
 
 void main() {
   group("BuildkiteSourceValidator", () {
@@ -41,7 +41,7 @@ void main() {
     const organizationScopeToken = BuildkiteToken(
       scopes: [BuildkiteTokenScope.readOrganizations],
     );
-    const accessTokenValidationResult = TargetValidationResult(
+    const failureAccessTokenValidationResult = TargetValidationResult(
       target: accessTokenTarget,
       conclusion: invalidConclusion,
       data: null,
@@ -70,7 +70,7 @@ void main() {
     final auth = BearerAuthorization(accessToken);
 
     final validationDelegate = _BuildkiteSourceValidationDelegateMock();
-    final validationResultBuilder = ValidationResultBuilderMock();
+    final validationResultBuilder = CoreValidationResultBuilderMock();
     final validator = BuildkiteSourceValidator(
       validationDelegate,
       validationResultBuilder,
@@ -160,7 +160,7 @@ void main() {
       ".validate() delegates the access token validation to the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureTargetValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         final expectedAuth = BearerAuthorization(accessToken);
@@ -175,7 +175,7 @@ void main() {
       ".validate() sets the access token target validation result returned by the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(accessTokenValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -183,7 +183,7 @@ void main() {
         verify(
           validationResultBuilder.setResult(
             BuildkiteSourceValidationTarget.accessToken,
-            accessTokenValidationResult,
+            failureAccessTokenValidationResult,
           ),
         ).called(once);
       },
@@ -198,7 +198,7 @@ void main() {
           description: BuildkiteStrings.tokenInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(accessTokenValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -213,7 +213,7 @@ void main() {
       ".validate() does not validate the organization slug if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureTargetValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -226,7 +226,7 @@ void main() {
       ".validate() does not validate the pipeline slug if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureTargetValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -240,7 +240,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureTargetValidationResult),
+          (_) => Future.value(failureAccessTokenValidationResult),
         );
 
         final result = await validator.validate(config);

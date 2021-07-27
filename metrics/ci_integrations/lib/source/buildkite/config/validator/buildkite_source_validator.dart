@@ -121,7 +121,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   }
 
   /// Sets empty results of the [validationResultBuilder] to the
-  /// [TargetValidationResult] with the given [target] and [interruptReason],
+  /// [TargetValidationResult] with the given [target], [interruptReason],
   /// and [ConfigFieldValidationConclusion.unknown] as a
   /// [TargetValidationResult.conclusion].
   void _setEmptyTargets(ValidationTarget target, String interruptReason) {
