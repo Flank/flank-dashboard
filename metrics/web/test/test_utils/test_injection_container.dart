@@ -6,6 +6,7 @@ import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
+import 'package:metrics/common/presentation/state/page_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/timer_notifier.dart';
@@ -19,6 +20,7 @@ import 'auth_notifier_stub.dart';
 import 'debug_menu_notifier_stub.dart';
 import 'feature_config_notifier_stub.dart';
 import 'navigation_notifier_mock.dart';
+import 'page_notifier_mock.dart';
 import 'project_groups_notifier_stub.dart';
 import 'project_metrics_notifier_stub.dart';
 import 'projects_notifier_stub.dart';
@@ -59,6 +61,9 @@ class TestInjectionContainer extends StatelessWidget {
   /// A [TimerNotifier] to inject.
   final TimerNotifier timerNotifier;
 
+  /// A [PageNotifier] to inject.
+  final PageNotifier pageNotifier;
+
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
   /// If the [metricsNotifier] is `null`, the [ProjectMetricsNotifierStub] is used.
@@ -71,6 +76,7 @@ class TestInjectionContainer extends StatelessWidget {
   /// If the [debugMenuNotifier] is `null`, the [DebugMenuNotifierStub] is used.
   /// If the [navigationNotifier] is `null`, the [NavigationNotifierMock] is used.
   /// If the [timerNotifier] is `null`, the [TimerNotifier] is used.
+  /// If the [pageNotifier] is `null`, the [PageNotifier] is used.
   const TestInjectionContainer({
     Key key,
     this.child,
@@ -84,6 +90,7 @@ class TestInjectionContainer extends StatelessWidget {
     this.debugMenuNotifier,
     this.navigationNotifier,
     this.timerNotifier,
+    this.pageNotifier,
   }) : super(key: key);
 
   @override
@@ -119,6 +126,9 @@ class TestInjectionContainer extends StatelessWidget {
         ),
         ChangeNotifierProvider<TimerNotifier>(
           create: (_) => timerNotifier ?? TimerNotifier(),
+        ),
+        ChangeNotifierProvider<PageNotifier>(
+          create: (_) => pageNotifier ?? PageNotifierMock(),
         ),
       ],
       child: child,
