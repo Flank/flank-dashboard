@@ -13,7 +13,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
-import '../../../../test_utils/mock/validation_result_builder_stub_mock.dart';
+import '../../../../test_utils/mock/validation_result_builder_mock.dart';
 
 void main() {
   group("JenkinsSourceValidator", () {
@@ -34,7 +34,7 @@ void main() {
     final auth = BasicAuthorization(username, apiKey);
 
     final validationDelegate = _JenkinsSourceValidationDelegateMock();
-    final validationResultBuilder = ValidationResultBuilderStubMock();
+    final validationResultBuilder = ValidationResultBuilderMock();
 
     final validationResult = ValidationResult(const {});
 
