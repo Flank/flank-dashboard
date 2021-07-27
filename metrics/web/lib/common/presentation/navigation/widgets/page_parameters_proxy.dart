@@ -66,9 +66,9 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
 
   /// Handles the [PageParametersModel] updates using the [NavigationNotifier].
   void _pageNotifierListener() {
-    _navigationNotifier.handlePageParametersUpdates(
-      widget.pageNotifier.parameters,
-    );
+    final pageParameters = widget.pageNotifier.parameters;
+
+    _navigationNotifier.handlePageParametersUpdates(pageParameters);
   }
 
   @override
