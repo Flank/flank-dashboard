@@ -7,16 +7,15 @@ import 'package:provider/provider.dart';
 /// A [Widget] that purposes to handle a connection between
 /// the [NavigationNotifier] and a specific [PageNotifier].
 class PageParametersProxy extends StatefulWidget {
-  /// The [PageNotifier] that provides an ability to handle page parameters.
+  /// A [PageNotifier] that provides an ability to handle page parameters.
   final PageNotifier pageNotifier;
 
   /// A [Widget] below the [PageParametersProxy] in the tree.
   final Widget child;
 
-  /// Creates the [PageParametersProxy] with the given parameters.
+  /// Creates a new instance of the [PageParametersProxy] with the given parameters.
   ///
-  /// The [pageNotifier] must not be `null`.
-  /// The [child] must not be `null`.
+  /// Throws an `AssertionError` if the given [pageNotifier] or [child] is `null`.
   const PageParametersProxy({
     Key key,
     @required this.pageNotifier,
@@ -29,9 +28,10 @@ class PageParametersProxy extends StatefulWidget {
   _PageParametersProxyState createState() => _PageParametersProxyState();
 }
 
-/// The logic and internal state for the [PageParametersProxy] widget.
+/// A class that contains the logic and internal state
+/// of the [PageParametersProxy] widget.
 class _PageParametersProxyState extends State<PageParametersProxy> {
-  /// The [ChangeNotifier] that manages navigation.
+  /// A [ChangeNotifier] that manages navigation.
   NavigationNotifier _navigationNotifier;
 
   @override
@@ -66,7 +66,7 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
 
   /// Handles the [PageParametersModel] updates using the [NavigationNotifier].
   void _pageNotifierListener() {
-    final pageParameters = widget.pageNotifier.parameters;
+    final pageParameters = widget.pageNotifier.pageParameters;
 
     _navigationNotifier.handlePageParametersUpdates(pageParameters);
   }

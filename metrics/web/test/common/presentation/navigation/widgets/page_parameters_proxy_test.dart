@@ -113,7 +113,7 @@ class _PageParametersProxyTestbed extends StatelessWidget {
   /// A [PageNotifier] used in tests.
   final PageNotifier pageNotifier;
 
-  /// An [NavigationNotifier] used in tests.
+  /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
   /// Creates an instance of this testbed with the given parameters.
