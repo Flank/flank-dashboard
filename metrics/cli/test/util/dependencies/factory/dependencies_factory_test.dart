@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:cli/util/dependencies/dependency.dart';
 import 'package:cli/util/dependencies/factory/dependencies_factory.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -18,6 +19,10 @@ void main() {
     const service = 'service';
     const recommendedVersion = 'version';
     const installUrl = 'url';
+    const dependency = Dependency(
+      recommendedVersion: recommendedVersion,
+      installUrl: installUrl,
+    );
 
     final dependenciesMap = {
       service: {
@@ -119,10 +124,9 @@ void main() {
         when(yamlMapParser.parse(any)).thenReturn(dependenciesMap);
 
         final dependencies = dependenciesFactory.create('path');
-        final dependency = dependencies.getFor(service);
+        final actualDependency = dependencies.getFor(service);
 
-        expect(dependency.recommendedVersion, equals(recommendedVersion));
-        expect(dependency.installUrl, equals(installUrl));
+        expect(actualDependency, equals(dependency));
       },
     );
   });
