@@ -4,6 +4,7 @@
 import 'package:ci_integration/client/jenkins/model/jenkins_instance_info.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_user.dart';
+import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
@@ -20,11 +21,8 @@ import '../../test_utils/jenkins_client_mock.dart';
 void main() {
   group("JenkinsSourceValidationDelegate", () {
     const url = 'url';
-    final auth = BearerAuthorization('token');
     const jobName = 'job';
-
     const nullVersionInstanceInfo = JenkinsInstanceInfo(version: null);
-
     const anonymousUser = JenkinsUser(anonymous: true);
     const unauthenticatedUser = JenkinsUser(authenticated: false);
     const anonymousUnauthenticatedUser = JenkinsUser(
@@ -36,7 +34,10 @@ void main() {
       authenticated: true,
       anonymous: false,
     );
+    const validConclusion = ConfigFieldValidationConclusion.valid;
+    const invalidConclusion = ConfigFieldValidationConclusion.invalid;
 
+    final auth = BearerAuthorization('token');
     final client = JenkinsClientMock();
     final delegate = JenkinsSourceValidationDelegate(client);
 
@@ -84,7 +85,7 @@ void main() {
         final result = await delegate.validateJenkinsUrl(url);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(conclusion, equals(invalidConclusion));
       },
     );
 
@@ -120,7 +121,7 @@ void main() {
         final result = await delegate.validateJenkinsUrl(url);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(conclusion, equals(invalidConclusion));
       },
     );
 
@@ -160,7 +161,7 @@ void main() {
         final result = await delegate.validateJenkinsUrl(url);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(conclusion, equals(invalidConclusion));
       },
     );
 
@@ -200,200 +201,174 @@ void main() {
         final result = await delegate.validateJenkinsUrl(url);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(conclusion, equals(validConclusion));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the interaction with the client is not successful",
+      ".validateAuth() returns a failure jenkins source auth validation result, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsUser(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
-        final target = result.target;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
+        expect(usernameResult.conclusion, equals(invalidConclusion));
+        expect(apiKeyResult.conclusion, equals(invalidConclusion));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the interaction with the client is not successful",
+      ".validateAuth() returns a jenkins source auth validation result with the 'auth invalid' description, if the interaction with the client is not successful",
       () async {
         when(client.fetchJenkinsUser(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(usernameResult.description, equals(JenkinsStrings.authInvalid));
+        expect(apiKeyResult.description, equals(JenkinsStrings.authInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with the 'auth invalid' description, if the interaction with the client is not successful",
-      () async {
-        when(client.fetchJenkinsUser(auth)).thenErrorWith();
-
-        final result = await delegate.validateAuth(auth);
-        final description = result.description;
-
-        expect(description, equals(JenkinsStrings.authInvalid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the result of the interaction with the client is null",
+      ".validateAuth() returns a failure jenkins source auth validation result, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
-        final target = result.target;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
+        expect(usernameResult.conclusion, equals(invalidConclusion));
+        expect(apiKeyResult.conclusion, equals(invalidConclusion));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with an invalid config field validation conclusion, if the result of the interaction with the client is null",
+      ".validateAuth() returns a jenkins source auth validation result with the 'auth invalid' description, if the result of the interaction with the client is null",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(usernameResult.description, equals(JenkinsStrings.authInvalid));
+        expect(apiKeyResult.description, equals(JenkinsStrings.authInvalid));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with the 'auth invalid' description, if the result of the interaction with the client is null",
-      () async {
-        when(client.fetchJenkinsUser(auth)).thenSuccessWith(null);
-
-        final result = await delegate.validateAuth(auth);
-        final description = result.description;
-
-        expect(description, equals(JenkinsStrings.authInvalid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is anonymous",
+      ".validateAuth() returns a success jenkins source auth validation result, if the user associated with the given auth is anonymous",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
 
         final result = await delegate.validateAuth(auth);
-        final target = result.target;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
+        expect(usernameResult.conclusion, equals(validConclusion));
+        expect(apiKeyResult.conclusion, equals(validConclusion));
       },
     );
 
     test(
-      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is anonymous",
+      ".validateAuth() returns a jenkins source auth validation result with the 'anonymous user' description, if the fetched user is anonymous",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
-
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with the 'anonymous user' description, if the fetched user is anonymous",
-      () async {
-        when(client.fetchJenkinsUser(auth)).thenSuccessWith(anonymousUser);
-
-        final result = await delegate.validateAuth(auth);
-        final description = result.description;
-
-        expect(description, contains(JenkinsStrings.anonymousUser));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is unauthenticated",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(unauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final target = result.target;
-
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is unauthenticated",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(unauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
-
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with the 'unauthenticated user' description, if the fetched user is unauthenticated",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(unauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final description = result.description;
-
-        expect(description, contains(JenkinsStrings.unauthenticatedUser));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the user associated with the given auth is unauthenticated and anonymous",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(anonymousUnauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final target = result.target;
-
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the user associated with the given auth is unauthenticated and anonymous",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(anonymousUnauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
-
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with the 'unauthenticated user' and 'anonymous user' descriptions, if the fetched user is unauthenticated and anonymous",
-      () async {
-        when(
-          client.fetchJenkinsUser(auth),
-        ).thenSuccessWith(anonymousUnauthenticatedUser);
-
-        final result = await delegate.validateAuth(auth);
-        final description = result.description;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
         expect(
-          description,
+          usernameResult.description,
+          contains(JenkinsStrings.anonymousUser),
+        );
+        expect(
+          apiKeyResult.description,
+          contains(JenkinsStrings.anonymousUser),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a success jenkins source auth validation result, if the user associated with the given auth is unauthenticated",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(unauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
+
+        expect(usernameResult.conclusion, equals(validConclusion));
+        expect(apiKeyResult.conclusion, equals(validConclusion));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a jenkins source auth validation result with the 'unauthenticated user' description, if the fetched user is unauthenticated",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(unauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
+
+        expect(
+          usernameResult.description,
+          contains(JenkinsStrings.unauthenticatedUser),
+        );
+        expect(
+          apiKeyResult.description,
+          contains(JenkinsStrings.unauthenticatedUser),
+        );
+      },
+    );
+
+    test(
+      ".validateAuth() returns a success jenkins source auth validation result, if the user associated with the given auth is unauthenticated and anonymous",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(anonymousUnauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
+
+        expect(usernameResult.conclusion, equals(validConclusion));
+        expect(apiKeyResult.conclusion, equals(validConclusion));
+      },
+    );
+
+    test(
+      ".validateAuth() returns a jenkins source auth validation result with the 'unauthenticated user' and 'anonymous user' descriptions, if the fetched user is unauthenticated and anonymous",
+      () async {
+        when(
+          client.fetchJenkinsUser(auth),
+        ).thenSuccessWith(anonymousUnauthenticatedUser);
+
+        final result = await delegate.validateAuth(auth);
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
+
+        expect(
+          usernameResult.description,
+          stringContainsInOrder([
+            JenkinsStrings.anonymousUser,
+            JenkinsStrings.unauthenticatedUser,
+          ]),
+        );
+        expect(
+          apiKeyResult.description,
           stringContainsInOrder([
             JenkinsStrings.anonymousUser,
             JenkinsStrings.unauthenticatedUser,
@@ -403,26 +378,16 @@ void main() {
     );
 
     test(
-      ".validateAuth() returns a target validation result with a jenkins api key validation target, if the given auth is valid",
+      ".validateAuth() returns a success jenkins source auth validation result, if the given auth is valid",
       () async {
         when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
 
         final result = await delegate.validateAuth(auth);
-        final target = result.target;
+        final usernameResult = result.usernameValidationResult;
+        final apiKeyResult = result.apiKeyValidationResult;
 
-        expect(target, equals(JenkinsSourceValidationTarget.apiKey));
-      },
-    );
-
-    test(
-      ".validateAuth() returns a target validation result with a valid config field validation conclusion, if the given auth is valid",
-      () async {
-        when(client.fetchJenkinsUser(auth)).thenSuccessWith(user);
-
-        final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
-
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(usernameResult.conclusion, equals(validConclusion));
+        expect(apiKeyResult.conclusion, equals(validConclusion));
       },
     );
 
@@ -446,7 +411,7 @@ void main() {
         final result = await delegate.validateJobName(jobName);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(conclusion, equals(invalidConclusion));
       },
     );
 
@@ -482,7 +447,7 @@ void main() {
         final result = await delegate.validateJobName(jobName);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(conclusion, equals(invalidConclusion));
       },
     );
 
@@ -520,7 +485,7 @@ void main() {
         final result = await delegate.validateJobName(jobName);
         final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(conclusion, equals(validConclusion));
       },
     );
   });

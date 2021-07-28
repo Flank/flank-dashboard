@@ -4,6 +4,7 @@
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_auth_validation_result.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/strings/jenkins_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -48,16 +49,14 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [auth].
-  Future<TargetValidationResult<void>> validateAuth(
+  Future<JenkinsSourceAuthValidationResult> validateAuth(
     AuthorizationBase auth,
   ) async {
     final userInteraction = await _client.fetchJenkinsUser(auth);
 
     if (userInteraction.isError || userInteraction.result == null) {
-      return const TargetValidationResult(
-        target: JenkinsSourceValidationTarget.apiKey,
-        conclusion: ConfigFieldValidationConclusion.invalid,
-        description: JenkinsStrings.authInvalid,
+      return JenkinsSourceAuthValidationResult.failure(
+        JenkinsStrings.authInvalid,
       );
     }
 
@@ -79,16 +78,11 @@ class JenkinsSourceValidationDelegate implements ValidationDelegate {
     if (authenticationInfo.isNotEmpty) {
       final description = 'Note: $authenticationInfo';
 
-      return TargetValidationResult(
-        target: JenkinsSourceValidationTarget.apiKey,
-        conclusion: ConfigFieldValidationConclusion.valid,
-        description: description,
-      );
+      return JenkinsSourceAuthValidationResult.success(description);
     }
 
-    return const TargetValidationResult(
-      target: JenkinsSourceValidationTarget.apiKey,
-      conclusion: ConfigFieldValidationConclusion.valid,
+    return JenkinsSourceAuthValidationResult.success(
+      JenkinsStrings.authInvalid,
     );
   }
 
