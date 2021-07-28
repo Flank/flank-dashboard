@@ -87,6 +87,18 @@ void main() {
     );
 
     test(
+      ".success() creates an instance with an empty description for both target validation results if the given description is null",
+      () {
+        final result = JenkinsSourceAuthValidationResult.success(null);
+        final usernameDescription = result.usernameValidationResult.description;
+        final apiKeyDescription = result.apiKeyValidationResult.description;
+
+        expect(usernameDescription, isEmpty);
+        expect(apiKeyDescription, isEmpty);
+      },
+    );
+
+    test(
       ".failure() creates an instance with the correct validation targets for both target validation results",
       () {
         final result = JenkinsSourceAuthValidationResult.failure();
@@ -123,6 +135,18 @@ void main() {
     );
 
     test(
+      ".failure() creates an instance with an empty description for both target validation results if the given description is null",
+      () {
+        final result = JenkinsSourceAuthValidationResult.failure(null);
+        final usernameDescription = result.usernameValidationResult.description;
+        final apiKeyDescription = result.apiKeyValidationResult.description;
+
+        expect(usernameDescription, isEmpty);
+        expect(apiKeyDescription, isEmpty);
+      },
+    );
+
+    test(
       ".unknown() creates an instance with the correct validation targets for both target validation results",
       () {
         final result = JenkinsSourceAuthValidationResult.unknown();
@@ -155,6 +179,18 @@ void main() {
 
         expect(usernameDescription, equals(description));
         expect(apiKeyDescription, equals(description));
+      },
+    );
+
+    test(
+      ".unknown() creates an instance with an empty description for both target validation results if the given description is null",
+      () {
+        final result = JenkinsSourceAuthValidationResult.unknown(null);
+        final usernameDescription = result.usernameValidationResult.description;
+        final apiKeyDescription = result.apiKeyValidationResult.description;
+
+        expect(usernameDescription, isEmpty);
+        expect(apiKeyDescription, isEmpty);
       },
     );
 

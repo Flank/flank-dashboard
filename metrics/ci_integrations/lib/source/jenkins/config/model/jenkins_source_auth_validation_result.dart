@@ -44,13 +44,13 @@ class JenkinsSourceAuthValidationResult extends Equatable {
     final usernameValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.username,
       conclusion: validConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     final apiKeyValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.apiKey,
       conclusion: validConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     return JenkinsSourceAuthValidationResult(
@@ -71,13 +71,13 @@ class JenkinsSourceAuthValidationResult extends Equatable {
     final usernameValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.username,
       conclusion: invalidConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     final apiKeyValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.apiKey,
       conclusion: invalidConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     return JenkinsSourceAuthValidationResult(
@@ -98,13 +98,13 @@ class JenkinsSourceAuthValidationResult extends Equatable {
     final usernameValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.username,
       conclusion: unknownConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     final apiKeyValidationResult = TargetValidationResult(
       target: JenkinsSourceValidationTarget.apiKey,
       conclusion: unknownConclusion,
-      description: description,
+      description: description ?? '',
     );
 
     return JenkinsSourceAuthValidationResult(
