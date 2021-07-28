@@ -51,7 +51,7 @@ void main() {
     );
 
     test(
-      ".setResult() throws an ArgumentError if the given result contains non available targt",
+      ".setResult() throws an ArgumentError if the given result contains non available target",
       () {
         const nonAvailableTarget = ValidationTarget(name: 'not available');
         const nonAvailableResult = TargetValidationResult(
