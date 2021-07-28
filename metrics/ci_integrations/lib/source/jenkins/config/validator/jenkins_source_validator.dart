@@ -69,21 +69,22 @@ class JenkinsSourceValidator implements ConfigValidator<JenkinsSourceConfig> {
     }
 
     final auth = BasicAuthorization(username, apiKey);
-    final authValidationResult = await validationDelegate.validateAuth(
-      auth,
-    );
+    final authValidationResult = await validationDelegate.validateAuth(auth);
+    final usernameValidationResult =
+        authValidationResult.usernameValidationResult;
+    final apiKeyValidationResult = authValidationResult.apiKeyValidationResult;
 
     validationResultBuilder.setResult(
       JenkinsSourceValidationTarget.username,
-      authValidationResult,
+      usernameValidationResult,
     );
 
     validationResultBuilder.setResult(
       JenkinsSourceValidationTarget.apiKey,
-      authValidationResult,
+      apiKeyValidationResult,
     );
 
-    if (authValidationResult.conclusion ==
+    if (apiKeyValidationResult.conclusion ==
         ConfigFieldValidationConclusion.invalid) {
       return _finalizeValidationResult(
         JenkinsSourceValidationTarget.apiKey,

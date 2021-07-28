@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_auth_validation_result.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
@@ -24,16 +25,30 @@ void main() {
     const validConclusion = ConfigFieldValidationConclusion.valid;
     const invalidConclusion = ConfigFieldValidationConclusion.invalid;
     const unknownConclusion = ConfigFieldValidationConclusion.unknown;
+    const usernameTarget = JenkinsSourceValidationTarget.username;
     const urlTarget = JenkinsSourceValidationTarget.url;
     const apiTarget = JenkinsSourceValidationTarget.apiKey;
-    const successResult = TargetValidationResult(
+    const successUrlValidationResult = TargetValidationResult(
       target: urlTarget,
       conclusion: validConclusion,
     );
-    const failureResult = TargetValidationResult(
+    const failureUrlValidationResult = TargetValidationResult(
       target: urlTarget,
       conclusion: invalidConclusion,
     );
+    const failureUsernameValidationResult = TargetValidationResult(
+      target: usernameTarget,
+      conclusion: invalidConclusion,
+    );
+    const failureApiKeyValidationResult = TargetValidationResult(
+      target: apiTarget,
+      conclusion: invalidConclusion,
+    );
+
+    final successJenkinsAuthValidationResult =
+        JenkinsSourceAuthValidationResult.success();
+    final failureJenkinsAuthValidationResult =
+        JenkinsSourceAuthValidationResult.failure();
 
     final config = JenkinsSourceConfig(
       url: url,
@@ -74,15 +89,20 @@ void main() {
       return when(validationDelegate.validateJenkinsUrl(url));
     }
 
-    PostExpectation<Future<TargetValidationResult<void>>> whenValidateAuth() {
-      whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+    PostExpectation<Future<JenkinsSourceAuthValidationResult>>
+        whenValidateAuth() {
+      whenValidateUrl().thenAnswer(
+        (_) => Future.value(successUrlValidationResult),
+      );
 
       return when(validationDelegate.validateAuth(auth));
     }
 
     PostExpectation<Future<TargetValidationResult<void>>>
         whenValidateJobName() {
-      whenValidateAuth().thenAnswer((_) => Future.value(successResult));
+      whenValidateAuth().thenAnswer(
+        (_) => Future.value(successJenkinsAuthValidationResult),
+      );
 
       return when(validationDelegate.validateJobName(jobName));
     }
@@ -131,7 +151,9 @@ void main() {
     test(
       ".validate() delegates the url validation to the validation delegate",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -142,14 +164,16 @@ void main() {
     test(
       ".validate() sets the url field validation result returned by validation delegate",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
             JenkinsSourceValidationTarget.url,
-            failureResult,
+            failureUrlValidationResult,
           ),
         ).called(once);
       },
@@ -163,7 +187,9 @@ void main() {
           conclusion: unknownConclusion,
           description: JenkinsStrings.jenkinsUrlInvalidInterruptReason,
         );
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -176,7 +202,9 @@ void main() {
     test(
       ".validate() does not validate the auth if the url validation fails",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -187,7 +215,9 @@ void main() {
     test(
       ".validate() does not validate the job name if the url validation fails",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -199,7 +229,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the url validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateUrl().thenAnswer((_) => Future.value(failureResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         final result = await validator.validate(config);
 
@@ -220,7 +252,9 @@ void main() {
           conclusion: unknownConclusion,
           description: expectedInterruptReason,
         );
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noUsernameConfig);
 
@@ -233,7 +267,9 @@ void main() {
     test(
       ".validate() does not validate the auth if the username is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noUsernameConfig);
 
@@ -244,7 +280,9 @@ void main() {
     test(
       ".validate() does not validate the job name if the username is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noUsernameConfig);
 
@@ -256,7 +294,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the username is missing in the config",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         final result = await validator.validate(noUsernameConfig);
 
@@ -277,7 +317,9 @@ void main() {
           conclusion: unknownConclusion,
           description: expectedInterruptReason,
         );
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noApiKeyConfig);
 
@@ -290,7 +332,9 @@ void main() {
     test(
       ".validate() does not validate the auth if the api key is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noApiKeyConfig);
 
@@ -301,7 +345,9 @@ void main() {
     test(
       ".validate() does not validate the job name if the api key is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noApiKeyConfig);
 
@@ -313,7 +359,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the api key is missing in the config",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         final result = await validator.validate(noApiKeyConfig);
 
@@ -337,7 +385,9 @@ void main() {
           conclusion: unknownConclusion,
           description: expectedInterruptReason,
         );
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noAuthConfig);
 
@@ -350,7 +400,9 @@ void main() {
     test(
       ".validate() does not validate the auth if the auth is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noAuthConfig);
 
@@ -361,7 +413,9 @@ void main() {
     test(
       ".validate() does not validate the job name if the auth is missing in the config",
       () async {
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         await validator.validate(noAuthConfig);
 
@@ -373,7 +427,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the auth is missing in the config",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateUrl().thenAnswer((_) => Future.value(successResult));
+        whenValidateUrl().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         final result = await validator.validate(noAuthConfig);
 
@@ -384,7 +440,9 @@ void main() {
     test(
       ".validate() delegates the auth credentials validation to the validation delegate",
       () async {
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -395,14 +453,16 @@ void main() {
     test(
       ".validate() sets the username field validation result returned by validation delegate",
       () async {
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
             JenkinsSourceValidationTarget.username,
-            failureResult,
+            failureUsernameValidationResult,
           ),
         ).called(once);
       },
@@ -411,14 +471,16 @@ void main() {
     test(
       ".validate() sets the api key field validation result returned by validation delegate",
       () async {
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
             JenkinsSourceValidationTarget.apiKey,
-            failureResult,
+            failureApiKeyValidationResult,
           ),
         ).called(once);
       },
@@ -432,7 +494,9 @@ void main() {
           conclusion: unknownConclusion,
           description: JenkinsStrings.authInvalidInterruptReason,
         );
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -445,7 +509,9 @@ void main() {
     test(
       ".validate() does not validate the job name if the auth credentials validation fails",
       () async {
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -457,7 +523,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the auth credentials validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateAuth().thenAnswer((_) => Future.value(failureResult));
+        whenValidateAuth().thenAnswer(
+          (_) => Future.value(failureJenkinsAuthValidationResult),
+        );
 
         final result = await validator.validate(config);
 
@@ -468,7 +536,9 @@ void main() {
     test(
       ".validate() delegates the job name validation to the validation delegate",
       () async {
-        whenValidateJobName().thenAnswer((_) => Future.value(failureResult));
+        whenValidateJobName().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
@@ -479,14 +549,16 @@ void main() {
     test(
       ".validate() sets the job name field validation result returned by the validation delegate",
       () async {
-        whenValidateJobName().thenAnswer((_) => Future.value(failureResult));
+        whenValidateJobName().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
             JenkinsSourceValidationTarget.jobName,
-            failureResult,
+            failureUrlValidationResult,
           ),
         ).called(once);
       },
@@ -496,7 +568,9 @@ void main() {
       ".validate() returns a validation result built by the validation result builder if the job name validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateJobName().thenAnswer((_) => Future.value(failureResult));
+        whenValidateJobName().thenAnswer(
+          (_) => Future.value(failureUrlValidationResult),
+        );
 
         final result = await validator.validate(config);
 
@@ -508,7 +582,9 @@ void main() {
       ".validate() returns a validation result build by the validation result builder if the config is valid",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
-        whenValidateJobName().thenAnswer((_) => Future.value(successResult));
+        whenValidateJobName().thenAnswer(
+          (_) => Future.value(successUrlValidationResult),
+        );
 
         final result = await validator.validate(config);
 
