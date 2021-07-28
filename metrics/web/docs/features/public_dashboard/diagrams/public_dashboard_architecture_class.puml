@@ -2,7 +2,7 @@
 
 package feature_config.presentation {
     package models {
-        class PublicDashboardFeatureConfigModel {}
+        class PublicDashboardFeatureConfigViewModel {}
     }
 
     package state {
@@ -23,7 +23,7 @@ package auth {
 
     package presentation as auth.presentation {
         package models as auth.presentation.models {
-            class UserProfileModel {}
+            enum AuthState {}
         }
 
 
@@ -48,16 +48,15 @@ package common.presentation {
 }
 
 
-FeatureConfigNotifier --> PublicDashboardFeatureConfigModel : provides
+FeatureConfigNotifier --> PublicDashboardFeatureConfigViewModel : provides
 
-AuthNotifier --> PublicDashboardFeatureConfigModel : uses
 AuthNotifier -left-> UserProfileViewModel : provides
 AuthNotifier --> SignInAnomymouslyUseCase : uses
-AuthNotifier -right-> UserProfileModel : provides
+AuthNotifier -right-> AuthState : provides
 
 SignInAnomymouslyUseCase --> UserRepository : uses
 
 MetricsUserMenu --> UserProfileViewModel : uses
-NavigationNotifier --> UserProfileModel : uses
+NavigationNotifier --> AuthState : uses
 
 @enduml

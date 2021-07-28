@@ -10,20 +10,22 @@ package auth {
     package presentation {
         package view_models {
             class UserProfileViewModel {
-                + isLoggedIn: bool
                 + isAnonymous: bool
             }
         }
 
         package models {
-            class UserProfileModel {
-                + isLoggedIn: bool
-                + isAnonymous: bool
+            enum AuthState {
+                 loggedIn
+                 loggedAnonymously
+                 unauthenticated
             }
         }
 
         package state {
             class AuthNotifier {
+                - _authState: AuthState
+                + userProfileViewModel: UserProfileViewModel
                 + signInAnonymously(): Future<void>
             }
         }
@@ -50,6 +52,6 @@ package auth {
 
 SignInAnonymouslyUseCase --> UserRepository: uses
 AuthNotifier --> SignInAnonymouslyUseCase: uses
-AuthNotifier --> UserProfileModel: provides
+AuthNotifier --> AuthState: uses
 AuthNotifier --> UserProfileViewModel: provides
 @enduml
