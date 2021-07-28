@@ -4,7 +4,6 @@
 import 'package:ci_integration/client/jenkins/model/jenkins_instance_info.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_user.dart';
-import 'package:ci_integration/integration/stub/base/config/validator_factory/config_validator_factory_stub.dart';
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_validation_target.dart';
 import 'package:ci_integration/source/jenkins/config/validation_delegate/jenkins_source_validation_delegate.dart';
