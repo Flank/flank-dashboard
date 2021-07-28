@@ -52,7 +52,7 @@ FeatureConfigNotifier --> PublicDashboardFeatureConfigViewModel : provides
 
 AuthNotifier -left-> UserProfileViewModel : provides
 AuthNotifier --> SignInAnomymouslyUseCase : uses
-AuthNotifier -right-> AuthState : provides
+AuthNotifier -right-> AuthState : uses
 
 SignInAnomymouslyUseCase --> UserRepository : uses
 
