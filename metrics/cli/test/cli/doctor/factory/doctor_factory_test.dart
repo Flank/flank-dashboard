@@ -85,6 +85,7 @@ void main() {
       ".create() creates a Services instance using the given services factory",
       () {
         whenCreateServices().thenReturn(services);
+        whenCreateDependencies().thenReturn(dependencies);
 
         doctorFactory.create();
 
