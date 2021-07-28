@@ -359,7 +359,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final updatedUserProfile = _authNotifier.userProfileModel;
     final isLoggedIn = _authNotifier.isLoggedIn;
 
-    _navigationNotifier.handleAuthenticationUpdates(isLoggedIn: isLoggedIn);
+    if (!isLoggedIn) {
+      _navigationNotifier.handleLoggedOut();
+    }
+
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
 

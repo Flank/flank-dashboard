@@ -164,7 +164,7 @@ void main() {
     );
 
     testWidgets(
-      "closes and navigates to the dashboard page if the login was successful",
+      "delegates to the navigation notifier if the login was successful",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
 
@@ -193,14 +193,12 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        verify(navigationNotifier.pushStateReplacement(
-          DefaultRoutes.dashboard,
-        )).called(once);
+        verify(navigationNotifier.handleLoggedIn()).called(once);
       },
     );
 
     testWidgets(
-      "closes and navigates to the dashboard page on open if the user is logged in",
+      "delegates to the navigation notifier on open if the user is logged in",
       (tester) async {
         final authNotifier = AuthNotifierMock();
         final navigationNotifier = NavigationNotifierMock();
@@ -221,9 +219,7 @@ void main() {
           );
         });
 
-        verify(navigationNotifier.pushStateReplacement(
-          DefaultRoutes.dashboard,
-        )).called(once);
+        verify(navigationNotifier.handleLoggedIn()).called(once);
       },
     );
   });
