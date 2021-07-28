@@ -17,11 +17,24 @@ As a user, I want to be able to enable public access to the dashboard page in my
     - [System modeling](#system-modeling)
 - [**Design**](#design)
     - [Architecture](#architecture)
+        - [PublicDashboardFeatureConfigViewModel](#PublicDashboardFeatureConfigViewModel)
+        - [UserProfileViewModel](#UserProfileViewModel)  
+        - [SignInAnonymouslyUseCase](#SignInAnonymouslyUseCase)
+        - [AuthState](#AuthState)  
     - [User Interface](#user-interface)
     - [Database](#database)
+        - [Storing the public dashboard configuration](#storing-the-public-dashboard-configuration)
+        - [Accessing the data using the anonymous user](#accessing-the-data-using-the-anonymous-user)
     - [Privacy](#privacy)
     - [Security](#security)
     - [Program](#program)
+        - [FeatureConfig module](#featureconfig-module)
+        - [Auth module](#auth-module)
+        - [Navigation module](#navigation-module)
+        - [Making things work](#making-things-work) 
+            - [Auto sign in the user anonymously](#auto-sign-in-the-user-anonymously)
+            - [Manage sign in for the anonymous user](#manage-sign-in-for-the-anonymous-user)
+            - [Change the Metrics user menu UI](#change-the-metrics-user-menu-ui)
     - [Testing](#testing)
 
 # Analysis
@@ -179,7 +192,7 @@ Since we want to disable some features on the UI if the user is anonymous, we sh
 
 Since the public dashboard feature implies logging in as an anonymous user, we should create a use case needed to log in to the application using the anonymous user. 
 
-### AuthState
+#### AuthState
 > Explain the purpose and responsibility of the class.
 
 Since we should know whether the user signed in anonymously or using sign in providers or credentials, or logged out, we should provide an enum, which should contain all the described states. 
