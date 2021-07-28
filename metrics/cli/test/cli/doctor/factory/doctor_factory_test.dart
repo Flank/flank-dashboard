@@ -108,6 +108,7 @@ void main() {
       ".create() successfully creates a Doctor instance",
       () {
         whenCreateServices().thenReturn(services);
+        whenCreateDependencies().thenReturn(dependencies);
 
         final doctor = doctorFactory.create();
 

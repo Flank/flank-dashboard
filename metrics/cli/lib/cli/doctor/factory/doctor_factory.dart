@@ -37,6 +37,9 @@ class DoctorFactory {
       DoctorConstants.dependenciesPath,
     );
 
-    return Doctor(services: services);
+    return Doctor(
+      services: services,
+      dependencies: dependencies,
+    );
   }
 }

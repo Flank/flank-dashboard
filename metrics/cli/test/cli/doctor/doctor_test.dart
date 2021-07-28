@@ -3,6 +3,8 @@
 
 import 'package:cli/cli/doctor/doctor.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/util/dependencies/dependencies.dart';
+import 'package:cli/util/dependencies/dependency.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -20,6 +22,8 @@ import '../../test_utils/mocks/services_mock.dart';
 
 void main() {
   group("Doctor", () {
+    const dependency = Dependency(recommendedVersion: '1', installUrl: 'url');
+    const dependenciesMap = {'service': dependency};
     final stateError = StateError('test');
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -36,8 +40,10 @@ void main() {
       firebaseService: firebaseService,
       sentryService: sentryService,
     );
+    final dependencies = Dependencies(dependenciesMap);
     final doctor = Doctor(
       services: services,
+      dependencies: dependencies,
     );
 
     tearDown(() {
@@ -53,7 +59,26 @@ void main() {
     test(
       "throws an ArgumentError if the given services is null",
       () {
-        expect(() => Doctor(services: null), throwsArgumentError);
+        expect(
+          () => Doctor(
+            services: null,
+            dependencies: dependencies,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given dependencies is null",
+      () {
+        expect(
+          () => Doctor(
+            services: services,
+            dependencies: null,
+          ),
+          throwsArgumentError,
+        );
       },
     );
 
