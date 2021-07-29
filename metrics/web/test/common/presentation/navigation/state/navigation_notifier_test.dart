@@ -190,9 +190,7 @@ void main() {
         notifier.handleLoggedOut();
 
         final loginPagesCount = notifier.pages
-            .where(
-              (page) => page.routeName == RouteName.login,
-            )
+            .where((page) => page.routeName == RouteName.login)
             .length;
 
         expect(notifier.pages, hasLength(2));
