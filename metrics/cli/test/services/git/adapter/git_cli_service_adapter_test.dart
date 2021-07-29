@@ -54,7 +54,7 @@ void main() {
     );
 
     test(
-      ".version() returns the version information",
+      ".version() returns the process result of the cli version command",
       () async {
         final expected = ProcessResult(0, 0, null, null);
 
