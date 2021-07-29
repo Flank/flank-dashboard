@@ -19,7 +19,7 @@ void main() {
       description: 'description',
     );
     const anotherTargetValidationResult = TargetValidationResult(
-      target: firstTarget,
+      target: secondTarget,
       conclusion: conclusion,
       description: 'another description',
     );
@@ -51,36 +51,41 @@ void main() {
     );
 
     test(
-      ".setResult() throws an ArgumentError if the target is not available",
+      ".setResult() throws an ArgumentError if the given result contains non available target",
       () {
         const nonAvailableTarget = ValidationTarget(name: 'not available');
+        const nonAvailableResult = TargetValidationResult(
+          target: nonAvailableTarget,
+          conclusion: conclusion,
+          description: 'description',
+        );
 
         expect(
-          () => builder.setResult(nonAvailableTarget, targetValidationResult),
+          () => builder.setResult(nonAvailableResult),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".setResult() throws a StateError if the given target already has a target validation result",
+      ".setResult() throws a StateError if the given result contains the target that already has a target validation result",
       () {
-        builder.setResult(firstTarget, targetValidationResult);
+        builder.setResult(targetValidationResult);
 
         expect(
-          () => builder.setResult(firstTarget, targetValidationResult),
+          () => builder.setResult(targetValidationResult),
           throwsStateError,
         );
       },
     );
 
     test(
-      ".setResult() sets the given target validation result to the given target",
+      ".setResult() sets the given target validation result to the corresponding target",
       () {
         const target = ValidationTarget(name: 'name');
         final builder = ValidationResultBuilder.forTargets([target]);
 
-        builder.setResult(target, targetValidationResult);
+        builder.setResult(targetValidationResult);
 
         final result = builder.build();
         final validationResults = result.results;
@@ -107,7 +112,7 @@ void main() {
     test(
       ".setEmptyResults() does not override the non-empty target validation results",
       () {
-        builder.setResult(firstTarget, targetValidationResult);
+        builder.setResult(targetValidationResult);
 
         builder.setEmptyResults(anotherTargetValidationResult);
 
@@ -134,8 +139,8 @@ void main() {
     test(
       ".build() returns a validation result containing target validation results that were set",
       () {
-        builder.setResult(firstTarget, targetValidationResult);
-        builder.setResult(secondTarget, anotherTargetValidationResult);
+        builder.setResult(targetValidationResult);
+        builder.setResult(anotherTargetValidationResult);
 
         final result = builder.build();
         final validationResults = result.results;
