@@ -25,14 +25,17 @@ class ValidationResultBuilder {
     }
   }
 
-  /// Sets the [result] for the given [target].
+  /// Sets the [result] for the corresponding [TargetValidationResult.target].
   ///
-  /// Throws an [ArgumentError] if the provided [target] is not included in the
-  /// [ValidationResult] this builder assembles.
+  /// Throws an [ArgumentError] if the [TargetValidationResult.target] of
+  /// the given [result] is not included in the [ValidationResult]
+  /// this builder assembles.
   ///
-  /// Throws a [StateError] if the provided [target] already has the
-  /// [TargetValidationResult].
-  void setResult(ValidationTarget target, TargetValidationResult result) {
+  /// Throws a [StateError] if the [TargetValidationResult.target] of
+  /// the given [result] already has the [TargetValidationResult].
+  void setResult(TargetValidationResult result) {
+    final target = result.target;
+
     if (!_results.containsKey(target)) {
       throw ArgumentError('The provided target is not available to set.');
     }
