@@ -5,7 +5,7 @@ import 'package:cli/services/flutter/cli/flutter_cli.dart';
 import 'package:cli/services/flutter/flutter_service.dart';
 
 /// An adapter for the [FlutterCli] to implement the [FlutterService]
-/// interface.
+/// abstract methods.
 class FlutterCliServiceAdapter extends FlutterService {
   /// A [FlutterCli] class that provides an ability to interact
   /// with the Flutter CLI.

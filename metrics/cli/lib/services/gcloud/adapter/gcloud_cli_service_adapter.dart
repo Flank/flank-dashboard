@@ -9,7 +9,8 @@ import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/gcloud/strings/gcloud_strings.dart';
 import 'package:random_string/random_string.dart';
 
-/// An adapter for the [GCloudCli] to implement the [GCloudService] interface.
+/// An adapter for the [GCloudCli] to implement the [GCloudService]
+/// abstract methods.
 class GCloudCliServiceAdapter extends GCloudService {
   /// A [GCloudCli] class that provides an ability to interact
   /// with the GCloud CLI.
