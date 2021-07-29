@@ -39,6 +39,9 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   /// A [ChangeNotifier] that manages navigation.
   NavigationNotifier _navigationNotifier;
 
+  /// A [PageNotifier] that provides an ability to handle page parameters.
+  PageNotifier get _pageNotifier => widget.pageNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -61,17 +64,17 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   void _navigationNotifierListener() {
     final pageParameters = _navigationNotifier.currentPageParameters;
 
-    widget.pageNotifier.handlePageParameters(pageParameters);
+    _pageNotifier.handlePageParameters(pageParameters);
   }
 
   /// Subscribes to [PageNotifier]'s updates.
   void _subscribeToPageNotifierUpdates() {
-    widget.pageNotifier.addListener(_pageNotifierListener);
+    _pageNotifier.addListener(_pageNotifierListener);
   }
 
   /// Handles the [PageParametersModel] updates using the [NavigationNotifier].
   void _pageNotifierListener() {
-    final pageParameters = widget.pageNotifier.pageParameters;
+    final pageParameters = _pageNotifier.pageParameters;
 
     _navigationNotifier.handlePageParametersUpdates(pageParameters);
   }
@@ -84,7 +87,7 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   @override
   void dispose() {
     _navigationNotifier.removeListener(_navigationNotifierListener);
-    widget.pageNotifier.removeListener(_pageNotifierListener);
+    _pageNotifier.removeListener(_pageNotifierListener);
     super.dispose();
   }
 }
