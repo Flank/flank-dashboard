@@ -4,7 +4,7 @@
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/integration/validation/model/config_field_target_validation_result.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
@@ -46,8 +46,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     final authValidationResult = await validationDelegate.validateAuth(auth);
     validationResultBuilder.setResult(authValidationResult);
 
-    if (authValidationResult.conclusion ==
-        ConfigFieldValidationConclusion.invalid) {
+    if (authValidationResult.isFailure) {
       return _finalizeValidationResult(
         BuildkiteSourceValidationTarget.accessToken,
         BuildkiteStrings.tokenInvalidInterruptReason,
@@ -73,8 +72,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
         await validationDelegate.validateOrganizationSlug(organizationSlug);
     validationResultBuilder.setResult(organizationSlugValidationResult);
 
-    if (organizationSlugValidationResult.conclusion ==
-        ConfigFieldValidationConclusion.invalid) {
+    if (organizationSlugValidationResult.isFailure) {
       return _finalizeValidationResult(
         BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.organizationInvalidInterruptReason,
@@ -112,30 +110,25 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
   }
 
   /// Sets empty results of the [validationResultBuilder] to the
-  /// [TargetValidationResult] with the given [target], [interruptReason],
-  /// and [ConfigFieldValidationConclusion.unknown] as a
-  /// [TargetValidationResult.conclusion].
+  /// [ConfigFieldTargetValidationResult.unknown].
   void _setEmptyTargets(ValidationTarget target, String interruptReason) {
-    final emptyFieldResult = TargetValidationResult(
+    final emptyFieldResult = ConfigFieldTargetValidationResult.unknown(
       target: target,
-      conclusion: ConfigFieldValidationConclusion.unknown,
       description: interruptReason,
     );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }
 
-  /// Sets the [TargetValidationResult] with the
-  /// [ConfigFieldValidationConclusion.unknown] conclusion and the given
-  /// [description] to the given [target] using
+  /// Sets the given [target] and [description] to the
+  /// [ConfigFieldTargetValidationResult.unknown] using
   /// the [validationResultBuilder].
   void _setUnknownTargetValidationResult(
     ValidationTarget target,
     String description,
   ) {
-    final validationResult = TargetValidationResult(
+    final validationResult = ConfigFieldTargetValidationResult.unknown(
       target: target,
-      conclusion: ConfigFieldValidationConclusion.unknown,
       description: description,
     );
 

@@ -3,7 +3,7 @@
 
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/integration/validation/model/config_field_target_validation_result.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
@@ -25,9 +25,6 @@ void main() {
     const pipelineTarget = BuildkiteSourceValidationTarget.pipelineSlug;
     const accessTokenTarget = BuildkiteSourceValidationTarget.accessToken;
     const organizationTarget = BuildkiteSourceValidationTarget.organizationSlug;
-    const validConclusion = ConfigFieldValidationConclusion.valid;
-    const invalidConclusion = ConfigFieldValidationConclusion.invalid;
-    const unknownConclusion = ConfigFieldValidationConclusion.unknown;
 
     const allRequiredScopesToken = BuildkiteToken(
       scopes: [
@@ -41,26 +38,20 @@ void main() {
     const organizationScopeToken = BuildkiteToken(
       scopes: [BuildkiteTokenScope.readOrganizations],
     );
-    const failureAccessTokenValidationResult = TargetValidationResult(
+    const failureAccessTokenValidationResult =
+        ConfigFieldTargetValidationResult.failure(
       target: accessTokenTarget,
-      conclusion: invalidConclusion,
       data: null,
     );
-    const pipelineScopeValidationResult = TargetValidationResult(
+    const pipelineScopeValidationResult =
+        ConfigFieldTargetValidationResult.success(
       target: pipelineTarget,
-      conclusion: validConclusion,
       data: pipelineScopeToken,
     );
-    const failureTargetValidationResult = TargetValidationResult(
-      target: pipelineTarget,
-      conclusion: invalidConclusion,
-      data: null,
-    );
-    const successTargetValidationResult = TargetValidationResult(
-      target: pipelineTarget,
-      conclusion: validConclusion,
-      data: null,
-    );
+    const failureTargetValidationResult =
+        ConfigFieldTargetValidationResult.failure(target: pipelineTarget);
+    const successTargetValidationResult =
+        ConfigFieldTargetValidationResult.success(target: pipelineTarget);
 
     final config = BuildkiteSourceConfig(
       accessToken: accessToken,
@@ -78,19 +69,18 @@ void main() {
     final results = {pipelineTarget: successTargetValidationResult};
     final validationResult = ValidationResult(results);
 
-    PostExpectation<Future<TargetValidationResult<BuildkiteToken>>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult<BuildkiteToken>>>
         whenValidateAuth() {
       return when(validationDelegate.validateAuth(auth));
     }
 
-    PostExpectation<Future<TargetValidationResult>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult>>
         whenValidateOrganizationSlug({
       BuildkiteToken accessToken,
     }) {
       whenValidateAuth().thenAnswer(
-        (_) => Future.value(TargetValidationResult(
+        (_) => Future.value(ConfigFieldTargetValidationResult.success(
           target: pipelineTarget,
-          conclusion: validConclusion,
           data: accessToken,
         )),
       );
@@ -100,13 +90,13 @@ void main() {
       );
     }
 
-    PostExpectation<Future<TargetValidationResult>> whenValidatePipelineSlug() {
+    PostExpectation<Future<ConfigFieldTargetValidationResult>>
+        whenValidatePipelineSlug() {
       whenValidateOrganizationSlug(
         accessToken: allRequiredScopesToken,
       ).thenAnswer(
-        (_) => Future.value(const TargetValidationResult(
+        (_) => Future.value(const ConfigFieldTargetValidationResult.success(
           target: pipelineTarget,
-          conclusion: validConclusion,
         )),
       );
 
@@ -189,9 +179,8 @@ void main() {
     test(
       ".validate() sets empty results with the unknown target validation result with the 'token invalid' description if the access token validation fails",
       () async {
-        const expectedResult = TargetValidationResult(
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
           target: accessTokenTarget,
-          conclusion: unknownConclusion,
           description: BuildkiteStrings.tokenInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer(
@@ -249,9 +238,8 @@ void main() {
     test(
       ".validate() sets the unknown organization slug target validation result with the 'no scopes to validate organization' description if the access token has no scope to validate the organization slug",
       () async {
-        const expectedResult = TargetValidationResult(
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
           target: organizationTarget,
-          conclusion: unknownConclusion,
           description: BuildkiteStrings.noScopesToValidateOrganization,
         );
         whenValidateAuth().thenAnswer(
@@ -267,9 +255,8 @@ void main() {
     test(
       ".validate() sets empty results with the unknown target validation result with the 'organization can't be validated' description if the access token has no scope to validate the organization slug",
       () async {
-        const expectedResult = TargetValidationResult(
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
           target: organizationTarget,
-          conclusion: unknownConclusion,
           description:
               BuildkiteStrings.organizationCantBeValidatedInterruptReason,
         );
@@ -357,9 +344,8 @@ void main() {
     test(
       ".validate() sets empty results with the unknown target validation result with the 'organization slug is invalid' description after the organization slug validation fails",
       () async {
-        const expectedResult = TargetValidationResult(
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
           target: organizationTarget,
-          conclusion: unknownConclusion,
           description: BuildkiteStrings.organizationInvalidInterruptReason,
         );
         whenValidateOrganizationSlug(
@@ -404,9 +390,8 @@ void main() {
     test(
       ".validate() sets the unknown pipeline slug target validation result with the 'no scopes to validate pipeline' description if the access token hasn't scope to validate the pipeline slug",
       () async {
-        const expectedResult = TargetValidationResult(
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
           target: pipelineTarget,
-          conclusion: unknownConclusion,
           description: BuildkiteStrings.noScopesToValidatePipeline,
         );
         whenValidateOrganizationSlug(
@@ -465,13 +450,13 @@ void main() {
       ".validate() sets the pipeline slug target validation result returned by the validation delegate",
       () async {
         whenValidatePipelineSlug().thenAnswer(
-          (_) => Future.value(successTargetValidationResult),
+          (_) => Future.value(pipelineScopeValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setResult(successTargetValidationResult),
+          validationResultBuilder.setResult(pipelineScopeValidationResult),
         ).called(once);
       },
     );
