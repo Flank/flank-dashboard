@@ -44,10 +44,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     final auth = BearerAuthorization(accessToken);
 
     final authValidationResult = await validationDelegate.validateAuth(auth);
-    validationResultBuilder.setResult(
-      BuildkiteSourceValidationTarget.accessToken,
-      authValidationResult,
-    );
+    validationResultBuilder.setResult(authValidationResult);
 
     if (authValidationResult.conclusion ==
         ConfigFieldValidationConclusion.invalid) {
@@ -74,10 +71,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
 
     final organizationSlugValidationResult =
         await validationDelegate.validateOrganizationSlug(organizationSlug);
-    validationResultBuilder.setResult(
-      BuildkiteSourceValidationTarget.organizationSlug,
-      organizationSlugValidationResult,
-    );
+    validationResultBuilder.setResult(organizationSlugValidationResult);
 
     if (organizationSlugValidationResult.conclusion ==
         ConfigFieldValidationConclusion.invalid) {
@@ -100,10 +94,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
 
     final pipelineSlugValidationResult =
         await validationDelegate.validatePipelineSlug(pipelineSlug);
-    validationResultBuilder.setResult(
-      BuildkiteSourceValidationTarget.pipelineSlug,
-      pipelineSlugValidationResult,
-    );
+    validationResultBuilder.setResult(pipelineSlugValidationResult);
 
     return validationResultBuilder.build();
   }
@@ -148,7 +139,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
       description: description,
     );
 
-    validationResultBuilder.setResult(target, validationResult);
+    validationResultBuilder.setResult(validationResult);
   }
 
   /// Checks that the given [token] has enough scopes for
