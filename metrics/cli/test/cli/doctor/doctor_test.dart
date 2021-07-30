@@ -3,6 +3,7 @@
 
 import 'package:cli/cli/doctor/doctor.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -195,10 +196,20 @@ void main() {
     );
 
     test(
+      ".checkVersions() returns an instance of the ValidationResult",
+      () async {
+        final result = await doctor.checkVersions();
+
+        expect(result, isA<ValidationResult>());
+      },
+    );
+
+    test(
       ".checkVersions() proceeds if GCloud service throws during the version showing",
       () async {
-        when(gcloudService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          gcloudService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -213,8 +224,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Flutter service throws during the version showing",
       () async {
-        when(flutterService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          flutterService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -229,8 +241,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Firebase service throws during the version showing",
       () async {
-        when(firebaseService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -275,8 +288,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Sentry service throws during the version showing",
       () async {
-        when(sentryService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
