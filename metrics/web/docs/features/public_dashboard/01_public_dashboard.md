@@ -281,9 +281,9 @@ Consider the following subsections that describe each module changes in more det
 The first important part is adding the ability to track the feature state to change the behavior of our application correspondingly.
 
 To implement this, we should follow the next steps:
-- add the `isPublicDashboardFeatureEnabled` boolean field to the `FeatureConfig` model;
-- change the `FeatureConfigData`'s `fromJson()` and `toJson()` methods, so they include handling the new added field;
-- create the [`PublicDashboardFeatureConfigViewModel`](#PublicDashboardFeatureConfigViewModel) and initialize it in the `FeatureConfigNotifier` as the other ones.
+1. Add the `isPublicDashboardFeatureEnabled` boolean field to the `FeatureConfig` model; 
+2. Change the `FeatureConfigData`'s `fromJson()` and `toJson()` methods, so they include handling the new added field;
+3. Create the [`PublicDashboardFeatureConfigViewModel`](#PublicDashboardFeatureConfigViewModel) and initialize it in the `FeatureConfigNotifier` as the other ones.
 
 Let's review the following class diagram, which describes the relationship between the classes in this module:
 
@@ -325,9 +325,9 @@ Let's review each of the above points in the following subsections
 ##### Auto sign in the user anonymously
 
 To auto sign in the user anonymously, we should make the following:
-- find the loading page;
-- add the condition to the loading page after the initialization, if the public dashboard feature is enabled (this we can take from the `FeatureConfigNotifier`), and if the user is logged out (this we can take from the `AuthNotifier`);
-- then sign in user anonymously using the `AuthNotifier`.
+1. Find the loading page; 
+2. Add the condition to the loading page after the initialization, if the public dashboard feature is enabled (this we can take from the `FeatureConfigNotifier`), and if the user is logged out (this we can take from the `AuthNotifier`); 
+3. Then sign in user anonymously using the `AuthNotifier`.
 
 ##### Manage sign in for the anonymous user
 
