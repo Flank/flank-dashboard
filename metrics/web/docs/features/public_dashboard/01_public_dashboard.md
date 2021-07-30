@@ -185,7 +185,7 @@ Since we should sign in the user anonymously after the app initializing, we shou
 #### UserProfileViewModel
 > Explain the purpose and responsibility of the class.
 
-Since we want to disable some features on the UI if the user is anonymous, we should be able to access the user profile from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, we should create a view model representing a user profile to disable the `Project Groups` page and provide the ability to `Sign In` to the application for the anonymous users.
+To disable some features on the UI when the user is anonymous, we should have access the user profile from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, we should create a view model representing a user profile to disable the `Project Groups` page and provide the ability to `Sign In` to the application for the anonymous users.
 
 #### SignInAnonymouslyUseCase
 > Explain the purpose and responsibility of the class.
@@ -195,12 +195,15 @@ Since the public dashboard feature implies logging in as an anonymous user, we s
 #### AuthState
 > Explain the purpose and responsibility of the class.
 
-Since we should know whether the user signed in anonymously or using sign in providers or credentials, or logged out, we should provide an enum, which should contain all the described states. 
+Since we should know the authentication state of the user, we should provide an enum that will contain all the following states:
+- authenticated
+- anonymous
+- notAuthenticated
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
 
-Since the non-authorized users should not be able to access the `Project Groups` page, it should be hidden from the user menu for such users. Also, there should be an ability to sign in for anonymous users, so we should change the `Logout` button from the user menu to `Sign in` one. 
+As we've mentioned above, the non-authorized users should not be able to access the `Project Groups` page. Because of this, we should hide this option from the user menu for anonymous users. Also, there should be an ability to sign in for anonymous users, so we should change the `Logout` button from the user menu to the `Sign in` one. 
 
 Let's consider the user menu UI in case we are using an anonymous user: 
 
@@ -267,9 +270,9 @@ Please, note that if the collection is not mentioned in the list above, the coll
  
 The implementation of the public dashboard feature involves the changes in the following modules:
 
-- [the `feature config` module;](#featureconfig-module)
-- [the `auth` module;](#auth-module)
-- [the `navigation` module;](#navigation-module)
+- [The `feature config` module](#featureconfig-module).
+- [The `auth` module](#auth-module).
+- [The `navigation` module](#navigation-module).
 
 Consider the following subsections that describe each module changes in more detail.
 
