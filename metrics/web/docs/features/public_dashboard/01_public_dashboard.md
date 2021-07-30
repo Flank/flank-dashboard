@@ -22,7 +22,7 @@ As a user, I want to be able to enable public access to the dashboard page in my
         - [SignInAnonymouslyUseCase](#SignInAnonymouslyUseCase)
         - [AuthState](#AuthState)  
     - [User Interface](#user-interface)
-    - [Database](#database)
+    - [Data Storage](#data-storage)
         - [Storing the public dashboard configuration](#storing-the-public-dashboard-configuration)
         - [Accessing the data using the anonymous user](#accessing-the-data-using-the-anonymous-user)
     - [Privacy](#privacy)
@@ -206,13 +206,13 @@ Let's consider the user menu UI in case we are using an anonymous user:
 
 ![Anonymous User Menu](images/menu.png)
 
-### Database
+### Data Storage
 > How relevant data will be persisted and protected.
 
 The public dashboard menu requires changes in the `Firestore` database that can be divided into two different parts:
 
-- [Storing the public dashboard configuration](#Storing-the-public-dashboard-configuration).
-- [Accessing the data using the anonymous user](#Accessing-the-data-using-the-anonymous-user).
+- [Storing the public dashboard configuration](#storing-the-public-dashboard-configuration).
+- [Accessing the data using the anonymous user](#accessing-the-data-using-the-anonymous-user).
 
 Let's consider each of them in more detail: 
 
@@ -275,7 +275,7 @@ Consider the following subsections that describe each module changes in more det
 
 #### FeatureConfig module
 
-The first important part is adding the ability to track the feature state, so that we can change the behavior of our application correspondingly.
+The first important part is adding the ability to track the feature state to change the behavior of our application correspondingly.
 
 To implement this, we should follow the next steps:
 - add the `isPublicDashboardFeatureEnabled` boolean field to the `FeatureConfig` model;
@@ -288,7 +288,7 @@ Let's review the following class diagram, which describes the relationship betwe
 
 #### Auth module
 
-The next one, we should add the ability to sign-in anonymously. Also, we should know whether the user sign-in anonymously. For these purposes, we should make the following changes in the `auth` module:
+Next, we should add the ability to sign in anonymously and detect this kind of user. For these purposes, we should make the following changes in the `auth` module:
 - add the `signInAnonymously()` method to the `UserRepository` abstract class;
 - add the implementation of the `signInAnonymously()` method to the `FirebaseUserRepository` class;
 - create the [`SignInAnonymouslyUseCase`](#SignInAnonymouslyUseCase) class, which calls the `signInAnonymously()` method of the `UserRepository`;
