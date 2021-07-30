@@ -4,10 +4,14 @@
 import 'dart:async';
 
 import 'package:cli/services/common/info_service.dart';
+import 'package:cli/services/common/service/model/service_name.dart';
 
 /// An abstract class for GCloud service that provides methods
 /// for working with GCloud.
 abstract class GCloudService extends InfoService {
+  @override
+  ServiceName get serviceName => ServiceName.gcloud;
+
   /// Logins into the GCloud.
   Future<void> login();
 

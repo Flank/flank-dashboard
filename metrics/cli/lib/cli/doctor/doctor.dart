@@ -8,6 +8,7 @@ import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/git/git_service.dart';
 import 'package:cli/services/npm/npm_service.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides an ability to check whether all required third-party
 /// services are available and get their versions.
@@ -56,14 +57,17 @@ class Doctor {
     ArgumentError.checkNotNull(_sentryService, 'sentryService');
   }
 
-  /// Checks versions of the required third-party services.
-  Future<void> checkVersions() async {
+  /// Returns the [ValidationResult] of versions checking for the required
+  /// third-party services.
+  Future<ValidationResult> checkVersions() async {
     await _checkVersion(_flutterService);
     await _checkVersion(_gcloudService);
     await _checkVersion(_npmService);
     await _checkVersion(_gitService);
     await _checkVersion(_firebaseService);
     await _checkVersion(_sentryService);
+
+    return ValidationResult(const {});
   }
 
   /// Checks version of the third-party [service].

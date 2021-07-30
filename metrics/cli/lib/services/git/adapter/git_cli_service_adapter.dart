@@ -1,11 +1,13 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/git/cli/git_cli.dart';
 import 'package:cli/services/git/git_service.dart';
 
-/// An adapter for the [GitCli] to implement the [GitService] interface.
-class GitCliServiceAdapter implements GitService {
+/// An adapter for the [GitCli] to implement the [GitService] abstract methods.
+class GitCliServiceAdapter extends GitService {
   /// A [GitCli] class that provides an ability to interact with the Git CLI.
   final GitCli _gitCli;
 
@@ -23,7 +25,7 @@ class GitCliServiceAdapter implements GitService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _gitCli.version();
   }
 }

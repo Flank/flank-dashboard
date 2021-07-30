@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/gcloud/cli/gcloud_cli.dart';
@@ -9,8 +10,9 @@ import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/gcloud/strings/gcloud_strings.dart';
 import 'package:random_string/random_string.dart';
 
-/// An adapter for the [GCloudCli] to implement the [GCloudService] interface.
-class GCloudCliServiceAdapter implements GCloudService {
+/// An adapter for the [GCloudCli] to implement the [GCloudService]
+/// abstract methods.
+class GCloudCliServiceAdapter extends GCloudService {
   /// A [GCloudCli] class that provides an ability to interact
   /// with the GCloud CLI.
   final GCloudCli _gcloudCli;
@@ -66,7 +68,7 @@ class GCloudCliServiceAdapter implements GCloudService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _gcloudCli.version();
   }
 
