@@ -5,7 +5,6 @@ import 'package:ci_integration/client/buildkite/models/buildkite_organization.da
 import 'package:ci_integration/client/buildkite/models/buildkite_pipeline.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
-import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
@@ -24,9 +23,7 @@ void main() {
     const pipelineSlug = 'pipeline_slug';
 
     const buildkiteToken = BuildkiteToken(
-      scopes: [
-        BuildkiteTokenScope.readBuilds,
-      ],
+      scopes: [BuildkiteTokenScope.readBuilds],
     );
     const readBuildsAndArtifactsScopes = [
       BuildkiteTokenScope.readBuilds,
@@ -92,9 +89,8 @@ void main() {
         when(client.fetchToken(auth)).thenErrorWith();
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
@@ -128,9 +124,8 @@ void main() {
         when(client.fetchToken(auth)).thenSuccessWith(null);
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
@@ -168,9 +163,8 @@ void main() {
         );
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
@@ -209,9 +203,8 @@ void main() {
         when(client.fetchToken(auth)).thenSuccessWith(buildkiteToken);
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(result.isSuccess, isTrue);
       },
     );
 
@@ -264,9 +257,8 @@ void main() {
         );
 
         final result = await delegate.validateAuth(auth);
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(result.isSuccess, isTrue);
       },
     );
 
@@ -290,9 +282,7 @@ void main() {
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
         final target = result.target;
 
         expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
@@ -304,12 +294,9 @@ void main() {
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
-        final conclusion = result.conclusion;
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
@@ -318,9 +305,7 @@ void main() {
       () async {
         when(client.fetchPipeline(pipelineSlug)).thenErrorWith();
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
         final description = result.description;
 
         expect(description, equals(BuildkiteStrings.pipelineNotFound));
@@ -334,9 +319,7 @@ void main() {
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
         final target = result.target;
 
         expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
@@ -350,25 +333,18 @@ void main() {
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(null);
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
-        final conclusion = result.conclusion;
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
       ".validatePipelineSlug() returns a target validation result with the 'pipeline not found' description if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchPipeline(pipelineSlug),
-        ).thenSuccessWith(null);
+        when(client.fetchPipeline(pipelineSlug)).thenSuccessWith(null);
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
         final description = result.description;
 
         expect(description, equals(BuildkiteStrings.pipelineNotFound));
@@ -382,9 +358,7 @@ void main() {
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(buildkitePipeline);
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
         final target = result.target;
 
         expect(target, equals(BuildkiteSourceValidationTarget.pipelineSlug));
@@ -398,12 +372,9 @@ void main() {
           client.fetchPipeline(pipelineSlug),
         ).thenSuccessWith(buildkitePipeline);
 
-        final result = await delegate.validatePipelineSlug(
-          pipelineSlug,
-        );
-        final conclusion = result.conclusion;
+        final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(result.isSuccess, isTrue);
       },
     );
 
@@ -429,25 +400,20 @@ void main() {
     test(
       ".validateOrganizationSlug() returns a target validation result with an invalid conclusion if the interaction with the client is not successful",
       () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenErrorWith();
+        when(client.fetchOrganization(organizationSlug)).thenErrorWith();
 
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
       ".validateOrganizationSlug() returns a target validation result with the 'organization not found' description if the interaction with the client is not successful",
       () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenErrorWith();
+        when(client.fetchOrganization(organizationSlug)).thenErrorWith();
 
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
@@ -461,9 +427,7 @@ void main() {
     test(
       ".validateOrganizationSlug() returns a target validation result with an organization slug target if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenSuccessWith(null);
+        when(client.fetchOrganization(organizationSlug)).thenSuccessWith(null);
 
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
@@ -480,25 +444,20 @@ void main() {
     test(
       ".validateOrganizationSlug() returns a target validation result with an invalid conclusion if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenSuccessWith(null);
+        when(client.fetchOrganization(organizationSlug)).thenSuccessWith(null);
 
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.invalid));
+        expect(result.isFailure, isTrue);
       },
     );
 
     test(
       ".validateOrganizationSlug() returns a target validation result with the 'organization not found' description if the result of an interaction with the client is null",
       () async {
-        when(
-          client.fetchOrganization(organizationSlug),
-        ).thenSuccessWith(null);
+        when(client.fetchOrganization(organizationSlug)).thenSuccessWith(null);
 
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
@@ -538,9 +497,8 @@ void main() {
         final result = await delegate.validateOrganizationSlug(
           organizationSlug,
         );
-        final conclusion = result.conclusion;
 
-        expect(conclusion, equals(ConfigFieldValidationConclusion.valid));
+        expect(result.isSuccess, isTrue);
       },
     );
   });

@@ -5,11 +5,10 @@ import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_token_scope.dart';
 import 'package:ci_integration/integration/interface/base/config/validation_delegate/validation_delegate.dart';
-import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:ci_integration/integration/validation/model/config_field_target_validation_result.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/strings/buildkite_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
-import 'package:metrics_core/metrics_core.dart';
 
 /// A [ValidationDelegate] for the Buildkite source integration.
 class BuildkiteSourceValidationDelegate implements ValidationDelegate {
@@ -29,15 +28,14 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
   }
 
   /// Validates the given [auth].
-  Future<TargetValidationResult<BuildkiteToken>> validateAuth(
+  Future<ConfigFieldTargetValidationResult<BuildkiteToken>> validateAuth(
     AuthorizationBase auth,
   ) async {
     final tokenInteraction = await _client.fetchToken(auth);
 
     if (tokenInteraction.isError || tokenInteraction.result == null) {
-      return const TargetValidationResult(
+      return const ConfigFieldTargetValidationResult.failure(
         target: BuildkiteSourceValidationTarget.accessToken,
-        conclusion: ConfigFieldValidationConclusion.invalid,
         description: BuildkiteStrings.tokenInvalid,
       );
     }
@@ -49,9 +47,8 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       (element) => tokenScopes.contains(element),
     );
     if (!containsRequiredScopes) {
-      return const TargetValidationResult(
+      return const ConfigFieldTargetValidationResult.failure(
         target: BuildkiteSourceValidationTarget.accessToken,
-        conclusion: ConfigFieldValidationConclusion.invalid,
         description: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
       );
     }
@@ -60,43 +57,39 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       BuildkiteTokenScope.readArtifacts,
     );
     if (!containsScopesToReadArtifacts) {
-      return TargetValidationResult(
+      return ConfigFieldTargetValidationResult.success(
         target: BuildkiteSourceValidationTarget.accessToken,
-        conclusion: ConfigFieldValidationConclusion.valid,
         description: BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope,
         data: token,
       );
     }
 
-    return TargetValidationResult(
+    return ConfigFieldTargetValidationResult.success(
       target: BuildkiteSourceValidationTarget.accessToken,
-      conclusion: ConfigFieldValidationConclusion.valid,
       data: token,
     );
   }
 
   /// Validates the given [pipelineSlug].
-  Future<TargetValidationResult<void>> validatePipelineSlug(
+  Future<ConfigFieldTargetValidationResult<void>> validatePipelineSlug(
     String pipelineSlug,
   ) async {
     final pipelineInteraction = await _client.fetchPipeline(pipelineSlug);
 
     if (pipelineInteraction.isError || pipelineInteraction.result == null) {
-      return const TargetValidationResult(
+      return const ConfigFieldTargetValidationResult.failure(
         target: BuildkiteSourceValidationTarget.pipelineSlug,
-        conclusion: ConfigFieldValidationConclusion.invalid,
         description: BuildkiteStrings.pipelineNotFound,
       );
     }
 
-    return const TargetValidationResult(
+    return const ConfigFieldTargetValidationResult.success(
       target: BuildkiteSourceValidationTarget.pipelineSlug,
-      conclusion: ConfigFieldValidationConclusion.valid,
     );
   }
 
   /// Validates the given [organizationSlug].
-  Future<TargetValidationResult<void>> validateOrganizationSlug(
+  Future<ConfigFieldTargetValidationResult<void>> validateOrganizationSlug(
     String organizationSlug,
   ) async {
     final organizationInteraction = await _client.fetchOrganization(
@@ -105,16 +98,14 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
 
     if (organizationInteraction.isError ||
         organizationInteraction.result == null) {
-      return const TargetValidationResult(
+      return const ConfigFieldTargetValidationResult.failure(
         target: BuildkiteSourceValidationTarget.organizationSlug,
-        conclusion: ConfigFieldValidationConclusion.invalid,
         description: BuildkiteStrings.organizationNotFound,
       );
     }
 
-    return const TargetValidationResult(
+    return const ConfigFieldTargetValidationResult.success(
       target: BuildkiteSourceValidationTarget.organizationSlug,
-      conclusion: ConfigFieldValidationConclusion.valid,
     );
   }
 }
