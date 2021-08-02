@@ -2,17 +2,20 @@
 // that can be found in the LICENSE file.
 
 import 'package:ci_integration/integration/validation/model/config_field_validation_conclusion.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents a [TargetValidationResult]s for config fields.
+/// A class that represents a [TargetValidationResult] for CI integrations
+/// config field.
 class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
-  /// Indicates whether this is a successful target validation result.
+  /// A flag that indicates whether this is a successful target validation
+  /// result.
   bool get isSuccess => conclusion == ConfigFieldValidationConclusion.valid;
 
-  /// Indicates whether this is a failure target validation result.
+  /// A flag that indicates whether this is a failure target validation result.
   bool get isFailure => conclusion == ConfigFieldValidationConclusion.invalid;
 
-  /// Indicates whether this is an unknown target validation result.
+  /// A flag that indicates whether this is an unknown target validation result.
   bool get isUnknown => conclusion == ConfigFieldValidationConclusion.unknown;
 
   /// Creates a new instance of the [ConfigFieldTargetValidationResult] with
@@ -21,8 +24,8 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   /// The given [target] must not be `null`.
   /// The given [conclusion] must not be `null`.
   const ConfigFieldTargetValidationResult._({
-    ValidationTarget target,
-    ValidationConclusion conclusion,
+    @required ValidationTarget target,
+    @required ValidationConclusion conclusion,
     String description,
     Map<String, dynamic> details,
     Map<String, dynamic> context,
@@ -46,8 +49,8 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   /// The [context] defaults to an empty [Map].
   ///
   /// The given [target] must not be `null`.
-  const ConfigFieldTargetValidationResult.success({
-    ValidationTarget target,
+  const ConfigFieldTargetValidationResult.valid({
+    @required ValidationTarget target,
     String description = '',
     Map<String, dynamic> details = const {},
     Map<String, dynamic> context = const {},
@@ -72,7 +75,7 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   ///
   /// The given [target] must not be `null`.
   const ConfigFieldTargetValidationResult.failure({
-    ValidationTarget target,
+    @required ValidationTarget target,
     String description = '',
     Map<String, dynamic> details = const {},
     Map<String, dynamic> context = const {},
@@ -98,7 +101,7 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   ///
   /// The given [target] must not be `null`.
   const ConfigFieldTargetValidationResult.unknown({
-    ValidationTarget target,
+    @required ValidationTarget target,
     String description = '',
     Map<String, dynamic> details = const {},
     Map<String, dynamic> context = const {},

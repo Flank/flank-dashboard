@@ -15,7 +15,7 @@ void main() {
     const context = {'context': 'test'};
     const data = 'data';
     const target = ValidationTarget(name: 'target');
-    const successResult = ConfigFieldTargetValidationResult.success(
+    const successResult = ConfigFieldTargetValidationResult.valid(
       target: target,
     );
     const failureResult = ConfigFieldTargetValidationResult.failure(
@@ -29,7 +29,7 @@ void main() {
       ".success() throws an AssertionError if the given target is null",
       () {
         expect(
-          () => ConfigFieldTargetValidationResult.success(target: null),
+          () => ConfigFieldTargetValidationResult.valid(target: null),
           throwsAssertionError,
         );
       },
@@ -38,7 +38,7 @@ void main() {
     test(
       ".success() creates an instance with the valid field validation conclusion",
       () {
-        const result = ConfigFieldTargetValidationResult.success(
+        const result = ConfigFieldTargetValidationResult.valid(
           target: target,
         );
 
@@ -47,9 +47,9 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with an empty description if the given description is not specified",
+      ".success() creates an instance with an empty description if the description is not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.success(
+        const result = ConfigFieldTargetValidationResult.valid(
           target: target,
         );
 
@@ -58,9 +58,9 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with an empty details if the given details is not specified",
+      ".success() creates an instance with empty details if the details are not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.success(
+        const result = ConfigFieldTargetValidationResult.valid(
           target: target,
         );
 
@@ -69,9 +69,9 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with an empty context if the given context is not specified",
+      ".success() creates an instance with an empty context if the context is not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.success(
+        const result = ConfigFieldTargetValidationResult.valid(
           target: target,
         );
 
@@ -82,7 +82,7 @@ void main() {
     test(
       ".success() creates an instance with the given parameters",
       () {
-        const result = ConfigFieldTargetValidationResult.success(
+        const result = ConfigFieldTargetValidationResult.valid(
           target: target,
           description: description,
           details: details,

@@ -120,9 +120,8 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     validationResultBuilder.setEmptyResults(emptyFieldResult);
   }
 
-  /// Sets the given [target] and [description] to the
-  /// [ConfigFieldTargetValidationResult.unknown] using
-  /// the [validationResultBuilder].
+  /// Sets the [ConfigFieldTargetValidationResult.unknown] with the given [description]
+  /// to the given [target] using the [validationResultBuilder].
   void _setUnknownTargetValidationResult(
     ValidationTarget target,
     String description,

@@ -44,14 +44,14 @@ void main() {
       data: null,
     );
     const pipelineScopeValidationResult =
-        ConfigFieldTargetValidationResult.success(
+        ConfigFieldTargetValidationResult.valid(
       target: pipelineTarget,
       data: pipelineScopeToken,
     );
     const failureTargetValidationResult =
         ConfigFieldTargetValidationResult.failure(target: pipelineTarget);
     const successTargetValidationResult =
-        ConfigFieldTargetValidationResult.success(target: pipelineTarget);
+        ConfigFieldTargetValidationResult.valid(target: pipelineTarget);
 
     final config = BuildkiteSourceConfig(
       accessToken: accessToken,
@@ -79,8 +79,8 @@ void main() {
       BuildkiteToken accessToken,
     }) {
       whenValidateAuth().thenAnswer(
-        (_) => Future.value(ConfigFieldTargetValidationResult.success(
-          target: pipelineTarget,
+        (_) => Future.value(ConfigFieldTargetValidationResult.valid(
+          target: accessTokenTarget,
           data: accessToken,
         )),
       );
@@ -95,8 +95,8 @@ void main() {
       whenValidateOrganizationSlug(
         accessToken: allRequiredScopesToken,
       ).thenAnswer(
-        (_) => Future.value(const ConfigFieldTargetValidationResult.success(
-          target: pipelineTarget,
+        (_) => Future.value(const ConfigFieldTargetValidationResult.valid(
+          target: organizationTarget,
         )),
       );
 

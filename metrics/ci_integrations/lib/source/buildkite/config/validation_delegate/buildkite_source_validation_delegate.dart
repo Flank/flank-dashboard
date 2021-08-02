@@ -57,14 +57,14 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       BuildkiteTokenScope.readArtifacts,
     );
     if (!containsScopesToReadArtifacts) {
-      return ConfigFieldTargetValidationResult.success(
+      return ConfigFieldTargetValidationResult.valid(
         target: BuildkiteSourceValidationTarget.accessToken,
         description: BuildkiteStrings.tokenDoesNotHaveReadArtifactsScope,
         data: token,
       );
     }
 
-    return ConfigFieldTargetValidationResult.success(
+    return ConfigFieldTargetValidationResult.valid(
       target: BuildkiteSourceValidationTarget.accessToken,
       data: token,
     );
@@ -83,7 +83,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       );
     }
 
-    return const ConfigFieldTargetValidationResult.success(
+    return const ConfigFieldTargetValidationResult.valid(
       target: BuildkiteSourceValidationTarget.pipelineSlug,
     );
   }
@@ -104,7 +104,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       );
     }
 
-    return const ConfigFieldTargetValidationResult.success(
+    return const ConfigFieldTargetValidationResult.valid(
       target: BuildkiteSourceValidationTarget.organizationSlug,
     );
   }
