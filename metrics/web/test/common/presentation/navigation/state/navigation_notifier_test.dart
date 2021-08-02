@@ -176,9 +176,7 @@ void main() {
 
         notifier.handleLoggedOut();
 
-        final pages = notifier.pages;
-
-        expect(pages, hasLength(1));
+        expect(notifier.pages, hasLength(1));
       },
     );
 
