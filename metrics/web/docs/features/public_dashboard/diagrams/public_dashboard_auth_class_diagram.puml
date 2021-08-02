@@ -1,7 +1,7 @@
 @startuml public_dashboard_auth_class_diagram
 
 package base.domain.usecases {
-    abstract class UseCase<Type, Params> {
+    interface UseCase<Type, Params> {
         + call(Params params): Type
     }
 }
@@ -33,7 +33,7 @@ package auth {
 
     package domain {
         package repositories {
-            class UserRepository {
+            interface UserRepository {
                 + signInAnonymously(): Future<void>
             }
         }

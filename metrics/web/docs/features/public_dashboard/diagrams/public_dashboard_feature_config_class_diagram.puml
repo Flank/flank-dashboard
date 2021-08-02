@@ -5,7 +5,7 @@ package feature_config {
         package view_models {
             class PublicDashboardFeatureConfigViewModel extends FeatureConfigViewModel {}
 
-            class FeatureConfigViewModel {
+            abstract class FeatureConfigViewModel {
                 + isEnabled: bool
             }
         }
