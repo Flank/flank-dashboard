@@ -42,7 +42,7 @@ void main() {
     void prepareNotifier() {
       notifier.handleAppInitialized(isAppInitialized: true);
 
-      notifier.handleLoggedIn();
+      notifier.handleLoggedOut();
     }
 
     setUp(() {
@@ -57,6 +57,7 @@ void main() {
       reset(pageParametersFactory);
       reset(pageRouteConfigurationFactory);
       reset(routeConfigurationLocationConverter);
+      reset(navigationState);
     });
 
     final isLoginPageName = equals(DefaultRoutes.login.path);
@@ -170,6 +171,7 @@ void main() {
     test(
       ".handleLoggedOut() clears pages and pushes to the login page when a user logs out",
       () {
+        notifier.handleLoggedIn();
         notifier.push(DefaultRoutes.dashboard);
 
         notifier.handleLoggedOut();
@@ -183,17 +185,25 @@ void main() {
     );
 
     test(
-      ".handleLoggedOut() does not clear pages and push to the login page when a user logs out from the login page",
+      ".handleLoggedOut() does not clear pages when a user logs out from the login page",
       () {
         notifier.push(DefaultRoutes.login);
 
+        notifier.handleLoggedOut();
+
+        expect(notifier.pages, hasLength(2));
+      },
+    );
+
+    test(
+      ".handleLoggedOut() does not push to the login page when a user logs out from the login page",
+      () {
         notifier.handleLoggedOut();
 
         final loginPagesCount = notifier.pages
             .where((page) => page.routeName == RouteName.login)
             .length;
 
-        expect(notifier.pages, hasLength(2));
         expect(loginPagesCount, equals(1));
       },
     );
@@ -210,18 +220,35 @@ void main() {
     );
 
     test(
-      ".handleLoggedIn() pushes the redirect route if the current redirect route is not null",
+      ".handleLoggedIn() pushes the redirect route if it is not null",
       () {
-        const expectedRouteConfiguration = DefaultRoutes.loading;
+        final expectedRouteConfiguration = DefaultRoutes.projectGroups;
 
         notifier.handleAppInitialized(isAppInitialized: false);
         notifier.handleInitialRoutePath(expectedRouteConfiguration);
+        notifier.handleAppInitialized(isAppInitialized: true);
 
         notifier.handleLoggedIn();
 
         final currentPage = notifier.pages.last;
 
         expect(currentPage.routeName, expectedRouteConfiguration.name);
+      },
+    );
+
+    test(
+      ".handleAuthenticationUpdates() clears pages and pushes to the login page when the user logs out",
+      () {
+        notifier.handleLoggedIn();
+        notifier.push(DefaultRoutes.dashboard);
+
+        notifier.handleLoggedOut();
+
+        final pages = notifier.pages;
+        final currentPage = pages.last;
+
+        expect(pages, hasLength(1));
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
@@ -380,13 +407,11 @@ void main() {
 
         notifier.handlePageParametersUpdates(null);
 
-        verifyNever(
-          navigationState.replaceState(
-            any,
-            any,
-            DefaultRoutes.projectGroups.path,
-          ),
-        );
+        verifyNever(navigationState.replaceState(
+          any,
+          any,
+          DefaultRoutes.projectGroups.path,
+        ));
       },
     );
 
@@ -440,7 +465,6 @@ void main() {
       ".handlePageParametersUpdates() does not update the browser URL if the given page parameters model is equal to the current page parameters",
       () {
         notifier.handleLoggedIn();
-
         notifier.push(DefaultRoutes.projectGroups);
 
         final currentPageParameters = notifier.currentPageParameters;
@@ -448,7 +472,10 @@ void main() {
         notifier.handlePageParametersUpdates(currentPageParameters);
 
         verifyNever(navigationState.replaceState(
-            any, any, DefaultRoutes.projectGroups.path));
+          any,
+          any,
+          DefaultRoutes.projectGroups.path,
+        ));
       },
     );
 
@@ -710,7 +737,6 @@ void main() {
     test(
       ".push() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.dashboard);
 
         final currentPage = notifier.pages.last;
@@ -722,7 +748,6 @@ void main() {
     test(
       ".push() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         final currentPage = notifier.pages.last;
@@ -870,7 +895,6 @@ void main() {
     test(
       ".pushReplacement() replaces the current page with the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushReplacement(DefaultRoutes.projectGroups);
@@ -884,7 +908,6 @@ void main() {
     test(
       ".pushReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushReplacement(DefaultRoutes.login);
@@ -899,7 +922,6 @@ void main() {
       ".pushReplacement() updates the current configuration",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.login);
 
         notifier.pushReplacement(expectedConfiguration);
@@ -990,7 +1012,6 @@ void main() {
     test(
       ".pushStateReplacement() replaces the current page with the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushStateReplacement(DefaultRoutes.projectGroups);
@@ -1004,7 +1025,6 @@ void main() {
     test(
       ".pushStateReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushStateReplacement(DefaultRoutes.login);
@@ -1019,7 +1039,6 @@ void main() {
       ".pushStateReplacement() updates the current configuration",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.login);
 
         notifier.pushStateReplacement(expectedConfiguration);
@@ -1032,7 +1051,7 @@ void main() {
       ".pushStateReplacement() replaces the navigation state path with the pushed route configuration path",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
-        notifier.handleLoggedOut();
+        // notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(DefaultRoutes.login);
 
         notifier.pushStateReplacement(expectedConfiguration);
@@ -1172,7 +1191,6 @@ void main() {
     test(
       ".pushAndRemoveUntil() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushAndRemoveUntil(
@@ -1189,7 +1207,6 @@ void main() {
     test(
       ".pushAndRemoveUntil() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
         notifier.push(DefaultRoutes.loading);
 
         notifier.pushAndRemoveUntil(
@@ -1262,8 +1279,6 @@ void main() {
     test(
       ".handleInitialRoutePath() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
-
         notifier.handleInitialRoutePath(DefaultRoutes.projectGroups);
 
         final currentPage = notifier.pages.last;
@@ -1275,8 +1290,6 @@ void main() {
     test(
       ".handleInitialRoutePath() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
-
         notifier.handleInitialRoutePath(DefaultRoutes.login);
 
         final currentPage = notifier.pages.last;
@@ -1386,8 +1399,6 @@ void main() {
     test(
       ".handleNewRoutePath() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
-
         notifier.handleNewRoutePath(DefaultRoutes.projectGroups);
 
         final currentPage = notifier.pages.last;
@@ -1399,8 +1410,6 @@ void main() {
     test(
       ".handleNewRoutePath() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
-        notifier.handleLoggedOut();
-
         notifier.handleNewRoutePath(DefaultRoutes.login);
 
         final currentPage = notifier.pages.last;

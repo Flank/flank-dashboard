@@ -91,7 +91,7 @@ class NavigationNotifier extends ChangeNotifier {
         assert(navigationState != null),
         _navigationState = navigationState;
 
-  /// Clears the pages stack and pushes the [DefaultRoutes.login].
+  /// Handles the log out of the user.
   ///
   /// Does nothing if a user is not logged in.
   void handleLoggedOut() {
@@ -109,16 +109,15 @@ class NavigationNotifier extends ChangeNotifier {
     }
   }
 
-  /// Replaces the current route with the redirect route,
-  /// or with the [DefaultRoutes.dashboard] if the redirect route is `null`.
+  /// Handles the log in of the user.
+  ///
+  /// Does nothing if a user is logged in.
   void handleLoggedIn() {
-    final RouteConfiguration configuration =
-        _redirectRoute ?? DefaultRoutes.dashboard;
+    if (_isUserLoggedIn) return;
 
     _isUserLoggedIn = true;
-    _redirectRoute = null;
 
-    pushStateReplacement(configuration);
+    _redirect();
   }
 
   /// Handles the application's initialization state update represented by the
@@ -261,11 +260,9 @@ class NavigationNotifier extends ChangeNotifier {
     _pages.clear();
 
     push(_redirectRoute);
+    replaceState(path: _redirectRoute.path);
 
-    final isAnyoneCanAccessRoute =
-        !_isUserLoggedIn && !_redirectRoute.authorizationRequired;
-
-    if (_isUserLoggedIn || isAnyoneCanAccessRoute) {
+    if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
       _redirectRoute = null;
     }
   }

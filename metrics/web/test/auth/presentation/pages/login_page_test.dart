@@ -6,7 +6,6 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -21,7 +20,6 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/matchers.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
@@ -167,31 +165,28 @@ void main() {
       "delegates to the navigation notifier if the login was successful",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
+        final authNotifier = AuthNotifierMock();
 
+        when(authNotifier.isLoading).thenReturn(false);
         when(navigationNotifier.currentConfiguration).thenReturn(
           DefaultRoutes.dashboard,
         );
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginPageTestbed(
-            authNotifier: AuthNotifierStub(),
-            navigationNotifier: navigationNotifier,
-          ));
+          return tester.pumpWidget(
+            _LoginPageTestbed(
+              authNotifier: authNotifier,
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
-
-        await tester.enterText(
-          find.widgetWithText(TextFormField, AuthStrings.email),
-          'test@email.com',
-        );
-        await tester.enterText(
-          find.widgetWithText(TextFormField, AuthStrings.password),
-          'testPassword',
-        );
-        await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
 
         await mockNetworkImagesFor(() {
           return tester.pumpAndSettle();
         });
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        authNotifier.notifyListeners();
 
         verify(navigationNotifier.handleLoggedIn()).called(once);
       },
