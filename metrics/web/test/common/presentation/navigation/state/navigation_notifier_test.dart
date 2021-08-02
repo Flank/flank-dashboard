@@ -169,7 +169,7 @@ void main() {
     );
 
     test(
-      ".handleLoggedOut() clears pages and pushes to the login page when a user logs out",
+      ".handleLoggedOut() clears pages when a user logs out",
       () {
         notifier.handleLoggedIn();
         notifier.push(DefaultRoutes.dashboard);
@@ -177,9 +177,21 @@ void main() {
         notifier.handleLoggedOut();
 
         final pages = notifier.pages;
-        final currentPage = pages.last;
 
         expect(pages, hasLength(1));
+      },
+    );
+
+    test(
+      ".handleLoggedOut() pushes to the login page when a user logs out",
+      () {
+        notifier.handleLoggedIn();
+        notifier.push(DefaultRoutes.dashboard);
+
+        notifier.handleLoggedOut();
+
+        final currentPage = notifier.pages.last;
+
         expect(currentPage.name, isLoginPageName);
       },
     );
