@@ -350,6 +350,22 @@ void main() {
     );
 
     test(
+      ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is loading page",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleLoggedIn();
+
+        notifier.push(DefaultRoutes.loading);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isDashboardPageName);
+      },
+    );
+
+    test(
       ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is null",
       () {
         notifier.handleLoggedIn();
@@ -409,6 +425,22 @@ void main() {
         final pages = notifier.pages;
 
         expect(pages, hasLength(equals(1)));
+      },
+    );
+
+    test(
+      ".handleAppInitialized() replaces the current navigation state using the redirect route path",
+      () {
+        final configuration = DefaultRoutes.projectGroups;
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleLoggedIn();
+        notifier.push(configuration);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        verify(
+          navigationState.replaceState(any, any, configuration.path),
+        ).called(once);
       },
     );
 

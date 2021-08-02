@@ -118,8 +118,6 @@ class NavigationNotifier extends ChangeNotifier {
     _isUserLoggedIn = true;
 
     _redirect();
-
-    replaceState(path: _currentConfiguration.path);
   }
 
   /// Handles the application's initialization state update represented by the
@@ -252,14 +250,17 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Redirects to the redirect route and clears it.
   ///
-  /// If the redirect route is `null`,
+  /// If the redirect route is [DefaultRoutes.loading] or `null`,
   /// redirects to the [DefaultRoutes.dashboard].
   void _redirect() {
-    _redirectRoute ??= DefaultRoutes.dashboard;
+    if (_redirectRoute == null || _redirectRoute == DefaultRoutes.loading) {
+      _redirectRoute = DefaultRoutes.dashboard;
+    }
 
     _pages.clear();
 
     push(_redirectRoute);
+    replaceState(path: _currentConfiguration.path);
 
     if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
       _redirectRoute = null;
