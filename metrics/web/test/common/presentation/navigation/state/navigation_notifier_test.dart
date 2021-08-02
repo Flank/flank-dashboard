@@ -413,22 +413,6 @@ void main() {
     );
 
     test(
-      ".handleAppInitialized() replaces the current navigation state using the redirect route path",
-      () {
-        final configuration = DefaultRoutes.projectGroups;
-        notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.handleLoggedIn();
-        notifier.handleInitialRoutePath(configuration);
-
-        notifier.handleAppInitialized(isAppInitialized: true);
-
-        verify(
-          navigationState.replaceState(any, any, configuration.path),
-        ).called(once);
-      },
-    );
-
-    test(
       ".handlePageParametersUpdates() does not change the current page parameters if the given page parameters model is null",
       () {
         when(pageParametersFactory.create(any)).thenReturn(pageParametersModel);
