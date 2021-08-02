@@ -296,7 +296,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// and saves the [_redirectRoute].
   ///
   /// If the user is not logged in and the given [configuration]
-  /// requires authorization, returns [DefaultRoutes.login]
+  /// requires authorization, saves the [_redirectRoute] and
+  /// returns [DefaultRoutes.login].
   ///
   /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
@@ -310,7 +311,11 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) return DefaultRoutes.login;
+    if (!_isUserLoggedIn && authorizationRequired) {
+      _redirectRoute = configuration;
+
+      return DefaultRoutes.login;
+    }
 
     return configuration;
   }

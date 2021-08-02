@@ -181,10 +181,6 @@ void main() {
           );
         });
 
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-
         when(authNotifier.isLoggedIn).thenReturn(true);
         authNotifier.notifyListeners();
 

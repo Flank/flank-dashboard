@@ -188,14 +188,14 @@ void main() {
 
         notifier.handleLoggedOut();
 
-        final currentPage = notifier.pages.last;
+        final currentConfiguration = notifier.currentConfiguration;
 
-        expect(currentPage.name, isLoginPageName);
+        expect(currentConfiguration.name, equals(RouteName.login));
       },
     );
 
     test(
-      ".handleLoggedOut() does not clear pages when a user logs out from the login page",
+      ".handleLoggedOut() does not clear pages when a user is not logged in",
       () {
         notifier.push(DefaultRoutes.login);
 
@@ -206,15 +206,15 @@ void main() {
     );
 
     test(
-      ".handleLoggedOut() does not push to the login page when a user logs out from the login page",
+      ".handleLoggedOut() does not push to the login page when a is not logged in",
       () {
+        final initialPagesLength = notifier.pages.length;
+
         notifier.handleLoggedOut();
 
-        final loginPagesCount = notifier.pages
-            .where((page) => page.routeName == RouteName.login)
-            .length;
+        final actualPagesLength = notifier.pages.length;
 
-        expect(loginPagesCount, equals(1));
+        expect(actualPagesLength, equals(initialPagesLength));
       },
     );
 
@@ -223,42 +223,95 @@ void main() {
       () {
         notifier.handleLoggedIn();
 
-        final currentPage = notifier.pages.last;
+        final currentConfigurationName = notifier.currentConfiguration.name;
 
-        expect(currentPage.name, isDashboardPageName);
+        expect(currentConfigurationName, equals(RouteName.dashboard));
+      },
+    );
+
+    test(
+      ".handleLoggedIn() pushes the loading route if the current redirect route is loading",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.push(DefaultRoutes.loading);
+
+        notifier.handleLoggedIn();
+
+        final currentConfigurationName = notifier.currentConfiguration.name;
+
+        expect(currentConfigurationName, equals(RouteName.loading));
+      },
+    );
+
+    test(
+      ".handleLoggedIn() clears pages before redirect",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        notifier.handleLoggedIn();
+
+        expect(notifier.pages, hasLength(equals(1)));
       },
     );
 
     test(
       ".handleLoggedIn() pushes the redirect route if it is not null",
       () {
-        final expectedRouteConfiguration = DefaultRoutes.projectGroups;
+        final configuration = DefaultRoutes.projectGroups;
 
         notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.handleInitialRoutePath(expectedRouteConfiguration);
+        notifier.handleInitialRoutePath(configuration);
         notifier.handleAppInitialized(isAppInitialized: true);
 
         notifier.handleLoggedIn();
 
-        final currentPage = notifier.pages.last;
+        final currentConfigurationName = notifier.currentConfiguration.name;
 
-        expect(currentPage.routeName, expectedRouteConfiguration.name);
+        expect(currentConfigurationName, configuration.name);
       },
     );
 
     test(
-      ".handleAuthenticationUpdates() clears pages and pushes to the login page when the user logs out",
+      ".handleLoggedIn() replaces the current navigation state using the redirect route path",
       () {
+        final configuration = DefaultRoutes.projectGroups;
+        notifier.push(configuration);
+
         notifier.handleLoggedIn();
-        notifier.push(DefaultRoutes.dashboard);
 
-        notifier.handleLoggedOut();
+        verify(
+          navigationState.replaceState(any, any, configuration.path),
+        ).called(once);
+      },
+    );
 
-        final pages = notifier.pages;
-        final currentPage = pages.last;
+    test(
+      ".handleLoggedIn() clears the redirect route after redirect if user is logged in",
+      () {
+        notifier.handleInitialRoutePath(DefaultRoutes.projectGroups);
 
-        expect(pages, hasLength(1));
-        expect(currentPage.name, isLoginPageName);
+        notifier.handleLoggedIn();
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final currentConfigurationName = notifier.currentConfiguration.name;
+
+        expect(currentConfigurationName, equals(RouteName.dashboard));
+      },
+    );
+
+    test(
+      ".handleLoggedIn() clears the redirect route after redirect if the route does not require authorization",
+      () {
+        notifier.handleInitialRoutePath(DefaultRoutes.login);
+
+        notifier.handleLoggedIn();
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final currentConfigurationName = notifier.currentConfiguration.name;
+
+        expect(currentConfigurationName, equals(RouteName.dashboard));
       },
     );
 
@@ -348,6 +401,22 @@ void main() {
         final pages = notifier.pages;
 
         expect(pages, hasLength(equals(1)));
+      },
+    );
+
+    test(
+      ".handleAppInitialized() replaces the current navigation state using the redirect route path",
+      () {
+        final configuration = DefaultRoutes.projectGroups;
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleLoggedIn();
+        notifier.handleInitialRoutePath(configuration);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        verify(
+          navigationState.replaceState(any, any, configuration.path),
+        ).called(once);
       },
     );
 
@@ -756,6 +825,18 @@ void main() {
     );
 
     test(
+      ".push() saves the redirect route if the user is not logged in, the given page requires authorization, and the app is initialized",
+      () {
+        final configuration = DefaultRoutes.projectGroups;
+        notifier.push(configuration);
+
+        notifier.handleLoggedIn();
+
+        expect(notifier.currentConfiguration.name, equals(configuration.name));
+      },
+    );
+
+    test(
       ".push() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.push(DefaultRoutes.loading);
@@ -1061,7 +1142,6 @@ void main() {
       ".pushStateReplacement() replaces the navigation state path with the pushed route configuration path",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
-        // notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(DefaultRoutes.login);
 
         notifier.pushStateReplacement(expectedConfiguration);
@@ -1294,6 +1374,18 @@ void main() {
         final currentPage = notifier.pages.last;
 
         expect(currentPage.name, isLoginPageName);
+      },
+    );
+
+    test(
+      ".handleInitialRoutePath() saves the redirect route if the user is not logged in, the given page requires authorization, and the app is initialized",
+      () {
+        final configuration = DefaultRoutes.projectGroups;
+        notifier.handleInitialRoutePath(configuration);
+
+        notifier.handleLoggedIn();
+
+        expect(notifier.currentConfiguration.name, equals(configuration.name));
       },
     );
 
