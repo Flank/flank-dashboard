@@ -377,8 +377,8 @@ void main() {
         authNotifier.subscribeToAuthenticationUpdates();
 
         final listener = expectAsyncUntil0(() {}, () {
-          if (authNotifier.isLoggedIn != null) {
-            return authNotifier.isLoggedIn;
+          if (authNotifier.authState != null) {
+            return authNotifier.authState;
           }
 
           return false;
@@ -445,7 +445,7 @@ void main() {
 
       await authNotifier.signOut();
 
-      expect(authNotifier.isLoggedIn, isFalse);
+      expect(authNotifier.authState, isFalse);
     });
 
     test(

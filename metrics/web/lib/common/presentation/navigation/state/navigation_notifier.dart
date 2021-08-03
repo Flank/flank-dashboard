@@ -3,6 +3,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
@@ -54,7 +55,9 @@ class NavigationNotifier extends ChangeNotifier {
   RouteConfiguration _redirectRoute;
 
   /// A flag that indicates whether the user is logged in.
-  bool _isUserLoggedIn = false;
+  AuthState _isUserLoggedIn = AuthState.loggedOut;
+
+  bool _isAnonymous = false;
 
   /// A flag that indicates whether the application is finished loading.
   bool _isAppInitialized = false;
@@ -91,13 +94,22 @@ class NavigationNotifier extends ChangeNotifier {
         assert(navigationState != null),
         _navigationState = navigationState;
 
+  ///
+  void authUpdates(AuthState state) {
+    switch(state) {
+      case AuthState.anonymous: _isUserLoggedIn = AuthState.anonymous; break;
+      case AuthState.loggedOut: _handleLoggedOut(); break;
+      default: break;
+    }
+  }
+
   /// Handles the log out of the user.
   ///
   /// Does nothing if a user is not logged in.
-  void handleLoggedOut() {
-    if (!_isUserLoggedIn) return;
+  void _handleLoggedOut() {
+    if (_isUserLoggedIn == AuthState.loggedOut) return;
 
-    _isUserLoggedIn = false;
+    _isUserLoggedIn = AuthState.loggedOut;
     _redirectRoute = null;
 
     final currentRouteName = currentConfiguration?.name;
@@ -109,13 +121,14 @@ class NavigationNotifier extends ChangeNotifier {
     }
   }
 
+
   /// Handles the log in of the user.
   ///
   /// Does nothing if a user is logged in.
   void handleLoggedIn() {
-    if (_isUserLoggedIn) return;
+    if (_isUserLoggedIn!=AuthState.loggedOut) return;
 
-    _isUserLoggedIn = true;
+    _isUserLoggedIn = AuthState.loggedIn;
 
     _redirect();
   }
@@ -265,7 +278,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     _pushWithStateReplacement(_redirectRoute);
 
-    if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
+    if (_isUserLoggedIn!=AuthState.loggedOut || !_redirectRoute.authorizationRequired) {
       _redirectRoute = null;
     }
   }
@@ -306,6 +319,8 @@ class NavigationNotifier extends ChangeNotifier {
   RouteConfiguration _processConfiguration(
     RouteConfiguration configuration,
   ) {
+    print('process configuration');
+    print(configuration.name);
     if (!_isAppInitialized) {
       _redirectRoute = configuration;
 
@@ -314,7 +329,8 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) {
+    if (_isUserLoggedIn == AuthState.loggedOut && authorizationRequired) {
+      print('IM LOGIN');
       _redirectRoute = configuration;
 
       return DefaultRoutes.login;

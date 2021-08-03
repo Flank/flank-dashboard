@@ -13,6 +13,7 @@ import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_anonymously_use_case.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -80,6 +81,8 @@ class InjectionContainer extends StatefulWidget {
 class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to sign in a user.
   SignInUseCase _signInUseCase;
+
+  SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
 
   /// A use case needed to be able to sign in a user with Google.
   GoogleSignInUseCase _googleSignInUseCase;
@@ -181,6 +184,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _receiveAuthUpdates = ReceiveAuthenticationUpdates(_userRepository);
     _signInUseCase = SignInUseCase(_userRepository);
+    _signInAnonymouslyUseCase = SignInAnonymouslyUseCase(_userRepository);
     _googleSignInUseCase = GoogleSignInUseCase(_userRepository);
     _signOutUseCase = SignOutUseCase(_userRepository);
 
@@ -225,6 +229,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,
       _signInUseCase,
+      _signInAnonymouslyUseCase,
       _googleSignInUseCase,
       _signOutUseCase,
       _receiveUserProfileUpdates,
@@ -299,9 +304,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
             _deleteProjectGroupUseCase,
           ),
           update: (_, authNotifier, projectsNotifier, projectGroupsNotifier) {
-            final isLoggedIn = authNotifier.isLoggedIn;
+            final isLoggedIn = authNotifier.authState;
 
-            if (isLoggedIn != null && isLoggedIn) {
+            if (isLoggedIn != null && isLoggedIn != AuthState.loggedOut) {
               projectGroupsNotifier.subscribeToProjectGroups();
             } else {
               projectGroupsNotifier.unsubscribeFromProjectGroups();
@@ -357,11 +362,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// Listens to [AuthNotifier]'s updates.
   void _authNotifierListener() {
     final updatedUserProfile = _authNotifier.userProfileModel;
-    final isLoggedIn = _authNotifier.isLoggedIn;
+    final authState = _authNotifier.authState;
 
-    if (!isLoggedIn) {
-      _navigationNotifier.handleLoggedOut();
-    }
+    _navigationNotifier.authUpdates(authState);
 
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
@@ -380,11 +383,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
     AuthNotifier authNotifier,
     ProjectsNotifier projectsNotifier,
   ) {
-    final isLoggedIn = authNotifier.isLoggedIn;
+    final isLoggedIn = authNotifier.authState;
 
     if (isLoggedIn == null) return;
 
-    if (isLoggedIn) {
+    if (isLoggedIn != AuthState.loggedOut) {
       projectsNotifier.subscribeToProjects();
     } else {
       projectsNotifier.unsubscribeFromProjects();

@@ -12,12 +12,15 @@ class User {
   /// An email of the user.
   final String email;
 
+  final bool isAnonymous;
+
   /// Creates a new instance of the [User] with the given [id] and [email].
   ///
   /// The [id] must not be `null`.
   User({
     @required this.id,
     this.email,
+    this.isAnonymous,
   }) {
     ArgumentError.checkNotNull(id, 'id');
   }

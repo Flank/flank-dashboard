@@ -42,7 +42,7 @@ class _LoadingPageState extends State<LoadingPage>
   DebugMenuNotifier _debugMenuNotifier;
 
   /// Indicates whether a user is logged in or not.
-  bool _isLoggedIn;
+  AuthState _authState;
 
   /// Indicates whether a feature config is initialized or not.
   bool _isFeatureConfigInitialized = false;
@@ -52,7 +52,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
-      _isLoggedIn != null &&
+      _authState != null &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
 
@@ -140,9 +140,10 @@ class _LoadingPageState extends State<LoadingPage>
     _debugMenuNotifier.addListener(_debugMenuNotifierListener);
   }
 
-  /// Updates the [_isLoggedIn] value depending on the [AuthNotifier] state.
+  /// Updates the [AuthState] value depending on the [AuthNotifier] state.
   void _authNotifierListener() {
-    _isLoggedIn = _authNotifier.isLoggedIn;
+    print('LISTENER STATE: ${_authNotifier.authState}');
+    _authState = _authNotifier.authState;
 
     _handleIsInitializedChanged();
   }
@@ -190,6 +191,17 @@ class _LoadingPageState extends State<LoadingPage>
   /// Handles the application initialization state changes.
   void _handleIsInitializedChanged() {
     if (!_isInitialized) return;
+
+    final publicDashboardFeature = _featureConfigNotifier.publicDashboardFeatureViewModel.isEnabled;
+
+    if(publicDashboardFeature && _authState==AuthState.loggedOut) {
+      print('handle logged in');
+      _authNotifier.signInAnonymously();
+
+      return;
+    }
+
+    print('FINISH');
 
     final notifier = Provider.of<NavigationNotifier>(context, listen: false);
 

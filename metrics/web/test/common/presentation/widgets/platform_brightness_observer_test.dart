@@ -61,7 +61,7 @@ void main() {
         final themeNotifier = ThemeNotifierMock();
         final authNotifier = AuthNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
 
         await tester.pumpWidget(
           _PlatformBrightnessObserverTestbed(

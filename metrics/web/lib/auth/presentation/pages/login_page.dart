@@ -46,9 +46,9 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Navigates to the dashboard screen once the user becomes logged in.
   void _loggedInListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
+    final authState = _authNotifier.authState;
 
-    if (isLoggedIn != null && isLoggedIn) {
+    if (authState != null && authState!=AuthState.loggedOut) {
       final navigationNotifier = Provider.of<NavigationNotifier>(
         context,
         listen: false,

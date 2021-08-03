@@ -44,7 +44,7 @@ void main() {
       (tester) async {
         final authNotifier = AuthNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
 
         await tester.pumpWidget(MetricsDrawerTestbed(
           authNotifier: authNotifier,

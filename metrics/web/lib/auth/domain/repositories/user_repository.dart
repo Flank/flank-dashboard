@@ -58,4 +58,6 @@ abstract class UserRepository {
   ///
   /// Throws a [PersistentStoreException] if updating is failed.
   Future<void> updateUserProfile(String id, ThemeType selectedTheme);
+
+  Future<void> signInAnonymously();
 }

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:equatable/equatable.dart';
@@ -12,10 +12,13 @@ class FeatureConfigParam extends Equatable {
   /// Indicates whether the debug menu feature is enabled.
   final bool isDebugMenuEnabled;
 
+  final bool isPublicDashboardFeatureEnabled;
+
   @override
   List<Object> get props => [
         isPasswordSignInOptionEnabled,
         isDebugMenuEnabled,
+        isPublicDashboardFeatureEnabled,
       ];
 
   /// Creates a new instance of the [FeatureConfigParam]
@@ -25,9 +28,12 @@ class FeatureConfigParam extends Equatable {
   FeatureConfigParam({
     @required this.isPasswordSignInOptionEnabled,
     @required this.isDebugMenuEnabled,
+    @required this.isPublicDashboardFeatureEnabled,
   }) {
     ArgumentError.checkNotNull(
         isPasswordSignInOptionEnabled, 'isPasswordSignInOptionEnabled');
     ArgumentError.checkNotNull(isDebugMenuEnabled, 'isDebugMenuEnabled');
+    ArgumentError.checkNotNull(
+        isPublicDashboardFeatureEnabled, 'isPublicDashboardFeatureEnabled');
   }
 }

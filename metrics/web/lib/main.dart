@@ -27,31 +27,7 @@ Future<void> main() async {
   final configFactory = MetricsConfigFactory();
   final metricsConfig = configFactory.create();
 
-  if (kReleaseMode) {
-    final userAgent = window?.navigator?.userAgent;
-    final eventProcessor = UserAgentEventProcessor(userAgent);
-    writer = await SentryWriter.init(
-      metricsConfig.sentryDsn,
-      metricsConfig.sentryRelease,
-      metricsConfig.sentryEnvironment,
-      eventProcessor: eventProcessor,
-    );
-  } else {
-    writer = ConsoleWriter();
-  }
-
-  await MetricsLogger.initialize(writer);
-
-  runZonedGuarded(() {
-    WidgetsFlutterBinding.ensureInitialized();
-    FlutterError.onError = (details, {bool forceReport = false}) {
-      Zone.current.handleUncaughtError(details.exception, details.stack);
-    };
-
-    runApp(MetricsApp(
-      metricsConfig: metricsConfig,
-    ));
-  }, (Object error, StackTrace stackTrace) async {
-    await MetricsLogger.logError(error, stackTrace);
-  });
+  runApp(MetricsApp(
+    metricsConfig: metricsConfig,
+  ));
 }

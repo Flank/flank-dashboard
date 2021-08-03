@@ -14,6 +14,9 @@ class FirebaseUserAdapter implements User {
   @override
   String get id => _firebaseUser.uid;
 
+  @override
+  bool get isAnonymous => _firebaseUser.isAnonymous;
+
   /// Creates a [FirebaseUserAdapter] with the given [FirebaseUser].
   FirebaseUserAdapter(this._firebaseUser) {
     ArgumentError.checkNotNull(_firebaseUser, 'firebaseUser');

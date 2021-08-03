@@ -190,4 +190,9 @@ class FirebaseUserRepository implements UserRepository {
       );
     }
   }
+
+  @override
+  Future<void> signInAnonymously() {
+    return _firebaseAuth.signInAnonymously();
+  }
 }

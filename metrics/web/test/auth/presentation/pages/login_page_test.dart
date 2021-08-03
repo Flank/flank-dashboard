@@ -181,7 +181,7 @@ void main() {
           );
         });
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
         authNotifier.notifyListeners();
 
         verify(navigationNotifier.handleLoggedIn()).called(once);
@@ -199,7 +199,7 @@ void main() {
         );
 
         when(authNotifier.isLoading).thenReturn(false);
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(

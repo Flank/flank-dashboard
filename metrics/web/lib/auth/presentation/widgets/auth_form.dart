@@ -21,7 +21,7 @@ class AuthForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isPasswordSignInOptionEnabled) const PasswordSignInOption(),
+            const PasswordSignInOption(),
             SignInOptionButton(
               strategy: GoogleSignInOptionAppearanceStrategy(),
             ),

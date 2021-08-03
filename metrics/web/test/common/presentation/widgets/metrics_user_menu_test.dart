@@ -247,7 +247,7 @@ void main() {
       (tester) async {
         final authNotifier = AuthNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
@@ -286,7 +286,7 @@ void main() {
         final authNotifier = AuthNotifierMock();
         final navigationNotifier = NavigationNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
@@ -308,7 +308,7 @@ void main() {
         final authNotifier = AuthNotifierMock();
         final navigationNotifier = NavigationNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(true);
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           const DebugMenuFeatureConfigViewModel(isEnabled: true),
         );

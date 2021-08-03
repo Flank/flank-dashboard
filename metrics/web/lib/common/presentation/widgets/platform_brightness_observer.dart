@@ -49,9 +49,9 @@ class _PlatformBrightnessObserverState extends State<PlatformBrightnessObserver>
   /// is not logged in.
   void _updatePlatformBrightness() {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    final isLoggedIn = authNotifier.isLoggedIn;
+    final isLoggedIn = authNotifier.authState;
 
-    if (isLoggedIn != null && isLoggedIn) return;
+    if (isLoggedIn != null && isLoggedIn != AuthState.loggedOut) return;
 
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
