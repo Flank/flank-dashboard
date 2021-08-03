@@ -230,6 +230,20 @@ void main() {
     );
 
     test(
+      ".handleLoggedIn() pushes the dashboard route if the current redirect route is loading",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.push(DefaultRoutes.loading);
+
+        notifier.handleLoggedIn();
+
+        final currentConfigurationName = notifier.currentConfiguration.name;
+
+        expect(currentConfigurationName, equals(RouteName.dashboard));
+      },
+    );
+
+    test(
       ".handleLoggedIn() clears pages before redirect",
       () {
         notifier.handleAppInitialized(isAppInitialized: true);
