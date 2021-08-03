@@ -232,10 +232,14 @@ class NavigationNotifier extends ChangeNotifier {
   void pushStateReplacement(RouteConfiguration configuration) {
     if (_pages.isNotEmpty) _pages.removeLast();
 
+    _pushWithStateReplacement(configuration);
+  }
+
+  /// Replaces the current state path with the path
+  /// of the [_currentConfiguration] and pushes the given [configuration].
+  void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
-    replaceState(
-      path: _currentConfiguration.path,
-    );
+    replaceState(path: _currentConfiguration.path);
   }
 
   /// Handles the initial route.
@@ -259,8 +263,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     _pages.clear();
 
-    push(_redirectRoute);
-    replaceState(path: _currentConfiguration.path);
+    _pushWithStateReplacement(_redirectRoute);
 
     if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
       _redirectRoute = null;
