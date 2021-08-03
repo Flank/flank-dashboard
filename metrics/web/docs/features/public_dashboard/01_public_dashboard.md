@@ -243,27 +243,24 @@ But we should change the `Firestore` security rules for managing anonymous users
 ### Privacy
 > Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
 
-Implementation of the public dashboard feature will change the privacy of data in the following way: 
- - if the public dashboard feature is enabled in the Firestore config, the dashboard page will become available for reading by all users who visit this page;
- - if the public dashboard feature is disabled in the Firestore config, the privacy of the data will remain unchanged.
+When introducing the feature, we should pay attention to the privacy of the affected data. The integrating of the public dashboard feature makes the dashboard data available for all users, if the feature is enabled, but since the data from the dashboard is not affected by the following rules: GDPR, CCPA, etc. Therefore, we don't have to request users' permission to collect and process their data.
 
 ### Security
 > How relevant data will be secured (Data encryption at rest, etc.).
 
-The relevant data will be secured by `Firestore` security rules, so let's review them for the anonymous users in more detail:
+After introducing the public dashboard feature, we receive a new user authentication state (`anonymous user`), so we have to revise the `Firestore` security rules and add rules for this `anonymous user`.
 
-- The user logged in anonymously should be able to read the `projects` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is `true`.
-- The user logged in anonymously should not be able to write to the `projects` collection.
-- The anonymous user should be able to read the `builds` collection if the `isPublicDashboardEnabled` field of the `feature_config` document is true.
-- The anonymous user should not be able to write to the `builds` collection.
-- The user logged in anonymously should be able to read the `project_groups` collection if the public dashboard feature is enabled.
-- The anonymous user should not be able to write to the `project_groups` collection.
-- The user logged in anonymously should be able to read only their profile document (document with the user identifier as document identifier) from the `user_profiles` collection if the public dashboard feature is enabled.
-- The user logged in anonymously should be able to create/update their profile (document with the user identifier as document identifier) in the `user_profiles` collection if the public dashboard feature is enabled.
-- The anonymous user should be able to read the data from the `build_days` collection if the public dashboard feature is enabled.
-- The anonymous user should not be able to write to the `build_days` collection.
+The following table describes the `Firestore` security rules for the `anonymous user`:
 
-Please, note that if the collection is not mentioned in the list above, the collection rules should stay as is.
+| Collection name  | Read  | Write |
+| ---------------- | ----- | ----- |
+| `projects` | + | - |
+| `builds`| + | - |
+| `project_groups` | + | - |
+| `user_profiles` | + | + (create, update only) |
+| `build_days` | + | - |
+
+Please, note that if the collection is not mentioned in the table above, the collection rules should stay as is.
 
 ### Program
 > Detailed solution description to class/method level.
