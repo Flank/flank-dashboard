@@ -296,7 +296,7 @@ void main() {
 
         final actualPages = notifier.pages;
 
-        expect(initialPages, equals(actualPages));
+        expect(actualPages, equals(initialPages));
       },
     );
 
