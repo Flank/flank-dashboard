@@ -199,9 +199,11 @@ void main() {
       () {
         notifier.push(DefaultRoutes.login);
 
+        final initialPagesLength = notifier.pages.length;
+
         notifier.handleLoggedOut();
 
-        expect(notifier.pages, hasLength(2));
+        expect(notifier.pages, hasLength(equals(initialPagesLength)));
       },
     );
 
@@ -212,9 +214,7 @@ void main() {
 
         notifier.handleLoggedOut();
 
-        final actualPagesLength = notifier.pages.length;
-
-        expect(actualPagesLength, equals(initialPagesLength));
+        expect(notifier.pages, hasLength(equals(initialPagesLength)));
       },
     );
 
@@ -288,35 +288,28 @@ void main() {
     );
 
     test(
-      ".handleLoggedIn() does not push to the redirect route when a user is already logged in",
+      ".handleLoggedIn() does not push if a user is already logged in",
       () {
-        final configuration = DefaultRoutes.projectGroups;
-        notifier.handleLoggedIn();
-        notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.push(configuration);
+        bool isPagePushed = false;
 
         notifier.handleLoggedIn();
+        notifier.push(DefaultRoutes.projectGroups);
 
-        final currentConfigurationName = notifier.currentConfiguration.name;
+        notifier.addListener(() => isPagePushed = true);
 
-        expect(currentConfigurationName, isNot(equals(configuration.name)));
+        notifier.handleLoggedIn();
+
+        expect(isPagePushed, isFalse);
       },
     );
 
     test(
       ".handleLoggedIn() does not replace the current navigation state when a user is already logged in",
       () {
-        final configuration = DefaultRoutes.projectGroups;
-
         notifier.handleLoggedIn();
-        notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.push(configuration);
-
         notifier.handleLoggedIn();
 
-        verifyNever(
-          navigationState.replaceState(any, any, configuration.path),
-        );
+        verify(navigationState.replaceState(any, any, any)).called(once);
       },
     );
 
