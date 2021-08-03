@@ -165,11 +165,11 @@ The following sections explains the implementation details of the public dashboa
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
 
-Once we've chosen the implementation approach of the public dashboard, let's consider the top-level class diagram explaining the main classes and their relationships needed to implement this feature.
+Once we've chosen the implementation approach of the public dashboard, let's consider the top-level components diagram explaining the main components and their relationships needed to implement this feature.
 
-![Public Dashboard Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_class.puml)
+![Public Dashboard Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_components_diagram.puml)
 
-As we can see on the diagram, we need to implement the following classes: 
+To meet the new relationships from the diagram, we need to implement the following classes: 
 - [PublicDashboardFeatureConfigViewModel](#PublicDashboardFeatureConfigViewModel)
 - [UserProfileViewModel](#UserProfileViewModel)
 - [SignInAnonymouslyUseCase](#SignInAnonymouslyUseCase)
@@ -196,9 +196,9 @@ Since the public dashboard feature implies logging in as an anonymous user, we s
 > Explain the purpose and responsibility of the class.
 
 Since we should know the authentication state of the user, we should provide an enum that will contain all the following states:
-- authenticated
-- anonymous
-- notAuthenticated
+- loggedIn
+- loggedInAnonymously
+- loggedOut
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).

@@ -1,0 +1,25 @@
+@startuml public_dashboard_architecture_components_diagram
+
+legend top left
+    | Color | Arrow type |
+    |<#B70033>| Existing relationship |
+    |<#Green>| New relationship/component |
+endlegend
+
+
+package "Metrics Web" {
+    component "Loading Page" as loading_page
+    component "Auth module" as auth
+    component "Feature Config module" as feature_config
+    component "Navigation module" as navigation
+    component "Auth State" as auth_state #Green
+    component "Metrics User Menu" as user_menu
+}
+
+auth -[#Green]-> auth_state: <color:green> provides
+loading_page -[#Green]-> feature_config: <color:green> uses to know whether\n <color:green> the public dashboard feature is enabled
+loading_page -[#Green]-> auth: <color:green> uses to\n <color:green> sign in anonymously
+navigation -[#Green]> auth_state: <color:green> uses to navigate\n <color:green> depending on the auth state
+user_menu -[#Green]left-> auth_state: <color:green> change the UI depending on the auth state
+
+@enduml
