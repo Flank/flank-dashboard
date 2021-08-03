@@ -281,24 +281,22 @@ void main() {
 
         notifier.handleLoggedIn();
 
-        final actualPagesLength = notifier.pages.length;
-
-        expect(actualPagesLength, equals(initialPagesLength));
+        expect(notifier.pages, hasLength(equals(initialPagesLength)));
       },
     );
 
     test(
       ".handleLoggedIn() does not push if a user is already logged in",
       () {
-        bool isPagePushed = false;
+        notifier.handleLoggedIn();
+
+        final initialPages = notifier.pages;
 
         notifier.handleLoggedIn();
 
-        notifier.addListener(() => isPagePushed = true);
+        final actualPages = notifier.pages;
 
-        notifier.handleLoggedIn();
-
-        expect(isPagePushed, isFalse);
+        expect(initialPages, equals(actualPages));
       },
     );
 
@@ -604,10 +602,9 @@ void main() {
         notifier.handlePageParametersUpdates(pageParametersModel);
 
         final currentPage = notifier.pages.last;
-        final actualPagesLength = notifier.pages.length;
 
         expect(currentPage.arguments, equals(pageParametersModel));
-        expect(actualPagesLength, equals(initialPagesLength));
+        expect(notifier.pages, hasLength(equals(initialPagesLength)));
       },
     );
 
