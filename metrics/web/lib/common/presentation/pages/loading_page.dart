@@ -195,10 +195,6 @@ class _LoadingPageState extends State<LoadingPage>
 
     Router.neglect(context, () {
       notifier.handleAppInitialized(isAppInitialized: true);
-
-      notifier.replaceState(
-        path: notifier.currentConfiguration.path,
-      );
     });
   }
 
