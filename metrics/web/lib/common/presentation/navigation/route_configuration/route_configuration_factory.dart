@@ -25,15 +25,16 @@ class RouteConfigurationFactory {
     }
 
     final routeName = pathSegments.first;
+    final queryParameters = uri?.queryParameters;
 
     if (routeName == RouteName.login.value) {
-      return DefaultRoutes.login;
+      return RouteConfiguration.login(parameters: queryParameters);
     } else if (routeName == RouteName.dashboard.value) {
-      return DefaultRoutes.dashboard;
+      return RouteConfiguration.dashboard(parameters: queryParameters);
     } else if (routeName == RouteName.projectGroups.value) {
-      return DefaultRoutes.projectGroups;
+      return RouteConfiguration.projectGroups(parameters: queryParameters);
     } else if (routeName == RouteName.debugMenu.value) {
-      return DefaultRoutes.debugMenu;
+      return RouteConfiguration.debugMenu(parameters: queryParameters);
     }
 
     return DefaultRoutes.dashboard;

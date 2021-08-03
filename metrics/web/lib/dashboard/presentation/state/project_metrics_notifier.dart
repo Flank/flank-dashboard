@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
+import 'package:metrics/common/presentation/state/page_notifier.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -20,6 +22,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -38,7 +41,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
-class ProjectMetricsNotifier extends ChangeNotifier {
+class ProjectMetricsNotifier extends PageNotifier {
   /// A [ProjectGroupDropdownItemViewModel] representing
   /// a project group with all projects.
   static const _allProjectsGroupDropdownItemViewModel =
@@ -165,7 +168,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _projectNameFilter = value;
-      notifyListeners();
+
+      final pageParameters = _updateCurrentPageParameters(projectFilter: value);
+      _applyPageParameters(pageParameters);
     });
   }
 
@@ -208,7 +213,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     _selectedProjectGroup = projectGroup;
 
-    notifyListeners();
+    final pageParameters = _updateCurrentPageParameters(projectGroupId: id);
+    _applyPageParameters(pageParameters);
+
+    // notifyListeners();
   }
 
   /// Updates projects and an error message.
@@ -572,5 +580,48 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     await _cancelSubscriptions();
     await _projectNameFilterSubject.close();
     super.dispose();
+  }
+
+  @override
+  void handlePageParameters(PageParametersModel parameters) {
+    if (parameters == null) return;
+
+    final pageParameters = parameters as DashboardPageParametersModel;
+
+    _applyPageParameters(pageParameters);
+  }
+
+  @override
+  DashboardPageParametersModel get pageParameters => _currentPageParameters;
+
+  DashboardPageParametersModel _currentPageParameters;
+
+  /// Updates the [_currentPageParameters] with the given [projectFilter] and
+  /// [projectGroupId].
+  ///
+  /// If the [_currentPageParameters] is `null`, creates a new instance of
+  /// the [DashboardPageParametersModel] updated with the given parameters.
+  DashboardPageParametersModel _updateCurrentPageParameters({
+    String projectFilter,
+    String projectGroupId,
+  }) {
+    final pageParameters =
+        _currentPageParameters ?? const DashboardPageParametersModel();
+
+    return pageParameters.copyWith(
+      projectFilter: projectFilter,
+      projectGroupId: projectGroupId,
+    );
+  }
+
+  /// Updates the [_currentPageParameters] with the given [pageParameters].
+  /// 
+  /// Does nothing if the given [pageParameters] model is `null`.
+  void _applyPageParameters(DashboardPageParametersModel pageParameters) {
+    if (pageParameters == null) return;
+
+    _currentPageParameters = pageParameters;
+
+    notifyListeners();
   }
 }

@@ -239,7 +239,12 @@ class NavigationNotifier extends ChangeNotifier {
   /// with the path of the [_currentConfiguration].
   void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
-    replaceState(path: _currentConfiguration.path);
+
+    final path = _routeConfigurationLocationConverter.convert(
+      _currentConfiguration,
+    );
+
+    replaceState(path: path);
   }
 
   /// Handles the initial route.

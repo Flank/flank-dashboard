@@ -57,6 +57,10 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
       listen: false,
     );
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigationNotifierListener();
+    });
+
     _navigationNotifier.addListener(_navigationNotifierListener);
   }
 
