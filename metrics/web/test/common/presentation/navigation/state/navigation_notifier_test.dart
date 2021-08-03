@@ -293,7 +293,6 @@ void main() {
         bool isPagePushed = false;
 
         notifier.handleLoggedIn();
-        notifier.push(DefaultRoutes.projectGroups);
 
         notifier.addListener(() => isPagePushed = true);
 

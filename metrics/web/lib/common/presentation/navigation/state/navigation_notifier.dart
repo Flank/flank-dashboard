@@ -235,7 +235,7 @@ class NavigationNotifier extends ChangeNotifier {
     _pushWithStateReplacement(configuration);
   }
 
-  /// Pushes the given [configuration] and replaces the current state path 
+  /// Pushes the given [configuration] and replaces the current state path
   /// with the path of the [_currentConfiguration].
   void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
