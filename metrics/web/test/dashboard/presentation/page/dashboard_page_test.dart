@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/navigation/widgets/page_parameters_proxy.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
@@ -32,6 +33,17 @@ void main() {
     tearDown(() {
       reset(projectMetricsNotifier);
     });
+
+    testWidgets(
+      "contains the PageParametersProxy widget",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _DashboardTestbed());
+        });
+
+        expect(find.byType(PageParametersProxy), findsOneWidget);
+      },
+    );
 
     testWidgets(
       "contains the MetricsAppBar widget",

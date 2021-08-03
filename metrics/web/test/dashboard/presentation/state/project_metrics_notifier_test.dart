@@ -19,6 +19,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_m
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/finished_build_result_view_model.dart';
@@ -33,10 +34,14 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matchers.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectMetricsNotifier", () {
     const projectId = 'projectId';
     const projectIdParam = ProjectIdParam(projectId);
+    const projectNameFilter = 'projectNameFilter';
+    const projectGroupId = 'projectGroupId';
     const List<ProjectModel> projects = [
       ProjectModel(id: 'id', name: 'name'),
       ProjectModel(id: 'id2', name: 'name2'),
@@ -45,6 +50,18 @@ void main() {
     const maxNumberOfBuilds =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
 
+    final projectGroups = [
+      ProjectGroupModel(
+        id: projectGroupId,
+        name: "name",
+        projectIds: UnmodifiableListView([]),
+      ),
+      ProjectGroupModel(
+        id: "id2",
+        name: "name1",
+        projectIds: UnmodifiableListView([]),
+      ),
+    ];
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
     final receiveProjectMetricsMock = _ReceiveProjectMetricsUpdatesMock();
     final receiveEmptyProjectMetrics = _ReceiveProjectMetricsUpdatesStub(
@@ -742,6 +759,36 @@ void main() {
     );
 
     test(
+      ".pageParameters is a dashboard page parameters model",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        expect(
+          projectMetricsNotifier.pageParameters,
+          isA<DashboardPageParametersModel>(),
+        );
+      },
+    );
+
+    test(
+      ".pageParameters provides current page parameters",
+      () {
+        const expectedParameters = DashboardPageParametersModel(
+          projectFilter: '',
+          projectGroupId: projectGroupId,
+        );
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        expect(
+          projectMetricsNotifier.pageParameters,
+          equals(expectedParameters),
+        );
+      },
+    );
+
+    test(
       ".filterByProjectName() filters list of the project metrics according to the given value",
       () async {
         final metricsTileViewModel =
@@ -766,8 +813,6 @@ void main() {
     test(
       ".resetProjectNameFilter() resets the project name filter",
       () async {
-        const projectNameFilter = 'filter name';
-
         final listener = expectAsyncUntil0(
           () {
             if (projectMetricsNotifier.projectNameFilter != null) {
@@ -817,6 +862,48 @@ void main() {
 
         projectMetricsNotifier.addListener(listener);
         projectMetricsNotifier.filterByProjectName(expectedProjectNameFilter);
+      },
+    );
+
+    test(
+      ".filterByProjectName() updates the current page parameters with the project name filter value",
+      () {
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: projectNameFilter,
+          projectGroupId: '',
+        );
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.pageParameters ==
+                expectedPageParameters;
+          },
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
+      },
+    );
+
+    test(
+      ".filterByProjectName() updates the current page project filter parameter with an empty string if project name filter value is null",
+      () {
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: '',
+          projectGroupId: '',
+        );
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.pageParameters ==
+                expectedPageParameters;
+          },
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(null);
       },
     );
 
@@ -896,19 +983,6 @@ void main() {
     test(
       ".setProjectGroups() refreshes a list of project group dropdown item view models",
       () {
-        final projectGroups = [
-          ProjectGroupModel(
-            id: "id",
-            name: "name",
-            projectIds: UnmodifiableListView([]),
-          ),
-          ProjectGroupModel(
-            id: "id2",
-            name: "name1",
-            projectIds: UnmodifiableListView([]),
-          ),
-        ];
-
         projectMetricsNotifier.setProjectGroups(projectGroups);
 
         final newProjectGroups = [
@@ -943,8 +1017,6 @@ void main() {
     test(
       ".setProjectGroups() updates selected project group",
       () {
-        const projectGroupId = "groupId";
-
         final List<ProjectGroupModel> projectGroups = [
           ProjectGroupModel(
             id: projectGroupId,
@@ -982,7 +1054,6 @@ void main() {
         const expectedSelectedProjectGroup = ProjectGroupDropdownItemViewModel(
           name: "All projects",
         );
-        const projectGroupId = "groupId";
 
         final firstProjectGroup = ProjectGroupModel(
           id: projectGroupId,
@@ -1023,7 +1094,6 @@ void main() {
       ".selectProjectGroup() filters a list of project metrics according to the given project group id",
       () {
         const projectId = "projectId";
-        const projectGroupId = "groupId";
         const selectedProjectIds = [projectId];
 
         const projects = [
@@ -1063,21 +1133,6 @@ void main() {
     test(
       ".selectProjectGroup() selects the project group with the given id",
       () {
-        const projectGroupId = "id";
-
-        final List<ProjectGroupModel> projectGroups = [
-          ProjectGroupModel(
-            id: projectGroupId,
-            name: "name",
-            projectIds: UnmodifiableListView([]),
-          ),
-          ProjectGroupModel(
-            id: "id2",
-            name: "name1",
-            projectIds: UnmodifiableListView([]),
-          ),
-        ];
-
         projectMetricsNotifier.setProjectGroups(projectGroups);
         projectMetricsNotifier.selectProjectGroup(projectGroupId);
 
@@ -1091,19 +1146,6 @@ void main() {
     test(
       ".selectProjectGroup() doesn't select the project group if there is no project group with the given id",
       () {
-        final projectGroups = [
-          ProjectGroupModel(
-            id: "id",
-            name: "name",
-            projectIds: UnmodifiableListView([]),
-          ),
-          ProjectGroupModel(
-            id: "id2",
-            name: "name1",
-            projectIds: UnmodifiableListView([]),
-          ),
-        ];
-
         projectMetricsNotifier.setProjectGroups(projectGroups);
 
         final initialSelectedProjectGroup =
@@ -1119,21 +1161,46 @@ void main() {
     );
 
     test(
+      ".selectProjectGroup() updates the current page parameters with the selected project group id",
+      () {
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: '',
+          projectGroupId: projectGroupId,
+        );
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        expect(
+          projectMetricsNotifier.pageParameters,
+          equals(expectedPageParameters),
+        );
+      },
+    );
+
+    test(
+      ".selectProjectGroup() updates the current page project group id parameter with an empty string if the selected project group id is null",
+      () {
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: '',
+          projectGroupId: '',
+        );
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        projectMetricsNotifier.selectProjectGroup(null);
+
+        expect(
+          projectMetricsNotifier.pageParameters,
+          equals(expectedPageParameters),
+        );
+      },
+    );
+
+    test(
       ".setProjectGroups() resets project group dropdown items and selected project group to null if project groups are null",
       () {
-        final projectGroups = [
-          ProjectGroupModel(
-            id: "id",
-            name: "name",
-            projectIds: UnmodifiableListView([]),
-          ),
-          ProjectGroupModel(
-            id: "id2",
-            name: "name1",
-            projectIds: UnmodifiableListView([]),
-          ),
-        ];
-
         projectMetricsNotifier.setProjectGroups(projectGroups);
 
         expect(projectMetricsNotifier.selectedProjectGroup, isNotNull);

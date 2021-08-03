@@ -634,6 +634,25 @@ void main() {
     );
 
     test(
+      ".handlePageParametersUpdates() updates current configuration parameters with removing null and empty values",
+      () {
+        const pageParameters = DashboardPageParametersModel(
+          projectFilter: 'projectFilter',
+        );
+        final expectedPageParametersMap = {
+          'projectFilter': pageParameters.projectFilter,
+        };
+
+        notifier.handlePageParametersUpdates(pageParameters);
+
+        expect(
+          notifier.currentConfiguration.parameters,
+          equals(expectedPageParametersMap),
+        );
+      },
+    );
+
+    test(
       ".pop() does nothing if pages are empty",
       () {
         final expectedPages = notifier.pages;
