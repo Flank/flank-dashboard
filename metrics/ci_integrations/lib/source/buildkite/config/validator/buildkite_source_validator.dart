@@ -46,7 +46,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
     final authValidationResult = await validationDelegate.validateAuth(auth);
     validationResultBuilder.setResult(authValidationResult);
 
-    if (authValidationResult.isFailure) {
+    if (authValidationResult.isInvalid) {
       return _finalizeValidationResult(
         BuildkiteSourceValidationTarget.accessToken,
         BuildkiteStrings.tokenInvalidInterruptReason,
@@ -72,7 +72,7 @@ class BuildkiteSourceValidator extends ConfigValidator<BuildkiteSourceConfig> {
         await validationDelegate.validateOrganizationSlug(organizationSlug);
     validationResultBuilder.setResult(organizationSlugValidationResult);
 
-    if (organizationSlugValidationResult.isFailure) {
+    if (organizationSlugValidationResult.isInvalid) {
       return _finalizeValidationResult(
         BuildkiteSourceValidationTarget.organizationSlug,
         BuildkiteStrings.organizationInvalidInterruptReason,

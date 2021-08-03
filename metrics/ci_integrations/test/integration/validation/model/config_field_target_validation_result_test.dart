@@ -15,10 +15,10 @@ void main() {
     const context = {'context': 'test'};
     const data = 'data';
     const target = ValidationTarget(name: 'target');
-    const successResult = ConfigFieldTargetValidationResult.valid(
+    const validResult = ConfigFieldTargetValidationResult.valid(
       target: target,
     );
-    const failureResult = ConfigFieldTargetValidationResult.failure(
+    const invalidResult = ConfigFieldTargetValidationResult.invalid(
       target: target,
     );
     const unknownResult = ConfigFieldTargetValidationResult.unknown(
@@ -26,7 +26,7 @@ void main() {
     );
 
     test(
-      ".success() throws an AssertionError if the given target is null",
+      ".valid() throws an AssertionError if the given target is null",
       () {
         expect(
           () => ConfigFieldTargetValidationResult.valid(target: null),
@@ -36,7 +36,7 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with the valid field validation conclusion",
+      ".valid() creates an instance with the valid field validation conclusion",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with an empty description if the description is not specified",
+      ".valid() creates an instance with an empty description if the description is not specified",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -58,7 +58,7 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with empty details if the details are not specified",
+      ".valid() creates an instance with empty details if the details are not specified",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -69,7 +69,7 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with an empty context if the context is not specified",
+      ".valid() creates an instance with an empty context if the context is not specified",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -80,7 +80,7 @@ void main() {
     );
 
     test(
-      ".success() creates an instance with the given parameters",
+      ".valid() creates an instance with the given parameters",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -99,40 +99,40 @@ void main() {
     );
 
     test(
-      ".isSuccess returns true if the result is successful",
+      ".isValid returns true if the result is successful",
       () {
-        expect(successResult.isSuccess, isTrue);
+        expect(validResult.isValid, isTrue);
       },
     );
 
     test(
-      ".isFailure returns false if the result is successful",
+      ".isInvalid returns false if the result is successful",
       () {
-        expect(successResult.isFailure, isFalse);
+        expect(validResult.isInvalid, isFalse);
       },
     );
 
     test(
       ".isUnknown returns false if the result is successful",
       () {
-        expect(successResult.isUnknown, isFalse);
+        expect(validResult.isUnknown, isFalse);
       },
     );
 
     test(
-      ".failure() throws an AssertionError if the given target is null",
+      ".invalid() throws an AssertionError if the given target is null",
       () {
         expect(
-          () => ConfigFieldTargetValidationResult.failure(target: null),
+          () => ConfigFieldTargetValidationResult.invalid(target: null),
           throwsAssertionError,
         );
       },
     );
 
     test(
-      ".failure() creates an instance with the invalid field validation conclusion",
+      ".invalid() creates an instance with the invalid field validation conclusion",
       () {
-        const result = ConfigFieldTargetValidationResult.failure(
+        const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
         );
 
@@ -141,9 +141,9 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with an empty description if the given description is not specified",
+      ".invalid() creates an instance with an empty description if the given description is not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.failure(
+        const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
         );
 
@@ -152,9 +152,9 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with an empty details if the given details is not specified",
+      ".invalid() creates an instance with an empty details if the given details is not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.failure(
+        const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
         );
 
@@ -163,9 +163,9 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with an empty context if the given context is not specified",
+      ".invalid() creates an instance with an empty context if the given context is not specified",
       () {
-        const result = ConfigFieldTargetValidationResult.failure(
+        const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
         );
 
@@ -174,9 +174,9 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with the given parameters",
+      ".invalid() creates an instance with the given parameters",
       () {
-        const result = ConfigFieldTargetValidationResult.failure(
+        const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
           description: description,
           details: details,
@@ -193,23 +193,23 @@ void main() {
     );
 
     test(
-      ".isSuccess returns false if the result is failure",
+      ".isValid returns false if the result is failure",
       () {
-        expect(failureResult.isSuccess, isFalse);
+        expect(invalidResult.isValid, isFalse);
       },
     );
 
     test(
-      ".isFailure returns true if the result is failure",
+      ".isInvalid returns true if the result is failure",
       () {
-        expect(failureResult.isFailure, isTrue);
+        expect(invalidResult.isInvalid, isTrue);
       },
     );
 
     test(
       ".isUnknown returns false if the result is failure",
       () {
-        expect(failureResult.isUnknown, isFalse);
+        expect(invalidResult.isUnknown, isFalse);
       },
     );
 
@@ -287,16 +287,16 @@ void main() {
     );
 
     test(
-      ".isSuccess returns false if the result is unknown",
+      ".isValid returns false if the result is unknown",
       () {
-        expect(unknownResult.isSuccess, isFalse);
+        expect(unknownResult.isValid, isFalse);
       },
     );
 
     test(
-      ".isFailure returns false if the result is unknown",
+      ".isInvalid returns false if the result is unknown",
       () {
-        expect(unknownResult.isFailure, isFalse);
+        expect(unknownResult.isInvalid, isFalse);
       },
     );
 

@@ -90,7 +90,7 @@ void main() {
 
         final result = await delegate.validateAuth(auth);
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -125,7 +125,7 @@ void main() {
 
         final result = await delegate.validateAuth(auth);
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -164,7 +164,7 @@ void main() {
 
         final result = await delegate.validateAuth(auth);
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -204,7 +204,7 @@ void main() {
 
         final result = await delegate.validateAuth(auth);
 
-        expect(result.isSuccess, isTrue);
+        expect(result.isValid, isTrue);
       },
     );
 
@@ -258,7 +258,7 @@ void main() {
 
         final result = await delegate.validateAuth(auth);
 
-        expect(result.isSuccess, isTrue);
+        expect(result.isValid, isTrue);
       },
     );
 
@@ -296,7 +296,7 @@ void main() {
 
         final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -335,7 +335,7 @@ void main() {
 
         final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -374,7 +374,7 @@ void main() {
 
         final result = await delegate.validatePipelineSlug(pipelineSlug);
 
-        expect(result.isSuccess, isTrue);
+        expect(result.isValid, isTrue);
       },
     );
 
@@ -406,7 +406,7 @@ void main() {
           organizationSlug,
         );
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -450,7 +450,7 @@ void main() {
           organizationSlug,
         );
 
-        expect(result.isFailure, isTrue);
+        expect(result.isInvalid, isTrue);
       },
     );
 
@@ -498,7 +498,7 @@ void main() {
           organizationSlug,
         );
 
-        expect(result.isSuccess, isTrue);
+        expect(result.isValid, isTrue);
       },
     );
   });

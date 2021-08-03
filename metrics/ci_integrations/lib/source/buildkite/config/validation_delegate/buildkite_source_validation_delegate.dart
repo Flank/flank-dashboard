@@ -34,7 +34,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
     final tokenInteraction = await _client.fetchToken(auth);
 
     if (tokenInteraction.isError || tokenInteraction.result == null) {
-      return const ConfigFieldTargetValidationResult.failure(
+      return const ConfigFieldTargetValidationResult.invalid(
         target: BuildkiteSourceValidationTarget.accessToken,
         description: BuildkiteStrings.tokenInvalid,
       );
@@ -47,7 +47,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
       (element) => tokenScopes.contains(element),
     );
     if (!containsRequiredScopes) {
-      return const ConfigFieldTargetValidationResult.failure(
+      return const ConfigFieldTargetValidationResult.invalid(
         target: BuildkiteSourceValidationTarget.accessToken,
         description: BuildkiteStrings.tokenDoesNotHaveReadBuildsScope,
       );
@@ -77,7 +77,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
     final pipelineInteraction = await _client.fetchPipeline(pipelineSlug);
 
     if (pipelineInteraction.isError || pipelineInteraction.result == null) {
-      return const ConfigFieldTargetValidationResult.failure(
+      return const ConfigFieldTargetValidationResult.invalid(
         target: BuildkiteSourceValidationTarget.pipelineSlug,
         description: BuildkiteStrings.pipelineNotFound,
       );
@@ -98,7 +98,7 @@ class BuildkiteSourceValidationDelegate implements ValidationDelegate {
 
     if (organizationInteraction.isError ||
         organizationInteraction.result == null) {
-      return const ConfigFieldTargetValidationResult.failure(
+      return const ConfigFieldTargetValidationResult.invalid(
         target: BuildkiteSourceValidationTarget.organizationSlug,
         description: BuildkiteStrings.organizationNotFound,
       );

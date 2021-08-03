@@ -10,10 +10,10 @@ import 'package:metrics_core/metrics_core.dart';
 class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   /// A flag that indicates whether this is a successful target validation
   /// result.
-  bool get isSuccess => conclusion == ConfigFieldValidationConclusion.valid;
+  bool get isValid => conclusion == ConfigFieldValidationConclusion.valid;
 
   /// A flag that indicates whether this is a failure target validation result.
-  bool get isFailure => conclusion == ConfigFieldValidationConclusion.invalid;
+  bool get isInvalid => conclusion == ConfigFieldValidationConclusion.invalid;
 
   /// A flag that indicates whether this is an unknown target validation result.
   bool get isUnknown => conclusion == ConfigFieldValidationConclusion.unknown;
@@ -42,7 +42,7 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   /// Creates a new instance of the [ConfigFieldTargetValidationResult] with
   /// the given parameters and [ConfigFieldValidationConclusion.valid] conclusion.
   ///
-  /// Represents a successful config field target validation result.
+  /// Represents a valid config field target validation result.
   ///
   /// The [description] defaults to an empty [String],
   /// The [details] defaults to an empty [Map].
@@ -67,14 +67,14 @@ class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
   /// Creates a new instance of the [ConfigFieldTargetValidationResult] with
   /// the given parameters and [ConfigFieldValidationConclusion.invalid] conclusion.
   ///
-  /// Represents a failed config field target validation result.
+  /// Represents an invalid config field target validation result.
   ///
   /// The [description] defaults to an empty [String],
   /// The [details] defaults to an empty [Map].
   /// The [context] defaults to an empty [Map].
   ///
   /// The given [target] must not be `null`.
-  const ConfigFieldTargetValidationResult.failure({
+  const ConfigFieldTargetValidationResult.invalid({
     @required ValidationTarget target,
     String description = '',
     Map<String, dynamic> details = const {},
