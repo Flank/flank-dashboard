@@ -27,7 +27,6 @@ void main() {
       projectGroupId: 'projectGroupId',
       projectFilter: 'projectFilter',
     );
-
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
     final pageParametersFactory = _PageParametersFactoryMock();
