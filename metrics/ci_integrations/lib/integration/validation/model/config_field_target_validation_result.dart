@@ -8,11 +8,10 @@ import 'package:metrics_core/metrics_core.dart';
 /// A class that represents a [TargetValidationResult] for CI integrations
 /// config field.
 class ConfigFieldTargetValidationResult<T> extends TargetValidationResult<T> {
-  /// A flag that indicates whether this is a successful target validation
-  /// result.
+  /// A flag that indicates whether this is a valid target validation result.
   bool get isValid => conclusion == ConfigFieldValidationConclusion.valid;
 
-  /// A flag that indicates whether this is a failure target validation result.
+  /// A flag that indicates whether this is an invalid target validation result.
   bool get isInvalid => conclusion == ConfigFieldValidationConclusion.invalid;
 
   /// A flag that indicates whether this is an unknown target validation result.
