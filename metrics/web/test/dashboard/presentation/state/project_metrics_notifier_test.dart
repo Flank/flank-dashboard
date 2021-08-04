@@ -1150,24 +1150,6 @@ void main() {
     );
 
     test(
-      ".selectProjectGroup() updates the current page project group id parameter with an empty string if the selected project group is null",
-      () {
-        const expectedPageParameters = DashboardPageParametersModel(
-          projectGroupId: '',
-        );
-
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-
-        projectMetricsNotifier.selectProjectGroup('wrong id');
-
-        expect(
-          projectMetricsNotifier.pageParameters,
-          equals(expectedPageParameters),
-        );
-      },
-    );
-
-    test(
       ".setProjectGroups() does not update the current page project filter parameter",
       () {
         const expectedPageParameters = DashboardPageParametersModel(

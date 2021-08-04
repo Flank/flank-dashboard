@@ -88,11 +88,11 @@ class ProjectMetricsNotifier extends PageNotifier {
   List<ProjectGroupDropdownItemViewModel> _projectGroupDropdownItems = [];
 
   /// A [DashboardPageParametersModel] that holds current page parameters.
-  DashboardPageParametersModel _currentPageParameters =
+  DashboardPageParametersModel _pageParameters =
       const DashboardPageParametersModel();
 
   @override
-  DashboardPageParametersModel get pageParameters => _currentPageParameters;
+  DashboardPageParametersModel get pageParameters => _pageParameters;
 
   /// Provides a list of [ProjectMetricsTileViewModel]s.
   List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
@@ -171,14 +171,14 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   /// Subscribes to a projects name filter.
   ///
-  /// Updates the current page parameters with the [_projectNameFilter] value.
+  /// Updates the [_pageParameters].
   void _subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _projectNameFilter = value;
 
-      _updateCurrentPageParameters(projectFilter: _projectNameFilter);
+      _updateCurrentPageParameters();
     });
   }
 
@@ -212,21 +212,18 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
-  /// Updates the current page parameters with the selected project id
-  /// or an empty string if the id is `null`.
+  /// Updates the page parameters.
   void selectProjectGroup(String id) {
-    _updateSelectedProjectGroup(id);
+    _selectProjectGroup(id);
 
-    final projectGroupId = _selectedProjectGroup?.id ?? '';
-
-    _updateCurrentPageParameters(projectGroupId: projectGroupId);
+    _updateCurrentPageParameters();
   }
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
   /// Does nothing if the [_projectGroupDropdownItems] does not contain
   /// the project group with the given [id].
-  void _updateSelectedProjectGroup(String id) {
+  void _selectProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == id,
       orElse: () => null,
@@ -596,29 +593,20 @@ class ProjectMetricsNotifier extends PageNotifier {
     }
   }
 
-  /// Updates the [_currentPageParameters] with the given [projectFilter] and
-  /// [projectGroupId].
-  ///
-  /// If the given [projectFilter] or [projectGroupId] is `null`,
-  /// current values are used.
-  void _updateCurrentPageParameters({
-    String projectFilter,
-    String projectGroupId,
-  }) {
-    final updatedprojectFilter = projectFilter ?? _projectNameFilter;
-    final updatedProjectGroupId = projectGroupId ?? _selectedProjectGroup?.id;
-
-    final updatedPageParameters = _currentPageParameters.copyWith(
-      projectFilter: updatedprojectFilter,
-      projectGroupId: updatedProjectGroupId,
+  /// Updates the [_pageParameters] with the current [_projectNameFilter] and
+  /// [_selectedProjectGroup] id values.
+  void _updateCurrentPageParameters() {
+    final pageParameters = DashboardPageParametersModel(
+      projectFilter: _projectNameFilter,
+      projectGroupId: _selectedProjectGroup?.id,
     );
 
-    _applyPageParameters(updatedPageParameters);
+    _setPageParameters(pageParameters);
   }
 
-  /// Updates the [_currentPageParameters] with the given [pageParameters].
-  void _applyPageParameters(DashboardPageParametersModel pageParameters) {
-    _currentPageParameters = pageParameters;
+  /// Updates the [_pageParameters] with the given [pageParameters].
+  void _setPageParameters(DashboardPageParametersModel pageParameters) {
+    _pageParameters = pageParameters;
 
     notifyListeners();
   }
