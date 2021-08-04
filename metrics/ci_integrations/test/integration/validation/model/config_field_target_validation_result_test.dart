@@ -58,7 +58,7 @@ void main() {
     );
 
     test(
-      ".valid() creates an instance with empty details if the details are not specified",
+      ".valid() creates an instance with empty details if the details parameter is not specified",
       () {
         const result = ConfigFieldTargetValidationResult.valid(
           target: target,
@@ -99,21 +99,21 @@ void main() {
     );
 
     test(
-      ".isValid returns true if the result is successful",
+      ".isValid returns true if the result is valid",
       () {
         expect(validResult.isValid, isTrue);
       },
     );
 
     test(
-      ".isInvalid returns false if the result is successful",
+      ".isInvalid returns false if the result is valid",
       () {
         expect(validResult.isInvalid, isFalse);
       },
     );
 
     test(
-      ".isUnknown returns false if the result is successful",
+      ".isUnknown returns false if the result is valid",
       () {
         expect(validResult.isUnknown, isFalse);
       },
@@ -152,7 +152,7 @@ void main() {
     );
 
     test(
-      ".invalid() creates an instance with an empty details if the given details is not specified",
+      ".invalid() creates an instance with an empty details if the given details parameter is not specified",
       () {
         const result = ConfigFieldTargetValidationResult.invalid(
           target: target,
@@ -193,21 +193,21 @@ void main() {
     );
 
     test(
-      ".isValid returns false if the result is failure",
+      ".isValid returns false if the result is invalid",
       () {
         expect(invalidResult.isValid, isFalse);
       },
     );
 
     test(
-      ".isInvalid returns true if the result is failure",
+      ".isInvalid returns true if the result is invalid",
       () {
         expect(invalidResult.isInvalid, isTrue);
       },
     );
 
     test(
-      ".isUnknown returns false if the result is failure",
+      ".isUnknown returns false if the result is invalid",
       () {
         expect(invalidResult.isUnknown, isFalse);
       },
@@ -246,7 +246,7 @@ void main() {
     );
 
     test(
-      ".unknown() creates an instance with an empty details if the given details is not specified",
+      ".unknown() creates an instance with an empty details if the given details parameter is not specified",
       () {
         const result = ConfigFieldTargetValidationResult.unknown(
           target: target,
