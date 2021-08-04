@@ -840,7 +840,6 @@ void main() {
       () {
         const expectedPageParameters = DashboardPageParametersModel(
           projectFilter: projectNameFilter,
-          projectGroupId: '',
         );
 
         final listener = expectAsyncUntil0(
@@ -857,11 +856,10 @@ void main() {
     );
 
     test(
-      ".filterByProjectName() updates the current page project filter parameter with an empty string if the project name filter value is null",
+      ".filterByProjectName() updates the current page project filter parameter with an empty string if called with null value",
       () {
         const expectedPageParameters = DashboardPageParametersModel(
           projectFilter: '',
-          projectGroupId: '',
         );
 
         final listener = expectAsyncUntil0(
@@ -1157,7 +1155,6 @@ void main() {
       ".selectProjectGroup() updates the current page parameters with the selected project group id",
       () {
         const expectedPageParameters = DashboardPageParametersModel(
-          projectFilter: '',
           projectGroupId: projectGroupId,
         );
 
@@ -1173,16 +1170,15 @@ void main() {
     );
 
     test(
-      ".selectProjectGroup() updates the current page project group id parameter with an empty string if the selected project group id is null",
+      ".selectProjectGroup() updates the current page project group id parameter with an empty string if the selected project group is null",
       () {
         const expectedPageParameters = DashboardPageParametersModel(
-          projectFilter: '',
           projectGroupId: '',
         );
 
         projectMetricsNotifier.setProjectGroups(projectGroups);
 
-        projectMetricsNotifier.selectProjectGroup(null);
+        projectMetricsNotifier.selectProjectGroup('wrong id');
 
         expect(
           projectMetricsNotifier.pageParameters,

@@ -178,7 +178,7 @@ class ProjectMetricsNotifier extends PageNotifier {
         .listen((value) {
       _projectNameFilter = value;
 
-      _updateCurrentPageParameters(projectFilter: _projectNameFilter);
+      _updateCurrentPageParameters(projectFilter: _projectNameFilter ?? '');
     });
   }
 
@@ -212,11 +212,14 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
-  /// Updates the current page parameters with the given project group [id].
+  /// Updates the current page parameters with the selected project id
+  /// or an empty string if the id is `null`.
   void selectProjectGroup(String id) {
     _updateSelectedProjectGroup(id);
 
-    _updateCurrentPageParameters(projectGroupId: id);
+    final projectGroupId = _selectedProjectGroup?.id ?? '';
+
+    _updateCurrentPageParameters(projectGroupId: projectGroupId);
   }
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
@@ -598,7 +601,6 @@ class ProjectMetricsNotifier extends PageNotifier {
   ///
   /// If the given [projectFilter] or [projectGroupId] is `null`,
   /// current values are used.
-  /// If current values are `null`, an empty string is used.
   void _updateCurrentPageParameters({
     String projectFilter,
     String projectGroupId,
@@ -607,8 +609,8 @@ class ProjectMetricsNotifier extends PageNotifier {
     final updatedProjectGroupId = projectGroupId ?? _selectedProjectGroup?.id;
 
     final updatedPageParameters = _currentPageParameters.copyWith(
-      projectFilter: updatedprojectFilter ?? '',
-      projectGroupId: updatedProjectGroupId ?? '',
+      projectFilter: updatedprojectFilter,
+      projectGroupId: updatedProjectGroupId,
     );
 
     _applyPageParameters(updatedPageParameters);
