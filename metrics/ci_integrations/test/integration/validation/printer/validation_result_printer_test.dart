@@ -9,7 +9,7 @@ import 'package:ci_integration/integration/validation/model/field_validation_res
 import 'package:ci_integration/integration/validation/model/mappers/field_validation_conclusion_mapper.dart';
 import 'package:ci_integration/integration/validation/model/validation_result.dart';
 import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
-import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
+import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config_field.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -24,9 +24,9 @@ void main() {
 
     const additionalContext = 'context';
 
-    final firstField = BuildkiteSourceConfigField.accessToken;
-    final secondField = BuildkiteSourceConfigField.organizationSlug;
-    final thirdField = BuildkiteSourceConfigField.pipelineSlug;
+    final firstField = JenkinsSourceConfigField.apiKey;
+    final secondField = JenkinsSourceConfigField.jobName;
+    final thirdField = JenkinsSourceConfigField.username;
 
     const successResult = FieldValidationResult.success(
       additionalContext: additionalContext,

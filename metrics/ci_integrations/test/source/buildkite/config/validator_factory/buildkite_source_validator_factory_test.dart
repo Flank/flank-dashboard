@@ -1,11 +1,11 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/config/validator/buildkite_source_validator.dart';
 import 'package:ci_integration/source/buildkite/config/validator_factory/buildkite_source_validator_factory.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 //ignore_for_file: avoid_redundant_argument_values

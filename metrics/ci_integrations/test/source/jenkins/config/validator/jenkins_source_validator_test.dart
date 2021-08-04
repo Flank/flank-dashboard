@@ -58,7 +58,7 @@ void main() {
     final noUsernameConfig = createConfig(username: null);
     final noApiKeyConfig = createConfig(apiKey: null);
     final noAuthConfig = createConfig(username: null, apiKey: null);
-    
+
     PostExpectation<Future<FieldValidationResult<void>>> whenValidateUrl() {
       return when(validationDelegate.validateJenkinsUrl(url));
     }
