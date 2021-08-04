@@ -91,23 +91,33 @@ class NavigationNotifier extends ChangeNotifier {
         assert(navigationState != null),
         _navigationState = navigationState;
 
-  /// Handles the authentication update represented by the given [isLoggedIn].
+  /// Handles the log out of the user.
   ///
-  /// Clears the pages stack and pushes the [DefaultRoutes.login]
-  /// after the user logs out.
-  void handleAuthenticationUpdates({
-    bool isLoggedIn,
-  }) {
-    if (_isUserLoggedIn == isLoggedIn) return;
+  /// Does nothing if a user is not logged in.
+  void handleLoggedOut() {
+    if (!_isUserLoggedIn) return;
 
-    final currentPageName = currentConfiguration?.name;
-    _isUserLoggedIn = isLoggedIn ?? false;
+    _isUserLoggedIn = false;
+    _redirectRoute = null;
 
-    if (!_isUserLoggedIn && currentPageName != DefaultRoutes.login.name) {
+    final currentRouteName = currentConfiguration?.name;
+
+    if (currentRouteName != DefaultRoutes.login.name) {
       _pages.clear();
 
       push(DefaultRoutes.login);
     }
+  }
+
+  /// Handles the log in of the user.
+  ///
+  /// Does nothing if a user is logged in.
+  void handleLoggedIn() {
+    if (_isUserLoggedIn) return;
+
+    _isUserLoggedIn = true;
+
+    _redirect();
   }
 
   /// Handles the application's initialization state update represented by the
@@ -222,10 +232,14 @@ class NavigationNotifier extends ChangeNotifier {
   void pushStateReplacement(RouteConfiguration configuration) {
     if (_pages.isNotEmpty) _pages.removeLast();
 
+    _pushWithStateReplacement(configuration);
+  }
+
+  /// Pushes the given [configuration] and replaces the current state path
+  /// with the path of the [_currentConfiguration].
+  void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
-    replaceState(
-      path: _currentConfiguration.path,
-    );
+    replaceState(path: _currentConfiguration.path);
   }
 
   /// Handles the initial route.
@@ -248,8 +262,12 @@ class NavigationNotifier extends ChangeNotifier {
     }
 
     _pages.clear();
-    push(_redirectRoute);
-    _redirectRoute = null;
+
+    _pushWithStateReplacement(_redirectRoute);
+
+    if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
+      _redirectRoute = null;
+    }
   }
 
   /// Creates a [RouteConfiguration] using the given [page].
@@ -281,7 +299,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// and saves the [_redirectRoute].
   ///
   /// If the user is not logged in and the given [configuration]
-  /// requires authorization, returns [DefaultRoutes.login]
+  /// requires authorization, saves the [_redirectRoute] and
+  /// returns [DefaultRoutes.login].
   ///
   /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
@@ -295,7 +314,11 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) return DefaultRoutes.login;
+    if (!_isUserLoggedIn && authorizationRequired) {
+      _redirectRoute = configuration;
+
+      return DefaultRoutes.login;
+    }
 
     return configuration;
   }

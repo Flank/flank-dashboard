@@ -157,51 +157,6 @@ void main() {
     );
 
     testWidgets(
-      "replaces the navigation state path once the application finishes initialization",
-      (tester) async {
-        final navigationNotifier = NavigationNotifierMock();
-        final configuration = DefaultRoutes.dashboard;
-
-        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
-          debugMenuViewModel,
-        );
-
-        when(navigationNotifier.currentConfiguration).thenReturn(
-          configuration,
-        );
-
-        await tester.pumpWidget(
-          _LoadingPageTestbed(
-            authNotifier: authNotifier,
-            featureConfigNotifier: featureConfigNotifier,
-            debugMenuNotifier: debugMenuNotifier,
-            navigationNotifier: navigationNotifier,
-          ),
-        );
-
-        when(authNotifier.isLoggedIn).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
-        when(featureConfigNotifier.isInitialized).thenReturn(true);
-        when(authNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isLoading).thenReturn(false);
-
-        authNotifier.notifyListeners();
-        featureConfigNotifier.notifyListeners();
-        debugMenuNotifier.notifyListeners();
-
-        verify(navigationNotifier.replaceState(
-          data: anyNamed('data'),
-          title: anyNamed('title'),
-          path: argThat(
-            equals(configuration.path),
-            named: 'path',
-          ),
-        )).called(once);
-      },
-    );
-
-    testWidgets(
       "does not delegate to the navigation notifier if the feature config is loading",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
@@ -424,55 +379,6 @@ void main() {
 
         verify(navigationNotifier.handleAppInitialized(
           isAppInitialized: anyNamed('isAppInitialized'),
-        )).called(once);
-      },
-    );
-
-    testWidgets(
-      "replaces the navigation state path on opened if the application is initialized",
-      (tester) async {
-        final navigationNotifier = NavigationNotifierMock();
-        final configuration = DefaultRoutes.dashboard;
-
-        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
-          debugMenuViewModel,
-        );
-
-        when(navigationNotifier.currentConfiguration).thenReturn(
-          configuration,
-        );
-
-        when(authNotifier.isLoggedIn).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
-        when(featureConfigNotifier.isInitialized).thenReturn(true);
-        when(authNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isLoading).thenReturn(false);
-
-        when(featureConfigNotifier.initializeConfig()).thenAnswer((_) async {
-          return featureConfigNotifier.notifyListeners();
-        });
-
-        when(debugMenuNotifier.initializeLocalConfig()).thenAnswer((_) async {
-          return debugMenuNotifier.notifyListeners();
-        });
-
-        await tester.pumpWidget(
-          _LoadingPageTestbed(
-            navigationNotifier: navigationNotifier,
-            authNotifier: authNotifier,
-            featureConfigNotifier: featureConfigNotifier,
-            debugMenuNotifier: debugMenuNotifier,
-          ),
-        );
-
-        verify(navigationNotifier.replaceState(
-          data: anyNamed('data'),
-          title: anyNamed('title'),
-          path: argThat(
-            equals(configuration.path),
-            named: 'path',
-          ),
         )).called(once);
       },
     );
