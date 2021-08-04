@@ -150,12 +150,8 @@ class NavigationNotifier extends ChangeNotifier {
 
     _currentPageParameters = pageParameters;
 
-    final filteredPageParameters = _removeEmptyAndNullValues(
-      _currentPageParameters.toMap(),
-    );
-
     _currentConfiguration = _currentConfiguration.copyWith(
-      parameters: filteredPageParameters,
+      parameters: _currentPageParameters.toMap(),
     );
 
     final lastPage = _pages.removeLast();
@@ -332,16 +328,5 @@ class NavigationNotifier extends ChangeNotifier {
     final pageParameters = _pageParametersFactory.create(_currentConfiguration);
 
     _currentPageParameters = pageParameters;
-  }
-
-  /// Removes empty and `null` values from the given [map].
-  Map<String, String> _removeEmptyAndNullValues(
-    Map<String, dynamic> map,
-  ) {
-    final filteredMap = Map<String, String>.from(map);
-
-    filteredMap.removeWhere((_, value) => value == null || value.isEmpty);
-
-    return filteredMap;
   }
 }

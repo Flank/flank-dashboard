@@ -67,7 +67,6 @@ void main() {
     test(
       ".convert() returns a location containing the given route configuration's path and parameters as query parameters",
       () {
-        const path = '/test';
         const parameters = {'test': 'test'};
         const expectedLocation = '/test?test=test';
 
@@ -77,6 +76,34 @@ void main() {
         final result = locationConverter.convert(routeConfiguration);
 
         expect(result, equals(expectedLocation));
+      },
+    );
+
+    test(
+      ".convert() returns a location that does not contain empty query parameters keys",
+      () {
+        const parameters = {'test': ''};
+
+        when(routeConfiguration.path).thenReturn(path);
+        when(routeConfiguration.parameters).thenReturn(parameters);
+
+        final result = locationConverter.convert(routeConfiguration);
+
+        expect(result, equals(path));
+      },
+    );
+
+    test(
+      ".convert() returns a location that does not contain null query parameters keys",
+      () {
+        const parameters = {'test': null};
+
+        when(routeConfiguration.path).thenReturn(path);
+        when(routeConfiguration.parameters).thenReturn(parameters);
+
+        final result = locationConverter.convert(routeConfiguration);
+
+        expect(result, equals(path));
       },
     );
   });

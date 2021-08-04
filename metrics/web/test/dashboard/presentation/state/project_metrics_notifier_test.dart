@@ -856,26 +856,6 @@ void main() {
     );
 
     test(
-      ".filterByProjectName() updates the current page project filter parameter with an empty string if called with null value",
-      () {
-        const expectedPageParameters = DashboardPageParametersModel(
-          projectFilter: '',
-        );
-
-        final listener = expectAsyncUntil0(
-          () {},
-          () {
-            return projectMetricsNotifier.pageParameters ==
-                expectedPageParameters;
-          },
-        );
-
-        projectMetricsNotifier.addListener(listener);
-        projectMetricsNotifier.filterByProjectName(null);
-      },
-    );
-
-    test(
       ".filterByProjectName() does not update the current page project group id parameter",
       () {
         projectMetricsNotifier.setProjectGroups(projectGroups);

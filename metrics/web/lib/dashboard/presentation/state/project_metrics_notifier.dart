@@ -178,7 +178,7 @@ class ProjectMetricsNotifier extends PageNotifier {
         .listen((value) {
       _projectNameFilter = value;
 
-      _updateCurrentPageParameters(projectFilter: _projectNameFilter ?? '');
+      _updateCurrentPageParameters(projectFilter: _projectNameFilter);
     });
   }
 
@@ -616,7 +616,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     _applyPageParameters(updatedPageParameters);
   }
 
-  /// Applies the given [pageParameters].
+  /// Updates the [_currentPageParameters] with the given [pageParameters].
   void _applyPageParameters(DashboardPageParametersModel pageParameters) {
     _currentPageParameters = pageParameters;
 
