@@ -18,7 +18,7 @@ class RouteConfigurationLocationConverter {
     final path = routeConfiguration.path;
     final parameters = routeConfiguration.parameters;
 
-    final filteredParameters = _removeEmptyAndNullValues(parameters);
+    final filteredParameters = _filterQueryParameters(parameters);
     final hasParameters =
         filteredParameters != null && filteredParameters.isNotEmpty;
     final queryParameters = hasParameters ? filteredParameters : null;
@@ -28,19 +28,18 @@ class RouteConfigurationLocationConverter {
     return '$uri';
   }
 
-  /// Removes empty and `null` values from the given [map].
+  /// Removes empty and `null` values from the given [queryParameters].
   ///
-  /// Returns `null` if the given [map] is `null`.
-  /// Returns `null` if the given [map] contains only empty and `null` values.
-  Map<String, String> _removeEmptyAndNullValues(Map<String, dynamic> map) {
-    if (map == null) return null;
+  /// Returns `null` if the given [queryParameters] is `null` or an empty.
+  Map<String, String> _filterQueryParameters(
+    Map<String, dynamic> queryParameters,
+  ) {
+    if (queryParameters == null || queryParameters.isEmpty) return null;
 
-    final updatedMap = Map<String, String>.from(map);
+    final filteredParameters = Map<String, String>.from(queryParameters);
 
-    updatedMap.removeWhere((_, value) => value == null || value.isEmpty);
+    filteredParameters.removeWhere((_, value) => value == null || value.isEmpty);
 
-    if (updatedMap.isEmpty) return null;
-
-    return updatedMap;
+    return filteredParameters;
   }
 }
