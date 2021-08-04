@@ -21,12 +21,12 @@ import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
   group("NavigationNotifier", () {
+    final routeConfigurationLocationConverter =
+        _RouteConfigurationLocationConverterMock();
     const pageParametersModel = DashboardPageParametersModel(
       projectGroupId: 'projectGroupId',
       projectFilter: 'projectFilter',
     );
-    final routeConfigurationLocationConverter =
-        _RouteConfigurationLocationConverterMock();
 
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
