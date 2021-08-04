@@ -857,7 +857,7 @@ void main() {
     );
 
     test(
-      ".filterByProjectName() updates the current page project filter parameter with an empty string if project name filter value is null",
+      ".filterByProjectName() updates the current page project filter parameter with an empty string if the project name filter value is null",
       () {
         const expectedPageParameters = DashboardPageParametersModel(
           projectFilter: '',

@@ -88,7 +88,8 @@ class ProjectMetricsNotifier extends PageNotifier {
   List<ProjectGroupDropdownItemViewModel> _projectGroupDropdownItems = [];
 
   /// A [DashboardPageParametersModel] that holds current page parameters.
-  DashboardPageParametersModel _currentPageParameters;
+  DashboardPageParametersModel _currentPageParameters =
+      const DashboardPageParametersModel();
 
   @override
   DashboardPageParametersModel get pageParameters => _currentPageParameters;
@@ -595,9 +596,6 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Updates the [_currentPageParameters] with the given [projectFilter] and
   /// [projectGroupId].
   ///
-  /// If the [_currentPageParameters] is `null`, creates a new instance of
-  /// the [DashboardPageParametersModel] updated with the given parameters.
-  ///
   /// If the given [projectFilter] or [projectGroupId] is `null`,
   /// current values are used.
   /// If current values are `null`, an empty string is used.
@@ -605,13 +603,10 @@ class ProjectMetricsNotifier extends PageNotifier {
     String projectFilter,
     String projectGroupId,
   }) {
-    final pageParameters =
-        _currentPageParameters ?? const DashboardPageParametersModel();
-
     final updatedprojectFilter = projectFilter ?? _projectNameFilter;
     final updatedProjectGroupId = projectGroupId ?? _selectedProjectGroup?.id;
 
-    final updatedPageParameters = pageParameters.copyWith(
+    final updatedPageParameters = _currentPageParameters.copyWith(
       projectFilter: updatedprojectFilter ?? '',
       projectGroupId: updatedProjectGroupId ?? '',
     );
