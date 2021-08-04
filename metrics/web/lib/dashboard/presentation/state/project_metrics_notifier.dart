@@ -177,12 +177,7 @@ class ProjectMetricsNotifier extends PageNotifier {
         .listen((value) {
       _projectNameFilter = value;
 
-      final pageParameters = _updateCurrentPageParameters(
-        projectFilter: _projectNameFilter,
-        projectGroupId: _selectedProjectGroup?.id,
-      );
-
-      _applyPageParameters(pageParameters);
+      _updateCurrentPageParameters(projectFilter: _projectNameFilter);
     });
   }
 
@@ -218,6 +213,16 @@ class ProjectMetricsNotifier extends PageNotifier {
   ///
   /// Updates the current page parameters with the given project group [id].
   void selectProjectGroup(String id) {
+    _updateSelectedProjectGroup(id);
+
+    _updateCurrentPageParameters(projectGroupId: id);
+  }
+
+  /// Sets the [selectedProjectGroup] to project group with the given [id].
+  ///
+  /// Does nothing if the [_projectGroupDropdownItems] does not contain
+  /// the project group with the given [id].
+  void _updateSelectedProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == id,
       orElse: () => null,
@@ -226,13 +231,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     if (projectGroup == null) return;
 
     _selectedProjectGroup = projectGroup;
-
-    final pageParameters = _updateCurrentPageParameters(
-      projectFilter: _projectNameFilter,
-      projectGroupId: id,
-    );
-
-    _applyPageParameters(pageParameters);
   }
 
   /// Updates projects and an error message.
@@ -601,18 +599,24 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// the [DashboardPageParametersModel] updated with the given parameters.
   ///
   /// If the given [projectFilter] or [projectGroupId] is `null`,
-  /// an empty string is used.
-  DashboardPageParametersModel _updateCurrentPageParameters({
+  /// current values are used.
+  /// If current values are `null`, an empty string is used.
+  void _updateCurrentPageParameters({
     String projectFilter,
     String projectGroupId,
   }) {
     final pageParameters =
         _currentPageParameters ?? const DashboardPageParametersModel();
 
-    return pageParameters.copyWith(
-      projectFilter: projectFilter ?? '',
-      projectGroupId: projectGroupId ?? '',
+    final updatedprojectFilter = projectFilter ?? _projectNameFilter;
+    final updatedProjectGroupId = projectGroupId ?? _selectedProjectGroup?.id;
+
+    final updatedPageParameters = pageParameters.copyWith(
+      projectFilter: updatedprojectFilter ?? '',
+      projectGroupId: updatedProjectGroupId ?? '',
     );
+
+    _applyPageParameters(updatedPageParameters);
   }
 
   /// Applies the given [pageParameters].

@@ -759,36 +759,6 @@ void main() {
     );
 
     test(
-      ".pageParameters is a dashboard page parameters model",
-      () {
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
-
-        expect(
-          projectMetricsNotifier.pageParameters,
-          isA<DashboardPageParametersModel>(),
-        );
-      },
-    );
-
-    test(
-      ".pageParameters provides current page parameters",
-      () {
-        const expectedParameters = DashboardPageParametersModel(
-          projectFilter: '',
-          projectGroupId: projectGroupId,
-        );
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
-
-        expect(
-          projectMetricsNotifier.pageParameters,
-          equals(expectedParameters),
-        );
-      },
-    );
-
-    test(
       ".filterByProjectName() filters list of the project metrics according to the given value",
       () async {
         final metricsTileViewModel =
@@ -904,6 +874,30 @@ void main() {
 
         projectMetricsNotifier.addListener(listener);
         projectMetricsNotifier.filterByProjectName(null);
+      },
+    );
+
+    test(
+      ".filterByProjectName() does not update the current page project group id parameter",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: projectNameFilter,
+          projectGroupId: projectGroupId,
+        );
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.pageParameters ==
+                expectedPageParameters;
+          },
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
       },
     );
 
@@ -1093,7 +1087,6 @@ void main() {
     test(
       ".selectProjectGroup() filters a list of project metrics according to the given project group id",
       () {
-        const projectId = "projectId";
         const selectedProjectIds = [projectId];
 
         const projects = [
@@ -1195,6 +1188,29 @@ void main() {
           projectMetricsNotifier.pageParameters,
           equals(expectedPageParameters),
         );
+      },
+    );
+
+    test(
+      ".setProjectGroups() does not update the current page project filter parameter",
+      () {
+        const expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: projectNameFilter,
+          projectGroupId: projectGroupId,
+        );
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.pageParameters ==
+                expectedPageParameters;
+          },
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
       },
     );
 

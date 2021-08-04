@@ -19,14 +19,19 @@ import 'package:test/test.dart';
 import '../../../../test_utils/matchers.dart';
 import '../../../../test_utils/navigation_state_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("NavigationNotifier", () {
+    const projectGroupId = 'projectGroupId';
+    const projectFilter = 'projectFilter';
+    const pageParametersModel = DashboardPageParametersModel(
+      projectGroupId: projectGroupId,
+      projectFilter: projectFilter,
+    );
     final routeConfigurationLocationConverter =
         _RouteConfigurationLocationConverterMock();
-    const pageParametersModel = DashboardPageParametersModel(
-      projectGroupId: 'projectGroupId',
-      projectFilter: 'projectFilter',
-    );
+
     final pageFactory = MetricsPageFactory();
     final navigationState = NavigationStateMock();
     final pageParametersFactory = _PageParametersFactoryMock();
@@ -634,13 +639,34 @@ void main() {
     );
 
     test(
-      ".handlePageParametersUpdates() updates current configuration parameters with removing null and empty values",
+      ".handlePageParametersUpdates() updates current configuration parameters with removing null values",
       () {
         const pageParameters = DashboardPageParametersModel(
-          projectFilter: 'projectFilter',
+          projectFilter: projectFilter,
+          projectGroupId: null,
         );
         final expectedPageParametersMap = {
-          'projectFilter': pageParameters.projectFilter,
+          'projectFilter': projectFilter,
+        };
+
+        notifier.handlePageParametersUpdates(pageParameters);
+
+        expect(
+          notifier.currentConfiguration.parameters,
+          equals(expectedPageParametersMap),
+        );
+      },
+    );
+
+    test(
+      ".handlePageParametersUpdates() updates current configuration parameters with removing empty values",
+      () {
+        const pageParameters = DashboardPageParametersModel(
+          projectFilter: '',
+          projectGroupId: projectGroupId,
+        );
+        final expectedPageParametersMap = {
+          'projectGroupId': projectGroupId,
         };
 
         notifier.handlePageParametersUpdates(pageParameters);
