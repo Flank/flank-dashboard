@@ -250,10 +250,19 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectGroupModels = projectGroupModels;
 
     _refreshProjectGroupDropdownItemViewModels();
+    _updatePageParameters();
   }
 
   @override
-  void handlePageParameters(PageParametersModel parameters) {}
+  void handlePageParameters(PageParametersModel parameters) {
+    if (parameters == null) return;
+
+    final pageParameters = parameters as DashboardPageParametersModel;
+
+    _projectNameFilter = pageParameters?.projectFilter;
+
+    _setPageParameters(pageParameters);
+  }
 
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
@@ -277,11 +286,9 @@ class ProjectMetricsNotifier extends PageNotifier {
         .toList());
 
     _selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
-      (group) => group.id == _selectedProjectGroup?.id,
+      (group) => group.id == _pageParameters?.projectGroupId,
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
-
-    notifyListeners();
   }
 
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
@@ -605,7 +612,11 @@ class ProjectMetricsNotifier extends PageNotifier {
   }
 
   /// Updates the [_pageParameters] with the given [pageParameters].
+  ///
+  /// Does nothing if the given [pageParameters] equal to the [_pageParameters].
   void _setPageParameters(DashboardPageParametersModel pageParameters) {
+    if (pageParameters == _pageParameters) return;
+
     _pageParameters = pageParameters;
 
     notifyListeners();
