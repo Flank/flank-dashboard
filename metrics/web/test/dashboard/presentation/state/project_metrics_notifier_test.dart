@@ -856,30 +856,6 @@ void main() {
     );
 
     test(
-      ".filterByProjectName() does not update the current page project group id parameter",
-      () {
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
-
-        const expectedPageParameters = DashboardPageParametersModel(
-          projectFilter: projectNameFilter,
-          projectGroupId: projectGroupId,
-        );
-
-        final listener = expectAsyncUntil0(
-          () {},
-          () {
-            return projectMetricsNotifier.pageParameters ==
-                expectedPageParameters;
-          },
-        );
-
-        projectMetricsNotifier.addListener(listener);
-        projectMetricsNotifier.filterByProjectName(projectNameFilter);
-      },
-    );
-
-    test(
       ".dispose() unsubscribes from all streams and removes project metrics",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
@@ -1146,29 +1122,6 @@ void main() {
           projectMetricsNotifier.pageParameters,
           equals(expectedPageParameters),
         );
-      },
-    );
-
-    test(
-      ".setProjectGroups() does not update the current page project filter parameter",
-      () {
-        const expectedPageParameters = DashboardPageParametersModel(
-          projectFilter: projectNameFilter,
-          projectGroupId: projectGroupId,
-        );
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-
-        final listener = expectAsyncUntil0(
-          () {},
-          () {
-            return projectMetricsNotifier.pageParameters ==
-                expectedPageParameters;
-          },
-        );
-
-        projectMetricsNotifier.addListener(listener);
-        projectMetricsNotifier.filterByProjectName(projectNameFilter);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
       },
     );
 

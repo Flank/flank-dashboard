@@ -38,7 +38,9 @@ class RouteConfigurationLocationConverter {
 
     final filteredParameters = Map<String, String>.from(queryParameters);
 
-    filteredParameters.removeWhere((_, value) => value == null || value.isEmpty);
+    filteredParameters.removeWhere(
+      (_, value) => value == null || value.isEmpty,
+    );
 
     return filteredParameters;
   }
