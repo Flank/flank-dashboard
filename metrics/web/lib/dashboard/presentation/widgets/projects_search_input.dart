@@ -27,6 +27,8 @@ class ProjectSearchInput extends StatefulWidget {
   _ProjectSearchInputState createState() => _ProjectSearchInputState();
 }
 
+/// A class that contains the logic and internal state
+/// of the [ProjectSearchInput] widget.
 class _ProjectSearchInputState extends State<ProjectSearchInput> {
   /// A text editing controller for a project name.
   final TextEditingController _projectNameController = TextEditingController();
