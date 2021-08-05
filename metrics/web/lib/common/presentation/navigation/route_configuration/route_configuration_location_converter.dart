@@ -28,7 +28,7 @@ class RouteConfigurationLocationConverter {
     return '$uri';
   }
 
-  /// Removes empty and `null` values from the given [queryParameters].
+  /// Filters out empty and `null` values from the given [queryParameters].
   ///
   /// Returns `null` if the given [queryParameters] is `null` or an empty.
   Map<String, String> _filterQueryParameters(
