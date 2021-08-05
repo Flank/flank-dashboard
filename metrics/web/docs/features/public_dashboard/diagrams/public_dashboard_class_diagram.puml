@@ -1,4 +1,4 @@
-@startuml public_dashboard_overall_class_diagram
+@startuml public_dashboard_class_diagram
 
 package auth {
     package presentation as auth_presentation{

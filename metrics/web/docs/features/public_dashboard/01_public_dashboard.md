@@ -348,11 +348,11 @@ The last thing we should change the Metrics user menu UI accordingly to the [Use
 
 Consider the overall class diagram for the public dashboard feature that describes the relationships between the classes this feature requires:
 
-![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_overall_class_diagram.puml)
+![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
 
 Consider the overall sequence diagram for the public dashboard feature that describes the main flow for the public dashboard feature:
 
-![Public Dashboard Feature Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_overall_sequence_diagram.puml)
+![Public Dashboard Feature Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_sequence_diagram.puml)
 
 ### Testing
 > Describe an approach on how the feature should be tested.

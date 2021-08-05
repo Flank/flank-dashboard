@@ -13,7 +13,7 @@ package feature_config.presentation {
 package auth {
     package domain {
         package usecases {
-            class SignInAnomymouslyUseCase {}
+            class SignInAnonymouslyUseCase {}
         }
 
         package repositories {
@@ -51,10 +51,10 @@ package common.presentation {
 FeatureConfigNotifier --> PublicDashboardFeatureConfigViewModel : provides
 
 AuthNotifier -left-> UserProfileViewModel : provides
-AuthNotifier --> SignInAnomymouslyUseCase : uses
+AuthNotifier --> SignInAnonymouslyUseCase : uses
 AuthNotifier -right-> AuthState : uses
 
-SignInAnomymouslyUseCase --> UserRepository : uses
+SignInAnonymouslyUseCase --> UserRepository : uses
 
 MetricsUserMenu --> UserProfileViewModel : uses
 NavigationNotifier --> AuthState : uses
