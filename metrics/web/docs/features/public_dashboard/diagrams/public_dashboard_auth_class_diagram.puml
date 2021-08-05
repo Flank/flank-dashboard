@@ -17,16 +17,19 @@ package auth {
         package models {
             enum AuthState {
                  loggedIn
-                 loggedAnonymously
-                 unauthenticated
+                 loggedInAnonymously
+                 loggedOut
             }
         }
 
         package state {
             class AuthNotifier {
-                - _authState: AuthState
+                - _isPublicDashboardFeatureEnabled: bool
+                + authState: AuthState
+                + isAuthInitialized: bool
                 + userProfileViewModel: UserProfileViewModel
-                + signInAnonymously(): Future<void>
+                - signInAnonymously(): Future<void>
+                + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
             }
         }
     }

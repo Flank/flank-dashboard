@@ -165,40 +165,16 @@ The following sections explains the implementation details of the public dashboa
 ### Architecture
 > Fundamental structures of the feature and context (diagram).
 
-Once we've chosen the implementation approach of the public dashboard, let's consider the top-level components diagram explaining the main components and their relationships needed to implement this feature.
+Once we've chosen the implementation approach of the public dashboard, let's review the main points this feature architecture requires:
+- add the ability to sign in anonymously into the `AuthNotifier`;
+- subscribe the `AuthNotifier` to the `FeatureConfigNotifier`, so the first one is able to take the public dashboard feature state from the last one;
+- after taking the state of the public dashboard feature, the `AuthNotifier` can handle the anonymous sign in by itself;
+- subscribe the `NavigationNotifier` to the `AuthNotifier`, so the `NavigationNotifier` is able to take the current user auth state from the `AuthNotifier`;
+- after taking the auth state of the user, the `NavigationNotifier` can handle the navigation depending on it;
+
+Consider the following component diagram that briefly describes this architecture approach:
 
 ![Public Dashboard Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_components_diagram.puml)
-
-To meet the new relationships from the diagram, we need to implement the following classes: 
-- [PublicDashboardFeatureConfigViewModel](#PublicDashboardFeatureConfigViewModel)
-- [UserProfileViewModel](#UserProfileViewModel)
-- [SignInAnonymouslyUseCase](#SignInAnonymouslyUseCase)
-- [AuthState](#AuthState)
-
-Let's consider each class in a bit more detail: 
-
-#### PublicDashboardFeatureConfigViewModel
-> Explain the purpose and responsibility of the class.
-
-Since we should sign in the user anonymously after the app initializing, we should be able to access the feature state from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, for this purpose, we should create a view model representing a public dashboard feature state to be able to work with this state value, for example, on the `loading page`.
-
-#### UserProfileViewModel
-> Explain the purpose and responsibility of the class.
-
-To disable some features on the UI when the user is anonymous, we should have access the user profile from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, we should create a view model representing a user profile to disable the `Project Groups` page and provide the ability to `Sign In` to the application for the anonymous users.
-
-#### SignInAnonymouslyUseCase
-> Explain the purpose and responsibility of the class.
-
-Since the public dashboard feature implies logging in as an anonymous user, we should create a use case needed to log in to the application using the anonymous user. 
-
-#### AuthState
-> Explain the purpose and responsibility of the class.
-
-Since we should know the authentication state of the user, we should provide an enum that will contain all the following states:
-- loggedIn
-- loggedInAnonymously
-- loggedOut
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -275,12 +251,19 @@ Consider the following subsections that describe each module changes in more det
 
 #### FeatureConfig module
 
-The first important part is adding the ability to track the feature state to change the behavior of our application correspondingly.
+The first important part is adding the ability to track the feature state to change the behavior of our application correspondingly. For this purpose, we should implement the new `PublicDashboardFeatureConfigModel` class and make changes to this module. The following subsections describes this class in a bit more detail and changes required for feature integration.
 
-To implement this, we should follow the next steps:
+##### PublicDashboardFeatureConfigModel
+> Explain the purpose and responsibility of the class.
+
+Since we are going to store the public dashboard configuration in the Firestore database and the `FeatureConfigNotifier` manages the application state related to the feature configuration, we should be able to transfer the configuration of the public dashboard feature between different states. According to the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#model) document, to transfer the data between the states, we should use the `model` classes. So, for this purpose, we should create a `PublicDashboardFeatureConfigModel` that will be used to transfer the public dashboard feature configuration from the `FeatureConfigNotifier` to any other state in the application.
+
+##### Module changes
+
+The list of changes this module requires to integrate the public dashboard feature:
 1. Add the `isPublicDashboardFeatureEnabled` boolean field to the `FeatureConfig` model; 
 2. Change the `FeatureConfigData`'s `fromJson()` and `toJson()` methods, so they include handling the new added field;
-3. Create the [`PublicDashboardFeatureConfigViewModel`](#PublicDashboardFeatureConfigViewModel) and initialize it in the `FeatureConfigNotifier` as the other ones.
+3. Create the [`PublicDashboardFeatureConfigModel`](#PublicDashboardFeatureConfigModel) and initialize it in the `FeatureConfigNotifier`.
 
 Let's review the following class diagram, which describes the relationship between the classes in this module:
 
@@ -288,13 +271,38 @@ Let's review the following class diagram, which describes the relationship betwe
 
 #### Auth module
 
-Next, we should add the ability to sign in anonymously and detect this kind of user. For these purposes, we should make the following changes in the `auth` module:
+Next, we should add the ability to sign in anonymously and detect this kind of user. For these purposes, we should create the classes and make module changes described in the following subsections.
+
+##### UserProfileViewModel
+> Explain the purpose and responsibility of the class.
+
+Since we want to disable some features on the UI if the user is anonymous, we should be able to access the user profile from the UI. As the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document states, we should create a view model to be able to access the data from the `state` on the UI. So, we should create a view model representing a user profile to disable the `Project Groups` page and provide the ability to `Sign In` to the application for the anonymous users.
+
+##### SignInAnonymouslyUseCase
+> Explain the purpose and responsibility of the class.
+
+Since the public dashboard feature implies logging in as an anonymous user, we should create a use case needed to log in to the application using the anonymous user.
+
+#### AuthState
+> Explain the purpose and responsibility of the class.
+
+Since we should know the authentication state of the user, we should provide an enum that will contain all the following states:
+- loggedIn
+- loggedInAnonymously
+- loggedOut
+
+##### Module changes
+
+The list of changes this module requires to integrate the public dashboard feature:
 - add the `signInAnonymously()` method to the `UserRepository` abstract class;
 - add the implementation of the `signInAnonymously()` method to the `FirebaseUserRepository` class;
-- create the [`SignInAnonymouslyUseCase`](#SignInAnonymouslyUseCase) class, which calls the `signInAnonymously()` method of the `UserRepository`;
+- add the `isPublicDashboardFeatureEnabled` field of the boolean type to the `AuthNotifier`;
+- add the `isAuthInitialized` field of the boolean type to the `AuthNotifier`;  
+- add the `handlePublicDashboardFeatureConfigUpdates()` to the `AuthNotifier`, so we can handle the feature state updates;
 - create the [`UserProfileViewModel`](#UserProfileViewModel) class;
+- create the [`SignInAnonymouslyUseCase`](#SignInAnonymouslyUseCase) class, which calls the `signInAnonymously()` method of the `UserRepository`;
 - create the `AuthState` enum;
-- integrate the use case, the enum, and the view model described above into the `AuthNotifier`.
+- integrate the view model, the use case, and the enum described above into the `AuthNotifier`.
 
 Let's review the following class diagram, which describes the relationship between the classes in this module:
 
@@ -302,9 +310,13 @@ Let's review the following class diagram, which describes the relationship betwe
 
 #### Navigation module
 
-The last thing, we should have the ability to manage the navigation of the anonymous user, that is, to know which pages they can visit and which they can't. Following the next steps, helps to achieve this purpose:
+The last thing, we should have the ability to manage the navigation of the anonymous user, that is, to know which pages they can visit and which they can't. The next subsection describes changes that we should implement to integrate the public dashboard feature.
+
+##### Module changes
+
+The list of changes this module requires to integrate the public dashboard feature:
 - add the field of the `AuthState` type to the `NavigationNotifier`;
-- change the `handleAuthenticationUpdates()` method of the `NavigationNotifier` to take an argument of the type `AuthState`;
+- add the `handleAuthUpdates()` method to the `NavigationNotifier`, which should handle the updating of the `AuthState` in the `AuthNotifier`;
 - create a set of the pages' `RouteName`, which the anonymous user can visit (at the moment, it is only the `dashboard` route name);
 - add the additional condition to the `_processConfiguration()` method, which should state the following, if the user auth state is logged in anonymously, and they visit the page, whose `RouteName` is not in the anonymous `RouteName` set, then redirect to the `login` page;
 
@@ -333,6 +345,14 @@ Next one, to manage the sign in for the anonymous user, we should firstly sign o
 ##### Change the Metrics user menu UI
 
 The last thing we should change the Metrics user menu UI accordingly to the [User Interface section](#user-interface). For this purpose, we should take the [`UserProfileViewModel`](#UserProfileViewModel) from the `AuthNotifier` and disable the specified parts in the UI based on the view model value. 
+
+Consider the overall class diagram for the public dashboard feature that describes the relationships between the classes this feature requires:
+
+![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_overall_class_diagram.puml)
+
+Consider the overall sequence diagram for the public dashboard feature that describes the main flow for the public dashboard feature:
+
+![Public Dashboard Feature Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_overall_sequence_diagram.puml)
 
 ### Testing
 > Describe an approach on how the feature should be tested.

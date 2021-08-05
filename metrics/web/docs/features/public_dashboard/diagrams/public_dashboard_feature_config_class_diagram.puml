@@ -2,16 +2,16 @@
 
 package feature_config {
     package presentation {
-        package view_models {
-            class PublicDashboardFeatureConfigViewModel extends FeatureConfigViewModel {}
-
-            abstract class FeatureConfigViewModel {
+        package models {
+            class PublicDashboardFeatureConfigModel {
                 + isEnabled: bool
             }
         }
 
         package state {
-            class FeatureConfigNotifier {}
+            class FeatureConfigNotifier {
+                + publicDashboardFeatureConfigModel: PublicDashboardFeatureConfigModel
+            }
         }
     }
 
@@ -32,6 +32,6 @@ package feature_config {
 }
 
 FeatureConfigNotifier --> FeatureConfig: uses
-FeatureConfigNotifier --> PublicDashboardFeatureConfigViewModel: provides
+FeatureConfigNotifier --> PublicDashboardFeatureConfigModel: provides
 
 @enduml
