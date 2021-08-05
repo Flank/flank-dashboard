@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
+import 'package:metrics/common/presentation/state/page_notifier.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -20,6 +22,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_build_day_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -38,7 +41,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
-class ProjectMetricsNotifier extends ChangeNotifier {
+class ProjectMetricsNotifier extends PageNotifier {
   /// A [ProjectGroupDropdownItemViewModel] representing
   /// a project group with all projects.
   static const _allProjectsGroupDropdownItemViewModel =
@@ -83,6 +86,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Holds the list of current [ProjectGroupDropdownItemViewModel]s.
   List<ProjectGroupDropdownItemViewModel> _projectGroupDropdownItems = [];
+
+  /// A [DashboardPageParametersModel] that holds page parameters.
+  DashboardPageParametersModel _pageParameters =
+      const DashboardPageParametersModel();
+
+  @override
+  DashboardPageParametersModel get pageParameters => _pageParameters;
 
   /// Provides a list of [ProjectMetricsTileViewModel]s.
   List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
@@ -160,12 +170,15 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Subscribes to a projects name filter.
+  ///
+  /// Updates the [_pageParameters].
   void _subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _projectNameFilter = value;
-      notifyListeners();
+
+      _updatePageParameters();
     });
   }
 
@@ -198,7 +211,19 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
+  ///
+  /// Updates the page parameters.
   void selectProjectGroup(String id) {
+    _selectProjectGroup(id);
+
+    _updatePageParameters();
+  }
+
+  /// Sets the [selectedProjectGroup] to project group with the given [id].
+  ///
+  /// Does nothing if the [_projectGroupDropdownItems] does not contain
+  /// the project group with the given [id].
+  void _selectProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == id,
       orElse: () => null,
@@ -207,8 +232,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     if (projectGroup == null) return;
 
     _selectedProjectGroup = projectGroup;
-
-    notifyListeners();
   }
 
   /// Updates projects and an error message.
@@ -228,6 +251,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     _refreshProjectGroupDropdownItemViewModels();
   }
+
+  @override
+  void handlePageParameters(PageParametersModel parameters) {}
 
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
@@ -565,6 +591,24 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       _projectsErrorMessage = error.message;
       notifyListeners();
     }
+  }
+
+  /// Updates the [_pageParameters] with the current [_projectNameFilter] and
+  /// [_selectedProjectGroup] id values.
+  void _updatePageParameters() {
+    final pageParameters = DashboardPageParametersModel(
+      projectFilter: _projectNameFilter,
+      projectGroupId: _selectedProjectGroup?.id,
+    );
+
+    _setPageParameters(pageParameters);
+  }
+
+  /// Updates the [_pageParameters] with the given [pageParameters].
+  void _setPageParameters(DashboardPageParametersModel pageParameters) {
+    _pageParameters = pageParameters;
+
+    notifyListeners();
   }
 
   @override
