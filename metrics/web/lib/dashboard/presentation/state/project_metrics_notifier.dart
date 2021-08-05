@@ -87,7 +87,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Holds the list of current [ProjectGroupDropdownItemViewModel]s.
   List<ProjectGroupDropdownItemViewModel> _projectGroupDropdownItems = [];
 
-  /// A [DashboardPageParametersModel] that holds current page parameters.
+  /// A [DashboardPageParametersModel] that holds page parameters.
   DashboardPageParametersModel _pageParameters =
       const DashboardPageParametersModel();
 
@@ -178,7 +178,7 @@ class ProjectMetricsNotifier extends PageNotifier {
         .listen((value) {
       _projectNameFilter = value;
 
-      _updateCurrentPageParameters();
+      _updatePageParameters();
     });
   }
 
@@ -216,7 +216,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   void selectProjectGroup(String id) {
     _selectProjectGroup(id);
 
-    _updateCurrentPageParameters();
+    _updatePageParameters();
   }
 
   /// Sets the [selectedProjectGroup] to project group with the given [id].
@@ -595,7 +595,7 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   /// Updates the [_pageParameters] with the current [_projectNameFilter] and
   /// [_selectedProjectGroup] id values.
-  void _updateCurrentPageParameters() {
+  void _updatePageParameters() {
     final pageParameters = DashboardPageParametersModel(
       projectFilter: _projectNameFilter,
       projectGroupId: _selectedProjectGroup?.id,
