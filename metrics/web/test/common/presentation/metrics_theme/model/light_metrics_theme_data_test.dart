@@ -41,6 +41,7 @@ void main() {
         expect(lightMetricsThemeData.tooltipPopupTheme, isNotNull);
         expect(lightMetricsThemeData.tooltipIconTheme, isNotNull);
         expect(lightMetricsThemeData.debugMenuTheme, isNotNull);
+        expect(lightMetricsThemeData.manufacturerBannerThemeData, isNotNull);
       },
     );
   });

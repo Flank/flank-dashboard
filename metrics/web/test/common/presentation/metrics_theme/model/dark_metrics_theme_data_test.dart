@@ -41,6 +41,7 @@ void main() {
         expect(darkMetricsThemeData.tooltipPopupTheme, isNotNull);
         expect(darkMetricsThemeData.tooltipIconTheme, isNotNull);
         expect(darkMetricsThemeData.debugMenuTheme, isNotNull);
+        expect(darkMetricsThemeData.manufacturerBannerThemeData, isNotNull);
       },
     );
   });

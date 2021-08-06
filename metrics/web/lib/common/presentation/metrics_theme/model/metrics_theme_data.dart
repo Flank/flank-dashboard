@@ -3,12 +3,13 @@
 
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
-import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufaacturer_banner_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/date_range/theme_data/date_range_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/date_range/theme_data/date_range_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
@@ -128,6 +129,8 @@ class MetricsThemeData {
   /// A theme for the debug menu.
   final DebugMenuThemeData debugMenuTheme;
 
+  final ManufacturerBannerThemeData manufacturerBannerThemeData;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
@@ -160,6 +163,7 @@ class MetricsThemeData {
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
     DebugMenuThemeData debugMenuTheme,
+    ManufacturerBannerThemeData manufacturerBannerThemeData,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         metricsColoredBarTheme =
@@ -204,44 +208,46 @@ class MetricsThemeData {
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
         graphIndicatorTheme =
             graphIndicatorTheme ?? const GraphIndicatorThemeData(),
-        debugMenuTheme = debugMenuTheme ?? const DebugMenuThemeData();
+        debugMenuTheme = debugMenuTheme ?? const DebugMenuThemeData(),
+        manufacturerBannerThemeData =
+            manufacturerBannerThemeData ?? const ManufacturerBannerThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
-  MetricsThemeData copyWith({
-    MetricsWidgetThemeData metricsWidgetTheme,
-    MetricsColoredBarThemeData metricsColoredBarTheme,
-    ProjectGroupDialogThemeData projectGroupDialogTheme,
-    DeleteDialogThemeData deleteDialogTheme,
-    ProjectGroupCardThemeData projectGroupCardTheme,
-    AddProjectGroupCardThemeData addProjectGroupCardTheme,
-    MetricsWidgetThemeData inactiveWidgetTheme,
-    MetricsButtonThemeData metricsButtonTheme,
-    TextFieldThemeData textFieldTheme,
-    DropdownThemeData dropdownTheme,
-    DropdownItemThemeData dropdownItemTheme,
-    LoginThemeData loginTheme,
-    ProjectMetricsTableThemeData projectMetricsTableTheme,
-    ScorecardThemeData buildNumberScorecardTheme,
-    DateRangeThemeData dateRangeTheme,
-    SparklineThemeData performanceSparklineTheme,
-    ProjectBuildStatusThemeData projectBuildStatusTheme,
-    ToggleThemeData toggleTheme,
-    UserMenuButtonThemeData userMenuButtonTheme,
-    UserMenuThemeData userMenuTheme,
-    TextPlaceholderThemeData textPlaceholderTheme,
-    ShimmerPlaceholderThemeData inputPlaceholderTheme,
-    CirclePercentageThemeData circlePercentageTheme,
-    ToastThemeData toastTheme,
-    BarGraphPopupThemeData barGraphPopupTheme,
-    TooltipPopupThemeData tooltipPopupTheme,
-    TooltipIconThemeData tooltipIconTheme,
-    PageTitleThemeData pageTitleTheme,
-    GraphIndicatorThemeData graphIndicatorTheme,
-    DebugMenuThemeData debugMenuTheme,
-  }) {
+  MetricsThemeData copyWith(
+      {MetricsWidgetThemeData metricsWidgetTheme,
+      MetricsColoredBarThemeData metricsColoredBarTheme,
+      ProjectGroupDialogThemeData projectGroupDialogTheme,
+      DeleteDialogThemeData deleteDialogTheme,
+      ProjectGroupCardThemeData projectGroupCardTheme,
+      AddProjectGroupCardThemeData addProjectGroupCardTheme,
+      MetricsWidgetThemeData inactiveWidgetTheme,
+      MetricsButtonThemeData metricsButtonTheme,
+      TextFieldThemeData textFieldTheme,
+      DropdownThemeData dropdownTheme,
+      DropdownItemThemeData dropdownItemTheme,
+      LoginThemeData loginTheme,
+      ProjectMetricsTableThemeData projectMetricsTableTheme,
+      ScorecardThemeData buildNumberScorecardTheme,
+      DateRangeThemeData dateRangeTheme,
+      SparklineThemeData performanceSparklineTheme,
+      ProjectBuildStatusThemeData projectBuildStatusTheme,
+      ToggleThemeData toggleTheme,
+      UserMenuButtonThemeData userMenuButtonTheme,
+      UserMenuThemeData userMenuTheme,
+      TextPlaceholderThemeData textPlaceholderTheme,
+      ShimmerPlaceholderThemeData inputPlaceholderTheme,
+      CirclePercentageThemeData circlePercentageTheme,
+      ToastThemeData toastTheme,
+      BarGraphPopupThemeData barGraphPopupTheme,
+      TooltipPopupThemeData tooltipPopupTheme,
+      TooltipIconThemeData tooltipIconTheme,
+      PageTitleThemeData pageTitleTheme,
+      GraphIndicatorThemeData graphIndicatorTheme,
+      DebugMenuThemeData debugMenuTheme,
+      ManufacturerBannerThemeData manufacturerBannerThemeData}) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
       metricsColoredBarTheme:
@@ -283,6 +289,8 @@ class MetricsThemeData {
       tooltipIconTheme: tooltipIconTheme ?? this.tooltipIconTheme,
       graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
       debugMenuTheme: debugMenuTheme ?? this.debugMenuTheme,
+      manufacturerBannerThemeData:
+          manufacturerBannerThemeData ?? this.manufacturerBannerThemeData,
     );
   }
 }
