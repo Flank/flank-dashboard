@@ -1057,8 +1057,20 @@ void main() {
     );
 
     test(
-      ".setProjectGroups() update page parameters with the selected project group",
-      () {},
+      ".setProjectGroups() update page parameters using the selected project group",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        final selectedProjectGroup =
+            projectMetricsNotifier.selectedProjectGroup;
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final pageParameters = projectMetricsNotifier.pageParameters;
+
+        expect(pageParameters.projectGroupId, equals(selectedProjectGroup.id));
+      },
     );
 
     test(

@@ -17,6 +17,8 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectMetricsSearchInput", () {
+    const searchText = "search";
+
     testWidgets(
       "displays the metrics input placeholder if project metrics are loading",
       (tester) async {
@@ -50,7 +52,6 @@ void main() {
     testWidgets(
       "filters the projects by the given name on project search input value changes",
       (tester) async {
-        const searchText = "search";
         final notifier = ProjectMetricsNotifierMock();
         when(notifier.isMetricsLoading).thenReturn(false);
 
@@ -63,6 +64,30 @@ void main() {
         await tester.enterText(find.byType(ProjectSearchInput), searchText);
 
         verify(notifier.filterByProjectName(searchText)).called(once);
+      },
+    );
+
+    testWidgets(
+      "filters sets an initial value to the project search input equals to a project name filter of the project metrics notifier",
+      (tester) async {
+        final notifier = ProjectMetricsNotifierMock();
+
+        when(notifier.isMetricsLoading).thenReturn(false);
+        when(notifier.projectNameFilter).thenReturn(searchText);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsSearchInputTestbed(
+            metricsNotifier: notifier,
+          ));
+        });
+
+        final projectSearchInputFinder = find.byType(ProjectSearchInput);
+
+        final projectSearchInput = tester.widget<ProjectSearchInput>(
+          projectSearchInputFinder,
+        );
+
+        expect(projectSearchInput.initialValue, equals(searchText));
       },
     );
   });
