@@ -40,6 +40,7 @@ class Doctor {
   /// Creates a new instance of the [Doctor] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
+  /// Throws an [ArgumentError] if the given [dependencies] is `null`.
   /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
