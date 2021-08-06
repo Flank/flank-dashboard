@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group("ManufacturerBannerThemeData", () {
     test(
-      "create an instance with the given parameters",
+      "creates an instance with the given parameters",
       () {
         const textStyle = TextStyle(fontSize: 12.0);
         const backgroundColor = Colors.blue;

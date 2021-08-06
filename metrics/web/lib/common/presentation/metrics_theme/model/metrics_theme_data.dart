@@ -129,6 +129,7 @@ class MetricsThemeData {
   /// A theme for the debug menu.
   final DebugMenuThemeData debugMenuTheme;
 
+  /// A theme for the manufacturer banner widget.
   final ManufacturerBannerThemeData manufacturerBannerThemeData;
 
   /// Creates the [MetricsThemeData].
@@ -216,38 +217,39 @@ class MetricsThemeData {
   ///
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
-  MetricsThemeData copyWith(
-      {MetricsWidgetThemeData metricsWidgetTheme,
-      MetricsColoredBarThemeData metricsColoredBarTheme,
-      ProjectGroupDialogThemeData projectGroupDialogTheme,
-      DeleteDialogThemeData deleteDialogTheme,
-      ProjectGroupCardThemeData projectGroupCardTheme,
-      AddProjectGroupCardThemeData addProjectGroupCardTheme,
-      MetricsWidgetThemeData inactiveWidgetTheme,
-      MetricsButtonThemeData metricsButtonTheme,
-      TextFieldThemeData textFieldTheme,
-      DropdownThemeData dropdownTheme,
-      DropdownItemThemeData dropdownItemTheme,
-      LoginThemeData loginTheme,
-      ProjectMetricsTableThemeData projectMetricsTableTheme,
-      ScorecardThemeData buildNumberScorecardTheme,
-      DateRangeThemeData dateRangeTheme,
-      SparklineThemeData performanceSparklineTheme,
-      ProjectBuildStatusThemeData projectBuildStatusTheme,
-      ToggleThemeData toggleTheme,
-      UserMenuButtonThemeData userMenuButtonTheme,
-      UserMenuThemeData userMenuTheme,
-      TextPlaceholderThemeData textPlaceholderTheme,
-      ShimmerPlaceholderThemeData inputPlaceholderTheme,
-      CirclePercentageThemeData circlePercentageTheme,
-      ToastThemeData toastTheme,
-      BarGraphPopupThemeData barGraphPopupTheme,
-      TooltipPopupThemeData tooltipPopupTheme,
-      TooltipIconThemeData tooltipIconTheme,
-      PageTitleThemeData pageTitleTheme,
-      GraphIndicatorThemeData graphIndicatorTheme,
-      DebugMenuThemeData debugMenuTheme,
-      ManufacturerBannerThemeData manufacturerBannerThemeData}) {
+  MetricsThemeData copyWith({
+    MetricsWidgetThemeData metricsWidgetTheme,
+    MetricsColoredBarThemeData metricsColoredBarTheme,
+    ProjectGroupDialogThemeData projectGroupDialogTheme,
+    DeleteDialogThemeData deleteDialogTheme,
+    ProjectGroupCardThemeData projectGroupCardTheme,
+    AddProjectGroupCardThemeData addProjectGroupCardTheme,
+    MetricsWidgetThemeData inactiveWidgetTheme,
+    MetricsButtonThemeData metricsButtonTheme,
+    TextFieldThemeData textFieldTheme,
+    DropdownThemeData dropdownTheme,
+    DropdownItemThemeData dropdownItemTheme,
+    LoginThemeData loginTheme,
+    ProjectMetricsTableThemeData projectMetricsTableTheme,
+    ScorecardThemeData buildNumberScorecardTheme,
+    DateRangeThemeData dateRangeTheme,
+    SparklineThemeData performanceSparklineTheme,
+    ProjectBuildStatusThemeData projectBuildStatusTheme,
+    ToggleThemeData toggleTheme,
+    UserMenuButtonThemeData userMenuButtonTheme,
+    UserMenuThemeData userMenuTheme,
+    TextPlaceholderThemeData textPlaceholderTheme,
+    ShimmerPlaceholderThemeData inputPlaceholderTheme,
+    CirclePercentageThemeData circlePercentageTheme,
+    ToastThemeData toastTheme,
+    BarGraphPopupThemeData barGraphPopupTheme,
+    TooltipPopupThemeData tooltipPopupTheme,
+    TooltipIconThemeData tooltipIconTheme,
+    PageTitleThemeData pageTitleTheme,
+    GraphIndicatorThemeData graphIndicatorTheme,
+    DebugMenuThemeData debugMenuTheme,
+    ManufacturerBannerThemeData manufacturerBannerThemeData,
+  }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
       metricsColoredBarTheme:
