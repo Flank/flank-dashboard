@@ -45,6 +45,7 @@ AuthNotifier --> LoadingPage: notify that the auth is initialized
 AuthNotifier --> InjectionContainer: notify listeners
 InjectionContainer -> NavigationNotifier: handleAuthUpdates(authState)
 LoadingPage -> NavigationNotifier: handleAppInitialized(true)
+LoadingPage--
 
 alt page is available for the anonymous user
 NavigationNotifier -> CoolPage ++: push to the CoolPage

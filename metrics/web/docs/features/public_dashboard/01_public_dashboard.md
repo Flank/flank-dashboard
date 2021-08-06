@@ -318,7 +318,7 @@ The last thing, we should have the ability to manage the navigation of the anony
 Please consider the following list of changes this module requires to integrate the public dashboard feature:
 - Add the `authState` field of the `AuthState` type to the `NavigationNotifier`.
 - Add the `handleAuthUpdates()` method to the `NavigationNotifier`, which should handle the updating of the `AuthState` in the `AuthNotifier`.
-- Add the `allowsAnonymousAccess` field of the `bool` type to the `RouteConfiguration` class and configure the `allowsAnonymousAccess` value in each `RouteConfiguration` constructor;  
+- Add the `allowsAnonymousAccess` field of the `bool` type to the `RouteConfiguration` class and configure the `allowsAnonymousAccess` value in the `RouteConfiguration` constructor for each page;  
 - Add the additional condition to the `_processConfiguration()` method, which should state the following, if the user auth state is logged in anonymously, and the `allowsAnonymousAccess` field of the `RouteConfiguration` is true, then return the current page configuration.
 
 #### Making things work
@@ -340,7 +340,7 @@ To auto sign in the user anonymously, we should make the following:
 3. Add the logic of the signing the user in anonymously depending on the `AuthNotifier.isPublicDashboardFeatureEnabled` and the `AuthNotifier.authState` to the `AuthNotifier`.
 4. Add the logic of the navigating depending on the `AuthNotifier.authState` to the `NavigationNotifier`.
 
-_**Note:** The `handleAuthUpdates()` should do nothing if the `AuthNotifier.authState` equals to the `AuthState.loggedIn`, because we handle this case in the `LoginPage`_
+_**Note:** The `handleAuthUpdates()` does nothing if the `AuthNotifier.authState` equals to the `AuthState.loggedIn`, because we handle this case in the `LoginPage` class._
 
 ##### Manage sign in for the anonymous user
 

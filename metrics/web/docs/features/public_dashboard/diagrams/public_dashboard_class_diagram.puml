@@ -20,7 +20,7 @@ package auth {
             class AuthNotifier {
                 - _isPublicDashboardFeatureEnabled: bool
                 + authState: AuthState
-                + isAuthInitialized: bool
+                + isInitialized: bool
                 + userProfileViewModel: UserProfileViewModel
                 - signInAnonymously(): Future<void>
                 + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
