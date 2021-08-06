@@ -8,6 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/matchers.dart';
+import '../../test_utils/mocks/dependencies_mock.dart';
 import '../../test_utils/mocks/firebase_service_mock.dart';
 import '../../test_utils/mocks/flutter_service_mock.dart';
 import '../../test_utils/mocks/gcloud_service_mock.dart';
@@ -36,8 +37,10 @@ void main() {
       firebaseService: firebaseService,
       sentryService: sentryService,
     );
+    final dependencies = DependenciesMock();
     final doctor = Doctor(
       services: services,
+      dependencies: dependencies,
     );
 
     tearDown(() {
@@ -53,7 +56,26 @@ void main() {
     test(
       "throws an ArgumentError if the given services is null",
       () {
-        expect(() => Doctor(services: null), throwsArgumentError);
+        expect(
+          () => Doctor(
+            services: null,
+            dependencies: dependencies,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given dependencies is null",
+      () {
+        expect(
+          () => Doctor(
+            services: services,
+            dependencies: null,
+          ),
+          throwsArgumentError,
+        );
       },
     );
 
