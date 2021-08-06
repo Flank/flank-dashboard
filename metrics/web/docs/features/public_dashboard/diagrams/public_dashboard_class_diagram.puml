@@ -50,17 +50,23 @@ package feature_config.presentation {
     }
 }
 
-package common.navigation {
-    package state as navigation_state {
-        class NavigationNotifier {
-            - _authState: AuthState
-            + handleAuthUpdates(AuthState authState): void
-        }
+package common.presentation {
+    package widgets {
+        class MetricsUserMenu {}
     }
 
-    package route_configuration {
-        class RouteName {
-            + {static} anonymousRouteNames: Set<RouteName>
+    package navigation {
+        package state as navigation_state {
+            class NavigationNotifier {
+                - _authState: AuthState
+                + handleAuthUpdates(AuthState authState): void
+            }
+        }
+
+        package route_configuration {
+            class RouteConfiguration {
+                + allowsAnonymousAccess: bool
+            }
         }
     }
 }
@@ -78,12 +84,13 @@ package common.presentation.injector.widget {
 InjectionContainer --> AuthNotifier: uses
 InjectionContainer --> FeatureConfigNotifier: uses
 InjectionContainer --> NavigationNotifier: uses
-NavigationNotifier --> RouteName: uses
+NavigationNotifier --> RouteConfiguration: uses
 NavigationNotifier ---> AuthState: uses
 AuthNotifier --> SignInAnonymouslyUseCase: uses
 AuthNotifier --> AuthState: provides
-AuthNotifier --> UserProfileViewModel: provides
+AuthNotifier -left-> UserProfileViewModel: provides
 AuthNotifier --> PublicDashboardFeatureConfigModel: uses
 FeatureConfigNotifier --> PublicDashboardFeatureConfigModel: provides
+MetricsUserMenu --> UserProfileViewModel: uses
 
 @enduml
