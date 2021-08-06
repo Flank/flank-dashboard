@@ -1,5 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
+
 import 'package:cli/common/model/services/services.dart';
 import 'package:cli/services/common/info_service.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
@@ -8,11 +9,16 @@ import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/git/git_service.dart';
 import 'package:cli/services/npm/npm_service.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
+import 'package:cli/util/dependencies/dependencies.dart';
+import 'package:cli/util/dependencies/dependency.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides an ability to check whether all required third-party
 /// services are available and get their versions.
 class Doctor {
+  /// A [Dependencies] that holds all third-party [Dependency]s.
+  final Dependencies _dependencies;
+
   /// A service that provides methods for working with Flutter.
   final FlutterService _flutterService;
 
@@ -34,6 +40,7 @@ class Doctor {
   /// Creates a new instance of the [Doctor] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
+  /// Throws an [ArgumentError] if the given [dependencies] is `null`.
   /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
   /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
@@ -42,13 +49,16 @@ class Doctor {
   /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
   Doctor({
     Services services,
+    Dependencies dependencies,
   })  : _flutterService = services?.flutterService,
         _gcloudService = services?.gcloudService,
         _npmService = services?.npmService,
         _gitService = services?.gitService,
         _firebaseService = services?.firebaseService,
-        _sentryService = services?.sentryService {
+        _sentryService = services?.sentryService,
+        _dependencies = dependencies {
     ArgumentError.checkNotNull(services, 'services');
+    ArgumentError.checkNotNull(_dependencies, 'dependencies');
     ArgumentError.checkNotNull(_flutterService, 'flutterService');
     ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
     ArgumentError.checkNotNull(_npmService, 'npmService');
