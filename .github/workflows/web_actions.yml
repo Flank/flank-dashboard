@@ -121,10 +121,6 @@ jobs:
           firebase deploy --only hosting:metrics
         working-directory: metrics/web/
 
-      - name: Switch to Flutter latest master version
-        run: flutter channel master && flutter upgrade
-        working-directory: metrics/web/
-
       - name: Build release app using auto renderer
         run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true
         working-directory: metrics/web/
