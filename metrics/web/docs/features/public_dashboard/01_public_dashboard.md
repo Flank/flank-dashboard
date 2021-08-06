@@ -294,11 +294,11 @@ Since we should know the authentication state of the user, we should provide an 
 
 ##### Auth module changes
 
-The list of changes this module requires to integrate the public dashboard feature:
+Let's consider the list of changes this module requires to integrate the public dashboard feature:
 - Add the `signInAnonymously()` method to the `UserRepository` abstract class.
 - Add the implementation of the `signInAnonymously()` method to the `FirebaseUserRepository` class.
 - Add the `isPublicDashboardFeatureEnabled` field of the boolean type to the `AuthNotifier`.
-- Add the `isAuthInitialized` field of the boolean type to the `AuthNotifier`.
+- Add the `isInitialized` getter of the boolean type to the `AuthNotifier`.
 - Add the `handlePublicDashboardFeatureConfigUpdates()` to the `AuthNotifier`, so we can handle the feature state updates.
 - Create the [`UserProfileViewModel`](#UserProfileViewModel) class.
 - Create the [`SignInAnonymouslyUseCase`](#SignInAnonymouslyUseCase) class, which calls the `signInAnonymously()` method of the `UserRepository`.
@@ -315,11 +315,11 @@ The last thing, we should have the ability to manage the navigation of the anony
 
 ##### Navigation module changes
 
-The list of changes this module requires to integrate the public dashboard feature:
+Please consider the following list of changes this module requires to integrate the public dashboard feature:
 - Add the `authState` field of the `AuthState` type to the `NavigationNotifier`.
 - Add the `handleAuthUpdates()` method to the `NavigationNotifier`, which should handle the updating of the `AuthState` in the `AuthNotifier`.
-- Create a set of the pages' `RouteName`, which the anonymous user can visit (at the moment, it is only the `dashboard` route name).
-- Add the additional condition to the `_processConfiguration()` method, which should state the following, if the user auth state is logged in anonymously, and they visit the page, whose `RouteName` is not in the anonymous `RouteName` set, then redirect to the `login` page.
+- Add the `allowsAnonymousAccess` field of the `bool` type to the `RouteConfiguration` class and configure the `allowsAnonymousAccess` value in each `RouteConfiguration` constructor;  
+- Add the additional condition to the `_processConfiguration()` method, which should state the following, if the user auth state is logged in anonymously, and the `allowsAnonymousAccess` field of the `RouteConfiguration` is true, then return the current page configuration.
 
 #### Making things work
 
@@ -335,14 +335,16 @@ Let's review each of the above points in the following subsections
 ##### Auto sign in the user anonymously
 
 To auto sign in the user anonymously, we should make the following:
-1. Find the `InjectionContainer`. 
-2. Add the `handleAuthUpdates()` method of the `NavigationNotifier` to the listener of the `AuthNotifier`.
-3. Create the listener for the `FeatureConfigNotifier` and add the `handlePublicDashboardFeatureConfigUpdates()` method of the `AuthNotifier`.
-4. Add the logic of the signing the user in anonymously depending on the public dashboard feature and the auth states to the `AuthNotifier`.
+1. The `handleAuthUpdates()` method of the `NavigationNotifier` should be called when the `AuthNotifier.authState` changes.
+2. The `handlePublicDashboardFeatureConfigUpdates()` method of the `AuthNotifier` should be called when the `FeatureConfigNotifier.publicDashboardFeatureConfigModel` changes.
+3. Add the logic of the signing the user in anonymously depending on the `AuthNotifier.isPublicDashboardFeatureEnabled` and the `AuthNotifier.authState` to the `AuthNotifier`.
+4. Add the logic of the navigating depending on the `AuthNotifier.authState` to the `NavigationNotifier`.
+
+_**Note:** The `handleAuthUpdates()` should do nothing if the `AuthNotifier.authState` equals to the `AuthState.loggedIn`, because we handle this case in the `LoginPage`_
 
 ##### Manage sign in for the anonymous user
 
-Next one, to manage the sign in for the anonymous user, we should firstly sign out them. After, we should sign in the user normally using the sign in with credentials, or using the Google provider.
+The next one, to manage the sign-in for the anonymous user (f.e. sign in with credentials or using Google provider), we have to sign in them using one of the sign methods mentioned above, then the Firebase auth, for its part, replaces the current user with a new one without any problems.
 
 ##### Change the Metrics user menu UI
 
