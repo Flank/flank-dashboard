@@ -16,7 +16,7 @@ import 'package:metrics_core/metrics_core.dart';
 /// A class that provides an ability to check whether all required third-party
 /// services are available and get their versions.
 class Doctor {
-  /// A [Dependencies] that holds all third-party [Dependency]s of this services.
+  /// A [Dependencies] that holds all third-party [Dependency]s.
   final Dependencies _dependencies;
 
   /// A service that provides methods for working with Flutter.
