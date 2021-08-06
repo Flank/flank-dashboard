@@ -67,6 +67,20 @@ void main() {
     );
 
     testWidgets(
+      "delegates to the page notifier when this widget is created",
+      (tester) async {
+        await tester.pumpWidget(
+          _PageParametersProxyTestbed(
+            pageNotifier: pageNotifier,
+            navigationNotifier: NavigationNotifierMock(),
+          ),
+        );
+
+        verify(pageNotifier.handlePageParameters(any)).called(once);
+      },
+    );
+
+    testWidgets(
       "delegates to the page notifier if the navigation notifier notifies about changes",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();

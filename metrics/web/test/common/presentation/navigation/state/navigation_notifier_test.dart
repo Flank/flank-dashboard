@@ -426,6 +426,9 @@ void main() {
         notifier.handleLoggedIn();
         notifier.push(configuration);
 
+        when(routeConfigurationLocationConverter.convert(configuration))
+            .thenReturn(configuration.path);
+
         notifier.handleAppInitialized(isAppInitialized: true);
 
         verify(
@@ -486,9 +489,11 @@ void main() {
         notifier.handleLoggedIn();
         notifier.push(DefaultRoutes.dashboard);
 
+        verify(routeConfigurationLocationConverter.convert(any));
+
         notifier.handlePageParametersUpdates(null);
 
-        verifyNever(routeConfigurationLocationConverter.convert(any));
+        verifyNoMoreInteractions(routeConfigurationLocationConverter);
       },
     );
 
@@ -548,9 +553,11 @@ void main() {
 
         final currentPageParameters = notifier.currentPageParameters;
 
+        verify(routeConfigurationLocationConverter.convert(any));
+
         notifier.handlePageParametersUpdates(currentPageParameters);
 
-        verifyNever(routeConfigurationLocationConverter.convert(any));
+        verifyNoMoreInteractions(routeConfigurationLocationConverter);
       },
     );
 
@@ -1156,6 +1163,9 @@ void main() {
       () {
         const expectedConfiguration = DefaultRoutes.loading;
         notifier.push(DefaultRoutes.login);
+
+        when(routeConfigurationLocationConverter.convert(expectedConfiguration))
+            .thenReturn(expectedConfiguration.path);
 
         notifier.pushStateReplacement(expectedConfiguration);
 

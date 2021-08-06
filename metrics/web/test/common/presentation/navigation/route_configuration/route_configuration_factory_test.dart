@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
 import 'package:test/test.dart';
 
@@ -9,6 +10,9 @@ void main() {
   group("RouteConfigurationFactory", () {
     const baseUrl = 'https://test.uri';
     const routeConfigurationFactory = RouteConfigurationFactory();
+    const queryParametersKey = 'testKey';
+    const queryParametersValue = 'testValue';
+    const queryParametersString = '$queryParametersKey=$queryParametersValue';
 
     test(
       ".create() returns a loading route configuration if the given uri is null",
@@ -90,6 +94,34 @@ void main() {
         final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a route configuration with query parameters from the given uri",
+      () {
+        const queryParametersMap = {queryParametersKey: queryParametersValue};
+        final expectedConfiguration = RouteConfiguration.login(
+          parameters: queryParametersMap,
+        );
+        final uri = Uri.parse(
+          '$baseUrl${DefaultRoutes.login.path}?$queryParametersString',
+        );
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a route configuration with parameters equals to null if the given uri contains an unknown path",
+      () {
+        final uri = Uri.parse('$baseUrl/path?$queryParametersString');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration.parameters, isNull);
       },
     );
   });
