@@ -5,7 +5,7 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
-import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufaacturer_banner_theme_data.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufacturer_banner_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';

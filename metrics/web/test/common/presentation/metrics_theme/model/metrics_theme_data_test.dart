@@ -11,7 +11,7 @@ import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
-import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufaacturer_banner_theme_data.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufacturer_banner_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
