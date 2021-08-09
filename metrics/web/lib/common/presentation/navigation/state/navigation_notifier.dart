@@ -8,7 +8,9 @@ import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
@@ -24,9 +26,19 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
-  /// A [PageParametersFactory] used to create a [PageParametersModel] 
+  /// A [PageParametersFactory] used to create a [PageParametersModel]
   /// from the [RouteConfiguration].
   final PageParametersFactory _pageParametersFactory;
+
+  /// A [MetricsPageRouteConfigurationFactory] used to create
+  /// the [RouteConfiguration] from the [MetricsPage].
+  final MetricsPageRouteConfigurationFactory
+      _metricsPageRouteConfigurationFactory;
+
+  /// A [RouteConfigurationLocationConverter] used to convert
+  /// the [RouteConfiguration] to a location [String].
+  final RouteConfigurationLocationConverter
+      _routeConfigurationLocationConverter;
 
   /// A stack of [MetricsPage]s to use by navigator.
   final List<MetricsPage> _pages = [];
@@ -62,32 +74,50 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
   /// Throws an [AssertionError] if the given [PageParametersFactory] is `null`.
+  /// Throws an [AssertionError] if the given
+  /// [MetricsPageRouteConfigurationFactory] is `null`.
+  /// Throws an [AssertionError] if the given
+  /// [RouteConfigurationLocationConverter] is `null`.
   NavigationNotifier(
     this._pageFactory,
     this._pageParametersFactory,
+    this._metricsPageRouteConfigurationFactory,
+    this._routeConfigurationLocationConverter,
     NavigationState navigationState,
   )   : assert(_pageFactory != null),
         assert(_pageParametersFactory != null),
+        assert(_metricsPageRouteConfigurationFactory != null),
+        assert(_routeConfigurationLocationConverter != null),
         assert(navigationState != null),
         _navigationState = navigationState;
 
-  /// Handles the authentication update represented by the given [isLoggedIn].
+  /// Handles the log out of the user.
   ///
-  /// Clears the pages stack and pushes the [DefaultRoutes.login]
-  /// after the user logs out.
-  void handleAuthenticationUpdates({
-    bool isLoggedIn,
-  }) {
-    if (_isUserLoggedIn == isLoggedIn) return;
+  /// Does nothing if a user is not logged in.
+  void handleLoggedOut() {
+    if (!_isUserLoggedIn) return;
 
-    final currentPageName = currentConfiguration?.name;
-    _isUserLoggedIn = isLoggedIn ?? false;
+    _isUserLoggedIn = false;
+    _redirectRoute = null;
 
-    if (!_isUserLoggedIn && currentPageName != DefaultRoutes.login.name) {
+    final currentRouteName = currentConfiguration?.name;
+
+    if (currentRouteName != DefaultRoutes.login.name) {
       _pages.clear();
 
       push(DefaultRoutes.login);
     }
+  }
+
+  /// Handles the log in of the user.
+  ///
+  /// Does nothing if a user is logged in.
+  void handleLoggedIn() {
+    if (_isUserLoggedIn) return;
+
+    _isUserLoggedIn = true;
+
+    _redirect();
   }
 
   /// Handles the application's initialization state update represented by the
@@ -104,6 +134,39 @@ class NavigationNotifier extends ChangeNotifier {
     _isAppInitialized = isAppInitialized;
 
     if (_isAppInitialized) _redirect();
+  }
+
+  /// Updates the current [PageParametersModel], [RouteConfiguration]
+  /// and [MetricsPage] using the given [pageParameters].
+  ///
+  /// Replaces the navigation state using the updated [RouteConfiguration].
+  ///
+  /// Does nothing if the given [pageParameters] model is `null` or equal
+  /// to the current [PageParametersModel].
+  void handlePageParametersUpdates(PageParametersModel pageParameters) {
+    if (pageParameters == null || pageParameters == _currentPageParameters) {
+      return;
+    }
+
+    _currentPageParameters = pageParameters;
+
+    _currentConfiguration = _currentConfiguration.copyWith(
+      parameters: _currentPageParameters.toMap(),
+    );
+
+    final lastPage = _pages.removeLast();
+    _pages.add(lastPage.copyWith(arguments: _currentPageParameters));
+
+    final path = _routeConfigurationLocationConverter.convert(
+      _currentConfiguration,
+    );
+
+    replaceState(path: path);
+  }
+
+  /// Determines whether the current page can be popped.
+  bool canPop() {
+    return _pages.length > 1;
   }
 
   /// Removes the current page and navigates to the previous one.
@@ -169,10 +232,14 @@ class NavigationNotifier extends ChangeNotifier {
   void pushStateReplacement(RouteConfiguration configuration) {
     if (_pages.isNotEmpty) _pages.removeLast();
 
+    _pushWithStateReplacement(configuration);
+  }
+
+  /// Pushes the given [configuration] and replaces the current state path
+  /// with the path of the [_currentConfiguration].
+  void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
-    replaceState(
-      path: _currentConfiguration.path,
-    );
+    replaceState(path: _currentConfiguration.path);
   }
 
   /// Handles the initial route.
@@ -195,18 +262,17 @@ class NavigationNotifier extends ChangeNotifier {
     }
 
     _pages.clear();
-    push(_redirectRoute);
-    _redirectRoute = null;
+
+    _pushWithStateReplacement(_redirectRoute);
+
+    if (_isUserLoggedIn || !_redirectRoute.authorizationRequired) {
+      _redirectRoute = null;
+    }
   }
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
-    final name = page?.name;
-
-    return RouteConfiguration.values.firstWhere(
-      (route) => route.name.value == name,
-      orElse: () => DefaultRoutes.dashboard,
-    );
+    return _metricsPageRouteConfigurationFactory.create(page);
   }
 
   /// Adds a new page created from the given [configuration] to the [pages].
@@ -215,9 +281,12 @@ class NavigationNotifier extends ChangeNotifier {
 
     _currentConfiguration = newConfiguration;
 
-    final newPage = _pageFactory.create(_currentConfiguration);
-
     _updatePageParameters();
+
+    final newPage = _pageFactory.create(
+      _currentConfiguration,
+      _currentPageParameters,
+    );
 
     _pages.add(newPage);
   }
@@ -230,7 +299,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// and saves the [_redirectRoute].
   ///
   /// If the user is not logged in and the given [configuration]
-  /// requires authorization, returns [DefaultRoutes.login]
+  /// requires authorization, saves the [_redirectRoute] and
+  /// returns [DefaultRoutes.login].
   ///
   /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
@@ -244,7 +314,11 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) return DefaultRoutes.login;
+    if (!_isUserLoggedIn && authorizationRequired) {
+      _redirectRoute = configuration;
+
+      return DefaultRoutes.login;
+    }
 
     return configuration;
   }

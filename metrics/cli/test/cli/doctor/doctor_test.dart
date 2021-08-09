@@ -3,17 +3,19 @@
 
 import 'package:cli/cli/doctor/doctor.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/firebase_service_mock.dart';
-import '../../test_utils/flutter_service_mock.dart';
-import '../../test_utils/gcloud_service_mock.dart';
-import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
-import '../../test_utils/npm_service_mock.dart';
-import '../../test_utils/sentry_service_mock.dart';
-import '../../test_utils/services_mock.dart';
+import '../../test_utils/mocks/dependencies_mock.dart';
+import '../../test_utils/mocks/firebase_service_mock.dart';
+import '../../test_utils/mocks/flutter_service_mock.dart';
+import '../../test_utils/mocks/gcloud_service_mock.dart';
+import '../../test_utils/mocks/git_service_mock.dart';
+import '../../test_utils/mocks/npm_service_mock.dart';
+import '../../test_utils/mocks/sentry_service_mock.dart';
+import '../../test_utils/mocks/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -35,8 +37,10 @@ void main() {
       firebaseService: firebaseService,
       sentryService: sentryService,
     );
+    final dependencies = DependenciesMock();
     final doctor = Doctor(
       services: services,
+      dependencies: dependencies,
     );
 
     tearDown(() {
@@ -52,7 +56,26 @@ void main() {
     test(
       "throws an ArgumentError if the given services is null",
       () {
-        expect(() => Doctor(services: null), throwsArgumentError);
+        expect(
+          () => Doctor(
+            services: null,
+            dependencies: dependencies,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given dependencies is null",
+      () {
+        expect(
+          () => Doctor(
+            services: services,
+            dependencies: null,
+          ),
+          throwsArgumentError,
+        );
       },
     );
 
@@ -195,10 +218,20 @@ void main() {
     );
 
     test(
+      ".checkVersions() returns an instance of the ValidationResult",
+      () async {
+        final result = await doctor.checkVersions();
+
+        expect(result, isA<ValidationResult>());
+      },
+    );
+
+    test(
       ".checkVersions() proceeds if GCloud service throws during the version showing",
       () async {
-        when(gcloudService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          gcloudService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -213,8 +246,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Flutter service throws during the version showing",
       () async {
-        when(flutterService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          flutterService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -229,8 +263,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Firebase service throws during the version showing",
       () async {
-        when(firebaseService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          firebaseService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 
@@ -275,8 +310,9 @@ void main() {
     test(
       ".checkVersions() proceeds if Sentry service throws during the version showing",
       () async {
-        when(sentryService.version())
-            .thenAnswer((_) => Future.error(stateError));
+        when(
+          sentryService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
         await doctor.checkVersions();
 

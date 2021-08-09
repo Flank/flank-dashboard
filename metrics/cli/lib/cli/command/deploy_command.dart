@@ -16,19 +16,19 @@ Creates GCloud and Firebase projects for Metrics components and deploys the Metr
 NOTE: The Metrics CLI does not collect and store any personal data during the deployment process.''';
 
   /// A [DeployerFactory] this command uses to create a [Deployer].
-  final DeployerFactory deployerFactory;
+  final DeployerFactory _deployerFactory;
 
   /// Creates a new instance of the [DeployCommand]
-  /// with the given [deployerFactory].
+  /// with the given [DeployerFactory].
   ///
-  /// Throws an [ArgumentError] if the given [deployerFactory] is `null`.
-  DeployCommand(this.deployerFactory) {
-    ArgumentError.checkNotNull(deployerFactory, 'deployerFactory');
+  /// Throws an [ArgumentError] if the given [DeployerFactory] is `null`.
+  DeployCommand(this._deployerFactory) {
+    ArgumentError.checkNotNull(_deployerFactory, 'deployerFactory');
   }
 
   @override
   Future<void> run() {
-    final deployer = deployerFactory.create();
+    final deployer = _deployerFactory.create();
 
     return deployer.deploy();
   }

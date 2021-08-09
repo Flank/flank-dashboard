@@ -1,14 +1,16 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/firebase/cli/firebase_cli.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/firebase/strings/firebase_strings.dart';
 
 /// An adapter for the [FirebaseCli] to implement
-/// the [FirebaseService] interface.
-class FirebaseCliServiceAdapter implements FirebaseService {
+/// the [FirebaseService] abstract methods.
+class FirebaseCliServiceAdapter extends FirebaseService {
   /// A [FirebaseCli] class that provides an ability to interact
   /// with the Firebase CLI.
   final FirebaseCli _firebaseCli;
@@ -60,7 +62,7 @@ class FirebaseCliServiceAdapter implements FirebaseService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _firebaseCli.version();
   }
 

@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/common/cli/cli.dart';
 
 /// A class that represents the GCloud [Cli].
@@ -61,7 +63,7 @@ class GCloudCli extends Cli {
   }
 
   @override
-  Future<void> version() {
-    return run(['--version']);
+  Future<ProcessResult> version() {
+    return run(['--version'], attachOutput: false);
   }
 }

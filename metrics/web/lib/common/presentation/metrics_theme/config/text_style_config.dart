@@ -12,7 +12,7 @@ class TextStyleConfig {
 
   /// A [TextStyle] of the caption text.
   static TextStyle captionTextStyle = MetricsTextStyle(
-    color: MetricsColors.gray[300],
+    color: MetricsColors.grey[300],
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
     fontWeight: FontWeight.w500,
@@ -22,7 +22,7 @@ class TextStyleConfig {
   static TextStyle popupTitleStyle = MetricsTextStyle(
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
-    color: MetricsColors.gray[300],
+    color: MetricsColors.grey[300],
     fontWeight: FontWeight.normal,
   );
 
@@ -30,7 +30,7 @@ class TextStyleConfig {
   static TextStyle popupSubtitleStyle = MetricsTextStyle(
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
-    color: MetricsColors.gray[800],
+    color: MetricsColors.grey[800],
     fontWeight: FontWeight.w500,
   );
 
@@ -38,7 +38,7 @@ class TextStyleConfig {
   static TextStyle tooltipPopupStyle = MetricsTextStyle(
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
-    color: MetricsColors.gray[800],
+    color: MetricsColors.grey[800],
     fontWeight: FontWeight.normal,
   );
 }

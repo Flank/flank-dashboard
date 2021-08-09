@@ -9,11 +9,11 @@ import 'package:cli/common/model/config/update_config.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/file_helper_mock.dart';
-import '../../../../test_utils/file_mock.dart';
 import '../../../../test_utils/matchers.dart';
+import '../../../../test_utils/mocks/file_helper_mock.dart';
+import '../../../../test_utils/mocks/file_mock.dart';
 
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, prefer_const_constructors
 
 void main() {
   group("UpdateConfigFactory", () {
@@ -42,39 +42,16 @@ void main() {
     });
 
     test(
-      "creates an instance with the given parameters",
+      "successfully creates an instance if the given config parser is null",
       () {
-        final configFactory = UpdateConfigFactory(
-          fileHelper: fileHelper,
-          configParser: configParser,
-        );
-
-        expect(configFactory.fileHelper, equals(fileHelper));
-        expect(configFactory.configParser, equals(configParser));
+        expect(() => UpdateConfigFactory(configParser: null), returnsNormally);
       },
     );
 
     test(
-      "creates an instance with the default file helper, if the given one is null",
+      "successfully creates an instance if the given file helper is null",
       () {
-        final updateConfigFactory = UpdateConfigFactory(
-          fileHelper: null,
-          configParser: configParser,
-        );
-
-        expect(updateConfigFactory.fileHelper, isNotNull);
-      },
-    );
-
-    test(
-      "creates an instance with the default update config parser, if the given one is null",
-      () {
-        final updateConfigFactory = UpdateConfigFactory(
-          fileHelper: fileHelper,
-          configParser: null,
-        );
-
-        expect(updateConfigFactory.configParser, isNotNull);
+        expect(() => UpdateConfigFactory(fileHelper: null), returnsNormally);
       },
     );
 

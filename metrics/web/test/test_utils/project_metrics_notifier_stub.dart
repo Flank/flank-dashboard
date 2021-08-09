@@ -1,9 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
+import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
@@ -83,4 +85,10 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   bool get isMetricsLoading => false;
+
+  @override
+  DashboardPageParametersModel get pageParameters => null;
+
+  @override
+  void handlePageParameters(PageParametersModel parameters) {}
 }

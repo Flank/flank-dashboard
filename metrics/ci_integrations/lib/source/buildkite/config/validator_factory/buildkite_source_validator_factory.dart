@@ -4,12 +4,12 @@
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
 import 'package:ci_integration/integration/interface/base/config/validator_factory/config_validator_factory.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
 import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config.dart';
-import 'package:ci_integration/source/buildkite/config/model/buildkite_source_config_field.dart';
+import 'package:ci_integration/source/buildkite/config/model/buildkite_source_validation_target.dart';
 import 'package:ci_integration/source/buildkite/config/validation_delegate/buildkite_source_validation_delegate.dart';
 import 'package:ci_integration/source/buildkite/config/validator/buildkite_source_validator.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A factory class that provides a method for creating [BuildkiteSourceConfig].
 class BuildkiteSourceValidatorFactory
@@ -32,8 +32,8 @@ class BuildkiteSourceValidatorFactory
       buildkiteClient,
     );
 
-    final validationResultBuilder = ValidationResultBuilder.forFields(
-      BuildkiteSourceConfigField.values,
+    final validationResultBuilder = ValidationResultBuilder.forTargets(
+      BuildkiteSourceValidationTarget.values,
     );
 
     return BuildkiteSourceValidator(

@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:ci_integration/cli/command/ci_integration_command.dart';
 import 'package:ci_integration/cli/config/factory/raw_integration_config_factory.dart';
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
@@ -11,8 +13,7 @@ import 'package:ci_integration/cli/logger/mixin/logger_mixin.dart';
 import 'package:ci_integration/integration/error/config_validation_error.dart';
 import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/printer/validation_result_printer.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class representing a [CiIntegrationCommand] for [Config] file validation.
 class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
@@ -54,7 +55,7 @@ class ValidateCommand extends CiIntegrationCommand<void> with LoggerMixin {
         configuredPartiesFactory =
             configuredPartiesFactory ?? ConfiguredPartiesFactory(),
         validationResultPrinter =
-            validationResultPrinter ?? ValidationResultPrinter() {
+            validationResultPrinter ?? ValidationResultPrinter(stdout) {
     argParser.addOption(
       _configFileOptionName,
       help: 'A path to the YAML configuration file to validate.',

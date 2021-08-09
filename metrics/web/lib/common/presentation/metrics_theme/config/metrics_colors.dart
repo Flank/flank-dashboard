@@ -14,7 +14,7 @@ class MetricsColors {
   static const Color shadow50 = Color.fromRGBO(0, 0, 0, 0.5);
   static const Color white = Color(0xFFFFFFFF);
 
-  static const MetricsColor gray = MetricsColor(
+  static const MetricsColor grey = MetricsColor(
     _grayPrimaryValue,
     <int, Color>{
       100: Color(0xFFF5F8FA),

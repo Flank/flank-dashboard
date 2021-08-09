@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/services/common/cli/auth_cli.dart';
 import 'package:cli/services/common/cli/cli.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
@@ -97,7 +99,7 @@ class SentryCli extends AuthCli {
   }
 
   @override
-  Future<void> version() {
-    return run(['--version']);
+  Future<ProcessResult> version() {
+    return run(['--version'], attachOutput: false);
   }
 }

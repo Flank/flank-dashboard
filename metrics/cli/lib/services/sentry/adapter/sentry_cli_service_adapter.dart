@@ -1,6 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/sentry/cli/sentry_cli.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
@@ -9,8 +11,9 @@ import 'package:cli/services/sentry/model/source_map.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
 import 'package:cli/services/sentry/strings/sentry_strings.dart';
 
-/// An adapter for the [SentryCli] to implement the [SentryService] interface.
-class SentryCliServiceAdapter implements SentryService {
+/// An adapter for the [SentryCli] to implement the [SentryService] abstract
+/// methods.
+class SentryCliServiceAdapter extends SentryService {
   /// A [SentryCli] class that provides an ability to interact
   /// with the Sentry CLI.
   final SentryCli _sentryCli;
@@ -47,7 +50,7 @@ class SentryCliServiceAdapter implements SentryService {
   }
 
   @override
-  Future<void> version() {
+  Future<ProcessResult> version() {
     return _sentryCli.version();
   }
 

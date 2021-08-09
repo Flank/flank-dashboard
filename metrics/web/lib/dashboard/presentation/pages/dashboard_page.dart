@@ -1,7 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/navigation/widgets/page_parameters_proxy.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
@@ -14,6 +15,9 @@ import 'package:provider/provider.dart';
 /// The widget that allows to quickly get primary metrics
 /// of all available projects.
 class DashboardPage extends StatefulWidget {
+  /// Creates a new instance of the [DashboardPage].
+  const DashboardPage({Key key}) : super(key: key);
+
   @override
   _DashboardPageState createState() => _DashboardPageState();
 }
@@ -41,27 +45,30 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsScaffold(
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 60.0),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: ProjectMetricsSearchInput(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 32.0),
-                  child: ProjectGroupsDropdownMenu(),
-                ),
-              ],
+    return PageParametersProxy(
+      pageNotifier: _projectMetricsNotifier,
+      child: MetricsScaffold(
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 60.0),
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    child: ProjectMetricsSearchInput(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 32.0),
+                    child: ProjectGroupsDropdownMenu(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: MetricsTable(),
-          ),
-        ],
+            Expanded(
+              child: MetricsTable(),
+            ),
+          ],
+        ),
       ),
     );
   }

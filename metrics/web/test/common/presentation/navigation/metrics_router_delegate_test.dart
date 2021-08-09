@@ -7,6 +7,9 @@ import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/metrics_page_route_configuration_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_location_converter.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -81,6 +84,10 @@ void main() {
     test(
       "notifies listeners once the given navigation notifier notifies listeners",
       () {
+        const pageRouteConfigurationFactory =
+            MetricsPageRouteConfigurationFactory();
+        const routeConfigurationLocationConverter =
+            RouteConfigurationLocationConverter();
         final metricsPageFactory = MetricsPageFactory();
         final pageParametersFactory = PageParametersFactory();
         final navigationState = NavigationStateMock();
@@ -88,6 +95,8 @@ void main() {
         final navigationNotifier = NavigationNotifier(
           metricsPageFactory,
           pageParametersFactory,
+          pageRouteConfigurationFactory,
+          routeConfigurationLocationConverter,
           navigationState,
         );
         final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifier);
@@ -151,7 +160,9 @@ void main() {
       "applies a list of pages from the given navigation notifier to the navigator widget",
       () {
         final expectedPages = UnmodifiableListView(
-          const [MetricsPage(child: Text('test'))],
+          const [
+            MetricsPage(child: Text('test'), routeName: RouteName.dashboard),
+          ],
         );
         when(navigationNotifierMock.pages).thenReturn(expectedPages);
 
