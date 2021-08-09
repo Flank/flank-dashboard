@@ -152,6 +152,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | js | [pub.dev](https://pub.dev/packages/js) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/js/LICENSE) |
 | auto_size_text | [pub.dev](https://pub.dev/packages/auto_size_text) | [MIT](https://github.com/leisim/auto_size_text/blob/master/LICENSE) |
 | rive | [pub.dev](https://pub.dev/packages/rive) | [MIT](https://pub.dev/packages/rive/license) |
+| tuple | [pub.dev](https://pub.dev/packages/tuple) | [BSD](https://pub.dev/packages/tuple/license) |
 
 ### Dev dependencies
 | Name | Source | License |
