@@ -16,7 +16,7 @@ class ProjectSearchInput extends StatefulWidget {
 
   /// Creates [TextField] to search projects.
   ///
-  /// Initializes widget [key] and [onChanged] callback.
+  /// Initializes widget [key], an [initialValue] and [onChanged] callback.
   const ProjectSearchInput({
     Key key,
     @required this.onChanged,
