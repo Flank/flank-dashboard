@@ -3,30 +3,31 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /project_groups/{projectGroupId} {
-      allow read, delete: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isSignInProviderAnonymous();
+      allow delete: if isAccessAuthorized(database);
       allow create, update: if isAccessAuthorized(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isSignInProviderAnonymous();
       allow create, update: if isAccessAuthorized(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isSignInProviderAnonymous();
       allow create, update: if isAccessAuthorized(database) && isBuildValid(database);
       allow delete: if false;
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isSignInProviderAnonymous();
       allow write: if false; 
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
-      allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
+      allow get: if (isAccessAuthorized(database) || isSignInProviderAnonymous()) && isDocumentOwner(userProfileId);
+      allow write: if (isAccessAuthorized(database) || isSignInProviderAnonymous()) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
     }
@@ -68,11 +69,21 @@ service cloud.firestore {
     return isEmailDomainExists;
   }
 
-  /// Checks if the sign in provider from the request is a password.
-  function isSignInProviderPassword() {
+  /// Checks if the sign in provider from the request equals to the given parameter
+  function checkSignInProvider(signInProvider) {
     let authToken = request.auth.token;
 
-    return authToken.firebase.sign_in_provider == 'password';
+    return authToken.firebase.sign_in_provider == signInProvider;
+  }
+
+  /// Checks if the sign in provider from the request is a password.
+  function isSignInProviderPassword() {
+    return checkSignInProvider('password');
+  }
+
+  /// Checks if the sign in provider from the request is an anonymous.
+  function isSignInProviderAnonymous() {
+    return checkSignInProvider('anonymous');
   }
 
   /// Checks whether project group data from the request is valid.

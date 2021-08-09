@@ -16,6 +16,7 @@ const {
   userProfiles,
   getUserProfile,
   allowedEmailDomains,
+  getAnonymousUser,
 } = require("./test_utils/test-data");
 
 describe("", async () => {
@@ -23,9 +24,31 @@ describe("", async () => {
   const collection = "user_profiles";
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true, uid)
-  )
+  );
 
   const users = [
+    {
+      'describe': 'Authenticated as an anonymous user who is not an owner of the user profile',
+      'app':  await getApplicationWith(getAnonymousUser()),
+      'can': {
+        'create': false,
+        'list': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated as an anonymous user who is an owner of the user profile',
+      'app':  await getApplicationWith(getAnonymousUser(uid)),
+      'can': {
+        'create': true,
+        'list': false,
+        'get': true,
+        'update': true,
+        'delete': false,
+      }
+    },
     {
       'describe': 'Authenticated with a password, allowed email domain, and not a verified email user who is not an owner of the user profile',
       'app': await getApplicationWith(

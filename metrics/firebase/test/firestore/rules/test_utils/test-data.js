@@ -143,6 +143,9 @@ exports.allowedEmailDomains = allowedEmailDomains;
 exports.featureConfig = featureConfig;
 exports.tasks = tasks;
 
+/** An anonymous sign in provider identifier */
+exports.anonymousSignInProviderId = "anonymous";
+
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
 
@@ -157,6 +160,11 @@ exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "
 /** Provides a firebase user with not allowed email, sign-in provider identifier, and uid*/
 exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(deniedEmail, signInProviderId, emailVerified, uid);
+};
+
+/** Provides a firebase anonymous user with the given uid*/
+exports.getAnonymousUser = function (uid = "uid") {
+  return getUser(null, "anonymous", null, uid);
 };
 
 /** Get a test project group */

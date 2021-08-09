@@ -16,6 +16,7 @@ const {
   passwordSignInProviderId,
   googleSignInProviderId,
   allowedEmailDomains,
+  getAnonymousUser,
 } = require("./test_utils/test-data");
 
 describe("", async function () {
@@ -23,9 +24,20 @@ describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true)
   );
+  const anonymousSignIn = await getApplicationWith(getAnonymousUser());
   const collection = "projects";
 
   const users = [
+    {
+      'describe': 'Authenticated as an anonymous user',
+      'app': anonymousSignIn,
+      'can': {
+        'create': false,
+        'read': true,
+        'update': false,
+        'delete': false,
+      }
+    },
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': passwordProviderAllowedEmailApp,

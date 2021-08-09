@@ -16,12 +16,24 @@ const {
   buildDays,
   getBuildDay,
   allowedEmailDomains,
+  getAnonymousUser,
 } = require("./test_utils/test-data");
 
 describe("", async () => {
   const collection = "build_days";
+  const anonymousSignIn = await getApplicationWith(getAnonymousUser());
 
   const users = [
+    {
+      'describe': 'Authenticated as an anonymous user',
+      'app': anonymousSignIn,
+      'can': {
+        'create': false,
+        'read': true,
+        'update': false,
+        'delete': false,
+      }
+    },
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(

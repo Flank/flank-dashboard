@@ -16,6 +16,7 @@ const {
   passwordSignInProviderId,
   allowedEmailDomains,
   getProjectGroup,
+  getAnonymousUser,
 } = require("./test_utils/test-data");
 
 describe("", async function () {
@@ -23,13 +24,24 @@ describe("", async function () {
     getAllowedEmailUser(passwordSignInProviderId, true)
   );
   const unauthenticatedApp = await getApplicationWith(null);
+  const anonymousSignIn = await getApplicationWith(getAnonymousUser());
   const collection = "project_groups";
 
   const users = [
     {
+      'describe': 'Authenticated as an anonymous user',
+      'app': anonymousSignIn,
+      'can': {
+        'create': false,
+        'read': true,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(passwordSignInProviderId, true)
+        getAllowedEmailUser(passwordSignInProviderId, true)
       ),
       'can': {
         'create': true,
