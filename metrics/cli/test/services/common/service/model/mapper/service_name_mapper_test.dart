@@ -3,6 +3,7 @@
 
 import 'package:cli/services/common/service/model/mapper/service_name_mapper.dart';
 import 'package:cli/services/common/service/model/service_name.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -78,7 +79,7 @@ void main() {
     test(
       ".map() maps the not specified service name to null",
       () {
-        final name = mapper.map("TEST");
+        final name = mapper.map(const ValidationTarget(name: 'Test'));
 
         expect(name, isNull);
       },

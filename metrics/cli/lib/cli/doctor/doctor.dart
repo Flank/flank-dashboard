@@ -1,8 +1,14 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:cli/cli/doctor/factory/doctor_factory.dart';
+import 'package:cli/cli/doctor/model/doctor_target_validation_result.dart';
 import 'package:cli/common/model/services/services.dart';
 import 'package:cli/services/common/info_service.dart';
+import 'package:cli/services/common/service/model/mapper/service_name_mapper.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/flutter/flutter_service.dart';
 import 'package:cli/services/gcloud/gcloud_service.dart';
@@ -37,6 +43,9 @@ class Doctor {
   /// A class that provides methods for working with the Sentry.
   final SentryService _sentryService;
 
+  /// A [ServiceNameMapper] this class uses to map service names.
+  final ServiceNameMapper _serviceNameMapper = const ServiceNameMapper();
+
   /// Creates a new instance of the [Doctor] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
@@ -70,23 +79,92 @@ class Doctor {
   /// Returns the [ValidationResult] of versions checking for the required
   /// third-party services.
   Future<ValidationResult> checkVersions() async {
-    await _checkVersion(_flutterService);
-    await _checkVersion(_gcloudService);
-    await _checkVersion(_npmService);
-    await _checkVersion(_gitService);
-    await _checkVersion(_firebaseService);
-    await _checkVersion(_sentryService);
+    final services = [
+      _flutterService,
+      _gcloudService,
+      _npmService,
+      _gitService,
+      _firebaseService,
+      _sentryService,
+    ];
 
-    return ValidationResult(const {});
+    final targets = <ValidationTarget>[];
+
+    for (final service in services) {
+      final target = _serviceNameMapper.unmap(service.serviceName);
+
+      targets.add(target);
+    }
+
+    final resultBuilder = ValidationResultBuilder.forTargets(targets);
+
+    for (final service in services) {
+      final result = await _validateVersion(service);
+
+      resultBuilder.setResult(result);
+    }
+
+    return resultBuilder.build();
   }
 
   /// Checks version of the third-party [service].
   ///
   /// Catches all thrown exceptions to be able to proceed with checking the
   /// version of all the rest services.
-  Future<void> _checkVersion(InfoService service) async {
+  Future<TargetValidationResult> _validateVersion(InfoService service) async {
+    final validationTarget = _serviceNameMapper.unmap(service.serviceName);
+    final serviceName = validationTarget.name;
+    final dependency = _dependencies.getFor(serviceName);
+    final recommendedVersion = dependency.recommendedVersion;
+    final installUrl = dependency.installUrl;
+
     try {
-      await service.version();
-    } catch (_) {}
+      final processResult = await service.version();
+
+      final stdout = processResult.stdout;
+      final currentVersion = stdout is List<int>
+          ? const Utf8Decoder().convert(stdout).replaceAll('\n', ' ').trim()
+          : stdout.toString().replaceAll('\n', ' ').trim();
+
+      final stderr = processResult.stderr;
+      final error = stderr is List<int>
+          ? const Utf8Decoder().convert(stderr)
+          : stderr.toString();
+
+      final versionValid = currentVersion.contains(recommendedVersion);
+      final commandHasError = error != null && error.isNotEmpty;
+
+      if (versionValid && !commandHasError) {
+        return DoctorTargetValidationResult.successful(
+          validationTarget,
+          recommendedVersion,
+        );
+      }
+
+      return DoctorTargetValidationResult.warning(
+        validationTarget,
+        currentVersion,
+        versionValid ? null : recommendedVersion,
+        versionValid ? null : installUrl,
+        commandHasError ? error : null,
+      );
+    } catch (exception) {
+      return DoctorTargetValidationResult.failure(
+        validationTarget,
+        recommendedVersion,
+        installUrl,
+        exception,
+      );
+    }
   }
+}
+
+Future<void> main() async {
+  final doctorFactory = DoctorFactory();
+  final doctor = doctorFactory.create();
+  final result = await doctor.checkVersions();
+
+  ValidationResultPrinter(stdout).print(result);
+
+  exit(0);
 }
