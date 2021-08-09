@@ -22,8 +22,8 @@ package auth {
                 + authState: AuthState
                 + isInitialized: bool
                 + userProfileViewModel: UserProfileViewModel
-                - signInAnonymously(): Future<void>
                 + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
+                - _signInAnonymously(): Future<void>
             }
         }
     }
@@ -85,10 +85,10 @@ InjectionContainer --> AuthNotifier: uses
 InjectionContainer --> FeatureConfigNotifier: uses
 InjectionContainer --> NavigationNotifier: uses
 NavigationNotifier --> RouteConfiguration: uses
-NavigationNotifier ---> AuthState: uses
+NavigationNotifier --> AuthState: uses
 AuthNotifier --> SignInAnonymouslyUseCase: uses
 AuthNotifier --> AuthState: provides
-AuthNotifier -left-> UserProfileViewModel: provides
+AuthNotifier -up-> UserProfileViewModel: provides
 AuthNotifier --> PublicDashboardFeatureConfigModel: uses
 FeatureConfigNotifier --> PublicDashboardFeatureConfigModel: provides
 MetricsUserMenu --> UserProfileViewModel: uses

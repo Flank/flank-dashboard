@@ -23,9 +23,9 @@ NavigationNotifier -> LoadingPage ++: push the LoadingPage to initialize all com
 LoadingPage --> Browser: returns the LoadingPage UI
 Browser --> Bob: displays the LoadingPage UI
 
-LoadingPage -> AuthNotifier: addListener(_authNotifierListener)
+LoadingPage -> AuthNotifier: adds listener
 LoadingPage -> AuthNotifier: subscribeToAuthenticationUpdates()
-LoadingPage -> FeatureConfigNotifier: addListener(_featureConfigNotifierListener)
+LoadingPage -> FeatureConfigNotifier: adds listener
 LoadingPage -> FeatureConfigNotifier: initializeConfig()
 
 AuthNotifier --> AuthNotifier: receives the user state

@@ -234,7 +234,7 @@ The following table describes the `Firestore` security rules for the `anonymous 
 | `projects` | - | + | - | - |
 | `builds`| - | + | - | - |
 | `project_groups` | - | + | - | - |
-| `user_profiles` | + | + | + | - |
+| `user_profiles` | + (only owner) | + (only owner) | + (only owner) | - |
 | `build_days` | - | + | - | - |
 
 Please, note that if the collection is not mentioned in the table above, the collection rules should stay as is.
@@ -352,7 +352,7 @@ The last thing we should change the Metrics user menu UI accordingly to the [Use
 
 Consider the overall class diagram for the public dashboard feature that describes the relationships between the classes this feature requires:
 
-![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
+![Public Dashboard Feature Class Diagram](http://wBut we should change the `Firestore` security rules for managing anonymous users' data access. Please, consider the following [section](#Security) to learn more about these `Firestore` security rules. ww.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
 
 Consider the overall sequence diagram for the public dashboard feature that describes the main flow for the public dashboard feature:
 
