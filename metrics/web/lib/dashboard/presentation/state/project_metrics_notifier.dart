@@ -612,11 +612,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   }
 
   /// Updates the [_pageParameters] with the given [pageParameters].
-  ///
-  /// Does nothing if the given [pageParameters] equal to the [_pageParameters].
   void _setPageParameters(DashboardPageParametersModel pageParameters) {
-    if (pageParameters == _pageParameters) return;
-
     _pageParameters = pageParameters;
 
     notifyListeners();

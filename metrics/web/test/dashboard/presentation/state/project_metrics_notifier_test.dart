@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
-import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_day_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -1185,21 +1184,6 @@ void main() {
         final actualPageParameters = projectMetricsNotifier.pageParameters;
 
         expect(actualPageParameters, equals(initialPageParameters));
-      },
-    );
-
-    test(
-      ".handlePageParameters() does not update page parameters if the given parameters is equal to the current page parameters",
-      () {
-        bool isCalled = false;
-
-        projectMetricsNotifier.handlePageParameters(parameters);
-
-        projectMetricsNotifier.addListener(() => isCalled = true);
-
-        projectMetricsNotifier.handlePageParameters(parameters);
-
-        expect(isCalled, isFalse);
       },
     );
 
