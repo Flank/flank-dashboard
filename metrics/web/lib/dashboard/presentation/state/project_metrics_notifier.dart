@@ -102,18 +102,6 @@ class ProjectMetricsNotifier extends PageNotifier {
   ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
       _selectedProjectGroup;
 
-  /// Sets a new value for the selected project group and updates page
-  /// parameters.
-  /// 
-  /// Does nothing if the given [viewModel] equals to the selected project
-  /// group.
-  void _setSelectedProjectGroup(ProjectGroupDropdownItemViewModel viewModel) {
-    if (_selectedProjectGroup == viewModel) return;
-
-    _selectedProjectGroup = viewModel;
-    _updatePageParameters();
-  }
-
   /// Indicates whether project metrics are loading or not.
   bool get isMetricsLoading {
     final List<ProjectMetricsTileViewModel> projectMetrics =
@@ -162,16 +150,6 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Provides the currently applied project name filter.
   String get projectNameFilter => _projectNameFilter;
 
-  /// Sets a new value for the project name filter and updates page parameters.
-  /// 
-  /// Does nothing if the given [value] equals to the project name filter.
-  void _setProjectNameFilter(String value) {
-    if (_projectNameFilter == value) return;
-
-    _projectNameFilter = value;
-    _updatePageParameters();
-  }
-
   /// Creates a new instance of the [ProjectMetricsNotifier] with the given
   /// parameters.
   ///
@@ -191,6 +169,28 @@ class ProjectMetricsNotifier extends PageNotifier {
     _subscribeToProjectsNameFilter();
   }
 
+  /// Sets a new value for the selected project group and updates page
+  /// parameters.
+  ///
+  /// Does nothing if the given [viewModel] equals to the selected project
+  /// group.
+  void _setSelectedProjectGroup(ProjectGroupDropdownItemViewModel viewModel) {
+    if (_selectedProjectGroup == viewModel) return;
+
+    _selectedProjectGroup = viewModel;
+    _updatePageParameters();
+  }
+
+  /// Sets a new value for the project name filter and updates page parameters.
+  ///
+  /// Does nothing if the given [value] equals to the project name filter.
+  void _setProjectNameFilter(String value) {
+    if (_projectNameFilter == value) return;
+
+    _projectNameFilter = value;
+    _updatePageParameters();
+  }
+
   /// Subscribes to a projects name filter.
   ///
   /// Updates the [_pageParameters].
@@ -199,8 +199,6 @@ class ProjectMetricsNotifier extends PageNotifier {
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _setProjectNameFilter(value);
-
-      // _updatePageParameters();
     });
   }
 
@@ -276,14 +274,11 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   @override
   void handlePageParameters(PageParametersModel parameters) {
+    if (parameters == null) return;
+
     final pageParameters = parameters as DashboardPageParametersModel;
 
-    if (pageParameters == null) {
-      _setSelectedProjectGroup(null);
-      _setProjectNameFilter(null);
-    } else {
-      _setProjectNameFilter(pageParameters.projectFilter);
-    }
+    _projectNameFilter = pageParameters.projectFilter;
 
     _setPageParameters(pageParameters);
   }
