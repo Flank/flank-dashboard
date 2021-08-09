@@ -1,0 +1,60 @@
+@startuml public_dashboard_auth_class_diagram
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        + call(Params params): Type
+    }
+}
+
+package auth {
+    package presentation {
+        package view_models {
+            class UserProfileViewModel {
+                + isAnonymous: bool
+            }
+        }
+
+        package models {
+            enum AuthState {
+                 loggedIn
+                 loggedInAnonymously
+                 loggedOut
+            }
+        }
+
+        package state {
+            class AuthNotifier {
+                - _isPublicDashboardFeatureEnabled: bool
+                + authState: AuthState
+                + isInitialized: bool
+                + userProfileViewModel: UserProfileViewModel
+                + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
+                - _signInAnonymously(): Future<void>
+            }
+        }
+    }
+
+    package domain {
+        package repositories {
+            interface UserRepository {
+                + signInAnonymously(): Future<void>
+            }
+        }
+
+        package usecases {
+            class SignInAnonymouslyUseCase<Future<void>, void> implements UseCase {
+                - _repository: UserRepository
+            }
+        }
+    }
+
+    package data.repositories {
+        class FirebaseUserRepository implements UserRepository {}
+    }
+}
+
+SignInAnonymouslyUseCase --> UserRepository: uses
+AuthNotifier --> SignInAnonymouslyUseCase: uses
+AuthNotifier --> AuthState: uses
+AuthNotifier --> UserProfileViewModel: provides
+@enduml
