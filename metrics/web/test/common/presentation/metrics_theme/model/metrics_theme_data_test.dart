@@ -11,14 +11,15 @@ import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/theme/theme_data/manufacturer_banner_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/date_range/theme_data/date_range_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/date_range/theme_data/date_range_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
@@ -86,6 +87,7 @@ void main() {
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
         expect(themeData.debugMenuTheme, isNotNull);
+        expect(themeData.manufacturerBannerThemeData, isNotNull);
       },
     );
 
@@ -123,6 +125,7 @@ void main() {
           pageTitleTheme: null,
           graphIndicatorTheme: null,
           debugMenuTheme: null,
+          manufacturerBannerThemeData: null,
         );
 
         expect(themeData.metricsWidgetTheme, isNotNull);
@@ -155,6 +158,7 @@ void main() {
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
         expect(themeData.debugMenuTheme, isNotNull);
+        expect(themeData.manufacturerBannerThemeData, isNotNull);
       },
     );
 
@@ -316,6 +320,11 @@ void main() {
           sectionContentTextStyle: TextStyle(color: Colors.red),
         );
 
+        const manufacturerBannerThemeData = ManufacturerBannerThemeData(
+          backgroundColor: Colors.blue,
+          textStyle: TextStyle(fontSize: 12.0),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -349,6 +358,7 @@ void main() {
           pageTitleTheme: pageTitleTheme,
           graphIndicatorTheme: graphIndicatorTheme,
           debugMenuTheme: debugMenuTheme,
+          manufacturerBannerThemeData: manufacturerBannerThemeData,
         );
 
         expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
@@ -414,6 +424,10 @@ void main() {
         expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
         expect(copiedTheme.graphIndicatorTheme, equals(graphIndicatorTheme));
         expect(copiedTheme.debugMenuTheme, equals(debugMenuTheme));
+        expect(
+          copiedTheme.manufacturerBannerThemeData,
+          equals(manufacturerBannerThemeData),
+        );
       },
     );
 
@@ -526,6 +540,10 @@ void main() {
         expect(
           themeData.debugMenuTheme,
           equals(copiedTheme.debugMenuTheme),
+        );
+        expect(
+          themeData.manufacturerBannerThemeData,
+          equals(copiedTheme.manufacturerBannerThemeData),
         );
       },
     );
