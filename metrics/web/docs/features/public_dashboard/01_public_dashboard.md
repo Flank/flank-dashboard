@@ -215,7 +215,7 @@ Since these changes do not require creating any new collections/documents, the F
 > Explain the changes required to make the data accessible for anonymous users.
 
 There is no need to change the `Firestore` database structure to access the data using the anonymous user. 
-But we should change the `Firestore` security rules for managing anonymous users' data access. Please consider, the following [section](#Security) to learn more about these `Firestore` security rules. 
+But we should change the `Firestore` security rules for managing anonymous users' data access. Please, consider the following [section](#Security) to learn more about these `Firestore` security rules. 
 
 ### Privacy
 > Privacy by design. Explain how privacy is protected (GDPR, CCPA, HIPAA, etc.).
@@ -257,7 +257,7 @@ The first important part is adding the ability to track the feature state. It wi
 ##### PublicDashboardFeatureConfigModel
 > Explain the purpose and responsibility of the class.
 
-As mentioned above, we are going to store the public dashboard feature configuration in the dashboard. The FeatureConfigNotifier manages the application state related to the feature configuration, so this class will hold the current value of this feature configuration. To be able to transfer the data between the states, according to the Presentation Layer Architecture document, we should use the model classes. So, for this purpose, we should create a PublicDashboardFeatureConfigModel that will be used to transfer the public dashboard feature configuration between application states (ChangeNotifiers).
+As mentioned above, we are going to store the public dashboard feature configuration in the Firestore database. The `FeatureConfigNotifier` manages the application state related to the feature configuration, so this class will hold the current value of this feature configuration. To be able to transfer the data between the states, according to the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document, we should use the model classes. So, for this purpose, we should create a `PublicDashboardFeatureConfigModel` that will be used to transfer the public dashboard feature configuration between application states (`ChangeNotifier`s).
 
 ##### FeatureConfig module changes
 
@@ -326,9 +326,9 @@ Please consider the following list of changes this module requires to integrate 
 After the changes in the modules above, let's move on to integrating these changes into the application.
 
 Here are the main parts that we should add to the application:
-- Auto sign in the user anonymously if the feature is enabled.
-- Manage normal sign in for the anonymous user.
-- Change the UI of the Metrics user menu.
+- [Auto sign in the user anonymously](#auto-sign-in-the-user-anonymously) if the feature is enabled.
+- [Manage sign in for the anonymous user](#manage-sign-in-for-the-anonymous-user).
+- [Change the Metrics user menu UI](#change-the-metrics-user-menu-ui).
 
 Let's review each of the above points in the following subsections
 
@@ -364,5 +364,6 @@ Consider the overall sequence diagram for the public dashboard feature that desc
 To test the feature, we should focus on the following types of tests:
 - The unit tests, which cover the main logic of the feature, described in the [program section](#program).
 - The widget tests, which test that the UI behaviour corresponds to the expectations from the [User Interface section](#user-interface).
+- The integration tests, which test how individual pieces work together as a whole running on a real device.
 
 Also, since we're going to change the Firebase security rules accordingly to the security section, we should cover these rules with the unit tests.

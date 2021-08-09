@@ -28,8 +28,8 @@ package auth {
                 + authState: AuthState
                 + isInitialized: bool
                 + userProfileViewModel: UserProfileViewModel
-                - signInAnonymously(): Future<void>
                 + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
+                - _signInAnonymously(): Future<void>
             }
         }
     }
