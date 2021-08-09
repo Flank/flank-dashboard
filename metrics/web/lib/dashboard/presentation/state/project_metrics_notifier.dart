@@ -234,7 +234,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     _selectedProjectGroup = projectGroup;
   }
 
-  /// Updates projects, project name filter and an error message.
+  /// Updates projects and an error message.
   Future<void> setProjects(
     List<ProjectModel> newProjects,
     String errorMessage,
