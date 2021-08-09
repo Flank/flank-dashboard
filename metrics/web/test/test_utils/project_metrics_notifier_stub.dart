@@ -91,4 +91,10 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   void handlePageParameters(PageParametersModel parameters) {}
+
+  @override
+  set projectNameFilter(String value) {}
+
+  @override
+  set selectedProjectGroup(ProjectGroupDropdownItemViewModel viewModel) {}
 }

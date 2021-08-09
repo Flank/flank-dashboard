@@ -6,9 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
-import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
+import 'package:metrics/common/presentation/widgets/projects_search_input.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectSearchInput", () {
@@ -108,13 +107,13 @@ void main() {
 
 /// A testbed class required to test the [ProjectSearchInput] widget.
 class _ProjectSearchInputTestbed extends StatelessWidget {
-  /// A callback for value changes for the text field.
+  /// A callback for value changes for the [ProjectSearchInput].
   final ValueChanged<String> onChanged;
 
   /// An initial value for the project search input.
   final String initialValue;
 
-  /// Creates an instance of the project search input testbed.
+  /// Creates a new instance of the [_ProjectSearchInputTestbed].
   const _ProjectSearchInputTestbed({
     Key key,
     this.onChanged,
@@ -123,10 +122,12 @@ class _ProjectSearchInputTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      body: ProjectSearchInput(
-        onChanged: onChanged,
-        initialValue: initialValue,
+    return MaterialApp(
+      home: Scaffold(
+        body: ProjectSearchInput(
+          onChanged: onChanged,
+          initialValue: initialValue,
+        ),
       ),
     );
   }

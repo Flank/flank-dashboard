@@ -907,33 +907,6 @@ void main() {
     );
 
     test(
-      ".setProjects() sets the projects filter to the corresponding value of the page parameters",
-      () async {
-        final expectedProjectFilter = parameters.projectFilter;
-
-        projectMetricsNotifier.handlePageParameters(parameters);
-
-        await projectMetricsNotifier.setProjects(projects, errorMessage);
-
-        final actualProjectFilter = projectMetricsNotifier.projectNameFilter;
-
-        expect(actualProjectFilter, expectedProjectFilter);
-      },
-    );
-
-    test(
-      ".setProjects() sets the projects filter to null if the given projects are null",
-      () async {
-        projectMetricsNotifier.handlePageParameters(parameters);
-        await projectMetricsNotifier.setProjects(projects, errorMessage);
-
-        await projectMetricsNotifier.setProjects(null, null);
-
-        expect(projectMetricsNotifier.projectNameFilter, isNull);
-      },
-    );
-
-    test(
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
@@ -1070,32 +1043,17 @@ void main() {
     );
 
     test(
-      ".setProjectGroups() update the selected project group to the group with an id equals to the page parameters project group id",
-      () {
-        projectMetricsNotifier.handlePageParameters(parameters);
-
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-
-        final actualProjectGroup = projectMetricsNotifier.selectedProjectGroup;
-
-        expect(actualProjectGroup.id, equals(projectGroupId));
-      },
-    );
-
-    test(
       ".setProjectGroups() update page parameters using the selected project group",
       () {
         projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
 
-        final selectedProjectGroup =
-            projectMetricsNotifier.selectedProjectGroup;
+        final selectedProjectGroupId =
+            projectMetricsNotifier.selectedProjectGroup.id;
 
-        projectMetricsNotifier.setProjectGroups(projectGroups);
+        final pageParametersProjectGroupId =
+            projectMetricsNotifier.pageParameters.projectGroupId;
 
-        final pageParameters = projectMetricsNotifier.pageParameters;
-
-        expect(pageParameters.projectGroupId, equals(selectedProjectGroup.id));
+        expect(pageParametersProjectGroupId, equals(selectedProjectGroupId));
       },
     );
 
@@ -1202,20 +1160,7 @@ void main() {
     );
 
     test(
-      ".handlePageParameters() does not update page parameters if the given parameters model is null",
-      () {
-        final initialPageParameters = projectMetricsNotifier.pageParameters;
-
-        projectMetricsNotifier.handlePageParameters(null);
-
-        final actualPageParameters = projectMetricsNotifier.pageParameters;
-
-        expect(actualPageParameters, equals(initialPageParameters));
-      },
-    );
-
-    test(
-      ".handlePageParameters() does not update project name filter if the given parameters model is null",
+      ".handlePageParameters() sets project name filter to null if the given parameters are null",
       () {
         const parameters = DashboardPageParametersModel(
           projectFilter: 'test',
@@ -1223,13 +1168,26 @@ void main() {
 
         projectMetricsNotifier.handlePageParameters(parameters);
 
-        final initialNameFilter = projectMetricsNotifier.projectNameFilter;
-
         projectMetricsNotifier.handlePageParameters(null);
 
         final actualNameFilter = projectMetricsNotifier.projectNameFilter;
 
-        expect(actualNameFilter, equals(initialNameFilter));
+        expect(actualNameFilter, isNull);
+      },
+    );
+
+    test(
+      ".handlePageParameters() sets selected project group to null if the given parameters are null",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        projectMetricsNotifier.handlePageParameters(null);
+
+        final actualSelectedProjectGroup =
+            projectMetricsNotifier.selectedProjectGroup;
+
+        expect(actualSelectedProjectGroup, isNull);
       },
     );
 

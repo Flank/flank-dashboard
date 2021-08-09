@@ -419,7 +419,7 @@ void main() {
     );
 
     test(
-      ".handleAppInitialized() replaces the current navigation state using the redirect route path",
+      ".handleAppInitialized() replaces the current navigation state using the redirect route",
       () {
         final configuration = DefaultRoutes.projectGroups;
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -1159,7 +1159,7 @@ void main() {
     );
 
     test(
-      ".pushStateReplacement() replaces the navigation state path with the pushed route configuration path",
+      ".pushStateReplacement() replaces the navigation state path with the pushed route configuration",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
         notifier.push(DefaultRoutes.login);

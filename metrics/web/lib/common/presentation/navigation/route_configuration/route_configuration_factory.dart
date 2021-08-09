@@ -25,10 +25,7 @@ class RouteConfigurationFactory {
     }
 
     final routeName = pathSegments.first;
-
-    final parameters = uri?.queryParameters;
-    final hasParameters = parameters != null && parameters.isNotEmpty;
-    final queryParameters = hasParameters ? parameters : null;
+    final queryParameters = uri?.queryParameters;
 
     if (routeName == RouteName.login.value) {
       return RouteConfiguration.login(parameters: queryParameters);

@@ -13,6 +13,7 @@ void main() {
     const queryParametersKey = 'testKey';
     const queryParametersValue = 'testValue';
     const queryParametersString = '$queryParametersKey=$queryParametersValue';
+    const queryParametersMap = {queryParametersKey: queryParametersValue};
 
     test(
       ".create() returns a loading route configuration if the given uri is null",
@@ -40,8 +41,26 @@ void main() {
     test(
       ".create() returns a login route configuration if the given uri contains login path",
       () {
-        final expectedConfiguration = DefaultRoutes.login;
+        final expectedConfiguration = RouteConfiguration.login(
+          parameters: const {},
+        );
         final uri = Uri.parse('$baseUrl${DefaultRoutes.login.path}');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a login route configuration with query parameters from the given uri if the uri contains login path",
+      () {
+        final expectedConfiguration = RouteConfiguration.login(
+          parameters: queryParametersMap,
+        );
+        final uri = Uri.parse(
+          '$baseUrl${DefaultRoutes.login.path}?$queryParametersString',
+        );
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -52,8 +71,26 @@ void main() {
     test(
       ".create() returns a dashboard route configuration if the given uri contains dashboard path",
       () {
-        final expectedConfiguration = DefaultRoutes.dashboard;
+        final expectedConfiguration = RouteConfiguration.dashboard(
+          parameters: const {},
+        );
         final uri = Uri.parse('$baseUrl${DefaultRoutes.dashboard.path}');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a dashboard route configuration with query parameters from the given uri if the uri contains dashboard path",
+      () {
+        final expectedConfiguration = RouteConfiguration.dashboard(
+          parameters: queryParametersMap,
+        );
+        final uri = Uri.parse(
+          '$baseUrl${DefaultRoutes.dashboard.path}?$queryParametersString',
+        );
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -64,8 +101,26 @@ void main() {
     test(
       ".create() returns a project groups route configuration if the given uri contains project groups path",
       () {
-        final expectedConfiguration = DefaultRoutes.projectGroups;
+        final expectedConfiguration = RouteConfiguration.projectGroups(
+          parameters: const {},
+        );
         final uri = Uri.parse('$baseUrl${DefaultRoutes.projectGroups.path}');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a project groups route configuration with query parameters from the given uri if the uri contains project groups path",
+      () {
+        final expectedConfiguration = RouteConfiguration.projectGroups(
+          parameters: queryParametersMap,
+        );
+        final uri = Uri.parse(
+          '$baseUrl${DefaultRoutes.projectGroups.path}?$queryParametersString',
+        );
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -76,8 +131,26 @@ void main() {
     test(
       ".create() returns a debug menu route configuration if the given uri contains debug menu path",
       () {
-        final expectedConfiguration = DefaultRoutes.debugMenu;
+        final expectedConfiguration = RouteConfiguration.debugMenu(
+          parameters: const {},
+        );
         final uri = Uri.parse('$baseUrl${DefaultRoutes.debugMenu.path}');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".create() returns a debug menu route configuration with query parameters from the given uri if the uri contains debug menu path",
+      () {
+        final expectedConfiguration = RouteConfiguration.debugMenu(
+          parameters: queryParametersMap,
+        );
+        final uri = Uri.parse(
+          '$baseUrl${DefaultRoutes.debugMenu.path}?$queryParametersString',
+        );
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -98,30 +171,14 @@ void main() {
     );
 
     test(
-      ".create() returns a route configuration with query parameters from the given uri",
+      ".create() returns a dashboard route configuration with parameters equals to null if the given uri contains an unknown path",
       () {
-        const queryParametersMap = {queryParametersKey: queryParametersValue};
-        final expectedConfiguration = RouteConfiguration.login(
-          parameters: queryParametersMap,
-        );
-        final uri = Uri.parse(
-          '$baseUrl${DefaultRoutes.login.path}?$queryParametersString',
-        );
-
-        final configuration = routeConfigurationFactory.create(uri);
-
-        expect(configuration, equals(expectedConfiguration));
-      },
-    );
-
-    test(
-      ".create() returns a route configuration with parameters equals to null if the given uri contains an unknown path",
-      () {
+        final expectedConfiguration = DefaultRoutes.dashboard;
         final uri = Uri.parse('$baseUrl/path?$queryParametersString');
 
         final configuration = routeConfigurationFactory.create(uri);
 
-        expect(configuration.parameters, isNull);
+        expect(configuration, expectedConfiguration);
       },
     );
   });

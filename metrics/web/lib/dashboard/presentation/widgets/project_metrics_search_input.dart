@@ -3,10 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
+import 'package:metrics/common/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 /// A widget that displays a project metrics search input.
 ///
@@ -15,14 +14,10 @@ import 'package:tuple/tuple.dart';
 class ProjectMetricsSearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Selector<ProjectMetricsNotifier, Tuple2<bool, String>>(
-      selector: (_, state) => Tuple2(
-        state.isMetricsLoading,
-        state.projectNameFilter,
-      ),
-      builder: (_, tuple, __) {
-        final isLoading = tuple.item1;
-        final projectNameFilter = tuple.item2;
+    return Consumer<ProjectMetricsNotifier>(
+      builder: (_, notifier, __) {
+        final isLoading = notifier.isMetricsLoading;
+        final projectNameFilter = notifier.projectNameFilter;
 
         if (isLoading) return const MetricsInputPlaceholder();
 
