@@ -907,6 +907,33 @@ void main() {
     );
 
     test(
+      ".setProjects() sets the projects filter to the corresponding value of the page parameters",
+      () async {
+        final expectedProjectFilter = parameters.projectFilter;
+
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        final actualProjectFilter = projectMetricsNotifier.projectNameFilter;
+
+        expect(actualProjectFilter, expectedProjectFilter);
+      },
+    );
+
+    test(
+      ".setProjects() sets the projects filter to null if the given projects are null",
+      () async {
+        projectMetricsNotifier.handlePageParameters(parameters);
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        await projectMetricsNotifier.setProjects(null, null);
+
+        expect(projectMetricsNotifier.projectNameFilter, isNull);
+      },
+    );
+
+    test(
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();

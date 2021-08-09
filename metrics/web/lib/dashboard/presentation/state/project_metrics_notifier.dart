@@ -234,7 +234,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     _selectedProjectGroup = projectGroup;
   }
 
-  /// Updates projects and an error message.
+  /// Updates projects, project name filter and an error message.
   Future<void> setProjects(
     List<ProjectModel> newProjects,
     String errorMessage,
@@ -258,8 +258,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     if (parameters == null) return;
 
     final pageParameters = parameters as DashboardPageParametersModel;
-
-    _projectNameFilter = pageParameters?.projectFilter;
 
     _setPageParameters(pageParameters);
   }
@@ -294,6 +292,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
   Future<void> _refreshMetricsSubscriptions() async {
     if (_projects == null) {
+      _projectNameFilter = null;
       await _unsubscribeFromBuildMetrics();
       notifyListeners();
       return;
@@ -333,6 +332,8 @@ class ProjectMetricsNotifier extends PageNotifier {
 
       projectsMetrics[projectId] = projectMetrics;
     }
+
+    _projectNameFilter = pageParameters?.projectFilter;
 
     _updateProjectMetrics(projectsMetrics);
   }

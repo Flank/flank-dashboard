@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "filters sets an initial value to the project search input equals to a project name filter of the project metrics notifier",
+      "sets an initial value to the project search input equals to a project name filter of the project metrics notifier",
       (tester) async {
         final notifier = ProjectMetricsNotifierMock();
 
