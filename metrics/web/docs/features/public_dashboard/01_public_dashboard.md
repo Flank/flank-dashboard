@@ -252,7 +252,7 @@ Consider the following subsections that describe each module changes in more det
 
 #### FeatureConfig module
 
-The first important part is adding the ability to track the feature state. It will allow us to change the behavior of our application correspondingly. For this purpose, we should implement a PublicDashboardFeatureConfigModel class and make changes to this module. The following subsections describe in a bit more detail this class and the changes required for the feature integration.
+The first important part is adding the ability to track the feature state. It will allow us to change the behavior of our application correspondingly. For this purpose, we should implement a `PublicDashboardFeatureConfigModel` class and make changes to this module. The following subsections describe in a bit more detail this class and the changes required for the feature integration.
 
 ##### PublicDashboardFeatureConfigModel
 > Explain the purpose and responsibility of the class.
