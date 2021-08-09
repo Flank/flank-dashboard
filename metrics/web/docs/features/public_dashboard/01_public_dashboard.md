@@ -175,7 +175,7 @@ Once we've chosen the implementation approach of the public dashboard, let's rev
 
 Consider the following diagram that briefly describes this architecture approach:
 
-![Public Dashboard Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_components_diagram.puml)
+![Public Dashboard Architecture Components Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_architecture_components_diagram.puml)
 
 ### User Interface
 > How users will interact with the feature (API, CLI, Graphical interface, etc.).
@@ -268,7 +268,7 @@ Consider the list of changes this module requires to integrate the public dashbo
 
 Let's review the following class diagram, which describes the relationship between the classes in this module:
 
-![Feature Config Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_feature_config_class_diagram.puml)
+![Feature Config Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_feature_config_class_diagram.puml)
 
 #### Auth module
 
@@ -307,7 +307,7 @@ Let's consider the list of changes this module requires to integrate the public 
 
 Let's review the following class diagram, which describes the relationship between the classes in this module:
 
-![Auth Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_auth_class_diagram.puml)
+![Auth Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_auth_class_diagram.puml)
 
 #### Navigation module
 
@@ -352,11 +352,11 @@ The last thing we should change the Metrics user menu UI accordingly to the [Use
 
 Consider the overall class diagram for the public dashboard feature that describes the relationships between the classes this feature requires:
 
-![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
+![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
 
 Consider the overall sequence diagram for the public dashboard feature that describes the main flow for the public dashboard feature:
 
-![Public Dashboard Feature Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_sequence_diagram.puml)
+![Public Dashboard Feature Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/master/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_sequence_diagram.puml)
 
 ### Testing
 > Describe an approach on how the feature should be tested.
