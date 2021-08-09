@@ -257,7 +257,7 @@ The first important part is adding the ability to track the feature state. It wi
 ##### PublicDashboardFeatureConfigModel
 > Explain the purpose and responsibility of the class.
 
-As mentioned above, we are going to store the public dashboard feature configuration in the Firestore database. The `FeatureConfigNotifier` manages the application state related to the feature configuration, so this class will hold the current value of this feature configuration. To be able to transfer the data between the states, according to the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#view-model) document, we should use the model classes. So, for this purpose, we should create a `PublicDashboardFeatureConfigModel` that will be used to transfer the public dashboard feature configuration between application states (`ChangeNotifier`s).
+As mentioned above, we are going to store the public dashboard feature configuration in the Firestore database. The `FeatureConfigNotifier` manages the application state related to the feature configuration, so this class will hold the current value of this feature configuration. To be able to transfer the data between the states, according to the [Presentation Layer Architecture](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/02_presentation_layer_architecture.md#model) document, we should use the model classes. So, for this purpose, we should create a `PublicDashboardFeatureConfigModel` that will be used to transfer the public dashboard feature configuration between application states (`ChangeNotifier`s).
 
 ##### FeatureConfig module changes
 
@@ -352,7 +352,7 @@ The last thing we should change the Metrics user menu UI accordingly to the [Use
 
 Consider the overall class diagram for the public dashboard feature that describes the relationships between the classes this feature requires:
 
-![Public Dashboard Feature Class Diagram](http://wBut we should change the `Firestore` security rules for managing anonymous users' data access. Please, consider the following [section](#Security) to learn more about these `Firestore` security rules. ww.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
+![Public Dashboard Feature Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/Flank/flank-dashboard/public_dashboard_design/metrics/web/docs/features/public_dashboard/diagrams/public_dashboard_class_diagram.puml)
 
 Consider the overall sequence diagram for the public dashboard feature that describes the main flow for the public dashboard feature:
 
