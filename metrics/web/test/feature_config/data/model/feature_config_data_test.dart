@@ -13,7 +13,7 @@ void main() {
     const json = {
       'isPasswordSignInOptionEnabled': isPasswordSignInOptionEnabled,
       'isDebugMenuEnabled': isDebugMenuEnabled,
-      'isPublicDashboardEnabled': isPublicDashboardFeatureEnabled
+      'isPublicDashboardEnabled': isPublicDashboardFeatureEnabled,
     };
 
     test(
@@ -29,9 +29,10 @@ void main() {
       ".fromJson() creates an instance from the given json",
       () {
         const expectedConfig = FeatureConfigData(
-            isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
-            isDebugMenuEnabled: isDebugMenuEnabled,
-            isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled);
+          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+        );
 
         final config = FeatureConfigData.fromJson(json);
 
@@ -43,9 +44,10 @@ void main() {
       ".toJson() converts an instance to the json encodable map",
       () {
         const config = FeatureConfigData(
-            isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
-            isDebugMenuEnabled: isDebugMenuEnabled,
-            isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled);
+          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+        );
 
         expect(config.toJson(), equals(json));
       },

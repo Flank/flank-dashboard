@@ -6,23 +6,47 @@ import 'package:metrics/feature_config/domain/entities/feature_config.dart';
 
 void main() {
   group("FeatureConfig", () {
+    const isPasswordSignInOptionEnabled = true;
+    const isDebugMenuEnabled = true;
+    const isPublicDashboardFeatureEnabled = true;
+
     test(
       "creates an instance with the given parameters",
       () {
-        const isPasswordSignInOptionEnabled = true;
-        const isDebugMenuEnabled = true;
-        const isPublicDashboardFeatureEnabled = true;
-
         const config = FeatureConfig(
-            isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
-            isDebugMenuEnabled: isDebugMenuEnabled,
-            isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled);
+          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+        );
 
-        expect(config.isPasswordSignInOptionEnabled,
-            equals(isPasswordSignInOptionEnabled));
+        expect(
+          config.isPasswordSignInOptionEnabled,
+          equals(isPasswordSignInOptionEnabled),
+        );
         expect(config.isDebugMenuEnabled, equals(isDebugMenuEnabled));
-        expect(config.isPublicDashboardFeatureEnabled,
-            equals(isPublicDashboardFeatureEnabled));
+        expect(
+          config.isPublicDashboardFeatureEnabled,
+          equals(isPublicDashboardFeatureEnabled),
+        );
+      },
+    );
+
+    test(
+      "equals to another FeatureConfig with the same parameters",
+      () {
+        const expected = FeatureConfig(
+          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+        );
+
+        const featureConfig = FeatureConfig(
+          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+        );
+
+        expect(featureConfig, equals(expected));
       },
     );
   });

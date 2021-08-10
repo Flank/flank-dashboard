@@ -11,19 +11,20 @@ class FeatureConfig extends Equatable {
   /// Indicates whether the debug menu feature is enabled.
   final bool isDebugMenuEnabled;
 
-  /// Indicates whether the public dashboard feature is enabled
+  /// Indicates whether the public dashboard feature is enabled.
   final bool isPublicDashboardFeatureEnabled;
 
   @override
   List<Object> get props => [
         isPasswordSignInOptionEnabled,
         isDebugMenuEnabled,
-        isPublicDashboardFeatureEnabled
+        isPublicDashboardFeatureEnabled,
       ];
 
   /// Creates a new instance of the [FeatureConfig] with the given parameters.
-  const FeatureConfig(
-      {this.isPasswordSignInOptionEnabled,
-      this.isDebugMenuEnabled,
-      this.isPublicDashboardFeatureEnabled});
+  const FeatureConfig({
+    this.isPasswordSignInOptionEnabled,
+    this.isDebugMenuEnabled,
+    this.isPublicDashboardFeatureEnabled,
+  });
 }
