@@ -274,7 +274,7 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   @override
   void handlePageParameters(PageParametersModel parameters) {
-    if (parameters == null || parameters is DashboardPageParametersModel) {
+    if (parameters == null || parameters is! DashboardPageParametersModel) {
       return;
     }
 
