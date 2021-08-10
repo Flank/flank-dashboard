@@ -169,10 +169,10 @@ class ProjectMetricsNotifier extends PageNotifier {
     _subscribeToProjectsNameFilter();
   }
 
-  /// Sets a new value for the [_selectedProjectGroup] and updates 
+  /// Sets a new value for the [_selectedProjectGroup] and updates
   /// [_pageParameters].
   ///
-  /// Does nothing if the given [viewModel] equals 
+  /// Does nothing if the given [viewModel] equals
   /// to the [_selectedProjectGroup].
   void _setSelectedProjectGroup(ProjectGroupDropdownItemViewModel viewModel) {
     if (_selectedProjectGroup == viewModel) return;
@@ -181,7 +181,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     _updatePageParameters();
   }
 
-  /// Sets a new value for the [_projectNameFilter] and updates 
+  /// Sets a new value for the [_projectNameFilter] and updates
   /// [_pageParameters].
   ///
   /// Does nothing if the given [value] equals to the [_projectNameFilter].
@@ -275,7 +275,10 @@ class ProjectMetricsNotifier extends PageNotifier {
 
   @override
   void handlePageParameters(PageParametersModel parameters) {
-    if (parameters == null || parameters is! DashboardPageParametersModel) {
+    if (parameters == null) {
+      _selectedProjectGroup = _allProjectsGroupDropdownItemViewModel;
+      _projectNameFilter = null;
+      _updatePageParameters();
       return;
     }
 
