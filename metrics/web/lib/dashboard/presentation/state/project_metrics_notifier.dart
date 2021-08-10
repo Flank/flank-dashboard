@@ -186,11 +186,8 @@ class ProjectMetricsNotifier extends PageNotifier {
   ///
   /// Does nothing if the given [value] equals to the [_projectNameFilter].
   void _setProjectNameFilter(String value) {
-    print('_setProjectNameFilter');
-
-    print(1);
     if (_projectNameFilter == value) return;
-      print(2);
+
     _projectNameFilter = value;
     _updatePageParameters();
   }
@@ -202,8 +199,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
-
-          print('add to _projectNameFilterSubject');
       _setProjectNameFilter(value);
     });
   }
@@ -651,7 +646,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Updates the [_pageParameters] with the given [pageParameters].
   void _setPageParameters(DashboardPageParametersModel pageParameters) {
     _pageParameters = pageParameters;
-    print('notify');
+
     notifyListeners();
   }
 
