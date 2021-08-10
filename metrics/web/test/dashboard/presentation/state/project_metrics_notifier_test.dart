@@ -1160,6 +1160,19 @@ void main() {
     );
 
     test(
+      ".handlePageParameters() does not update page parameters if the given parameters model is null",
+      () {
+        final initialPageParameters = projectMetricsNotifier.pageParameters;
+
+        projectMetricsNotifier.handlePageParameters(null);
+
+        final actualPageParameters = projectMetricsNotifier.pageParameters;
+
+        expect(actualPageParameters, equals(initialPageParameters));
+      },
+    );
+
+    test(
       ".handlePageParameters() sets project name filter to null if the given parameters are null",
       () {
         const parameters = DashboardPageParametersModel(
