@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
@@ -40,6 +40,12 @@ abstract class UserRepository {
   ///
   /// Throws an [AuthenticationException] if sign in is failed.
   Future<void> signInWithGoogle(AuthCredentials credentials);
+
+  /// Provides an ability to sign in a user to the app
+  /// anonymously
+  ///
+  /// Throws an [AuthenticationException] if sign in is failed
+  Future<void> signInAnonymously();
 
   /// Provides an ability to sign out a user.
   Future<void> signOut();
