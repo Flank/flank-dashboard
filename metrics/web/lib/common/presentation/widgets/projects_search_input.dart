@@ -29,13 +29,23 @@ class ProjectSearchInput extends StatefulWidget {
 
 class _ProjectSearchInputState extends State<ProjectSearchInput> {
   /// A text editing controller for a project name.
-  final TextEditingController _projectNameController = TextEditingController();
+  TextEditingController _projectNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
     _projectNameController.text = widget.initialValue;
+  }
+
+  @override
+  void didUpdateWidget(ProjectSearchInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _projectNameController = TextEditingController(text: widget.initialValue);
+    _projectNameController.selection = TextSelection.fromPosition(
+      TextPosition(offset: _projectNameController.text.length),
+    );
   }
 
   @override
@@ -53,5 +63,11 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
       },
       hint: CommonStrings.searchForProject,
     );
+  }
+
+  @override
+  void dispose() {
+    _projectNameController.dispose();
+    super.dispose();
   }
 }

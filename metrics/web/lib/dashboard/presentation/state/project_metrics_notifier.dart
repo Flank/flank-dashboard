@@ -186,8 +186,11 @@ class ProjectMetricsNotifier extends PageNotifier {
   ///
   /// Does nothing if the given [value] equals to the [_projectNameFilter].
   void _setProjectNameFilter(String value) {
-    if (_projectNameFilter == value) return;
+    print('_setProjectNameFilter');
 
+    print(1);
+    if (_projectNameFilter == value) return;
+      print(2);
     _projectNameFilter = value;
     _updatePageParameters();
   }
@@ -199,6 +202,8 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
+
+          print('add to _projectNameFilterSubject');
       _setProjectNameFilter(value);
     });
   }
@@ -226,11 +231,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Resets the project name filter.
-  void resetProjectNameFilter() {
-    _setProjectNameFilter(null);
-  }
-
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
   /// Updates the page parameters.
@@ -240,15 +240,23 @@ class ProjectMetricsNotifier extends PageNotifier {
     _updatePageParameters();
   }
 
+  /// Returns the [ProjectGroupDropdownItemViewModel] by the given [id],
+  /// otherwise returns `null`.
+  ProjectGroupDropdownItemViewModel _findProjectGroupById(String id) {
+    final projectGroup = _projectGroupDropdownItems?.firstWhere(
+      (group) => group.id == id,
+      orElse: () => null,
+    );
+
+    return projectGroup;
+  }
+
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
   /// Does nothing if the [_projectGroupDropdownItems] does not contain
   /// the project group with the given [id].
   void _selectProjectGroup(String id) {
-    final projectGroup = _projectGroupDropdownItems.firstWhere(
-      (group) => group.id == id,
-      orElse: () => null,
-    );
+    final projectGroup = _findProjectGroupById(id);
 
     if (projectGroup == null) return;
 
@@ -285,6 +293,9 @@ class ProjectMetricsNotifier extends PageNotifier {
     final pageParameters = parameters as DashboardPageParametersModel;
 
     _projectNameFilter = pageParameters.projectFilter;
+    _selectedProjectGroup = _findProjectGroupById(
+      pageParameters.projectGroupId,
+    );
 
     _setPageParameters(pageParameters);
   }
@@ -640,7 +651,7 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Updates the [_pageParameters] with the given [pageParameters].
   void _setPageParameters(DashboardPageParametersModel pageParameters) {
     _pageParameters = pageParameters;
-
+    print('notify');
     notifyListeners();
   }
 

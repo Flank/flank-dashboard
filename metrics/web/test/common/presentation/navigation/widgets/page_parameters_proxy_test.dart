@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/navigation/widgets/page_parameters_proxy.dart';
 import 'package:metrics/common/presentation/state/page_notifier.dart';
+import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../test_utils/matchers.dart';
@@ -84,6 +85,7 @@ void main() {
       "delegates to the page notifier if the navigation notifier notifies about changes",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
+        const pageParameters = DashboardPageParametersModel();
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
@@ -92,9 +94,12 @@ void main() {
           ),
         );
 
+        when(navigationNotifier.currentPageParameters)
+            .thenReturn(pageParameters);
+
         navigationNotifier.notifyListeners();
 
-        verify(pageNotifier.handlePageParameters(any)).called(once);
+        verify(pageNotifier.handlePageParameters(pageParameters)).called(once);
       },
     );
 
