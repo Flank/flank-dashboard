@@ -8,12 +8,12 @@ void main() {
   group("FeatureConfigData", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
-    const isPublicDashboardFeatureEnabled = true;
+    const isPublicDashboardEnabled = true;
 
     const json = {
       'isPasswordSignInOptionEnabled': isPasswordSignInOptionEnabled,
       'isDebugMenuEnabled': isDebugMenuEnabled,
-      'isPublicDashboardEnabled': isPublicDashboardFeatureEnabled,
+      'isPublicDashboardEnabled': isPublicDashboardEnabled,
     };
 
     test(
@@ -31,7 +31,7 @@ void main() {
         const expectedConfig = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
-          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         final config = FeatureConfigData.fromJson(json);
@@ -46,7 +46,7 @@ void main() {
         const config = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
-          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         expect(config.toJson(), equals(json));

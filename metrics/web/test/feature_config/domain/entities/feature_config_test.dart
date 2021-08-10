@@ -8,7 +8,7 @@ void main() {
   group("FeatureConfig", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
-    const isPublicDashboardFeatureEnabled = true;
+    const isPublicDashboardEnabled = true;
 
     test(
       "creates an instance with the given parameters",
@@ -16,7 +16,7 @@ void main() {
         const config = FeatureConfig(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
-          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         expect(
@@ -25,8 +25,8 @@ void main() {
         );
         expect(config.isDebugMenuEnabled, equals(isDebugMenuEnabled));
         expect(
-          config.isPublicDashboardFeatureEnabled,
-          equals(isPublicDashboardFeatureEnabled),
+          config.isPublicDashboardEnabled,
+          equals(isPublicDashboardEnabled),
         );
       },
     );
@@ -37,13 +37,13 @@ void main() {
         const expected = FeatureConfig(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
-          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         const featureConfig = FeatureConfig(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
-          isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         expect(featureConfig, equals(expected));
