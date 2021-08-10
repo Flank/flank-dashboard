@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/feature_config/data/model/feature_config_data.dart';
@@ -8,10 +8,12 @@ void main() {
   group("FeatureConfigData", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
+    const isPublicDashboardFeatureEnabled = true;
 
     const json = {
       'isPasswordSignInOptionEnabled': isPasswordSignInOptionEnabled,
       'isDebugMenuEnabled': isDebugMenuEnabled,
+      'isPublicDashboardEnabled': isPublicDashboardFeatureEnabled
     };
 
     test(
@@ -27,9 +29,9 @@ void main() {
       ".fromJson() creates an instance from the given json",
       () {
         const expectedConfig = FeatureConfigData(
-          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
-          isDebugMenuEnabled: isDebugMenuEnabled,
-        );
+            isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+            isDebugMenuEnabled: isDebugMenuEnabled,
+            isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled);
 
         final config = FeatureConfigData.fromJson(json);
 
@@ -41,9 +43,9 @@ void main() {
       ".toJson() converts an instance to the json encodable map",
       () {
         const config = FeatureConfigData(
-          isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
-          isDebugMenuEnabled: isDebugMenuEnabled,
-        );
+            isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
+            isDebugMenuEnabled: isDebugMenuEnabled,
+            isPublicDashboardFeatureEnabled: isPublicDashboardFeatureEnabled);
 
         expect(config.toJson(), equals(json));
       },
