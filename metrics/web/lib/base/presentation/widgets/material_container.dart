@@ -14,17 +14,16 @@ class MaterialContainer extends StatelessWidget {
   /// A [MaterialType] of this container.
   final MaterialType type;
 
-  /// A z-coordinate at which to place this material widget related to it's
-  /// parents.
+  /// A z-coordinate at which to place this container related to its parents.
   final double elevation;
 
-  /// A background [Color] of this widget.
+  /// A background [Color] of this container.
   final Color backgroundColor;
 
-  /// A [Color] of this widget's shadow.
+  /// A [Color] of this container's shadow.
   final Color shadowColor;
 
-  /// A [BorderRadiusGeometry] of this widget.
+  /// A [BorderRadiusGeometry] of this container.
   final BorderRadiusGeometry borderRadius;
 
   /// Creates a new instance of the [MaterialContainer] with the given

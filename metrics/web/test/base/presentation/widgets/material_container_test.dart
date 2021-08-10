@@ -47,7 +47,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given elevation less than 0",
+      "throws an AssertionError if the given elevation is less than 0",
       (tester) async {
         await tester.pumpWidget(const _MaterialContainerTestbed(
           elevation: -1.0,
@@ -184,7 +184,7 @@ class _MaterialContainerTestbed extends StatelessWidget {
   final MaterialType type;
 
   /// A z-coordinate at which to place the [MaterialContainer] widget related to
-  /// it's parents.
+  /// its parents.
   final double elevation;
 
   /// A background [Color] of the [MaterialContainer] widget.
