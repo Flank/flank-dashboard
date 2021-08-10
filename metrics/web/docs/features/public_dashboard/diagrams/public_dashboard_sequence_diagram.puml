@@ -1,0 +1,60 @@
+@startuml public_dashboard_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant Browser
+participant InjectionContainer
+participant LoadingPage
+participant AuthNotifier
+participant FeatureConfigNotifier
+participant NavigationNotifier
+participant CoolPage
+participant DashboardPage
+
+Bob -> Browser ++:  opens a "Cool Page" URL
+Browser -> InjectionContainer ++: initializes the application
+InjectionContainer -> AuthNotifier ++: adds listener
+InjectionContainer -> FeatureConfigNotifier ++: adds listener
+InjectionContainer -> NavigationNotifier ++: initializes navigation notifier
+NavigationNotifier -> LoadingPage ++: push the LoadingPage to initialize all components
+LoadingPage --> Browser: returns the LoadingPage UI
+Browser --> Bob: displays the LoadingPage UI
+
+LoadingPage -> AuthNotifier: adds listener
+LoadingPage -> AuthNotifier: subscribeToAuthenticationUpdates()
+LoadingPage -> FeatureConfigNotifier: adds listener
+LoadingPage -> FeatureConfigNotifier: initializeConfig()
+
+AuthNotifier --> AuthNotifier: receives the user state
+AuthNotifier --> InjectionContainer: notify listeners
+InjectionContainer -> NavigationNotifier: handleAuthUpdates(authState)
+
+FeatureConfigNotifier --> FeatureConfigNotifier: receives the feature config
+FeatureConfigNotifier --> LoadingPage: notify that the feature is initialized
+FeatureConfigNotifier --> InjectionContainer: notify listeners
+InjectionContainer -> AuthNotifier: handlePublicDashboardFeatureConfigUpdates(model)
+
+alt publicDashboardFeature == true && authState == AuthState.logout
+AuthNotifier --> AuthNotifier: signInAnonymously()
+end
+
+AuthNotifier --> LoadingPage: notify that the auth is initialized
+AuthNotifier --> InjectionContainer: notify listeners
+InjectionContainer -> NavigationNotifier: handleAuthUpdates(authState)
+LoadingPage -> NavigationNotifier: handleAppInitialized(true)
+LoadingPage--
+
+alt page is available for the anonymous user
+NavigationNotifier -> CoolPage ++: push to the CoolPage
+CoolPage --> Browser --: returns the CoolPage UI
+Browser --> Bob: displays the CoolPage UI
+else page is not available for the anonymous user
+NavigationNotifier -> DashboardPage ++: push to the "DashboardPage"
+DashboardPage --> Browser --: returns the DashboardPage UI
+Browser --> Bob: displays the DashboardPage UI
+end
+
+@enduml
