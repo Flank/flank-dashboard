@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/common/presentation/project_search_input/widgets/projects_search_input.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
-import 'package:metrics/common/presentation/widgets/projects_search_input.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {

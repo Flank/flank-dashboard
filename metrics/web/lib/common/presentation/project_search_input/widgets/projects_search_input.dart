@@ -6,9 +6,9 @@ import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 
-/// [TextField] with the ability to search across projects.
+/// A [TextField] with the ability to search across projects.
 class ProjectSearchInput extends StatefulWidget {
-  /// Callback for [TextField] value change.
+  /// A callback for [TextField] value change.
   final ValueChanged<String> onChanged;
 
   /// An initial value for this input.

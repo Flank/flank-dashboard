@@ -1028,17 +1028,28 @@ void main() {
     );
 
     test(
-      ".setProjectGroups() update page parameters using the selected project group",
+      ".setProjectGroups() updates page parameters using the selected project group",
       () {
+        projectMetricsNotifier.handlePageParameters(parameters);
         projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final newProjectGroups = [
+          ProjectGroupModel(
+            id: "groupId2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          )
+        ];
+
+        projectMetricsNotifier.setProjectGroups(newProjectGroups);
+
+        final pageParametersProjectId =
+            projectMetricsNotifier.pageParameters.projectGroupId;
 
         final selectedProjectGroupId =
             projectMetricsNotifier.selectedProjectGroup.id;
 
-        final pageParametersProjectGroupId =
-            projectMetricsNotifier.pageParameters.projectGroupId;
-
-        expect(pageParametersProjectGroupId, equals(selectedProjectGroupId));
+        expect(pageParametersProjectId, equals(selectedProjectGroupId));
       },
     );
 
@@ -1207,6 +1218,30 @@ void main() {
         final actualPageParameters = projectMetricsNotifier.pageParameters;
 
         expect(actualPageParameters, equals(parameters));
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates the selected project group using the project group id from the given page parameters",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        final selectedProjectGroupId =
+            projectMetricsNotifier.selectedProjectGroup.id;
+
+        expect(selectedProjectGroupId, equals(parameters.projectGroupId));
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates the project name filter using the project filter value from the given page parameters",
+      () {
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        final projectNameFilter = projectMetricsNotifier.projectNameFilter;
+
+        expect(projectNameFilter, equals(parameters.projectFilter));
       },
     );
   });

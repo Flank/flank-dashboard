@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/project_search_input/widgets/projects_search_input.dart';
 import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
-import 'package:metrics/common/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_input.dart';
 import 'package:mockito/mockito.dart';

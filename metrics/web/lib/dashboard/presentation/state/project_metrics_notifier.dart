@@ -178,6 +178,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     if (_selectedProjectGroup == viewModel) return;
 
     _selectedProjectGroup = viewModel;
+
     _updatePageParameters();
   }
 
@@ -235,17 +236,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     _updatePageParameters();
   }
 
-  /// Returns the [ProjectGroupDropdownItemViewModel] by the given [id],
-  /// otherwise returns `null`.
-  ProjectGroupDropdownItemViewModel _findProjectGroupById(String id) {
-    final projectGroup = _projectGroupDropdownItems?.firstWhere(
-      (group) => group.id == id,
-      orElse: () => null,
-    );
-
-    return projectGroup;
-  }
-
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
   /// Does nothing if the [_projectGroupDropdownItems] does not contain
@@ -295,6 +285,17 @@ class ProjectMetricsNotifier extends PageNotifier {
     _setPageParameters(pageParameters);
   }
 
+  /// Returns the [ProjectGroupDropdownItemViewModel] by the given [id],
+  /// otherwise returns `null`.
+  ProjectGroupDropdownItemViewModel _findProjectGroupById(String id) {
+    final projectGroup = _projectGroupDropdownItems?.firstWhere(
+      (group) => group.id == id,
+      orElse: () => null,
+    );
+
+    return projectGroup;
+  }
+
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
   void _refreshProjectGroupDropdownItemViewModels() {
@@ -315,12 +316,12 @@ class ProjectMetricsNotifier extends PageNotifier {
             ))
         .toList());
 
-    _selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
+    final selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == _pageParameters?.projectGroupId,
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
 
-    _setSelectedProjectGroup(_selectedProjectGroup);
+    _setSelectedProjectGroup(selectedProjectGroup);
   }
 
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
@@ -639,7 +640,6 @@ class ProjectMetricsNotifier extends PageNotifier {
       projectFilter: _projectNameFilter,
       projectGroupId: _selectedProjectGroup?.id,
     );
-
     _setPageParameters(pageParameters);
   }
 

@@ -2,8 +2,8 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/project_search_input/widgets/projects_search_input.dart';
 import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
-import 'package:metrics/common/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 

@@ -8,12 +8,10 @@ import 'package:test/test.dart';
 
 void main() {
   group("RouteConfigurationFactory", () {
-    const baseUrl = 'https://test.uri';
+    const baseUrl = 'test.uri';
+    const unknownPath = 'path';
+    const queryParametersMap = {'testKey': 'testValue'};
     const routeConfigurationFactory = RouteConfigurationFactory();
-    const queryParametersKey = 'testKey';
-    const queryParametersValue = 'testValue';
-    const queryParametersString = '$queryParametersKey=$queryParametersValue';
-    const queryParametersMap = {queryParametersKey: queryParametersValue};
 
     test(
       ".create() returns a loading route configuration if the given uri is null",
@@ -30,7 +28,7 @@ void main() {
       ".create() returns a loading route configuration if the given uri does not contain the path",
       () {
         const expectedConfiguration = DefaultRoutes.loading;
-        final uri = Uri.parse(baseUrl);
+        final uri = Uri.https(baseUrl, '');
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -44,7 +42,7 @@ void main() {
         final expectedConfiguration = RouteConfiguration.login(
           parameters: const {},
         );
-        final uri = Uri.parse('$baseUrl${DefaultRoutes.login.path}');
+        final uri = Uri.https(baseUrl, DefaultRoutes.login.path);
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -58,8 +56,11 @@ void main() {
         final expectedConfiguration = RouteConfiguration.login(
           parameters: queryParametersMap,
         );
-        final uri = Uri.parse(
-          '$baseUrl${DefaultRoutes.login.path}?$queryParametersString',
+
+        final uri = Uri.https(
+          baseUrl,
+          DefaultRoutes.login.path,
+          queryParametersMap,
         );
 
         final configuration = routeConfigurationFactory.create(uri);
@@ -74,7 +75,7 @@ void main() {
         final expectedConfiguration = RouteConfiguration.dashboard(
           parameters: const {},
         );
-        final uri = Uri.parse('$baseUrl${DefaultRoutes.dashboard.path}');
+        final uri = Uri.https(baseUrl, DefaultRoutes.dashboard.path);
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -88,8 +89,10 @@ void main() {
         final expectedConfiguration = RouteConfiguration.dashboard(
           parameters: queryParametersMap,
         );
-        final uri = Uri.parse(
-          '$baseUrl${DefaultRoutes.dashboard.path}?$queryParametersString',
+        final uri = Uri.https(
+          baseUrl,
+          DefaultRoutes.dashboard.path,
+          queryParametersMap,
         );
 
         final configuration = routeConfigurationFactory.create(uri);
@@ -104,7 +107,7 @@ void main() {
         final expectedConfiguration = RouteConfiguration.projectGroups(
           parameters: const {},
         );
-        final uri = Uri.parse('$baseUrl${DefaultRoutes.projectGroups.path}');
+        final uri = Uri.https(baseUrl, DefaultRoutes.projectGroups.path);
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -118,8 +121,10 @@ void main() {
         final expectedConfiguration = RouteConfiguration.projectGroups(
           parameters: queryParametersMap,
         );
-        final uri = Uri.parse(
-          '$baseUrl${DefaultRoutes.projectGroups.path}?$queryParametersString',
+        final uri = Uri.https(
+          baseUrl,
+          DefaultRoutes.projectGroups.path,
+          queryParametersMap,
         );
 
         final configuration = routeConfigurationFactory.create(uri);
@@ -134,7 +139,7 @@ void main() {
         final expectedConfiguration = RouteConfiguration.debugMenu(
           parameters: const {},
         );
-        final uri = Uri.parse('$baseUrl${DefaultRoutes.debugMenu.path}');
+        final uri = Uri.https(baseUrl, DefaultRoutes.debugMenu.path);
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -148,8 +153,10 @@ void main() {
         final expectedConfiguration = RouteConfiguration.debugMenu(
           parameters: queryParametersMap,
         );
-        final uri = Uri.parse(
-          '$baseUrl${DefaultRoutes.debugMenu.path}?$queryParametersString',
+        final uri = Uri.https(
+          baseUrl,
+          DefaultRoutes.debugMenu.path,
+          queryParametersMap,
         );
 
         final configuration = routeConfigurationFactory.create(uri);
@@ -162,7 +169,7 @@ void main() {
       ".create() returns a dashboard route configuration if the given uri contains an unknown path",
       () {
         final expectedConfiguration = DefaultRoutes.dashboard;
-        final uri = Uri.parse('$baseUrl/path');
+        final uri = Uri.https(baseUrl, unknownPath);
 
         final configuration = routeConfigurationFactory.create(uri);
 
@@ -174,7 +181,7 @@ void main() {
       ".create() returns a dashboard route configuration with parameters equals to null if the given uri contains an unknown path",
       () {
         final expectedConfiguration = DefaultRoutes.dashboard;
-        final uri = Uri.parse('$baseUrl/path?$queryParametersString');
+        final uri = Uri.https(baseUrl, unknownPath, queryParametersMap);
 
         final configuration = routeConfigurationFactory.create(uri);
 
