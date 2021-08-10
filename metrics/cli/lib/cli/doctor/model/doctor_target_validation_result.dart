@@ -56,7 +56,7 @@ class DoctorTargetValidationResult<T> extends TargetValidationResult<T> {
     String installUrl,
     dynamic error,
   ) {
-    final targetName = target.name;
+    final targetName = target?.name;
     final installMessage = DoctorStrings.installMessage(
       targetName,
       installUrl,
@@ -82,11 +82,11 @@ class DoctorTargetValidationResult<T> extends TargetValidationResult<T> {
   /// Represents a warning doctor target validation result.
   factory DoctorTargetValidationResult.warning(
     ValidationTarget target,
-    String currentVersion, [
+    String currentVersion, {
     String recommendedVersion,
     String installUrl,
     dynamic error,
-  ]) {
+  }) {
     final details = _createWarningDetails(currentVersion, recommendedVersion);
     final context = _createWarningContext(installUrl, error);
 

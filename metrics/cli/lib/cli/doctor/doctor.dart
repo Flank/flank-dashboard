@@ -144,9 +144,9 @@ class Doctor {
       return DoctorTargetValidationResult.warning(
         validationTarget,
         currentVersion,
-        versionValid ? null : recommendedVersion,
-        versionValid ? null : installUrl,
-        commandHasError ? error : null,
+        recommendedVersion: versionValid ? null : recommendedVersion,
+        installUrl: versionValid ? null : installUrl,
+        error: commandHasError ? error : null,
       );
     } catch (exception) {
       return DoctorTargetValidationResult.failure(
