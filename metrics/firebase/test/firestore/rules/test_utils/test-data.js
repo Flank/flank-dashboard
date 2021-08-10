@@ -157,12 +157,12 @@ exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "
   return getUser(allowedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid*/
+/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid */
 exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(deniedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase anonymous user with the given uid*/
+/** Provides a firebase anonymous user with the given uid */
 exports.getAnonymousUser = function (uid = "uid") {
   return getUser(null, "anonymous", null, uid);
 };

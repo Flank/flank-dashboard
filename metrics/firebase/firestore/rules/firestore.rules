@@ -69,7 +69,7 @@ service cloud.firestore {
     return isEmailDomainExists;
   }
 
-  /// Checks if the sign in provider from the request equals to the given parameter
+  /// Checks if the sign in provider from the request equals to the given parameter.
   function checkSignInProvider(signInProvider) {
     let authToken = request.auth.token;
 
