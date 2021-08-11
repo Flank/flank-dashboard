@@ -3,7 +3,6 @@
 
 import 'package:cli/services/common/service/model/mapper/service_name_mapper.dart';
 import 'package:cli/services/common/service/model/service_name.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
