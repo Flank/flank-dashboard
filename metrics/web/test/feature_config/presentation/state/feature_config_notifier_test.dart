@@ -16,10 +16,12 @@ void main() {
   group("FeatureConfigNotifier", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
+    const isPublicDashboardEnabled = true;
 
     const featureConfig = FeatureConfig(
       isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: isDebugMenuEnabled,
+      isPublicDashboardEnabled: isPublicDashboardEnabled,
     );
 
     final _fetchFeatureConfigUseCase = _FetchFeatureConfigUseCaseMock();
@@ -94,6 +96,7 @@ void main() {
         final param = FeatureConfigParam(
           isPasswordSignInOptionEnabled: true,
           isDebugMenuEnabled: false,
+          isPublicDashboardEnabled: true,
         );
 
         notifier.initializeConfig();
@@ -114,6 +117,7 @@ void main() {
         final param = FeatureConfigParam(
           isPasswordSignInOptionEnabled: true,
           isDebugMenuEnabled: false,
+          isPublicDashboardEnabled: true,
         );
 
         await notifier.initializeConfig();
@@ -134,6 +138,7 @@ void main() {
         final param = FeatureConfigParam(
           isPasswordSignInOptionEnabled: true,
           isDebugMenuEnabled: false,
+          isPublicDashboardEnabled: true,
         );
 
         notifier.initializeConfig();
@@ -148,6 +153,7 @@ void main() {
         final featureConfigParam = FeatureConfigParam(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
         when(_fetchFeatureConfigUseCase(featureConfigParam)).thenAnswer(
           (_) => Future.value(featureConfig),

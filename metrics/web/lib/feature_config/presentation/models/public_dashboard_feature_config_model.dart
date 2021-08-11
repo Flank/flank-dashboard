@@ -4,7 +4,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A class that represents a feature configuration state.
+/// A class that represents a public dashboard feature configuration.
 class PublicDashboardFeatureConfigModel extends Equatable {
   /// A flag that indicates whether the feature is enabled or disabled.
   final bool isEnabled;
