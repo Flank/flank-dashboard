@@ -79,7 +79,7 @@ void main() {
     test(
       ".map() maps the not specified service name to null",
       () {
-        final name = mapper.map("Test");
+        final name = mapper.map("TEST");
 
         expect(name, isNull);
       },
