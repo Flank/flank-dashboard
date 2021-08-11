@@ -127,9 +127,11 @@ class Doctor {
           : stdout.toString().replaceAll('\n', ' ').trim();
 
       final stderr = processResult.stderr;
-      final error = stderr is List<int>
-          ? const Utf8Decoder().convert(stderr)
-          : stderr.toString();
+      final error = stderr == null
+          ? null
+          : stderr is List<int>
+              ? const Utf8Decoder().convert(stderr)
+              : stderr.toString();
 
       final versionValid = currentVersion.contains(recommendedVersion);
       final commandHasError = error != null && error.isNotEmpty;
