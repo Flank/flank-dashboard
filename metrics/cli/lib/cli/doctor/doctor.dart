@@ -160,13 +160,3 @@ class Doctor {
     }
   }
 }
-
-Future<void> main() async {
-  final doctorFactory = DoctorFactory();
-  final doctor = doctorFactory.create();
-  final result = await doctor.checkVersions();
-
-  ValidationResultPrinter(stdout).print(result);
-
-  exit(0);
-}
