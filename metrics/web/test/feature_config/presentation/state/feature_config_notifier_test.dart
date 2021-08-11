@@ -4,6 +4,7 @@
 import 'package:metrics/feature_config/domain/entities/feature_config.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
 import 'package:metrics/feature_config/domain/usecases/parameters/feature_config_param.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:metrics/feature_config/presentation/view_models/password_sign_in_option_feature_config_view_model.dart';
@@ -79,6 +80,18 @@ void main() {
         expect(
           () => notifier.setDefaults(
             isDebugMenuEnabled: null,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      ".setDefaults() throws an AssertionError if the given is public dashboard enabled is null",
+      () {
+        expect(
+          () => notifier.setDefaults(
+            isPublicDashboardEnabled: null,
           ),
           throwsAssertionError,
         );
@@ -162,6 +175,7 @@ void main() {
         notifier.setDefaults(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
         notifier.initializeConfig();
 
@@ -202,6 +216,25 @@ void main() {
 
         expect(
           notifier.debugMenuFeatureConfigViewModel,
+          equals(expectedViewModel),
+        );
+      },
+    );
+
+    test(
+      ".initializeConfig() sets the public dashboard feature config model",
+      () async {
+        const expectedViewModel = PublicDashboardFeatureConfigModel(
+          isEnabled: isPublicDashboardEnabled,
+        );
+        when(_fetchFeatureConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(featureConfig),
+        );
+
+        await notifier.initializeConfig();
+
+        expect(
+          notifier.publicDashboardFeatureConfigModel,
           equals(expectedViewModel),
         );
       },
