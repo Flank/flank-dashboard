@@ -149,7 +149,7 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with a details map containing a recommended version",
+      ".failure() creates an instance with a details map containing the recommended version",
       () {
         final result = DoctorTargetValidationResult.failure(
           target,
@@ -166,7 +166,7 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with a context map containing process output",
+      ".failure() creates an instance with a context map containing the failure message",
       () {
         const executable = 'executable';
         const arguments = <String>[];
@@ -193,7 +193,7 @@ void main() {
     );
 
     test(
-      ".failure() creates an instance with a context map containing process output and recommended version",
+      ".failure() creates an instance with a context map containing the error and the recommended version",
       () {
         final result = DoctorTargetValidationResult.failure(
           target,
@@ -258,7 +258,7 @@ void main() {
     );
 
     test(
-      ".warning() creates an instance with the details map containing current version",
+      ".warning() creates an instance with the details map containing the current version",
       () {
         final result = DoctorTargetValidationResult.warning(
           target,
@@ -273,7 +273,7 @@ void main() {
     );
 
     test(
-      ".warning() creates an instance with the details map containing recommended version if the given recommended version is not null",
+      ".warning() creates an instance with the details map containing the recommended version if the given recommended version is not null",
       () {
         final result = DoctorTargetValidationResult.warning(
           target,
@@ -289,7 +289,7 @@ void main() {
     );
 
     test(
-      ".warning() creates an instance with the context map containing warning if the given install url is not null",
+      ".warning() creates an instance with the context map containing the warning if the given install url is not null",
       () {
         final result = DoctorTargetValidationResult.warning(
           target,
@@ -324,7 +324,7 @@ void main() {
     );
 
     test(
-      ".warning() creates an instance with the context map containing command error if the given error is not null",
+      ".warning() creates an instance with the context map containing the command error if the given error is not null",
       () {
         final result = DoctorTargetValidationResult.warning(
           target,

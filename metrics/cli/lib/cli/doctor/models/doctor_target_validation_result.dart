@@ -30,8 +30,8 @@ class DoctorTargetValidationResult<T> extends TargetValidationResult<T> {
         );
 
   /// Creates a new instance of the [DoctorTargetValidationResult]
-  /// with the given parameters and [DoctorTargetValidationResult.successful]
-  /// result.
+  /// with the given parameters and
+  /// [DoctorTargetValidationResult.successful] result.
   ///
   /// Represents a successful doctor target validation result.
   factory DoctorTargetValidationResult.successful(
@@ -46,8 +46,8 @@ class DoctorTargetValidationResult<T> extends TargetValidationResult<T> {
   }
 
   /// Creates a new instance of the [DoctorTargetValidationResult]
-  /// with the given parameters and [DoctorTargetValidationResult.failure]
-  /// result.
+  /// with the given parameters and
+  /// [DoctorTargetValidationResult.failure] result.
   ///
   /// Represents a failure doctor target validation result.
   factory DoctorTargetValidationResult.failure(
@@ -76,8 +76,8 @@ class DoctorTargetValidationResult<T> extends TargetValidationResult<T> {
   }
 
   /// Creates a new instance of the [DoctorTargetValidationResult]
-  /// with the given parameters and [DoctorTargetValidationResult.warning]
-  /// result.
+  /// with the given parameters and
+  /// [DoctorTargetValidationResult.warning] result.
   ///
   /// Represents a warning doctor target validation result.
   factory DoctorTargetValidationResult.warning(

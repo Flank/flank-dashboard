@@ -7,8 +7,8 @@ import 'package:metrics_core/metrics_core.dart';
 /// A class that represents the [ValidationConclusion] within the [Doctor]
 /// versions checking process.
 class DoctorValidationConclusion extends ValidationConclusion {
-  /// Creates a new instance of the [DoctorValidationConclusion] with the
-  /// given [name] and [indicator].
+  /// Creates a new instance of the [DoctorValidationConclusion]
+  /// with the given [name] and [indicator].
   ///
   /// The given [name] must not be `null`.
   const DoctorValidationConclusion._({
