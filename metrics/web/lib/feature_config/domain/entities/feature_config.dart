@@ -5,13 +5,13 @@ import 'package:equatable/equatable.dart';
 
 /// An entity representing a feature config.
 class FeatureConfig extends Equatable {
-  /// Indicates whether the password sign-in option is enabled.
+  /// A flag that indicates whether the password sign-in option is enabled.
   final bool isPasswordSignInOptionEnabled;
 
-  /// Indicates whether the debug menu feature is enabled.
+  /// A flag that indicates whether the debug menu feature is enabled.
   final bool isDebugMenuEnabled;
 
-  /// Indicates whether the public dashboard feature is enabled.
+  /// A flag that indicates whether the public dashboard feature is enabled.
   final bool isPublicDashboardEnabled;
 
   @override
