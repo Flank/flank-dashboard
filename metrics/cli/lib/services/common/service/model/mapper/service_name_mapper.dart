@@ -8,52 +8,70 @@ import 'package:cli/services/gcloud/gcloud_service.dart';
 import 'package:cli/services/git/git_service.dart';
 import 'package:cli/services/npm/npm_service.dart';
 import 'package:cli/services/sentry/sentry_service.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides methods for mapping service names.
 class ServiceNameMapper {
-  /// A [FirebaseService] name.
-  static const String firebase = 'firebase';
+  /// A [FirebaseService] validation target.
+  static const firebase = ValidationTarget(
+    name: 'firebase',
+    description: 'CLI',
+  );
 
-  /// A [FlutterService] name.
-  static const String flutter = 'flutter';
+  /// A [FlutterService] validation target.
+  static const flutter = ValidationTarget(
+    name: 'flutter',
+    description: 'CLI',
+  );
 
-  /// A [GCloudService] name.
-  static const String gcloud = 'gcloud';
+  /// A [GCloudService] validation target.
+  static const gcloud = ValidationTarget(
+    name: 'gcloud',
+    description: 'CLI',
+  );
 
-  /// A [GitService] name.
-  static const String git = 'git';
+  /// A [GitService] validation target.
+  static const git = ValidationTarget(
+    name: 'git',
+    description: 'CLI',
+  );
 
-  /// An [NpmService] name.
-  static const String npm = 'npm';
+  /// An [NpmService] validation target.
+  static const npm = ValidationTarget(
+    name: 'npm',
+    description: 'package manager',
+  );
 
-  /// A [SentryService] name.
-  static const String sentry = 'sentry';
+  /// A [SentryService] validation target.
+  static const sentry = ValidationTarget(
+    name: 'sentry-cli',
+    description: 'CLI',
+  );
 
   /// Creates a new instance of the [ServiceNameMapper].
   const ServiceNameMapper();
 
-  /// Maps the given [name] to the [ServiceName].
-  ServiceName map(String name) {
-    switch (name) {
-      case firebase:
-        return ServiceName.firebase;
-      case flutter:
-        return ServiceName.flutter;
-      case gcloud:
-        return ServiceName.gcloud;
-      case git:
-        return ServiceName.git;
-      case npm:
-        return ServiceName.npm;
-      case sentry:
-        return ServiceName.sentry;
-      default:
-        return null;
+  /// Maps the given [target] to the [ServiceName].
+  ServiceName map(ValidationTarget target) {
+    if (target == firebase) {
+      return ServiceName.firebase;
+    } else if (target == flutter) {
+      return ServiceName.flutter;
+    } else if (target == gcloud) {
+      return ServiceName.gcloud;
+    } else if (target == git) {
+      return ServiceName.git;
+    } else if (target == npm) {
+      return ServiceName.npm;
+    } else if (target == sentry) {
+      return ServiceName.sentry;
+    } else {
+      return null;
     }
   }
 
-  /// Unmaps the given [name] to the [String].
-  String unmap(ServiceName name) {
+  /// Unmaps the given [name] to the [ValidationTarget].
+  ValidationTarget unmap(ServiceName name) {
     switch (name) {
       case ServiceName.firebase:
         return firebase;
