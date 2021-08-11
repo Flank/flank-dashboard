@@ -79,7 +79,7 @@ void main() {
     test(
       ".map() maps the not specified service name to null",
       () {
-        final name = mapper.map(const ValidationTarget(name: 'Test'));
+        final name = mapper.map('Test');
 
         expect(name, isNull);
       },
