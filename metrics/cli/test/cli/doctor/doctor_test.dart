@@ -23,6 +23,7 @@ import '../../test_utils/mocks/services_mock.dart';
 
 void main() {
   group("Doctor", () {
+    const dependency = Dependency(recommendedVersion: '1', installUrl: 'url');
     final stateError = StateError('test');
     final flutterService = FlutterServiceMock();
     final gcloudService = GCloudServiceMock();
@@ -44,6 +45,26 @@ void main() {
       services: services,
       dependencies: dependencies,
     );
+
+    setUp(() {
+      when(servicesMock.flutterService).thenReturn(flutterService);
+      when(servicesMock.gcloudService).thenReturn(gcloudService);
+      when(servicesMock.npmService).thenReturn(npmService);
+      when(servicesMock.gitService).thenReturn(gitService);
+      when(servicesMock.firebaseService).thenReturn(firebaseService);
+      when(servicesMock.sentryService).thenReturn(sentryService);
+    });
+
+    PostExpectation<Dependency> whenGetDependency() {
+      when(flutterService.serviceName).thenReturn(ServiceName.flutter);
+      when(gcloudService.serviceName).thenReturn(ServiceName.gcloud);
+      when(npmService.serviceName).thenReturn(ServiceName.npm);
+      when(gitService.serviceName).thenReturn(ServiceName.git);
+      when(firebaseService.serviceName).thenReturn(ServiceName.firebase);
+      when(sentryService.serviceName).thenReturn(ServiceName.sentry);
+
+      return when(dependencies.getFor(any));
+    }
 
     tearDown(() {
       reset(flutterService);
@@ -85,11 +106,6 @@ void main() {
       "throws an ArgumentError if the Flutter service in the given services is null",
       () {
         when(servicesMock.flutterService).thenReturn(null);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -98,12 +114,7 @@ void main() {
     test(
       "throws an ArgumentError if the GCloud service in the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
         when(servicesMock.gcloudService).thenReturn(null);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -112,12 +123,7 @@ void main() {
     test(
       "throws an ArgumentError if the Npm service in the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
         when(servicesMock.npmService).thenReturn(null);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -126,12 +132,7 @@ void main() {
     test(
       "throws an ArgumentError if the Git service in the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
         when(servicesMock.gitService).thenReturn(null);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -140,12 +141,7 @@ void main() {
     test(
       "throws an ArgumentError if the Firebase service in the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
         when(servicesMock.firebaseService).thenReturn(null);
-        when(servicesMock.sentryService).thenReturn(sentryService);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
@@ -154,179 +150,191 @@ void main() {
     test(
       "throws an ArgumentError if the Sentry service in the given services is null",
       () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
         when(servicesMock.sentryService).thenReturn(null);
 
         expect(() => Doctor(services: servicesMock), throwsArgumentError);
       },
     );
 
-    //   test(
-    //     ".checkVersions() shows the Flutter version",
-    //     () async {
-    //       when(servicesMock.flutterService).thenReturn(flutterService);
-    //       when(flutterService.serviceName).thenReturn(ServiceName.flutter);
-    //       when(dependencies.getFor(any)).thenReturn(dependency);
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() shows the Flutter version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //       verify(flutterService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() shows the Firebase version",
-    //     () async {
-    //       await doctor.checkVersions();
+        verify(flutterService.version()).called(once);
+      },
+    );
 
-    //       verify(firebaseService.version()).called(once);
-    //     },
-    //   );
+    test(
+      ".checkVersions() shows the Firebase version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //   test(
-    //     ".checkVersions() shows the GCloud version",
-    //     () async {
-    //       await doctor.checkVersions();
+        await doctor.checkVersions();
 
-    //       verify(gcloudService.version()).called(once);
-    //     },
-    //   );
+        verify(firebaseService.version()).called(once);
+      },
+    );
 
-    //   test(
-    //     ".checkVersions() shows the Git version",
-    //     () async {
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() shows the GCloud version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() shows the Npm version",
-    //     () async {
-    //       await doctor.checkVersions();
+        verify(gcloudService.version()).called(once);
+      },
+    );
 
-    //       verify(npmService.version()).called(once);
-    //     },
-    //   );
+    test(
+      ".checkVersions() shows the Git version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //   test(
-    //     ".checkVersions() shows the Sentry version",
-    //     () async {
-    //       await doctor.checkVersions();
+        await doctor.checkVersions();
 
-    //       verify(npmService.version()).called(once);
-    //     },
-    //   );
+        verify(gitService.version()).called(once);
+      },
+    );
 
-    //   test(
-    //     ".checkVersions() returns an instance of the ValidationResult",
-    //     () async {
-    //       final result = await doctor.checkVersions();
+    test(
+      ".checkVersions() shows the Npm version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //       expect(result, isA<ValidationResult>());
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if GCloud service throws during the version showing",
-    //     () async {
-    //       when(
-    //         gcloudService.version(),
-    //       ).thenAnswer((_) => Future.error(stateError));
+        verify(npmService.version()).called(once);
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() shows the Sentry version",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if Flutter service throws during the version showing",
-    //     () async {
-    //       when(
-    //         flutterService.version(),
-    //       ).thenAnswer((_) => Future.error(stateError));
+        verify(npmService.version()).called(once);
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() returns an instance of the ValidationResult",
+      () async {
+        whenGetDependency().thenReturn(dependency);
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        final result = await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if Firebase service throws during the version showing",
-    //     () async {
-    //       when(
-    //         firebaseService.version(),
-    //       ).thenAnswer((_) => Future.error(stateError));
+        expect(result, isA<ValidationResult>());
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() proceeds if GCloud service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(
+          gcloudService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if Git service throws during the version showing",
-    //     () async {
-    //       when(gitService.version()).thenAnswer((_) => Future.error(stateError));
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() proceeds if Flutter service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(
+          flutterService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if Npm service throws during the version showing",
-    //     () async {
-    //       when(npmService.version()).thenAnswer((_) => Future.error(stateError));
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() proceeds if Firebase service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(
+          firebaseService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
 
-    //   test(
-    //     ".checkVersions() proceeds if Sentry service throws during the version showing",
-    //     () async {
-    //       when(
-    //         sentryService.version(),
-    //       ).thenAnswer((_) => Future.error(stateError));
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
 
-    //       await doctor.checkVersions();
+    test(
+      ".checkVersions() proceeds if Git service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(gitService.version()).thenAnswer((_) => Future.error(stateError));
 
-    //       verify(gcloudService.version()).called(once);
-    //       verify(flutterService.version()).called(once);
-    //       verify(firebaseService.version()).called(once);
-    //       verify(npmService.version()).called(once);
-    //       verify(gitService.version()).called(once);
-    //     },
-    //   );
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Npm service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(npmService.version()).thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
+
+    test(
+      ".checkVersions() proceeds if Sentry service throws during the version showing",
+      () async {
+        whenGetDependency().thenReturn(dependency);
+        when(
+          sentryService.version(),
+        ).thenAnswer((_) => Future.error(stateError));
+
+        await doctor.checkVersions();
+
+        verify(gcloudService.version()).called(once);
+        verify(flutterService.version()).called(once);
+        verify(firebaseService.version()).called(once);
+        verify(npmService.version()).called(once);
+        verify(gitService.version()).called(once);
+      },
+    );
   });
 }
