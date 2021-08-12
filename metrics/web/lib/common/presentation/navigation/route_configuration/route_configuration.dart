@@ -19,6 +19,10 @@ class RouteConfiguration extends Equatable {
   /// A flag that indicates whether the authorization is required for this route.
   final bool authorizationRequired;
 
+  /// A flag that indicates whether this route can be accessed
+  /// if sign-in anonymously.
+  final bool allowsAnonymousAccess;
+
   /// A [Map] containing parameters of this route.
   final Map<String, dynamic> parameters;
 
@@ -27,20 +31,23 @@ class RouteConfiguration extends Equatable {
         name,
         path,
         authorizationRequired,
+        allowsAnonymousAccess,
         parameters,
       ];
 
   /// Creates a new instance of the [RouteConfiguration].
   ///
-  /// Throws an [AssertionError] if the given [name] or [authorizationRequired]
-  /// is `null`.
+  /// Throws an [AssertionError] if the given [name], [authorizationRequired]
+  /// or [allowsAnonymousAccess] is `null`.
   const RouteConfiguration._({
     @required this.name,
     @required this.authorizationRequired,
+    @required this.allowsAnonymousAccess,
     this.path,
     this.parameters,
   })  : assert(name != null),
-        assert(authorizationRequired != null);
+        assert(authorizationRequired != null),
+        assert(allowsAnonymousAccess != null);
 
   /// Creates a new instance of the [RouteConfiguration] for the
   /// [RouteName.loading] route.
@@ -48,6 +55,7 @@ class RouteConfiguration extends Equatable {
       : this._(
           name: RouteName.loading,
           authorizationRequired: false,
+          allowsAnonymousAccess: true,
           path: Navigator.defaultRouteName,
           parameters: null,
         );
@@ -58,8 +66,9 @@ class RouteConfiguration extends Equatable {
     Map<String, dynamic> parameters,
   }) : this._(
           name: RouteName.login,
-          path: '/${RouteName.login}',
           authorizationRequired: false,
+          allowsAnonymousAccess: true,
+          path: '/${RouteName.login}',
           parameters: parameters,
         );
 
@@ -70,6 +79,7 @@ class RouteConfiguration extends Equatable {
   }) : this._(
           name: RouteName.dashboard,
           authorizationRequired: true,
+          allowsAnonymousAccess: true,
           path: '/${RouteName.dashboard}',
           parameters: parameters,
         );
@@ -81,6 +91,7 @@ class RouteConfiguration extends Equatable {
   }) : this._(
           name: RouteName.projectGroups,
           authorizationRequired: true,
+          allowsAnonymousAccess: false,
           path: '/${RouteName.projectGroups}',
           parameters: parameters,
         );
@@ -92,6 +103,7 @@ class RouteConfiguration extends Equatable {
   }) : this._(
           name: RouteName.debugMenu,
           authorizationRequired: true,
+          allowsAnonymousAccess: true,
           path: '/${RouteName.debugMenu}',
           parameters: parameters,
         );
@@ -113,6 +125,7 @@ class RouteConfiguration extends Equatable {
   RouteConfiguration copyWith({
     RouteName name,
     bool authorizationRequired,
+    bool allowsAnonymousAccess,
     String path,
     Map<String, dynamic> parameters,
   }) {
@@ -120,6 +133,8 @@ class RouteConfiguration extends Equatable {
       name: name ?? this.name,
       authorizationRequired:
           authorizationRequired ?? this.authorizationRequired,
+      allowsAnonymousAccess:
+          allowsAnonymousAccess ?? this.allowsAnonymousAccess,
       path: path ?? this.path,
       parameters: parameters ?? this.parameters,
     );
