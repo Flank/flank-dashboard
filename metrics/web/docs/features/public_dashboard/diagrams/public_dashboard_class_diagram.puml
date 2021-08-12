@@ -1,0 +1,96 @@
+@startuml public_dashboard_class_diagram
+
+package auth {
+    package presentation as auth_presentation{
+        package view_models as auth_view_models {
+            class UserProfileViewModel {
+                + isAnonymous: bool
+            }
+        }
+
+        package models as auth_models {
+            enum AuthState {
+                 loggedIn
+                 loggedInAnonymously
+                 loggedOut
+            }
+        }
+
+        package state as auth_state {
+            class AuthNotifier {
+                - _isPublicDashboardFeatureEnabled: bool
+                + authState: AuthState
+                + isInitialized: bool
+                + userProfileViewModel: UserProfileViewModel
+                + handlePublicDashboardFeatureConfigUpdates(PublicDashboardFeatureConfigModel model): void
+                - _signInAnonymously(): Future<void>
+            }
+        }
+    }
+
+    package domain.usecases {
+        class SignInAnonymouslyUseCase<Future<void>, void> {
+            - _repository: UserRepository
+            + call([_]): Future<void>
+        }
+    }
+}
+
+package feature_config.presentation {
+    package models as feature_config_models {
+        class PublicDashboardFeatureConfigModel {
+            + isEnabled: bool
+        }
+    }
+
+    package state as feature_config_state{
+        class FeatureConfigNotifier {
+            + publicDashboardFeatureConfigModel: PublicDashboardFeatureConfigModel
+        }
+    }
+}
+
+package common.presentation {
+    package widgets {
+        class MetricsUserMenu {}
+    }
+
+    package navigation {
+        package state as navigation_state {
+            class NavigationNotifier {
+                - _authState: AuthState
+                + handleAuthUpdates(AuthState authState): void
+            }
+        }
+
+        package route_configuration {
+            class RouteConfiguration {
+                + allowsAnonymousAccess: bool
+            }
+        }
+    }
+}
+
+package common.presentation.injector.widget {
+    class InjectionContainer {
+        - _authNotifier: AuthNotifier
+        - _featureConfigNotifier: FeatureConfigNotifier
+        - _navigationNotifier: NavigationNotifier
+        - _authNotifierListener(): void
+        - _featureConfigNotifierListener(): void
+    }
+}
+
+InjectionContainer --> AuthNotifier: uses
+InjectionContainer --> FeatureConfigNotifier: uses
+InjectionContainer --> NavigationNotifier: uses
+NavigationNotifier --> RouteConfiguration: uses
+NavigationNotifier --> AuthState: uses
+AuthNotifier --> SignInAnonymouslyUseCase: uses
+AuthNotifier --> AuthState: provides
+AuthNotifier -up-> UserProfileViewModel: provides
+AuthNotifier --> PublicDashboardFeatureConfigModel: uses
+FeatureConfigNotifier --> PublicDashboardFeatureConfigModel: provides
+MetricsUserMenu --> UserProfileViewModel: uses
+
+@enduml

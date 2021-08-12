@@ -112,8 +112,8 @@ class _MetricsAppState extends State<MetricsApp> {
                     scaffoldBackgroundColor: MetricsColors.white,
                     inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: MetricsColors.gray[100],
-                      hoverColor: MetricsColors.gray[100],
+                      fillColor: MetricsColors.grey[100],
+                      hoverColor: MetricsColors.grey[100],
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,
                       focusedBorder: LightMetricsThemeData.inputFocusedBorder,
@@ -139,10 +139,10 @@ class _MetricsAppState extends State<MetricsApp> {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                     ),
-                    scaffoldBackgroundColor: MetricsColors.gray[800],
+                    scaffoldBackgroundColor: MetricsColors.grey[800],
                     inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: MetricsColors.gray[900],
+                      fillColor: MetricsColors.grey[900],
                       hoverColor: MetricsColors.black,
                       border: TextFieldConfig.border,
                       enabledBorder: TextFieldConfig.border,

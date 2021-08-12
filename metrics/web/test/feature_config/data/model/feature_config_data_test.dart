@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/feature_config/data/model/feature_config_data.dart';
@@ -8,10 +8,12 @@ void main() {
   group("FeatureConfigData", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
+    const isPublicDashboardEnabled = true;
 
     const json = {
       'isPasswordSignInOptionEnabled': isPasswordSignInOptionEnabled,
       'isDebugMenuEnabled': isDebugMenuEnabled,
+      'isPublicDashboardEnabled': isPublicDashboardEnabled,
     };
 
     test(
@@ -29,6 +31,7 @@ void main() {
         const expectedConfig = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         final config = FeatureConfigData.fromJson(json);
@@ -43,6 +46,7 @@ void main() {
         const config = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
         expect(config.toJson(), equals(json));

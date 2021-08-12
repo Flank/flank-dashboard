@@ -1,0 +1,33 @@
+@startuml public_dashboard_architecture_components_diagram
+
+legend top left
+    | Color | Arrow type |
+    |<#B70033>| Existing relationship |
+    |<#Green>| New relationship/component |
+endlegend
+
+component Browser #A9DCDF
+
+package "Metrics Web" {
+    component "LoadingPage" as loading_page
+    component "AuthNotifier" as auth
+    component "FeatureConfigNotifier" as feature_config
+    component "NavigationNotifier" as navigation
+    component "CoolPage" as cool_page
+}
+
+cloud "Firebase" {
+    component "Firebase Auth" as firebase_auth #5B95BB
+}
+
+Browser --> navigation: provides URL to the 'Cool Page'
+navigation --> loading_page: redirects to the loading page\n to initialize modules
+loading_page -> auth: subscribes to the\n auth updates and waits until it initializes
+loading_page --> feature_config: subscribes to the feature config updates\n and waits until it initializes
+auth -[#green]right-> firebase_auth: <color:green>signs in anonymously\n <color:green>if the feature is enabled\n <color:green>and the user is logged out
+auth -[#green]-> feature_config: <color:green>subscribes to the feature config updates\n <color:green>to know whether the feature is enabled
+loading_page -up-> navigation: after initializing all modules\n calls the app initialization callback
+navigation -[#green]right-> cool_page: <color:green>navigates to after the initialization callback\n <color:green>if the cool page is available for the anonymous user
+navigation -[#green]> auth: <color:green>subscribes to the auth updates\n <color:green>to know whether the user anonymous
+
+@enduml

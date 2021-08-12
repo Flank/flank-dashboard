@@ -1,0 +1,37 @@
+@startuml public_dashboard_feature_config_class_diagram
+
+package feature_config {
+    package presentation {
+        package models {
+            class PublicDashboardFeatureConfigModel {
+                + isEnabled: bool
+            }
+        }
+
+        package state {
+            class FeatureConfigNotifier {
+                + publicDashboardFeatureConfigModel: PublicDashboardFeatureConfigModel
+            }
+        }
+    }
+
+    package domain.entities {
+        class FeatureConfig {
+            + isPasswordSignInOptionEnabled: bool
+            + isDebugMenuEnabled: bool
+            + isPublicDashboardFeatureEnabled: bool
+        }
+    }
+
+    package data.model {
+        class FeatureConfigData extends FeatureConfig {
+            + fromJson(Map<String, dynamic> json): FeatureConfigData
+            + toJson(): Map<String, dynamic>
+        }
+    }
+}
+
+FeatureConfigNotifier --> FeatureConfig: uses
+FeatureConfigNotifier --> PublicDashboardFeatureConfigModel: provides
+
+@enduml
