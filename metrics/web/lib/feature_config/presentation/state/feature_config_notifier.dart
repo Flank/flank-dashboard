@@ -32,7 +32,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// A view model that holds the [FeatureConfig] data for the debug menu.
   DebugMenuFeatureConfigViewModel _debugMenuFeatureConfigViewModel;
 
-  /// A model that holds the config of the public dashboard feature
+  /// A model that holds the config of the public dashboard feature.
   PublicDashboardFeatureConfigModel _publicDashboardFeatureConfigModel;
 
   /// Returns `true` if the [FeatureConfig] is loading.
@@ -53,7 +53,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   DebugMenuFeatureConfigViewModel get debugMenuFeatureConfigViewModel =>
       _debugMenuFeatureConfigViewModel;
 
-  /// A model that holds the config of the public dashboard feature
+  /// A model that holds the config of the public dashboard feature.
   PublicDashboardFeatureConfigModel get publicDashboardFeatureConfigModel =>
       _publicDashboardFeatureConfigModel;
 
@@ -70,10 +70,11 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// Sets the default [FeatureConfig] from the given configuration values.
   ///
   /// Throws an [AssertionError] if one of the given parameters is `null`.
-  void setDefaults(
-      {bool isPasswordSignInOptionEnabled = false,
-      bool isDebugMenuEnabled = false,
-      bool isPublicDashboardEnabled = false}) {
+  void setDefaults({
+    bool isPasswordSignInOptionEnabled = false,
+    bool isDebugMenuEnabled = false,
+    bool isPublicDashboardEnabled = false,
+  }) {
     assert(isPasswordSignInOptionEnabled != null);
     assert(isDebugMenuEnabled != null);
     assert(isPublicDashboardEnabled != null);
