@@ -120,7 +120,7 @@ class AuthNotifier extends ChangeNotifier {
         assert(_updateUserProfileUseCase != null);
 
   /// Determines if a user is authenticated.
-  bool get isLoggedIn => _authState != AuthState.loggedOut;
+  bool get isLoggedIn => _authState != null &&_authState != AuthState.loggedOut;
 
   /// Returns a state of the user authorization.
   AuthState get authState => _authState;
@@ -269,8 +269,6 @@ class AuthNotifier extends ChangeNotifier {
         selectedTheme: userProfile.selectedTheme,
       );
       _isLoading = false;
-      // TODO: replace with AuthState
-      // _isLoggedIn = true;
 
       notifyListeners();
     } else {

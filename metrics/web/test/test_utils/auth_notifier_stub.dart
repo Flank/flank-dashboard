@@ -23,7 +23,8 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   AuthState _authState;
 
   @override
-  bool get isLoggedIn => _authState != AuthState.loggedOut;
+  bool get isLoggedIn =>
+      _authState != null && _authState != AuthState.loggedOut;
 
   @override
   bool get isLoading => false;
