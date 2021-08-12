@@ -52,6 +52,7 @@ void main() {
 
     const email = 'test@email.com';
     const password = 'password';
+    const isAnonymous = true;
 
     const invalidEmail = 'email@mail.mail';
     const invalidPassword = 'password';
@@ -60,7 +61,7 @@ void main() {
       password: Password(invalidPassword),
     );
 
-    final user = User(id: id, email: email);
+    final user = User(id: id, email: email, isAnonymous: isAnonymous);
     final userProfile = UserProfile(id: id, selectedTheme: selectedTheme);
     const userProfileModel = UserProfileModel(
       id: 'second id',

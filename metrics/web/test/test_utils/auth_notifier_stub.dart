@@ -1,7 +1,8 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
@@ -18,11 +19,11 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   String get passwordErrorMessage => null;
 
-  /// Contains a user's authentication status.
-  bool _isLoggedIn;
+  /// Contains a state of the user authorization.
+  AuthState _authState;
 
   @override
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoggedIn => _authState != AuthState.loggedOut;
 
   @override
   bool get isLoading => false;
@@ -32,13 +33,13 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    _isLoggedIn = true;
+    _authState = AuthState.loggedIn;
     notifyListeners();
   }
 
   @override
   Future<void> signInWithGoogle() async {
-    _isLoggedIn = true;
+    _authState = AuthState.loggedIn;
     notifyListeners();
   }
 
@@ -56,4 +57,7 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   String get userProfileSavingErrorMessage => null;
+
+  @override
+  AuthState get authState => _authState;
 }

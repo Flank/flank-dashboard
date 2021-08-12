@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +13,9 @@ class FirebaseUserAdapter implements User {
 
   @override
   String get id => _firebaseUser.uid;
+
+  @override
+  bool get isAnonymous => _firebaseUser.isAnonymous;
 
   /// Creates a [FirebaseUserAdapter] with the given [FirebaseUser].
   FirebaseUserAdapter(this._firebaseUser) {
