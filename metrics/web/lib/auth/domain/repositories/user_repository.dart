@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
@@ -20,10 +20,10 @@ abstract class UserRepository {
 
   /// Provides an ability to sign in a user using the [email] and [password].
   ///
-  /// Throws an [AuthenticationException] if sign in is failed.
+  /// Throws an [AuthenticationException] if sign-in is failed.
   Future<void> signInWithEmailAndPassword(String email, String password);
 
-  /// Provides an ability to get the [AuthCredentials] using the Google sign in.
+  /// Provides an ability to get the [AuthCredentials] using the Google sign-in.
   ///
   /// Throws an [AuthenticationException] if something went wrong
   /// during receiving the [AuthCredentials].
@@ -38,8 +38,14 @@ abstract class UserRepository {
   /// Provides an ability to sign in a user to the app
   /// using Google authentication.
   ///
-  /// Throws an [AuthenticationException] if sign in is failed.
+  /// Throws an [AuthenticationException] if sign-in is failed.
   Future<void> signInWithGoogle(AuthCredentials credentials);
+
+  /// Provides an ability to sign in a user to the app
+  /// anonymously.
+  ///
+  /// Throws an [AuthenticationException] if sign-in is failed.
+  Future<void> signInAnonymously();
 
   /// Provides an ability to sign out a user.
   Future<void> signOut();
