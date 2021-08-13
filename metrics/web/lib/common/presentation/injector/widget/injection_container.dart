@@ -415,6 +415,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();
+    _publicDashboardFeatureConfigNotifier.dispose();
     super.dispose();
   }
 }
