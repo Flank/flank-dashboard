@@ -243,6 +243,20 @@ void main() {
     );
 
     testWidgets(
+      "injects a FeatureConfigNotifier",
+      (tester) async {
+        await tester.pumpWidget(const InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<FeatureConfigNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
       "disposes an AuthNotifier on dispose",
       (tester) async {
         await tester.pumpWidget(const InjectionContainerTestbed());
@@ -447,6 +461,27 @@ void main() {
 
         expect(
           () => timerNotifier.notifyListeners(),
+          throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a FeatureConfigNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(const InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final featureConfigNotifier = Provider.of<FeatureConfigNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => featureConfigNotifier.notifyListeners(),
           throwsFlutterError,
         );
       },
