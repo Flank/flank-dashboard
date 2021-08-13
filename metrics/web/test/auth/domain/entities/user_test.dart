@@ -12,15 +12,20 @@ void main() {
     test(
       "throws an ArgumentError if the given id is null",
       () {
-        expect(() => User(id: null, isAnonymous: isAnonymous),
-            throwsArgumentError);
+        expect(
+          () => User(id: null, isAnonymous: isAnonymous),
+          throwsArgumentError,
+        );
       },
     );
 
     test(
       "throws an ArgumentError if the given isAnonymous is null",
       () {
-        expect(() => User(id: id, isAnonymous: null), throwsArgumentError);
+        expect(
+          () => User(id: id, isAnonymous: null),
+          throwsArgumentError,
+        );
       },
     );
   });

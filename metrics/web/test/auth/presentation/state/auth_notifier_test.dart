@@ -391,7 +391,7 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedIn once receiving a signed-in user profile",
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedIn once receiving a signed in user profile",
       () {
         final userProfile = UserProfile(
           id: 'some id',
@@ -463,7 +463,7 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedOut once receiving logged-out user profile",
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedOut once receiving the logged out user profile",
       () {
         when(receiveAuthUpdates(any)).thenAnswer(
           (_) => Stream.value(null),

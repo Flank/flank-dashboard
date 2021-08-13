@@ -15,7 +15,8 @@ class User {
   /// A flag that indicates whether the user is anonymous.
   final bool isAnonymous;
 
-  /// Creates a new instance of the [User] with the given [id], [isAnonymous] and [email].
+  /// Creates a new instance of the [User] with the given [id], [isAnonymous]
+  /// and [email].
   ///
   /// The [id] and [isAnonymous] must not be `null`.
   User({

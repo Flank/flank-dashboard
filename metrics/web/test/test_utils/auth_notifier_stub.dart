@@ -19,7 +19,7 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   String get passwordErrorMessage => null;
 
-  /// Contains a state of the user authorization.
+  /// Contains a user's authorization state.
   AuthState _authState;
 
   @override

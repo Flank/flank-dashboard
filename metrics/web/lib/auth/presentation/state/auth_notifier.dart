@@ -78,7 +78,7 @@ class AuthNotifier extends ChangeNotifier {
   /// during loading user profile data.
   PersistentStoreErrorMessage _userProfileErrorMessage;
 
-  /// Contains a state of the user authorization.
+  /// Contains a user's authorization state.
   AuthState _authState;
 
   /// The stream subscription needed to be able to unsubscribe
@@ -120,7 +120,8 @@ class AuthNotifier extends ChangeNotifier {
         assert(_updateUserProfileUseCase != null);
 
   /// Determines if a user is authenticated.
-  bool get isLoggedIn => _authState != null &&_authState != AuthState.loggedOut;
+  bool get isLoggedIn =>
+      _authState != null && _authState != AuthState.loggedOut;
 
   /// Returns a state of the user authorization.
   AuthState get authState => _authState;
@@ -156,7 +157,7 @@ class AuthNotifier extends ChangeNotifier {
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
-        _authState = (user.isAnonymous)
+        _authState = user.isAnonymous
             ? AuthState.loggedInAnonymously
             : AuthState.loggedIn;
       } else {
