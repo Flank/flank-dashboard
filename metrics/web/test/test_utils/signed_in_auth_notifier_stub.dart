@@ -1,10 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
@@ -25,18 +26,20 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
-  /// Contains a user's authentication status.
-  bool _isLoggedIn;
+  /// Contains a state of the user authorization.
+  AuthState _authState;
 
   @override
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoggedIn =>
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
 
   @override
   bool get isLoading => false;
 
   @override
   void subscribeToAuthenticationUpdates() {
-    _isLoggedIn = true;
+    _authState = AuthState.loggedIn;
     notifyListeners();
   }
 
@@ -49,7 +52,7 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   Future<void> signOut() async {
-    _isLoggedIn = false;
+    _authState = AuthState.loggedOut;
     notifyListeners();
   }
 
@@ -64,4 +67,7 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   String get userProfileSavingErrorMessage => null;
+
+  @override
+  AuthState get authState => _authState;
 }

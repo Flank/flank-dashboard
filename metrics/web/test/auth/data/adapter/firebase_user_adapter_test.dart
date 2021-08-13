@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,14 +15,17 @@ void main() {
     test("adapts FirebaseUser to a User", () {
       const id = 'id';
       const email = 'email';
+      const isAnonymous = true;
 
       final firebaseUser = FirebaseUserStub(
         uid: id,
         email: email,
+        isAnonymous: isAnonymous,
       );
       final expectedUser = User(
         id: id,
         email: email,
+        isAnonymous: isAnonymous,
       );
 
       final adaptedUser = FirebaseUserAdapter(firebaseUser);
@@ -30,6 +33,7 @@ void main() {
       expect(adaptedUser, isA<User>());
       expect(adaptedUser.id, expectedUser.id);
       expect(adaptedUser.email, expectedUser.email);
+      expect(adaptedUser.isAnonymous, expectedUser.isAnonymous);
     });
   });
 }
@@ -41,7 +45,10 @@ class FirebaseUserStub implements FirebaseUser {
   @override
   final String email;
 
-  FirebaseUserStub({this.uid, this.email});
+  @override
+  final bool isAnonymous;
+
+  FirebaseUserStub({this.uid, this.email, this.isAnonymous});
 
   @override
   Future<void> delete() async {}
@@ -53,9 +60,6 @@ class FirebaseUserStub implements FirebaseUser {
   Future<IdTokenResult> getIdToken({bool refresh = false}) async {
     return null;
   }
-
-  @override
-  bool get isAnonymous => false;
 
   @override
   bool get isEmailVerified => true;
