@@ -121,7 +121,8 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Determines if a user is authenticated.
   bool get isLoggedIn =>
-      _authState != null && _authState != AuthState.loggedOut;
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
 
   /// Returns a state of the user authorization.
   AuthState get authState => _authState;
