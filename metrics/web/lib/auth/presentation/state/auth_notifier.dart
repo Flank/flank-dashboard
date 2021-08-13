@@ -82,7 +82,7 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a user's authorization state.
   AuthState _authState;
 
-  // Indicates whether the public dashboard feature is enabled
+  /// Indicates whether the public dashboard feature is enabled.
   bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe

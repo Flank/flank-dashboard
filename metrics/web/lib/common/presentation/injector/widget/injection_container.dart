@@ -159,7 +159,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   NavigationNotifier _navigationNotifier;
 
   /// The [FeatureConfigNotifier] that holds the public dashboard feature config.
-  FeatureConfigNotifier _publicDashboardFeatureConfigNotifier;
+  FeatureConfigNotifier _featureConfigNotifier;
 
   @override
   void initState() {
@@ -245,13 +245,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
       BrowserNavigationState(window.history),
     );
 
-    _publicDashboardFeatureConfigNotifier =
+    _featureConfigNotifier =
         FeatureConfigNotifier(_fetchFeatureConfigUseCase);
 
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
-    _publicDashboardFeatureConfigNotifier
-        .addListener(_publicDashboardFeatureConfigNotifierListener);
+    _featureConfigNotifier
+        .addListener(_featureConfigNotifierListener);
   }
 
   @override
@@ -384,9 +384,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   }
 
   /// Listens to [FeatureConfigNotifier]'s updates.
-  void _publicDashboardFeatureConfigNotifierListener() {
+  void _featureConfigNotifierListener() {
     _authNotifier.handlePublicDashboardFeatureConfigUpdates(
-      _publicDashboardFeatureConfigNotifier.publicDashboardFeatureConfigModel,
+      _featureConfigNotifier.publicDashboardFeatureConfigModel,
     );
   }
 
@@ -410,12 +410,12 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
-    _publicDashboardFeatureConfigNotifier
-        .removeListener(_publicDashboardFeatureConfigNotifierListener);
+    _featureConfigNotifier
+        .removeListener(_featureConfigNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();
-    _publicDashboardFeatureConfigNotifier.dispose();
+    _featureConfigNotifier.dispose();
     super.dispose();
   }
 }
