@@ -1,19 +1,18 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/stub/base/config/validator/config_validator_stub.dart';
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result_builder.dart';
+import 'package:ci_integration/integration/interface/base/config/validator/config_validator.dart';
+import 'package:ci_integration/integration/validation/model/config_field_target_validation_result.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
-import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config_field.dart';
+import 'package:ci_integration/source/github_actions/config/model/github_actions_source_validation_target.dart';
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class responsible for validating the [GithubActionsSourceConfig].
 class GithubActionsSourceValidator
-    implements ConfigValidatorStub<GithubActionsSourceConfig> {
+    implements ConfigValidator<GithubActionsSourceConfig> {
   @override
   final GithubActionsSourceValidationDelegate validationDelegate;
 
@@ -42,11 +41,12 @@ class GithubActionsSourceValidator
 
     if (accessToken == null) {
       _setUnknownFieldValidationResult(
-        GithubActionsSourceConfigField.accessToken,
+        GithubActionsSourceValidationTarget.accessToken,
         GithubActionsStrings.tokenNotSpecified,
       );
 
       return _finalizeValidationResult(
+        GithubActionsSourceValidationTarget.accessToken,
         GithubActionsStrings.tokenNotSpecifiedInterruptReason,
       );
     }
@@ -55,13 +55,11 @@ class GithubActionsSourceValidator
 
     final authValidationResult = await validationDelegate.validateAuth(auth);
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.accessToken,
-      authValidationResult,
-    );
+    validationResultBuilder.setResult(authValidationResult);
 
-    if (authValidationResult.isFailure) {
+    if (authValidationResult.isInvalid) {
       return _finalizeValidationResult(
+        GithubActionsSourceValidationTarget.accessToken,
         GithubActionsStrings.tokenInvalidInterruptReason,
       );
     }
@@ -70,13 +68,11 @@ class GithubActionsSourceValidator
     final repositoryOwnerValidationResult =
         await validationDelegate.validateRepositoryOwner(repositoryOwner);
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.repositoryOwner,
-      repositoryOwnerValidationResult,
-    );
+    validationResultBuilder.setResult(repositoryOwnerValidationResult);
 
-    if (repositoryOwnerValidationResult.isFailure) {
+    if (repositoryOwnerValidationResult.isInvalid) {
       return _finalizeValidationResult(
+        GithubActionsSourceValidationTarget.repositoryOwner,
         GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
       );
     }
@@ -88,13 +84,11 @@ class GithubActionsSourceValidator
       repositoryOwner: repositoryOwner,
     );
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.repositoryName,
-      repositoryNameValidationResult,
-    );
+    validationResultBuilder.setResult(repositoryNameValidationResult);
 
-    if (repositoryNameValidationResult.isFailure) {
+    if (repositoryNameValidationResult.isInvalid) {
       return _finalizeValidationResult(
+        GithubActionsSourceValidationTarget.repositoryName,
         GithubActionsStrings.repositoryNameInvalidInterruptReason,
       );
     }
@@ -105,13 +99,11 @@ class GithubActionsSourceValidator
       workflowId,
     );
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.workflowIdentifier,
-      workflowIdValidationResult,
-    );
+    validationResultBuilder.setResult(workflowIdValidationResult);
 
-    if (workflowIdValidationResult.isFailure) {
+    if (workflowIdValidationResult.isInvalid) {
       return _finalizeValidationResult(
+        GithubActionsSourceValidationTarget.workflowIdentifier,
         GithubActionsStrings.workflowIdInvalidInterruptReason,
       );
     }
@@ -122,10 +114,7 @@ class GithubActionsSourceValidator
       jobName: jobName,
     );
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.jobName,
-      jobNameValidationResult,
-    );
+    validationResultBuilder.setResult(jobNameValidationResult);
 
     final coverageArtifact = config.coverageArtifactName;
     final coverageArtifactValidationResult =
@@ -134,43 +123,44 @@ class GithubActionsSourceValidator
       coverageArtifactName: coverageArtifact,
     );
 
-    validationResultBuilder.setResult(
-      GithubActionsSourceConfigField.coverageArtifactName,
-      coverageArtifactValidationResult,
-    );
+    validationResultBuilder.setResult(coverageArtifactValidationResult);
 
     return validationResultBuilder.build();
   }
 
-  /// Sets the [FieldValidationResult.unknown] with the given
-  /// [additionalContext] to the given [field] using
+  /// Sets the [ConfigFieldTargetValidationResult.unknown] with the given
+  /// [description] to the given [target] using
   /// the [validationResultBuilder].
   void _setUnknownFieldValidationResult(
-    GithubActionsSourceConfigField field,
-    String additionalContext,
+    ValidationTarget target,
+    String description,
   ) {
-    final validationResult = FieldValidationResult.unknown(
-      additionalContext: additionalContext,
+    final validationResult = ConfigFieldTargetValidationResult.unknown(
+      target: target,
+      description: description,
     );
 
-    validationResultBuilder.setResult(field, validationResult);
+    validationResultBuilder.setResult(validationResult);
   }
 
-  /// Sets the empty results of the [validationResultBuilder] using
-  /// the given [interruptReason] and builds the [ValidationResult]
-  /// using the [validationResultBuilder].
-  ValidationResult _finalizeValidationResult(String interruptReason) {
-    _setEmptyFields(interruptReason);
+  /// Builds the [ValidationResult] using the [validationResultBuilder], where
+  /// the [TargetValidationResult]s of empty fields contain the given [target]
+  /// and [interruptReason].
+  ValidationResult _finalizeValidationResult(
+    ValidationTarget target,
+    String interruptReason,
+  ) {
+    _setEmptyTargets(target, interruptReason);
 
     return validationResultBuilder.build();
   }
 
   /// Sets empty results of the [validationResultBuilder] to the
-  /// [FieldValidationResult.unknown] with the given [interruptReason] as
-  /// a [FieldValidationResult.additionalContext].
-  void _setEmptyFields(String interruptReason) {
-    final emptyFieldResult = FieldValidationResult.unknown(
-      additionalContext: interruptReason,
+  /// [ConfigFieldTargetValidationResult.unknown].
+  void _setEmptyTargets(ValidationTarget target, String interruptReason) {
+    final emptyFieldResult = ConfigFieldTargetValidationResult.unknown(
+      target: target,
+      description: interruptReason,
     );
 
     validationResultBuilder.setEmptyResults(emptyFieldResult);

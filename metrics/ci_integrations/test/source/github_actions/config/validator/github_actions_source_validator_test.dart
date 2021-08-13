@@ -1,19 +1,19 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:ci_integration/integration/validation/model/field_validation_result.dart';
-import 'package:ci_integration/integration/validation/model/validation_result.dart';
+import 'package:ci_integration/integration/validation/model/config_field_target_validation_result.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
-import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config_field.dart';
+import 'package:ci_integration/source/github_actions/config/model/github_actions_source_validation_target.dart';
 import 'package:ci_integration/source/github_actions/config/validation_delegate/github_actions_source_validation_delegate.dart';
 import 'package:ci_integration/source/github_actions/config/validator/github_actions_source_validator.dart';
 import 'package:ci_integration/source/github_actions/strings/github_actions_strings.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matchers.dart';
-import '../../../../test_utils/mock/validation_result_builder_mock.dart';
+import '../../../../test_utils/mock/core_validation_result_builder_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -25,23 +25,69 @@ void main() {
     const workflowId = 'workflowId';
     const jobName = 'jobName';
     const coverageArtifactName = 'coverageArtifactName';
-    const result = FieldValidationResult.success();
+    const accessTokenTarget = GithubActionsSourceValidationTarget.accessToken;
+    const repositoryOwnerTarget =
+        GithubActionsSourceValidationTarget.repositoryOwner;
+    const repositoryNameTarget =
+        GithubActionsSourceValidationTarget.repositoryName;
+    const workflowIdTarget =
+        GithubActionsSourceValidationTarget.workflowIdentifier;
+    const jobNameTarget = GithubActionsSourceValidationTarget.jobName;
+    const coverageArtifactNameTarget =
+        GithubActionsSourceValidationTarget.coverageArtifactName;
 
-    const successFieldValidationResult = FieldValidationResult.success();
-    const failureFieldValidationResult = FieldValidationResult.failure();
-    const unknownFieldValidationResult = FieldValidationResult.unknown();
+    const unknownAccessTokenValidationResult =
+        ConfigFieldTargetValidationResult.unknown(
+      target: accessTokenTarget,
+      description: GithubActionsStrings.tokenNotSpecified,
+    );
+    const invalidAccessTokenValidationResult =
+        ConfigFieldTargetValidationResult.invalid(target: accessTokenTarget);
+    const invalidRepositoryOwnerValidationResult =
+        ConfigFieldTargetValidationResult.invalid(
+      target: repositoryOwnerTarget,
+    );
+    const invalidRepositoryNameValidationResult =
+        ConfigFieldTargetValidationResult.invalid(
+      target: repositoryNameTarget,
+    );
+    const invalidWorkflowIdValidationResult =
+        ConfigFieldTargetValidationResult.invalid(
+      target: workflowIdTarget,
+    );
+    const invalidJobNameValidationResult =
+        ConfigFieldTargetValidationResult.invalid(target: jobNameTarget);
+    const unknownJobNameValidationResult =
+        ConfigFieldTargetValidationResult.unknown(target: jobNameTarget);
+    const invalidCoverageNameValidationResult =
+        ConfigFieldTargetValidationResult.invalid(
+      target: coverageArtifactNameTarget,
+    );
+    const unknownCoverageNameValidationResult =
+        ConfigFieldTargetValidationResult.unknown(
+      target: coverageArtifactNameTarget,
+    );
+    const validTargetValidationResult =
+        ConfigFieldTargetValidationResult.valid(target: accessTokenTarget);
+    final results = {accessTokenTarget: validTargetValidationResult};
+    final validationResult = ValidationResult(results);
+    // const result = FieldValidationResult.success();
+
+    // const successFieldValidationResult = FieldValidationResult.success();
+    // const failureFieldValidationResult = FieldValidationResult.failure();
+    // const unknownFieldValidationResult = FieldValidationResult.unknown();
 
     final auth = BearerAuthorization(accessToken);
     final validationDelegate = _GithubActionsSourceValidationDelegateMock();
-    final validationResultBuilder = ValidationResultBuilderMock();
+    final validationResultBuilder = CoreValidationResultBuilderMock();
     final validator = GithubActionsSourceValidator(
       validationDelegate,
       validationResultBuilder,
     );
-    final field = GithubActionsSourceConfigField.workflowIdentifier;
-    final validationResult = ValidationResult({
-      field: result,
-    });
+    // final field = GithubActionsSourceConfigField.workflowIdentifier;
+    // final validationResult = ValidationResult({
+    //   field: result,
+    // });
 
     GithubActionsSourceConfig createConfig({
       String accessToken = accessToken,
@@ -63,14 +109,19 @@ void main() {
 
     final config = createConfig();
 
-    PostExpectation<Future<FieldValidationResult<void>>> whenValidateAuth() {
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
+        whenValidateAuth() {
       return when(validationDelegate.validateAuth(auth));
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
         whenValidateRepositoryOwner() {
       whenValidateAuth().thenAnswer(
-        (_) => Future.value(successFieldValidationResult),
+        (_) => Future.value(
+          const ConfigFieldTargetValidationResult.valid(
+            target: accessTokenTarget,
+          ),
+        ),
       );
 
       return when(
@@ -78,10 +129,14 @@ void main() {
       );
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
         whenValidateRepositoryName() {
       whenValidateRepositoryOwner().thenAnswer(
-        (_) => Future.value(successFieldValidationResult),
+        (_) => Future.value(
+          const ConfigFieldTargetValidationResult.valid(
+            target: repositoryOwnerTarget,
+          ),
+        ),
       );
 
       return when(
@@ -92,10 +147,14 @@ void main() {
       );
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
         whenValidateWorkflowId() {
       whenValidateRepositoryName().thenAnswer(
-        (_) => Future.value(successFieldValidationResult),
+        (_) => Future.value(
+          const ConfigFieldTargetValidationResult.valid(
+            target: repositoryNameTarget,
+          ),
+        ),
       );
 
       return when(
@@ -103,9 +162,14 @@ void main() {
       );
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>> whenValidateJobName() {
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
+        whenValidateJobName() {
       whenValidateWorkflowId().thenAnswer(
-        (_) => Future.value(successFieldValidationResult),
+        (_) => Future.value(
+          const ConfigFieldTargetValidationResult.valid(
+            target: workflowIdTarget,
+          ),
+        ),
       );
 
       return when(
@@ -116,10 +180,14 @@ void main() {
       );
     }
 
-    PostExpectation<Future<FieldValidationResult<void>>>
+    PostExpectation<Future<ConfigFieldTargetValidationResult<void>>>
         whenValidateCoverageArtifactName() {
       whenValidateJobName().thenAnswer(
-        (_) => Future.value(successFieldValidationResult),
+        (_) => Future.value(
+          const ConfigFieldTargetValidationResult.valid(
+            target: jobNameTarget,
+          ),
+        ),
       );
 
       return when(
@@ -156,7 +224,7 @@ void main() {
     );
 
     test(
-      "creates a new instance with the given parameters",
+      "creates an instance with the given parameters",
       () {
         final validator = GithubActionsSourceValidator(
           validationDelegate,
@@ -172,37 +240,31 @@ void main() {
     );
 
     test(
-      ".validate() sets the unknown access token field validation result with the 'token not specified' additional context if the access token is null",
+      ".validate() sets the unknown access token target validation result with the 'token not specified' description if the access token is null",
       () async {
         final config = createConfig(accessToken: null);
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.accessToken,
-            const FieldValidationResult.unknown(
-              additionalContext: GithubActionsStrings.tokenNotSpecified,
-            ),
-          ),
+          validationResultBuilder.setResult(unknownAccessTokenValidationResult),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'token not specified' additional context if the access token is null",
+      ".validate() sets empty results with the unknown target validation result with the 'token not specified' description if the access token is null",
       () async {
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
+          target: accessTokenTarget,
+          description: GithubActionsStrings.tokenNotSpecifiedInterruptReason,
+        );
         final config = createConfig(accessToken: null);
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setEmptyResults(
-            const FieldValidationResult.unknown(
-              additionalContext:
-                  GithubActionsStrings.tokenNotSpecifiedInterruptReason,
-            ),
-          ),
+          validationResultBuilder.setEmptyResults(expectedResult),
         ).called(once);
       },
     );
@@ -308,7 +370,7 @@ void main() {
       ".validate() delegates the access token validation to the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         final expectedAuth = BearerAuthorization(accessToken);
@@ -320,31 +382,29 @@ void main() {
     );
 
     test(
-      ".validate() sets the access token field validation result returned by the validation delegate",
+      ".validate() sets the access token target validation result returned by the validation delegate",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.accessToken,
-            failureFieldValidationResult,
-          ),
+          validationResultBuilder.setResult(invalidAccessTokenValidationResult),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'token invalid' additional context if the access token validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'token invalid' description if the access token validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext: GithubActionsStrings.tokenInvalidInterruptReason,
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
+          target: accessTokenTarget,
+          description: GithubActionsStrings.tokenInvalidInterruptReason,
         );
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -359,7 +419,7 @@ void main() {
       ".validate() does not validate the repository owner if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -374,7 +434,7 @@ void main() {
       ".validate() does not validate the repository name if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -390,7 +450,7 @@ void main() {
       ".validate() does not validate the workflow identifier if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -403,7 +463,7 @@ void main() {
       ".validate() does not validate the job name if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -419,7 +479,7 @@ void main() {
       ".validate() does not validate the coverage artifact name if the access token validation fails",
       () async {
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         await validator.validate(config);
@@ -436,7 +496,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateAuth().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidAccessTokenValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -449,7 +509,7 @@ void main() {
       ".validate() delegates the repository owner validation to the validation delegate",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
@@ -464,37 +524,35 @@ void main() {
       ".validate() sets the repository owner field validation result returned by the validation delegate",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.repositoryOwner,
-            failureFieldValidationResult,
+            invalidRepositoryOwnerValidationResult,
           ),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'repository owner invalid' additional context if the repository owner validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'repository owner invalid' description if the repository owner validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
+          target: repositoryOwnerTarget,
+          description:
               GithubActionsStrings.repositoryOwnerInvalidInterruptReason,
         );
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setEmptyResults(
-            expectedResult,
-          ),
+          validationResultBuilder.setEmptyResults(expectedResult),
         ).called(once);
       },
     );
@@ -503,7 +561,7 @@ void main() {
       ".validate() does not validate the repository name if the repository owner validation fails",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
@@ -519,7 +577,7 @@ void main() {
       ".validate() does not validate the workflow identifier if the repository owner validation fails",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
@@ -532,7 +590,7 @@ void main() {
       ".validate() does not validate the job name if the repository owner validation fails",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
@@ -548,7 +606,7 @@ void main() {
       ".validate() does not validate the coverage artifact name if the repository owner validation fails",
       () async {
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         await validator.validate(config);
@@ -565,7 +623,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateRepositoryOwner().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryOwnerValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -578,7 +636,7 @@ void main() {
       ".validate() delegates repository name validation to the validation delegate",
       () async {
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
@@ -593,32 +651,32 @@ void main() {
     );
 
     test(
-      ".validate() sets the repository name field validation result returned by the validation delegate",
+      ".validate() sets the repository name target validation result returned by the validation delegate",
       () async {
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.repositoryName,
-            failureFieldValidationResult,
+            invalidRepositoryNameValidationResult,
           ),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'repository name invalid' additional context if the repository name validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'repository name invalid' description if the repository name validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
+          target: repositoryNameTarget,
+          description:
               GithubActionsStrings.repositoryNameInvalidInterruptReason,
         );
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
@@ -633,7 +691,7 @@ void main() {
       ".validate() does not validate the workflow identifier if the repository name validation fails",
       () async {
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
@@ -646,7 +704,7 @@ void main() {
       ".validate() does not validate the job name if the repository name validation fails",
       () async {
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
@@ -662,7 +720,7 @@ void main() {
       ".validate() does not validate the coverage artifact name if the repository name validation fails",
       () async {
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         await validator.validate(config);
@@ -679,7 +737,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateRepositoryName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidRepositoryNameValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -692,7 +750,7 @@ void main() {
       ".validate() delegates workflow identifier validation to the validation delegate",
       () async {
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         await validator.validate(config);
@@ -704,32 +762,29 @@ void main() {
     );
 
     test(
-      ".validate() sets the workflow identifier field validation result returned by the validation delegate",
+      ".validate() sets the workflow identifier target validation result returned by the validation delegate",
       () async {
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.workflowIdentifier,
-            failureFieldValidationResult,
-          ),
+          validationResultBuilder.setResult(invalidWorkflowIdValidationResult),
         ).called(once);
       },
     );
 
     test(
-      ".validate() sets empty results with the unknown field validation result with the 'workflow identifier invalid' additional context if the workflow identifier validation fails",
+      ".validate() sets empty results with the unknown target validation result with the 'workflow identifier invalid' description if the workflow identifier validation fails",
       () async {
-        const expectedResult = FieldValidationResult.unknown(
-          additionalContext:
-              GithubActionsStrings.workflowIdInvalidInterruptReason,
+        const expectedResult = ConfigFieldTargetValidationResult.unknown(
+          target: workflowIdTarget,
+          description: GithubActionsStrings.workflowIdInvalidInterruptReason,
         );
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         await validator.validate(config);
@@ -744,7 +799,7 @@ void main() {
       ".validate() does not validate the job name if the workflow identifier validation fails",
       () async {
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         await validator.validate(config);
@@ -760,7 +815,7 @@ void main() {
       ".validate() does not validate the coverage artifact name if the workflow identifier validation fails",
       () async {
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         await validator.validate(config);
@@ -777,7 +832,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateWorkflowId().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidWorkflowIdValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -790,7 +845,7 @@ void main() {
       ".validate() delegates job name validation to the validation delegate",
       () async {
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidJobNameValidationResult),
         );
 
         await validator.validate(config);
@@ -805,19 +860,16 @@ void main() {
     );
 
     test(
-      ".validate() sets the job name field validation result returned by the validation delegate",
+      ".validate() sets the job name target validation result returned by the validation delegate",
       () async {
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidJobNameValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
-          validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.jobName,
-            failureFieldValidationResult,
-          ),
+          validationResultBuilder.setResult(invalidJobNameValidationResult),
         ).called(once);
       },
     );
@@ -826,7 +878,7 @@ void main() {
       ".validate() validates the coverage artifact name if the job name validation fails",
       () async {
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidJobNameValidationResult),
         );
 
         await validator.validate(config);
@@ -844,7 +896,7 @@ void main() {
       ".validate() validates the coverage artifact name if the job name validation result is unknown",
       () async {
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(unknownFieldValidationResult),
+          (_) => Future.value(unknownJobNameValidationResult),
         );
 
         await validator.validate(config);
@@ -859,11 +911,11 @@ void main() {
     );
 
     test(
-      ".validate() returns a field validation result built by the validation result builder if the job name validation fails",
+      ".validate() returns a target validation result built by the validation result builder if the job name validation fails",
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidJobNameValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -877,7 +929,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateJobName().thenAnswer(
-          (_) => Future.value(unknownFieldValidationResult),
+          (_) => Future.value(unknownJobNameValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -890,7 +942,7 @@ void main() {
       ".validate() delegates coverage artifact name validation to the validation delegate",
       () async {
         whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidCoverageNameValidationResult),
         );
 
         await validator.validate(config);
@@ -905,18 +957,17 @@ void main() {
     );
 
     test(
-      ".validate() sets the coverage artifact name field validation result returned by the validation delegate",
+      ".validate() sets the coverage artifact name target validation result returned by the validation delegate",
       () async {
         whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidCoverageNameValidationResult),
         );
 
         await validator.validate(config);
 
         verify(
           validationResultBuilder.setResult(
-            GithubActionsSourceConfigField.coverageArtifactName,
-            failureFieldValidationResult,
+            invalidCoverageNameValidationResult,
           ),
         ).called(once);
       },
@@ -927,7 +978,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(failureFieldValidationResult),
+          (_) => Future.value(invalidCoverageNameValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -941,7 +992,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(unknownFieldValidationResult),
+          (_) => Future.value(unknownCoverageNameValidationResult),
         );
 
         final result = await validator.validate(config);
@@ -955,7 +1006,7 @@ void main() {
       () async {
         when(validationResultBuilder.build()).thenReturn(validationResult);
         whenValidateCoverageArtifactName().thenAnswer(
-          (_) => Future.value(successFieldValidationResult),
+          (_) => Future.value(validTargetValidationResult),
         );
 
         final result = await validator.validate(config);
