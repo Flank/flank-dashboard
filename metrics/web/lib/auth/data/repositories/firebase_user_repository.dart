@@ -136,6 +136,18 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Future<void> signInAnonymously() async {
+    try {
+      await _firebaseAuth.signInAnonymously();
+    } catch (error) {
+      final errorCode = error.code as String;
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
+
+      throw AuthenticationException(code: authErrorCode);
+    }
+  }
+
+  @override
   Future<void> signOut() async {
     if (_googleSignIn.currentUser != null) {
       await _googleSignIn.signOut();
