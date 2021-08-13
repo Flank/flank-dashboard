@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:duration/duration.dart';
@@ -33,6 +33,7 @@ class CommonStrings {
   static const String closeConnectionFailedErrorMessage =
       'An error occurred while closing a connection with the persistent store, please try again.';
   static const String debugMenu = 'Debug menu';
+  static const String buildBySolidSoftware = 'Built by Solid Software';
 
   static String duration(Duration duration) => prettyDuration(
         duration,

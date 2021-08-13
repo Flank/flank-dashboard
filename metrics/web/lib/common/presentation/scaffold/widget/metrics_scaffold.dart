@@ -1,9 +1,10 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/widget/manufacturer_banner.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
 
@@ -42,34 +43,43 @@ class MetricsScaffold extends StatelessWidget {
     const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
 
     return Scaffold(
-      body: Center(
-        child: Container(
-          constraints: BoxConstraints.tight(
-            const Size.fromWidth(DimensionsConfig.contentWidth),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Padding(
-                padding: _pageElementsPadding,
-                child: MetricsAppBar(),
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
+              constraints: BoxConstraints.tight(
+                const Size.fromWidth(DimensionsConfig.contentWidth),
               ),
-              if (title != null)
-                Padding(
-                  padding: _pageElementsPadding,
-                  child: MetricsPageTitle(
-                    title: title,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Padding(
+                    padding: _pageElementsPadding,
+                    child: MetricsAppBar(),
                   ),
-                ),
-              Expanded(
-                child: Padding(
-                  padding: padding,
-                  child: body,
-                ),
+                  if (title != null)
+                    Padding(
+                      padding: _pageElementsPadding,
+                      child: MetricsPageTitle(
+                        title: title,
+                      ),
+                    ),
+                  Expanded(
+                    child: Padding(
+                      padding: padding,
+                      child: body,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          const Positioned(
+            bottom: 0.0,
+            right: 0.0,
+            child: ManufacturerBanner(),
+          ),
+        ],
       ),
     );
   }
