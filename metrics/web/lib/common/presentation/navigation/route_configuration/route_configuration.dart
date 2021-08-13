@@ -20,7 +20,7 @@ class RouteConfiguration extends Equatable {
   final bool authorizationRequired;
 
   /// A flag that indicates whether this route can be accessed
-  /// if sign-in anonymously.
+  /// when signing in anonymously.
   final bool allowsAnonymousAccess;
 
   /// A [Map] containing parameters of this route.
