@@ -158,6 +158,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// The [ChangeNotifier] that manages navigation.
   NavigationNotifier _navigationNotifier;
 
+  /// The [FeatureConfigNotifier] that holds the public dashboard feature config.
+  FeatureConfigNotifier _publicDashboardFeatureConfigNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -242,8 +245,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
       BrowserNavigationState(window.history),
     );
 
+    _publicDashboardFeatureConfigNotifier =
+        FeatureConfigNotifier(_fetchFeatureConfigUseCase);
+
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
+    _publicDashboardFeatureConfigNotifier
+        .addListener(_publicDashboardFeatureConfigNotifierListener);
   }
 
   @override
@@ -375,6 +383,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _authNotifier.updateUserProfile(userProfileModel);
   }
 
+  /// Listens to [FeatureConfigNotifier]'s updates.
+  void _publicDashboardFeatureConfigNotifierListener() {
+    _authNotifier.handlePublicDashboardFeatureConfigUpdates(
+      _publicDashboardFeatureConfigNotifier.publicDashboardFeatureConfigModel,
+    );
+  }
+
   /// Updates projects subscription based on user logged in status.
   void _updateProjectsSubscription(
     AuthNotifier authNotifier,
@@ -395,6 +410,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
+    _publicDashboardFeatureConfigNotifier
+        .removeListener(_publicDashboardFeatureConfigNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();

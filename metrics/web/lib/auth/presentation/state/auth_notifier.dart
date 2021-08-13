@@ -24,6 +24,7 @@ import 'package:metrics/common/domain/entities/persistent_store_error_code.dart'
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -80,6 +81,9 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Contains a user's authorization state.
   AuthState _authState;
+
+  // Indicates whether the public dashboard feature is enabled
+  bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from authentication state updates.
