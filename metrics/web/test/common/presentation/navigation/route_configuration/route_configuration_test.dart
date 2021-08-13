@@ -48,6 +48,20 @@ void main() {
     );
 
     test(
+      ".loading() creates an instance with the correct allows anonymous access value",
+      () {
+        const expectedAllowsAnonymousAccess = true;
+
+        const configuration = RouteConfiguration.loading();
+
+        expect(
+          configuration.allowsAnonymousAccess,
+          equals(expectedAllowsAnonymousAccess),
+        );
+      },
+    );
+
+    test(
       ".loading() creates an instance with the parameters map equal to null",
       () {
         const configuration = RouteConfiguration.loading();
@@ -93,6 +107,20 @@ void main() {
     );
 
     test(
+      ".login() creates an instance with the correct allows anonymous access value",
+      () {
+        const expectedAllowsAnonymousAccess = true;
+
+        final configuration = RouteConfiguration.login();
+
+        expect(
+          configuration.allowsAnonymousAccess,
+          equals(expectedAllowsAnonymousAccess),
+        );
+      },
+    );
+
+    test(
       ".login() creates an instance with the given parameters",
       () {
         final configuration = RouteConfiguration.login(parameters: parameters);
@@ -133,6 +161,20 @@ void main() {
         expect(
           configuration.authorizationRequired,
           equals(expectedAuthorizationRequired),
+        );
+      },
+    );
+
+    test(
+      ".dashboard() creates an instance with the correct allows anonymous access value",
+      () {
+        const expectedAllowsAnonymousAccess = true;
+
+        final configuration = RouteConfiguration.dashboard();
+
+        expect(
+          configuration.allowsAnonymousAccess,
+          equals(expectedAllowsAnonymousAccess),
         );
       },
     );
@@ -185,6 +227,20 @@ void main() {
     );
 
     test(
+      ".projectGroups() creates an instance with the correct allows anonymous access value",
+      () {
+        const expectedAllowsAnonymousAccess = false;
+
+        final configuration = RouteConfiguration.projectGroups();
+
+        expect(
+          configuration.allowsAnonymousAccess,
+          equals(expectedAllowsAnonymousAccess),
+        );
+      },
+    );
+
+    test(
       ".projectGroups() creates an instance with the given parameters",
       () {
         final configuration = RouteConfiguration.projectGroups(
@@ -227,6 +283,20 @@ void main() {
         expect(
           configuration.authorizationRequired,
           equals(expectedAuthorizationRequired),
+        );
+      },
+    );
+
+    test(
+      ".debugMenu() creates an instance with the correct allows anonymous access value",
+      () {
+        const expectedAllowsAnonymousAccess = true;
+
+        final configuration = RouteConfiguration.debugMenu();
+
+        expect(
+          configuration.allowsAnonymousAccess,
+          equals(expectedAllowsAnonymousAccess),
         );
       },
     );
@@ -293,6 +363,7 @@ void main() {
         const newName = RouteName.dashboard;
         const newPath = 'test_path2';
         const newAuthorizationRequired = true;
+        const newAllowsAnonymousAccess = false;
         const newParameters = {'test2': 'test2'};
 
         final configuration = RouteConfiguration.dashboard(
@@ -303,6 +374,7 @@ void main() {
           name: newName,
           path: newPath,
           authorizationRequired: newAuthorizationRequired,
+          allowsAnonymousAccess: newAllowsAnonymousAccess,
           parameters: newParameters,
         );
 
@@ -311,6 +383,10 @@ void main() {
         expect(
           copiedConfiguration.authorizationRequired,
           equals(newAuthorizationRequired),
+        );
+        expect(
+          copiedConfiguration.allowsAnonymousAccess,
+          equals(newAllowsAnonymousAccess),
         );
         expect(copiedConfiguration.parameters, equals(newParameters));
       },
