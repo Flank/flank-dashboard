@@ -88,7 +88,7 @@ service cloud.firestore {
 
   /// Checks if the public dashboard feature is enabled
   function isPublicDashboardEnabled(){
-    return /databases/{database}/documents/feature_config/isPublicDashboardEnabled;
+    return get(/databases/{database}/documents/feature_config/isPublicDashboardEnabled);
   }
 
   /// Checks whether project group data from the request is valid.
