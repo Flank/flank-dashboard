@@ -6,7 +6,7 @@ class SignInAnonymouslyUseCase implements UseCase {
   final UserRepository _repository;
 
   /// Creates a [SignInAnonymouslyUseCase] with the given [UserRepository].
-  SignInAnonymouslyUseCase(this._repository);
+  SignInAnonymouslyUseCase(this._repository) : assert(_repository != null);
 
   @override
   Future<void> call(_) async {
