@@ -83,7 +83,12 @@ service cloud.firestore {
 
   /// Checks if the sign in provider from the request is an anonymous.
   function isSignInProviderAnonymous() {
-    return checkSignInProvider('anonymous');
+    return checkSignInProvider('anonymous') && isPublicDashboardEnabled();
+  }
+
+  /// Checks if the public dashboard feature is enabled
+  function isPublicDashboardEnabled(){
+    return /databases/{database}/documents/feature_config/isPublicDashboardEnabled;
   }
 
   /// Checks whether project group data from the request is valid.
