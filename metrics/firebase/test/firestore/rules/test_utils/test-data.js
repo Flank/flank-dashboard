@@ -82,7 +82,11 @@ const allowedEmailDomains = {
 
 /** A test data for the feature config collection */
 const featureConfig = {
-  "feature_config/feature_config": {},
+  "feature_config/feature_config": {
+    "isDebugMenuEnabled": true,
+    "isPasswordSignInOptionEnabled": true,
+    "isPublicDashboardEnabled": true
+  },
 };
 
 const allowedEmail = "test@gmail.com";

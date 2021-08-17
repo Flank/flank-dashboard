@@ -8,31 +8,33 @@ service cloud.firestore {
     }
 
     match /project_groups/{projectGroupId} {
-      allow read: if isAccessAuthorized(database) || isLegallySignedInAnonymously(database);
-      allow delete: if isAccessAuthorized(database);
-      allow create, update: if isAccessAuthorized(database) && isProjectGroupValid();
+      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
+      allow delete: if isSignedInWithVerifiedEmail(database);
+      allow create, update: if isSignedInWithVerifiedEmail(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
-      allow read: if isAccessAuthorized(database) || isLegallySignedInAnonymously(database);
-      allow create, update: if isAccessAuthorized(database) && isProjectValid();
+      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
+      allow create, update: if isSignedInWithVerifiedEmail(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isAccessAuthorized(database) || isLegallySignedInAnonymously(database);
-      allow create, update: if isAccessAuthorized(database) && isBuildValid(database);
+      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
+      allow create, update: if isSignedInWithVerifiedEmail(database) && isBuildValid(database);
       allow delete: if false;
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isAccessAuthorized(database) || isLegallySignedInAnonymously(database);
+      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
       allow write: if false; 
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if (isAccessAuthorized(database) || isLegallySignedInAnonymously(database)) && isDocumentOwner(userProfileId);
-      allow write: if (isAccessAuthorized(database) || isLegallySignedInAnonymously(database)) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
+      allow get: if (isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database)) &&
+                    isDocumentOwner(userProfileId);
+      allow write: if (isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database)) &&
+                      isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
     }
@@ -47,8 +49,8 @@ service cloud.firestore {
   }
 
   /// Checks if a user access is authorized.
-  function isAccessAuthorized(database) {
-    return request.auth.uid != null && isEmailValid(database)
+  function isSignedInWithVerifiedEmail(database) {
+    return request.auth.uid != null && isEmailValid(database);
   }
 
   /// Checks if the request is from a user with a valid email.
@@ -213,7 +215,7 @@ service cloud.firestore {
       "workflowName",
       "url",
       "apiUrl",
-      "coverage",
+      "coverage"
     ]);
   }
 
@@ -295,7 +297,7 @@ service cloud.firestore {
     let requestData = request.resource.data;
 
     return requestData.keys().hasOnly([
-      "selectedTheme",
+      "selectedTheme"
     ]);
   }
 }
