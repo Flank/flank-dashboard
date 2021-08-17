@@ -16,6 +16,7 @@ class DoctorStrings {
   static const String versionMismatch = 'Versions mismatch does not guarantee '
       'the successful deployment! We advise to use the recommended version'
       ' of the tool.';
+
   static String installMessage(String name, String installUrl) {
     return 'Install $name ($installUrl)';
   }
