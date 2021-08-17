@@ -16,6 +16,7 @@ import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
@@ -60,7 +61,8 @@ void main() {
       password: Password(invalidPassword),
     );
 
-    final user = User(id: id, email: email);
+    final user = User(id: id, email: email, isAnonymous: false);
+    final anonymousUser = User(id: id, email: email, isAnonymous: true);
     final userProfile = UserProfile(id: id, selectedTheme: selectedTheme);
     const userProfileModel = UserProfileModel(
       id: 'second id',
@@ -382,6 +384,109 @@ void main() {
           }
 
           return false;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedIn once receiving a signed in user profile",
+      () {
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedIn;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedInAnonymously once receiving an anonymous user profile",
+      () {
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(anonymousUser),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedInAnonymously;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedOut once receiving the logged out user profile",
+      () {
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedOut;
         });
 
         authNotifier.addListener(listener);
