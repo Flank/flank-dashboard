@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 const cloneDeep = require("clone-deep");
@@ -80,12 +80,23 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A test data for the feature config collection */
 const featureConfig = {
   "feature_config/feature_config": {
-    "isDebugMenuEnabled": true,
-    "isPasswordSignInOptionEnabled": true,
     "isPublicDashboardEnabled": true
+  },
+};
+
+/** A test data for the feature config collection with enabled public dashboard*/
+const featureConfigEnabled = {
+  "feature_config/feature_config": {
+    "isPublicDashboardEnabled": true
+  },
+};
+
+/** A test data for the feature config collection with disabled public dashboard*/
+const featureConfigDisabled = {
+  "feature_config/feature_config": {
+    "isPublicDashboardEnabled": false
   },
 };
 
@@ -145,6 +156,8 @@ exports.buildDays = buildDays;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 exports.featureConfig = featureConfig;
+exports.featureConfigDisabled = featureConfigDisabled;
+exports.featureConfiEnabled = featureConfigEnabled;
 exports.tasks = tasks;
 
 /** An anonymous sign in provider identifier */
