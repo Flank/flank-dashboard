@@ -131,6 +131,7 @@ class NavigationNotifier extends ChangeNotifier {
     @required bool isLoggedIn,
   }) {
     ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
+    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
 
     _isAppInitialized = isAppInitialized;
     _isUserLoggedIn = isLoggedIn;

@@ -343,6 +343,17 @@ void main() {
     );
 
     test(
+      ".handleAppInitialized() throws an argument error if the given is logged in is null",
+      () {
+        expect(
+          () => notifier.handleAppInitialized(
+              isAppInitialized: false, isLoggedIn: null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
       ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is loading page",
       () {
         notifier.handleAppInitialized(
