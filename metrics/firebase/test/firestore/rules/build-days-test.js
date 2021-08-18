@@ -2,12 +2,15 @@
 // that can be found in the LICENSE file.
 
 const async = require('async');
+
 const {
     setupTestDatabaseWith,
     getApplicationWith,
     tearDown,
 } = require("./test_utils/test-app-utils");
+
 const {assertFails, assertSucceeds} = require("@firebase/rules-unit-testing");
+
 const {
     passwordSignInProviderId,
     googleSignInProviderId,
@@ -144,12 +147,11 @@ describe("", async () => {
         },
     ];
 
-    await before(async () => {
-        await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigEnabled));
-    });
-
     describe("Build days collection rules, public dashboard is enabled", () => {
-        //alert(featureConfigDisabled["feature_config/feature_config"].isPublicDashboardEnabled);
+        before(async () => {
+            await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigEnabled));
+        });
+
         async.forEach(usersEnabled, (user, callback) => {
             describe(user.describe, () => {
                 let canCreateDescription = user.can.create ?
@@ -335,12 +337,11 @@ describe("", async () => {
         },
     ];
 
-    await before(async () => {
-        await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigDisabled));
-    });
-
     describe("Build days collection rules, public dashboard is disabled", () => {
-        // alert(featureConfigDisabled["feature_config/feature_config"].isPublicDashboardEnabled);
+        before(async () => {
+            await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigDisabled));
+        });
+
         async.forEach(usersDisabled, (user, callback) => {
             describe(user.describe, () => {
                 let canCreateDescription = user.can.create ?
@@ -401,4 +402,5 @@ describe("", async () => {
     after(async () => {
         await tearDown();
     });
+
 });

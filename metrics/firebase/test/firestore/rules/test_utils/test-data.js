@@ -157,7 +157,7 @@ exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 exports.featureConfig = featureConfig;
 exports.featureConfigDisabled = featureConfigDisabled;
-exports.featureConfiEnabled = featureConfigEnabled;
+exports.featureConfigEnabled = featureConfigEnabled;
 exports.tasks = tasks;
 
 /** An anonymous sign in provider identifier */
