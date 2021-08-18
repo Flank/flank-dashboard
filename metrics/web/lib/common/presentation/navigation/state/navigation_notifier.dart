@@ -128,10 +128,12 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
   void handleAppInitialized({
     @required bool isAppInitialized,
+    @required bool isLoggedIn,
   }) {
     ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
 
     _isAppInitialized = isAppInitialized;
+    _isUserLoggedIn = isLoggedIn;
 
     if (_isAppInitialized) _redirect();
   }
