@@ -11,6 +11,64 @@ const {
 
 const {assertFails, assertSucceeds} = require("@firebase/rules-unit-testing");
 
+function test(users) {
+    async.forEach(users, (user, callback) => {
+        describe(user.describe, () => {
+            let canCreateDescription = user.can.create ?
+                "allows creating a build day" : "does not allow creating a build day";
+            let canReadDescription = user.can.read ?
+                "allows reading build days" : "does not allow reading build days";
+            let canUpdateDescription = user.can.update ?
+                "allows updating a build day" : "does not allow updating a build day";
+            let canDeleteDescription = user.can.delete ?
+                "allows deleting a build day" : "does not allow deleting a build day";
+
+            it(canCreateDescription, async () => {
+                const createPromise = user.app.collection(collection).add(getBuildDay());
+
+                if (user.can.create) {
+                    await assertSucceeds(createPromise)
+                } else {
+                    await assertFails(createPromise)
+                }
+            });
+
+            it(canReadDescription, async () => {
+                const readPromise = user.app.collection(collection).get();
+
+                if (user.can.read) {
+                    await assertSucceeds(readPromise)
+                } else {
+                    await assertFails(readPromise)
+                }
+            });
+
+            it(canUpdateDescription, async () => {
+                const updatePromise =
+                    user.app.collection(collection).doc("1").update({projectId: "3"});
+
+                if (user.can.update) {
+                    await assertSucceeds(updatePromise)
+                } else {
+                    await assertFails(updatePromise)
+                }
+            });
+
+            it(canDeleteDescription, async () => {
+                const deletePromise =
+                    user.app.collection(collection).doc("1").delete();
+
+                if (user.can.delete) {
+                    await assertSucceeds(deletePromise)
+                } else {
+                    await assertFails(deletePromise)
+                }
+            });
+        });
+        callback();
+    });
+}
+
 const {
     passwordSignInProviderId,
     googleSignInProviderId,
@@ -24,11 +82,12 @@ const {
     featureConfigDisabled
 } = require("./test_utils/test-data");
 
+const collection = "build_days";
+
 describe("", async () => {
-    const collection = "build_days";
     const anonymousSignIn = await getApplicationWith(getAnonymousUser());
 
-    const usersEnabled = [
+    const users = [
         {
             'describe': 'Authenticated as an anonymous user, public dashboard is enabled',
             'app': anonymousSignIn,
@@ -152,61 +211,7 @@ describe("", async () => {
             await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigEnabled));
         });
 
-        async.forEach(usersEnabled, (user, callback) => {
-            describe(user.describe, () => {
-                let canCreateDescription = user.can.create ?
-                    "allows creating a build day" : "does not allow creating a build day";
-                let canReadDescription = user.can.read ?
-                    "allows reading build days" : "does not allow reading build days";
-                let canUpdateDescription = user.can.update ?
-                    "allows updating a build day" : "does not allow updating a build day";
-                let canDeleteDescription = user.can.delete ?
-                    "allows deleting a build day" : "does not allow deleting a build day";
-
-                it(canCreateDescription, async () => {
-                    const createPromise = user.app.collection(collection).add(getBuildDay());
-
-                    if (user.can.create) {
-                        await assertSucceeds(createPromise)
-                    } else {
-                        await assertFails(createPromise)
-                    }
-                });
-
-                it(canReadDescription, async () => {
-                    const readPromise = user.app.collection(collection).get();
-
-                    if (user.can.read) {
-                        await assertSucceeds(readPromise)
-                    } else {
-                        await assertFails(readPromise)
-                    }
-                });
-
-                it(canUpdateDescription, async () => {
-                    const updatePromise =
-                        user.app.collection(collection).doc("1").update({projectId: "3"});
-
-                    if (user.can.update) {
-                        await assertSucceeds(updatePromise)
-                    } else {
-                        await assertFails(updatePromise)
-                    }
-                });
-
-                it(canDeleteDescription, async () => {
-                    const deletePromise =
-                        user.app.collection(collection).doc("1").delete();
-
-                    if (user.can.delete) {
-                        await assertSucceeds(deletePromise)
-                    } else {
-                        await assertFails(deletePromise)
-                    }
-                });
-            });
-            callback();
-        });
+        test(users);
     });
 
     after(async () => {
@@ -215,10 +220,9 @@ describe("", async () => {
 });
 
 describe("", async () => {
-    const collection = "build_days";
     const anonymousSignIn = await getApplicationWith(getAnonymousUser());
 
-    const usersDisabled = [
+    const users = [
         {
             'describe': 'Authenticated as an anonymous user, public dashboard is disabled',
             'app': anonymousSignIn,
@@ -342,61 +346,7 @@ describe("", async () => {
             await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, featureConfigDisabled));
         });
 
-        async.forEach(usersDisabled, (user, callback) => {
-            describe(user.describe, () => {
-                let canCreateDescription = user.can.create ?
-                    "allows creating a build day" : "does not allow creating a build day";
-                let canReadDescription = user.can.read ?
-                    "allows reading build days" : "does not allow reading build days";
-                let canUpdateDescription = user.can.update ?
-                    "allows updating a build day" : "does not allow updating a build day";
-                let canDeleteDescription = user.can.delete ?
-                    "allows deleting a build day" : "does not allow deleting a build day";
-
-                it(canCreateDescription, async () => {
-                    const createPromise = user.app.collection(collection).add(getBuildDay());
-
-                    if (user.can.create) {
-                        await assertSucceeds(createPromise)
-                    } else {
-                        await assertFails(createPromise)
-                    }
-                });
-
-                it(canReadDescription, async () => {
-                    const readPromise = user.app.collection(collection).get();
-
-                    if (user.can.read) {
-                        await assertSucceeds(readPromise)
-                    } else {
-                        await assertFails(readPromise)
-                    }
-                });
-
-                it(canUpdateDescription, async () => {
-                    const updatePromise =
-                        user.app.collection(collection).doc("1").update({projectId: "3"});
-
-                    if (user.can.update) {
-                        await assertSucceeds(updatePromise)
-                    } else {
-                        await assertFails(updatePromise)
-                    }
-                });
-
-                it(canDeleteDescription, async () => {
-                    const deletePromise =
-                        user.app.collection(collection).doc("1").delete();
-
-                    if (user.can.delete) {
-                        await assertSucceeds(deletePromise)
-                    } else {
-                        await assertFails(deletePromise)
-                    }
-                });
-            });
-            callback();
-        });
+        test(users);
     });
 
     after(async () => {
