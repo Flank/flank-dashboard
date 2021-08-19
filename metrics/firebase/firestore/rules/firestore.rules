@@ -2,41 +2,41 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /feature_config/{config} {
-      allow read: if true;
-      allow write: if false;
-    }
-
     match /project_groups/{projectGroupId} {
-      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
-      allow delete: if isSignedInWithVerifiedEmail(database);
-      allow create, update: if isSignedInWithVerifiedEmail(database) && isProjectGroupValid();
+      allow read: if isSignedIn(database) || isPublicDashbordAnonymousAccess(database);
+      allow delete: if isSignedIn(database);
+      allow create, update: if isSignedIn(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
-      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
-      allow create, update: if isSignedInWithVerifiedEmail(database) && isProjectValid();
+      allow read: if isSignedIn(database) || isPublicDashbordAnonymousAccess(database);
+      allow create, update: if isSignedIn(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
-      allow create, update: if isSignedInWithVerifiedEmail(database) && isBuildValid(database);
+      allow read: if isSignedIn(database) || isPublicDashbordAnonymousAccess(database);
+      allow create, update: if isSignedIn(database) && isBuildValid(database);
       allow delete: if false;
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database);
+      allow read: if isSignedIn(database) || isPublicDashbordAnonymousAccess(database);
       allow write: if false; 
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if (isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database)) &&
+      allow get: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
                     isDocumentOwner(userProfileId);
-      allow write: if (isSignedInWithVerifiedEmail(database) || isLegallySignedInAnonymously(database)) &&
+      allow write: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
                       isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
+    }
+
+    match /feature_config/{config} {
+      allow read: if true;
+      allow write: if false;
     }
 
     match /allowed_email_domains/{domain} {
@@ -49,7 +49,7 @@ service cloud.firestore {
   }
 
   /// Checks if a user access is authorized.
-  function isSignedInWithVerifiedEmail(database) {
+  function isSignedIn(database) {
     return request.auth.uid != null && isEmailValid(database);
   }
 
@@ -84,7 +84,7 @@ service cloud.firestore {
   }
 
   /// Checks if the sign in provider from request is anonymous and public dashboard feature is enabled
-  function isLegallySignedInAnonymously(database) {
+  function isPublicDashbordAnonymousAccess(database) {
     return isSignInProviderAnonymous(database) && isPublicDashboardEnabled(database);
   }
 
