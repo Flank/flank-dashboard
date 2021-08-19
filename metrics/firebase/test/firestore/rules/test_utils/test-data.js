@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 const cloneDeep = require("clone-deep");
@@ -80,9 +80,18 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A test data for the feature config collection */
-const featureConfig = {
-  "feature_config/feature_config": {},
+/** A test data for the feature config collection with enabled public dashboard*/
+const featureConfigEnabled = {
+  "feature_config/feature_config": {
+    "isPublicDashboardEnabled": true
+  },
+};
+
+/** A test data for the feature config collection with disabled public dashboard*/
+const featureConfigDisabled = {
+  "feature_config/feature_config": {
+    "isPublicDashboardEnabled": false
+  },
 };
 
 const allowedEmail = "test@gmail.com";
@@ -140,8 +149,12 @@ exports.builds = builds;
 exports.buildDays = buildDays;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
-exports.featureConfig = featureConfig;
+exports.featureConfigDisabled = featureConfigDisabled;
+exports.featureConfigEnabled = featureConfigEnabled;
 exports.tasks = tasks;
+
+/** An anonymous sign in provider identifier */
+exports.anonymousSignInProviderId = "anonymous";
 
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
@@ -154,9 +167,14 @@ exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "
   return getUser(allowedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid*/
+/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid */
 exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(deniedEmail, signInProviderId, emailVerified, uid);
+};
+
+/** Provides a firebase anonymous user with the given uid */
+exports.getAnonymousUser = function (uid = "uid") {
+  return getUser(null, "anonymous", null, uid);
 };
 
 /** Get a test project group */
