@@ -80,12 +80,6 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-const featureConfig = {
-  "feature_config/feature_config": {
-    "isPublicDashboardEnabled": true
-  },
-};
-
 /** A test data for the feature config collection with enabled public dashboard*/
 const featureConfigEnabled = {
   "feature_config/feature_config": {
@@ -155,7 +149,6 @@ exports.builds = builds;
 exports.buildDays = buildDays;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
-exports.featureConfig = featureConfig;
 exports.featureConfigDisabled = featureConfigDisabled;
 exports.featureConfigEnabled = featureConfigEnabled;
 exports.tasks = tasks;

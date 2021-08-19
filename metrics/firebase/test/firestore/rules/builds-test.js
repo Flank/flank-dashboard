@@ -546,7 +546,7 @@ describe("", async () => {
     ];
 
 
-    describe("Build collection rules", () => {
+    describe("Build collection rules, public dashboard is enabled", () => {
         before(async () => {
             await setupTestDatabaseWith(
                 Object.assign({}, builds, allowedEmailDomains, projects, featureConfigEnabled));
@@ -686,7 +686,7 @@ describe("", async () => {
         },
     ];
 
-    describe("Build collection rules", () => {
+    describe("Build collection rules, public dashboard is disabled", () => {
         before(async () => {
             await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, featureConfigDisabled));
         });

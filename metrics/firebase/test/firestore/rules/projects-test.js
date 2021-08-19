@@ -219,7 +219,7 @@ describe("", async function () {
         },
     ];
 
-    describe("Projects collection rules", () => {
+    describe("Projects collection rules, public dashboard is enabled", () => {
         before(async () => {
             await setupTestDatabaseWith(
                 Object.assign({}, projects, allowedEmailDomains, featureConfigEnabled)

@@ -117,7 +117,6 @@ jobs:
 
       - name: Deploy HTML version to Firebase
         run: |
-          firebase use test
           firebase target:apply hosting metrics metrics-d9c67
           firebase deploy --only hosting:metrics
         working-directory: metrics/web/
@@ -144,7 +143,6 @@ jobs:
 
       - name: Deploy auto renderer version to Firebase
         run: |
-          firebase use test
           firebase target:clear hosting metrics
           firebase target:apply hosting metrics metrics-skia
           firebase deploy --only hosting:metrics
@@ -162,7 +160,6 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ env.PRODUCTION_FIREBASE_TOKEN }}
         run: |
-          firebase use default
           firebase use --add $PRODUCTION_PROJECT_ID
           firebase target:clear hosting metrics
           firebase target:apply hosting metrics $PRODUCTION_HOSTING_NAME

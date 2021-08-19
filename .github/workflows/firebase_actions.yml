@@ -47,7 +47,7 @@ jobs:
         working-directory: metrics/firebase/functions/
 
       - name: Run Firestore security rules tests
-        run: firebase emulators:exec --only firestore "npm run test"
+        run: firebase use default && firebase emulators:exec --only firestore "npm run test"
         working-directory: metrics/firebase/
 
       - name: Deploy Cloud Functions and Firestore security rules
