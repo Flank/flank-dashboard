@@ -3,22 +3,35 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/navigation/widgets/page_parameters_proxy.dart';
 import 'package:metrics/common/presentation/state/page_notifier.dart';
 import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
+import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../test_utils/matchers.dart';
 import '../../../../test_utils/navigation_notifier_mock.dart';
 import '../../../../test_utils/page_notifier_mock.dart';
+import '../../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../../test_utils/test_injection_container.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("PageParametersProxy", () {
-    final pageNotifier = PageNotifierMock();
+    PageNotifier pageNotifier;
+    ProjectMetricsNotifier projectMetricsNotifier;
+    RouteConfiguration dashBoardConfiguration;
+    NavigationNotifier navigationNotifier;
+
+    setUp((){
+      pageNotifier = PageNotifierMock();
+      projectMetricsNotifier = ProjectMetricsNotifierMock();
+      dashBoardConfiguration = RouteConfiguration.dashboard();
+      navigationNotifier = NavigationNotifierMock();
+    });
 
     tearDown(() {
       reset(pageNotifier);
@@ -51,9 +64,13 @@ void main() {
       (tester) async {
         const textWidget = Text('test');
 
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
             pageNotifier: pageNotifier,
+            navigationNotifier: navigationNotifier,
             child: textWidget,
           ),
         );
@@ -70,26 +87,31 @@ void main() {
     testWidgets(
       "delegates to the page notifier when this widget is created",
       (tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
-            pageNotifier: pageNotifier,
-            navigationNotifier: NavigationNotifierMock(),
+            pageNotifier: projectMetricsNotifier,
+            navigationNotifier: navigationNotifier,
           ),
         );
 
-        verify(pageNotifier.handlePageParameters(any)).called(once);
+        verify(projectMetricsNotifier.handlePageParameters(any)).called(once);
       },
     );
 
     testWidgets(
       "delegates to the page notifier if the navigation notifier notifies about changes",
       (tester) async {
-        final navigationNotifier = NavigationNotifierMock();
         const pageParameters = DashboardPageParametersModel();
+
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
-            pageNotifier: pageNotifier,
+            pageNotifier: projectMetricsNotifier,
             navigationNotifier: navigationNotifier,
           ),
         );
@@ -98,27 +120,62 @@ void main() {
             .thenReturn(pageParameters);
 
         navigationNotifier.notifyListeners();
-
-        verify(pageNotifier.handlePageParameters(pageParameters)).called(once);
+        verify(projectMetricsNotifier.handlePageParameters(pageParameters))
+            .called(once);
       },
     );
 
     testWidgets(
       "delegates to the navigation notifier if the page notifier notifies about changes",
       (tester) async {
-        final navigationNotifier = NavigationNotifierMock();
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
-            pageNotifier: pageNotifier,
+            pageNotifier: projectMetricsNotifier,
             navigationNotifier: navigationNotifier,
           ),
         );
 
-        pageNotifier.notifyListeners();
+        projectMetricsNotifier.notifyListeners();
 
         verify(navigationNotifier.handlePageParametersUpdates(any))
             .called(once);
+      },
+    );
+
+    testWidgets(
+      "calls handle page parameters update if can handle returns true ",
+      (tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
+        await tester.pumpWidget(
+          _PageParametersProxyTestbed(
+            pageNotifier: projectMetricsNotifier,
+            navigationNotifier: navigationNotifier,
+          ),
+        );
+
+        verify(projectMetricsNotifier.handlePageParameters(any)).called(once);
+      },
+    );
+
+    testWidgets(
+      "Does not call handle page parameters update if can handle returns false ",
+          (tester) async {
+            when(navigationNotifier.currentConfiguration)
+                .thenReturn(dashBoardConfiguration);
+
+            await tester.pumpWidget(
+              _PageParametersProxyTestbed(
+                pageNotifier: pageNotifier,
+                navigationNotifier: navigationNotifier,
+              ),
+            );
+
+            verifyNever(pageNotifier.handlePageParameters(any));
       },
     );
   });

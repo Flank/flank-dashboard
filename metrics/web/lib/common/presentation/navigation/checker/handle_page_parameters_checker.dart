@@ -7,9 +7,9 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 import 'package:metrics/common/presentation/state/page_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 
-/// A class that shows if page parameters can be handled by dashboard
-class DashboardPageParameters {
-  /// Checks whether the page parameters can be handled
+/// A class that shows if page parameters can be handled by dashboard.
+class HandlePageParametersChecker {
+  /// Checks whether the page parameters can be handled.
   bool canHandle({
     @required RouteConfiguration configuration,
     @required PageNotifier pageNotifier,
@@ -17,11 +17,6 @@ class DashboardPageParameters {
     ArgumentError.checkNotNull(configuration, 'configuration');
     ArgumentError.checkNotNull(pageNotifier, 'pageNotifier');
 
-    return _canHandlePageParameters(configuration, pageNotifier);
-  }
-
-  bool _canHandlePageParameters(
-      RouteConfiguration configuration, PageNotifier pageNotifier) {
     final routeName = configuration.name;
 
     if (routeName == RouteName.dashboard &&

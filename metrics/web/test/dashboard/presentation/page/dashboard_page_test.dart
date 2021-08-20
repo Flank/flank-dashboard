@@ -9,6 +9,8 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/navigation/widgets/page_parameters_proxy.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
@@ -19,15 +21,20 @@ import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_in
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DashboardPage", () {
     ProjectMetricsNotifier projectMetricsNotifier;
+    NavigationNotifier navigationNotifier;
+    RouteConfiguration dashBoardConfiguration;
 
     setUp(() {
       projectMetricsNotifier = ProjectMetricsNotifierMock();
+      navigationNotifier = NavigationNotifierMock();
+      dashBoardConfiguration = RouteConfiguration.dashboard();
     });
 
     tearDown(() {
@@ -37,8 +44,15 @@ void main() {
     testWidgets(
       "contains the PageParametersProxy widget",
       (WidgetTester tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
+          return tester.pumpWidget(
+            _DashboardTestbed(
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
 
         expect(find.byType(PageParametersProxy), findsOneWidget);
@@ -48,8 +62,15 @@ void main() {
     testWidgets(
       "contains the MetricsAppBar widget",
       (WidgetTester tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
+          return tester.pumpWidget(
+            _DashboardTestbed(
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
 
         expect(find.byType(MetricsAppBar), findsOneWidget);
@@ -59,8 +80,15 @@ void main() {
     testWidgets(
       "contains the MetricsTable widget",
       (WidgetTester tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
+          return tester.pumpWidget(
+            _DashboardTestbed(
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
 
         expect(find.byType(MetricsTable), findsOneWidget);
@@ -70,8 +98,15 @@ void main() {
     testWidgets(
       "contains the project groups dropdown menu",
       (WidgetTester tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
+          return tester.pumpWidget(
+            _DashboardTestbed(
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
 
         expect(find.byType(ProjectGroupsDropdownMenu), findsOneWidget);
@@ -81,8 +116,15 @@ void main() {
     testWidgets(
       "contains the project metrics search input",
       (tester) async {
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
+          return tester.pumpWidget(
+            _DashboardTestbed(
+              navigationNotifier: navigationNotifier,
+            ),
+          );
         });
 
         expect(find.byType(ProjectMetricsSearchInput), findsOneWidget);
@@ -96,8 +138,12 @@ void main() {
 
         when(projectMetricsNotifier.isMetricsLoading).thenReturn(false);
 
+        when(navigationNotifier.currentConfiguration)
+            .thenReturn(dashBoardConfiguration);
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DashboardTestbed(
+            navigationNotifier: navigationNotifier,
             metricsNotifier: projectMetricsNotifier,
           ));
         });
@@ -131,12 +177,16 @@ class _DashboardTestbed extends StatelessWidget {
   /// The [AuthNotifier] to inject and use to test the [DashboardPage].
   final AuthNotifier authNotifier;
 
+  /// The [NavigationNotifier] to inject and use to test the [DashboardPage].
+  final NavigationNotifier navigationNotifier;
+
   /// Creates the [_DashboardTestbed] with the given [themeNotifier].
   const _DashboardTestbed({
     Key key,
     this.themeNotifier,
     this.metricsNotifier,
     this.authNotifier,
+    this.navigationNotifier,
   }) : super(key: key);
 
   @override
@@ -145,6 +195,7 @@ class _DashboardTestbed extends StatelessWidget {
       themeNotifier: themeNotifier,
       metricsNotifier: metricsNotifier,
       authNotifier: authNotifier,
+      navigationNotifier: navigationNotifier,
       child: Builder(builder: (context) {
         return MaterialApp(
           home: MetricsThemeBuilder(

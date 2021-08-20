@@ -2,24 +2,24 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/navigation/checker/dashboard_page_parameters.dart';
+import 'package:metrics/common/presentation/navigation/checker/handle_page_parameters_checker.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 
 import '../../../../test_utils/project_metrics_notifier_mock.dart';
 
 void main() {
-  group("DashboardPageParameters", () {
+  group("HandlePageParametersChecker", () {
     final routeConfigurationDashboard = RouteConfiguration.dashboard();
     final routeConfigurationLogin = RouteConfiguration.login();
     final projectMetricsNotifierMock = ProjectMetricsNotifierMock();
-    final DashboardPageParameters dashboardPageParameters =
-        DashboardPageParameters();
+    final HandlePageParametersChecker handlePageParametersChecker =
+        HandlePageParametersChecker();
 
     test(
       "throws an ArgumentError if the given configuration is null",
       () {
         expect(
-          () => dashboardPageParameters.canHandle(
+          () => handlePageParametersChecker.canHandle(
             configuration: null,
             pageNotifier: projectMetricsNotifierMock,
           ),
@@ -32,7 +32,7 @@ void main() {
       "throws an ArgumentError if the given page notifier is null",
       () {
         expect(
-          () => dashboardPageParameters.canHandle(
+          () => handlePageParametersChecker.canHandle(
             configuration: routeConfigurationDashboard,
             pageNotifier: null,
           ),
@@ -40,10 +40,11 @@ void main() {
         );
       },
     );
+
     test(
       ".canHandle() returns true if the page is a dashboard and PageNotifier is ProjectMetricsNotifier",
       () {
-        final actualValue = dashboardPageParameters.canHandle(
+        final actualValue = handlePageParametersChecker.canHandle(
           configuration: routeConfigurationDashboard,
           pageNotifier: projectMetricsNotifierMock,
         );
@@ -51,10 +52,11 @@ void main() {
         expect(actualValue, isTrue);
       },
     );
+
     test(
       ".canHandle() returns false if the page is not a dashboard or PageNotifier is not ProjectMetricsNotifier",
       () {
-        final actualValue = dashboardPageParameters.canHandle(
+        final actualValue = handlePageParametersChecker.canHandle(
           configuration: routeConfigurationLogin,
           pageNotifier: projectMetricsNotifierMock,
         );
