@@ -245,13 +245,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
       BrowserNavigationState(window.history),
     );
 
-    _featureConfigNotifier =
-        FeatureConfigNotifier(_fetchFeatureConfigUseCase);
+    _featureConfigNotifier = FeatureConfigNotifier(_fetchFeatureConfigUseCase);
 
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
-    _featureConfigNotifier
-        .addListener(_featureConfigNotifierListener);
+    _featureConfigNotifier.addListener(_featureConfigNotifierListener);
   }
 
   @override
@@ -259,9 +257,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _navigationNotifier),
-        ChangeNotifierProvider(
-          create: (_) => FeatureConfigNotifier(_fetchFeatureConfigUseCase),
-        ),
+        ChangeNotifierProvider.value(value: _featureConfigNotifier),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
         ChangeNotifierProvider<DebugMenuNotifier>(
@@ -410,8 +406,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
-    _featureConfigNotifier
-        .removeListener(_featureConfigNotifierListener);
+    _featureConfigNotifier.removeListener(_featureConfigNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();
