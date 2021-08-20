@@ -210,6 +210,7 @@ function test(users, passwordProviderAllowedEmailApp) {
   });
 }
 
+// Tests project groups security rules with enabled public dashboard feature
 describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
       getAllowedEmailUser(passwordSignInProviderId, true)
@@ -217,7 +218,7 @@ describe("", async function () {
   const unauthenticatedApp = await getApplicationWith(null);
   const anonymousSignIn = await getApplicationWith(getAnonymousUser());
 
-  const users = [
+  const usersPublicDashboardEnabled = [
     {
       'describe': 'Authenticated as an anonymous user',
       'app': anonymousSignIn,
@@ -343,7 +344,7 @@ describe("", async function () {
       );
     });
 
-    test(users, passwordProviderAllowedEmailApp);
+    test(usersPublicDashboardEnabled, passwordProviderAllowedEmailApp);
   });
 
   after(async () => {
@@ -351,6 +352,7 @@ describe("", async function () {
   });
 });
 
+// Tests project groups security rules with enabled public dashboard feature
 describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
       getAllowedEmailUser(passwordSignInProviderId, true)
@@ -358,7 +360,7 @@ describe("", async function () {
   const unauthenticatedApp = await getApplicationWith(null);
   const anonymousSignIn = await getApplicationWith(getAnonymousUser());
 
-  const users = [
+  const usersPublicDashboardDisabled = [
     {
       'describe': 'Authenticated as an anonymous user',
       'app': anonymousSignIn,
@@ -484,7 +486,7 @@ describe("", async function () {
       );
     });
 
-    test(users, passwordProviderAllowedEmailApp);
+    test(usersPublicDashboardDisabled, passwordProviderAllowedEmailApp);
   });
 
   after(async () => {
