@@ -75,7 +75,6 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
 
     if (_handlePageParametersChecker.canHandle(
       configuration: _navigationNotifier.currentConfiguration,
-      pageNotifier: _pageNotifier,
     )) {
       _pageNotifier.handlePageParameters(pageParameters);
     }

@@ -29,12 +29,12 @@ void main() {
   group("DashboardPage", () {
     ProjectMetricsNotifier projectMetricsNotifier;
     NavigationNotifier navigationNotifier;
-    RouteConfiguration dashBoardConfiguration;
+    RouteConfiguration dashboardConfiguration;
 
     setUp(() {
       projectMetricsNotifier = ProjectMetricsNotifierMock();
       navigationNotifier = NavigationNotifierMock();
-      dashBoardConfiguration = RouteConfiguration.dashboard();
+      dashboardConfiguration = RouteConfiguration.dashboard();
     });
 
     tearDown(() {
@@ -45,7 +45,7 @@ void main() {
       "contains the PageParametersProxy widget",
       (WidgetTester tester) async {
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -63,7 +63,7 @@ void main() {
       "contains the MetricsAppBar widget",
       (WidgetTester tester) async {
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -81,7 +81,7 @@ void main() {
       "contains the MetricsTable widget",
       (WidgetTester tester) async {
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -99,7 +99,7 @@ void main() {
       "contains the project groups dropdown menu",
       (WidgetTester tester) async {
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -117,7 +117,7 @@ void main() {
       "contains the project metrics search input",
       (tester) async {
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -139,7 +139,7 @@ void main() {
         when(projectMetricsNotifier.isMetricsLoading).thenReturn(false);
 
         when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashBoardConfiguration);
+            .thenReturn(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DashboardTestbed(

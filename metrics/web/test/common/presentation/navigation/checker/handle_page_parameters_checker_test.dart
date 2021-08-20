@@ -5,13 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/navigation/checker/handle_page_parameters_checker.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 
-import '../../../../test_utils/project_metrics_notifier_mock.dart';
-
 void main() {
   group("HandlePageParametersChecker", () {
     final routeConfigurationDashboard = RouteConfiguration.dashboard();
     final routeConfigurationLogin = RouteConfiguration.login();
-    final projectMetricsNotifierMock = ProjectMetricsNotifierMock();
     final HandlePageParametersChecker handlePageParametersChecker =
         HandlePageParametersChecker();
 
@@ -21,20 +18,6 @@ void main() {
         expect(
           () => handlePageParametersChecker.canHandle(
             configuration: null,
-            pageNotifier: projectMetricsNotifierMock,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the given page notifier is null",
-      () {
-        expect(
-          () => handlePageParametersChecker.canHandle(
-            configuration: routeConfigurationDashboard,
-            pageNotifier: null,
           ),
           throwsArgumentError,
         );
@@ -46,7 +29,6 @@ void main() {
       () {
         final actualValue = handlePageParametersChecker.canHandle(
           configuration: routeConfigurationDashboard,
-          pageNotifier: projectMetricsNotifierMock,
         );
 
         expect(actualValue, isTrue);
@@ -58,7 +40,6 @@ void main() {
       () {
         final actualValue = handlePageParametersChecker.canHandle(
           configuration: routeConfigurationLogin,
-          pageNotifier: projectMetricsNotifierMock,
         );
 
         expect(actualValue, isFalse);
