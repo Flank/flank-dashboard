@@ -29,7 +29,7 @@ void main() {
       () async {
         final signInAnonymouslyUseCase = SignInAnonymouslyUseCase(repository);
 
-        await signInAnonymouslyUseCase(Null);
+        await signInAnonymouslyUseCase();
 
         verify(repository.signInAnonymously()).called(once);
       },
@@ -44,7 +44,7 @@ void main() {
             .thenThrow(const AuthenticationException());
 
         expect(
-          () => signInAnonymouslyUseCase(Null),
+          () => signInAnonymouslyUseCase(),
           throwsAuthenticationException,
         );
       },
