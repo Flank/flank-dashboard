@@ -24,6 +24,7 @@ import 'package:metrics/common/domain/entities/persistent_store_error_code.dart'
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -80,6 +81,9 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Contains a user's authorization state.
   AuthState _authState;
+
+  /// Indicates whether the public dashboard feature is enabled.
+  bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from authentication state updates.
@@ -228,11 +232,25 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
+  /// Handles the anonymous log in of the user.
+  void handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) {
+    _isPublicDashboardFeatureEnabled = model.isEnabled;
+    if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
+      _signInAnonymously();
+    }
+  }
+
   /// Signs out the user from the app.
   Future<void> signOut() async {
     await _userProfileSubscription?.cancel();
     await _signOutUseCase();
   }
+
+  /// Signs in a user to the app using anonymous authentication.
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
+  Future<void> _signInAnonymously() async {}
 
   /// Subscribes to a user profile updates.
   ///

@@ -158,6 +158,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// The [ChangeNotifier] that manages navigation.
   NavigationNotifier _navigationNotifier;
 
+  /// The [FeatureConfigNotifier] that holds the public dashboard feature config.
+  FeatureConfigNotifier _featureConfigNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -242,8 +245,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
       BrowserNavigationState(window.history),
     );
 
+    _featureConfigNotifier = FeatureConfigNotifier(_fetchFeatureConfigUseCase);
+
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
+    _featureConfigNotifier.addListener(_featureConfigNotifierListener);
   }
 
   @override
@@ -251,9 +257,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _navigationNotifier),
-        ChangeNotifierProvider(
-          create: (_) => FeatureConfigNotifier(_fetchFeatureConfigUseCase),
-        ),
+        ChangeNotifierProvider.value(value: _featureConfigNotifier),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
         ChangeNotifierProvider<DebugMenuNotifier>(
@@ -375,6 +379,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _authNotifier.updateUserProfile(userProfileModel);
   }
 
+  /// Listens to [FeatureConfigNotifier]'s updates.
+  void _featureConfigNotifierListener() {
+    _authNotifier.handlePublicDashboardFeatureConfigUpdates(
+      _featureConfigNotifier.publicDashboardFeatureConfigModel,
+    );
+  }
+
   /// Updates projects subscription based on user logged in status.
   void _updateProjectsSubscription(
     AuthNotifier authNotifier,
@@ -395,9 +406,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
+    _featureConfigNotifier.removeListener(_featureConfigNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();
+    _featureConfigNotifier.dispose();
     super.dispose();
   }
 }
