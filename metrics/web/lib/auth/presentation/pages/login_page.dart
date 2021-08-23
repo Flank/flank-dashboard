@@ -83,9 +83,9 @@ class _LoginPageState extends State<LoginPage> {
     final loginTheme = MetricsTheme.of(context).loginTheme;
 
     return Scaffold(
-      body: PlatformBrightnessObserver(
-        child: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: PlatformBrightnessObserver(
+          child: Center(
             child: SizedBox(
               width: 480,
               child: Column(
