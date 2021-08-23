@@ -7,7 +7,7 @@ const {
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const {assertFails, assertSucceeds} = require("@firebase/rules-unit-testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   projectGroups,
   getAllowedEmailUser,
@@ -213,7 +213,7 @@ function test(users, passwordProviderAllowedEmailApp) {
 // Tests project groups security rules with enabled public dashboard feature
 describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
-      getAllowedEmailUser(passwordSignInProviderId, true)
+    getAllowedEmailUser(passwordSignInProviderId, true)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const anonymousSignIn = await getApplicationWith(getAnonymousUser());
