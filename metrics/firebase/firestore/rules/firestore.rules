@@ -98,7 +98,7 @@ service cloud.firestore {
     return checkSignInProvider('anonymous');
   }
 
-  /// Checks if the public dashboard feature is enabled
+  /// Checks if the public dashboard feature is enabled.
   function isPublicDashboardEnabled(database) {
     return get(/databases/$(database)/documents/feature_config/feature_config).data.isPublicDashboardEnabled;
   }
