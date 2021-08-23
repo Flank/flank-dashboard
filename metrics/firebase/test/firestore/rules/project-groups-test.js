@@ -244,7 +244,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getDeniedEmailUser(passwordSignInProviderId, true)
+        getDeniedEmailUser(passwordSignInProviderId, true)
       ),
       'can': {
         'create': true,
@@ -256,7 +256,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with a password and allowed email domain user with not verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(passwordSignInProviderId, false)
+        getAllowedEmailUser(passwordSignInProviderId, false)
       ),
       'can': {
         'create': true,
@@ -268,7 +268,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
       'app': await getApplicationWith(
-          getDeniedEmailUser(passwordSignInProviderId, false)
+        getDeniedEmailUser(passwordSignInProviderId, false)
       ),
       'can': {
         'create': true,
@@ -280,7 +280,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with google and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(googleSignInProviderId, true)
+        getAllowedEmailUser(googleSignInProviderId, true)
       ),
       'can': {
         'create': true,
@@ -292,7 +292,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with google and not allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getDeniedEmailUser(googleSignInProviderId, true)
+        getDeniedEmailUser(googleSignInProviderId, true)
       ),
       'can': {
         'create': false,
@@ -304,7 +304,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with google and allowed email domain user with not verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(googleSignInProviderId, false)
+        getAllowedEmailUser(googleSignInProviderId, false)
       ),
       'can': {
         'create': false,
@@ -316,7 +316,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with google and not allowed email domain user with not verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(googleSignInProviderId, false)
+        getAllowedEmailUser(googleSignInProviderId, false)
       ),
       'can': {
         'create': false,

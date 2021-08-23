@@ -9,25 +9,25 @@ service cloud.firestore {
     }
 
     match /projects/{projectId} {
-      allow read: if isSignedIn(database);
-      allow create, update: if isSignedIn(database) && isProjectValid();
+      allow read: if isAccessAuthorized(database);
+      allow create, update: if isAccessAuthorized(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isSignedIn(database);
-      allow create, update: if isSignedIn(database) && isBuildValid(database);
+      allow read: if isAccessAuthorized(database);
+      allow create, update: if isAccessAuthorized(database) && isBuildValid(database);
       allow delete: if false;
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isSignedIn(database);
+      allow read: if isAccessAuthorized(database);
       allow write: if false; 
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if isSignedIn(database) && isDocumentOwner(userProfileId);
-      allow write: if isSignedIn(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
+      allow get: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
+      allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
     }
@@ -44,6 +44,11 @@ service cloud.firestore {
     match /tasks/{taskId} {
       allow read, write: if false;
     }
+  }
+
+  /// Checks if a user access is authorized.
+  function isAccessAuthorized(database) {
+    return request.auth.uid != null && isEmailValid(database);
   }
 
   /// Checks if a user access is authorized.
@@ -83,7 +88,7 @@ service cloud.firestore {
     return authToken.firebase.sign_in_provider == 'password';
   }
 
-  /// Checks if the sign in provider from request is anonymous and public dashboard feature is enabled
+  /// Checks if a sign-in provider from a request is anonymous and the public dashboard feature is enabled.
   function isPublicDashbordAnonymousAccess(database) {
     return isSignInProviderAnonymous(database) && isPublicDashboardEnabled(database);
   }
