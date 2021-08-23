@@ -83,35 +83,37 @@ class _LoginPageState extends State<LoginPage> {
     final loginTheme = MetricsTheme.of(context).loginTheme;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: PlatformBrightnessObserver(
-          child: Center(
-            child: SizedBox(
-              width: 480,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 104.0),
-                    alignment: Alignment.center,
-                    child: const MetricsThemeImage(
-                      darkAsset: 'icons/logo-metrics.svg',
-                      lightAsset: 'icons/logo-metrics-light.svg',
-                      width: 180.0,
-                      height: 44.0,
-                      fit: BoxFit.contain,
+      body: Center(
+        child: SingleChildScrollView(
+          child: PlatformBrightnessObserver(
+            child: Center(
+              child: SizedBox(
+                width: 480,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 104.0),
+                      alignment: Alignment.center,
+                      child: const MetricsThemeImage(
+                        darkAsset: 'icons/logo-metrics.svg',
+                        lightAsset: 'icons/logo-metrics-light.svg',
+                        width: 180.0,
+                        height: 44.0,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 24.0),
-                    child: Text(
-                      CommonStrings.welcomeMetrics,
-                      style: loginTheme.titleTextStyle,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      child: Text(
+                        CommonStrings.welcomeMetrics,
+                        style: loginTheme.titleTextStyle,
+                      ),
                     ),
-                  ),
-                  AuthForm(),
-                ],
+                    AuthForm(),
+                  ],
+                ),
               ),
             ),
           ),
