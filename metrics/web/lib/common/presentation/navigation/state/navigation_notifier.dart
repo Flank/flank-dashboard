@@ -54,7 +54,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// initialization.
   RouteConfiguration _redirectRoute;
 
-  /// A [AuthState] used to interact with the current authentication state.
+  /// An [AuthState] that represents the current authentication state
+  /// of the user.
   AuthState _authState;
 
   /// A flag that indicates whether the user is logged in.
