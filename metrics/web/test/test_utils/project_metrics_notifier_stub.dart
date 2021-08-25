@@ -88,4 +88,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   void handlePageParameters(PageParametersModel parameters) {}
+
+  @override
+  void handlePageParametersOnQuit(PageParametersModel parameters){}
 }

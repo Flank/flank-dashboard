@@ -35,6 +35,11 @@ void main() {
       reset(pageNotifier);
     });
 
+     void whenNavigationNotifierConfiguration(RouteConfiguration configuration){
+      return when(navigationNotifier.currentConfiguration)
+          .thenReturn(configuration);
+    }
+
     testWidgets(
       "throws an AssertionError if the given child is null",
       (tester) async {
@@ -85,8 +90,7 @@ void main() {
     testWidgets(
       "delegates to the page notifier when this widget is created",
       (tester) async {
-        when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashboardConfiguration);
+        whenNavigationNotifierConfiguration(dashboardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
@@ -104,8 +108,7 @@ void main() {
       (tester) async {
         const pageParameters = DashboardPageParametersModel();
 
-        when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashboardConfiguration);
+       whenNavigationNotifierConfiguration(dashboardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
@@ -126,8 +129,7 @@ void main() {
     testWidgets(
       "delegates to the navigation notifier if the page notifier notifies about changes",
       (tester) async {
-        when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashboardConfiguration);
+        whenNavigationNotifierConfiguration(dashboardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
@@ -144,10 +146,9 @@ void main() {
     );
 
     testWidgets(
-      "calls handle page parameters update if can handle returns true ",
+      "calls handle page parameters update if can handle returns true",
       (tester) async {
-        when(navigationNotifier.currentConfiguration)
-            .thenReturn(dashboardConfiguration);
+        whenNavigationNotifierConfiguration(dashboardConfiguration);
 
         await tester.pumpWidget(
           _PageParametersProxyTestbed(
@@ -161,19 +162,50 @@ void main() {
     );
 
     testWidgets(
-      "Does not call handle page parameters update if can handle returns false ",
+      "does not call handle page parameters to update if can handle returns false",
           (tester) async {
-            when(navigationNotifier.currentConfiguration)
-                .thenReturn(loginConfiguration);
+        whenNavigationNotifierConfiguration(loginConfiguration);
 
-            await tester.pumpWidget(
-              _PageParametersProxyTestbed(
+          await tester.pumpWidget(
+            _PageParametersProxyTestbed(
                 pageNotifier: pageNotifier,
                 navigationNotifier: navigationNotifier,
-              ),
-            );
+            ),
+          );
 
-            verifyNever(pageNotifier.handlePageParameters(any));
+          verifyNever(pageNotifier.handlePageParameters(any));
+      },
+    );
+
+    testWidgets(
+      "calls check page parameters on quit update if can handle returns false",
+          (tester) async {
+        whenNavigationNotifierConfiguration(loginConfiguration);
+
+        await tester.pumpWidget(
+          _PageParametersProxyTestbed(
+            pageNotifier: pageNotifier,
+            navigationNotifier: navigationNotifier,
+          ),
+        );
+
+        verify(pageNotifier.handlePageParametersOnQuit(any)).called(once);
+      },
+    );
+
+    testWidgets(
+      "does not call check page parameters on quit update if can handle returns true",
+          (tester) async {
+        whenNavigationNotifierConfiguration(dashboardConfiguration);
+
+        await tester.pumpWidget(
+          _PageParametersProxyTestbed(
+            pageNotifier: pageNotifier,
+            navigationNotifier: navigationNotifier,
+          ),
+        );
+
+        verifyNever(pageNotifier.handlePageParametersOnQuit(any));
       },
     );
   });

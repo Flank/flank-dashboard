@@ -1244,6 +1244,26 @@ void main() {
         expect(projectNameFilter, equals(parameters.projectFilter));
       },
     );
+
+    test(
+      ".handlePageParametersOnQuit() updates page parameters if the given parameters are null",
+          () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        final defaultProjectGroupId =
+            projectMetricsNotifier.projectGroupDropdownItems.first.id;
+
+        final expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: null,
+          projectGroupId: defaultProjectGroupId,
+        );
+
+        projectMetricsNotifier.handlePageParametersOnQuit(null);
+
+        expect(projectMetricsNotifier.pageParameters, expectedPageParameters);
+      },
+    );
   });
 }
 

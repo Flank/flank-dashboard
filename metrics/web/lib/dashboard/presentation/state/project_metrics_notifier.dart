@@ -324,10 +324,24 @@ class ProjectMetricsNotifier extends PageNotifier {
     _setSelectedProjectGroup(selectedProjectGroup);
   }
 
+  @override
+  void handlePageParametersOnQuit(PageParametersModel parameters){
+    if (parameters == null) {
+      _selectedProjectGroup = _allProjectsGroupDropdownItemViewModel;
+      _projectNameFilter = null;
+
+      final pageParameters = DashboardPageParametersModel(
+        projectFilter: _projectNameFilter,
+        projectGroupId: _selectedProjectGroup?.id,
+      );
+
+      _pageParameters = pageParameters;
+    }
+  }
+
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
   Future<void> _refreshMetricsSubscriptions() async {
     if (_projects == null) {
-      _projectNameFilter = null;
       await _unsubscribeFromBuildMetrics();
       notifyListeners();
       return;

@@ -77,7 +77,10 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
       configuration: _navigationNotifier.currentConfiguration,
     )) {
       _pageNotifier.handlePageParameters(pageParameters);
+      return;
     }
+
+    _pageNotifier.handlePageParametersOnQuit(pageParameters);
   }
 
   /// Subscribes to [PageNotifier]'s updates.
