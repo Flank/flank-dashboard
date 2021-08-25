@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/navigation/checker/handle_page_parameters_checker.dart';
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/page_notifier.dart';
@@ -42,10 +43,14 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   /// A [PageNotifier] that provides an ability to handle page parameters.
   PageNotifier get _pageNotifier => widget.pageNotifier;
 
+  /// A class that shows if page parameters can be handled by dashboard.
+  HandlePageParametersChecker _handlePageParametersChecker;
+
   @override
   void initState() {
     super.initState();
 
+    _handlePageParametersChecker = HandlePageParametersChecker();
     _subscribeToNavigationNotifierUpdates();
     _subscribeToPageNotifierUpdates();
   }
@@ -57,6 +62,10 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
       listen: false,
     );
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigationNotifierListener();
+    });
+
     _navigationNotifier.addListener(_navigationNotifierListener);
   }
 
@@ -64,7 +73,14 @@ class _PageParametersProxyState extends State<PageParametersProxy> {
   void _navigationNotifierListener() {
     final pageParameters = _navigationNotifier.currentPageParameters;
 
-    _pageNotifier.handlePageParameters(pageParameters);
+    if (_handlePageParametersChecker.canHandle(
+      configuration: _navigationNotifier.currentConfiguration,
+    )) {
+      _pageNotifier.handlePageParameters(pageParameters);
+      return;
+    }
+
+    _pageNotifier.handlePageParametersOnQuit(pageParameters);
   }
 
   /// Subscribes to [PageNotifier]'s updates.
