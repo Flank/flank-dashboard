@@ -367,6 +367,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _navigationNotifier.handleLoggedOut();
     }
 
+    _navigationNotifier.handleAuthUpdates(_authNotifier.authState);
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
 
