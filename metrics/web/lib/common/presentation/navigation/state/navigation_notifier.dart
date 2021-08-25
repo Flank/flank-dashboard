@@ -172,6 +172,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// Updates the current [AuthState] with the given [authState].
   void handleAuthUpdates(AuthState authState) {
     _authState = authState;
+
+    // The temporary line to fix the error in Flutter analyze tests
+    // TODO: remove the following line when the auth state logic implemented
+    print(_authState);
   }
 
   /// Determines whether the current page can be popped.
