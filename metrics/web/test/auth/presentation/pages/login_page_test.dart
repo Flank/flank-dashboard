@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
@@ -181,7 +182,7 @@ void main() {
           );
         });
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(AuthState.loggedIn);
         authNotifier.notifyListeners();
 
         verify(navigationNotifier.handleLoggedIn()).called(once);
@@ -199,7 +200,7 @@ void main() {
         );
 
         when(authNotifier.isLoading).thenReturn(false);
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.authState).thenReturn(AuthState.loggedIn);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -211,6 +212,32 @@ void main() {
         });
 
         verify(navigationNotifier.handleLoggedIn()).called(once);
+      },
+    );
+
+    testWidgets(
+      "does not delegate to the navigation notifier on open if the user is logged in anonymously",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          DefaultRoutes.dashboard,
+        );
+
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.authState).thenReturn(AuthState.loggedInAnonymously);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _LoginPageTestbed(
+              authNotifier: authNotifier,
+              navigationNotifier: navigationNotifier,
+            ),
+          );
+        });
+
+        verifyNever(navigationNotifier.handleLoggedIn());
       },
     );
   });
