@@ -22,7 +22,8 @@ const {
 } = require("./test_utils/test-data");
 const collection = "project_groups";
 
-function test(users, passwordProviderAllowedEmailApp) {
+/// Checks whether the access permissions to the project groups table for each user category matches the expected value.
+function checkAccessPermissions(users, passwordProviderAllowedEmailApp) {
   it("does not allow creating a project group with not allowed fields", async () => {
     await assertFails(
         passwordProviderAllowedEmailApp.collection(collection).add({
@@ -344,7 +345,7 @@ describe("", async function () {
       );
     });
 
-    test(usersPublicDashboardEnabled, passwordProviderAllowedEmailApp);
+    checkAccessPermissions(usersPublicDashboardEnabled, passwordProviderAllowedEmailApp);
   });
 
   after(async () => {
@@ -486,7 +487,7 @@ describe("", async function () {
       );
     });
 
-    test(usersPublicDashboardDisabled, passwordProviderAllowedEmailApp);
+    checkAccessPermissions(usersPublicDashboardDisabled, passwordProviderAllowedEmailApp);
   });
 
   after(async () => {

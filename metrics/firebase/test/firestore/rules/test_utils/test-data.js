@@ -80,19 +80,19 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A test data for the feature config collection with enabled public dashboard*/
+/** A test data for the feature config collection with enabled public dashboard */
 const featureConfig = {
   "feature_config/feature_config": {},
 };
 
-/** A test data for the feature config collection with enabled public dashboard*/
+/** A test data for the feature config collection with enabled public dashboard */
 const featureConfigEnabled = {
   "feature_config/feature_config": {
     "isPublicDashboardEnabled": true
   },
 };
 
-/** A test data for the feature config collection with disabled public dashboard*/
+/** A test data for the feature config collection with disabled public dashboard */
 const featureConfigDisabled = {
   "feature_config/feature_config": {
     "isPublicDashboardEnabled": false
@@ -159,21 +159,21 @@ exports.featureConfigDisabled = featureConfigDisabled;
 exports.featureConfigEnabled = featureConfigEnabled;
 exports.tasks = tasks;
 
-/** An anonymous sign in provider identifier*/
+/** An anonymous sign in provider identifier */
 exports.anonymousSignInProviderId = "anonymous";
 
-/** An email and password sign in provider identifier*/
+/** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
 
-/** A google sign in provider identifier*/
+/** A google sign in provider identifier */
 exports.googleSignInProviderId = "google.com";
 
-/** Provides a firebase user with allowed email, sign-in provider identifier, and uid*/
+/** Provides a firebase user with allowed email, sign-in provider identifier, and uid */
 exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(allowedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid*/
+/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid */
 exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(deniedEmail, signInProviderId, emailVerified, uid);
 };
