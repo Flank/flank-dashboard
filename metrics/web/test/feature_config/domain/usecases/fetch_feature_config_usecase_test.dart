@@ -17,14 +17,17 @@ void main() {
   group("FetchFeatureConfigUseCase", () {
     const isPasswordSignInOptionEnabled = true;
     const isDebugMenuEnabled = true;
+    const isPublicDashboardEnabled = true;
 
     const featureConfig = FeatureConfig(
       isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: isDebugMenuEnabled,
+      isPublicDashboardEnabled: isPublicDashboardEnabled,
     );
     final param = FeatureConfigParam(
       isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: isDebugMenuEnabled,
+      isPublicDashboardEnabled: isPublicDashboardEnabled,
     );
 
     final repository = _FeatureConfigRepositoryMock();
@@ -66,6 +69,7 @@ void main() {
         const nullConfig = FeatureConfig(
           isPasswordSignInOptionEnabled: null,
           isDebugMenuEnabled: null,
+          isPublicDashboardEnabled: null,
         );
 
         when(repository.fetch()).thenAnswer((_) => Future.value(nullConfig));

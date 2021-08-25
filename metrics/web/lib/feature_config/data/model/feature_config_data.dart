@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:metrics/feature_config/domain/entities/feature_config.dart';
@@ -11,9 +11,11 @@ class FeatureConfigData extends FeatureConfig implements DataModel {
   const FeatureConfigData({
     bool isPasswordSignInOptionEnabled,
     bool isDebugMenuEnabled,
+    bool isPublicDashboardEnabled,
   }) : super(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
+          isPublicDashboardEnabled: isPublicDashboardEnabled,
         );
 
   /// Creates the [FeatureConfigData] from the given [json].
@@ -26,6 +28,7 @@ class FeatureConfigData extends FeatureConfig implements DataModel {
       isPasswordSignInOptionEnabled:
           json['isPasswordSignInOptionEnabled'] as bool,
       isDebugMenuEnabled: json['isDebugMenuEnabled'] as bool,
+      isPublicDashboardEnabled: json['isPublicDashboardEnabled'] as bool,
     );
   }
 
@@ -34,6 +37,7 @@ class FeatureConfigData extends FeatureConfig implements DataModel {
     return {
       'isPasswordSignInOptionEnabled': isPasswordSignInOptionEnabled,
       'isDebugMenuEnabled': isDebugMenuEnabled,
+      'isPublicDashboardEnabled': isPublicDashboardEnabled,
     };
   }
 }

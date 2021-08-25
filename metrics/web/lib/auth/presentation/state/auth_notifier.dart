@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -18,11 +18,13 @@ import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -77,8 +79,11 @@ class AuthNotifier extends ChangeNotifier {
   /// during loading user profile data.
   PersistentStoreErrorMessage _userProfileErrorMessage;
 
-  /// Contains a user's authentication status.
-  bool _isLoggedIn;
+  /// Contains a user's authorization state.
+  AuthState _authState;
+
+  /// Indicates whether the public dashboard feature is enabled.
+  bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from authentication state updates.
@@ -119,7 +124,12 @@ class AuthNotifier extends ChangeNotifier {
         assert(_updateUserProfileUseCase != null);
 
   /// Determines if a user is authenticated.
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoggedIn =>
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
+
+  /// Returns a state of the user authorization.
+  AuthState get authState => _authState;
 
   /// Indicates whether the sign-in process is in progress or not.
   bool get isLoading => _isLoading;
@@ -152,8 +162,11 @@ class AuthNotifier extends ChangeNotifier {
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
+        _authState = user.isAnonymous
+            ? AuthState.loggedInAnonymously
+            : AuthState.loggedIn;
       } else {
-        _isLoggedIn = false;
+        _authState = AuthState.loggedOut;
         _selectedTheme = null;
         _userProfileModel = null;
         notifyListeners();
@@ -219,11 +232,25 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
+  /// Handles the anonymous log in of the user.
+  void handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) {
+    _isPublicDashboardFeatureEnabled = model.isEnabled;
+    if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
+      _signInAnonymously();
+    }
+  }
+
   /// Signs out the user from the app.
   Future<void> signOut() async {
     await _userProfileSubscription?.cancel();
     await _signOutUseCase();
   }
+
+  /// Signs in a user to the app using anonymous authentication.
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
+  Future<void> _signInAnonymously() async {}
 
   /// Subscribes to a user profile updates.
   ///
@@ -262,7 +289,6 @@ class AuthNotifier extends ChangeNotifier {
         selectedTheme: userProfile.selectedTheme,
       );
       _isLoading = false;
-      _isLoggedIn = true;
 
       notifyListeners();
     } else {

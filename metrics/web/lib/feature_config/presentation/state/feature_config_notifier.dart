@@ -1,10 +1,11 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/feature_config/domain/entities/feature_config.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
 import 'package:metrics/feature_config/domain/usecases/parameters/feature_config_param.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:metrics/feature_config/presentation/view_models/password_sign_in_option_feature_config_view_model.dart';
 
@@ -12,6 +13,9 @@ import 'package:metrics/feature_config/presentation/view_models/password_sign_in
 class FeatureConfigNotifier extends ChangeNotifier {
   /// Indicates whether the [FeatureConfig] is loading.
   bool _isLoading = false;
+
+  /// Indicates whether the [FeatureConfig] is initialized.
+  bool _isInitialized = false;
 
   /// A [FetchFeatureConfigUseCase] that provides an ability to fetch
   /// the [FeatureConfig].
@@ -31,13 +35,16 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// A view model that holds the [FeatureConfig] data for the debug menu.
   DebugMenuFeatureConfigViewModel _debugMenuFeatureConfigViewModel;
 
+  /// A model that holds the config of the public dashboard feature.
+  PublicDashboardFeatureConfigModel _publicDashboardFeatureConfigModel;
+
   /// Returns `true` if the [FeatureConfig] is loading.
   /// Otherwise, returns `false`.
   bool get isLoading => _isLoading;
 
-  /// Returns `true` if current [FeatureConfig] is not `null`.
+  /// Returns `true` if the [FeatureConfig] is initialized.
   /// Otherwise, returns `false`.
-  bool get isInitialized => _featureConfig != null;
+  bool get isInitialized => _isInitialized;
 
   /// A view model that provides the [FeatureConfig] data for the password
   /// sign-in option.
@@ -49,6 +56,10 @@ class FeatureConfigNotifier extends ChangeNotifier {
   DebugMenuFeatureConfigViewModel get debugMenuFeatureConfigViewModel =>
       _debugMenuFeatureConfigViewModel;
 
+  /// A model that holds the config of the public dashboard feature.
+  PublicDashboardFeatureConfigModel get publicDashboardFeatureConfigModel =>
+      _publicDashboardFeatureConfigModel;
+
   /// Creates an instance of the [FeatureConfigNotifier]
   /// with the given [FetchFeatureConfigUseCase].
   ///
@@ -57,6 +68,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   FeatureConfigNotifier(this._fetchFeatureConfigUseCase)
       : assert(_fetchFeatureConfigUseCase != null) {
     setDefaults();
+    _setFeatureConfig(_defaultFeatureConfig);
   }
 
   /// Sets the default [FeatureConfig] from the given configuration values.
@@ -65,13 +77,16 @@ class FeatureConfigNotifier extends ChangeNotifier {
   void setDefaults({
     bool isPasswordSignInOptionEnabled = false,
     bool isDebugMenuEnabled = false,
+    bool isPublicDashboardEnabled = false,
   }) {
     assert(isPasswordSignInOptionEnabled != null);
     assert(isDebugMenuEnabled != null);
+    assert(isPublicDashboardEnabled != null);
 
     _defaultFeatureConfig = FeatureConfig(
       isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: isDebugMenuEnabled,
+      isPublicDashboardEnabled: isPublicDashboardEnabled,
     );
   }
 
@@ -83,10 +98,12 @@ class FeatureConfigNotifier extends ChangeNotifier {
       isPasswordSignInOptionEnabled:
           _defaultFeatureConfig.isPasswordSignInOptionEnabled,
       isDebugMenuEnabled: _defaultFeatureConfig.isDebugMenuEnabled,
+      isPublicDashboardEnabled: _defaultFeatureConfig.isPublicDashboardEnabled,
     );
     final config = await _fetchFeatureConfigUseCase(params);
     _setFeatureConfig(config);
 
+    _isInitialized = true;
     _setIsLoading(false);
   }
 
@@ -102,6 +119,9 @@ class FeatureConfigNotifier extends ChangeNotifier {
     _debugMenuFeatureConfigViewModel = DebugMenuFeatureConfigViewModel(
       isEnabled: _featureConfig.isDebugMenuEnabled,
     );
+
+    _publicDashboardFeatureConfigModel = PublicDashboardFeatureConfigModel(
+        isEnabled: _featureConfig.isPublicDashboardEnabled);
   }
 
   /// Sets the current [_isLoading] value to the given [value]

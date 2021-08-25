@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -33,11 +33,14 @@ class FetchFeatureConfigUseCase
             params.isPasswordSignInOptionEnabled,
         isDebugMenuEnabled:
             config?.isDebugMenuEnabled ?? params.isDebugMenuEnabled,
+        isPublicDashboardEnabled:
+            config?.isPublicDashboardEnabled ?? params.isPublicDashboardEnabled,
       );
     } catch (_) {
       return FeatureConfig(
         isPasswordSignInOptionEnabled: params.isPasswordSignInOptionEnabled,
         isDebugMenuEnabled: params.isDebugMenuEnabled,
+        isPublicDashboardEnabled: params.isPublicDashboardEnabled,
       );
     }
   }
