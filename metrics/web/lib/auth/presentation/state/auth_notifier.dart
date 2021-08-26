@@ -14,6 +14,7 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/parameters/user_profile_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -52,6 +53,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Used to sign in a user via Google.
   final GoogleSignInUseCase _googleSignInUseCase;
 
+  /// Used to sign in a user anonymously.
+  final SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
+
   /// Used to sign out a user.
   final SignOutUseCase _signOutUseCase;
 
@@ -80,7 +84,7 @@ class AuthNotifier extends ChangeNotifier {
   PersistentStoreErrorMessage _userProfileErrorMessage;
 
   /// Contains a user's authorization state.
-  AuthState _authState;
+  AuthState _authState = AuthState.loggedOut;
 
   /// Indicates whether the public dashboard feature is enabled.
   bool _isPublicDashboardFeatureEnabled;
@@ -111,6 +115,7 @@ class AuthNotifier extends ChangeNotifier {
     this._receiveAuthUpdates,
     this._signInUseCase,
     this._googleSignInUseCase,
+    this._signInAnonymouslyUseCase,
     this._signOutUseCase,
     this._receiveUserProfileUpdates,
     this._createUserProfileUseCase,
@@ -118,6 +123,7 @@ class AuthNotifier extends ChangeNotifier {
   )   : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_googleSignInUseCase != null),
+        assert(_signInAnonymouslyUseCase != null),
         assert(_signOutUseCase != null),
         assert(_receiveUserProfileUpdates != null),
         assert(_createUserProfileUseCase != null),
@@ -233,11 +239,11 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   /// Handles the anonymous log in of the user.
-  void handlePublicDashboardFeatureConfigUpdates(
-      PublicDashboardFeatureConfigModel model) {
+  Future<void> handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) async {
     _isPublicDashboardFeatureEnabled = model.isEnabled;
     if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
-      _signInAnonymously();
+      await _signInAnonymously();
     }
   }
 
@@ -250,7 +256,17 @@ class AuthNotifier extends ChangeNotifier {
   /// Signs in a user to the app using anonymous authentication.
   ///
   /// Does nothing if the [isLoading] status is `true`.
-  Future<void> _signInAnonymously() async {}
+  Future<void> _signInAnonymously() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _clearErrorMessages();
+    try {
+      await _signInAnonymouslyUseCase();
+    } on AuthenticationException catch (exception) {
+      _handleAuthErrorMessage(exception.code);
+    }
+  }
 
   /// Subscribes to a user profile updates.
   ///

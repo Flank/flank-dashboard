@@ -13,6 +13,7 @@ import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -83,6 +84,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   /// A use case needed to be able to sign in a user with Google.
   GoogleSignInUseCase _googleSignInUseCase;
+
+  /// A use case needed to be able to sign in a user anonymously.
+  SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
 
   /// A use case needed to be able to sign out a user.
   SignOutUseCase _signOutUseCase;
@@ -185,6 +189,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _receiveAuthUpdates = ReceiveAuthenticationUpdates(_userRepository);
     _signInUseCase = SignInUseCase(_userRepository);
     _googleSignInUseCase = GoogleSignInUseCase(_userRepository);
+    _signInAnonymouslyUseCase = SignInAnonymouslyUseCase(_userRepository);
     _signOutUseCase = SignOutUseCase(_userRepository);
 
     _receiveUserProfileUpdates = ReceiveUserProfileUpdates(_userRepository);
@@ -229,6 +234,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _receiveAuthUpdates,
       _signInUseCase,
       _googleSignInUseCase,
+      _signInAnonymouslyUseCase,
       _signOutUseCase,
       _receiveUserProfileUpdates,
       _createUserProfileUseCase,
