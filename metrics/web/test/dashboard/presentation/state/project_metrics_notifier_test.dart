@@ -49,6 +49,10 @@ void main() {
     const String errorMessage = null;
     const maxNumberOfBuilds =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics;
+    const parameters = DashboardPageParametersModel(
+      projectFilter: projectNameFilter,
+      projectGroupId: projectGroupId,
+    );
 
     final projectGroups = [
       ProjectGroupModel(
@@ -781,27 +785,12 @@ void main() {
     );
 
     test(
-      ".resetProjectNameFilter() resets the project name filter",
-      () async {
-        final listener = expectAsyncUntil0(
-          () {
-            if (projectMetricsNotifier.projectNameFilter != null) {
-              projectMetricsNotifier.resetProjectNameFilter();
-            }
-          },
-          () => projectMetricsNotifier.projectNameFilter == null,
-        );
-
-        projectMetricsNotifier.addListener(listener);
-        projectMetricsNotifier.filterByProjectName(projectNameFilter);
-      },
-    );
-
-    test(
       ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
       () async {
         final expectedProjectMetrics =
             projectMetricsNotifier.projectsMetricsTileViewModels;
+
+        projectMetricsNotifier.handlePageParameters(parameters);
 
         final listener = expectAsyncUntil0(
           () {},
@@ -1039,6 +1028,32 @@ void main() {
     );
 
     test(
+      ".setProjectGroups() updates page parameters using the selected project group",
+      () {
+        projectMetricsNotifier.handlePageParameters(parameters);
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final newProjectGroups = [
+          ProjectGroupModel(
+            id: "groupId2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          )
+        ];
+
+        projectMetricsNotifier.setProjectGroups(newProjectGroups);
+
+        final pageParametersProjectId =
+            projectMetricsNotifier.pageParameters.projectGroupId;
+
+        final selectedProjectGroupId =
+            projectMetricsNotifier.selectedProjectGroup.id;
+
+        expect(pageParametersProjectId, equals(selectedProjectGroupId));
+      },
+    );
+
+    test(
       ".selectProjectGroup() filters a list of project metrics according to the given project group id",
       () {
         const selectedProjectIds = [projectId];
@@ -1137,6 +1152,116 @@ void main() {
 
         expect(projectMetricsNotifier.selectedProjectGroup, isNull);
         expect(projectMetricsNotifier.projectGroupDropdownItems, isNull);
+      },
+    );
+
+    test(
+      ".handlePageParameters() sets project name filter to null if the given parameters are null",
+      () {
+        const parameters = DashboardPageParametersModel(
+          projectFilter: 'test',
+        );
+
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        projectMetricsNotifier.handlePageParameters(null);
+
+        final actualNameFilter = projectMetricsNotifier.projectNameFilter;
+
+        expect(actualNameFilter, isNull);
+      },
+    );
+
+    test(
+      ".handlePageParameters() sets selected project group to the default one if the given parameters are null",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        final expectedProjectGroup =
+            projectMetricsNotifier.projectGroupDropdownItems.first;
+
+        projectMetricsNotifier.handlePageParameters(null);
+
+        final actualSelectedProjectGroup =
+            projectMetricsNotifier.selectedProjectGroup;
+
+        expect(actualSelectedProjectGroup, expectedProjectGroup);
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates page parameters if the given parameters are null",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        final defaultProjectGroupId =
+            projectMetricsNotifier.projectGroupDropdownItems.first.id;
+
+        final expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: null,
+          projectGroupId: defaultProjectGroupId,
+        );
+
+        projectMetricsNotifier.handlePageParameters(null);
+
+        expect(projectMetricsNotifier.pageParameters, expectedPageParameters);
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates page parameters to the given parameters",
+      () {
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        final actualPageParameters = projectMetricsNotifier.pageParameters;
+
+        expect(actualPageParameters, equals(parameters));
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates the selected project group using the project group id from the given page parameters",
+      () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        final selectedProjectGroupId =
+            projectMetricsNotifier.selectedProjectGroup.id;
+
+        expect(selectedProjectGroupId, equals(parameters.projectGroupId));
+      },
+    );
+
+    test(
+      ".handlePageParameters() updates the project name filter using the project filter value from the given page parameters",
+      () {
+        projectMetricsNotifier.handlePageParameters(parameters);
+
+        final projectNameFilter = projectMetricsNotifier.projectNameFilter;
+
+        expect(projectNameFilter, equals(parameters.projectFilter));
+      },
+    );
+
+    test(
+      ".handlePageParametersOnQuit() updates page parameters if the given parameters are null",
+          () {
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+
+        final defaultProjectGroupId =
+            projectMetricsNotifier.projectGroupDropdownItems.first.id;
+
+        final expectedPageParameters = DashboardPageParametersModel(
+          projectFilter: null,
+          projectGroupId: defaultProjectGroupId,
+        );
+
+        projectMetricsNotifier.handlePageParametersOnQuit(null);
+
+        expect(projectMetricsNotifier.pageParameters, expectedPageParameters);
       },
     );
   });
