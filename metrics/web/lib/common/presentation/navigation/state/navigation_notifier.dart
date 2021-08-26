@@ -56,6 +56,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// An [AuthState] that represents the current authentication state
   /// of the user.
+  // ignore: unused_field
   AuthState _authState;
 
   /// A flag that indicates whether the user is logged in.
@@ -168,14 +169,11 @@ class NavigationNotifier extends ChangeNotifier {
 
     replaceState(path: path);
   }
-
+  
+  // ignore: use_setters_to_change_properties
   /// Updates the current [AuthState] with the given [authState].
   void handleAuthUpdates(AuthState authState) {
     _authState = authState;
-
-    // The temporary line to fix the error in Flutter analyze tests
-    // TODO: remove the following line when the auth state logic implemented
-    print(_authState);
   }
 
   /// Determines whether the current page can be popped.
