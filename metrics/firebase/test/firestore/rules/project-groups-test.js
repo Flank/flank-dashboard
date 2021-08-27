@@ -55,8 +55,8 @@ describe("", async function () {
     it("does not allow creating a project group with a name having other than a string value", async () => {
       let names = [false, 123, []];
 
-      names.forEach(async (name) => {
-        await assertFails(
+      names.forEach((name) => {
+        assertFails(
             passwordProviderAllowedEmailApp
                 .collection(collection)
                 .add({name, projectIds: []})
