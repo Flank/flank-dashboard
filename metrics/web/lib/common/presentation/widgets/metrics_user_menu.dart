@@ -132,13 +132,21 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: TappableArea(
-                  onTap: () => _signOut(context),
-                  builder: (context, isHovered, child) => child,
-                  child: Text(
-                    CommonStrings.logOut,
-                    style: userMenuTextStyle,
-                  ),
+                child: Consumer<AuthNotifier>(
+                  builder: (context, authNotifier, widget) {
+                    final title = authNotifier.userProfileViewModel.isAnonymous
+                        ? CommonStrings.signIn
+                        : CommonStrings.logOut;
+
+                    return TappableArea(
+                      onTap: () => _signOut(context),
+                      builder: (context, isHovered, child) => child,
+                      child: Text(
+                        title,
+                        style: userMenuTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
