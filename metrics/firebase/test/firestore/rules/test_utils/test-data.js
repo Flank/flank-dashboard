@@ -80,7 +80,7 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A test data for the feature config collection with enabled public dashboard */
+/** A test data for the feature config collection */
 const featureConfig = {
   "feature_config/feature_config": {},
 };
