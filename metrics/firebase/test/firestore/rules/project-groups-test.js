@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 const async = require('async');
@@ -20,46 +20,379 @@ const {
   featureConfigEnabled,
   featureConfigDisabled
 } = require("./test_utils/test-data");
-const collection = "project_groups";
+
+// Tests project groups security rules with public dashboard feature.
+describe("", async function () {
+  const collection = "project_groups";
+
+  const usersPermissions = [
+    {
+      'describe': 'Authenticated as an anonymous user',
+      'app': await getApplicationWith(getAnonymousUser()),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': true,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+          getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': true,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
+    {
+      'describe': 'Unauthenticated user',
+      'app': await getApplicationWith(null),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
+  ];
+
+  before(async () => {
+    await setupTestDatabaseWith(
+      Object.assign({}, projectGroups, allowedEmailDomains)
+    );
+  });
+
+  describe("Project groups collection rules", () => {
+    async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
+      const featureConfigPath = "feature_config/feature_config";
+
+      describe(
+        "Project groups collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
+        function () {
+          async.forEach(usersPermissions, (user, callback) => {
+            describe(user.describe, () => {
+              before(
+                "",
+                async function () {
+                  await setupTestDatabaseWith(
+                    Object.assign({}, projectGroups, allowedEmailDomains, config)
+                  );
+                });
+
+              let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
+                ? 'on'
+                : 'off';
+              let canCreateDescription = user.public_dashboard[publicDashboardState].can.create ?
+                "allows to create a project group" : "does not allow creating a project group";
+              let canReadDescription = user.public_dashboard[publicDashboardState].can.read ?
+                "allows reading project groups" : "does not allow reading project groups";
+              let canUpdateDescription = user.public_dashboard[publicDashboardState].can.update ?
+                "allows to update a project group" : "does not allow updating a project group";
+              let canDeleteDescription = user.public_dashboard[publicDashboardState].can.delete ?
+                "allows to delete a project group" : "does not allow deleting a project group";
+
+              it(canCreateDescription, async () => {
+                const createPromise = user.app.collection(collection).add(getProjectGroup());
+
+                if (user.public_dashboard[publicDashboardState].can.create) {
+                  await assertSucceeds(createPromise)
+                } else {
+                  await assertFails(createPromise)
+                }
+              });
+
+              it(canReadDescription, async () => {
+                const readPromise = user.app.collection(collection).get();
+
+                if (user.public_dashboard[publicDashboardState].can.read) {
+                  await assertSucceeds(readPromise)
+                } else {
+                  await assertFails(readPromise)
+                }
+              });
+
+              it(canUpdateDescription, async () => {
+                const updatePromise = user.app.collection(collection)
+                  .doc("2")
+                  .update(getProjectGroup());
+
+                if (user.public_dashboard[publicDashboardState].can.update) {
+                  await assertSucceeds(updatePromise)
+                } else {
+                  await assertFails(updatePromise)
+                }
+              });
+
+              it(canDeleteDescription, async () => {
+                const deletePromise = user.app.collection(collection).doc("1").delete();
+
+                if (user.public_dashboard[publicDashboardState].can.delete) {
+                  await assertSucceeds(deletePromise)
+                } else {
+                  await assertFails(deletePromise)
+                }
+              });
+            });
+            callback();
+          });
+        }
+      );
+      callback();
+    });
+  });
+
+  after(async () => {
+    await tearDown();
+  });
+});
 
 // Runs general security rules tests.
 describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
-      getAllowedEmailUser(passwordSignInProviderId, true)
+    getAllowedEmailUser(passwordSignInProviderId, true)
   );
+  const collection = "project_groups";
 
   before("", async function () {
     await setupTestDatabaseWith(
-        Object.assign({}, projectGroups, allowedEmailDomains, featureConfigDisabled))
+      Object.assign({}, projectGroups, allowedEmailDomains, featureConfigDisabled))
   });
 
-  describe("General project groups collection rules", async function ()  {
+  describe("General project groups collection rules", async function () {
     it("does not allow creating a project group with not allowed fields", async () => {
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            name: "name",
-            projectIds: [],
-            notAllowedField: "test",
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: [],
+          notAllowedField: "test",
+        })
       );
     });
 
     it("does not allow creating a project group without a name", async () => {
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            projectIds: [],
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          projectIds: [],
+        })
       );
     });
 
     it("does not allow creating a project group with a name having other than a string value", async () => {
       let names = [false, 123, []];
 
-      names.forEach((name) => {
-        assertFails(
-            passwordProviderAllowedEmailApp
-                .collection(collection)
-                .add({name, projectIds: []})
+      names.forEach(async (name) => {
+        await assertFails(
+          passwordProviderAllowedEmailApp
+            .collection(collection)
+            .add({ name, projectIds: [] })
         );
       });
     });
@@ -69,9 +402,9 @@ describe("", async function () {
 
       projectIdsValues.forEach(async (projectIds) => {
         await assertFails(
-            passwordProviderAllowedEmailApp
-                .collection(collection)
-                .add({name: "test", projectIds})
+          passwordProviderAllowedEmailApp
+            .collection(collection)
+            .add({ name: "test", projectIds })
         );
       });
     });
@@ -80,10 +413,10 @@ describe("", async function () {
       const testName = "testName";
 
       await assertSucceeds(
-          passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
-            name: testName,
-            projectIds: [],
-          })
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: testName,
+          projectIds: [],
+        })
       );
     });
 
@@ -91,10 +424,10 @@ describe("", async function () {
       const testProjectIds = ["1", "2"];
 
       await assertSucceeds(
-          passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
-            name: "name",
-            projectIds: testProjectIds,
-          })
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: "name",
+          projectIds: testProjectIds,
+        })
       );
     });
 
@@ -102,10 +435,10 @@ describe("", async function () {
       const testName = "testName";
 
       await assertSucceeds(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            name: testName,
-            projectIds: [],
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: testName,
+          projectIds: [],
+        })
       );
     });
 
@@ -113,10 +446,10 @@ describe("", async function () {
       const testProjectIds = ["1", "2"];
 
       await assertSucceeds(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            name: "name",
-            projectIds: testProjectIds,
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: testProjectIds,
+        })
       );
     });
 
@@ -124,10 +457,10 @@ describe("", async function () {
       const testName = "a".repeat(256);
 
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
-            name: testName,
-            projectIds: [],
-          })
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: testName,
+          projectIds: [],
+        })
       );
     });
 
@@ -135,10 +468,10 @@ describe("", async function () {
       const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
-            name: "name",
-            projectIds: testProjectIds,
-          })
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: "name",
+          projectIds: testProjectIds,
+        })
       );
     });
 
@@ -146,10 +479,10 @@ describe("", async function () {
       const testName = "a".repeat(256);
 
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            name: testName,
-            projectIds: [],
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: testName,
+          projectIds: [],
+        })
       );
     });
 
@@ -157,316 +490,11 @@ describe("", async function () {
       const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
       await assertFails(
-          passwordProviderAllowedEmailApp.collection(collection).add({
-            name: "name",
-            projectIds: testProjectIds,
-          })
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: testProjectIds,
+        })
       );
-    });
-  });
-
-  after(async () => {
-    await tearDown();
-  });
-});
-
-// Tests project groups security rules with public dashboard feature.
-describe("", function () {
-  describe("Project groups collection rules, public dashboard is disabled", async function () {
-    let usersPermissions = [
-      {
-        'describe': 'Authenticated as an anonymous user',
-        'app': await getApplicationWith(getAnonymousUser()),
-        'public_dashboard_on': {
-          'can': {
-            'create': false,
-            'read': true,
-            'update': false,
-            'delete': false,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with a password and allowed email domain user with a verified email',
-        'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, true)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
-        'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, true)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with a password and allowed email domain user with not verified email',
-        'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, false)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
-        'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, false)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with google and allowed email domain user with a verified email',
-        'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, true)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with google and not allowed email domain user with a verified email',
-        'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, true)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with google and allowed email domain user with not verified email',
-        'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      },
-      {
-        'describe': 'Authenticated with google and not allowed email domain user with not verified email',
-        'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-        ),
-        'public_dashboard_on': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      },
-      {
-        'describe': 'Unauthenticated user',
-        'app': await getApplicationWith(null),
-        'public_dashboard_on': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        'public_dashboard_off': {
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      },
-    ];
-
-    async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
-      const featureConfigPath = "feature_config/feature_config";
-
-      describe(
-          "Project groups collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
-          function () {
-            async.forEach(usersPermissions, (user, callback) => {
-              describe(user.describe, () => {
-                before(
-                    "",
-                    async function () {
-                      await setupTestDatabaseWith(
-                          Object.assign({}, projectGroups, allowedEmailDomains, config)
-                      );
-                    });
-
-                let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
-                    ? 'public_dashboard_on'
-                    : 'public_dashboard_off';
-                let canCreateDescription = user[publicDashboardState].can.create ?
-                    "allows to create a project group" : "does not allow creating a project group";
-                let canReadDescription = user[publicDashboardState].can.read ?
-                    "allows reading project groups" : "does not allow reading project groups";
-                let canUpdateDescription = user[publicDashboardState].can.update ?
-                    "allows to update a project group" : "does not allow updating a project group";
-                let canDeleteDescription = user[publicDashboardState].can.delete ?
-                    "allows to delete a project group" : "does not allow deleting a project group";
-
-                it(canCreateDescription, async () => {
-                  const createPromise = user.app.collection(collection).add(getProjectGroup());
-
-                  if (user[publicDashboardState].can.create) {
-                    await assertSucceeds(createPromise)
-                  } else {
-                    await assertFails(createPromise)
-                  }
-                });
-
-                it(canReadDescription, async () => {
-                  const readPromise = user.app.collection(collection).get();
-
-                  if (user[publicDashboardState].can.read) {
-                    await assertSucceeds(readPromise)
-                  } else {
-                    await assertFails(readPromise)
-                  }
-                });
-
-                it(canUpdateDescription, async () => {
-                  const updatePromise = user.app.collection(collection)
-                      .doc("2")
-                      .update(getProjectGroup());
-
-                  if (user[publicDashboardState].can.update) {
-                    await assertSucceeds(updatePromise)
-                  } else {
-                    await assertFails(updatePromise)
-                  }
-                });
-
-                it(canDeleteDescription, async () => {
-                  const deletePromise = user.app.collection(collection).doc("1").delete();
-
-                  if (user[publicDashboardState].can.delete) {
-                    await assertSucceeds(deletePromise)
-                  } else {
-                    await assertFails(deletePromise)
-                  }
-                });
-              });
-              callback();
-            });
-          }
-      );
-      callback();
     });
   });
 
