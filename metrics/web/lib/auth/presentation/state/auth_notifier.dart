@@ -178,6 +178,8 @@ class AuthNotifier extends ChangeNotifier {
         _authState = user.isAnonymous
             ? AuthState.loggedInAnonymously
             : AuthState.loggedIn;
+        _userProfileViewModel =
+            UserProfileViewModel(isAnonymous: user.isAnonymous);
       } else {
         _authState = AuthState.loggedOut;
         _selectedTheme = null;

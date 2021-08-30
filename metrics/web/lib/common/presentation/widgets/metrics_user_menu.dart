@@ -33,6 +33,7 @@ class MetricsUserMenu extends StatelessWidget {
       context,
       listen: false,
     );
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(
@@ -88,6 +89,7 @@ class MetricsUserMenu extends StatelessWidget {
                   },
                 ),
               ),
+              if(!authNotifier.userProfileViewModel.isAnonymous)
               Padding(
                 padding: itemPadding,
                 child: TappableArea(
@@ -128,7 +130,7 @@ class MetricsUserMenu extends StatelessWidget {
               Divider(
                 color: userMenuTheme.dividerColor,
                 thickness: 1.0,
-                height: 25.0,
+                height: 1.0,
               ),
               Padding(
                 padding: itemPadding,

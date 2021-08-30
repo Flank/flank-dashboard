@@ -10,7 +10,8 @@ class UserProfileViewModel extends Equatable {
   final bool isAnonymous;
 
   /// Creates the [UserProfileViewModel] with the given [isAnonymous] value.
-  const UserProfileViewModel({@required this.isAnonymous});
+  const UserProfileViewModel({@required this.isAnonymous})
+      : assert(isAnonymous != null);
 
   @override
   List<Object> get props => [isAnonymous];
