@@ -26,8 +26,10 @@ service cloud.firestore {
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
-      allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
+      allow get: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
+                    isDocumentOwner(userProfileId);
+      allow write: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
+                      isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
     }
