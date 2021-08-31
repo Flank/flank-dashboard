@@ -130,7 +130,7 @@ class MetricsUserMenu extends StatelessWidget {
               Divider(
                 color: userMenuTheme.dividerColor,
                 thickness: 1.0,
-                height: 1.0,
+                height: 25.0,
               ),
               Padding(
                 padding: itemPadding,
