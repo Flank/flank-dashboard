@@ -21,7 +21,7 @@ service cloud.firestore {
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isPublicDashbordAnonymousAccess(database);
       allow write: if false; 
     }
 
