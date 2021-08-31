@@ -152,6 +152,7 @@ void main() {
 
         verify(navigationNotifier.handleAppInitialized(
           isAppInitialized: anyNamed('isAppInitialized'),
+          isLoggedIn: anyNamed('isLoggedIn'),
         )).called(once);
       },
     );
@@ -186,8 +187,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -221,8 +226,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -256,8 +265,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        );
       },
     );
 
@@ -291,8 +304,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        );
       },
     );
 
@@ -326,8 +343,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -377,9 +398,12 @@ void main() {
           ),
         );
 
-        verify(navigationNotifier.handleAppInitialized(
-          isAppInitialized: anyNamed('isAppInitialized'),
-        )).called(once);
+        verify(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        ).called(once);
       },
     );
   });

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 
 /// Stub implementation of the [AuthNotifier].
 ///
@@ -62,4 +63,8 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   AuthState get authState => _authState;
+
+  @override
+  Future<void> handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) async {}
 }

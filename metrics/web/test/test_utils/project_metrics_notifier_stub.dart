@@ -66,9 +66,6 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   void filterByProjectName(String value) {}
 
   @override
-  void resetProjectNameFilter() {}
-
-  @override
   Future<void> setProjects(
       List<ProjectModel> newProjectModels, String projectErrorMessage) async {
     return;
@@ -91,4 +88,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   void handlePageParameters(PageParametersModel parameters) {}
+
+  @override
+  void handlePageParametersOnQuit(PageParametersModel parameters){}
 }

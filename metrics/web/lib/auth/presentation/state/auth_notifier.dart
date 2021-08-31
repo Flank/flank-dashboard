@@ -14,6 +14,7 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/parameters/user_profile_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -24,6 +25,7 @@ import 'package:metrics/common/domain/entities/persistent_store_error_code.dart'
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -50,6 +52,9 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Used to sign in a user via Google.
   final GoogleSignInUseCase _googleSignInUseCase;
+
+  /// Used to sign in a user anonymously.
+  final SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
 
   /// Used to sign out a user.
   final SignOutUseCase _signOutUseCase;
@@ -79,7 +84,10 @@ class AuthNotifier extends ChangeNotifier {
   PersistentStoreErrorMessage _userProfileErrorMessage;
 
   /// Contains a user's authorization state.
-  AuthState _authState;
+  AuthState _authState = AuthState.loggedOut;
+
+  /// Indicates whether the public dashboard feature is enabled.
+  bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from authentication state updates.
@@ -107,6 +115,7 @@ class AuthNotifier extends ChangeNotifier {
     this._receiveAuthUpdates,
     this._signInUseCase,
     this._googleSignInUseCase,
+    this._signInAnonymouslyUseCase,
     this._signOutUseCase,
     this._receiveUserProfileUpdates,
     this._createUserProfileUseCase,
@@ -114,6 +123,7 @@ class AuthNotifier extends ChangeNotifier {
   )   : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_googleSignInUseCase != null),
+        assert(_signInAnonymouslyUseCase != null),
         assert(_signOutUseCase != null),
         assert(_receiveUserProfileUpdates != null),
         assert(_createUserProfileUseCase != null),
@@ -228,10 +238,34 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
+  /// Handles the anonymous log in of the user.
+  Future<void> handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) async {
+    _isPublicDashboardFeatureEnabled = model.isEnabled;
+    if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
+      await _signInAnonymously();
+    }
+  }
+
   /// Signs out the user from the app.
   Future<void> signOut() async {
     await _userProfileSubscription?.cancel();
     await _signOutUseCase();
+  }
+
+  /// Signs in a user to the app using anonymous authentication.
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
+  Future<void> _signInAnonymously() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _clearErrorMessages();
+    try {
+      await _signInAnonymouslyUseCase();
+    } on AuthenticationException catch (exception) {
+      _handleAuthErrorMessage(exception.code);
+    }
   }
 
   /// Subscribes to a user profile updates.
