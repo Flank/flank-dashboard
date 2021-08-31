@@ -13,6 +13,7 @@ import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -22,6 +23,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -32,6 +34,7 @@ void main() {
   group("AuthNotifier", () {
     final signInUseCase = SignInUseCaseMock();
     final googleSignInUseCase = GoogleSignInUseCaseMock();
+    final signInAnonymouslyUseCase = SignInAnonymouslyUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
     final receiveUserProfileUpdates = ReceiveUserProfileUpdatesMock();
@@ -73,6 +76,7 @@ void main() {
       receiveAuthUpdates,
       signInUseCase,
       googleSignInUseCase,
+      signInAnonymouslyUseCase,
       signOutUseCase,
       receiveUserProfileUpdates,
       createUserProfileUseCase,
@@ -106,6 +110,7 @@ void main() {
           null,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -121,6 +126,7 @@ void main() {
           receiveAuthUpdates,
           null,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -138,6 +144,26 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             null,
+            signInAnonymouslyUseCase,
+            signOutUseCase,
+            receiveUserProfileUpdates,
+            createUserProfileUseCase,
+            updateUserProfileUseCase,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws AssertionError if a sign in anonymously use case parameter is null",
+      () {
+        expect(
+          () => AuthNotifier(
+            receiveAuthUpdates,
+            signInUseCase,
+            googleSignInUseCase,
+            null,
             signOutUseCase,
             receiveUserProfileUpdates,
             createUserProfileUseCase,
@@ -154,6 +180,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           null,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -171,6 +198,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             null,
             createUserProfileUseCase,
@@ -189,6 +217,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             receiveUserProfileUpdates,
             null,
@@ -207,6 +236,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             receiveUserProfileUpdates,
             createUserProfileUseCase,
@@ -257,6 +287,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -294,6 +325,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -334,6 +366,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -370,6 +403,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -410,6 +444,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -446,6 +481,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -477,6 +513,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -512,6 +549,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -540,6 +578,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -570,6 +609,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -618,6 +658,19 @@ void main() {
     );
 
     test(
+      ".isLoading status is false if ._signInAnonymously() is finished with an error",
+      () async {
+        when(signInAnonymouslyUseCase())
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.handlePublicDashboardFeatureConfigUpdates(
+            const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+        expect(authNotifier.isLoading, isFalse);
+      },
+    );
+
+    test(
       ".signInWithEmailAndPassword() delegates to sign in use case",
       () async {
         await authNotifier.signInWithEmailAndPassword(email, password);
@@ -648,6 +701,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -664,6 +718,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -676,6 +731,44 @@ void main() {
       verifyNever(googleSignInUseCase());
     });
 
+    test("._signInAnonymously() delegates to sign in anonymously use case",
+        () async {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signInAnonymouslyUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
+      await authNotifier.handlePublicDashboardFeatureConfigUpdates(
+          const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+      verify(signInAnonymouslyUseCase()).called(once);
+    });
+
+    test("._signInAnonymously() does nothing if isLoading is true", () {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signInAnonymouslyUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
+      authNotifier.signInWithEmailAndPassword(email, password);
+      authNotifier.handlePublicDashboardFeatureConfigUpdates(
+          const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+      verifyNever(signInAnonymouslyUseCase());
+    });
+
     test(
       ".authErrorMessage is populated when the auth error occurred during the sign-in process",
       () async {
@@ -686,6 +779,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -708,6 +802,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -730,6 +825,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -752,6 +848,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -774,6 +871,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -803,6 +901,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -832,6 +931,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -861,6 +961,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -984,6 +1085,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -1035,6 +1137,9 @@ void main() {
 class SignInUseCaseMock extends Mock implements SignInUseCase {}
 
 class GoogleSignInUseCaseMock extends Mock implements GoogleSignInUseCase {}
+
+class SignInAnonymouslyUseCaseMock extends Mock
+    implements SignInAnonymouslyUseCase {}
 
 class SignOutUseCaseMock extends Mock implements SignOutUseCase {}
 
