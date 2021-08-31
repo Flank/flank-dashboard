@@ -3,8 +3,9 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /project_groups/{projectGroupId} {
-      allow read, delete: if isAccessAuthorized(database);
-      allow create, update: if isAccessAuthorized(database) && isProjectGroupValid();
+      allow read: if isSignedIn(database) || isPublicDashbordAnonymousAccess(database);
+      allow delete: if isSignedIn(database);
+      allow create, update: if isSignedIn(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
@@ -47,7 +48,12 @@ service cloud.firestore {
 
   /// Checks if a user access is authorized.
   function isAccessAuthorized(database) {
-    return request.auth.uid != null && isEmailValid(database)
+    return request.auth.uid != null && isEmailValid(database);
+  }
+
+  /// Checks if a user access is authorized.
+  function isSignedIn(database) {
+    return request.auth.uid != null && isEmailValid(database);
   }
 
   /// Checks if the request is from a user with a valid email.
@@ -68,11 +74,33 @@ service cloud.firestore {
     return isEmailDomainExists;
   }
 
+  /// Checks if the sign in provider from the request equals to the given parameter.
+  function checkSignInProvider(signInProvider) {
+    let authToken = request.auth.token;
+
+    return authToken.firebase.sign_in_provider == signInProvider;
+  }
+
   /// Checks if the sign in provider from the request is a password.
   function isSignInProviderPassword() {
     let authToken = request.auth.token;
 
     return authToken.firebase.sign_in_provider == 'password';
+  }
+
+  /// Checks if a sign-in provider from a request is anonymous and the public dashboard feature is enabled.
+  function isPublicDashbordAnonymousAccess(database) {
+    return isSignInProviderAnonymous(database) && isPublicDashboardEnabled(database);
+  }
+
+  /// Checks if the sign in provider from the request is an anonymous.
+  function isSignInProviderAnonymous(database) {
+    return checkSignInProvider('anonymous');
+  }
+
+  /// Checks if the public dashboard feature is enabled.
+  function isPublicDashboardEnabled(database) {
+    return get(/databases/$(database)/documents/feature_config/feature_config).data.isPublicDashboardEnabled;
   }
 
   /// Checks whether project group data from the request is valid.
