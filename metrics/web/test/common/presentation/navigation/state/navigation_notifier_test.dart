@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
@@ -1558,6 +1559,45 @@ void main() {
         verify(
           navigationState.replaceState(data, title, path),
         ).called(once);
+      },
+    );
+
+    test(
+      ".push() redirects anonymous user to the passed route config if RouteConfig.allowsAnonymousAccess is true",
+      () {
+        final notifier = NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
+            navigationState);
+        final routeWithAnonymousAccess = DefaultRoutes.dashboard;
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthUpdates(AuthState.loggedInAnonymously);
+        notifier.push(routeWithAnonymousAccess);
+
+        expect(notifier.currentConfiguration, equals(routeWithAnonymousAccess));
+      },
+    );
+
+    test(
+      ".push() redirects anonymous user to the login page if RouteConfig.allowsAnonymousAccess is false",
+          () {
+        final notifier = NavigationNotifier(
+            pageFactory,
+            pageParametersFactory,
+            pageRouteConfigurationFactory,
+            routeConfigurationLocationConverter,
+            navigationState);
+
+        final routeWithoutAnonymousAccess = DefaultRoutes.projectGroups;
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthUpdates(AuthState.loggedInAnonymously);
+        notifier.push(routeWithoutAnonymousAccess);
+
+        expect(notifier.currentConfiguration, equals(DefaultRoutes.login));
       },
     );
   });

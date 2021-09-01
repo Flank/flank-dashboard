@@ -56,11 +56,12 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// An [AuthState] that represents the current authentication state
   /// of the user.
-  // ignore: unused_field
   AuthState _authState;
 
   /// A flag that indicates whether the user is logged in.
-  bool _isUserLoggedIn = false;
+  bool get _isUserLoggedIn =>
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
 
   /// A flag that indicates whether the application is finished loading.
   bool _isAppInitialized = false;
@@ -103,7 +104,7 @@ class NavigationNotifier extends ChangeNotifier {
   void handleLoggedOut() {
     if (!_isUserLoggedIn) return;
 
-    _isUserLoggedIn = false;
+    _authState = AuthState.loggedOut;
     _redirectRoute = null;
 
     final currentRouteName = currentConfiguration?.name;
@@ -119,9 +120,9 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// Does nothing if a user is logged in.
   void handleLoggedIn() {
-    if (_isUserLoggedIn) return;
+    if (_authState == AuthState.loggedIn) return;
 
-    _isUserLoggedIn = true;
+    _authState = AuthState.loggedIn;
 
     _redirect();
   }
@@ -169,11 +170,12 @@ class NavigationNotifier extends ChangeNotifier {
 
     replaceState(path: path);
   }
-  
-  // ignore: use_setters_to_change_properties
+
   /// Updates the current [AuthState] with the given [authState].
   void handleAuthUpdates(AuthState authState) {
-    _authState = authState;
+    if (authState == AuthState.loggedInAnonymously) {
+      _authState = authState;
+    }
   }
 
   /// Determines whether the current page can be popped.
@@ -326,7 +328,9 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) {
+    if ((!_isUserLoggedIn && authorizationRequired) ||
+        (_authState == AuthState.loggedInAnonymously &&
+            !configuration.allowsAnonymousAccess)) {
       _redirectRoute = configuration;
 
       return DefaultRoutes.login;
