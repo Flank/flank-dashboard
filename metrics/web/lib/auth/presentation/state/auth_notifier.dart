@@ -172,6 +172,7 @@ class AuthNotifier extends ChangeNotifier {
   void subscribeToAuthenticationUpdates() {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
+      _isInitialized = true;
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
         _authState = user.isAnonymous
@@ -181,7 +182,6 @@ class AuthNotifier extends ChangeNotifier {
         _authState = AuthState.loggedOut;
         _selectedTheme = null;
         _userProfileModel = null;
-        _isInitialized = true;
         notifyListeners();
       }
     });
@@ -312,11 +312,9 @@ class AuthNotifier extends ChangeNotifier {
         selectedTheme: userProfile.selectedTheme,
       );
       _isLoading = false;
-      _isInitialized = true;
       notifyListeners();
     } else {
       await _createUserProfile(id, _selectedTheme);
-      _isInitialized = true;
     }
   }
 
