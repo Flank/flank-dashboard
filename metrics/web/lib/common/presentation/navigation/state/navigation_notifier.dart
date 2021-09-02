@@ -3,6 +3,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/common/presentation/navigation/constants/default_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
@@ -52,6 +53,11 @@ class NavigationNotifier extends ChangeNotifier {
   /// A [RouteConfiguration] redirect to when the application finishes
   /// initialization.
   RouteConfiguration _redirectRoute;
+
+  /// An [AuthState] that represents the current authentication state
+  /// of the user.
+  // ignore: unused_field
+  AuthState _authState;
 
   /// A flag that indicates whether the user is logged in.
   bool _isUserLoggedIn = false;
@@ -165,6 +171,12 @@ class NavigationNotifier extends ChangeNotifier {
     );
 
     replaceState(path: path);
+  }
+  
+  // ignore: use_setters_to_change_properties
+  /// Updates the current [AuthState] with the given [authState].
+  void handleAuthUpdates(AuthState authState) {
+    _authState = authState;
   }
 
   /// Determines whether the current page can be popped.
