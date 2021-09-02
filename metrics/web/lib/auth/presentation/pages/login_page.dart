@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -46,9 +47,7 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Navigates to the dashboard screen once the user becomes logged in.
   void _loggedInListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
-
-    if (isLoggedIn != null && isLoggedIn) {
+    if (_authNotifier.authState == AuthState.loggedIn) {
       final navigationNotifier = Provider.of<NavigationNotifier>(
         context,
         listen: false,

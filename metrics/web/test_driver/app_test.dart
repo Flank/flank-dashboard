@@ -9,6 +9,7 @@ import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_app/metrics_app.dart';
+import 'package:metrics/common/presentation/project_search_input/widgets/projects_search_input.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
@@ -20,7 +21,6 @@ import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentag
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:metrics/platform/stub/metrics_config/metrics_config_factory.dart'
     if (dart.library.html) 'package:metrics/platform/web/metrics_config/metrics_config_factory.dart';

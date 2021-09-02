@@ -134,10 +134,13 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
   void handleAppInitialized({
     @required bool isAppInitialized,
+    @required bool isLoggedIn,
   }) {
     ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
+    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
 
     _isAppInitialized = isAppInitialized;
+    _isUserLoggedIn = isLoggedIn;
 
     if (_isAppInitialized) _redirect();
   }
@@ -251,7 +254,12 @@ class NavigationNotifier extends ChangeNotifier {
   /// with the path of the [_currentConfiguration].
   void _pushWithStateReplacement(RouteConfiguration configuration) {
     push(configuration);
-    replaceState(path: _currentConfiguration.path);
+
+    final path = _routeConfigurationLocationConverter.convert(
+      _currentConfiguration,
+    );
+
+    replaceState(path: path);
   }
 
   /// Handles the initial route.

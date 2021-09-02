@@ -169,6 +169,30 @@ class ProjectMetricsNotifier extends PageNotifier {
     _subscribeToProjectsNameFilter();
   }
 
+  /// Sets a new value for the [_selectedProjectGroup] and updates
+  /// [_pageParameters].
+  ///
+  /// Does nothing if the given [viewModel] equals
+  /// to the [_selectedProjectGroup].
+  void _setSelectedProjectGroup(ProjectGroupDropdownItemViewModel viewModel) {
+    if (_selectedProjectGroup == viewModel) return;
+
+    _selectedProjectGroup = viewModel;
+
+    _updatePageParameters();
+  }
+
+  /// Sets a new value for the [_projectNameFilter] and updates
+  /// [_pageParameters].
+  ///
+  /// Does nothing if the given [value] equals to the [_projectNameFilter].
+  void _setProjectNameFilter(String value) {
+    if (_projectNameFilter == value) return;
+
+    _projectNameFilter = value;
+    _updatePageParameters();
+  }
+
   /// Subscribes to a projects name filter.
   ///
   /// Updates the [_pageParameters].
@@ -176,9 +200,7 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {
-      _projectNameFilter = value;
-
-      _updatePageParameters();
+      _setProjectNameFilter(value);
     });
   }
 
@@ -205,11 +227,6 @@ class ProjectMetricsNotifier extends PageNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Resets the project name filter.
-  void resetProjectNameFilter() {
-    _projectNameFilter = null;
-  }
-
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   ///
   /// Updates the page parameters.
@@ -224,14 +241,11 @@ class ProjectMetricsNotifier extends PageNotifier {
   /// Does nothing if the [_projectGroupDropdownItems] does not contain
   /// the project group with the given [id].
   void _selectProjectGroup(String id) {
-    final projectGroup = _projectGroupDropdownItems.firstWhere(
-      (group) => group.id == id,
-      orElse: () => null,
-    );
+    final projectGroup = _findProjectGroupById(id);
 
     if (projectGroup == null) return;
 
-    _selectedProjectGroup = projectGroup;
+    _setSelectedProjectGroup(projectGroup);
   }
 
   /// Updates projects and an error message.
@@ -253,15 +267,41 @@ class ProjectMetricsNotifier extends PageNotifier {
   }
 
   @override
-  void handlePageParameters(PageParametersModel parameters) {}
+  void handlePageParameters(PageParametersModel parameters) {
+    if (parameters == null) {
+      _selectedProjectGroup = _allProjectsGroupDropdownItemViewModel;
+      _projectNameFilter = null;
+      _updatePageParameters();
+      return;
+    }
+
+    final pageParameters = parameters as DashboardPageParametersModel;
+
+    _projectNameFilter = pageParameters.projectFilter;
+    _selectedProjectGroup = _findProjectGroupById(
+      pageParameters.projectGroupId,
+    );
+
+    _setPageParameters(pageParameters);
+  }
+
+  /// Returns the [ProjectGroupDropdownItemViewModel] by the given [id],
+  /// otherwise returns `null`.
+  ProjectGroupDropdownItemViewModel _findProjectGroupById(String id) {
+    final projectGroup = _projectGroupDropdownItems?.firstWhere(
+      (group) => group.id == id,
+      orElse: () => null,
+    );
+
+    return projectGroup;
+  }
 
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
   void _refreshProjectGroupDropdownItemViewModels() {
     if (_projectGroupModels == null) {
       _projectGroupDropdownItems = null;
-      _selectedProjectGroup = null;
-
+      _setSelectedProjectGroup(null);
       return;
     }
 
@@ -276,12 +316,27 @@ class ProjectMetricsNotifier extends PageNotifier {
             ))
         .toList());
 
-    _selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
-      (group) => group.id == _selectedProjectGroup?.id,
+    final selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
+      (group) => group.id == _pageParameters?.projectGroupId,
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
 
-    notifyListeners();
+    _setSelectedProjectGroup(selectedProjectGroup);
+  }
+
+  @override
+  void handlePageParametersOnQuit(PageParametersModel parameters){
+    if (parameters == null) {
+      _selectedProjectGroup = _allProjectsGroupDropdownItemViewModel;
+      _projectNameFilter = null;
+
+      final pageParameters = DashboardPageParametersModel(
+        projectFilter: _projectNameFilter,
+        projectGroupId: _selectedProjectGroup?.id,
+      );
+
+      _pageParameters = pageParameters;
+    }
   }
 
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
@@ -600,7 +655,6 @@ class ProjectMetricsNotifier extends PageNotifier {
       projectFilter: _projectNameFilter,
       projectGroupId: _selectedProjectGroup?.id,
     );
-
     _setPageParameters(pageParameters);
   }
 

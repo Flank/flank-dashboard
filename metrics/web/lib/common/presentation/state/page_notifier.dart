@@ -13,4 +13,8 @@ abstract class PageNotifier extends ChangeNotifier {
   /// Updates the [PageParametersModel] for the specific page using the given
   /// [parameters].
   void handlePageParameters(PageParametersModel parameters);
+
+  /// Updates the [PageParametersModel] for the specific page using the given
+  /// [parameters] when the page is closed.
+  void handlePageParametersOnQuit(PageParametersModel parameters);
 }
