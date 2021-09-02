@@ -149,6 +149,27 @@ firebase.initializeApp(firebaseConfig);
 Finally, you have a configured Flutter application that works with your Firebase instance.
 It's time to deploy your Flutter application to the Firebase Hosting!
 
+## Firebase Anonymous sign-In configuration
+
+The Anonymous sign-in option allows authorizing to the application anonymously.
+To enable the Anonymous sign-in option, consider the following steps:
+
+1. Open the [Firebase console](https://console.firebase.google.com/) and choose your project.
+2. Navigate to `Authentication` -> `Sign-in method`.
+3. Press the `Anonymous` item in the `Sign-in providers` table.
+4. Enable the `Anonymous` sign-in method using the toggle in the opened menu.
+5. Press the `Save` button.
+6. Navigate to `Cloud Firestore` -> `Data`.
+7. Open the `feature_config` collection (or create one by pressing the `Start collection` button).
+8. Open the `feature_config` document (or create one by pressing the `Add document` button).
+9. Find the `isPublicDashboardEnabled` field (or create one by pressing the `Add field` button).
+10. Ensure the `isPublicDashboardEnabled` value is `true`.
+11. Press the `Update` button to save the field value.
+
+The anonymous sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPublicDashboardEnabled` configuration stands for the anonymous auth availability of the application. If the `isPublicDashboardEnabled` is `false` then users are not allowed to sign in using the anonymous sign-in method. To know more about the `Feature Config` consider the [Feature Config](https://github.com/Flank/flank-dashboard/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
+
+When both the anonymous sign-in option and appropriate feature config is enabled, users can sign in to the application anonymously.
+
 ## Firebase Email and Password Sign-In configuration
 
 The email and password sign-in option allows authorizing to the application using the email and password a user has been created with. About how to create a new user with email and password consider the [Creating a new Firebase User](#creating-a-new-firebase-user) section. _Please note, that adding a new user requires the email and password sign-in option to be enabled!_
