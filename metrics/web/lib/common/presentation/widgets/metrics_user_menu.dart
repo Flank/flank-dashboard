@@ -89,20 +89,20 @@ class MetricsUserMenu extends StatelessWidget {
                   },
                 ),
               ),
-              if(!authNotifier.userProfileViewModel.isAnonymous)
-              Padding(
-                padding: itemPadding,
-                child: TappableArea(
-                  onTap: () => navigationNotifier.push(
-                    DefaultRoutes.projectGroups,
-                  ),
-                  builder: (context, isHovered, child) => child,
-                  child: Text(
-                    CommonStrings.projectGroups,
-                    style: userMenuTextStyle,
+              if (!authNotifier.userProfileViewModel.isAnonymous)
+                Padding(
+                  padding: itemPadding,
+                  child: TappableArea(
+                    onTap: () => navigationNotifier.push(
+                      DefaultRoutes.projectGroups,
+                    ),
+                    builder: (context, isHovered, child) => child,
+                    child: Text(
+                      CommonStrings.projectGroups,
+                      style: userMenuTextStyle,
+                    ),
                   ),
                 ),
-              ),
               Selector<FeatureConfigNotifier, bool>(
                 selector: (_, notifier) {
                   return notifier.debugMenuFeatureConfigViewModel.isEnabled;

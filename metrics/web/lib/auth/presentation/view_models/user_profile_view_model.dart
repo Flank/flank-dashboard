@@ -4,7 +4,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A view model that represents the logged in user profile.
+/// A view model that represents the logged-in user profile.
 class UserProfileViewModel extends Equatable {
   /// Indicates whether the logged in user is anonymous.
   final bool isAnonymous;

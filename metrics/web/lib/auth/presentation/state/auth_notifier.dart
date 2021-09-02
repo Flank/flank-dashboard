@@ -72,7 +72,7 @@ class AuthNotifier extends ChangeNotifier {
   /// A class that represents a user profile model.
   UserProfileModel _userProfileModel;
 
-  /// A class that represents the logged in user profile.
+  /// A view model that represents the logged-in user profile.
   UserProfileViewModel _userProfileViewModel;
 
   /// The stream subscription needed to be able to unsubscribe
@@ -147,7 +147,7 @@ class AuthNotifier extends ChangeNotifier {
   /// Provides a class that represents a user profile model.
   UserProfileModel get userProfileModel => _userProfileModel;
 
-  /// Provides a class, that represents a user profile model used to
+  /// Provides a view model that represents the logged-in user profile.
   UserProfileViewModel get userProfileViewModel => _userProfileViewModel;
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
