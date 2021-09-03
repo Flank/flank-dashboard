@@ -41,7 +41,8 @@ void main() {
     NavigationNotifier notifier;
 
     void prepareNotifier() {
-      notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+      notifier.handleAppInitialized(
+          isAppInitialized: true, authState: AuthState.loggedIn);
 
       notifier.handleLoggedOut();
     }
@@ -234,7 +235,7 @@ void main() {
       ".handleLoggedIn() clears pages before redirect",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: true, isLoggedIn: false);
+            isAppInitialized: true, authState: AuthState.loggedOut);
         notifier.push(DefaultRoutes.projectGroups);
 
         notifier.handleLoggedIn();
@@ -265,7 +266,8 @@ void main() {
 
         notifier.handleLoggedIn();
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentConfigurationName = notifier.currentConfiguration.name;
 
@@ -319,12 +321,13 @@ void main() {
 
         notifier.handleLoggedIn();
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: true);
+            isAppInitialized: false, authState: AuthState.loggedIn);
         notifier.push(configuration);
 
         notifier.handleLoggedIn();
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentConfigurationName = notifier.currentConfiguration.name;
 
@@ -337,18 +340,18 @@ void main() {
       () {
         expect(
           () => notifier.handleAppInitialized(
-              isAppInitialized: null, isLoggedIn: false),
+              isAppInitialized: null, authState: AuthState.loggedOut),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      ".handleAppInitialized() throws an argument error if the given is logged in is null",
+      ".handleAppInitialized() throws an argument error if the given authState is null",
       () {
         expect(
           () => notifier.handleAppInitialized(
-              isAppInitialized: false, isLoggedIn: null),
+              isAppInitialized: false, authState: null),
           throwsArgumentError,
         );
       },
@@ -358,12 +361,13 @@ void main() {
       ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is loading page",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.push(DefaultRoutes.loading);
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentPage = notifier.pages.last;
 
@@ -376,7 +380,8 @@ void main() {
       () {
         notifier.handleLoggedIn();
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentPage = notifier.pages.last;
 
@@ -388,12 +393,13 @@ void main() {
       ".handleAppInitialized() redirects to the redirect route when the app is initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.handleInitialRoutePath(DefaultRoutes.projectGroups);
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentPage = notifier.pages.last;
 
@@ -405,13 +411,15 @@ void main() {
       ".handleAppInitialized() clears the redirect route after redirect",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.handleInitialRoutePath(DefaultRoutes.projectGroups);
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final currentPage = notifier.pages.last;
 
@@ -423,13 +431,14 @@ void main() {
       ".handleAppInitialized() clears pages before redirect",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.handleInitialRoutePath(DefaultRoutes.loading);
         notifier.push(DefaultRoutes.dashboard);
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         final pages = notifier.pages;
 
@@ -442,14 +451,15 @@ void main() {
       () {
         final configuration = DefaultRoutes.projectGroups;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
         notifier.push(configuration);
 
         when(routeConfigurationLocationConverter.convert(configuration))
             .thenReturn(configuration.path);
 
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
 
         verify(
           navigationState.replaceState(any, any, configuration.path),
@@ -718,7 +728,7 @@ void main() {
             .thenReturn(expectedConfiguration);
 
         notifier.handleAppInitialized(
-            isAppInitialized: true, isLoggedIn: false);
+            isAppInitialized: true, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.push(expectedConfiguration);
@@ -818,7 +828,7 @@ void main() {
       ".push() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.push(DefaultRoutes.dashboard);
 
@@ -834,7 +844,7 @@ void main() {
         final configuration = DefaultRoutes.dashboard;
 
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.push(configuration);
 
@@ -938,7 +948,8 @@ void main() {
           routeConfigurationLocationConverter,
           navigationState,
         );
-        notifier.handleAppInitialized(isAppInitialized: true, isLoggedIn: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedIn);
         notifier.handleLoggedIn();
 
         notifier.push(routeConfiguration);
@@ -951,7 +962,7 @@ void main() {
       ".pushReplacement() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushReplacement(DefaultRoutes.dashboard);
 
@@ -966,7 +977,7 @@ void main() {
       () {
         final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushReplacement(configuration);
 
@@ -1070,7 +1081,7 @@ void main() {
       ".pushStateReplacement() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushStateReplacement(DefaultRoutes.dashboard);
 
@@ -1085,7 +1096,7 @@ void main() {
       () {
         final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushStateReplacement(configuration);
 
@@ -1208,7 +1219,7 @@ void main() {
       ".pushAndRemoveUntil() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushAndRemoveUntil(
           DefaultRoutes.dashboard,
@@ -1226,7 +1237,7 @@ void main() {
       () {
         final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.pushAndRemoveUntil(
           configuration,
@@ -1382,7 +1393,7 @@ void main() {
       ".handleInitialRoutePath() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.handleInitialRoutePath(DefaultRoutes.dashboard);
 
@@ -1397,7 +1408,7 @@ void main() {
       () {
         final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.handleInitialRoutePath(configuration);
 
@@ -1504,7 +1515,7 @@ void main() {
           navigationState,
         );
         notifier.handleAppInitialized(
-            isAppInitialized: true, isLoggedIn: false);
+            isAppInitialized: true, authState: AuthState.loggedOut);
         notifier.handleLoggedIn();
 
         notifier.handleInitialRoutePath(routeConfiguration);
@@ -1517,7 +1528,7 @@ void main() {
       ".handleNewRoutePath() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.handleNewRoutePath(DefaultRoutes.dashboard);
 
@@ -1532,7 +1543,7 @@ void main() {
       () {
         final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(
-            isAppInitialized: false, isLoggedIn: false);
+            isAppInitialized: false, authState: AuthState.loggedOut);
 
         notifier.handleNewRoutePath(configuration);
 
@@ -1616,7 +1627,8 @@ void main() {
             navigationState);
         final routeWithAnonymousAccess = DefaultRoutes.dashboard;
 
-        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedOut);
         notifier.handleAuthUpdates(AuthState.loggedInAnonymously);
         notifier.push(routeWithAnonymousAccess);
 
@@ -1626,7 +1638,7 @@ void main() {
 
     test(
       ".push() redirects anonymous user to the login page if RouteConfig.allowsAnonymousAccess is false",
-          () {
+      () {
         final notifier = NavigationNotifier(
             pageFactory,
             pageParametersFactory,
@@ -1636,7 +1648,8 @@ void main() {
 
         final routeWithoutAnonymousAccess = DefaultRoutes.projectGroups;
 
-        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAppInitialized(
+            isAppInitialized: true, authState: AuthState.loggedOut);
         notifier.handleAuthUpdates(AuthState.loggedInAnonymously);
         notifier.push(routeWithoutAnonymousAccess);
 

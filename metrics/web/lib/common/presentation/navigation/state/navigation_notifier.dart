@@ -132,16 +132,17 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// If the [isAppInitialized] is `true`, redirects to the redirect route.
   ///
-  /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
+  /// Throws an [ArgumentError] if the given [isAppInitialized] or [authState]
+  /// is `null`.
   void handleAppInitialized({
     @required bool isAppInitialized,
-    @required bool isLoggedIn,
+    @required AuthState authState,
   }) {
     ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
-    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
+    ArgumentError.checkNotNull(authState, 'authState');
 
     _isAppInitialized = isAppInitialized;
-    _isUserLoggedIn = isLoggedIn;
+    _authState = authState;
 
     if (_isAppInitialized) _redirect();
   }
@@ -172,12 +173,6 @@ class NavigationNotifier extends ChangeNotifier {
     );
 
     replaceState(path: path);
-  }
-  
-  // ignore: use_setters_to_change_properties
-  /// Updates the current [AuthState] with the given [authState].
-  void handleAuthUpdates(AuthState authState) {
-    _authState = authState;
   }
 
   /// Updates the current [AuthState] with the given [authState].
