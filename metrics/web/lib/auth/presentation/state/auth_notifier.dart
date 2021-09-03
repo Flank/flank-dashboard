@@ -96,6 +96,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Stores the loading status for the sign-in process.
   bool _isLoading = false;
 
+  /// Indicates whether the [AuthNotifier] is initialized.
+  bool _isInitialized = false;
+
   /// A currently selected [ThemeType].
   ThemeType _selectedTheme;
 
@@ -140,6 +143,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Indicates whether the sign-in process is in progress or not.
   bool get isLoading => _isLoading;
 
+  /// Indicates whether the [AuthNotifier] is initialized.
+  bool get isInitialized => _isInitialized;
+
   /// Provides a class that represents a user profile model.
   UserProfileModel get userProfileModel => _userProfileModel;
 
@@ -166,6 +172,7 @@ class AuthNotifier extends ChangeNotifier {
   void subscribeToAuthenticationUpdates() {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
+      _isInitialized = true;
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
         _authState = user.isAnonymous
@@ -305,7 +312,6 @@ class AuthNotifier extends ChangeNotifier {
         selectedTheme: userProfile.selectedTheme,
       );
       _isLoading = false;
-
       notifyListeners();
     } else {
       await _createUserProfile(id, _selectedTheme);
