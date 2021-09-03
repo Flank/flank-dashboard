@@ -22,11 +22,10 @@ const {
   projects,
 } = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
+const collection = "build";
 
 // Tests builds security rules with public dashboard feature.
 describe("", async () => {
-  const collection = "build";
-
   const usersPermissions = [
     {
       'describe': 'Authenticated as an anonymous user',
@@ -352,7 +351,6 @@ describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true)
   );
-  const collection = "build";
 
   before(async () => {
     await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, featureConfigDisabled));
