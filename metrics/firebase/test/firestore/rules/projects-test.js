@@ -20,11 +20,10 @@ const {
   featureConfigEnabled,
   featureConfigDisabled
 } = require("./test_utils/test-data");
+const collection = "projects";
 
 // Tests projects security rules with public dashboard feature.
 describe("", async function () {
-  const collection = "projects";
-
   const usersPermissions = [
     {
       'describe': 'Authenticated as an anonymous user',
@@ -264,12 +263,6 @@ describe("", async function () {
     },
   ];
 
-  before(async () => {
-    await setupTestDatabaseWith(
-      Object.assign({}, projects, allowedEmailDomains)
-    );
-  });
-
   describe("Projects collection rules", () => {
     async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
       const featureConfigPath = "feature_config/feature_config";
@@ -352,12 +345,12 @@ describe("", async function () {
   });
 });
 
+// Runs general security rules tests.
 describe("", async function () {
   const unauthenticatedApp = await getApplicationWith(null);
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true)
   );
-  const collection = "projects";
 
   before(async () => {
     await setupTestDatabaseWith(
