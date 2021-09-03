@@ -210,8 +210,8 @@ void main() {
 
     testWidgets(
       "displays the 'Sign in' menu item if the user is signed in anonymously",
-          (WidgetTester tester) async {
-            final authNotifier = AuthNotifierMock();
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
 
         when(authNotifier.userProfileViewModel).thenReturn(
           const UserProfileViewModel(isAnonymous: true),
@@ -227,7 +227,7 @@ void main() {
 
     testWidgets(
       "displays the 'Logout' menu item if the user is logged in",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.userProfileViewModel).thenReturn(
@@ -261,7 +261,7 @@ void main() {
 
     testWidgets(
       "does not display the 'Project Groups' menu item if the user is signed in anonymously",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.userProfileViewModel).thenReturn(
@@ -278,7 +278,7 @@ void main() {
 
     testWidgets(
       "does not display the 'Logout' menu item if the user is signed in anonymously",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.userProfileViewModel).thenReturn(
@@ -295,7 +295,7 @@ void main() {
 
     testWidgets(
       "does not display the 'Sign in' menu item if the user is logged in",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.userProfileViewModel).thenReturn(

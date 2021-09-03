@@ -17,7 +17,7 @@ void main() {
       );
     });
 
-    test("creates an instance with the given parameters", () {
+    test("creates an instance of the UserProfileViewModel with the given parameters", () {
       const metric = UserProfileViewModel(isAnonymous: isAnonymous);
 
       expect(metric.isAnonymous, equals(isAnonymous));
