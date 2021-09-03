@@ -56,6 +56,8 @@ void main() {
     testWidgets(
       "subscribes to authentication updates on init state",
       (tester) async {
+        when(authNotifier.isInitialized).thenReturn(true);
+
         await tester.pumpWidget(_LoadingPageTestbed(
           authNotifier: authNotifier,
         ));
@@ -125,6 +127,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         when(navigationNotifier.currentConfiguration).thenReturn(
           DefaultRoutes.dashboard,
@@ -165,6 +168,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -204,6 +208,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -243,6 +248,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(false);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -282,6 +288,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -321,6 +328,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -369,6 +377,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         when(navigationNotifier.currentConfiguration).thenReturn(
           DefaultRoutes.dashboard,
