@@ -9,7 +9,7 @@ service cloud.firestore {
     }
 
     match /projects/{projectId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isPublicDashbordAnonymousAccess(database);
       allow create, update: if isAccessAuthorized(database) && isProjectValid();
       allow delete: if false;
     }

@@ -52,6 +52,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
+      _authNotifier.isInitialized &&
       _isLoggedIn != null &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
