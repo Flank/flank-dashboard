@@ -72,4 +72,7 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   UserProfileViewModel get userProfileViewModel =>
       const UserProfileViewModel(isAnonymous: false);
+  
+  @override
+  bool get isInitialized => true;
 }

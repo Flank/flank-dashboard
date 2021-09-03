@@ -1131,6 +1131,47 @@ void main() {
         userProfileController.add(userProfile);
       },
     );
+
+    test(
+      "_userProfileUpdatesListener() sets the AuthNotifier.isInitialized value to true once receiving the user profile",
+      () {
+        final streamController = StreamController<UserProfile>();
+        final userProfile = UserProfile(
+          id: userProfileModel.id,
+          selectedTheme: userProfileModel.selectedTheme,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signInAnonymouslyUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return authNotifier.isInitialized == true;
+          },
+        );
+
+        authNotifier.addListener(listener);
+        streamController.add(userProfile);
+      },
+    );
   });
 }
 
