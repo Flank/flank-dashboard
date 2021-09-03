@@ -56,6 +56,8 @@ void main() {
     testWidgets(
       "subscribes to authentication updates on init state",
       (tester) async {
+        when(authNotifier.isInitialized).thenReturn(true);
+
         await tester.pumpWidget(_LoadingPageTestbed(
           authNotifier: authNotifier,
         ));
@@ -125,6 +127,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         when(navigationNotifier.currentConfiguration).thenReturn(
           DefaultRoutes.dashboard,
@@ -152,6 +155,7 @@ void main() {
 
         verify(navigationNotifier.handleAppInitialized(
           isAppInitialized: anyNamed('isAppInitialized'),
+          isLoggedIn: anyNamed('isLoggedIn'),
         )).called(once);
       },
     );
@@ -164,6 +168,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -186,8 +191,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -199,6 +208,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -221,8 +231,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -234,6 +248,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(false);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -256,8 +271,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        );
       },
     );
 
@@ -269,6 +288,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -291,8 +311,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        );
       },
     );
 
@@ -304,6 +328,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -326,8 +351,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verifyNever(navigationNotifier.handleAppInitialized(
-            isAppInitialized: anyNamed('isAppInitialized')));
+        verifyNever(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: anyNamed('isLoggedIn'),
+          ),
+        );
       },
     );
 
@@ -348,6 +377,7 @@ void main() {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           debugMenuViewModel,
         );
+        when(authNotifier.isInitialized).thenReturn(true);
 
         when(navigationNotifier.currentConfiguration).thenReturn(
           DefaultRoutes.dashboard,
@@ -377,9 +407,12 @@ void main() {
           ),
         );
 
-        verify(navigationNotifier.handleAppInitialized(
-          isAppInitialized: anyNamed('isAppInitialized'),
-        )).called(once);
+        verify(
+          navigationNotifier.handleAppInitialized(
+            isAppInitialized: anyNamed('isAppInitialized'),
+            isLoggedIn: false,
+          ),
+        ).called(once);
       },
     );
   });

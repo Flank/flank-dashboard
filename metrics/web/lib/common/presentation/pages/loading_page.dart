@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
@@ -52,6 +52,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
+      _authNotifier.isInitialized &&
       _isLoggedIn != null &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
@@ -194,7 +195,9 @@ class _LoadingPageState extends State<LoadingPage>
     final notifier = Provider.of<NavigationNotifier>(context, listen: false);
 
     Router.neglect(context, () {
-      notifier.handleAppInitialized(isAppInitialized: true);
+      notifier.handleAppInitialized(
+          isAppInitialized: true,
+          isLoggedIn: _isLoggedIn);
     });
   }
 

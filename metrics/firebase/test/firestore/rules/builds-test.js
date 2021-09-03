@@ -13,31 +13,64 @@ const {
   googleSignInProviderId,
   getAllowedEmailUser,
   getDeniedEmailUser,
+  getAnonymousUser,
+  featureConfigEnabled,
+  featureConfigDisabled,
   builds,
   getBuild,
   allowedEmailDomains,
   projects,
 } = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
+const collection = "build";
 
+// Tests builds security rules with public dashboard feature.
 describe("", async () => {
-  const passwordProviderAllowedEmailApp = await getApplicationWith(
-    getAllowedEmailUser(passwordSignInProviderId, true)
-  );
-  const unauthenticatedApp = await getApplicationWith(null);
-  const collection = "build";
-
-  const users = [
+  const usersPermissions = [
+    {
+      'describe': 'Authenticated as an anonymous user',
+      'app': await getApplicationWith(getAnonymousUser()),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': true,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      }
+    },
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, true)
       ),
-      'can': {
-        'create': true,
-        'read': true,
-        'update': true,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -45,11 +78,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, true)
       ),
-      'can': {
-        'create': true,
-        'read': true,
-        'update': true,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -57,11 +102,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, false)
       ),
-      'can': {
-        'create': true,
-        'read': true,
-        'update': true,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -69,11 +126,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, false)
       ),
-      'can': {
-        'create': true,
-        'read': true,
-        'update': true,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -81,11 +150,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, true)
       ),
-      'can': {
-        'create': true,
-        'read': true,
-        'update': true,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': true,
+            'read': true,
+            'update': true,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -93,11 +174,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, true)
       ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -105,11 +198,23 @@ describe("", async () => {
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, false)
       ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
       }
     },
     {
@@ -117,30 +222,137 @@ describe("", async () => {
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, false)
       ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
       }
     },
     {
       'describe': 'Unauthenticated user',
-      'app': unauthenticatedApp,
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
+      'app': await getApplicationWith(null),
+      'public_dashboard': {
+        'on': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        'off': {
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        }
       }
     },
   ];
 
-  before(async () => {
-    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects));
+  describe("Build collection rules", () => {
+    async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
+      const featureConfigPath = "feature_config/feature_config";
+
+      describe("Build tests collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
+        function () {
+          async.forEach(usersPermissions, (user, callback) => {
+            describe(user.describe, () => {
+              before(async () => {
+                await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, config));
+              });
+              let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
+                ? 'on'
+                : 'off';
+              let canCreateDescription = user.public_dashboard[publicDashboardState].can.create ?
+                "allows creating a build" : "does not allow creating a build";
+              let canReadDescription = user.public_dashboard[publicDashboardState].can.read ?
+                "allows reading builds" : "does not allow reading builds";
+              let canUpdateDescription = user.public_dashboard[publicDashboardState].can.update ?
+                "allows updating a build" : "does not allow updating a build";
+              let canDeleteDescription = user.public_dashboard[publicDashboardState].can.delete ?
+                "allows deleting a build" : "does not allow deleting a build";
+
+              it(canCreateDescription, async () => {
+                const createPromise = user.app.collection(collection).add(getBuild());
+
+                if (user.public_dashboard[publicDashboardState].can.create) {
+                  await assertSucceeds(createPromise)
+                } else {
+                  await assertFails(createPromise)
+                }
+              });
+
+              it(canReadDescription, async () => {
+                const readPromise = user.app.collection(collection).get();
+
+                if (user.public_dashboard[publicDashboardState].can.read) {
+                  await assertSucceeds(readPromise)
+                } else {
+                  await assertFails(readPromise)
+                }
+              });
+
+              it(canUpdateDescription, async () => {
+                const updatePromise =
+                  user.app.collection(collection).doc("1").update({url: "updated"});
+
+                if (user.public_dashboard[publicDashboardState].can.update) {
+                  await assertSucceeds(updatePromise)
+                } else {
+                  await assertFails(updatePromise)
+                }
+              });
+
+              it(canDeleteDescription, async () => {
+                const deletePromise =
+                  user.app.collection(collection).doc("1").delete();
+
+                if (user.public_dashboard[publicDashboardState].can.delete) {
+                  await assertSucceeds(deletePromise)
+                } else {
+                  await assertFails(deletePromise)
+                }
+              });
+            });
+            callback();
+          });
+        });
+      callback();
+    });
   });
 
-  describe("Build collection rules", () => {
+  after(async () => {
+    await tearDown();
+  });
+});
+
+// Runs general security rules tests.
+describe("", async function () {
+  const passwordProviderAllowedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(passwordSignInProviderId, true)
+  );
+
+  before(async () => {
+    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, featureConfigDisabled));
+  });
+
+  describe("General builds collection rules", async function () {
     it("does not allow creating a build with not allowed fields", async () => {
       let build = getBuild();
       build.test = "test";
@@ -472,62 +684,6 @@ describe("", async () => {
       await assertSucceeds(
         passwordProviderAllowedEmailApp.collection(collection).add(build)
       );
-    });
-
-    async.forEach(users, (user, callback) => {
-      describe(user.describe, () => {
-        let canCreateDescription = user.can.create ?
-          "allows creating a build" : "does not allow creating a build";
-        let canReadDescription = user.can.read ?
-          "allows reading builds" : "does not allow reading builds";
-        let canUpdateDescription = user.can.update ?
-          "allows updating a build" : "does not allow updating a build";
-        let canDeleteDescription = user.can.delete ?
-          "allows deleting a build" : "does not allow deleting a build";
-
-        it(canCreateDescription, async () => {
-          const createPromise = user.app.collection(collection).add(getBuild());
-
-          if (user.can.create) {
-            await assertSucceeds(createPromise)
-          } else {
-            await assertFails(createPromise)
-          }
-        });
-
-        it(canReadDescription, async () => {
-          const readPromise = user.app.collection(collection).get();
-
-          if (user.can.read) {
-            await assertSucceeds(readPromise)
-          } else {
-            await assertFails(readPromise)
-          }
-        });
-
-        it(canUpdateDescription, async () => {
-          const updatePromise =
-            user.app.collection(collection).doc("1").update({ url: "updated" });
-
-          if (user.can.update) {
-            await assertSucceeds(updatePromise)
-          } else {
-            await assertFails(updatePromise)
-          }
-        });
-
-        it(canDeleteDescription, async () => {
-          const deletePromise =
-            user.app.collection(collection).doc("1").delete();
-
-          if (user.can.delete) {
-            await assertSucceeds(deletePromise)
-          } else {
-            await assertFails(deletePromise)
-          }
-        });
-      });
-      callback();
     });
   });
 

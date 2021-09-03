@@ -65,6 +65,9 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   AuthState get authState => _authState;
 
   @override
-  void handlePublicDashboardFeatureConfigUpdates(
-      PublicDashboardFeatureConfigModel model) {}
+  Future<void> handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) async {}
+
+  @override
+  bool get isInitialized => true;
 }
