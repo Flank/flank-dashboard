@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      "equals to another BuildResultMetricViewModel with the same parameters",
+      "equals to another UserProfileViewModel with the same parameters",
       () {
         const expected = UserProfileViewModel(isAnonymous: isAnonymous);
 
