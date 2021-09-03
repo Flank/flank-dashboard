@@ -265,10 +265,6 @@ describe("", async () => {
     },
   ];
 
-  before(async () => {
-    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects));
-  });
-
   describe("Build collection rules", () => {
     async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
       const featureConfigPath = "feature_config/feature_config";
