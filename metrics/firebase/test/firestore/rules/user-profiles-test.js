@@ -20,12 +20,11 @@ const {
   featureConfigEnabled,
   featureConfigDisabled
 } = require("./test_utils/test-data");
+const collection = "user_profiles";
+const uid = "1";
 
 // Tests user profiles security rules with public dashboard feature.
 describe("", async () => {
-  const uid = "1";
-  const collection = "user_profiles";
-
   const usersPermissions = [
     {
       'describe': 'Authenticated as an anonymous user who is an owner of the user profile',
@@ -613,8 +612,6 @@ describe("", async () => {
 
 // Runs general security rules tests.
 describe("", async function () {
-  const uid = "1";
-  const collection = "user_profiles";
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true, uid)
   )
@@ -624,8 +621,9 @@ describe("", async function () {
   });
 
   describe("General project groups collection rules", async function () {
+    let userProfile = getUserProfile();
+
     it("does not allow creating a user profile with not allowed fields", async () => {
-      let userProfile = getUserProfile();
       userProfile.test = "test";
 
       await assertFails(
@@ -634,7 +632,6 @@ describe("", async function () {
     });
 
     it("does not allow creating a user profile with not valid selected theme value", async () => {
-      let userProfile = getUserProfile();
       userProfile.selectedTheme = "test";
 
       await assertFails(
@@ -643,7 +640,6 @@ describe("", async function () {
     });
 
     it("does not allow to create a user profile with null selected theme value", async () => {
-      let userProfile = getUserProfile();
       userProfile.selectedTheme = null;
 
       await assertFails(
