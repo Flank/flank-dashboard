@@ -516,10 +516,6 @@ describe("", async () => {
     }
   ];
 
-  before(async () => {
-    await setupTestDatabaseWith(Object.assign({}, userProfiles, allowedEmailDomains));
-  });
-
   describe("Profile collection rules", () => {
     async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
       const featureConfigPath = "feature_config/feature_config";
@@ -621,9 +617,8 @@ describe("", async function () {
   });
 
   describe("General project groups collection rules", async function () {
-    let userProfile = getUserProfile();
-
     it("does not allow creating a user profile with not allowed fields", async () => {
+      let userProfile = getUserProfile();
       userProfile.test = "test";
 
       await assertFails(
@@ -632,6 +627,7 @@ describe("", async function () {
     });
 
     it("does not allow creating a user profile with not valid selected theme value", async () => {
+      let userProfile = getUserProfile();
       userProfile.selectedTheme = "test";
 
       await assertFails(
@@ -640,6 +636,7 @@ describe("", async function () {
     });
 
     it("does not allow to create a user profile with null selected theme value", async () => {
+      let userProfile = getUserProfile();
       userProfile.selectedTheme = null;
 
       await assertFails(
