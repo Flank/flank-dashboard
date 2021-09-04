@@ -2,7 +2,7 @@
 
 > Summary of the proposed change.
 
-The latest versions of Flutter bring some changes to the existing API of the framework, so we should make some changes to the code to update our project to the latest version of Flutter successfully.
+The latest versions of Flutter bring some changes to the existing API of the framework, so we should make some changes to the code to adapt our project to the latest version of Flutter.
 
 # References
 
@@ -11,7 +11,7 @@ The latest versions of Flutter bring some changes to the existing API of the fra
 * [`RaisedButton` class](https://api.flutter.dev/flutter/material/RaisedButton-class.html)
 * [`ElevatedButton` class](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
 * [Migrating to the New Material Buttons and their Themes](https://docs.google.com/document/d/1yohSuYrvyya5V1hB6j9pJskavCdVq9sVeTqSoEPsWH0/edit#heading=h.pub7jnop54q0)
-* [Use `BuildContext` synchronously linter rule](https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html)
+* [Use `BuildContext` synchronously lint rule](https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html)
 * [Use named constants lint rule](https://dart-lang.github.io/linter/lints/use_named_constants.html)
 
 # Goals
@@ -83,7 +83,7 @@ If we update Flutter to the 2.2.3 stable version, we can see that the output of 
   * `project_group_dialog_test.dart`.
 
 
-* Add checkout that the `State` is still present in the widget tree before using `BuildContext` inside async functions in accordance with [use_build_context_synchronously](https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html) lint rule. For example:
+* Add checkout that the `State` is still present in the widget tree before using `BuildContext` inside async functions in accordance with the [use_build_context_synchronously](https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html) lint rule. For example:
   ```dart
   Future<void> asyncFunction() async {
     if (mounted) {
