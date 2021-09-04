@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 const async = require('async');
-const { assertFails } = require("@firebase/rules-unit-testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   setupTestDatabaseWith,
   getApplicationWith,
@@ -17,7 +17,7 @@ describe("", async () => {
   const collection = "allowed_email_domains";
   const domain = { "test.com": {} };
 
-  const users = [
+  const usersPermissions = [
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
@@ -131,7 +131,7 @@ describe("", async () => {
   });
 
   describe("Allowed email domains collection rules", () => {
-    async.forEach(users, (user, callback) => {
+    async.forEach(usersPermissions, (user, callback) => {
       describe(user.describe, function () {
         let canCreateDescription = user.can.create ?
           "allows to create an allowed email domain" :
