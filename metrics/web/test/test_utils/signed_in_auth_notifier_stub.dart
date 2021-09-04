@@ -75,4 +75,7 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   Future<void> handlePublicDashboardFeatureConfigUpdates(
       PublicDashboardFeatureConfigModel model) async {}
+
+  @override
+  bool get isInitialized => true;
 }

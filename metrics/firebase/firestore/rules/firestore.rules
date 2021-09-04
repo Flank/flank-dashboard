@@ -9,25 +9,27 @@ service cloud.firestore {
     }
 
     match /projects/{projectId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isPublicDashbordAnonymousAccess(database);
       allow create, update: if isAccessAuthorized(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isPublicDashbordAnonymousAccess(database);
       allow create, update: if isAccessAuthorized(database) && isBuildValid(database);
       allow delete: if false;
     }
 
     match /build_days/{buildDayId} {
-      allow read: if isAccessAuthorized(database);
+      allow read: if isAccessAuthorized(database) || isPublicDashbordAnonymousAccess(database);
       allow write: if false; 
     }
 
     match /user_profiles/{userProfileId} {
-      allow get: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
-      allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
+      allow get: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
+                    isDocumentOwner(userProfileId);
+      allow write: if (isSignedIn(database) || isPublicDashbordAnonymousAccess(database)) &&
+                      isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow list: if false;
       allow delete: if false;
     }

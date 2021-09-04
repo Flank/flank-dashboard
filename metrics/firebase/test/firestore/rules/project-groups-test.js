@@ -20,10 +20,10 @@ const {
   featureConfigEnabled,
   featureConfigDisabled
 } = require("./test_utils/test-data");
+const collection = "project_groups";
 
 // Tests project groups security rules with public dashboard feature.
 describe("", async function () {
-  const collection = "project_groups";
 
   const usersPermissions = [
     {
@@ -359,7 +359,6 @@ describe("", async function () {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true)
   );
-  const collection = "project_groups";
 
   before("", async function () {
     await setupTestDatabaseWith(
