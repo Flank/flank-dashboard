@@ -179,6 +179,7 @@ class NavigationNotifier extends ChangeNotifier {
   void handleAuthUpdates(AuthState authState) {
     if (authState == AuthState.loggedInAnonymously) {
       _authState = authState;
+      _redirect();
     }
   }
 
