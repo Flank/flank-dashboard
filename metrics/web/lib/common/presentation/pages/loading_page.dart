@@ -2,6 +2,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -41,14 +42,19 @@ class _LoadingPageState extends State<LoadingPage>
   /// the [LocalConfig] and remove added listeners in the [dispose] method.
   DebugMenuNotifier _debugMenuNotifier;
 
-  /// Indicates whether a user is logged in or not.
-  bool _isLoggedIn;
+  /// An [AuthState] that represents the current authentication state
+  /// of the user.
+  AuthState _authState;
 
   /// Indicates whether a feature config is initialized or not.
   bool _isFeatureConfigInitialized = false;
 
   /// Indicates whether a local config is initialized or not.
   bool _isLocalConfigInitialized = false;
+
+  /// Indicates whether a user is logged in or not.
+  bool get _isLoggedIn =>
+      _authState == AuthState.loggedIn || _authState == AuthState.loggedOut;
 
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
@@ -143,7 +149,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Updates the [_isLoggedIn] value depending on the [AuthNotifier] state.
   void _authNotifierListener() {
-    _isLoggedIn = _authNotifier.isLoggedIn;
+    _authState = _authNotifier.authState;
 
     _handleIsInitializedChanged();
   }
@@ -196,8 +202,7 @@ class _LoadingPageState extends State<LoadingPage>
 
     Router.neglect(context, () {
       notifier.handleAppInitialized(
-          isAppInitialized: true,
-          isLoggedIn: _isLoggedIn);
+          isAppInitialized: true, authState: _authState);
     });
   }
 
