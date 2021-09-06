@@ -2,7 +2,7 @@
 // that can be found in the LICENSE file.
 
 const async = require('async');
-const { assertFails } = require("@firebase/rules-unit-testing");
+const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   setupTestDatabaseWith,
   getApplicationWith,
@@ -16,7 +16,7 @@ const {
 describe("", async () => {
   const collection = "tasks";
 
-  const users = [
+  const usersPermissions = [
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
@@ -130,7 +130,7 @@ describe("", async () => {
   });
 
   describe("Tasks collection rules", () => {
-    async.forEach(users, (user, callback) => {
+    async.forEach(usersPermissions, (user, callback) => {
       describe(user.describe, function () {
         let canCreateDescription = user.can.create ?
           "allows creating a task" :
