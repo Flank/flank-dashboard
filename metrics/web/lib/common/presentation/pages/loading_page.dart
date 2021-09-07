@@ -54,12 +54,13 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Indicates whether a user is logged in or not.
   bool get _isLoggedIn =>
-      _authState == AuthState.loggedIn || _authState == AuthState.loggedOut;
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
 
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
       _authNotifier.isInitialized &&
-      _isLoggedIn != null &&
+      _isLoggedIn &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
 

@@ -179,8 +179,8 @@ class NavigationNotifier extends ChangeNotifier {
   void handleAuthUpdates(AuthState authState) {
     if (authState == AuthState.loggedInAnonymously) {
       _authState = authState;
-      _redirect();
     }
+    _redirect();
   }
 
   /// Determines whether the current page can be popped.
@@ -338,9 +338,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if ((!_isUserLoggedIn && authorizationRequired) ||
-        (_authState == AuthState.loggedInAnonymously &&
-            !configuration.allowsAnonymousAccess)) {
+    if (!_isUserLoggedIn && authorizationRequired && _isAppInitialized) {
       _redirectRoute = configuration;
 
       return DefaultRoutes.login;

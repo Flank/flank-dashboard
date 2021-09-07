@@ -251,13 +251,17 @@ class AuthNotifier extends ChangeNotifier {
     _isPublicDashboardFeatureEnabled = model.isEnabled;
     if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
       await _signInAnonymously();
+      notifyListeners();
     }
   }
 
   /// Signs out the user from the app.
   Future<void> signOut() async {
+    if (_isLoading) return;
+    _isLoading = true;
     await _userProfileSubscription?.cancel();
     await _signOutUseCase();
+    _isLoading = false;
   }
 
   /// Signs in a user to the app using anonymous authentication.
@@ -273,6 +277,7 @@ class AuthNotifier extends ChangeNotifier {
     } on AuthenticationException catch (exception) {
       _handleAuthErrorMessage(exception.code);
     }
+    _isLoading = false;
   }
 
   /// Subscribes to a user profile updates.
