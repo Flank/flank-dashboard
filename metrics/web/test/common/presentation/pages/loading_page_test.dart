@@ -143,7 +143,7 @@ void main() {
           ),
         );
 
-        when(authNotifier.authState).thenReturn(AuthState.loggedOut);
+        when(authNotifier.authState).thenReturn(AuthState.loggedIn);
         when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
@@ -384,7 +384,7 @@ void main() {
           DefaultRoutes.dashboard,
         );
 
-        when(authNotifier.authState).thenReturn(AuthState.loggedOut);
+        when(authNotifier.authState).thenReturn(AuthState.loggedIn);
         when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
@@ -411,7 +411,7 @@ void main() {
         verify(
           navigationNotifier.handleAppInitialized(
             isAppInitialized: anyNamed('isAppInitialized'),
-            authState: AuthState.loggedOut,
+            authState: AuthState.loggedIn,
           ),
         ).called(once);
       },

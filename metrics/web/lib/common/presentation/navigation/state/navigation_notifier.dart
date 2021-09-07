@@ -338,7 +338,9 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired && _isAppInitialized) {
+    if ((!_isUserLoggedIn && authorizationRequired && _isAppInitialized) ||
+        (_authState == AuthState.loggedInAnonymously &&
+            !configuration.allowsAnonymousAccess)) {
       _redirectRoute = configuration;
 
       return DefaultRoutes.login;
