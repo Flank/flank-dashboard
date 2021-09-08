@@ -21,6 +21,7 @@ import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
+import 'package:metrics/auth/presentation/view_models/user_profile_view_model.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
@@ -70,6 +71,9 @@ class AuthNotifier extends ChangeNotifier {
 
   /// A class that represents a user profile model.
   UserProfileModel _userProfileModel;
+
+  /// A view model that represents the logged-in user profile.
+  UserProfileViewModel _userProfileViewModel;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from user profile updates.
@@ -149,6 +153,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Provides a class that represents a user profile model.
   UserProfileModel get userProfileModel => _userProfileModel;
 
+  /// Provides a view model that represents the logged-in user profile.
+  UserProfileViewModel get userProfileViewModel => _userProfileViewModel;
+
   /// Returns an [AuthErrorMessage], containing an authentication error message.
   String get authErrorMessage => _authErrorMessage?.message;
 
@@ -178,6 +185,8 @@ class AuthNotifier extends ChangeNotifier {
         _authState = user.isAnonymous
             ? AuthState.loggedInAnonymously
             : AuthState.loggedIn;
+        _userProfileViewModel =
+            UserProfileViewModel(isAnonymous: user.isAnonymous);
       } else {
         _authState = AuthState.loggedOut;
         _selectedTheme = null;
