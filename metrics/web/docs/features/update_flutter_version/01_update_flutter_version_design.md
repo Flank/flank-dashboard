@@ -135,9 +135,7 @@ If we update Flutter to the 2.2.3 stable version, we can see that the output of 
 
     Toast toast;
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
