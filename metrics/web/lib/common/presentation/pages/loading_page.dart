@@ -60,9 +60,16 @@ class _LoadingPageState extends State<LoadingPage>
   /// Indicates whether the application is finished initializing.
   bool get _isInitialized =>
       _authNotifier.isInitialized &&
-      _isLoggedIn &&
+      _isAuthenticationInitialized &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
+
+  /// Indicates whether the user is authenticated or the public dashboard
+  /// feature is disabled.
+  bool get _isAuthenticationInitialized =>
+      _isLoggedIn ||
+      !(_featureConfigNotifier.publicDashboardFeatureConfigModel?.isEnabled ??
+          false);
 
   @override
   void initState() {
