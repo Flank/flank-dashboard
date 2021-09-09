@@ -14,6 +14,9 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// Indicates whether the [FeatureConfig] is loading.
   bool _isLoading = false;
 
+  /// Indicates whether the [FeatureConfig] is initialized.
+  bool _isInitialized = false;
+
   /// A [FetchFeatureConfigUseCase] that provides an ability to fetch
   /// the [FeatureConfig].
   final FetchFeatureConfigUseCase _fetchFeatureConfigUseCase;
@@ -39,9 +42,9 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// Otherwise, returns `false`.
   bool get isLoading => _isLoading;
 
-  /// Returns `true` if current [FeatureConfig] is not `null`.
+  /// Returns `true` if the [FeatureConfig] is initialized.
   /// Otherwise, returns `false`.
-  bool get isInitialized => _featureConfig != null;
+  bool get isInitialized => _isInitialized;
 
   /// A view model that provides the [FeatureConfig] data for the password
   /// sign-in option.
@@ -65,6 +68,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   FeatureConfigNotifier(this._fetchFeatureConfigUseCase)
       : assert(_fetchFeatureConfigUseCase != null) {
     setDefaults();
+    _setFeatureConfig(_defaultFeatureConfig);
   }
 
   /// Sets the default [FeatureConfig] from the given configuration values.
@@ -99,6 +103,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
     final config = await _fetchFeatureConfigUseCase(params);
     _setFeatureConfig(config);
 
+    _isInitialized = true;
     _setIsLoading(false);
   }
 

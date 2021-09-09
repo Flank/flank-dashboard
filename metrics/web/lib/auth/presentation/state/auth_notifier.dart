@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'dart:async';
@@ -14,15 +14,19 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/parameters/user_profile_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
+import 'package:metrics/auth/presentation/view_models/user_profile_view_model.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -50,6 +54,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Used to sign in a user via Google.
   final GoogleSignInUseCase _googleSignInUseCase;
 
+  /// Used to sign in a user anonymously.
+  final SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
+
   /// Used to sign out a user.
   final SignOutUseCase _signOutUseCase;
 
@@ -65,6 +72,9 @@ class AuthNotifier extends ChangeNotifier {
   /// A class that represents a user profile model.
   UserProfileModel _userProfileModel;
 
+  /// A view model that represents the logged-in user profile.
+  UserProfileViewModel _userProfileViewModel;
+
   /// The stream subscription needed to be able to unsubscribe
   /// from user profile updates.
   StreamSubscription _userProfileSubscription;
@@ -77,8 +87,11 @@ class AuthNotifier extends ChangeNotifier {
   /// during loading user profile data.
   PersistentStoreErrorMessage _userProfileErrorMessage;
 
-  /// Contains a user's authentication status.
-  bool _isLoggedIn;
+  /// Contains a user's authorization state.
+  AuthState _authState = AuthState.loggedOut;
+
+  /// Indicates whether the public dashboard feature is enabled.
+  bool _isPublicDashboardFeatureEnabled;
 
   /// The stream subscription needed to be able to unsubscribe
   /// from authentication state updates.
@@ -86,6 +99,9 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Stores the loading status for the sign-in process.
   bool _isLoading = false;
+
+  /// Indicates whether the [AuthNotifier] is initialized.
+  bool _isInitialized = false;
 
   /// A currently selected [ThemeType].
   ThemeType _selectedTheme;
@@ -106,6 +122,7 @@ class AuthNotifier extends ChangeNotifier {
     this._receiveAuthUpdates,
     this._signInUseCase,
     this._googleSignInUseCase,
+    this._signInAnonymouslyUseCase,
     this._signOutUseCase,
     this._receiveUserProfileUpdates,
     this._createUserProfileUseCase,
@@ -113,19 +130,31 @@ class AuthNotifier extends ChangeNotifier {
   )   : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_googleSignInUseCase != null),
+        assert(_signInAnonymouslyUseCase != null),
         assert(_signOutUseCase != null),
         assert(_receiveUserProfileUpdates != null),
         assert(_createUserProfileUseCase != null),
         assert(_updateUserProfileUseCase != null);
 
   /// Determines if a user is authenticated.
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoggedIn =>
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
+
+  /// Returns a state of the user authorization.
+  AuthState get authState => _authState;
 
   /// Indicates whether the sign-in process is in progress or not.
   bool get isLoading => _isLoading;
 
+  /// Indicates whether the [AuthNotifier] is initialized.
+  bool get isInitialized => _isInitialized;
+
   /// Provides a class that represents a user profile model.
   UserProfileModel get userProfileModel => _userProfileModel;
+
+  /// Provides a view model that represents the logged-in user profile.
+  UserProfileViewModel get userProfileViewModel => _userProfileViewModel;
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
   String get authErrorMessage => _authErrorMessage?.message;
@@ -150,10 +179,16 @@ class AuthNotifier extends ChangeNotifier {
   void subscribeToAuthenticationUpdates() {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
+      _isInitialized = true;
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
+        _authState = user.isAnonymous
+            ? AuthState.loggedInAnonymously
+            : AuthState.loggedIn;
+        _userProfileViewModel =
+            UserProfileViewModel(isAnonymous: user.isAnonymous);
       } else {
-        _isLoggedIn = false;
+        _authState = AuthState.loggedOut;
         _selectedTheme = null;
         _userProfileModel = null;
         notifyListeners();
@@ -219,10 +254,39 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
+  /// Handles the anonymous log in of the user.
+  Future<void> handlePublicDashboardFeatureConfigUpdates(
+      PublicDashboardFeatureConfigModel model) async {
+    _isPublicDashboardFeatureEnabled = model.isEnabled;
+    if (_isPublicDashboardFeatureEnabled && authState == AuthState.loggedOut) {
+      await _signInAnonymously();
+      notifyListeners();
+    }
+  }
+
   /// Signs out the user from the app.
   Future<void> signOut() async {
+    if (_isLoading) return;
+    _isLoading = true;
     await _userProfileSubscription?.cancel();
     await _signOutUseCase();
+    _isLoading = false;
+  }
+
+  /// Signs in a user to the app using anonymous authentication.
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
+  Future<void> _signInAnonymously() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _clearErrorMessages();
+    try {
+      await _signInAnonymouslyUseCase();
+    } on AuthenticationException catch (exception) {
+      _handleAuthErrorMessage(exception.code);
+    }
+    _isLoading = false;
   }
 
   /// Subscribes to a user profile updates.
@@ -262,8 +326,6 @@ class AuthNotifier extends ChangeNotifier {
         selectedTheme: userProfile.selectedTheme,
       );
       _isLoading = false;
-      _isLoggedIn = true;
-
       notifyListeners();
     } else {
       await _createUserProfile(id, _selectedTheme);

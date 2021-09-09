@@ -13,14 +13,17 @@ import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -31,6 +34,7 @@ void main() {
   group("AuthNotifier", () {
     final signInUseCase = SignInUseCaseMock();
     final googleSignInUseCase = GoogleSignInUseCaseMock();
+    final signInAnonymouslyUseCase = SignInAnonymouslyUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
     final receiveUserProfileUpdates = ReceiveUserProfileUpdatesMock();
@@ -60,7 +64,8 @@ void main() {
       password: Password(invalidPassword),
     );
 
-    final user = User(id: id, email: email);
+    final user = User(id: id, email: email, isAnonymous: false);
+    final anonymousUser = User(id: id, email: email, isAnonymous: true);
     final userProfile = UserProfile(id: id, selectedTheme: selectedTheme);
     const userProfileModel = UserProfileModel(
       id: 'second id',
@@ -71,6 +76,7 @@ void main() {
       receiveAuthUpdates,
       signInUseCase,
       googleSignInUseCase,
+      signInAnonymouslyUseCase,
       signOutUseCase,
       receiveUserProfileUpdates,
       createUserProfileUseCase,
@@ -104,6 +110,7 @@ void main() {
           null,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -119,6 +126,7 @@ void main() {
           receiveAuthUpdates,
           null,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -136,6 +144,26 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             null,
+            signInAnonymouslyUseCase,
+            signOutUseCase,
+            receiveUserProfileUpdates,
+            createUserProfileUseCase,
+            updateUserProfileUseCase,
+          ),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "throws AssertionError if a sign in anonymously use case parameter is null",
+      () {
+        expect(
+          () => AuthNotifier(
+            receiveAuthUpdates,
+            signInUseCase,
+            googleSignInUseCase,
+            null,
             signOutUseCase,
             receiveUserProfileUpdates,
             createUserProfileUseCase,
@@ -152,6 +180,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           null,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -169,6 +198,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             null,
             createUserProfileUseCase,
@@ -187,6 +217,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             receiveUserProfileUpdates,
             null,
@@ -205,6 +236,7 @@ void main() {
             receiveAuthUpdates,
             signInUseCase,
             googleSignInUseCase,
+            signInAnonymouslyUseCase,
             signOutUseCase,
             receiveUserProfileUpdates,
             createUserProfileUseCase,
@@ -255,6 +287,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -292,6 +325,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -332,6 +366,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -368,6 +403,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -382,6 +418,112 @@ void main() {
           }
 
           return false;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedIn once receiving a signed in user profile",
+      () {
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signInAnonymouslyUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedIn;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedInAnonymously once receiving an anonymous user profile",
+      () {
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(anonymousUser),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signInAnonymouslyUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedInAnonymously;
+        });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() sets the authState to AuthState.loggedOut once receiving the logged out user profile",
+      () {
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signInAnonymouslyUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return authNotifier.authState == AuthState.loggedOut;
         });
 
         authNotifier.addListener(listener);
@@ -407,6 +549,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -435,6 +578,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -465,6 +609,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -513,6 +658,19 @@ void main() {
     );
 
     test(
+      ".isLoading status is false if ._signInAnonymously() is finished with an error",
+      () async {
+        when(signInAnonymouslyUseCase())
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.handlePublicDashboardFeatureConfigUpdates(
+            const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+        expect(authNotifier.isLoading, isFalse);
+      },
+    );
+
+    test(
       ".signInWithEmailAndPassword() delegates to sign in use case",
       () async {
         await authNotifier.signInWithEmailAndPassword(email, password);
@@ -543,6 +701,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -559,6 +718,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -571,6 +731,44 @@ void main() {
       verifyNever(googleSignInUseCase());
     });
 
+    test("._signInAnonymously() delegates to sign in anonymously use case",
+        () async {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signInAnonymouslyUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
+      await authNotifier.handlePublicDashboardFeatureConfigUpdates(
+          const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+      verify(signInAnonymouslyUseCase()).called(once);
+    });
+
+    test("._signInAnonymously() does nothing if isLoading is true", () {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signInAnonymouslyUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
+      authNotifier.signInWithEmailAndPassword(email, password);
+      authNotifier.handlePublicDashboardFeatureConfigUpdates(
+          const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+      verifyNever(signInAnonymouslyUseCase());
+    });
+
     test(
       ".authErrorMessage is populated when the auth error occurred during the sign-in process",
       () async {
@@ -581,6 +779,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -603,6 +802,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -625,6 +825,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -647,6 +848,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -669,6 +871,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -698,6 +901,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -727,6 +931,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -756,6 +961,7 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          signInAnonymouslyUseCase,
           signOutUseCase,
           receiveUserProfileUpdates,
           createUserProfileUseCase,
@@ -879,6 +1085,7 @@ void main() {
         receiveAuthUpdates,
         signInUseCase,
         googleSignInUseCase,
+        signInAnonymouslyUseCase,
         signOutUseCase,
         receiveUserProfileUpdates,
         createUserProfileUseCase,
@@ -924,12 +1131,56 @@ void main() {
         userProfileController.add(userProfile);
       },
     );
+
+    test(
+      "_userProfileUpdatesListener() sets the AuthNotifier.isInitialized value to true once receiving the user profile",
+      () {
+        final streamController = StreamController<UserProfile>();
+        final userProfile = UserProfile(
+          id: userProfileModel.id,
+          selectedTheme: userProfileModel.selectedTheme,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signInAnonymouslyUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return authNotifier.isInitialized == true;
+          },
+        );
+
+        authNotifier.addListener(listener);
+        streamController.add(userProfile);
+      },
+    );
   });
 }
 
 class SignInUseCaseMock extends Mock implements SignInUseCase {}
 
 class GoogleSignInUseCaseMock extends Mock implements GoogleSignInUseCase {}
+
+class SignInAnonymouslyUseCaseMock extends Mock
+    implements SignInAnonymouslyUseCase {}
 
 class SignOutUseCaseMock extends Mock implements SignOutUseCase {}
 

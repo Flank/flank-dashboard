@@ -13,6 +13,7 @@ import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
@@ -83,6 +84,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   /// A use case needed to be able to sign in a user with Google.
   GoogleSignInUseCase _googleSignInUseCase;
+
+  /// A use case needed to be able to sign in a user anonymously.
+  SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
 
   /// A use case needed to be able to sign out a user.
   SignOutUseCase _signOutUseCase;
@@ -158,6 +162,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// The [ChangeNotifier] that manages navigation.
   NavigationNotifier _navigationNotifier;
 
+  /// The [FeatureConfigNotifier] that holds the public dashboard feature config.
+  FeatureConfigNotifier _featureConfigNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -182,6 +189,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _receiveAuthUpdates = ReceiveAuthenticationUpdates(_userRepository);
     _signInUseCase = SignInUseCase(_userRepository);
     _googleSignInUseCase = GoogleSignInUseCase(_userRepository);
+    _signInAnonymouslyUseCase = SignInAnonymouslyUseCase(_userRepository);
     _signOutUseCase = SignOutUseCase(_userRepository);
 
     _receiveUserProfileUpdates = ReceiveUserProfileUpdates(_userRepository);
@@ -226,6 +234,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _receiveAuthUpdates,
       _signInUseCase,
       _googleSignInUseCase,
+      _signInAnonymouslyUseCase,
       _signOutUseCase,
       _receiveUserProfileUpdates,
       _createUserProfileUseCase,
@@ -242,8 +251,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
       BrowserNavigationState(window.history),
     );
 
+    _featureConfigNotifier = FeatureConfigNotifier(_fetchFeatureConfigUseCase);
+
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
+    _featureConfigNotifier.addListener(_featureConfigNotifierListener);
   }
 
   @override
@@ -251,9 +263,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _navigationNotifier),
-        ChangeNotifierProvider(
-          create: (_) => FeatureConfigNotifier(_fetchFeatureConfigUseCase),
-        ),
+        ChangeNotifierProvider.value(value: _featureConfigNotifier),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
         ChangeNotifierProvider<DebugMenuNotifier>(
@@ -363,6 +373,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _navigationNotifier.handleLoggedOut();
     }
 
+    _navigationNotifier.handleAuthUpdates(_authNotifier.authState);
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
 
@@ -373,6 +384,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
 
     _authNotifier.updateUserProfile(userProfileModel);
+  }
+
+  /// Listens to [FeatureConfigNotifier]'s updates.
+  void _featureConfigNotifierListener() {
+    _authNotifier.handlePublicDashboardFeatureConfigUpdates(
+      _featureConfigNotifier.publicDashboardFeatureConfigModel,
+    );
   }
 
   /// Updates projects subscription based on user logged in status.
@@ -395,9 +413,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
+    _featureConfigNotifier.removeListener(_featureConfigNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
     _navigationNotifier.dispose();
+    _featureConfigNotifier.dispose();
     super.dispose();
   }
 }
