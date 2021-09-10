@@ -177,10 +177,11 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Updates the current [AuthState] with the given [authState].
   void handleAuthUpdates(AuthState authState) {
-    if (authState == AuthState.loggedInAnonymously) {
-      _authState = authState;
+    _authState = authState;
+
+    if (_isUserLoggedIn && _isAppInitialized) {
+      _redirect();
     }
-    _redirect();
   }
 
   /// Determines whether the current page can be popped.
