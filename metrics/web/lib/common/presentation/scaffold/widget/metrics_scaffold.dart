@@ -2,11 +2,14 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/models/auth_state.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/manufacturer_banner/widget/manufacturer_banner.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
+import 'package:provider/provider.dart';
 
 /// A common [Scaffold] widget for metrics pages.
 class MetricsScaffold extends StatelessWidget {
@@ -41,6 +44,7 @@ class MetricsScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -74,11 +78,12 @@ class MetricsScaffold extends StatelessWidget {
               ),
             ),
           ),
-          const Positioned(
-            bottom: 0.0,
-            right: 0.0,
-            child: ManufacturerBanner(),
-          ),
+          if (authNotifier.authState == AuthState.loggedInAnonymously)
+            const Positioned(
+              bottom: 0.0,
+              right: 0.0,
+              child: ManufacturerBanner(),
+            ),
         ],
       ),
     );
