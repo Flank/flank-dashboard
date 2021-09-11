@@ -269,7 +269,13 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Handles the initial route.
   void handleInitialRoutePath(RouteConfiguration configuration) {
-    _addNewPage(configuration);
+    var pageConfiguration = configuration;
+
+    if (configuration.path == DefaultRoutes.login.path) {
+      pageConfiguration = DefaultRoutes.dashboard;
+    }
+
+    _addNewPage(pageConfiguration);
   }
 
   /// Handles the new route.
