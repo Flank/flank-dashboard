@@ -41,7 +41,7 @@ void main() {
       reset(projectMetricsNotifier);
     });
 
-    void whenNavigationNotifierConfiguration(RouteConfiguration configuration){
+    void whenNavigationNotifierConfiguration(RouteConfiguration configuration) {
       return when(navigationNotifier.currentConfiguration)
           .thenReturn(configuration);
     }
@@ -116,7 +116,7 @@ void main() {
 
     testWidgets(
       "contains the project metrics search input",
-      (tester) async {
+      (WidgetTester tester) async {
         whenNavigationNotifierConfiguration(dashboardConfiguration);
 
         await mockNetworkImagesFor(() {

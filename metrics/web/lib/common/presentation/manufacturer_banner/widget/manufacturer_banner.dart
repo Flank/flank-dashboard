@@ -77,7 +77,7 @@ class _ManufacturerBannerState extends State<ManufacturerBanner>
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        CommonStrings.buildBySolidSoftware,
+                        CommonStrings.builtBySolidSoftware,
                         style: themeData.textStyle,
                       ),
                     ),

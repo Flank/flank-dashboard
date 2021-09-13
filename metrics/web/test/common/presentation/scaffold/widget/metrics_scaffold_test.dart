@@ -1,14 +1,19 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
+import 'package:metrics/common/presentation/manufacturer_banner/widget/manufacturer_banner.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
+import 'package:metrics/feature_config/presentation/models/public_dashboard_feature_config_model.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -123,6 +128,54 @@ void main() {
         expect(find.byType(MetricsAppBar), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "shows manufacturer banner if the public dashboard feature is enabled",
+      (WidgetTester tester) async {
+        final featureConfigNotifier = FeatureConfigNotifierMock();
+
+        when(featureConfigNotifier.publicDashboardFeatureConfigModel)
+            .thenReturn(
+                const PublicDashboardFeatureConfigModel(isEnabled: true));
+
+        final metricsScaffold = _MetricsScaffoldTestbed(
+            featureConfigNotifier: featureConfigNotifier);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            metricsScaffold,
+          );
+        });
+
+        final manufacturerBannerFinder = find.byType(ManufacturerBanner);
+
+        expect(manufacturerBannerFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "does not show manufacturer banner if the public dashboard feature is disabled",
+      (WidgetTester tester) async {
+        final featureConfigNotifier = FeatureConfigNotifierMock();
+
+        when(featureConfigNotifier.publicDashboardFeatureConfigModel)
+            .thenReturn(
+                const PublicDashboardFeatureConfigModel(isEnabled: false));
+
+        final metricsScaffold = _MetricsScaffoldTestbed(
+            featureConfigNotifier: featureConfigNotifier);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            metricsScaffold,
+          );
+        });
+
+        final manufacturerBannerFinder = find.byType(ManufacturerBanner);
+
+        expect(manufacturerBannerFinder, findsNothing);
+      },
+    );
   });
 }
 
@@ -141,22 +194,27 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   /// A title for the body of this scaffold.
   final String bodyTitle;
 
+  /// A [FeatureConfigNotifier] to inject and test [MetricsScaffold].
+  final FeatureConfigNotifier featureConfigNotifier;
+
   /// Creates the [_MetricsScaffoldTestbed].
   ///
   /// The [body] defaults to the [SizedBox] widget.
   /// The [padding] defaults to the [EdgeInsets.zero].
   /// The [bodyTitle] defaults to the `title`.
-  const _MetricsScaffoldTestbed({
-    Key key,
-    this.drawer,
-    this.body = const SizedBox(),
-    this.padding = EdgeInsets.zero,
-    this.bodyTitle = 'title',
-  }) : super(key: key);
+  const _MetricsScaffoldTestbed(
+      {Key key,
+      this.drawer,
+      this.body = const SizedBox(),
+      this.padding = EdgeInsets.zero,
+      this.bodyTitle = 'title',
+      this.featureConfigNotifier})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
+      featureConfigNotifier: featureConfigNotifier,
       child: MaterialApp(
         home: MetricsScaffold(
           body: body,

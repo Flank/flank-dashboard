@@ -70,7 +70,7 @@ void main() {
           await tester.pumpWidget(const _ManufacturerBannerTestbed());
         });
 
-        final manufacturerText = find.text(CommonStrings.buildBySolidSoftware);
+        final manufacturerText = find.text(CommonStrings.builtBySolidSoftware);
 
         expect(manufacturerText, findsOneWidget);
       },
@@ -122,7 +122,7 @@ void main() {
         });
 
         final textWidget = tester.widget<Text>(
-          find.text(CommonStrings.buildBySolidSoftware),
+          find.text(CommonStrings.builtBySolidSoftware),
         );
 
         expect(textWidget.style, equals(expectedTextStyle));
