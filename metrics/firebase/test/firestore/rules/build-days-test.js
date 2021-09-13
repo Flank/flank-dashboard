@@ -8,7 +8,6 @@ const {
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   passwordSignInProviderId,
   googleSignInProviderId,
@@ -273,71 +272,11 @@ describe("", async () => {
       describe(
         "Build days collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
         async function () {
-          before("", async function (){
+          before("", async function () {
             await setupTestDatabaseWith(Object.assign({}, buildDays, allowedEmailDomains, config));
           });
-          await userPermissionsTest(usersPermissions, config, collection, getBuildDay(), {projectId: "3"})
-          // async.forEach(usersPermissions, (user, callback) => {
-          //   describe(user.describe, () => {
-          //     console.log('FEATURE CONFIG STATUS:' + config[featureConfigPath].isPublicDashboardEnabled);
-          //     let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
-          //       ? 'on'
-          //       : 'off';
-          //     let canCreateDescription = user.public_dashboard[publicDashboardState].can.create ?
-          //       "allows creating a build day" : "does not allow creating a build day";
-          //     let canReadDescription = user.public_dashboard[publicDashboardState].can.read ?
-          //       "allows reading build days" : "does not allow reading build days";
-          //     let canUpdateDescription = user.public_dashboard[publicDashboardState].can.update ?
-          //       "allows updating a build day" : "does not allow updating a build day";
-          //     let canDeleteDescription = user.public_dashboard[publicDashboardState].can.delete ?
-          //       "allows deleting a build day" : "does not allow deleting a build day";
-          //
-          //     it(canCreateDescription, async () => {
-          //       const createPromise = user.app.collection(collection).add(getBuildDay());
-          //
-          //       if (user.public_dashboard[publicDashboardState].can.create) {
-          //         await assertSucceeds(createPromise)
-          //       } else {
-          //         await assertFails(createPromise)
-          //       }
-          //     });
-          //
-          //     it(canReadDescription, async () => {
-          //       const readPromise = user.app.collection(collection).get();
-          //       console.log('FEATURE CONFIG STATUS:' + config[featureConfigPath].isPublicDashboardEnabled);
-          //       console.log('CAN READ?' + user.public_dashboard[publicDashboardState].can.read);
-          //
-          //       if (user.public_dashboard[publicDashboardState].can.read) {
-          //         await assertSucceeds(readPromise)
-          //       } else {
-          //         await assertFails(readPromise)
-          //       }
-          //     });
-          //
-          //     it(canUpdateDescription, async () => {
-          //       const updatePromise =
-          //         user.app.collection(collection).doc("1").update({projectId: "3"});
-          //
-          //       if (user.public_dashboard[publicDashboardState].can.update) {
-          //         await assertSucceeds(updatePromise)
-          //       } else {
-          //         await assertFails(updatePromise)
-          //       }
-          //     });
-          //
-          //     it(canDeleteDescription, async () => {
-          //       const deletePromise =
-          //         user.app.collection(collection).doc("1").delete();
-          //
-          //       if (user.public_dashboard[publicDashboardState].can.delete) {
-          //         await assertSucceeds(deletePromise)
-          //       } else {
-          //         await assertFails(deletePromise)
-          //       }
-          //     });
-          //   });
-          //   callback();
-          // });
+
+          await userPermissionsTest(usersPermissions, config, collection, getBuildDay(), { projectId: "3" })
         });
       callback();
     });

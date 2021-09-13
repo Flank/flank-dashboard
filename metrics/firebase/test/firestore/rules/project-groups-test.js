@@ -51,7 +51,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-          getAllowedEmailUser(passwordSignInProviderId, true)
+        getAllowedEmailUser(passwordSignInProviderId, true)
       ),
       'public_dashboard': {
         'on': {
@@ -264,12 +264,6 @@ describe("", async function () {
     },
   ];
 
-  before(async () => {
-    await setupTestDatabaseWith(
-      Object.assign({}, projectGroups, allowedEmailDomains)
-    );
-  });
-
   describe("Project groups collection rules", () => {
     async.forEach([featureConfigEnabled, featureConfigDisabled], function (config, callback) {
       const featureConfigPath = "feature_config/feature_config";
@@ -333,7 +327,7 @@ describe("", async function () {
         await assertFails(
           passwordProviderAllowedEmailApp
             .collection(collection)
-            .add({ name, projectIds: [] })
+            .add({name, projectIds: []})
         );
       });
     });

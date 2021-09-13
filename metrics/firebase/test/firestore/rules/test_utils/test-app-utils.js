@@ -55,7 +55,7 @@ exports.userPermissionsTest = async function (usersPermissions, config, collecti
     describe(user.describe, () => {
       let publicDashboardState = '';
       let userPath;
-      uid = uid === undefined ? "2" : uid ;
+      uid = uid === undefined ? "1" : uid;
 
       if(collectionsWithPublicDashboardTests.find(e => e === collection) !== undefined){
         publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
@@ -114,7 +114,7 @@ exports.userPermissionsTest = async function (usersPermissions, config, collecti
 
       it(canDeleteDescription, async () => {
         const deletePromise =
-          user.app.collection(collection).doc("1").delete();
+          user.app.collection(collection).doc(uid).delete();
 
         if (userPath.can.delete) {
           await assertSucceeds(deletePromise)
@@ -124,16 +124,16 @@ exports.userPermissionsTest = async function (usersPermissions, config, collecti
       });
 
       if(setValue !== undefined){
-      it(canCreateDescription, async () => {
-        const createPromise = user.app.collection(collection).doc(uid).set(setValue);
+        it(canCreateDescription, async () => {
+          const createPromise = user.app.collection(collection).doc(uid).set(setValue);
 
-        if (user.public_dashboard[publicDashboardState].can.create) {
-          await assertSucceeds(createPromise)
-        } else {
-          await assertFails(createPromise)
-        }
-      });
-       }
+          if (user.public_dashboard[publicDashboardState].can.create) {
+            await assertSucceeds(createPromise)
+          } else {
+            await assertFails(createPromise)
+          }
+        });
+      }
 
       if(userPath.can.list !== undefined){
         let canListDescription = user.public_dashboard[publicDashboardState].can.list ?

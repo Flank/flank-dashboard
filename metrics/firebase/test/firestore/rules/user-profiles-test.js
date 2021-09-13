@@ -6,6 +6,7 @@ const {
   setupTestDatabaseWith,
   getApplicationWith,
   tearDown,
+  userPermissionsTest,
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
@@ -21,7 +22,7 @@ const {
   featureConfigDisabled
 } = require("./test_utils/test-data");
 const collection = "user_profiles";
-const uid = "1";
+const uid = "2";
 
 // Tests user profiles security rules with public dashboard feature.
 describe("", async () => {
@@ -521,81 +522,12 @@ describe("", async () => {
       const featureConfigPath = "feature_config/feature_config";
       describe(
         "User profiles collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
-        function () {
-          async.forEach(usersPermissions, (user, callback) => {
-            before(async () => {
-              await setupTestDatabaseWith(Object.assign({}, userProfiles, allowedEmailDomains, config));
-            });
-
-            describe(user.describe, () => {
-              let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
-                ? 'on'
-                : 'off';
-              let canCreateDescription = user.public_dashboard[publicDashboardState].can.create ?
-                "allows to create a user profile" : "does not allow creating a user profile";
-              let canListDescription = user.public_dashboard[publicDashboardState].can.list ?
-                "allows reading user profiles" : "does not allow reading user profiles";
-              let canGetDescription = user.public_dashboard[publicDashboardState].can.get ?
-                "allows reading own user profile" : "does not allow reading own user profile";
-              let canUpdateDescription = user.public_dashboard[publicDashboardState].can.update ?
-                "allows to update a user profile" : "does not allow updating a user profile";
-              let canDeleteDescription = user.public_dashboard[publicDashboardState].can.delete ?
-                "allows to delete a user profile" : "does not allow deleting a user profile";
-
-              it(canCreateDescription, async () => {
-                const createPromise = user.app.collection(collection).doc(uid).set(getUserProfile());
-
-                if (user.public_dashboard[publicDashboardState].can.create) {
-                  await assertSucceeds(createPromise)
-                } else {
-                  await assertFails(createPromise)
-                }
-              });
-
-              it(canListDescription, async () => {
-                const readPromise = user.app.collection(collection).get();
-
-                if (user.public_dashboard[publicDashboardState].can.list) {
-                  await assertSucceeds(readPromise)
-                } else {
-                  await assertFails(readPromise)
-                }
-              });
-
-              it(canGetDescription, async () => {
-                const readOwnPromise = user.app.collection(collection).doc(uid).get();
-
-                if (user.public_dashboard[publicDashboardState].can.get) {
-                  await assertSucceeds(readOwnPromise)
-                } else {
-                  await assertFails(readOwnPromise)
-                }
-              });
-
-              it(canUpdateDescription, async () => {
-                const updatePromise =
-                  user.app.collection(collection).doc(uid).update({selectedTheme: "ThemeType.light"});
-
-                if (user.public_dashboard[publicDashboardState].can.update) {
-                  await assertSucceeds(updatePromise)
-                } else {
-                  await assertFails(updatePromise)
-                }
-              });
-
-              it(canDeleteDescription, async () => {
-                const deletePromise =
-                  user.app.collection(collection).doc(uid).delete();
-
-                if (user.public_dashboard[publicDashboardState].can.delete) {
-                  await assertSucceeds(deletePromise)
-                } else {
-                  await assertFails(deletePromise)
-                }
-              });
-            });
-            callback();
+        async function () {
+          before(async () => {
+            await setupTestDatabaseWith(Object.assign({}, userProfiles, allowedEmailDomains, config));
           });
+
+          await userPermissionsTest(usersPermissions, config, collection, undefined, { selectedTheme: "ThemeType.light" }, getUserProfile(), uid)
         });
       callback();
     });

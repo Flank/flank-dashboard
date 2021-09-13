@@ -1,8 +1,6 @@
 // Use of this source code is governed by the Apache License, Version 2.0 
 // that can be found in the LICENSE file.
 
-const async = require("async");
-const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
   setupTestDatabaseWith,
   getApplicationWith,
@@ -138,7 +136,7 @@ describe("", async () => {
     );
   });
 
-  await userPermissionsTest(usersPermissions, featureConfig, collection, config, config );
+  await userPermissionsTest(usersPermissions, featureConfig, collection, config, config);
 
   after(async () => {
     await tearDown();
