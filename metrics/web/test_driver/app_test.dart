@@ -94,7 +94,7 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
-        final expectedPagesLength = window.history.length + 1;
+        final expectedPagesLength = window.history.length;
 
         await tester.pumpAndSettle();
 
