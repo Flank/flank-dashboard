@@ -59,7 +59,7 @@ class _ManufacturerBannerState extends State<ManufacturerBanner>
           builder: (_, __) {
             return MaterialContainer(
               padding: const EdgeInsets.all(8.0),
-              elevation: 10.0,
+              elevation: themeData.elevation,
               backgroundColor: themeData.backgroundColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10.0),
