@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/auth/presentation/view_models/user_profile_view_model.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
@@ -208,6 +209,40 @@ void main() {
     );
 
     testWidgets(
+      "displays the 'Sign in' menu item if the user is signed in anonymously",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.userProfileViewModel).thenReturn(
+          const UserProfileViewModel(isAnonymous: true),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        expect(find.text(CommonStrings.signIn), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the 'Logout' menu item if the user is logged in",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.userProfileViewModel).thenReturn(
+          const UserProfileViewModel(isAnonymous: false),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        expect(find.text(CommonStrings.logOut), findsOneWidget);
+      },
+    );
+
+    testWidgets(
       "does not display the 'Debug menu' menu item if the debug menu is disabled in feature config",
       (WidgetTester tester) async {
         final featureConfigNotifier = FeatureConfigNotifierMock();
@@ -221,6 +256,57 @@ void main() {
         ));
 
         expect(find.text(CommonStrings.debugMenu), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not display the 'Project Groups' menu item if the user is signed in anonymously",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.userProfileViewModel).thenReturn(
+          const UserProfileViewModel(isAnonymous: true),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        expect(find.text(CommonStrings.projectGroups), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not display the 'Logout' menu item if the user is signed in anonymously",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.userProfileViewModel).thenReturn(
+          const UserProfileViewModel(isAnonymous: true),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        expect(find.text(CommonStrings.logOut), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not display the 'Sign in' menu item if the user is logged in",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.userProfileViewModel).thenReturn(
+          const UserProfileViewModel(isAnonymous: false),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        expect(find.text(CommonStrings.signIn), findsNothing);
       },
     );
 
@@ -248,6 +334,8 @@ void main() {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.userProfileViewModel)
+            .thenReturn(const UserProfileViewModel(isAnonymous: false));
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
@@ -287,6 +375,8 @@ void main() {
         final navigationNotifier = NavigationNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.userProfileViewModel)
+            .thenReturn(const UserProfileViewModel(isAnonymous: false));
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
@@ -309,6 +399,8 @@ void main() {
         final navigationNotifier = NavigationNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.userProfileViewModel)
+            .thenReturn(const UserProfileViewModel(isAnonymous: false));
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
           const DebugMenuFeatureConfigViewModel(isEnabled: true),
         );

@@ -1,4 +1,4 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +35,8 @@ import 'test_utils/hover_widget.dart';
 import 'test_utils/pump_and_settle_widget.dart';
 
 void main() {
+  const bool isPublicDashboardEnabled = true;
+
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   final configFactory = MetricsConfigFactory();
@@ -63,12 +65,25 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> openProjectGroupsPage(WidgetTester tester) async {
+  Future<void> openUserMenu(WidgetTester tester) async {
     await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> openProjectGroupsPage(WidgetTester tester) async {
+    await openUserMenu(tester);
 
     await tester.tap(find.text(CommonStrings.projectGroups));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> openLoginPage(WidgetTester tester) async {
+    await openUserMenu(tester);
+
+    await tester.tap(find.text(isPublicDashboardEnabled
+        ? CommonStrings.signIn
+        : CommonStrings.logOut));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
   group("LoadingPage", () {
@@ -85,7 +100,12 @@ void main() {
 
         final actualPagesLength = window.history.length;
 
-        expect(find.byType(AuthForm), findsOneWidget);
+        expect(
+          find.byType(
+            isPublicDashboardEnabled ? DashboardPage : AuthForm,
+          ),
+          findsOneWidget,
+        );
         expect(actualPagesLength, equals(expectedPagesLength));
       },
     );
@@ -99,6 +119,10 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
+        if (isPublicDashboardEnabled) {
+          await openLoginPage(tester);
+        }
+
         expect(find.byType(AuthForm), findsOneWidget);
       },
     );
@@ -110,6 +134,9 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
+        if (isPublicDashboardEnabled) {
+          await openLoginPage(tester);
+        }
         await login(tester);
 
         expect(find.byType(DashboardPage), findsOneWidget);
@@ -123,8 +150,7 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-        await tester.pumpAndSettle();
+        await openUserMenu(tester);
 
         await tester.tap(find.text(CommonStrings.logOut));
         await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -140,8 +166,13 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
-        final expectedPagesLength = window.history.length;
+        final expectedPagesLength = isPublicDashboardEnabled
+            ? window.history.length + 1
+            : window.history.length;
 
+        if (isPublicDashboardEnabled) {
+          await openLoginPage(tester);
+        }
         await login(tester);
 
         final actualPagesLength = window.history.length;

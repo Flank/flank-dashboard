@@ -33,6 +33,7 @@ class MetricsUserMenu extends StatelessWidget {
       context,
       listen: false,
     );
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(
@@ -88,19 +89,20 @@ class MetricsUserMenu extends StatelessWidget {
                   },
                 ),
               ),
-              Padding(
-                padding: itemPadding,
-                child: TappableArea(
-                  onTap: () => navigationNotifier.push(
-                    DefaultRoutes.projectGroups,
-                  ),
-                  builder: (context, isHovered, child) => child,
-                  child: Text(
-                    CommonStrings.projectGroups,
-                    style: userMenuTextStyle,
+              if (!authNotifier.userProfileViewModel.isAnonymous)
+                Padding(
+                  padding: itemPadding,
+                  child: TappableArea(
+                    onTap: () => navigationNotifier.push(
+                      DefaultRoutes.projectGroups,
+                    ),
+                    builder: (context, isHovered, child) => child,
+                    child: Text(
+                      CommonStrings.projectGroups,
+                      style: userMenuTextStyle,
+                    ),
                   ),
                 ),
-              ),
               Selector<FeatureConfigNotifier, bool>(
                 selector: (_, notifier) {
                   return notifier.debugMenuFeatureConfigViewModel.isEnabled;
@@ -132,13 +134,21 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: TappableArea(
-                  onTap: () => _signOut(context),
-                  builder: (context, isHovered, child) => child,
-                  child: Text(
-                    CommonStrings.logOut,
-                    style: userMenuTextStyle,
-                  ),
+                child: Consumer<AuthNotifier>(
+                  builder: (context, authNotifier, widget) {
+                    final title = authNotifier.userProfileViewModel.isAnonymous
+                        ? CommonStrings.signIn
+                        : CommonStrings.logOut;
+
+                    return TappableArea(
+                      onTap: () => _signOut(context),
+                      builder: (context, isHovered, child) => child,
+                      child: Text(
+                        title,
+                        style: userMenuTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

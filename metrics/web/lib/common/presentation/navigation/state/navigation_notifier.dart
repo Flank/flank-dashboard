@@ -56,11 +56,12 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// An [AuthState] that represents the current authentication state
   /// of the user.
-  // ignore: unused_field
   AuthState _authState;
 
   /// A flag that indicates whether the user is logged in.
-  bool _isUserLoggedIn = false;
+  bool get _isUserLoggedIn =>
+      _authState == AuthState.loggedIn ||
+      _authState == AuthState.loggedInAnonymously;
 
   /// A flag that indicates whether the application is finished loading.
   bool _isAppInitialized = false;
@@ -103,7 +104,7 @@ class NavigationNotifier extends ChangeNotifier {
   void handleLoggedOut() {
     if (!_isUserLoggedIn) return;
 
-    _isUserLoggedIn = false;
+    _authState = AuthState.loggedOut;
     _redirectRoute = null;
 
     final currentRouteName = currentConfiguration?.name;
@@ -119,9 +120,9 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// Does nothing if a user is logged in.
   void handleLoggedIn() {
-    if (_isUserLoggedIn) return;
+    if (_authState == AuthState.loggedIn) return;
 
-    _isUserLoggedIn = true;
+    _authState = AuthState.loggedIn;
 
     _redirect();
   }
@@ -131,16 +132,17 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// If the [isAppInitialized] is `true`, redirects to the redirect route.
   ///
-  /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
+  /// Throws an [ArgumentError] if the given [isAppInitialized] or [authState]
+  /// is `null`.
   void handleAppInitialized({
     @required bool isAppInitialized,
-    @required bool isLoggedIn,
+    @required AuthState authState,
   }) {
     ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
-    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
+    ArgumentError.checkNotNull(authState, 'authState');
 
     _isAppInitialized = isAppInitialized;
-    _isUserLoggedIn = isLoggedIn;
+    _authState = authState;
 
     if (_isAppInitialized) _redirect();
   }
@@ -172,11 +174,14 @@ class NavigationNotifier extends ChangeNotifier {
 
     replaceState(path: path);
   }
-  
-  // ignore: use_setters_to_change_properties
+
   /// Updates the current [AuthState] with the given [authState].
   void handleAuthUpdates(AuthState authState) {
     _authState = authState;
+
+    if (_isUserLoggedIn && _isAppInitialized) {
+      _redirect();
+    }
   }
 
   /// Determines whether the current page can be popped.
@@ -264,7 +269,13 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Handles the initial route.
   void handleInitialRoutePath(RouteConfiguration configuration) {
-    _addNewPage(configuration);
+    var pageConfiguration = configuration;
+
+    if (configuration.path == DefaultRoutes.login.path) {
+      pageConfiguration = DefaultRoutes.dashboard;
+    }
+
+    _addNewPage(pageConfiguration);
   }
 
   /// Handles the new route.
@@ -334,7 +345,9 @@ class NavigationNotifier extends ChangeNotifier {
 
     final authorizationRequired = configuration.authorizationRequired;
 
-    if (!_isUserLoggedIn && authorizationRequired) {
+    if ((!_isUserLoggedIn && authorizationRequired && _isAppInitialized) ||
+        (_authState == AuthState.loggedInAnonymously &&
+            !configuration.allowsAnonymousAccess)) {
       _redirectRoute = configuration;
 
       return DefaultRoutes.login;

@@ -128,7 +128,6 @@ describe("", async () => {
   });
 
   await userPermissionsTest(usersPermissions, featureConfig, collection, getTask(), { context: "updated" });
-
   after(async () => {
     await tearDown();
   });

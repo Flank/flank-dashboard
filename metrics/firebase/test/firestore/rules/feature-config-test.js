@@ -137,7 +137,6 @@ describe("", async () => {
   });
 
   await userPermissionsTest(usersPermissions, featureConfig, collection, config, config);
-
   after(async () => {
     await tearDown();
   });
