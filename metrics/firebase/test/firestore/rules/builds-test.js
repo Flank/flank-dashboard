@@ -5,7 +5,7 @@ const async = require('async');
 const {
   setupTestDatabaseWith,
   getApplicationWith,
-  tearDown,
+  tearDown, userPermissionsTest,
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const {
@@ -270,68 +270,12 @@ describe("", async () => {
       const featureConfigPath = "feature_config/feature_config";
 
       describe("Build tests collection rules, isPublicDashboardEnabled = " + config[featureConfigPath].isPublicDashboardEnabled,
-        function () {
-          async.forEach(usersPermissions, (user, callback) => {
-            describe(user.describe, () => {
-              before(async () => {
-                await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, config));
-              });
-              let publicDashboardState = config[featureConfigPath].isPublicDashboardEnabled
-                ? 'on'
-                : 'off';
-              let canCreateDescription = user.public_dashboard[publicDashboardState].can.create ?
-                "allows creating a build" : "does not allow creating a build";
-              let canReadDescription = user.public_dashboard[publicDashboardState].can.read ?
-                "allows reading builds" : "does not allow reading builds";
-              let canUpdateDescription = user.public_dashboard[publicDashboardState].can.update ?
-                "allows updating a build" : "does not allow updating a build";
-              let canDeleteDescription = user.public_dashboard[publicDashboardState].can.delete ?
-                "allows deleting a build" : "does not allow deleting a build";
-
-              it(canCreateDescription, async () => {
-                const createPromise = user.app.collection(collection).add(getBuild());
-
-                if (user.public_dashboard[publicDashboardState].can.create) {
-                  await assertSucceeds(createPromise)
-                } else {
-                  await assertFails(createPromise)
-                }
-              });
-
-              it(canReadDescription, async () => {
-                const readPromise = user.app.collection(collection).get();
-
-                if (user.public_dashboard[publicDashboardState].can.read) {
-                  await assertSucceeds(readPromise)
-                } else {
-                  await assertFails(readPromise)
-                }
-              });
-
-              it(canUpdateDescription, async () => {
-                const updatePromise =
-                  user.app.collection(collection).doc("1").update({url: "updated"});
-
-                if (user.public_dashboard[publicDashboardState].can.update) {
-                  await assertSucceeds(updatePromise)
-                } else {
-                  await assertFails(updatePromise)
-                }
-              });
-
-              it(canDeleteDescription, async () => {
-                const deletePromise =
-                  user.app.collection(collection).doc("1").delete();
-
-                if (user.public_dashboard[publicDashboardState].can.delete) {
-                  await assertSucceeds(deletePromise)
-                } else {
-                  await assertFails(deletePromise)
-                }
-              });
-            });
-            callback();
+        async function () {
+          before(async () => {
+            await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains, projects, config));
           });
+
+          await userPermissionsTest(usersPermissions, config, collection, getBuild(), {url: "updated"});
         });
       callback();
     });
