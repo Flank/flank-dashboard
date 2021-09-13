@@ -51,7 +51,7 @@ describe("", async function () {
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-        getAllowedEmailUser(passwordSignInProviderId, true)
+          getAllowedEmailUser(passwordSignInProviderId, true)
       ),
       'public_dashboard': {
         'on': {
@@ -327,7 +327,7 @@ describe("", async function () {
         await assertFails(
           passwordProviderAllowedEmailApp
             .collection(collection)
-            .add({name, projectIds: []})
+            .add({ name, projectIds: [] })
         );
       });
     });
