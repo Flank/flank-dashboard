@@ -222,10 +222,9 @@ void main() {
       (tester) async {
         final fakeAsync = FakeAsync();
 
-        // ignore: unawaited_futures
-        await fakeAsync.run((_) async {
-          await mockNetworkImagesFor(() async {
-            await tester.pumpWidget(const _ManufacturerBannerTestbed());
+        fakeAsync.run((_) {
+          mockNetworkImagesFor(() {
+            tester.pumpWidget(const _ManufacturerBannerTestbed());
           });
         });
         fakeAsync.flushMicrotasks();

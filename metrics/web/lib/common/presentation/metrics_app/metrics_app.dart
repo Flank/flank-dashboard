@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/manufacturer_advertisement_container/widget/manufacturer_advertisement_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/metrics_colors.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
@@ -20,6 +21,7 @@ import 'package:metrics/common/presentation/routes/observers/toast_route_observe
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:provider/provider.dart';
 
@@ -91,9 +93,16 @@ class _MetricsAppState extends State<MetricsApp> {
                   title: CommonStrings.metrics,
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
-                    return ScrollConfiguration(
-                      behavior: MetricsScrollBehavior(),
-                      child: child,
+                    final featureConfigNotifier =
+                        Provider.of<FeatureConfigNotifier>(context);
+
+                    return ManufacturerAdvertisementContainer(
+                      isEnabled: featureConfigNotifier
+                          .publicDashboardFeatureConfigModel.isEnabled,
+                      child: ScrollConfiguration(
+                        behavior: MetricsScrollBehavior(),
+                        child: child,
+                      ),
                     );
                   },
                   themeMode: isDark ? ThemeMode.dark : ThemeMode.light,

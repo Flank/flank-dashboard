@@ -117,6 +117,8 @@ class _ManufacturerBannerState extends State<ManufacturerBanner>
 
     _previewTimer.cancel();
     _previewTimer = null;
+
+    print('Preview timer disposed');
   }
 
   /// Opens the manufacturer link.
