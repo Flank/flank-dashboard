@@ -1,12 +1,12 @@
-// Use of this source code is governed by the Apache License, Version 2.0 
+// Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
+import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../../test_utils/test_injection_container.dart';

@@ -11,10 +11,14 @@ class ManufacturerBannerThemeData {
   /// A [TextStyle] of the text in the manufacturer banner widget.
   final TextStyle textStyle;
 
+  /// The z-coordinate at which to place the banner relative to its parent.
+  final double elevation;
+
   /// Creates a new instance of the [ManufacturerBannerThemeData] with the given
   /// parameters.
   const ManufacturerBannerThemeData({
     this.backgroundColor,
     this.textStyle,
+    this.elevation = 10.0,
   });
 }
